@@ -6339,7 +6339,7 @@
     "symbols": [
       "fn_1_810E4"
     ],
-    "status": "nonmatching",
+    "status": "matching",
     "mw_version": null,
     "extra_cflags": [],
     "tu": "rel/main_rel/car.c"

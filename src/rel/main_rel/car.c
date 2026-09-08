@@ -196,6 +196,32 @@ void fn_1_80F1C(s32 arg0, void *arg1) {
 }
 /* fzgx:end fn_1_80F1C */
 
+/* fzgx:begin fn_1_810E4 */
+typedef struct {
+    void *a;
+    void *b;
+} CarPair;
+
+extern void fn_80071718(void *arg0);
+extern void fn_800711A8(u32 value);
+
+void fn_1_810E4(CarPair *p) {
+    CarPair *q;
+    s16 i;
+
+    for (q = p, i = 0; i < 3; q++, i++) {
+        if (q->b != 0) {
+            fn_80071718(q->b);
+            q->b = 0;
+        }
+        if (q->a != 0) {
+            fn_800711A8((u32)q->a);
+            q->a = 0;
+        }
+    }
+}
+/* fzgx:end fn_1_810E4 */
+
 /* fzgx:begin fn_1_8171C */
 // Maps a car mode to its corresponding status code.
 s32 fn_1_8171C(s32 value) {
