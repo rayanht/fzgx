@@ -298,6 +298,22 @@ int fn_1_14F014(void) {
 }
 /* fzgx:end fn_1_14F014 */
 
+/* fzgx:begin fn_1_14F118 */
+extern s16 fn_1_14F01C(s16 category);
+extern s16 fn_1_14F090(s16 category, s16 occurrence);
+
+s16 fn_1_14F118(s16 record_id, s16 category) {
+    s16 occurrence;
+
+    for (occurrence = 0; occurrence < fn_1_14F01C(category); occurrence++) {
+        if (record_id == fn_1_14F090(category, occurrence)) {
+            return occurrence;
+        }
+    }
+    return -1;
+}
+/* fzgx:end fn_1_14F118 */
+
 /* fzgx:begin fn_1_14F344 */
 extern u8 lbl_1_rodata_C6E8[1200];
 
