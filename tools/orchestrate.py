@@ -26,7 +26,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Dict, List, Optional
 
-from fzgx import api, trivial
+from fzgx import api, reuse, trivial
 from fzgx.ledger import Ledger
 from fzgx.project import ROOT, STATE_DIR, Project
 
@@ -340,9 +340,13 @@ def main(argv: Optional[List[str]] = None) -> int:
         return 0
     if not a.no_trivial and not a.shadow and not a.revise:
         triv = trivial.apply(p)
+        reused = reuse.run(p, max_size=a.max_size or 255, module=a.module)
         from fzgx import lift  # scoped: the lifter needs the build tree, not the harness
-        lifted = lift.apply(p, [a.module] if a.module else None, 400)
-        print(f"trivial pass: {triv.get('applied', 0)} matched mechanically; lifter: {lifted.get('submitted', 0)} submitted of {lifted.get('lifted', 0)} lifted", flush=True)
+        lifted = lift.apply(p, [a.module] if a.module else None, a.max_size or 400)
+        print(f"trivial pass: {triv.get('applied', 0)} matched mechanically; reuse: {len(reused['matched'])}; "
+              f"lifter: {lifted.get('submitted', 0)} submitted of {lifted.get('lifted', 0)} lifted", flush=True)
+        ledger = Ledger()
+        symbols = [s for s in symbols if (row := ledger.get(api._key(p, s))) is not None and row['status'] == 'unmatched']
     # nothing is carved up front: a unit exists only once a function matches (submit carves it)
 
     t0 = time.time()

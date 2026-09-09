@@ -72,10 +72,9 @@ def lift(p: Project, module: str, name: str) -> Optional[str]:
     LABELS[0] = labels
     if not ins or ins[-1][0] != "blr":
         return None
-    # control flow accepted: straight line, conditional returns (`beqlr` and friends), and
-    # forward conditional branches whose target is the final blr or a later point of the same
-    # straight-line body (an `if` block). Anything else (loops, several branches) is not lifted.
-    branches = [(i, mn, a) for i, (mn, a) in enumerate(ins) if mn.startswith("b") and mn not in ("bl", "blr")]
+    # Calls return to the next instruction, including indirect calls through CTR. The inner
+    # lifter validates their pointer and arguments, and the loop/branch shapes below.
+    branches = [(i, mn, a) for i, (mn, a) in enumerate(ins) if mn.startswith("b") and mn not in ("bl", "bctrl", "blrl", "blr")]
     for i, mn, a in branches:
         if mn.endswith("lr") and mn[1:-2] in COND:
             continue
@@ -136,7 +135,7 @@ def explain(p: Project, module: str, name: str) -> str:
     if not ins or ins[-1][0] != "blr":
         return "filter: no final blr" if ins else "filter: empty"
     for i, (mn, a) in enumerate(ins):
-        if not mn.startswith("b") or mn in ("bl", "blr"):
+        if not mn.startswith("b") or mn in ("bl", "bctrl", "blrl", "blr"):
             continue
         if (mn.endswith("lr") and mn[1:-2] in COND) or mn == "bdnz":
             continue
@@ -726,7 +725,7 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
         mn_, a_ = ins[idx]
         if not a_:
             return False
-        srcs = a_[1:] if mn_ not in STORE_T and not mn_.startswith(("st", "cmp")) else a_
+        srcs = a_[1:] if mn_ not in STORE_T and mn_ not in ("mtlr", "mtctr") and not mn_.startswith(("st", "cmp")) else a_
         return any(re.search(rf"\b{r}\b", x) for x in srcs)
 
     def read_later(idx: int, r: str) -> bool:
@@ -735,7 +734,7 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
             mn_, a_ = ins[j]
             if reads(j, r):
                 return True
-            if mn_ == "bl":
+            if mn_ in ("bl", "bctrl", "blrl"):
                 if re.fullmatch(r"r([3-9]|10)|f([1-8])", r):
                     return True
                 if re.fullmatch(r"r([0-9]|1[0-2])|f(\d|1[0-3])", r):
@@ -757,7 +756,7 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                 continue
             if stored and reads(j, r):
                 return True
-            if mn_ == "bl":
+            if mn_ in ("bl", "bctrl", "blrl"):
                 if stored and re.fullmatch(r"r([3-9]|10)", r):
                     return True  # an argument register at a call is read by the callee
                 if re.fullmatch(r"r([0-9]|1[0-2])", r):
@@ -825,6 +824,7 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
         dowhile_by_entry[t_] = (t_, ts, k_)
         dowhile_test[ts] = (t_, ts, k_)
     ctr_expr: List[Optional[str]] = [None]
+    lr_expr: List[Optional[str]] = [None]
     fn_typedefs: List[str] = []
 
     # ---- structured control flow, discovered up front ---------------------------------------
@@ -1123,7 +1123,7 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
         for rw in written:
             if rw in ("r0", "r1") or rw in carried or not re.fullmatch(r"r([3-9]|1\d|2\d|3[01])|f([1-9]|1\d|2\d|3[01])", rw):
                 continue
-            read_after = any(reads(x, rw) or (ins[x][0] == "bl" and re.fullmatch(r"r([3-9]|10)|f[1-8]", rw)) or (ins[x][0] == "blr" and rw in ("r3", "f1"))
+            read_after = any(reads(x, rw) or (ins[x][0] in ("bl", "bctrl", "blrl") and re.fullmatch(r"r([3-9]|10)|f[1-8]", rw)) or (ins[x][0] == "blr" and rw in ("r3", "f1"))
                              for x in range(region_end, len(ins)))
             read_inside_first = False
             for x in range(i0 + 1, region_end):
@@ -1187,14 +1187,14 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                 if pd and pd in regs and pd not in carried and not re.fullmatch(r"[A-Za-z_]\w*|-?\d+|0x[0-9A-Fa-f]+|&[A-Za-z_]\w*", regs[pd]) and not regs[pd].startswith(("(struct ", "__CALLRET__", "((u8 *)&", "&")):
                     uses = 0
                     for x in range(i, len(ins)):
-                        if reads(x, pd) or (ins[x][0] == "bl" and re.fullmatch(r"r([3-9]|10)|f[1-8]", pd)):
+                        if reads(x, pd) or (ins[x][0] in ("bl", "bctrl", "blrl") and re.fullmatch(r"r([3-9]|10)|f[1-8]", pd)):
                             if x in chain_cmp_idx and reads(x, pd) and ins[x][0].startswith("cmp"):
                                 uses += 0.5  # compares of one short-circuit condition share the value
                             else:
                                 uses += 1
                         if ins[x][0] == "blr" and pd in ("r3", "f1"):
                             uses += 1  # returned
-                        if ins[x][0] == "bl" and re.fullmatch(r"r([0-9]|1[0-2])|f([0-9]|1[0-3])", pd):
+                        if ins[x][0] in ("bl", "bctrl", "blrl") and re.fullmatch(r"r([0-9]|1[0-2])|f([0-9]|1[0-3])", pd):
                             break
                         if ins[x][1] and ins[x][1][0] == pd and ins[x][0] not in STORE_T and not ins[x][0].startswith(("st", "cmp")):
                             break
@@ -1223,7 +1223,7 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                 carried_until.pop(rw_, None)
                 if rw_ in carried and not in_loop:
                     carried.pop(rw_, None)
-            if a and mn not in STORE_T and not mn.startswith(("st", "cmp", "b")) and mn not in ("mtlr", "mtspr"):
+            if a and mn not in STORE_T and not mn.startswith(("st", "cmp", "b")) and mn not in ("mtlr", "mtspr", "mtctr"):
                 temps_written.append((a[0], i)); written_since_call.add(a[0]); def_idx[a[0]] = i
             if mn == "bl":
                 pass  # cleared after the call is processed (see the bl branch)
@@ -1231,11 +1231,11 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
             # call will intervene before its use: the source kept it in a local
             if i > 0:
                 pm, pa = ins[i - 1]
-                pd = pa[0] if pa and pm not in STORE_T and not pm.startswith(("st", "cmp", "b")) and pm not in ("mtlr", "mtspr") else None
+                pd = pa[0] if pa and pm not in STORE_T and not pm.startswith(("st", "cmp", "b")) and pm not in ("mtlr", "mtspr", "mtctr") else None
                 if pd and SAVE_RE.match(pd) and pd not in carried and pd in regs and not re.fullmatch(r"[A-Za-z_]\w*|-?\d+|0x[0-9A-Fa-f]+|&[A-Za-z_]\w*", regs[pd]) and not regs[pd].startswith("(struct "):
                     call_before_use = False
                     for x in range(i, len(ins)):
-                        if ins[x][0] == "bl":
+                        if ins[x][0] in ("bl", "bctrl", "blrl"):
                             call_before_use = True; break
                         if reads(x, pd) or (ins[x][1] and ins[x][1][0] == pd and ins[x][0] not in STORE_T):
                             break
@@ -1555,6 +1555,13 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
             if a and len(a) > 1 and a[1].endswith("(r1)"):
                 m_s = re.match(r"^(-?0x[0-9a-f]+|-?\d+)", a[1])
                 slot_ = int(m_s.group(1), 0) if m_s else None
+            if mn == "mtlr":
+                # An indirect call consumes LR as a function pointer; the final mtlr
+                # restores the caller's return address and remains frame bookkeeping.
+                next_lr_use = next((m for m, _ in ins[i + 1:] if m in ("mtlr", "bl", "bctrl", "blrl", "blr")), None)
+                if next_lr_use == "blrl":
+                    lr_expr[0] = use(a[0])
+                    continue
             if mn in ("stwu", "mflr", "mtlr") or (mn in ("stw", "lwz") and a and ((a[0] == "r0" and a[1] == lr_slot) or (SAVE_RE.match(a[0]) and slot_ in saved_slots))) or (mn == "addi" and a and a[0] == "r1"):
                 frame = True
                 continue
@@ -2071,12 +2078,13 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                 frame = True; continue  # the helpers' frame pointer
             if mn == "mtctr" and i not in ctr_loops and i not in copies:
                 ctr_expr[0] = use(a[0]); continue
-            if mn in ("bl", "bctrl"):
+            if mn in ("bl", "bctrl", "blrl"):
                 callee = a[0] if mn == "bl" else None
                 if callee is not None and lookup(callee) is None:
                     raise Give(f"unknown callee {callee}")
-                if callee is None and ctr_expr[0] is None:
-                    raise Give("bctrl without a pointer")
+                indirect = lr_expr if mn == "blrl" else ctr_expr
+                if callee is None and indirect[0] is None:
+                    raise Give(f"{mn} without a pointer")
                 # arguments: r3..rN where N is the highest argument register set here; a lower
                 # register never written is a parameter of ours passed straight through
                 # an argument register counts only if this function wrote it since the last call
@@ -2156,8 +2164,8 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                 if callee is None:
                     tname = f"{name}_Fn{len(fn_typedefs)}"
                     fn_typedefs.append(f"typedef u32 (*{tname})({', '.join(ptypes_) or 'void'});")
-                    callee = f"(({tname}){ctr_expr[0]})"
-                    ctr_expr[0] = None
+                    callee = f"(({tname}){indirect[0]})"
+                    indirect[0] = None
                 calls.append(callee)
                 written_since_call.clear()
                 if callee.startswith("(("):
@@ -2242,7 +2250,7 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
         mn_l, a_l = ins[last_w]
         if mn_l == "lis" and a_l and a_l[1].endswith("@ha"):
             wrote_r3 = False
-        elif any(reads(x, "r3") and ins[x][0] not in ("mr",) for x in range(last_w + 1, len(ins)) if ins[x][0] != "blr") and not any(ins[x][0] == "bl" for x in range(last_w + 1, len(ins))):
+        elif any(reads(x, "r3") and ins[x][0] not in ("mr",) for x in range(last_w + 1, len(ins)) if ins[x][0] != "blr") and not any(ins[x][0] in ("bl", "bctrl", "blrl") for x in range(last_w + 1, len(ins))):
             wrote_r3 = False
     if "r3" in regs and wrote_r3 and not regs["r3"].startswith("__CALLRET__"):
         ret = regs["r3"]  # a call's result falls through in r3 either way: `void f(void) { g(); }`

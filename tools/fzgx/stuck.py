@@ -45,7 +45,9 @@ def _fmt(row: dict) -> str:
 
 def _reloc(row: dict) -> Optional[str]:
     rel = (row.get("instruction") or {}).get("relocation")
-    return None if not rel else f"{rel.get('type_name')}:{rel.get('target_symbol')}"
+    # target_symbol is an index into each object's own symbol table, so equal
+    # references can have different indices. Compare the printed symbol/addend.
+    return None if not rel else f"{rel.get('type_name')}:{REG_RE.sub('R', _fmt(row))}"
 
 
 def _has_reloc(row: dict) -> bool:
@@ -151,7 +153,8 @@ def _pure(counts: Dict[str, int], lrows: List[dict], rrows: List[dict]) -> str:
     return "mixed"
 
 
-def best_bodies(p: Project, min_percent: float, module: Optional[str] = None) -> Dict[str, Tuple[str, float, int, str]]:
+def best_bodies(p: Project, min_percent: float, module: Optional[str] = None,
+                max_size: Optional[int] = None) -> Dict[str, Tuple[str, float, int, str]]:
     """{symbol: (body path, best %, size, module)} for unmatched functions at or above min_percent."""
     db = sqlite3.connect(str(STATE_DIR / "ledger.db"))
     q = """select f.symbol, f.best_percent, f.size, f.module, a.best_body_path, a.best_in_attempt from functions f
@@ -160,8 +163,13 @@ def best_bodies(p: Project, min_percent: float, module: Optional[str] = None) ->
     if module:
         q += " and f.module=?"
         args.append(module)
+    if max_size is not None:
+        q += " and f.size<=?"
+        args.append(max_size)
     out: Dict[str, tuple] = {}
     for s, bp, size, mod, path, pct in db.execute(q, args):
+        if not Path(path).exists():
+            path = str(STATE_DIR / "attempts" / Path(path).name)
         if Path(path).exists() and (s not in out or (pct or 0) > out[s][1]):
             out[s] = (path, pct or 0.0, size, mod)
     return out
@@ -182,8 +190,9 @@ def analyse(p: Project, symbol: str, path: str, res: Optional[oracle.CheckResult
             "counts": counts, "pure": _pure(counts, lrows, rrows), "diffs": diffs}
 
 
-def run(p: Project, min_percent: float = 80.0, module: Optional[str] = None, workers: int = 12) -> Dict[str, object]:
-    bodies = best_bodies(p, min_percent, module)
+def run(p: Project, min_percent: float = 80.0, module: Optional[str] = None, workers: int = 12,
+        max_size: Optional[int] = None) -> Dict[str, object]:
+    bodies = best_bodies(p, min_percent, module, max_size)
     items = sorted(bodies.items())
     # one parallel batched compile for every body, then the row analysis in threads
     checks = oracle.check_many(p, [(s, Path(v[0])) for s, v in items])
@@ -192,7 +201,7 @@ def run(p: Project, min_percent: float = 80.0, module: Optional[str] = None, wor
     for r in results:
         _, pct, size, mod = bodies[r["symbol"]]
         r.update({"ledger_best": pct, "size": size, "module": mod})
-    out = {"min_percent": min_percent, "n": len(results), "results": results}
+    out = {"min_percent": min_percent, "max_size": max_size, "n": len(results), "results": results}
     path = STATE_DIR / "stuck.json"
     path.write_text(json.dumps(out, indent=1))
     return out

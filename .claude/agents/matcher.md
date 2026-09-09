@@ -48,7 +48,7 @@ reaches 100%, pass it as `mw_version` to submit.
 - `lis/addi` is a symbol address: declare the symbol and take its address.
 - `lfs/lfd` from a `lbl_*_rodata_*` symbol is a pooled constant: declare it
   `extern const f32/f64` as the context shows and use the symbol. A literal in C
-  becomes a private constant with a different relocation and never matches.
+  emits a private constant; the oracle can retarget its relocation when the bytes agree.
 - `lwz r, OFF(base)` is a struct field at OFF: declare a minimal struct.
 - The register a value lands in before a `bl` is its argument position.
 - If the context shows a prologue "already in scope", do not redeclare what it

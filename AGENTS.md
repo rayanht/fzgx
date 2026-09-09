@@ -5,6 +5,9 @@ same work. Read `CLAUDE.md` for the project overview; this file is the
 contract a subagent must follow. The Claude Code versions of these roles live
 in `.claude/agents/*.md` and say the same things.
 
+Do not add unit tests to this repository. Validate tooling changes against real
+functions with MWCC, retail object diffs, `fzgx lint`, and the 16-target hash check.
+
 ## Matcher (one function per session; cheap tier: GPT 5.6 Luna, Haiku 4.5)
 
 Matchers get **no shell**. Their only tools are the `fzgx` MCP server
@@ -20,8 +23,8 @@ cwd = "/path/to/fzero_gx"
 
 ) plus a read-only file tool. Tools: `claim`, `context`, `read_unit`,
 `write_unit`, `check`, `submit`, `release`. `write_unit` only accepts the unit
-the caller has claimed; `submit` relinks all 16 targets and verifies every
-hash before committing. The same operations exist as CLI subcommands
+the caller has claimed; `submit` queues a matched unit, and `fzgx verify` relinks
+all 16 targets and verifies every hash before committing the batch. The same operations exist as CLI subcommands
 (`uv run tools/fzgx.py ...`) for humans and the orchestrator.
 
 Loop: `claim` (returns the context bundle) → `write_unit` (complete file:
@@ -50,8 +53,12 @@ and a row in `state/blocked.md`.
 
 ## Orchestrator
 
-Picks work with `fzgx --json inventory --status unmatched --max-size N`
-(smallest first), fans out matchers in parallel (start at 8), then librarian,
+Prioritize deterministic SDK C imports (CARD, then OS, EXI, SI) regardless of
+function size. Under-256-byte functions (`--max-size 255`) remain useful repair
+corpora, not a gate on identified larger functions. Prefer deterministic work: `fzgx trivial`, `fzgx reuse`, and size-filtered `fzgx sweep`/`fzgx stuck`;
+fix recurring failure modes in the tooling before spending agents on them.
+Picks remaining work with `fzgx --json inventory --status unmatched --max-size N`
+(smallest first), runs 48 Luna workers via the headless orchestrator, then librarian,
 then triage; writes `docs/batches/<date>.md` from `fzgx report` and commits
 `state/ledger.json` via `fzgx snapshot`. Budget per batch is enforced by the
 orchestrator from the `--cost-usd` values matchers report.

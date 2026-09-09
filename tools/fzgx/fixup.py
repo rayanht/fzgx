@@ -33,8 +33,9 @@ FLIP = {"s8": "u8", "u8": "s8", "s16": "u16", "u16": "s16", "s32": "u32", "u32":
 WIDEN = {"s8": ["s16", "s32"], "u8": ["u16", "u32"], "s16": ["s8", "s32"], "u16": ["u8", "u32"],
          "s32": ["s16", "s8"], "u32": ["u16", "u8"], "int": ["s16", "s8"], "char": ["s16", "s32"], "short": ["s8", "s32"]}
 TYPE_RE = "|".join(re.escape(t) for t in sorted(INT_TYPES, key=len, reverse=True))
-# a declaration: type, then one or more declarators (pointers excluded: their signedness never matters)
-DECL_RE = re.compile(rf"(?<![\w.>])(?:const\s+)?({TYPE_RE})\s+(?!\*)([A-Za-z_]\w*(?:\s*\[[^\]]*\])?)(?=\s*[;,=)\[])")
+# Pointee signedness matters too: loading through char* versus u8* changes sign
+# extension even when the pointer itself occupies the same register.
+DECL_RE = re.compile(rf"(?<![\w.>])(?:const\s+)?({TYPE_RE})(?:\s+(?:\*\s*)*|\s*\*+\s*)([A-Za-z_]\w*(?:\s*\[[^\]]*\])?)(?=\s*[;,=()\[])")
 
 
 def _kinds(res: oracle.CheckResult) -> Dict[str, int]:
@@ -50,7 +51,7 @@ def _wants_type_flip(counts: Dict[str, int], diffs: List[Tuple[str, str]]) -> bo
 
 
 def _decl_sites(body: str, fn_span: Tuple[int, int]) -> List[Tuple[int, int, str, str]]:
-    """(start, end, type, name) of integer declarations in the function and in structs above it."""
+    """Integer locals, fields, globals and called functions' return types affect codegen."""
     out = []
     for m in DECL_RE.finditer(body):
         if m.start() > fn_span[1]:
@@ -125,16 +126,6 @@ def try_fix(p: Project, symbol: str, body: str, budget_s: float = 30.0, max_cand
         return out
     counts = _kinds(base)
     out["kinds"] = {k: v for k, v in counts.items()}
-    # first, a fraction of a second: the register-allocation search (declaration order, scope,
-    # initializer splits) on a body that is already close; the type families come after
-    if base.percent >= 85.0 and _depth == 0:
-        from . import regalloc
-        ra = regalloc.search(p, symbol, body, budget_s=min(budget_s, 8.0), mw_version=base.mw_version)
-        out["regalloc"] = {"tried": ra.get("tried"), "best": ra.get("best"), "secs": ra.get("secs")}
-        if ra.get("matched") and ra.get("body"):
-            out.update(matched=True, body=ra["body"], tried=ra.get("tried", 0), best=100.0,
-                       label=f"regalloc {ra.get('stage')}: {ra.get('label')}", secs=round(time.time() - t0, 2))
-            return out
     lrows, rrows = base._rows
     diffs = [(stuck._fmt(a), stuck._fmt(b)) for a, b in zip(lrows, rrows) if (a.get("diff_kind") or "DIFF_NONE") != "DIFF_NONE"]
     span = _function_span(body, sym.name)
@@ -454,7 +445,9 @@ def try_fix(p: Project, symbol: str, body: str, budget_s: float = 30.0, max_cand
     best_text, best_pct = None, out["best"]
     cand = candidates[:max_candidates]
     if cand and target and time.time() - t0 < budget_s:
-        singles = evaluate([t_ for _, t_ in cand])
+        scored = evaluate([body] + [t_ for _, t_ in cand])
+        best_pct = scored[0][0] if scored[0] else 0.0
+        singles = scored[1:]
         out["tried"] = len(cand)
         keepers = []
         for i_, ((label, text), r_) in enumerate(zip(cand, singles)):
@@ -498,6 +491,18 @@ def try_fix(p: Project, symbol: str, body: str, budget_s: float = 30.0, max_cand
                 out["best"] = max(out["best"], pct2)
                 if r.matched or r.matched_pool:
                     out.update(matched=True, body=best_text, label=out.get("label") or out.get("best_label"))
+    # Targeted repairs get the budget first: register permutations must not starve a
+    # one-declaration type or relocation fix.
+    left = budget_s - (time.time() - t0)
+    if not out["matched"] and base.percent >= 85.0 and _depth == 0 and left > 0:
+        from . import regalloc
+        ra = regalloc.search(p, symbol, best_text or body, budget_s=min(left, 8.0), mw_version=base.mw_version)
+        out["regalloc"] = {"tried": ra.get("tried"), "best": ra.get("best"), "secs": ra.get("secs")}
+        out["tried"] += ra.get("tried", 0)
+        if ra.get("matched") and ra.get("body"):
+            out.update(matched=True, body=ra["body"], best=100.0,
+                       label=f"regalloc {ra.get('stage')}: {ra.get('label')}", secs=round(time.time() - t0, 2))
+            return out
     # a plateau usually has more than one cause: when repairs improved the body without matching,
     # search again from the improved body (bounded by the budget)
     if not out["matched"] and best_text is not None and out["best"] > out["base"] + 0.05 and _depth < 2:

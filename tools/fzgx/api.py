@@ -704,7 +704,7 @@ def lint_repair(text: str, findings) -> str:
 
 def sweep(p: Project, module: Optional[str] = None, min_percent: float = 80.0, limit: int = 2000,
           workers: int = 12, drafts: bool = False, max_percent: float = 100.0, budget_s: float = 10.0,
-          do_submit: bool = True) -> Dict[str, Any]:
+          do_submit: bool = True, max_size: Optional[int] = None, do_spell: bool = True) -> Dict[str, Any]:
     """The search over every saved body, in three stages, one pass:
       1. re-check against today's oracle and headers (a header, oracle or pool change lands
          bodies that were right all along); submit outright and pool matches
@@ -731,7 +731,7 @@ def sweep(p: Project, module: Optional[str] = None, min_percent: float = 80.0, l
             if rec.get("matched") or pct < min_percent or pct >= max_percent:
                 continue
             sym = p.resolve(key)
-            if sym is None or p.unit_of(sym) or (module and sym.module != module):
+            if sym is None or p.unit_of(sym) or (module and sym.module != module) or (max_size is not None and sym.size > max_size):
                 continue
             best = STATE_DIR / "spell" / p.key(sym).replace(":", "__") / "best.c"
             text = best.read_text() if best.exists() else rec.get("text") or ""
@@ -741,8 +741,10 @@ def sweep(p: Project, module: Optional[str] = None, min_percent: float = 80.0, l
         bodies = bodies[:limit]
     else:
         q = ("SELECT symbol, module, size, best_percent FROM functions WHERE status='unmatched' AND best_percent>=? AND best_percent<? "
-             + ("AND module=? " if module else "") + "ORDER BY best_percent DESC LIMIT ?")
-        for key, mod, size, pct in l.db.execute(q, [min_percent, max_percent] + ([module] if module else []) + [limit]).fetchall():
+             + ("AND module=? " if module else "") + ("AND size<=? " if max_size is not None else "")
+             + "ORDER BY best_percent DESC LIMIT ?")
+        args = [min_percent, max_percent] + ([module] if module else []) + ([max_size] if max_size is not None else []) + [limit]
+        for key, mod, size, pct in l.db.execute(q, args).fetchall():
             sym = p.resolve(key)
             text = _attempt_text(p, key) if sym else None
             if not text or sym.name not in text:
@@ -819,12 +821,14 @@ def sweep(p: Project, module: Optional[str] = None, min_percent: float = 80.0, l
             left.append((key, mod, size, r["percent"], r.get("body") or text))
     cache_path.write_text(json.dumps(cache))
     # stage 3: the spelling search over what is left, lockstep (its own memo skips old bodies)
-    if left:
+    if left and do_spell:
         sp = spell.run_bodies(p, left, workers=3, budget_s=budget_s, submit=do_submit, agent="sweep")
         out["spelled"] = [(s_, pct_, path_) for s_, pct_, path_ in sp.get("matched", [])]
         out["spell"] = {k: sp.get(k) for k in ("searched", "skipped", "improved", "candidates", "families", "secs")}
         spelled = {s_ for s_, _, _ in out["spelled"]}
         out["still"] += [(key, pct) for key, _, _, pct, _ in left if key not in spelled]
+    elif left:
+        out["still"] += [(key, pct) for key, _, _, pct, _ in left]
     return out
 
 
@@ -838,5 +842,3 @@ def sweep_one(p: Project, symbol: str, body: str, budget_s: float = 10.0) -> Dic
     sp = spell.search(p, symbol, fx.get("best_body") or body, budget_s=budget_s)
     sp["stage"] = "spell"; sp["fixup_best"] = fx.get("best")
     return sp
-
-

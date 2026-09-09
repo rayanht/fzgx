@@ -93,6 +93,13 @@ Rules that hold for everyone:
   2026-09-08) and then lifts straight-line functions from the disassembly (`tools/fzgx/lift.py`:
   getters, setters, one-call wrappers, short call-free bodies; 102 landed the same day). Run it
   before spending agents on small functions.
+- Prioritize deterministic SDK C imports (CARD, then OS, EXI, SI) regardless of size.
+  Functions **under 256 bytes** (`--max-size 255`) are a repair corpus, not a prerequisite. `fzgx stuck --max-size 255` classifies the saved attempts; `fzgx sweep --max-size 255`
+  searches them. `fzgx reuse --max-size 255` rebinds verified C when retail instruction
+  shapes agree, retaining registers, immediates, relocation kinds/addends and branch targets;
+  all candidates pass the oracle and `fzgx verify`. Use 48 headless Luna workers only for
+  remaining work the deterministic tools cannot compute. Do not add unit tests: use real
+  MWCC/object-diff checks, lint, and the 16-target hash check.
 - Readability tooling: `fzgx tu-organize` (TU directories from `tus.json`), `fzgx headers`
   (layouts from disassembly → `include/rel/<module>/globals.h`, offset self-checked under MWCC;
   `--symbol` prints one layout, `--oversize` lists dtk under-sized symbols), `fzgx rename`,

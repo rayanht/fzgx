@@ -50,7 +50,7 @@ def cmd_context(a, p):
 
 def cmd_stuck(a, p):
     from . import stuck
-    out = stuck.run(p, a.min_percent, a.module, a.workers)
+    out = stuck.run(p, a.min_percent, a.module, a.workers, a.max_size)
     if a.json:
         print(json.dumps(out, indent=1))
     else:
@@ -136,6 +136,12 @@ def cmd_trivial(a, p):
         from . import lift
         r["lift"] = lift.apply(p, a.module.split(",") if a.module else None, a.max_size, a.limit)
     _print(r, a.json); return 0
+
+
+def cmd_reuse(a, p):
+    from . import reuse
+    _print(reuse.run(p, a.max_size, a.module, not a.no_submit), a.json)
+    return 0
 
 
 def cmd_compare(a, p):
@@ -286,7 +292,7 @@ def cmd_sweep(a, p):
         if r.get("body") and a.out:
             Path(a.out).write_text(r["body"]); print(f"wrote {a.out}")
         return 0 if r.get("matched") else 1
-    out = api.sweep(p, a.module, a.min_percent, a.limit, a.workers, a.drafts, a.max_percent, a.budget, not a.no_submit)
+    out = api.sweep(p, a.module, a.min_percent, a.limit, a.workers, a.drafts, a.max_percent, a.budget, not a.no_submit, a.max_size, not a.fixup_only)
     if a.json:
         _print(out, True); return 0
     print(f"{out['candidates']} bodies: {out['checked']} checked, {out['cached']} memoised; "
@@ -411,8 +417,11 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--limit", type=int, default=2000); s.add_argument("--workers", type=int, default=12); s.add_argument("--budget", type=float, default=10.0)
     s.add_argument("--drafts", action="store_true", help="the lifter's drafts (fzgx trivial) instead of the agents' saved bodies")
     s.add_argument("--no-submit", action="store_true")
+    s.add_argument("--fixup-only", action="store_true", help="recheck and repair saved bodies without the spelling beam")
+    s.add_argument("--max-size", type=int, help="only functions up to N bytes")
     s = sub.add_parser("stuck", help="classify plateaued attempts (>= N%%) by failure mode from the object diff"); s.set_defaults(fn=cmd_stuck)
     s.add_argument("--min-percent", type=float, default=80.0); s.add_argument("--module"); s.add_argument("--workers", type=int, default=12)
+    s.add_argument("--max-size", type=int, help="only functions up to N bytes")
     s.add_argument("--json", action="store_true")
     s = sub.add_parser("uncarve", help="drop units that have no matched code (rejected, or every stub with --stubs); re-splits"); s.set_defaults(fn=cmd_uncarve)
     s.add_argument("sources", nargs="*"); s.add_argument("--stubs", action="store_true")
@@ -422,6 +431,9 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--a", required=True); s.add_argument("--b", required=True)
     s = sub.add_parser("trivial", help="mechanically match single-blr and `li r3,N; blr` functions"); s.set_defaults(fn=cmd_trivial)
     s.add_argument("--module", help="comma list; default all"); s.add_argument("--limit", type=int); s.add_argument("--dry-run", action="store_true"); s.add_argument("--no-lift", action="store_true"); s.add_argument("--max-size", type=int, default=160)
+    s = sub.add_parser("reuse", help="reuse verified C for identical retail instruction shapes"); s.set_defaults(fn=cmd_reuse)
+    s.add_argument("--module"); s.add_argument("--max-size", type=int, default=255)
+    s.add_argument("--no-submit", action="store_true")
     return ap
 
 

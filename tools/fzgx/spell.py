@@ -321,6 +321,23 @@ def fitness(tw: List[int], ow: List[int]) -> Tuple[float, float]:
     return (100.0 * matched / n, pos)
 
 
+def _candidates(frontier, seen, name: str, weights: Dict[str, float], cap: int):
+    """Prioritize before truncating; uncompiled candidates remain eligible next level."""
+    out = []
+    queued = set()
+    for fit, text, path in frontier:
+        for fam, label, candidate in all_rewrites(text, name):
+            if candidate == text or candidate in seen or candidate in queued:
+                continue
+            queued.add(candidate)
+            out.append((candidate, path + [f"{fam}: {label}"]))
+    out.sort(key=lambda c: -weights.get(c[1][-1].split(":")[0], 0))
+    selected = out[:cap]
+    for text, _ in selected:
+        seen[text] = (-1.0, -1.0)
+    return selected
+
+
 def search(p: Project, symbol: str, body: str, budget_s: float = 10.0, beam: int = BEAM, levels: int = LEVELS,
            max_candidates: int = MAX_CANDIDATES) -> Dict[str, object]:
     t0 = time.time()
@@ -359,7 +376,7 @@ def search(p: Project, symbol: str, body: str, budget_s: float = 10.0, beam: int
 
     def confirm(text: str) -> bool:
         w = root / "winner.c"; w.write_text(text)
-        r = oracle.check(p, symbol, 0, source=w, mw_version=mw)
+        r = oracle.check(p, symbol, 0, source=w, mw_version=mw, extra_cflags=extra)
         return bool(r.ok and (r.matched or r.matched_pool) and oracle.unit_fully_matches(r) is None)
 
     base_fit = evaluate([body])[0]
@@ -392,22 +409,9 @@ def search(p: Project, symbol: str, body: str, budget_s: float = 10.0, beam: int
     for _level in range(levels):
         if time.time() - t0 > budget_s or tried >= max_candidates:
             break
-        cands: List[Tuple[str, List[str]]] = []
-        for fit, text, path in frontier:
-            for fam, label, t2 in all_rewrites(text, sym.name):
-                if t2 in seen or t2 == text:
-                    continue
-                seen[t2] = (-1.0, -1.0)
-                cands.append((t2, path + [f"{fam}: {label}"]))
-                if len(cands) >= max_candidates - tried:
-                    break
-            if len(cands) >= max_candidates - tried:
-                break
+        cands = _candidates(frontier, seen, sym.name, weights, max_candidates - tried)
         if not cands:
             break
-        if weights:
-            # the families the diff rows point at first: a budget cut keeps the likely ones
-            cands.sort(key=lambda c: -weights.get(c[1][-1].split(":")[0], 0))
         res = evaluate([t for t, _ in cands])
         tried += len(cands)
         scored: List[Tuple[Tuple[float, float], str, List[str]]] = []
@@ -455,16 +459,7 @@ class _Body:
         self.error: Optional[str] = None
 
     def candidates(self, cap: int) -> List[Tuple[str, List[str]]]:
-        cands: List[Tuple[str, List[str]]] = []
-        for fit, text, path in self.frontier:
-            for fam, label, t2 in all_rewrites(text, self.sym.name):
-                if t2 in self.seen or t2 == text:
-                    continue
-                self.seen[t2] = (-1.0, -1.0)
-                cands.append((t2, path + [f"{fam}: {label}"]))
-        if self.weights:
-            cands.sort(key=lambda c: -self.weights.get(c[1][-1].split(":")[0], 0))
-        return cands[:cap]
+        return _candidates(self.frontier, self.seen, self.sym.name, self.weights, cap)
 
 
 def run_bodies(p: Project, items, workers: int = 3, budget_s: float = 10.0, submit: bool = True, agent: str = "spell",
@@ -589,16 +584,21 @@ def run_bodies(p: Project, items, workers: int = 3, budget_s: float = 10.0, subm
 
     def confirm_and_submit(b: _Body, text: str, path: List[str]) -> None:
         w = b.root / "winner.c"; w.write_text(text)
-        r = oracle.check(p, b.symbol, 0, source=w, mw_version=b.mw)
+        r = oracle.check(p, b.symbol, 0, source=w, mw_version=b.mw, extra_cflags=b.extra)
         if not (r.ok and (r.matched or r.matched_pool) and oracle.unit_fully_matches(r) is None):
             return
         b.matched = (text, path); b.done = True
         if submit:
             work = p.work_path(p.key(b.sym)); work.parent.mkdir(parents=True, exist_ok=True); work.write_text(text)
-            sr = api.submit(p, b.symbol, agent=agent, message="spelling search: " + " + ".join(path)[:200], harness="fzgx", model="spell")
+            sr = api.submit(p, b.symbol, agent=agent, message="spelling search: " + " + ".join(path)[:200], harness="fzgx", model="spell",
+                            mw_version=b.mw, extra_cflags=b.extra)
             if not sr.get("ok"):
                 return
         matched.append((b.symbol, b.pct, path))
+
+    for b in bodies:
+        if b.best and b.base_fit[1] >= 100.0:
+            confirm_and_submit(b, b.text, [])
 
     for level in range(levels):
         active = [b for b in bodies if not b.done]

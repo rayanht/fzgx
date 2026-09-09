@@ -337,7 +337,7 @@ def search(p: Project, symbol: str, body: str, budget_s: float = 8.0, max_orders
     def confirm(text: str) -> bool:
         scratch = root / "winner.c"
         scratch.write_text(text)
-        res = oracle.check(p, symbol, 0, source=scratch, mw_version=mw)
+        res = oracle.check(p, symbol, 0, source=scratch, mw_version=mw, extra_cflags=extra)
         return bool(res.ok and (res.matched or res.matched_pool))
 
     base = evaluate([body])[0]
