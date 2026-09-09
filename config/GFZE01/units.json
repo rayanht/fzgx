@@ -8330,6 +8330,19 @@
   },
   {
     "module": "main",
+    "source": "dol/getTiming.c",
+    "symbols": [
+      "getTiming"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "pool": {
+      "@19": "jumptable_801243BC"
+    }
+  },
+  {
+    "module": "main",
     "source": "dol/main.c",
     "symbols": [
       "main"
