@@ -1,0 +1,484 @@
+{
+  "EXIAttach": {
+    "absolutes": {},
+    "bindings": {
+      "EXIAttach": "EXIAttach",
+      "EXIClearInterrupts": "EXIClearInterrupts",
+      "EXIGetID": "EXIGetID",
+      "Ecb": "Ecb_8015CCB0",
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "__EXIProbe": "__EXIProbe",
+      "__OSUnmaskInterrupts": "__OSUnmaskInterrupts"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [
+      "#pragma scheduling off"
+    ],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "EXIAttach",
+    "size": 268,
+    "source": "libs/dolphin/exi/EXIBios.c",
+    "symbol": "EXIAttach",
+    "variant": "aggregate"
+  },
+  "EXIClearInterrupts": {
+    "absolutes": {
+      "__EXIRegs": 3422578688
+    },
+    "bindings": {
+      "EXIClearInterrupts": "EXIClearInterrupts"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [
+      "#pragma scheduling off"
+    ],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "EXIClearInterrupts",
+    "size": 72,
+    "source": "libs/dolphin/exi/EXIBios.c",
+    "symbol": "EXIClearInterrupts",
+    "variant": "aggregate"
+  },
+  "EXIDeselect": {
+    "absolutes": {
+      "__EXIRegs": 3422578688
+    },
+    "bindings": {
+      "EXIDeselect": "EXIDeselect",
+      "Ecb": "Ecb_8015CCB0",
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "__EXIProbe": "__EXIProbe",
+      "__OSUnmaskInterrupts": "__OSUnmaskInterrupts"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [
+      "#pragma scheduling off"
+    ],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "EXIDeselect",
+    "size": 272,
+    "source": "libs/dolphin/exi/EXIBios.c",
+    "symbol": "EXIDeselect",
+    "variant": "aggregate"
+  },
+  "EXIDetach": {
+    "absolutes": {},
+    "bindings": {
+      "EXIDetach": "EXIDetach",
+      "Ecb": "Ecb_8015CCB0",
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "__OSMaskInterrupts": "__OSMaskInterrupts"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [
+      "#pragma scheduling off"
+    ],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "EXIDetach",
+    "size": 188,
+    "source": "libs/dolphin/exi/EXIBios.c",
+    "symbol": "EXIDetach",
+    "variant": "aggregate"
+  },
+  "EXIDma": {
+    "absolutes": {
+      "__EXIRegs": 3422578688
+    },
+    "bindings": {
+      "EXIClearInterrupts": "EXIClearInterrupts",
+      "EXIDma": "EXIDma",
+      "Ecb": "Ecb_8015CCB0",
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "__OSUnmaskInterrupts": "__OSUnmaskInterrupts"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [
+      "#pragma scheduling off"
+    ],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "EXIDma",
+    "size": 236,
+    "source": "libs/dolphin/exi/EXIBios.c",
+    "symbol": "EXIDma",
+    "variant": "aggregate"
+  },
+  "EXIGetState": {
+    "absolutes": {},
+    "bindings": {
+      "EXIGetState": "EXIGetState",
+      "Ecb": "Ecb_8015CCB0"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [
+      "#pragma scheduling off"
+    ],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "EXIGetState",
+    "size": 24,
+    "source": "libs/dolphin/exi/EXIBios.c",
+    "symbol": "EXIGetState",
+    "variant": "aggregate"
+  },
+  "EXIImm": {
+    "absolutes": {
+      "__EXIRegs": 3422578688
+    },
+    "bindings": {
+      "EXIClearInterrupts": "EXIClearInterrupts",
+      "EXIImm": "EXIImm",
+      "Ecb": "Ecb_8015CCB0",
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "__OSUnmaskInterrupts": "__OSUnmaskInterrupts"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [
+      "#pragma scheduling off"
+    ],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "EXIImm",
+    "size": 604,
+    "source": "libs/dolphin/exi/EXIBios.c",
+    "symbol": "EXIImm",
+    "variant": "aggregate"
+  },
+  "EXIImmEx": {
+    "absolutes": {},
+    "bindings": {
+      "EXIImm": "EXIImm",
+      "EXIImmEx": "EXIImmEx",
+      "EXISync": "EXISync"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [
+      "#pragma scheduling off"
+    ],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "EXIImmEx",
+    "size": 160,
+    "source": "libs/dolphin/exi/EXIBios.c",
+    "symbol": "EXIImmEx",
+    "variant": "aggregate"
+  },
+  "EXIIntrruptHandler": {
+    "absolutes": {
+      "__EXIRegs": 3422578688
+    },
+    "bindings": {
+      "EXIIntrruptHandler": "EXIIntrruptHandler",
+      "Ecb": "Ecb_8015CCB0",
+      "OSClearContext": "OSClearContext",
+      "OSSetCurrentContext": "OSSetCurrentContext"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [
+      "#pragma scheduling off"
+    ],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "EXIIntrruptHandler",
+    "size": 200,
+    "source": "libs/dolphin/exi/EXIBios.c",
+    "symbol": "EXIIntrruptHandler",
+    "variant": "aggregate"
+  },
+  "EXILock": {
+    "absolutes": {},
+    "bindings": {
+      "EXILock": "EXILock",
+      "Ecb": "Ecb_8015CCB0",
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "SetExiInterruptMask": "SetExiInterruptMask"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [
+      "#pragma scheduling off"
+    ],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "EXILock",
+    "size": 244,
+    "source": "libs/dolphin/exi/EXIBios.c",
+    "symbol": "EXILock",
+    "variant": "aggregate"
+  },
+  "EXIProbe": {
+    "absolutes": {},
+    "bindings": {
+      "EXIGetID": "EXIGetID",
+      "EXIProbe": "EXIProbe",
+      "Ecb": "Ecb_8015CCB0",
+      "__EXIProbe": "__EXIProbe"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [
+      "#pragma scheduling off"
+    ],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "EXIProbe",
+    "size": 128,
+    "source": "libs/dolphin/exi/EXIBios.c",
+    "symbol": "EXIProbe",
+    "variant": "aggregate"
+  },
+  "EXIProbeEx": {
+    "absolutes": {
+      "__EXIProbeStartTime": 2147496128
+    },
+    "bindings": {
+      "EXIGetID": "EXIGetID",
+      "EXIProbeEx": "EXIProbeEx",
+      "Ecb": "Ecb_8015CCB0",
+      "__EXIProbe": "__EXIProbe"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [
+      "#pragma scheduling off"
+    ],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "EXIProbeEx",
+    "size": 180,
+    "source": "libs/dolphin/exi/EXIBios.c",
+    "symbol": "EXIProbeEx",
+    "variant": "aggregate"
+  },
+  "EXISelect": {
+    "absolutes": {
+      "__EXIRegs": 3422578688
+    },
+    "bindings": {
+      "EXISelect": "EXISelect",
+      "Ecb": "Ecb_8015CCB0",
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "__EXIProbe": "__EXIProbe",
+      "__OSMaskInterrupts": "__OSMaskInterrupts"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [
+      "#pragma scheduling off"
+    ],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "EXISelect",
+    "size": 300,
+    "source": "libs/dolphin/exi/EXIBios.c",
+    "symbol": "EXISelect",
+    "variant": "aggregate"
+  },
+  "EXISetExiCallback": {
+    "absolutes": {},
+    "bindings": {
+      "EXISetExiCallback": "EXISetExiCallback",
+      "Ecb": "Ecb_8015CCB0",
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "SetExiInterruptMask": "SetExiInterruptMask"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [
+      "#pragma scheduling off"
+    ],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "EXISetExiCallback",
+    "size": 124,
+    "source": "libs/dolphin/exi/EXIBios.c",
+    "symbol": "EXISetExiCallback",
+    "variant": "aggregate"
+  },
+  "EXISync": {
+    "absolutes": {
+      "__EXIRegs": 3422578688,
+      "__OSDeviceCode": 2147496166
+    },
+    "bindings": {
+      "EXISync": "EXISync",
+      "Ecb": "Ecb_8015CCB0",
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSGetConsoleType": "fn_8000A224",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "__OSGetDIConfig": "__OSGetDIConfig"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [
+      "#pragma scheduling off"
+    ],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "EXISync",
+    "size": 588,
+    "source": "libs/dolphin/exi/EXIBios.c",
+    "symbol": "EXISync",
+    "variant": "aggregate"
+  },
+  "EXIUnlock": {
+    "absolutes": {},
+    "bindings": {
+      "EXIUnlock": "EXIUnlock",
+      "Ecb": "Ecb_8015CCB0",
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "SetExiInterruptMask": "SetExiInterruptMask",
+      "memmove": "memmove"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [
+      "#pragma scheduling off"
+    ],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "EXIUnlock",
+    "size": 220,
+    "source": "libs/dolphin/exi/EXIBios.c",
+    "symbol": "EXIUnlock",
+    "variant": "aggregate"
+  },
+  "EXTIntrruptHandler": {
+    "absolutes": {},
+    "bindings": {
+      "EXTIntrruptHandler": "EXTIntrruptHandler",
+      "Ecb": "Ecb_8015CCB0",
+      "OSClearContext": "OSClearContext",
+      "OSSetCurrentContext": "OSSetCurrentContext",
+      "__OSMaskInterrupts": "__OSMaskInterrupts"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [
+      "#pragma scheduling off"
+    ],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "EXTIntrruptHandler",
+    "size": 208,
+    "source": "libs/dolphin/exi/EXIBios.c",
+    "symbol": "EXTIntrruptHandler",
+    "variant": "aggregate"
+  },
+  "ProbeBarnacle": {
+    "absolutes": {},
+    "bindings": {
+      "EXIAttach": "EXIAttach",
+      "EXIDeselect": "EXIDeselect",
+      "EXIDetach": "EXIDetach",
+      "EXIImm": "EXIImm",
+      "EXILock": "EXILock",
+      "EXISelect": "EXISelect",
+      "EXISync": "EXISync",
+      "EXIUnlock": "EXIUnlock",
+      "ProbeBarnacle": "ProbeBarnacle"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "ProbeBarnacle",
+    "size": 396,
+    "source": "libs/dolphin/exi/EXIUart.c",
+    "symbol": "ProbeBarnacle",
+    "variant": "aggregate"
+  },
+  "SetExiInterruptMask": {
+    "absolutes": {},
+    "bindings": {
+      "Ecb": "Ecb_8015CCB0",
+      "SetExiInterruptMask": "SetExiInterruptMask",
+      "__OSGetInterruptHandler": "fn_8000D55C",
+      "__OSMaskInterrupts": "__OSMaskInterrupts",
+      "__OSUnmaskInterrupts": "__OSUnmaskInterrupts"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [
+      "#pragma scheduling off"
+    ],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "SetExiInterruptMask",
+    "size": 244,
+    "source": "libs/dolphin/exi/EXIBios.c",
+    "symbol": "SetExiInterruptMask",
+    "variant": "aggregate"
+  },
+  "TCIntrruptHandler": {
+    "absolutes": {
+      "__EXIRegs": 3422578688
+    },
+    "bindings": {
+      "Ecb": "Ecb_8015CCB0",
+      "OSClearContext": "OSClearContext",
+      "OSSetCurrentContext": "OSSetCurrentContext",
+      "TCIntrruptHandler": "TCIntrruptHandler",
+      "__OSMaskInterrupts": "__OSMaskInterrupts"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [
+      "#pragma scheduling off"
+    ],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "TCIntrruptHandler",
+    "size": 536,
+    "source": "libs/dolphin/exi/EXIBios.c",
+    "symbol": "TCIntrruptHandler",
+    "variant": "aggregate"
+  },
+  "UnlockedHandler": {
+    "absolutes": {},
+    "bindings": {
+      "EXIGetID": "EXIGetID",
+      "UnlockedHandler": "UnlockedHandler"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [
+      "#pragma scheduling off"
+    ],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "UnlockedHandler",
+    "size": 40,
+    "source": "libs/dolphin/exi/EXIBios.c",
+    "symbol": "UnlockedHandler",
+    "variant": "aggregate"
+  },
+  "__EXIProbe": {
+    "absolutes": {
+      "__EXIProbeStartTime": 2147496128,
+      "__EXIRegs": 3422578688,
+      "__OSBusClock": 2147483896
+    },
+    "bindings": {
+      "Ecb": "Ecb_8015CCB0",
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSGetTime": "OSGetTime",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "__EXIProbe": "__EXIProbe",
+      "__div2i": "__div2i"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [
+      "#pragma scheduling off"
+    ],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "__EXIProbe",
+    "size": 372,
+    "source": "libs/dolphin/exi/EXIBios.c",
+    "symbol": "__EXIProbe",
+    "variant": "aggregate"
+  }
+}

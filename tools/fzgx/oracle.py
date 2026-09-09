@@ -281,6 +281,13 @@ def _diff(project: Project, module: str, symbol: str, unit: str, max_diff_lines:
             res.diff = [f"(symbol {symbol} not present in our object: define it, check the name)"]
         else:
             pool_rows, res._pool_pairs = _pool_rows(project, module, left, right, lrows, rrows)
+            if base is not None:
+                data_rows, data_pairs = _data_pool_rows(project, module, base, left, right, lrows, rrows)
+                pool_rows |= data_rows
+                res._pool_pairs += data_pairs
+                bss_rows, bss_pairs = _bss_base_rows(project, module, base, left, right, lrows, rrows)
+                pool_rows |= bss_rows
+                res._pool_pairs += bss_pairs
             res.pool = [d for _, _, d in res._pool_pairs]
             abs_rows = _abs_rows(right, lrows, rrows)
             res.diff = _render_diff(lrows, rrows, max_diff_lines, pool_rows | abs_rows)
@@ -296,6 +303,84 @@ def _diff(project: Project, module: str, symbol: str, unit: str, max_diff_lines:
                 # resolved literal): the link produces retail's bytes; verify's hash is the guard
                 res.matched = True
     return res
+
+
+def _bss_base_rows(project, module, obj, left, right, lrows, rrows):
+    """A compiler section base and its named BSS object denote the same storage."""
+    elf = poolfix.Elf(obj.read_bytes())
+    section = elf.section('.bss')
+    if not section:
+        return set(), []
+    symbols = {s['name']: s for s in elf.symbols()}
+    rows, pairs = set(), []
+    for i, (l, r) in enumerate(zip(lrows, rrows)):
+        li, ri = l.get('instruction', {}), r.get('instruction', {})
+        lr, rr = li.get('relocation'), ri.get('relocation')
+        if not lr or not rr or lr.get('type') != rr.get('type') or int(lr.get('addend') or 0) != int(rr.get('addend') or 0):
+            continue
+        if [x for x in li.get('parts', []) if 'reloc' not in json.dumps(x)] != [x for x in ri.get('parts', []) if 'reloc' not in json.dumps(x)]:
+            continue
+        lname = left['symbols'][lr['target_symbol']]['name']
+        rname = right['symbols'][rr['target_symbol']]['name']
+        anchor, owned = symbols.get(rname), symbols.get(lname)
+        if not rname.startswith('...bss') or not anchor or not owned:
+            continue
+        retail = project.symbols(module).get(lname)
+        if retail is None:
+            retail = next((s for s in project.symbols(module).values() if lname == f'{s.name}_{s.addr:08X}'), None)
+        if not retail or retail.section != '.bss' or owned['size'] != retail.size:
+            continue
+        if anchor['shndx'] != section['index'] or owned['shndx'] != section['index'] or anchor['value'] != owned['value']:
+            continue
+        rows.add(i)
+        pair = (rname, lname, f'{lname}=owned BSS base')
+        if pair not in pairs:
+            pairs.append(pair)
+    return rows, pairs
+
+
+def _data_pool_rows(project, module, obj, left, right, lrows, rrows):
+    """Retarget a compiler-owned string pool only when its entire byte range agrees."""
+    elf = poolfix.Elf(obj.read_bytes())
+    section = elf.section('.data')
+    if not section or not section['size']:
+        return set(), []
+    if any(s['type'] == 4 and s['info'] == section['index'] and s['size'] for s in elf.sections):
+        return set(), []
+    symbols = elf.symbols()
+    defined = [s for s in symbols if s['shndx'] == section['index'] and s['size']]
+    if not defined or any(not s['name'].startswith('@') for s in defined):
+        return set(), []
+    payload = bytes(elf.data[section['offset']:section['offset'] + section['size']])
+    rows, pairs = set(), []
+    for i, (l, r) in enumerate(zip(lrows, rrows)):
+        li, ri = l.get('instruction', {}), r.get('instruction', {})
+        lr, rr = li.get('relocation'), ri.get('relocation')
+        if not lr or not rr or lr.get('type') != rr.get('type'):
+            continue
+        if [x for x in li.get('parts', []) if 'reloc' not in json.dumps(x)] != [x for x in ri.get('parts', []) if 'reloc' not in json.dumps(x)]:
+            continue
+        lname = left['symbols'][lr['target_symbol']]['name']
+        rname = right['symbols'][rr['target_symbol']]['name']
+        ours = next((s for s in symbols if s['name'] == rname), None)
+        target = project.symbols(module).get(lname)
+        if target is None:
+            suffix = re.search(r'_([0-9A-Fa-f]{8})$', lname)
+            target = next((s for s in project.symbols(module).values() if suffix and s.addr == int(suffix[1], 16)), None)
+        if not ours or ours['shndx'] != section['index'] or not target:
+            continue
+        address = target.addr + int(lr.get('addend') or 0) - ours['value'] - int(rr.get('addend') or 0)
+        actual = next((raw[address - base:address - base + len(payload)]
+                       for base, raw in project._rel_layout(module).values()
+                       if base <= address and address + len(payload) <= base + len(raw)), None)
+        if payload != actual:
+            continue
+        rows.add(i)
+        if ours['value'] == 0 and (lr.get('addend') or 0) == (rr.get('addend') or 0):
+            pair = (rname, lname, f'{lname}=string pool[{len(payload)}]')
+            if pair not in pairs:
+                pairs.append(pair)
+    return rows, pairs
 
 
 _ABS_SYMS: Optional[Dict[str, int]] = None

@@ -89,6 +89,7 @@ def rename(p: Project, old: str, new: str, verify: bool = True) -> Dict[str, obj
     sym = p.resolve(old)
     if sym is None:
         return {"ok": False, "error": f"unknown or ambiguous symbol {old}"}
+    old = sym.name
     for m in p.modules:
         if new in p.symbols(m):
             return {"ok": False, "error": f"{new} already exists in {m}"}

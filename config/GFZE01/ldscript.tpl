@@ -37,6 +37,31 @@ SECTIONS
     __OSBusClock = 0x800000F8;
     GameChoice = 0x800030E3;
     __GXFifo = 0xCC008000;
+    /* SDK absolute globals; configure.py generates their C constants. */
+    DAT_800030e2 = 0x800030E2;
+    DAT_cc003000 = 0xCC003000;
+    OS_CURRENT_FPU_CONTEXT = 0x800000D8;
+    __OSCurrentThread = 0x800000E4;
+    __OSDeviceCode = 0x800030E6;
+    __OSFPUContext = 0x800000D8;
+    __OSModuleInfoList = 0x800030C8;
+    __OSModuleList = 0x800030C8;
+    __OSStringTable = 0x800030D0;
+    /* SDK absolute globals; configure.py generates their C constants. */
+    __EXIProbeStartTime = 0x800030C0;
+    /* SDK absolute globals; configure.py generates their C constants. */
+    OS_CURRENT_CONTEXT = 0x800000D4;
+    __OSCurrentContext = 0x800000D4;
+    /* SDK absolute globals; configure.py generates their C constants. */
+    __OSGlobalInterruptMask = 0x800000C4;
+    __OSLocalInterruptMask = 0x800000C8;
+    __OSSystemCallVectorAddress = 0x80000C00;
+    __OSTimeAdjust = 0x800030D8;
+    /* SDK absolute globals; configure.py generates their C constants. */
+    __OSAudioInitBuffer = 0x81000000;
+    __OSPhysicalMemSize = 0x80000028;
+    __OSSimulatedMemSize = 0x800000F0;
+    __OSUnmappedMemory = 0x81800000;
 }
 
 FORCEACTIVE

@@ -3340,3 +3340,211 @@ dol/CARDCreate.c:
 
 dol/CARDOpen.c:
 	.text       start:0x8002E954 end:0x8002EDA0 align:4
+
+dol/InquiryCallback.c:
+	.text       start:0x8000A374 end:0x8000A3B0 align:4
+
+dol/__OSStopAudioSystem.c:
+	.text       start:0x8000B53C end:0x8000B614 align:4
+
+dol/L2GlobalInvalidate.c:
+	.text       start:0x8000B8C0 end:0x8000B958 align:4
+
+dol/OSPanic.c:
+	.text       start:0x8000C49C end:0x8000C5C8 align:4
+
+dol/SetInterruptMask.c:
+	.text       start:0x8000D5E4 end:0x8000D8BC align:4
+
+dol/__OSMaskInterrupts.c:
+	.text       start:0x8000D8BC end:0x8000D944 align:4
+
+dol/__OSUnmaskInterrupts.c:
+	.text       start:0x8000D944 end:0x8000D9CC align:4
+
+dol/Relocate.c:
+	.text       start:0x8000DD74 end:0x8000E030 align:4
+
+dol/Undo.c:
+	.text       start:0x8000E370 end:0x8000E5A8 align:4
+
+dol/OSUnlink.c:
+	.text       start:0x8000E5A8 end:0x8000E77C align:4
+
+dol/__OSModuleInit.c:
+	.text       start:0x8000E77C end:0x8000E794 align:4
+
+dol/OnReset.c:
+	.text       start:0x8000E7AC end:0x8000E7E8 align:4
+
+dol/MEMIntrruptHandler.c:
+	.text       start:0x8000E7E8 end:0x8000E854 align:4
+
+dol/WriteSram.c:
+	.text       start:0x8000F670 end:0x8000F788 align:4
+
+dol/__OSInitSystemCall.c:
+	.text       start:0x800100DC end:0x80010140 align:4
+
+dol/OSClearStack.c:
+	.text       start:0x80011360 end:0x8001140C align:4
+
+dol/__OSGetSystemTime.c:
+	.text       start:0x8001142C end:0x80011490 align:4
+
+dol/__OSTimeToSystemTime.c:
+	.text       start:0x80011490 end:0x800114E8 align:4
+
+dol/GetDates.c:
+	.text       start:0x800114E8 end:0x80011684 align:4
+
+dol/OSTicksToCalendarTime.c:
+	.text       start:0x80011684 end:0x80011888 align:4
+
+dol/DMAErrorHandler.c:
+	.text       start:0x8000B958 end:0x8000BAB8 align:4
+
+dol/__OSCacheInit.c:
+	.text       start:0x8000BAB8 end:0x8000BBAC align:4
+
+dol/Link.c:
+	.text       start:0x8000E030 end:0x8000E310 align:4
+
+dol/OSIsThreadTerminated.c:
+	.text       start:0x800102B8 end:0x800102EC align:4
+
+dol/OSSetProgressiveMode.c:
+	.text       start:0x8000FEE8 end:0x8000FF8C align:4
+
+dol/OSGetWirelessID.c:
+	.text       start:0x8000FF8C end:0x80010010 align:4
+
+dol/OSSetWirelessID.c:
+	.text       start:0x80010010 end:0x800100BC align:4
+
+dol/__OSInitSram.c:
+	.bss        start:0x8015BFC0 end:0x8015C014 align:32
+	.text       start:0x8000F788 end:0x8000F8BC align:4
+
+dol/SetExiInterruptMask.c:
+	.text       start:0x80013A88 end:0x80013B7C align:4
+
+dol/EXIImm.c:
+	.text       start:0x80013B7C end:0x80013DD8 align:4
+
+dol/EXIImmEx.c:
+	.text       start:0x80013DD8 end:0x80013E78 align:4
+
+dol/EXIDma.c:
+	.text       start:0x80013E78 end:0x80013F64 align:4
+
+dol/EXISync.c:
+	.text       start:0x80013F64 end:0x800141B0 align:4
+
+dol/EXIClearInterrupts.c:
+	.text       start:0x800141B0 end:0x800141F8 align:4
+
+dol/EXISetExiCallback.c:
+	.text       start:0x800141F8 end:0x80014274 align:4
+
+dol/__EXIProbe.c:
+	.text       start:0x80014274 end:0x800143E8 align:4
+
+dol/EXIProbe.c:
+	.text       start:0x800143E8 end:0x80014468 align:4
+
+dol/EXIProbeEx.c:
+	.text       start:0x80014468 end:0x8001451C align:4
+
+dol/EXIAttach.c:
+	.text       start:0x8001451C end:0x80014628 align:4
+
+dol/EXIDetach.c:
+	.text       start:0x80014628 end:0x800146E4 align:4
+
+dol/EXISelect.c:
+	.text       start:0x800146E4 end:0x80014810 align:4
+
+dol/EXIDeselect.c:
+	.text       start:0x80014810 end:0x80014920 align:4
+
+dol/EXIIntrruptHandler.c:
+	.text       start:0x80014920 end:0x800149E8 align:4
+
+dol/TCIntrruptHandler.c:
+	.text       start:0x800149E8 end:0x80014C00 align:4
+
+dol/EXTIntrruptHandler.c:
+	.text       start:0x80014C00 end:0x80014CD0 align:4
+
+dol/EXILock.c:
+	.text       start:0x80014EA4 end:0x80014F98 align:4
+
+dol/EXIUnlock.c:
+	.text       start:0x80014F98 end:0x80015074 align:4
+
+dol/EXIGetState.c:
+	.text       start:0x80015074 end:0x8001508C align:4
+
+dol/UnlockedHandler.c:
+	.text       start:0x8001508C end:0x800150B4 align:4
+
+dol/ProbeBarnacle.c:
+	.text       start:0x80015464 end:0x800155F0 align:4
+
+dol/OSClearContext.c:
+	.text       start:0x8000BFC8 end:0x8000BFEC align:4
+
+dol/OSDumpContext.c:
+	.text       start:0x8000C0A8 end:0x8000C350 align:4
+
+dol/__OSContextInit.c:
+	.text       start:0x8000C3D4 end:0x8000C41C align:4
+
+dol/OSGetResetCode.c:
+	.text       start:0x8000F234 end:0x8000F264 align:4
+
+dol/SIRegisterPollingHandler.c:
+	.text       start:0x80012050 end:0x8001211C align:4
+
+dol/SIUnregisterPollingHandler.c:
+	.text       start:0x8001211C end:0x80012210 align:4
+
+dol/__SITransfer.c:
+	.text       start:0x800122C4 end:0x800124D0 align:4
+
+dol/SITransferCommands.c:
+	.text       start:0x80012560 end:0x80012570 align:4
+
+dol/SISetXY.c:
+	.text       start:0x80012570 end:0x800125DC align:4
+
+dol/SIEnablePolling.c:
+	.text       start:0x800125DC end:0x80012678 align:4
+
+dol/SIDisablePolling.c:
+	.text       start:0x80012678 end:0x800126E4 align:4
+
+dol/SIGetResponseRaw.c:
+	.text       start:0x800126E4 end:0x800127B8 align:4
+
+dol/SIGetResponse.c:
+	.text       start:0x800127B8 end:0x8001287C align:4
+
+dol/SIGetTypeAsync.c:
+	.text       start:0x80012ED0 end:0x8001300C align:4
+
+dol/SIDecodeType.c:
+	.text       start:0x8001300C end:0x80013158 align:4
+
+dol/CompleteTransfer.c:
+	.text       start:0x80011978 end:0x80011C74 align:4
+
+dol/__OSInitAudioSystem.c:
+	.text       start:0x8000B380 end:0x8000B53C align:4
+
+dol/__OSInitMemoryProtection.c:
+	.text       start:0x8000E96C end:0x8000EA84 align:4
+
+dol/SIEnablePollingInterrupt.c:
+	.text       start:0x80011FB8 end:0x80012050 align:4

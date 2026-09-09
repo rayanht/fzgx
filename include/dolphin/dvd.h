@@ -13,4 +13,22 @@ typedef struct DVDDiskID {
     u8 padding[22];
 } DVDDiskID;
 
+typedef struct DVDCommandBlock DVDCommandBlock;
+
+typedef void (*DVDCBCallback)(s32 result, DVDCommandBlock *block);
+
+struct DVDCommandBlock {
+    DVDCommandBlock *next;
+    DVDCommandBlock *prev;
+    u32 command;
+    s32 state;
+    u32 offset;
+    u32 length;
+    void *addr;
+    u32 currTransferSize;
+    u32 transferredSize;
+    DVDDiskID *id;
+    DVDCBCallback callback;
+    void *userData;
+};
 #endif

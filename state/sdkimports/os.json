@@ -1,0 +1,759 @@
+{
+  "DMAErrorHandler": {
+    "absolutes": {},
+    "bindings": {
+      "...data.0": "OSCacheData_80122828",
+      "DMAErrorHandler": "DMAErrorHandler",
+      "OSDumpContext": "OSDumpContext",
+      "OSReport": "OSReport",
+      "PPCHalt": "PPCHalt",
+      "PPCMfhid2": "PPCMfhid2",
+      "PPCMthid2": "PPCMthid2"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [
+      "#pragma peephole off"
+    ],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "DMAErrorHandler",
+    "size": 352,
+    "source": "libs/dolphin/os/OSCache.c",
+    "symbol": "DMAErrorHandler",
+    "variant": "aggregate-messages"
+  },
+  "GetDates": {
+    "absolutes": {},
+    "bindings": {
+      "GetDates": "GetDates",
+      "LeapYearDays": "lbl_80123B20",
+      "YearDays": "lbl_80123AF0"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [
+      "#pragma peephole off"
+    ],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "GetDates",
+    "size": 412,
+    "source": "libs/dolphin/os/OSTime.c",
+    "symbol": "GetDates",
+    "variant": "aggregate"
+  },
+  "InquiryCallback": {
+    "absolutes": {
+      "__OSDeviceCode": 2147496166
+    },
+    "bindings": {
+      "DriveInfo": "DriveInfo_8015BF00",
+      "InquiryCallback": "InquiryCallback"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [
+      "#pragma peephole off"
+    ],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "InquiryCallback",
+    "size": 60,
+    "source": "libs/dolphin/os/OS.c",
+    "symbol": "InquiryCallback",
+    "variant": "aggregate"
+  },
+  "L2GlobalInvalidate": {
+    "absolutes": {},
+    "bindings": {
+      "DBPrintf": "DBPrintf",
+      "L2GlobalInvalidate": "L2GlobalInvalidate",
+      "PPCMfl2cr": "PPCMfl2cr",
+      "PPCMtl2cr": "PPCMtl2cr"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [
+      "#pragma peephole off"
+    ],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "L2GlobalInvalidate",
+    "size": 152,
+    "source": "libs/dolphin/os/OSCache.c",
+    "symbol": "L2GlobalInvalidate",
+    "variant": "aggregate"
+  },
+  "Link": {
+    "absolutes": {
+      "__OSModuleInfoList": 2147496136,
+      "__OSStringTable": 2147496144
+    },
+    "bindings": {
+      "Link": "Link",
+      "OSNotifyLink": "fn_8000DD60",
+      "Relocate": "Relocate",
+      "memset": "memset"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "Link",
+    "size": 736,
+    "source": "src/dolphin/os/OSLink.c",
+    "symbol": "Link",
+    "variant": "aggregate"
+  },
+  "MEMIntrruptHandler": {
+    "absolutes": {
+      "__MEMRegs": 3422568448
+    },
+    "bindings": {
+      "MEMIntrruptHandler": "MEMIntrruptHandler",
+      "__OSErrorTable": "__OSErrorTable",
+      "__OSUnhandledException": "__OSUnhandledException"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "MEMIntrruptHandler",
+    "size": 108,
+    "source": "libs/dolphin/os/OSMemory.c",
+    "symbol": "MEMIntrruptHandler",
+    "variant": "aggregate"
+  },
+  "OSClearContext": {
+    "absolutes": {
+      "__OSFPUContext": 2147483864
+    },
+    "bindings": {
+      "OSClearContext": "OSClearContext"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [
+      "#pragma peephole off"
+    ],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "OSClearContext",
+    "size": 36,
+    "source": "libs/dolphin/os/OSContext.c",
+    "symbol": "OSClearContext",
+    "variant": "aggregate"
+  },
+  "OSClearStack": {
+    "absolutes": {
+      "__OSCurrentThread": 2147483876
+    },
+    "bindings": {
+      "OSClearStack": "OSClearStack",
+      "OSGetStackPointer": "fn_8000BFC0"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "OSClearStack",
+    "size": 172,
+    "source": "libs/dolphin/os/OSThread.c",
+    "symbol": "OSClearStack",
+    "variant": "aggregate"
+  },
+  "OSDumpContext": {
+    "absolutes": {
+      "__OSCurrentContext": 2147483860,
+      "__OSFPUContext": 2147483864
+    },
+    "bindings": {
+      "...data.0": "lbl_80122A58",
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSDumpContext": "OSDumpContext",
+      "OSReport": "OSReport",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "OSSetCurrentContext": "OSSetCurrentContext",
+      "__cvt_fp2unsigned": "__cvt_fp2unsigned"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [
+      "#pragma peephole off"
+    ],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "OSDumpContext",
+    "size": 680,
+    "source": "libs/dolphin/os/OSContext.c",
+    "symbol": "OSDumpContext",
+    "variant": "aggregate"
+  },
+  "OSGetResetCode": {
+    "absolutes": {
+      "DAT_800030e2": 2147496162,
+      "DAT_cc003000": 3422564352
+    },
+    "bindings": {
+      "OSGetResetCode": "OSGetResetCode"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [
+      "#pragma peephole off"
+    ],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "OSGetResetCode",
+    "size": 48,
+    "source": "libs/dolphin/os/OSReset.c",
+    "symbol": "OSGetResetCode",
+    "variant": "aggregate"
+  },
+  "OSGetWirelessID": {
+    "absolutes": {},
+    "bindings": {
+      "...bss.0": "Scb_8015BFC0",
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSGetWirelessID": "OSGetWirelessID",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "Scb": "(sdk_storage____bss_0->sdk_Scb)",
+      "UnlockSram": "UnlockSram"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "OSGetWirelessID",
+    "size": 132,
+    "source": "libs/dolphin/os/OSRtc.c",
+    "symbol": "OSGetWirelessID",
+    "variant": "aggregate-locked"
+  },
+  "OSIsThreadTerminated": {
+    "absolutes": {},
+    "bindings": {
+      "OSIsThreadTerminated": "OSIsThreadTerminated"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "OSIsThreadTerminated",
+    "size": 52,
+    "source": "src/dolphin/os/OSThread.c",
+    "symbol": "OSIsThreadTerminated",
+    "variant": "aggregate"
+  },
+  "OSPanic": {
+    "absolutes": {},
+    "bindings": {
+      "...data.0": "OSErrorData_80122C30",
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSGetStackPointer": "fn_8000BFC0",
+      "OSPanic": "OSPanic",
+      "OSReport": "OSReport",
+      "PPCHalt": "PPCHalt",
+      "vprintf": "vprintf"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "OSPanic",
+    "size": 300,
+    "source": "libs/dolphin/os/OSError.c",
+    "symbol": "OSPanic",
+    "variant": "aggregate"
+  },
+  "OSSetProgressiveMode": {
+    "absolutes": {},
+    "bindings": {
+      "...bss.0": "Scb_8015BFC0",
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "OSSetProgressiveMode": "OSSetProgressiveMode",
+      "Scb": "(sdk_storage____bss_0->sdk_Scb)",
+      "UnlockSram": "UnlockSram"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "OSSetProgressiveMode",
+    "size": 164,
+    "source": "libs/dolphin/os/OSRtc.c",
+    "symbol": "OSSetProgressiveMode",
+    "variant": "aggregate-locked"
+  },
+  "OSSetWirelessID": {
+    "absolutes": {},
+    "bindings": {
+      "...bss.0": "Scb_8015BFC0",
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "OSSetWirelessID": "OSSetWirelessID",
+      "Scb": "(sdk_storage____bss_0->sdk_Scb)",
+      "UnlockSram": "UnlockSram"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "OSSetWirelessID",
+    "size": 172,
+    "source": "libs/dolphin/os/OSRtc.c",
+    "symbol": "OSSetWirelessID",
+    "variant": "aggregate-locked"
+  },
+  "OSTicksToCalendarTime": {
+    "absolutes": {
+      "__OSBusClock": 2147483896
+    },
+    "bindings": {
+      "GetDates": "GetDates",
+      "OSTicksToCalendarTime": "OSTicksToCalendarTime",
+      "__div2i": "__div2i",
+      "__mod2i": "__mod2i"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [
+      "#pragma peephole off",
+      "#pragma dont_inline on"
+    ],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "OSTicksToCalendarTime",
+    "size": 516,
+    "source": "libs/dolphin/os/OSTime.c",
+    "symbol": "OSTicksToCalendarTime",
+    "variant": "aggregate"
+  },
+  "OSUnlink": {
+    "absolutes": {
+      "__OSModuleInfoList": 2147496136,
+      "__OSStringTable": 2147496144
+    },
+    "bindings": {
+      "OSNotifyUnlink": "fn_8000DD64",
+      "OSUnlink": "OSUnlink",
+      "Undo": "Undo"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "OSUnlink",
+    "size": 468,
+    "source": "libs/dolphin/os/OSLink.c",
+    "symbol": "OSUnlink",
+    "variant": "aggregate"
+  },
+  "OnReset": {
+    "absolutes": {
+      "__MEMRegs": 3422568448
+    },
+    "bindings": {
+      "OnReset": "OnReset",
+      "__OSMaskInterrupts": "__OSMaskInterrupts"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "OnReset",
+    "size": 60,
+    "source": "libs/dolphin/os/OSMemory.c",
+    "symbol": "OnReset",
+    "variant": "aggregate"
+  },
+  "Relocate": {
+    "absolutes": {},
+    "bindings": {
+      "DCFlushRange": "DCFlushRange",
+      "ICInvalidateRange": "ICInvalidateRange",
+      "OSReport": "OSReport",
+      "Relocate": "Relocate"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "Relocate",
+    "size": 700,
+    "source": "libs/dolphin/os/OSLink.c",
+    "symbol": "Relocate",
+    "variant": "aggregate"
+  },
+  "SetInterruptMask": {
+    "absolutes": {
+      "__AIRegs": 3422579712,
+      "__DSPRegs": 3422572544,
+      "__EXIRegs": 3422578688,
+      "__MEMRegs": 3422568448,
+      "__PIRegs": 3422564352
+    },
+    "bindings": {
+      "SetInterruptMask": "SetInterruptMask"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [
+      "#pragma peephole off"
+    ],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "SetInterruptMask",
+    "size": 728,
+    "source": "libs/dolphin/os/OSInterrupt.c",
+    "symbol": "SetInterruptMask",
+    "variant": "aggregate"
+  },
+  "Undo": {
+    "absolutes": {},
+    "bindings": {
+      "DCFlushRange": "DCFlushRange",
+      "ICInvalidateRange": "ICInvalidateRange",
+      "OSReport": "OSReport",
+      "Undo": "Undo"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "Undo",
+    "size": 568,
+    "source": "libs/dolphin/os/OSLink.c",
+    "symbol": "Undo",
+    "variant": "aggregate"
+  },
+  "UnlockSram": {
+    "absolutes": {},
+    "bindings": {
+      "...bss.0": "Scb_8015BFC0",
+      "EXIDeselect": "EXIDeselect",
+      "EXIImm": "EXIImm",
+      "EXIImmEx": "EXIImmEx",
+      "EXILock": "EXILock",
+      "EXISelect": "EXISelect",
+      "EXISync": "EXISync",
+      "EXIUnlock": "EXIUnlock",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "Scb": "(sdk_storage____bss_0->sdk_Scb)",
+      "UnlockSram": "UnlockSram",
+      "WriteSramCallback": "WriteSramCallback"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "UnlockSram",
+    "size": 776,
+    "source": "src/dolphin/os/OSRtc.c",
+    "symbol": "UnlockSram",
+    "variant": "aggregate-offset-bytes"
+  },
+  "WriteSram": {
+    "absolutes": {},
+    "bindings": {
+      "EXIDeselect": "EXIDeselect",
+      "EXIImm": "EXIImm",
+      "EXIImmEx": "EXIImmEx",
+      "EXILock": "EXILock",
+      "EXISelect": "EXISelect",
+      "EXISync": "EXISync",
+      "EXIUnlock": "EXIUnlock",
+      "WriteSram": "WriteSram",
+      "WriteSramCallback": "WriteSramCallback"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "WriteSram",
+    "size": 280,
+    "source": "libs/dolphin/os/OSRtc.c",
+    "symbol": "WriteSram",
+    "variant": "aggregate"
+  },
+  "__OSCacheInit": {
+    "absolutes": {},
+    "bindings": {
+      "...data.0": "OSCacheData_80122828",
+      "DBPrintf": "DBPrintf",
+      "DCEnable": "DCEnable",
+      "DMAErrorHandler": "DMAErrorHandler",
+      "ICEnable": "ICEnable",
+      "L2GlobalInvalidate": "L2GlobalInvalidate",
+      "OSSetErrorHandler": "OSSetErrorHandler",
+      "PPCMfhid0": "PPCMfhid0",
+      "PPCMfl2cr": "PPCMfl2cr",
+      "PPCMfmsr": "PPCMfmsr",
+      "PPCMtl2cr": "PPCMtl2cr",
+      "PPCMtmsr": "PPCMtmsr",
+      "__OSCacheInit": "__OSCacheInit"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [
+      "#pragma peephole off"
+    ],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "__OSCacheInit",
+    "size": 244,
+    "source": "libs/dolphin/os/OSCache.c",
+    "symbol": "__OSCacheInit",
+    "variant": "aggregate-messages"
+  },
+  "__OSContextInit": {
+    "absolutes": {
+      "__OSFPUContext": 2147483864
+    },
+    "bindings": {
+      "DBPrintf": "DBPrintf",
+      "OSSwitchFPUContext": "OSSwitchFPUContext_8000C350",
+      "__OSContextInit": "__OSContextInit",
+      "__OSSetExceptionHandler": "__OSSetExceptionHandler"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [
+      "#pragma peephole off"
+    ],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "__OSContextInit",
+    "size": 72,
+    "source": "libs/dolphin/os/OSContext.c",
+    "symbol": "__OSContextInit",
+    "variant": "aggregate"
+  },
+  "__OSGetSystemTime": {
+    "absolutes": {
+      "__OSTimeAdjust": 2147496152
+    },
+    "bindings": {
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSGetTime": "OSGetTime",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "__OSGetSystemTime": "__OSGetSystemTime"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [
+      "#pragma peephole off"
+    ],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "__OSGetSystemTime",
+    "size": 100,
+    "source": "libs/dolphin/os/OSTime.c",
+    "symbol": "__OSGetSystemTime",
+    "variant": "aggregate"
+  },
+  "__OSInitAudioSystem": {
+    "absolutes": {
+      "__DSPRegs": 3422572544,
+      "__OSAudioInitBuffer": 2164260864
+    },
+    "bindings": {
+      "DCFlushRange": "DCFlushRange",
+      "DSPInitCode": "DSPInitCode_801227A8",
+      "OSGetArenaHi": "OSGetArenaHi",
+      "OSGetTick": "OSGetTick",
+      "__OSInitAudioSystem": "__OSInitAudioSystem",
+      "memcpy": "memcpy"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "__OSInitAudioSystem",
+    "size": 444,
+    "source": "libs/dolphin/os/OSAudioSystem.c",
+    "symbol": "__OSInitAudioSystem",
+    "variant": "aggregate"
+  },
+  "__OSInitMemoryProtection": {
+    "absolutes": {
+      "__MEMRegs": 3422568448,
+      "__OSPhysicalMemSize": 2147483688,
+      "__OSSimulatedMemSize": 2147483888,
+      "__OSUnmappedMemory": 2172649472
+    },
+    "bindings": {
+      "Config24MB": "Config24MB_8000E854",
+      "Config48MB": "Config48MB_8000E8D4",
+      "DCInvalidateRange": "DCInvalidateRange",
+      "MEMIntrruptHandler": "MEMIntrruptHandler",
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSRegisterResetFunction": "OSRegisterResetFunction",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "RealMode": "RealMode_8000E954",
+      "ResetFunctionInfo": "ResetFunctionInfo_80123AE0",
+      "__OSInitMemoryProtection": "__OSInitMemoryProtection",
+      "__OSMaskInterrupts": "__OSMaskInterrupts",
+      "__OSSetInterruptHandler": "__OSSetInterruptHandler",
+      "__OSUnmaskInterrupts": "__OSUnmaskInterrupts"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [
+      "#pragma peephole off"
+    ],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "__OSInitMemoryProtection",
+    "size": 280,
+    "source": "libs/dolphin/os/OSMemory.c",
+    "symbol": "__OSInitMemoryProtection",
+    "variant": "aggregate"
+  },
+  "__OSInitSram": {
+    "absolutes": {},
+    "bindings": {
+      "...bss.0": "Scb_8015BFC0",
+      "DCInvalidateRange": "DCInvalidateRange",
+      "EXIDeselect": "EXIDeselect",
+      "EXIDma": "EXIDma",
+      "EXIImm": "EXIImm",
+      "EXILock": "EXILock",
+      "EXISelect": "EXISelect",
+      "EXISync": "EXISync",
+      "EXIUnlock": "EXIUnlock",
+      "Scb": "Scb_8015BFC0",
+      "__OSInitSram": "__OSInitSram"
+    },
+    "mw": "GC/1.2.5n",
+    "owned_bss": {
+      "align": 32,
+      "end": 2148909076,
+      "start": 2148908992
+    },
+    "pragmas": [],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "__OSInitSram",
+    "size": 308,
+    "source": "src/dolphin/os/OSRtc.c",
+    "symbol": "__OSInitSram",
+    "variant": "direct-owned"
+  },
+  "__OSInitSystemCall": {
+    "absolutes": {
+      "__OSSystemCallVectorAddress": 2147486720
+    },
+    "bindings": {
+      "DCFlushRangeNoSync": "DCFlushRangeNoSync",
+      "ICInvalidateRange": "ICInvalidateRange",
+      "__OSInitSystemCall": "__OSInitSystemCall",
+      "__OSSystemCallVectorEnd": "__OSSystemCallVectorEnd",
+      "__OSSystemCallVectorStart": "__OSSystemCallVectorStart",
+      "memcpy": "memcpy"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [
+      "#pragma peephole off"
+    ],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "__OSInitSystemCall",
+    "size": 100,
+    "source": "libs/dolphin/os/OSSync.c",
+    "symbol": "__OSInitSystemCall",
+    "variant": "aggregate"
+  },
+  "__OSMaskInterrupts": {
+    "absolutes": {
+      "__OSGlobalInterruptMask": 2147483844,
+      "__OSLocalInterruptMask": 2147483848
+    },
+    "bindings": {
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "SetInterruptMask": "SetInterruptMask",
+      "__OSMaskInterrupts": "__OSMaskInterrupts"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [
+      "#pragma peephole off"
+    ],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "__OSMaskInterrupts",
+    "size": 136,
+    "source": "libs/dolphin/os/OSInterrupt.c",
+    "symbol": "__OSMaskInterrupts",
+    "variant": "aggregate"
+  },
+  "__OSModuleInit": {
+    "absolutes": {
+      "__OSModuleInfoList": 2147496136,
+      "__OSStringTable": 2147496144
+    },
+    "bindings": {
+      "__OSModuleInit": "__OSModuleInit"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "__OSModuleInit",
+    "size": 24,
+    "source": "libs/dolphin/os/OSLink.c",
+    "symbol": "__OSModuleInit",
+    "variant": "aggregate"
+  },
+  "__OSStopAudioSystem": {
+    "absolutes": {
+      "__DSPRegs": 3422572544
+    },
+    "bindings": {
+      "OSGetTick": "OSGetTick",
+      "__OSStopAudioSystem": "__OSStopAudioSystem"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "__OSStopAudioSystem",
+    "size": 216,
+    "source": "libs/dolphin/os/OSAudioSystem.c",
+    "symbol": "__OSStopAudioSystem",
+    "variant": "aggregate"
+  },
+  "__OSTimeToSystemTime": {
+    "absolutes": {
+      "__OSTimeAdjust": 2147496152
+    },
+    "bindings": {
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "__OSTimeToSystemTime": "__OSTimeToSystemTime"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [
+      "#pragma peephole off"
+    ],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "__OSTimeToSystemTime",
+    "size": 88,
+    "source": "libs/dolphin/os/OSTime.c",
+    "symbol": "__OSTimeToSystemTime",
+    "variant": "aggregate"
+  },
+  "__OSUnmaskInterrupts": {
+    "absolutes": {
+      "__OSGlobalInterruptMask": 2147483844,
+      "__OSLocalInterruptMask": 2147483848
+    },
+    "bindings": {
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "SetInterruptMask": "SetInterruptMask",
+      "__OSUnmaskInterrupts": "__OSUnmaskInterrupts"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [
+      "#pragma peephole off"
+    ],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "__OSUnmaskInterrupts",
+    "size": 136,
+    "source": "libs/dolphin/os/OSInterrupt.c",
+    "symbol": "__OSUnmaskInterrupts",
+    "variant": "aggregate"
+  }
+}

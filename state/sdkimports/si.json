@@ -1,0 +1,336 @@
+{
+  "AlarmHandler_SIBios": {
+    "absolutes": {},
+    "bindings": {
+      "Alarm": "lbl_8015CA90",
+      "AlarmHandler": "AlarmHandler_SIBios",
+      "Packet": "Packet_8015CA10",
+      "__SITransfer": "__SITransfer"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "AlarmHandler",
+    "size": 140,
+    "source": "libs/dolphin/si/SIBios.c",
+    "symbol": "AlarmHandler_SIBios",
+    "variant": "aggregate"
+  },
+  "CompleteTransfer": {
+    "absolutes": {
+      "__SIRegs": 3422577664
+    },
+    "bindings": {
+      "...data.0": "lbl_80123B50",
+      "CompleteTransfer": "CompleteTransfer",
+      "Si": "(sdk_storage____data_0->sdk_Si)",
+      "Type": "(sdk_storage____data_0->sdk_Type)",
+      "TypeTime": "TypeTime_8015CB30",
+      "XferTime": "lbl_8015CB50",
+      "__OSGetSystemTime": "__OSGetSystemTime"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "CompleteTransfer",
+    "size": 764,
+    "source": "libs/dolphin/si/SIBios.c",
+    "symbol": "CompleteTransfer",
+    "variant": "aggregate-inputBytes-bytes"
+  },
+  "SIDecodeType": {
+    "absolutes": {},
+    "bindings": {
+      "SIDecodeType": "SIDecodeType"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "SIDecodeType",
+    "size": 332,
+    "source": "libs/dolphin/si/SIBios.c",
+    "symbol": "SIDecodeType",
+    "variant": "aggregate"
+  },
+  "SIDisablePolling": {
+    "absolutes": {
+      "__SIRegs": 3422577664
+    },
+    "bindings": {
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "SIDisablePolling": "SIDisablePolling",
+      "Si": "Si_80123B94"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "SIDisablePolling",
+    "size": 108,
+    "source": "libs/dolphin/si/SIBios.c",
+    "symbol": "SIDisablePolling",
+    "variant": "aggregate"
+  },
+  "SIEnablePolling": {
+    "absolutes": {
+      "__SIRegs": 3422577664
+    },
+    "bindings": {
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "SIEnablePolling": "SIEnablePolling",
+      "Si": "Si_80123B94"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "SIEnablePolling",
+    "size": 156,
+    "source": "libs/dolphin/si/SIBios.c",
+    "symbol": "SIEnablePolling",
+    "variant": "aggregate"
+  },
+  "SIEnablePollingInterrupt": {
+    "absolutes": {
+      "__SIRegs": 3422577664
+    },
+    "bindings": {
+      "...bss.0": "Packet_8015CA10",
+      "Alarm": "(sdk_storage____bss_0->sdk_Alarm)",
+      "InputBuffer": "(sdk_storage____bss_0->sdk_InputBuffer)",
+      "InputBufferValid": "(sdk_storage____bss_0->sdk_InputBufferValid)",
+      "InputBufferVcount": "(sdk_storage____bss_0->sdk_InputBufferVcount)",
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "Packet": "(sdk_storage____bss_0->sdk_Packet)",
+      "RDSTHandler": "(sdk_storage____bss_0->sdk_RDSTHandler)",
+      "SIEnablePollingInterrupt": "SIEnablePollingInterrupt",
+      "TypeCallback": "(sdk_storage____bss_0->sdk_TypeCallback)",
+      "TypeTime": "(sdk_storage____bss_0->sdk_TypeTime)",
+      "XferTime": "(sdk_storage____bss_0->sdk_XferTime)"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "SIEnablePollingInterrupt",
+    "size": 152,
+    "source": "libs/dolphin/si/SIBios.c",
+    "symbol": "SIEnablePollingInterrupt",
+    "variant": "aggregate"
+  },
+  "SIGetResponse": {
+    "absolutes": {
+      "__SIRegs": 3422577664
+    },
+    "bindings": {
+      "...bss.0": "Packet_8015CA10",
+      "Alarm": "(sdk_storage____bss_0->sdk_Alarm)",
+      "InputBuffer": "(sdk_storage____bss_0->sdk_InputBuffer)",
+      "InputBufferValid": "(sdk_storage____bss_0->sdk_InputBufferValid)",
+      "InputBufferVcount": "(sdk_storage____bss_0->sdk_InputBufferVcount)",
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "Packet": "(sdk_storage____bss_0->sdk_Packet)",
+      "RDSTHandler": "(sdk_storage____bss_0->sdk_RDSTHandler)",
+      "SIGetResponse": "SIGetResponse",
+      "SIGetStatus": "SIGetStatus",
+      "TypeCallback": "(sdk_storage____bss_0->sdk_TypeCallback)",
+      "TypeTime": "(sdk_storage____bss_0->sdk_TypeTime)",
+      "XferTime": "(sdk_storage____bss_0->sdk_XferTime)"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "SIGetResponse",
+    "size": 196,
+    "source": "libs/dolphin/si/SIBios.c",
+    "symbol": "SIGetResponse",
+    "variant": "aggregate"
+  },
+  "SIGetResponseRaw": {
+    "absolutes": {
+      "__SIRegs": 3422577664
+    },
+    "bindings": {
+      "...bss.0": "Packet_8015CA10",
+      "Alarm": "(sdk_storage____bss_0->sdk_Alarm)",
+      "InputBuffer": "(sdk_storage____bss_0->sdk_InputBuffer)",
+      "InputBufferValid": "(sdk_storage____bss_0->sdk_InputBufferValid)",
+      "InputBufferVcount": "(sdk_storage____bss_0->sdk_InputBufferVcount)",
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "Packet": "(sdk_storage____bss_0->sdk_Packet)",
+      "RDSTHandler": "(sdk_storage____bss_0->sdk_RDSTHandler)",
+      "SIGetResponseRaw": "SIGetResponseRaw",
+      "Type": "Type_80123BA8",
+      "TypeCallback": "(sdk_storage____bss_0->sdk_TypeCallback)",
+      "TypeTime": "(sdk_storage____bss_0->sdk_TypeTime)",
+      "XferTime": "(sdk_storage____bss_0->sdk_XferTime)"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "SIGetResponseRaw",
+    "size": 212,
+    "source": "libs/dolphin/si/SIBios.c",
+    "symbol": "SIGetResponseRaw",
+    "variant": "aggregate"
+  },
+  "SIGetTypeAsync": {
+    "absolutes": {},
+    "bindings": {
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "SIGetType": "SIGetType",
+      "SIGetTypeAsync": "SIGetTypeAsync",
+      "Type": "Type_80123BA8",
+      "TypeCallback": "lbl_8015CB70"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "SIGetTypeAsync",
+    "size": 316,
+    "source": "libs/dolphin/si/SIBios.c",
+    "symbol": "SIGetTypeAsync",
+    "variant": "aggregate"
+  },
+  "SIRegisterPollingHandler": {
+    "absolutes": {},
+    "bindings": {
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "RDSTHandler": "lbl_8015CBB0",
+      "SIEnablePollingInterrupt": "SIEnablePollingInterrupt",
+      "SIRegisterPollingHandler": "SIRegisterPollingHandler"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "SIRegisterPollingHandler",
+    "size": 204,
+    "source": "libs/dolphin/si/SIBios.c",
+    "symbol": "SIRegisterPollingHandler",
+    "variant": "aggregate"
+  },
+  "SISetXY": {
+    "absolutes": {
+      "__SIRegs": 3422577664
+    },
+    "bindings": {
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "SISetXY": "SISetXY",
+      "Si": "Si_80123B94"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "SISetXY",
+    "size": 108,
+    "source": "libs/dolphin/si/SIBios.c",
+    "symbol": "SISetXY",
+    "variant": "aggregate"
+  },
+  "SITransfer": {
+    "absolutes": {},
+    "bindings": {
+      "...bss.0": "Packet_8015CA10",
+      "Alarm": "(sdk_storage____bss_0->sdk_Alarm)",
+      "AlarmHandler": "AlarmHandler_SIBios",
+      "InputBuffer": "(sdk_storage____bss_0->sdk_InputBuffer)",
+      "InputBufferValid": "(sdk_storage____bss_0->sdk_InputBufferValid)",
+      "InputBufferVcount": "(sdk_storage____bss_0->sdk_InputBufferVcount)",
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "OSSetAlarm": "OSSetAlarm",
+      "Packet": "(sdk_storage____bss_0->sdk_Packet)",
+      "RDSTHandler": "(sdk_storage____bss_0->sdk_RDSTHandler)",
+      "SITransfer": "SITransfer",
+      "Si": "Si_80123B94",
+      "TypeCallback": "(sdk_storage____bss_0->sdk_TypeCallback)",
+      "TypeTime": "(sdk_storage____bss_0->sdk_TypeTime)",
+      "XferTime": "(sdk_storage____bss_0->sdk_XferTime)",
+      "__OSGetSystemTime": "__OSGetSystemTime",
+      "__SITransfer": "__SITransfer"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "SITransfer",
+    "size": 364,
+    "source": "libs/dolphin/si/SIBios.c",
+    "symbol": "SITransfer",
+    "variant": "aggregate-array-base-sum"
+  },
+  "SITransferCommands": {
+    "absolutes": {
+      "__SIRegs": 3422577664
+    },
+    "bindings": {
+      "SITransferCommands": "SITransferCommands"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "SITransferCommands",
+    "size": 16,
+    "source": "libs/dolphin/si/SIBios.c",
+    "symbol": "SITransferCommands",
+    "variant": "aggregate"
+  },
+  "SIUnregisterPollingHandler": {
+    "absolutes": {},
+    "bindings": {
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "RDSTHandler": "lbl_8015CBB0",
+      "SIEnablePollingInterrupt": "SIEnablePollingInterrupt",
+      "SIUnregisterPollingHandler": "SIUnregisterPollingHandler"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "SIUnregisterPollingHandler",
+    "size": 244,
+    "source": "libs/dolphin/si/SIBios.c",
+    "symbol": "SIUnregisterPollingHandler",
+    "variant": "aggregate"
+  },
+  "__SITransfer": {
+    "absolutes": {
+      "__SIRegs": 3422577664
+    },
+    "bindings": {
+      "...data.0": "lbl_80123B50",
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "Si": "(sdk_storage____data_0->sdk_Si)",
+      "Type": "(sdk_storage____data_0->sdk_Type)",
+      "__SITransfer": "__SITransfer"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "__SITransfer",
+    "size": 524,
+    "source": "libs/dolphin/si/SIBios.c",
+    "symbol": "__SITransfer",
+    "variant": "aggregate"
+  }
+}

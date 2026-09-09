@@ -136,6 +136,15 @@ class Elf:
             return True
         others = [s for s in self.symbols()
                   if s["shndx"] == dsec["index"] and (s["info"] & 0xF) == STT_OBJECT and s["name"] not in private_names]
+        if others and any(n.startswith('...data') for n in private_names):
+            indices = {s['index'] for s in others}
+            referenced = any((struct.unpack_from('>I', self.data, off + 4)[0] >> 8) in indices
+                             for rs in self.sections if rs['type'] == SHT_RELA
+                             for off in range(rs['offset'], rs['offset'] + rs['size'], 12))
+            if not referenced and all(s['name'].startswith('@') for s in others):
+                for s in others:
+                    self.data[s['off'] + 4:s['off'] + 16] = struct.pack('>IIBBH', 0, 0, 0, 0, SHN_UNDEF)
+                others = []
         if others:
             return False
         dsec["size"] = 0
@@ -172,10 +181,12 @@ def apply(obj: Path, mapping: Dict[str, str]) -> Dict[str, object]:
     elf = Elf(obj.read_bytes())
     tables = {k: v for k, v in mapping.items() if v.startswith("jumptable_")}
     pooled = {k: v for k, v in mapping.items() if k not in tables}
+    data_section = elf.section('.data')
+    data_names = [s['name'] for s in elf.symbols() if data_section and s['shndx'] == data_section['index'] and s['name'] in mapping]
     # both kinds become references to the retail symbol (the data unit that owns the retail
     # range keeps the bytes); our private copies are dropped with their section
     done, skipped = elf.retarget(mapping)
-    emptied = (elf.drop_private_rodata(list(pooled)) if pooled else True) and (elf.drop_private_data(list(tables)) if tables else True)
+    emptied = (elf.drop_private_rodata(list(pooled)) if pooled else True) and (elf.drop_private_data(data_names) if data_names else True)
     obj.write_bytes(bytes(elf.data))
     return {"retargeted": done, "skipped": skipped, "rodata_emptied": emptied}
 

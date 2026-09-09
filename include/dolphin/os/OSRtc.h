@@ -26,4 +26,13 @@ typedef struct OSSram {
     u8 flags;
 } OSSram;
 
+
+typedef struct SramControlBlock {
+    u8 sram[64];
+    u32 offset;
+    BOOL enabled;
+    BOOL locked;
+    BOOL sync;
+    void (*callback)(void);
+} SramControlBlock;
 #endif
