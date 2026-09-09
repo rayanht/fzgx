@@ -95,6 +95,8 @@ extern void *fn_1_D3884(u8 *arg0);
 extern void *fn_1_D358C(u8 *arg0, void *arg1);
 extern void fn_1_41134(void *unused, char *value);
 extern void fn_1_411D4(u32 index, char *message);
+extern u32 fn_800075AC(u32, u32, u32);
+extern u32 GXGetTexBufferSize(u32, u32, u32, u32, u32);
 
 /* fzgx:begin fn_1_35124 */
 void fn_1_35124(void) {
@@ -881,7 +883,6 @@ u8 fn_1_40ED4(void) {
 /* fzgx:end fn_1_40ED4 */
 
 /* fzgx:begin fn_1_40EE4 */
-extern u32 GXGetTexBufferSize(u32, u32, u32, u32, u32);
 extern u8 lbl_1_bss_3820C;
 
 u32 fn_1_40EE4(void) {

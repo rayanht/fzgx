@@ -9,6 +9,18 @@ extern u32 fn_1_4630(u32 arg0, u32 arg1, u8 *arg2, s32 arg3);
 extern u8 lbl_1_bss_8EDA0;
 extern void fn_1_154F1C(void);
 extern void *memset(void *dest, int value, u32 size);
+extern void fn_1_155120(void);
+extern const f64 lbl_1_rodata_D5A8;
+extern void fn_1_496FC(f32, f32);
+extern void fn_1_4955C(f32, f32);
+extern void fn_1_495FC(void);
+extern f32 fn_1_4B090(void *);
+extern int fn_1_4B16C(void *);
+extern const f32 lbl_1_rodata_D5A0;
+extern void fn_1_4966C(f32, f32);
+extern int fn_1_FA638(void);
+extern void fn_1_4AF64(void *, ...);
+extern void fn_1_49614(void);
 
 /* fzgx:begin fn_1_154CC4 */
 void fn_1_154CC4(u32 arg0) {
@@ -158,19 +170,6 @@ void fn_1_154FC0(void) {
 /* fzgx:end fn_1_154FC0 */
 
 /* fzgx:begin fn_1_154FD8 */
-extern void fn_1_155120(void);
-extern const f64 lbl_1_rodata_D5A8;
-extern void fn_1_496FC(f32, f32);
-extern void fn_1_4955C(f32, f32);
-extern void fn_1_495FC(void);
-extern f32 fn_1_4B090(void *);
-extern int fn_1_4B16C(void *);
-extern const f32 lbl_1_rodata_D5A0;
-extern void fn_1_4966C(f32, f32);
-extern int fn_1_FA638(void);
-extern void fn_1_4AF64(void *, ...);
-extern void fn_1_49614(void);
-
 void fn_1_154FD8(void) {
     Obj_1_bss_8EDF0 *obj;
     f32 value;

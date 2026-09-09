@@ -297,7 +297,6 @@ typedef struct BgSanAllocation {
 } BgSanAllocation;
 
 extern u32 fn_1_58C4(Obj_1_data_2A7E0 *object);
-extern f32 lbl_1_rodata_6644[35];
 extern void lbl_8006DCA4(void *data);
 extern void *fn_1_5448C(BgSanPosition *position);
 extern void fn_1_DB53C(void);

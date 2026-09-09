@@ -293,6 +293,8 @@ void fn_1_A942C(u8 value) {
 /* fzgx:begin fn_1_A943C noprologue */
 #include "types.h"
 
+extern void (*lbl_1_bss_7168C)(void);
+
 extern struct fn_1_A943C_lbl_1_bss_6F648 lbl_1_bss_6F648;
 
 struct fn_1_A943C_lbl_1_bss_6F648 {

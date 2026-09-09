@@ -62,6 +62,9 @@ extern void fn_1_727BC();
 extern void fn_8006FDEC(void);
 extern void fn_80071718(void *);
 extern void fn_800711A8(void *);
+extern u32 fn_8003526C(u32, u32);
+extern u32 fn_80074300(u32, u32, u32, u32);
+extern u32 fn_80074438(u32, u32, u32, u32);
 
 /* fzgx:begin fn_1_72648 */
 void fn_1_72648(void) {
@@ -196,14 +199,8 @@ void fn_1_72980(Fn_1_72980_Obj *arg0) {
 }
 /* fzgx:end fn_1_72980 */
 
-/* fzgx:begin fn_1_76448 noprologue */
+/* fzgx:begin fn_1_76448 */
 #include "types.h"
-
-extern u32 fn_8003526C(u32, u32);
-extern u32 fn_80074300(u32, u32, u32, u32);
-extern u32 fn_80074438(u32, u32, u32, u32);
-extern u32 lbl_1_data_1D960;
-extern u32 lbl_1_data_1D9B8;
 
 struct fn_1_76448_Arg0 {
     u8 pad_0[0xA0];

@@ -1138,7 +1138,7 @@ f32 fn_1_542B8(void) {
 extern void fn_1_54320(void);
 extern u8 *lbl_801A66CC;
 
-typedef struct FontState {
+typedef struct fn_1_542C4_FontState {
     u8 pad30[0x30];
     void *unk_30;
     void *unk_34;
@@ -1147,10 +1147,10 @@ typedef struct FontState {
     f32 unk_40;
     u8 pad44[8];
     f32 unk_4C;
-} FontState;
+} fn_1_542C4_FontState;
 
 // Volatile preserves the repeated loads of the shared font state.
-#define FONT_STATE ((volatile FontState *)lbl_801A66CC)
+#define FONT_STATE ((volatile fn_1_542C4_FontState *)lbl_801A66CC)
 
 // Store the current font parameters and notify the font system.
 void fn_1_542C4(void *arg0, void *arg1, f32 arg2, f32 arg3, f32 arg4) {
@@ -1603,7 +1603,7 @@ void fn_1_563B8(u32 value) {
 /* fzgx:begin fn_1_563E4 noprologue */
 #include "types.h"
 
-typedef struct FontState {
+typedef struct fn_1_563E4_FontState {
     u8 pad_00[8];
     f32 scale;
     u8 pad_0C[6];
@@ -1614,7 +1614,7 @@ typedef struct FontState {
     f32 y;
     u8 pad_20[4];
     u32 state;
-} FontState;
+} fn_1_563E4_FontState;
 
 extern void fn_80077B04(f32 scale);
 extern void fn_80074918(u8 a, u8 b, u8 c);
@@ -1622,7 +1622,7 @@ extern void fn_80071ED4(u8 value, f32 x, f32 y);
 extern void fn_80072014(u32 *value);
 extern void fn_800720B0(u32 value);
 
-void fn_1_563E4(FontState *font) {
+void fn_1_563E4(fn_1_563E4_FontState *font) {
     u32 value;
     u32 lab_t0;
     u32 lab_t2;
@@ -1647,7 +1647,7 @@ void fn_1_563E4(FontState *font) {
 /* fzgx:begin fn_1_56470 noprologue */
 #include "types.h"
 
-typedef struct FontState {
+typedef struct fn_1_56470_FontState {
     u8 unk_00[4];
     void *unk_04;
     f32 unk_08;
@@ -1664,10 +1664,10 @@ typedef struct FontState {
     f32 unk_1C;
     u32 unk_20;
     u32 unk_24;
-} FontState;
+} fn_1_56470_FontState;
 
-extern void fn_80077B04(FontState *state, f32 value);
-extern void fn_80074B40(FontState *state);
+extern void fn_80077B04(fn_1_56470_FontState *state, f32 value);
+extern void fn_80074B40(fn_1_56470_FontState *state);
 extern void fn_80074C74(void *value);
 extern void fn_80074918(u8 a, u8 b, u8 c);
 extern void fn_80077BBC(u8 value);
@@ -1678,7 +1678,7 @@ extern void fn_80071ED4(u8 value, f32 a, f32 b);
 extern void fn_80072014(void *value);
 extern void fn_800720B0(u32 value);
 
-void fn_1_56470(FontState *state) {
+void fn_1_56470(fn_1_56470_FontState *state) {
     u32 value;
 
     fn_80077B04(state, state->unk_08);

@@ -40,6 +40,14 @@ extern char lbl_1_data_2C9C[20];
 extern char lbl_1_data_2CB0[31];
 extern void OSPanic(const char *message, int line, const char *file, ...);
 extern void fn_80009AA8(u32 value, u32 count, const char *file, int line);
+extern u32 fn_1_156754(u32);
+extern u32 fn_1_A5864(void);
+extern u32 fn_1_F7578(void);
+extern struct fn_1_3C98_lbl_1_bss_DA5 lbl_1_bss_DA5;
+extern u32 fn_80008EC8(u32, u32, u32);
+extern u32 fn_800793D4(u32, u32, u32);
+extern struct fn_1_48B0_lbl_801A6CF8 lbl_801A6CF8;
+extern u32 lbl_801A6CFC;
 
 /* fzgx:begin fn_1_634 */
 struct fn_1_634_lbl_1_bss_54 {
@@ -197,10 +205,6 @@ void fn_1_958(void) {
 /* fzgx:end fn_1_958 */
 
 /* fzgx:begin fn_1_E34 */
-extern u32 fn_1_156754(u32);
-extern u32 fn_1_A5864(void);
-extern u32 fn_1_F7578(void);
-
 void fn_1_E34(void) {
     s32 v0;
     fn_1_A5864();
@@ -320,7 +324,6 @@ struct fn_1_3C98_lbl_1_bss_DA5 {
     u8 unk_0;
 };
 
-extern struct fn_1_3C98_lbl_1_bss_DA5 lbl_1_bss_DA5;
 extern u8 lbl_1_bss_D78;
 
 void fn_1_3C98(void) {
@@ -678,7 +681,6 @@ u32 fn_1_44A4(void) {
 extern struct fn_1_44B4_lbl_1_bss_DB8 lbl_1_bss_DB8;
 extern u32 OSGetArenaHi(void);
 extern u32 OSGetArenaLo(void);
-extern u32 fn_80008EC8(u32, u32, u32);
 extern u32 fn_80008F60(u32, u32);
 
 struct fn_1_44B4_lbl_1_bss_DB8 {
@@ -805,7 +807,6 @@ s32 fn_1_45D0(u32 arg0, u32 arg1) {
 extern u32 OSReport(u32, ...);
 extern u32 fn_800090A4(u32);
 extern u32 fn_80009830(void);
-extern u32 fn_800793D4(u32, u32, u32);
 extern u32 lbl_1_data_2C74;
 
 u32 fn_1_4630(u32 arg0, u32 arg1) {
@@ -894,9 +895,6 @@ void fn_1_4730(u32 value, u32 count, u32 size, const char *file, int line) {
 /* fzgx:end fn_1_4730 */
 
 /* fzgx:begin fn_1_48B0 */
-extern struct fn_1_48B0_lbl_801A6CF8 lbl_801A6CF8;
-extern u32 lbl_801A6CFC;
-
 struct fn_1_48B0_lbl_801A6CF8 {
     u32 unk_0;
 };

@@ -652,7 +652,6 @@ typedef struct Fn1ABE14Arg {
     u8 pad_3C[0x58];
 } Fn1ABE14Arg;
 
-extern const f32 lbl_1_rodata_4CA8;
 extern s32 fn_8002C0A0(u8 id);
 extern void CARDWriteAsync(void *data, void *arg_0x94, void *arg_0xC, int zero_1, int zero_2);
 
@@ -720,7 +719,6 @@ extern void CARDMountAsync(u8, u32, void (*)(void), s32);
 extern int CARDGetSerialNo(u8 value, void *data);
 extern void CARDCheckAsync(u8 byte_val, int value);
 extern void CARDFormatAsync(u8 byte, int value);
-extern const f32 lbl_1_rodata_4CA8;
 extern const f64 lbl_1_rodata_4CB0;
 extern void fn_80083DB0(void *dst, void *src);
 extern void strcat(void *dst, void *src);
@@ -1079,8 +1077,6 @@ struct fn_1_AC92C_Arg0 {
     u8 pad_2E[0xA];
     f32 unk_38;
 };
-
-extern const f32 lbl_1_rodata_4CA8;
 
 u32 fn_1_AC92C(struct fn_1_AC92C_Arg0 *arg0) {
     u32 v0;
@@ -1466,7 +1462,6 @@ extern void CARDMountAsync(u8, u32, void (*)(void), s32);
 extern int CARDGetSerialNo(u8 value, void *data);
 extern void CARDCheckAsync(u8 byte_val, int value);
 extern void CARDFormatAsync(u8 byte, int value);
-extern const f32 lbl_1_rodata_4CA8;
 extern const f64 lbl_1_rodata_4CB0;
 extern void fn_80083DB0(void *dst, void *src);
 extern void strcat(void *dst, void *src);
