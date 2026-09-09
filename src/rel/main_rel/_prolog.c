@@ -245,6 +245,21 @@ void fn_1_3C78(void) {
 }
 /* fzgx:end fn_1_3C78 */
 
+/* fzgx:begin fn_1_3C98 */
+struct fn_1_3C98_lbl_1_bss_DA5 {
+    u8 unk_0;
+};
+
+extern struct fn_1_3C98_lbl_1_bss_DA5 lbl_1_bss_DA5;
+extern u8 lbl_1_bss_D78;
+
+void fn_1_3C98(void) {
+    if (lbl_1_bss_D78 == 0) { return; }
+    if (lbl_1_bss_DA5.unk_0 != 0) { return; }
+    lbl_1_bss_DA5.unk_0 = 1;
+}
+/* fzgx:end fn_1_3C98 */
+
 /* fzgx:begin fn_1_3CC4 */
 void fn_1_3CC4(void) {
     if (lbl_1_bss_D78 == 0) {

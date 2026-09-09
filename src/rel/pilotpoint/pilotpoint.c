@@ -252,6 +252,37 @@ void fn_14_B398(void) {
 }
 /* fzgx:end fn_14_B398 */
 
+/* fzgx:begin fn_14_B400 */
+struct fn_14_B400_lbl_1_bss_D58 {
+    u8 pad_0[0x8];
+    u16 unk_8;
+};
+struct fn_14_B400_lbl_1_bss_6EAB4 {
+    u32 unk_0;
+};
+
+extern f32 lbl_14_rodata_30;
+extern struct fn_14_B400_lbl_1_bss_6EAB4 lbl_1_bss_6EAB4;
+extern struct fn_14_B400_lbl_1_bss_D58 lbl_1_bss_D58;
+extern u16 lbl_1_bss_96A;
+extern u32 fn_14_B484(void);
+extern u32 fn_14_DC90(f32);
+extern u32 fn_1_13DC54(void);
+extern u32 lbl_14_bss_0;
+extern void fn_1_133DBC(void *);
+
+void fn_14_B400(void) {
+    fn_1_133DBC((void *)0);
+    fn_1_13DC54();
+    fn_14_B484();
+    fn_14_DC90(lbl_14_rodata_30);
+    if ((s32)lbl_14_bss_0 < 420 && (((lbl_1_bss_D58.unk_8 >> 8) & 0x1) != 0 || (s32)lbl_14_bss_0 < 0)) {
+    lbl_1_bss_96A = 178;
+    lbl_1_bss_6EAB4.unk_0 = (lbl_1_bss_6EAB4.unk_0 | 44);
+    }
+}
+/* fzgx:end fn_14_B400 */
+
 /* fzgx:begin fn_14_B480 */
 // fn_14_B480: empty in retail (single blr).
 void fn_14_B480(void) {

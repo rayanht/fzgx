@@ -4835,3 +4835,6 @@ rel/main_rel/bg_win/fn_1_15E1D0.c:
 
 rel/main_rel/enemy_ctrl/fn_1_D07C4.c:
 	.text       start:0x000D07C4 end:0x000D07E0 align:4
+
+rel/main_rel/_prolog/fn_1_3C98.c:
+	.text       start:0x00003C98 end:0x00003CC4 align:4
