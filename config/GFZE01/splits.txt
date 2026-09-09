@@ -2659,3 +2659,276 @@ dol/fn_8008F748.c:
 
 dol/fn_8008AF58.c:
 	.text       start:0x8008AF58 end:0x8008AFF0 align:4
+
+dol/PPCMfmsr.c:
+	.text       start:0x80009FBC end:0x80009FC4 align:4
+
+dol/PPCMtmsr.c:
+	.text       start:0x80009FC4 end:0x80009FCC align:4
+
+dol/__start.c:
+	.init       start:0x80003154 end:0x800032B0 align:4
+
+dol/__init_hardware.c:
+	.init       start:0x80003400 end:0x80003424 align:4
+
+dol/fn_80005E0C.c:
+	.text       start:0x80005E0C end:0x80005EDC align:4
+
+dol/fn_800071B8.c:
+	.text       start:0x800071B8 end:0x8000740C align:4
+
+dol/fn_80007654.c:
+	.text       start:0x80007654 end:0x80007664 align:4
+
+dol/fn_80007664.c:
+	.text       start:0x80007664 end:0x80007700 align:4
+
+dol/fn_80007700.c:
+	.text       start:0x80007700 end:0x80007730 align:4
+
+dol/fn_800079A0.c:
+	.text       start:0x800079A0 end:0x800079C4 align:4
+
+dol/PPCMfhid0.c:
+	.text       start:0x80009FCC end:0x80009FD4 align:4
+
+dol/fn_80009FD4.c:
+	.text       start:0x80009FD4 end:0x80009FDC align:4
+
+dol/PPCMfl2cr.c:
+	.text       start:0x80009FDC end:0x80009FE4 align:4
+
+dol/PPCMtl2cr.c:
+	.text       start:0x80009FE4 end:0x80009FEC align:4
+
+dol/PPCMtdec.c:
+	.text       start:0x80009FEC end:0x80009FF4 align:4
+
+dol/fn_80009FF4.c:
+	.text       start:0x80009FF4 end:0x80009FFC align:4
+
+dol/PPCHalt.c:
+	.text       start:0x80009FFC end:0x8000A010 align:4
+
+dol/PPCMtmmcr0.c:
+	.text       start:0x8000A010 end:0x8000A018 align:4
+
+dol/PPCMtmmcr1.c:
+	.text       start:0x8000A018 end:0x8000A020 align:4
+
+dol/fn_8000A020.c:
+	.text       start:0x8000A020 end:0x8000A028 align:4
+
+dol/PPCMtpmc1.c:
+	.text       start:0x8000A028 end:0x8000A030 align:4
+
+dol/fn_8000A030.c:
+	.text       start:0x8000A030 end:0x8000A038 align:4
+
+dol/PPCMtpmc2.c:
+	.text       start:0x8000A038 end:0x8000A040 align:4
+
+dol/fn_8000A040.c:
+	.text       start:0x8000A040 end:0x8000A048 align:4
+
+dol/PPCMtpmc3.c:
+	.text       start:0x8000A048 end:0x8000A050 align:4
+
+dol/fn_8000A050.c:
+	.text       start:0x8000A050 end:0x8000A058 align:4
+
+dol/PPCMtpmc4.c:
+	.text       start:0x8000A058 end:0x8000A060 align:4
+
+dol/PPCMffpscr.c:
+	.text       start:0x8000A060 end:0x8000A080 align:4
+
+dol/PPCMtfpscr.c:
+	.text       start:0x8000A080 end:0x8000A0A8 align:4
+
+dol/PPCMfhid2.c:
+	.text       start:0x8000A0A8 end:0x8000A0B0 align:4
+
+dol/PPCMthid2.c:
+	.text       start:0x8000A0B0 end:0x8000A0B8 align:4
+
+dol/fn_8000A0B8.c:
+	.text       start:0x8000A0B8 end:0x8000A0C4 align:4
+
+dol/PPCMtwpar.c:
+	.text       start:0x8000A0C4 end:0x8000A0CC align:4
+
+dol/PPCSetFpNonIEEEMode.c:
+	.text       start:0x8000A0F4 end:0x8000A0FC align:4
+
+dol/__OSFPRInit.c:
+	.text       start:0x8000A0FC end:0x8000A224 align:4
+
+dol/__OSDBIntegrator.c:
+	.text       start:0x8000AA08 end:0x8000AA2C align:4
+
+dol/fn_8000AA2C.c:
+	.text       start:0x8000AA2C end:0x8000AA30 align:4
+
+dol/OSExceptionVector.c:
+	.text       start:0x8000AA60 end:0x8000AAFC align:4
+
+dol/OSDefaultExceptionHandler.c:
+	.text       start:0x8000AAFC end:0x8000AB54 align:4
+
+dol/__OSPSInit.c:
+	.text       start:0x8000AB54 end:0x8000ABA8 align:4
+
+dol/DecrementerExceptionHandler.c:
+	.text       start:0x8000B2C4 end:0x8000B314 align:4
+
+dol/DCEnable.c:
+	.text       start:0x8000B614 end:0x8000B628 align:4
+
+dol/DCFlushRange.c:
+	.text       start:0x8000B654 end:0x8000B684 align:4
+
+dol/DCStoreRange.c:
+	.text       start:0x8000B684 end:0x8000B6B4 align:4
+
+dol/ICFlashInvalidate.c:
+	.text       start:0x8000B714 end:0x8000B724 align:4
+
+dol/ICEnable.c:
+	.text       start:0x8000B724 end:0x8000B738 align:4
+
+dol/__LCEnable.c:
+	.text       start:0x8000B738 end:0x8000B804 align:4
+
+dol/LCDisable.c:
+	.text       start:0x8000B83C end:0x8000B864 align:4
+
+dol/LCStoreBlocks.c:
+	.text       start:0x8000B888 end:0x8000B8AC align:4
+
+dol/fn_8000B8AC.c:
+	.text       start:0x8000B8AC end:0x8000B8C0 align:4
+
+dol/__OSLoadFPUContext.c:
+	.text       start:0x8000BBAC end:0x8000BCD0 align:4
+
+dol/__OSSaveFPUContext.c:
+	.text       start:0x8000BCD0 end:0x8000BDF8 align:4
+
+dol/OSSaveFPUContext.c:
+	.text       start:0x8000BDF8 end:0x8000BE00 align:4
+
+dol/OSSaveContext.c:
+	.text       start:0x8000BE68 end:0x8000BEE8 align:4
+
+dol/OSLoadContext.c:
+	.text       start:0x8000BEE8 end:0x8000BFC0 align:4
+
+dol/OSInitContext.c:
+	.text       start:0x8000BFEC end:0x8000C0A8 align:4
+
+dol/OSSwitchFPUContext.c:
+	.text       start:0x8000C350 end:0x8000C3D4 align:4
+
+dol/OSDisableInterrupts.c:
+	.text       start:0x8000D4F4 end:0x8000D508 align:4
+
+dol/OSEnableInterrupts.c:
+	.text       start:0x8000D508 end:0x8000D51C align:4
+
+dol/ExternalInterruptHandler.c:
+	.text       start:0x8000DD10 end:0x8000DD60 align:4
+
+dol/Config24MB.c:
+	.text       start:0x8000E854 end:0x8000E8D4 align:4
+
+dol/Config48MB.c:
+	.text       start:0x8000E8D4 end:0x8000E954 align:4
+
+dol/RealMode.c:
+	.text       start:0x8000E954 end:0x8000E96C align:4
+
+dol/Run.c:
+	.text       start:0x8000EAF4 end:0x8000EB04 align:4
+
+dol/Reset.c:
+	.text       start:0x8000EEF4 end:0x8000EF64 align:4
+
+dol/SystemCallVector.c:
+	.text       start:0x800100BC end:0x800100DC align:4
+
+dol/__DBExceptionDestination.c:
+	.text       start:0x80015AA8 end:0x80015AB8 align:4
+
+dol/fn_80024E6C.c:
+	.text       start:0x80024E6C end:0x80025004 align:4
+
+dol/fn_80025004.c:
+	.text       start:0x80025004 end:0x800251F0 align:4
+
+dol/fn_8003C6D0.c:
+	.text       start:0x8003C6D0 end:0x8003CBB0 align:4
+
+dol/fn_8003CBB0.c:
+	.text       start:0x8003CBB0 end:0x8003CE74 align:4
+
+dol/fn_8003CE74.c:
+	.text       start:0x8003CE74 end:0x8003D42C align:4
+
+dol/fn_8003D4C0.c:
+	.text       start:0x8003D4C0 end:0x8003D4E0 align:4
+
+dol/mathutil_init.c:
+	.text       start:0x8006CFF8 end:0x8006D044 align:4
+
+dol/fn_8006E250.c:
+	.text       start:0x8006E250 end:0x8006E294 align:4
+
+dol/fn_8006E294.c:
+	.text       start:0x8006E294 end:0x8006E2B0 align:4
+
+dol/fn_8006E2B0.c:
+	.text       start:0x8006E2B0 end:0x8006E2C0 align:4
+
+dol/fn_80078538.c:
+	.text       start:0x80078538 end:0x800786B0 align:4
+
+dol/fn_80078884.c:
+	.text       start:0x80078884 end:0x80078944 align:4
+
+dol/fn_8008B0E0.c:
+	.text       start:0x8008B0E0 end:0x8008B0E8 align:4
+
+dol/fn_8008B0E8.c:
+	.text       start:0x8008B0E8 end:0x8008B0F0 align:4
+
+dol/fn_8008B0F0.c:
+	.text       start:0x8008B0F0 end:0x8008B12C align:4
+
+dol/TRKInterruptHandler.c:
+	.text       start:0x8008B12C end:0x8008B2C0 align:4
+
+dol/TRKExceptionHandler.c:
+	.text       start:0x8008B2C0 end:0x8008B35C align:4
+
+dol/TRKSwapAndGo.c:
+	.text       start:0x8008B35C end:0x8008B420 align:4
+
+dol/TRKInterruptHandlerEnableInterrupts.c:
+	.text       start:0x8008B420 end:0x8008B474 align:4
+
+dol/TRKSaveExtended1Block.c:
+	.text       start:0x8008CB40 end:0x8008CCF8 align:4
+
+dol/TRKRestoreExtended1Block.c:
+	.text       start:0x8008CCF8 end:0x8008CEB0 align:4
+
+dol/InitMetroTRK.c:
+	.text       start:0x8008CEB0 end:0x8008CF44 align:4
+
+dol/InitMetroTRK_BBA.c:
+	.text       start:0x8008CF48 end:0x8008CFDC align:4
+
+dol/TRKLoadContext.c:
+	.text       start:0x8008D224 end:0x8008D2AC align:4

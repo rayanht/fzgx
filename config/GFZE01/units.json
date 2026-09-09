@@ -1862,6 +1862,28 @@
   },
   {
     "module": "main",
+    "source": "dol/Config24MB.c",
+    "symbols": [
+      "Config24MB"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/Config48MB.c",
+    "symbols": [
+      "Config48MB"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
     "source": "dol/DBPrintf.c",
     "symbols": [
       "DBPrintf"
@@ -1869,6 +1891,39 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/DCEnable.c",
+    "symbols": [
+      "DCEnable"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/DCFlushRange.c",
+    "symbols": [
+      "DCFlushRange"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/DCStoreRange.c",
+    "symbols": [
+      "DCStoreRange"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
   },
   {
     "module": "main",
@@ -1942,6 +1997,17 @@
   },
   {
     "module": "main",
+    "source": "dol/DecrementerExceptionHandler.c",
+    "symbols": [
+      "DecrementerExceptionHandler"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
     "source": "dol/DeleteCallback.c",
     "symbols": [
       "DeleteCallback"
@@ -1979,6 +2045,17 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/ExternalInterruptHandler.c",
+    "symbols": [
+      "ExternalInterruptHandler"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
   },
   {
     "module": "main",
@@ -2082,6 +2159,61 @@
   },
   {
     "module": "main",
+    "source": "dol/ICEnable.c",
+    "symbols": [
+      "ICEnable"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/ICFlashInvalidate.c",
+    "symbols": [
+      "ICFlashInvalidate"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/InitMetroTRK.c",
+    "symbols": [
+      "InitMetroTRK"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/InitMetroTRK_BBA.c",
+    "symbols": [
+      "InitMetroTRK_BBA"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/LCDisable.c",
+    "symbols": [
+      "LCDisable"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
     "source": "dol/LCEnable.c",
     "symbols": [
       "LCEnable"
@@ -2089,6 +2221,17 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/LCStoreBlocks.c",
+    "symbols": [
+      "LCStoreBlocks"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
   },
   {
     "module": "main",
@@ -2112,6 +2255,28 @@
   },
   {
     "module": "main",
+    "source": "dol/OSDefaultExceptionHandler.c",
+    "symbols": [
+      "OSDefaultExceptionHandler"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/OSDisableInterrupts.c",
+    "symbols": [
+      "OSDisableInterrupts"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
     "source": "dol/OSDisableScheduler.c",
     "symbols": [
       "OSDisableScheduler"
@@ -2122,6 +2287,17 @@
   },
   {
     "module": "main",
+    "source": "dol/OSEnableInterrupts.c",
+    "symbols": [
+      "OSEnableInterrupts"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
     "source": "dol/OSEnableScheduler.c",
     "symbols": [
       "OSEnableScheduler"
@@ -2129,6 +2305,17 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/OSExceptionVector.c",
+    "symbols": [
+      "OSExceptionVector"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
   },
   {
     "module": "main",
@@ -2162,6 +2349,17 @@
   },
   {
     "module": "main",
+    "source": "dol/OSInitContext.c",
+    "symbols": [
+      "OSInitContext"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
     "source": "dol/OSInitThreadQueue.c",
     "symbols": [
       "OSInitThreadQueue"
@@ -2189,6 +2387,39 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/OSLoadContext.c",
+    "symbols": [
+      "OSLoadContext"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/OSSaveContext.c",
+    "symbols": [
+      "OSSaveContext"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/OSSaveFPUContext.c",
+    "symbols": [
+      "OSSaveFPUContext"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
   },
   {
     "module": "main",
@@ -2222,6 +2453,17 @@
   },
   {
     "module": "main",
+    "source": "dol/OSSwitchFPUContext.c",
+    "symbols": [
+      "OSSwitchFPUContext"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
     "source": "dol/OnReset_CARDBios.c",
     "symbols": [
       "OnReset_CARDBios"
@@ -2242,6 +2484,214 @@
   },
   {
     "module": "main",
+    "source": "dol/PPCHalt.c",
+    "symbols": [
+      "PPCHalt"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/PPCMffpscr.c",
+    "symbols": [
+      "PPCMffpscr"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/PPCMfhid0.c",
+    "symbols": [
+      "PPCMfhid0"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/PPCMfhid2.c",
+    "symbols": [
+      "PPCMfhid2"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/PPCMfl2cr.c",
+    "symbols": [
+      "PPCMfl2cr"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/PPCMfmsr.c",
+    "symbols": [
+      "PPCMfmsr"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/PPCMtdec.c",
+    "symbols": [
+      "PPCMtdec"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/PPCMtfpscr.c",
+    "symbols": [
+      "PPCMtfpscr"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/PPCMthid2.c",
+    "symbols": [
+      "PPCMthid2"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/PPCMtl2cr.c",
+    "symbols": [
+      "PPCMtl2cr"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/PPCMtmmcr0.c",
+    "symbols": [
+      "PPCMtmmcr0"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/PPCMtmmcr1.c",
+    "symbols": [
+      "PPCMtmmcr1"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/PPCMtmsr.c",
+    "symbols": [
+      "PPCMtmsr"
+    ],
+    "status": "nonmatching",
+    "mw_version": null,
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/PPCMtpmc1.c",
+    "symbols": [
+      "PPCMtpmc1"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/PPCMtpmc2.c",
+    "symbols": [
+      "PPCMtpmc2"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/PPCMtpmc3.c",
+    "symbols": [
+      "PPCMtpmc3"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/PPCMtpmc4.c",
+    "symbols": [
+      "PPCMtpmc4"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/PPCMtwpar.c",
+    "symbols": [
+      "PPCMtwpar"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/PPCSetFpNonIEEEMode.c",
+    "symbols": [
+      "PPCSetFpNonIEEEMode"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
     "source": "dol/ReadArrayUnlock.c",
     "symbols": [
       "ReadArrayUnlock"
@@ -2252,6 +2702,17 @@
   },
   {
     "module": "main",
+    "source": "dol/RealMode.c",
+    "symbols": [
+      "RealMode"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
     "source": "dol/ReserveEXI2Port.c",
     "symbols": [
       "ReserveEXI2Port"
@@ -2259,6 +2720,28 @@
     "status": "matching",
     "mw_version": "GC/1.3.2",
     "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/Reset.c",
+    "symbols": [
+      "Reset"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/Run.c",
+    "symbols": [
+      "Run"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
   },
   {
     "module": "main",
@@ -2292,6 +2775,17 @@
   },
   {
     "module": "main",
+    "source": "dol/SystemCallVector.c",
+    "symbols": [
+      "SystemCallVector"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
     "source": "dol/TRKDestructEvent.c",
     "symbols": [
       "TRKDestructEvent"
@@ -2309,6 +2803,17 @@
     "status": "matching",
     "mw_version": "GC/1.3.2",
     "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/TRKExceptionHandler.c",
+    "symbols": [
+      "TRKExceptionHandler"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
   },
   {
     "module": "main",
@@ -2369,6 +2874,72 @@
     "status": "matching",
     "mw_version": "GC/1.3.2",
     "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/TRKInterruptHandler.c",
+    "symbols": [
+      "TRKInterruptHandler"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/TRKInterruptHandlerEnableInterrupts.c",
+    "symbols": [
+      "TRKInterruptHandlerEnableInterrupts"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/TRKLoadContext.c",
+    "symbols": [
+      "TRKLoadContext"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/TRKRestoreExtended1Block.c",
+    "symbols": [
+      "TRKRestoreExtended1Block"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/TRKSaveExtended1Block.c",
+    "symbols": [
+      "TRKSaveExtended1Block"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/TRKSwapAndGo.c",
+    "symbols": [
+      "TRKSwapAndGo"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
   },
   {
     "module": "main",
@@ -2602,6 +3173,17 @@
   },
   {
     "module": "main",
+    "source": "dol/__DBExceptionDestination.c",
+    "symbols": [
+      "__DBExceptionDestination"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
     "source": "dol/__DBIsExceptionMarked.c",
     "symbols": [
       "__DBIsExceptionMarked"
@@ -2712,6 +3294,39 @@
   },
   {
     "module": "main",
+    "source": "dol/__LCEnable.c",
+    "symbols": [
+      "__LCEnable"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/__OSDBIntegrator.c",
+    "symbols": [
+      "__OSDBIntegrator"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/__OSFPRInit.c",
+    "symbols": [
+      "__OSFPRInit"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
     "source": "dol/__OSGetEffectivePriority.c",
     "symbols": [
       "__OSGetEffectivePriority"
@@ -2719,6 +3334,17 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/__OSLoadFPUContext.c",
+    "symbols": [
+      "__OSLoadFPUContext"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
   },
   {
     "module": "main",
@@ -2742,6 +3368,17 @@
   },
   {
     "module": "main",
+    "source": "dol/__OSPSInit.c",
+    "symbols": [
+      "__OSPSInit"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
     "source": "dol/__OSReadROM.c",
     "symbols": [
       "__OSReadROM"
@@ -2759,6 +3396,17 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/__OSSaveFPUContext.c",
+    "symbols": [
+      "__OSSaveFPUContext"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
   },
   {
     "module": "main",
@@ -2842,6 +3490,17 @@
   },
   {
     "module": "main",
+    "source": "dol/__init_hardware.c",
+    "symbols": [
+      "__init_hardware"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
     "source": "dol/__init_user.c",
     "symbols": [
       "__init_user"
@@ -2879,6 +3538,17 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/__start.c",
+    "symbols": [
+      "__start"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
   },
   {
     "module": "main",
@@ -3039,6 +3709,17 @@
     "status": "matching",
     "mw_version": "GC/1.3.2",
     "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_80005E0C.c",
+    "symbols": [
+      "fn_80005E0C"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
   },
   {
     "module": "main",
@@ -3242,6 +3923,61 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_800071B8.c",
+    "symbols": [
+      "fn_800071B8"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_80007654.c",
+    "symbols": [
+      "fn_80007654"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_80007664.c",
+    "symbols": [
+      "fn_80007664"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_80007700.c",
+    "symbols": [
+      "fn_80007700"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_800079A0.c",
+    "symbols": [
+      "fn_800079A0"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
     "source": "dol/fn_800079C4.c",
     "symbols": [
       "fn_800079C4"
@@ -3429,6 +4165,105 @@
     "status": "matching",
     "mw_version": "GC/1.3.2",
     "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_80009FD4.c",
+    "symbols": [
+      "fn_80009FD4"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_80009FF4.c",
+    "symbols": [
+      "fn_80009FF4"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_8000A020.c",
+    "symbols": [
+      "fn_8000A020"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_8000A030.c",
+    "symbols": [
+      "fn_8000A030"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_8000A040.c",
+    "symbols": [
+      "fn_8000A040"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_8000A050.c",
+    "symbols": [
+      "fn_8000A050"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_8000A0B8.c",
+    "symbols": [
+      "fn_8000A0B8"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_8000AA2C.c",
+    "symbols": [
+      "fn_8000AA2C"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_8000B8AC.c",
+    "symbols": [
+      "fn_8000B8AC"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
   },
   {
     "module": "main",
@@ -4532,6 +5367,28 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_80024E6C.c",
+    "symbols": [
+      "fn_80024E6C"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_80025004.c",
+    "symbols": [
+      "fn_80025004"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
     "source": "dol/fn_80025C28.c",
     "symbols": [
       "fn_80025C28"
@@ -5499,6 +6356,50 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_8003C6D0.c",
+    "symbols": [
+      "fn_8003C6D0"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_8003CBB0.c",
+    "symbols": [
+      "fn_8003CBB0"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_8003CE74.c",
+    "symbols": [
+      "fn_8003CE74"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_8003D4C0.c",
+    "symbols": [
+      "fn_8003D4C0"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
   },
   {
     "module": "main",
@@ -8577,6 +9478,39 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_8006E250.c",
+    "symbols": [
+      "fn_8006E250"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_8006E294.c",
+    "symbols": [
+      "fn_8006E294"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_8006E2B0.c",
+    "symbols": [
+      "fn_8006E2B0"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
     "source": "dol/fn_8006F774.c",
     "symbols": [
       "fn_8006F774"
@@ -9507,6 +10441,17 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_80078538.c",
+    "symbols": [
+      "fn_80078538"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
     "source": "dol/fn_800786B0.c",
     "symbols": [
       "fn_800786B0"
@@ -9514,6 +10459,17 @@
     "status": "matching",
     "mw_version": "GC/1.3.2",
     "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_80078884.c",
+    "symbols": [
+      "fn_80078884"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
   },
   {
     "module": "main",
@@ -9990,6 +10946,39 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_8008B0E0.c",
+    "symbols": [
+      "fn_8008B0E0"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_8008B0E8.c",
+    "symbols": [
+      "fn_8008B0E8"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_8008B0F0.c",
+    "symbols": [
+      "fn_8008B0F0"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
     "source": "dol/fn_8008B484.c",
     "symbols": [
       "fn_8008B484"
@@ -10400,6 +11389,17 @@
     "status": "matching",
     "mw_version": "GC/1.3.2",
     "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/mathutil_init.c",
+    "symbols": [
+      "mathutil_init"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
   },
   {
     "module": "main",
@@ -12708,6 +13708,17 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/bg_common/fn_1_106EB0.c",
+    "symbols": [
+      "fn_1_106EB0"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/bg_common/fn_1_1071C0.c",
     "symbols": [
       "fn_1_1071C0"
@@ -13981,6 +14992,17 @@
     "mw_version": null,
     "extra_cflags": [],
     "tu": "rel/main_rel/burner.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/burner/fn_1_9AF80.c",
+    "symbols": [
+      "fn_1_9AF80"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
   },
   {
     "module": "main_rel",
@@ -16759,6 +17781,17 @@
     "mw_version": null,
     "extra_cflags": [],
     "tu": "rel/main_rel/cloth.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/cloth/fn_1_1030D4.c",
+    "symbols": [
+      "fn_1_1030D4"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
   },
   {
     "module": "main_rel",
@@ -25444,6 +26477,17 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/screen_effect/fn_1_7A6B4.c",
+    "symbols": [
+      "fn_1_7A6B4"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/screen_effect/fn_1_7A9B8.c",
     "symbols": [
       "fn_1_7A9B8"
@@ -25452,6 +26496,17 @@
     "mw_version": "GC/1.3.2",
     "extra_cflags": [],
     "tu": "rel/main_rel/screen_effect.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/screen_effect/fn_1_7AA50.c",
+    "symbols": [
+      "fn_1_7AA50"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
   },
   {
     "module": "main_rel",
@@ -28274,6 +29329,28 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/stcoli/fn_1_15578.c",
+    "symbols": [
+      "fn_1_15578"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/stcoli/fn_1_163BC.c",
+    "symbols": [
+      "fn_1_163BC"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/stcoli/fn_1_181CC.c",
     "symbols": [
       "fn_1_181CC"
@@ -28315,6 +29392,17 @@
     "mw_version": null,
     "extra_cflags": [],
     "tu": "rel/main_rel/stcoli.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/stcoli/fn_1_20A5C.c",
+    "symbols": [
+      "fn_1_20A5C"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
   },
   {
     "module": "main_rel",
@@ -28632,6 +29720,17 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
+  },
+  {
+    "module": "movie_module",
+    "source": "rel/movie_module/fn_12_12564.c",
+    "symbols": [
+      "fn_12_12564"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
   },
   {
     "module": "movie_module",
@@ -30924,6 +32023,28 @@
   },
   {
     "module": "movie_module",
+    "source": "rel/movie_module/fn_12_33664.c",
+    "symbols": [
+      "fn_12_33664"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "movie_module",
+    "source": "rel/movie_module/fn_12_33698.c",
+    "symbols": [
+      "fn_12_33698"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "movie_module",
     "source": "rel/movie_module/fn_12_33874.c",
     "symbols": [
       "fn_12_33874"
@@ -32250,6 +33371,28 @@
   },
   {
     "module": "movie_module",
+    "source": "rel/movie_module/fn_12_3CB74.c",
+    "symbols": [
+      "fn_12_3CB74"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "movie_module",
+    "source": "rel/movie_module/fn_12_3D144.c",
+    "symbols": [
+      "fn_12_3D144"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "movie_module",
     "source": "rel/movie_module/fn_12_3D730.c",
     "symbols": [
       "fn_12_3D730"
@@ -32457,6 +33600,17 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
+  },
+  {
+    "module": "movie_module",
+    "source": "rel/movie_module/fn_12_52E8.c",
+    "symbols": [
+      "fn_12_52E8"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
   },
   {
     "module": "movie_module",
@@ -32907,6 +34061,28 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
+  },
+  {
+    "module": "movie_module",
+    "source": "rel/movie_module/fn_12_CF2C.c",
+    "symbols": [
+      "fn_12_CF2C"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "movie_module",
+    "source": "rel/movie_module/fn_12_D0B8.c",
+    "symbols": [
+      "fn_12_D0B8"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
   },
   {
     "module": "movie_module",
