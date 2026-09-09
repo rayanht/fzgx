@@ -413,6 +413,7 @@ def shared_storage(p: Project, rec: dict, pieces: list, text: str, mapping: dict
                 continue  # A function-local static is outside this aggregate's accessed fields.
             decl = re.sub(r'^(?:static\s+|extern\s+)+', '', piece.text.split('=', 1)[0].strip().rstrip(';'))
             decl = re.sub(r'__attribute__\s*\(\(aligned\(\d+\)\)\)', '', decl).strip()
+            source_decl = decl
             if re.fullmatch(r'(?:const\s+)?(?:(?:signed|unsigned)\s+)?char\s+\w+\s*\[\s*\]', decl):
                 # Initializers supply array bounds in C, but aggregate members
                 # have no initializer. The compiled symbol carries that extent.
@@ -424,7 +425,7 @@ def shared_storage(p: Project, rec: dict, pieces: list, text: str, mapping: dict
             field = 'sdk_' + s['name']
             fields.append(replace_symbols(decl, {s['name']: field}) + ';')
             replacements[s['name']] = f'({local}->{field})'
-            text = re.sub(re.escape('extern ' + decl) + r'\s*;', '', text)
+            text = re.sub(re.escape('extern ' + source_decl) + r'\s*;', '', text)
             cursor = offset + s['size']
         # Place the aggregate after its type dependencies and before function bodies.
         decl = 'struct ' + tag + ' {\n' + '\n'.join(fields) + '\n};\nextern struct ' + tag + ' ' + mapping[anchor] + ';\n\n'

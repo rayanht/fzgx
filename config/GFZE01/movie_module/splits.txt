@@ -1418,3 +1418,6 @@ rel/movie_module/MPV_GoNextDelimSj.c:
 
 rel/movie_module/DCT_FsriInitScanTbl.c:
 	.text       start:0x00004E28 end:0x00004F18 align:4
+
+rel/movie_module/mwSfdPause.c:
+	.text       start:0x00038F04 end:0x0003901C align:4

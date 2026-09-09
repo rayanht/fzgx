@@ -38652,6 +38652,16 @@
   },
   {
     "module": "movie_module",
+    "source": "rel/movie_module/mwSfdPause.c",
+    "symbols": [
+      "mwSfdPause"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "movie_module",
     "source": "rel/movie_module/sfxzmv_MakeOrgZ32TblByDirect.c",
     "symbols": [
       "sfxzmv_MakeOrgZ32TblByDirect"

@@ -101,6 +101,14 @@ Rules that hold for everyone:
   (the `memset`/`fn_80008BEC` size argument was one such case). Drafts containing `???` remain
   incomplete and cannot be submitted by this pass.
 - Prioritize deterministic SDK C imports (CARD, then OS, EXI, SI) regardless of size.
+  Include REL middleware: the reconstructed Sofdec sources in the CC0 MK Deception decomp
+  yielded 60,888 bytes from 24 functions (including one complete `mpvabdec.c` TU).
+  Owned sources, headers and provenance are under `src/rel/movie_module/`, `include/sofdec/`
+  and `state/sdkimports/sofdec.json`. GX and later Sofdec player layouts differ; only the
+  recovered fields in `mwsfd.h` are named. Compare code bytes when tracking the 30% target.
+  SDK imports must retain active compiler pragmas and distinguish function-pointer objects
+  from prototypes. After a pool-backed submit re-splits retail objects, invalidate the
+  in-memory object index before checking the next function (`api._reconfigure_and_split`).
   Functions **under 256 bytes** (`--max-size 255`) are a repair corpus, not a prerequisite. `fzgx stuck --max-size 255` classifies the saved attempts; `fzgx sweep --max-size 255`
   searches them. `fzgx reuse --max-size 255` rebinds verified C when retail instruction
   shapes agree, retaining registers, immediates, relocation kinds/addends and branch targets;
