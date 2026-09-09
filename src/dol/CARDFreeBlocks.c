@@ -1,5 +1,10 @@
-#include "types.h"
-#include "dolphin/sdk/mkdd/card/CARDBios.h"
+#include <dolphin/card/CARDPriv.h>
+
+BOOL OSDisableInterrupts(void);
+BOOL OSRestoreInterrupts(BOOL level);
+
+CARDDir *fn_8002C4BC(CARDControl *card);
+u16 *fn_8002C0B8(CARDControl *card);
 
 static inline s32 __CARDPutControlBlock(CARDControl *card, s32 result) {
     BOOL enabled;

@@ -1,5 +1,8 @@
-#include "types.h"
-#include "dolphin/sdk/mkdd/card/CARDRename.h"
+#include <dolphin/card/CARDPriv.h>
+
+OSTime OSGetTime(void);
+CARDDir *fn_8002C4BC(CARDControl *card);
+
 #include "sdk_addresses.h"
 
 u32 __OSBusClock : FZGX_ADDR___OSBusClock;

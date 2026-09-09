@@ -1,5 +1,7 @@
-#include "types.h"
-#include "dolphin/sdk/tww/card/CARDStat.h"
+#include <dolphin/card/CARDPriv.h>
+
+extern CARDDir *fn_8002C4BC(CARDControl *card);
+void UpdateIconOffsets(CARDDir *ent, CARDStat *stat);
 
 s32 CARDGetStatus(s32 chan, s32 fileNo, CARDStat *stat) {
     CARDControl *card;

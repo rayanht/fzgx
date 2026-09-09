@@ -317,9 +317,6 @@ dol/fn_8002A744.c:
 dol/fn_8002A7C4.c:
 	.text       start:0x8002A7C4 end:0x8002A83C
 
-dol/BlockReadCallback.c:
-	.text       start:0x8002BE20 end:0x8002BEFC
-
 dol/fn_8002C0B8.c:
 	.text       start:0x8002C0B8 end:0x8002C0C0
 
@@ -1529,9 +1526,6 @@ dol/fn_8003432C.c:
 dol/GXPeekZ.c:
 	.text       start:0x80034350 end:0x80034378 align:4
 
-dol/__CARDIsPublic.c:
-	.text       start:0x8002EA54 end:0x8002EA84 align:4
-
 dol/fn_80057B5C.c:
 	.text       start:0x80057B5C end:0x80057B9C align:4
 
@@ -1774,9 +1768,6 @@ dol/fn_80008E5C.c:
 
 dol/fn_80009CAC.c:
 	.text       start:0x80009CAC end:0x80009CD4 align:4
-
-dol/CARDCheckAsync.c:
-	.text       start:0x8002D634 end:0x8002D65C align:4
 
 dol/stateCoverClosed_CMD.c:
 	.text       start:0x80018620 end:0x80018650 align:4
@@ -2183,12 +2174,6 @@ dol/fn_80028598.c:
 dol/__CARDPutControlBlock.c:
 	.text       start:0x8002A8F4 end:0x8002A958 align:4
 
-dol/BlockWriteCallback.c:
-	.text       start:0x8002BF60 end:0x8002C03C align:4
-
-dol/__CARDRead.c:
-	.text       start:0x8002BEFC end:0x8002BF60 align:4
-
 dol/__CARDUnlockedHandler.c:
 	.text       start:0x80029AF4 end:0x80029B78 align:4
 
@@ -2201,17 +2186,11 @@ dol/WriteCallback.c:
 dol/fn_8002F570.c:
 	.text       start:0x8002F570 end:0x8002F5B8 align:4
 
-dol/__CARDWrite.c:
-	.text       start:0x8002C03C end:0x8002C0A0 align:4
-
 dol/EraseCallback_CARDWrite.c:
 	.text       start:0x8002F728 end:0x8002F7D8 align:4
 
 dol/DeleteCallback.c:
 	.text       start:0x8002F934 end:0x8002F9D8 align:4
-
-dol/__CARDCompareFileName.c:
-	.text       start:0x8002E954 end:0x8002E9BC align:4
 
 dol/GXInitFifoPtrs.c:
 	.text       start:0x80031CF0 end:0x80031D60 align:4
@@ -3056,9 +3035,6 @@ dol/fn_8004BF68.c:
 dol/__OSDoHotReset.c:
 	.text       start:0x8000EF64 end:0x8000EFAC align:4
 
-dol/CARDCreate.c:
-	.text       start:0x8002F0F8 end:0x8002F140 align:4
-
 dol/fn_8002FC14.c:
 	.text       start:0x8002FC14 end:0x8002FC5C align:4
 
@@ -3083,9 +3059,6 @@ dol/fn_8008023C.c:
 dol/fn_80072BD0.c:
 	.text       start:0x80072BD0 end:0x80072C24 align:4
 
-dol/CARDClose.c:
-	.text       start:0x8002ED4C end:0x8002EDA0 align:4
-
 dol/fn_8005B010.c:
 	.text       start:0x8005B010 end:0x8005B068 align:4
 
@@ -3094,9 +3067,6 @@ dol/fn_80034214.c:
 
 dol/fn_8000B360.c:
 	.text       start:0x8000B360 end:0x8000B380 align:4
-
-dol/CARDCheck.c:
-	.text       start:0x8002D65C end:0x8002D6B0 align:4
 
 dol/fn_8006CD50.c:
 	.text       start:0x8006CD50 end:0x8006CDA8 align:4
@@ -3305,24 +3275,6 @@ dol/EraseCallback_CARDDir.c:
 dol/__CARDUpdateDir.c:
 	.text       start:0x8002C65C end:0x8002C720 align:4
 
-dol/__CARDCheckSum.c:
-	.text       start:0x8002C720 end:0x8002C8D0 align:4
-
-dol/VerifyID.c:
-	.text       start:0x8002C8D0 end:0x8002CB54 align:4
-
-dol/VerifyDir.c:
-	.text       start:0x8002CB54 end:0x8002CD94 align:4
-
-dol/VerifyFAT.c:
-	.text       start:0x8002CD94 end:0x8002D018 align:4
-
-dol/__CARDVerify.c:
-	.text       start:0x8002D018 end:0x8002D0A4 align:4
-
-dol/CARDCheckExAsync.c:
-	.text       start:0x8002D0A4 end:0x8002D634 align:4
-
 dol/CARDProbeEx.c:
 	.text       start:0x8002D77C end:0x8002D8F8 align:4
 
@@ -3340,12 +3292,6 @@ dol/FormatCallback.c:
 
 dol/__CARDFormatRegionAsync.c:
 	.text       start:0x8002E2B4 end:0x8002E90C align:4
-
-dol/CreateCallbackFat.c:
-	.text       start:0x8002EDA8 end:0x8002EED8 align:4
-
-dol/CARDCreateAsync.c:
-	.text       start:0x8002EED8 end:0x8002F0F8 align:4
 
 dol/__CARDSeek.c:
 	.text       start:0x8002F140 end:0x8002F2F8 align:4
@@ -3374,20 +3320,23 @@ dol/CARDSetStatusAsync.c:
 dol/CARDRenameAsync.c:
 	.text       start:0x8003013C end:0x80030338 align:4
 
-dol/CARDGetSerialNo.c:
-	.text       start:0x80030690 end:0x80030754 align:4
-
-dol/__CARDAccess.c:
-	.text       start:0x8002E9BC end:0x8002EA54 align:4
-
-dol/__CARDGetFileNo.c:
-	.text       start:0x8002EA84 end:0x8002EBD4 align:4
-
-dol/CARDOpen.c:
-	.text       start:0x8002EBD4 end:0x8002ED4C align:4
-
 dol/CARDReadAsync.c:
 	.text       start:0x8002F428 end:0x8002F570 align:4
 
 dol/CARDGetStatus.c:
 	.text       start:0x8002FE54 end:0x8002FF80 align:4
+
+dol/CARDNet.c:
+	.text       start:0x80030690 end:0x80030754 align:4
+
+dol/CARDRdwr.c:
+	.text       start:0x8002BE20 end:0x8002C0A0 align:4
+
+dol/CARDCheck.c:
+	.text       start:0x8002C720 end:0x8002D6B0 align:4
+
+dol/CARDCreate.c:
+	.text       start:0x8002EDA8 end:0x8002F140 align:4
+
+dol/CARDOpen.c:
+	.text       start:0x8002E954 end:0x8002EDA0 align:4

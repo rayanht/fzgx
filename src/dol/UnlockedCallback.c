@@ -1,5 +1,8 @@
-#include "types.h"
-#include "dolphin/sdk/mkdd/card/CARDBios.h"
+#include <dolphin/card/CARDPriv.h>
+
+s32 Retry(s32 chan);
+
+void UnlockedCallback(s32 chan, s32 result);
 
 extern CARDControl lbl_80177960[2];
 

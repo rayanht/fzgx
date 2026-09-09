@@ -367,7 +367,8 @@ def load_generated_units() -> None:
 
 
 load_generated_units()
-config.reconfig_deps = [Path("config") / config.version / "units.json"]
+config.reconfig_deps = [Path("config") / config.version / "units.json",
+                        Path("config") / config.version / "ldscript.tpl"]
 
 
 def add_pool_rules() -> None:
@@ -532,6 +533,16 @@ config.progress_report_args = [
 ]
 
 if args.mode == "configure":
+    # MWCC's SDK absolute declarations share their address definitions with the linker.
+    template = Path(f"config/{args.version}/ldscript.tpl")
+    if template.exists():
+        addresses = re.findall(r"^\s*(\w+)\s*=\s*(0x[0-9A-Fa-f]+)\s*;", template.read_text(), re.M)
+        header = args.build_dir / args.version / "include/sdk_addresses.h"
+        content = "/* Generated from ldscript.tpl by configure.py. */\n" + "".join(
+            f"#define FZGX_ADDR_{name} {address}\n" for name, address in addresses)
+        header.parent.mkdir(parents=True, exist_ok=True)
+        if not header.exists() or header.read_text() != content:
+            header.write_text(content)
     # Write build.ninja and objdiff.json
     # pool units keep their own edge: apply_pool_rules rewrites it to mwcc_pool by name
     units_path = Path("config") / config.version / "units.json"

@@ -18,7 +18,7 @@ from pathlib import Path
 from typing import Dict, List, Optional
 
 from .project import ROOT, Project
-from . import tufile
+from . import oracle, tufile
 
 OBJDIFF = ROOT / "build" / "tools" / "objdiff-cli"
 
@@ -28,10 +28,7 @@ def compile_tu(p: Project, tu_source: str, extra_blocks: Optional[Dict[str, str]
     Returns (object path or None, compiler text)."""
     module = tu_source.split("/")[1] if tu_source.startswith("rel/") else "main"
     units = [u for u in p.load_units() if u.get("tu") == tu_source]
-    ref = units[0]["source"] if units else None
-    meta = p.objdiff_units().get(p.objdiff_unit_name(module, ref), {}) if ref else {}
-    flags = meta.get("scratch", {}).get("c_flags", "").replace(" -lang=c", "")
-    flags += f" -i include -i build/{p.version}/include"
+    flags = ' '.join(units[0].get('extra_cflags') or []) if units else None
     mw = (units[0].get("mw_version") if units else None) or ("GC/1.2.5n" if module == "main" else "GC/1.3.2")
     tf = tufile.load(p, tu_source)
     text = tf.render()
@@ -44,9 +41,7 @@ def compile_tu(p: Project, tu_source: str, extra_blocks: Optional[Dict[str, str]
     src = d / (Path(tu_source).stem + ".c")
     src.write_text(text)
     out = src.with_suffix(".o")
-    cmd = [str(ROOT / "build/tools/wibo"), str(ROOT / "build/compilers" / mw / "mwcceppc.exe")]
-    cmd += shlex.split(flags) + ["-c", str(src), "-o", str(out)]
-    cp = subprocess.run(cmd, cwd=ROOT, text=True, capture_output=True, timeout=600)
+    cp = oracle.compile_source(p, module, src, out, mw_version=mw, extra_cflags=flags)
     msg = "\n".join(l for l in (cp.stdout + cp.stderr).splitlines() if "Usage Warning" not in l).strip()
     return (out if cp.returncode == 0 and out.exists() else None), msg[-3000:]
 

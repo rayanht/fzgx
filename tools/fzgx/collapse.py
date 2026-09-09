@@ -187,7 +187,11 @@ def collapse(p: Project, tu_source: str, keep_on_failure: bool = False) -> Dict[
         old = [u for u in units if u.get("tu") == tu_source]
         old_sources = [u["source"] for u in old]
         mw = next((u.get("mw_version") for u in old if u.get("mw_version")), None)
-        extra = sorted({f for u in old for f in (u.get("extra_cflags") or [])})
+        # Flags are ordered option/value pairs, never a set of independent tokens.
+        options = {tuple(u.get("extra_cflags") or []) for u in old}
+        if len(options) != 1:
+            return {"ok": False, "error": "TU members have different compiler flags"}
+        extra = list(next(iter(options)))
         text = _splits_without(spath.read_text(), old_sources)
         text = text.rstrip("\n") + f"\n\n{tu_source}:\n"
         for sec, lo, hi, align in pl["ranges"]:

@@ -528,7 +528,8 @@ COMPILE_CHUNK_MAX = 240
 COMPILE_WORKERS = 12
 
 
-def check_many(project: Project, items: List[Tuple[str, Path]], max_diff_lines: int = 0) -> Dict[str, CheckResult]:
+def check_many(project: Project, items: List[Tuple[str, Path]], max_diff_lines: int = 0,
+               mw_version: Optional[str] = None, extra_cflags: Optional[str] = None) -> Dict[str, CheckResult]:
     """`check` for many (symbol, source) pairs at once: the uncarved ones are compiled in
     parallel batches (one mwcc process per chunk instead of one per function), then diffed
     one by one; carved ones go through `check`. Returns {symbol: result}."""
@@ -544,10 +545,12 @@ def check_many(project: Project, items: List[Tuple[str, Path]], max_diff_lines: 
             continue
         unit_src = project.unit_of(sym)
         if project.target_object_for(sym) is None or (unit_src is None and source is None):
-            results[symbol] = check(project, symbol, max_diff_lines, source=source)
+            results[symbol] = check(project, symbol, max_diff_lines, source=source,
+                                    mw_version=mw_version, extra_cflags=extra_cflags)
             continue
         ucfg = (project.unit_record(unit_src) or {}) if unit_src else {}
-        key = (sym.module, ucfg.get("mw_version"), " ".join(ucfg.get("extra_cflags") or []) or None)
+        key = (sym.module, mw_version or ucfg.get("mw_version"),
+               extra_cflags or " ".join(ucfg.get("extra_cflags") or []) or None)
         unit = project.objdiff_unit_name(sym.module, unit_src) if unit_src else ""
         groups.setdefault(key, []).append((symbol, sym, source if source is not None else unit_source_path(project, unit_src), unit))
     for (module, mw, extra), group in groups.items():
@@ -589,7 +592,8 @@ def check_many(project: Project, items: List[Tuple[str, Path]], max_diff_lines: 
             obj = objs.get(f)
             if obj is None:
                 # name the error the slow way, one process for this function only
-                return symbol, check(project, symbol, max_diff_lines, source=source)
+                return symbol, check(project, symbol, max_diff_lines, source=source,
+                                      mw_version=mw, extra_cflags=extra)
             target = project.target_object_for(sym)
             res = _diff(project, module, sym.name, unit, max_diff_lines, target=target, base=obj)
             if res.ok and res.matched_pool:

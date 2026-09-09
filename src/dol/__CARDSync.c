@@ -1,5 +1,9 @@
-#include "types.h"
-#include "dolphin/sdk/mkdd/card/CARDBios.h"
+#include <dolphin/card/CARDPriv.h>
+
+BOOL OSDisableInterrupts(void);
+BOOL OSRestoreInterrupts(BOOL level);
+
+void fn_800110A8(OSThreadQueue *queue);
 
 extern CARDControl lbl_80177960[2];
 

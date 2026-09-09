@@ -1,5 +1,9 @@
-#include "types.h"
-#include "dolphin/sdk/mkdd/card/CARDDelete.h"
+#include <dolphin/card/CARDPriv.h>
+
+void fn_80029824(s32 chan, s32 result);
+CARDDir *fn_8002C4BC(CARDControl *card);
+
+void DeleteCallback(s32 chan, s32 result);
 
 s32 CARDFastDeleteAsync(s32 chan, s32 fileNo, CARDCallback callback) {
     CARDControl *card;

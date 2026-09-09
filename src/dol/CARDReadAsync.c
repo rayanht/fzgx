@@ -1,5 +1,10 @@
-#include "types.h"
-#include "dolphin/sdk/tww/card/CARDRead.h"
+#include <dolphin/card/CARDPriv.h>
+
+extern CARDDir *fn_8002C4BC(CARDControl *card);
+
+void DCInvalidateRange(void *start, u32 nBytes);
+extern void fn_80029824(s32 chan, s32 result);
+void ReadCallback(s32 chan, s32 result);
 
 s32 CARDReadAsync(CARDFileInfo *fileInfo, void *buf, s32 length, s32 offset,
                   CARDCallback callback) {

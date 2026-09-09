@@ -1,5 +1,6 @@
-#include "types.h"
-#include "dolphin/sdk/mkdd/card/CARDRead.h"
+#include <dolphin/card/CARDPriv.h>
+
+u16 *fn_8002C0B8(CARDControl *card);
 
 extern CARDControl lbl_80177960[2];
 

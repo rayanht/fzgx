@@ -1,5 +1,7 @@
-#include "types.h"
-#include "dolphin/sdk/mkdd/card/CARDRead.h"
+#include <dolphin/card/CARDPriv.h>
+
+CARDDir *fn_8002C4BC(CARDControl *card);
+u16 *fn_8002C0B8(CARDControl *card);
 
 s32 __CARDSeek(CARDFileInfo *fileInfo, s32 length, s32 offset, CARDControl **pcard) {
     CARDControl *card;

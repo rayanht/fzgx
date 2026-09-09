@@ -1,5 +1,7 @@
-#include "types.h"
-#include "dolphin/sdk/mkdd/card/CARDBios.h"
+#include <dolphin/card/CARDPriv.h>
+
+BOOL OSDisableInterrupts(void);
+BOOL OSRestoreInterrupts(BOOL level);
 
 extern CARDControl lbl_80177960[2];
 

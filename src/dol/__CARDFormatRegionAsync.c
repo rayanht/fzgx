@@ -1,5 +1,12 @@
-#include "types.h"
-#include "dolphin/sdk/mkdd/card/CARDFormat.h"
+#include <dolphin/card/CARDPriv.h>
+
+OSTime OSGetTime(void);
+void DCStoreRange(void *addr, u32 nBytes);
+void fn_80029824(s32 chan, s32 result);
+
+OSSram *__OSLockSram();
+OSSramEx *__OSLockSramEx();
+void FormatCallback(s32 chan, s32 result);
 #include "sdk_addresses.h"
 
 vu16 __VIRegs[59] : FZGX_ADDR___VIRegs;

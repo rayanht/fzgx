@@ -1,0 +1,82 @@
+{
+  "module": "main",
+  "tus": [
+    {
+      "file": "CARDNet.c",
+      "text": [
+        2147681936,
+        2147682132
+      ],
+      "functions": [
+        "CARDGetSerialNo"
+      ],
+      "sdk": "mkdd",
+      "source": "libs/dolphin/card/CARDNet.c"
+    },
+    {
+      "file": "CARDRdwr.c",
+      "text": [
+        2147663392,
+        2147664032
+      ],
+      "functions": [
+        "BlockReadCallback",
+        "__CARDRead",
+        "BlockWriteCallback",
+        "__CARDWrite"
+      ],
+      "sdk": "mkdd",
+      "source": "libs/dolphin/card/CARDRdwr.c"
+    },
+    {
+      "file": "CARDCheck.c",
+      "text": [
+        2147665696,
+        2147669680
+      ],
+      "functions": [
+        "__CARDCheckSum",
+        "VerifyID",
+        "VerifyDir",
+        "VerifyFAT",
+        "__CARDVerify",
+        "CARDCheckExAsync",
+        "CARDCheckAsync",
+        "CARDCheck"
+      ],
+      "sdk": "mkdd",
+      "source": "libs/dolphin/card/CARDCheck.c"
+    },
+    {
+      "file": "CARDCreate.c",
+      "text": [
+        2147675560,
+        2147676480
+      ],
+      "functions": [
+        "CreateCallbackFat",
+        "CARDCreateAsync",
+        "CARDCreate"
+      ],
+      "sdk": "mkdd",
+      "source": "libs/dolphin/card/CARDCreate.c"
+    },
+    {
+      "file": "CARDOpen.c",
+      "text": [
+        2147674452,
+        2147675552
+      ],
+      "functions": [
+        "__CARDCompareFileName",
+        "__CARDAccess",
+        "__CARDIsPublic",
+        "__CARDGetFileNo",
+        "CARDOpen",
+        "CARDClose"
+      ],
+      "sdk": "tww",
+      "source": "src/dolphin/card/CARDOpen.c"
+    }
+  ]
+}

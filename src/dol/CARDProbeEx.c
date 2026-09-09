@@ -1,5 +1,11 @@
-#include "types.h"
-#include "dolphin/sdk/mkdd/card/CARDMount.h"
+#include <dolphin/card/CARDPriv.h>
+
+BOOL OSDisableInterrupts(void);
+BOOL OSRestoreInterrupts(BOOL level);
+s32 EXIProbeEx(s32 chan);
+s32 EXIGetID(s32 chan, u32 dev, u32 *id);
+BOOL fn_8002D6B0(u32 id);
+
 #include "sdk_addresses.h"
 
 extern CARDControl lbl_80177960[2];

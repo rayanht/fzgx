@@ -1,5 +1,10 @@
-#include "types.h"
-#include "dolphin/sdk/mkdd/card/CARDWrite.h"
+#include <dolphin/card/CARDPriv.h>
+
+OSTime OSGetTime(void);
+CARDDir *fn_8002C4BC(CARDControl *card);
+u16 *fn_8002C0B8(CARDControl *card);
+void EraseCallback_CARDWrite(s32 chan, s32 result);
+
 #include "sdk_addresses.h"
 
 u32 __OSBusClock : FZGX_ADDR___OSBusClock;

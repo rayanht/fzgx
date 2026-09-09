@@ -1,5 +1,4 @@
-#include "types.h"
-#include "dolphin/sdk/mkdd/card/CARDUnlock.h"
+#include <dolphin/card/CARDPriv.h>
 
 u32 bitrev(u32 data) {
     u32 wk;

@@ -274,6 +274,13 @@ def cmd_sdkmatch(a, p):
     return 0
 
 
+def cmd_sdkimport(a, p):
+    from . import sdkimport
+    r = sdkimport.consolidate(p, a.library) if a.consolidate else sdkimport.run(p, a.library, do_submit=not a.no_submit)
+    _print(r, a.json)
+    return 0 if not r.get('still') and not r.get('errors') and not r.get('failed') else 1
+
+
 def cmd_why_link(a, p):
     from . import oracle  # scoped
     _print(oracle.why_link(p, a.symbol), a.json); return 0
@@ -405,6 +412,10 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("tu", help="e.g. rel/main_rel/camera.c"); s.add_argument("-v", "--verbose", action="store_true")
     s = sub.add_parser("tu-finish", help="one pass over every TU of a module: include, tidy, hoist, reflag, collapse complete TUs; prints the revise queue"); s.set_defaults(fn=cmd_tu_finish)
     s.add_argument("--module", default="main_rel"); s.add_argument("-v", "--verbose", action="store_true")
+    s = sub.add_parser("sdkimport", help="import saved SDK C signatures with shared declarations and verified relocation bindings"); s.set_defaults(fn=cmd_sdkimport)
+    s.add_argument("--library", choices=["card", "os", "exi", "si"], default="card")
+    s.add_argument("--no-submit", action="store_true", help="adapt and check C without submitting units")
+    s.add_argument("--consolidate", action="store_true", help="combine complete, identified SDK source files and verify the link")
     s = sub.add_parser("sdkmatch", help="identify SDK/runtime functions in the DOL by masked-byte signatures of a compiled public SDK decomp"); s.set_defaults(fn=cmd_sdkmatch)
     s.add_argument("--sdk", default="build/tools/mkdd"); s.add_argument("--mw", default="GC/1.2.5n"); s.add_argument("--min-size", type=int, default=16)
     s.add_argument("--apply", action="store_true", help="name the identified unnamed DOL functions from the saved runs (link-verified)")

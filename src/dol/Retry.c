@@ -1,5 +1,13 @@
-#include "types.h"
-#include "dolphin/sdk/mkdd/card/CARDBios.h"
+#include <dolphin/card/CARDPriv.h>
+
+void fn_8000AF78(OSAlarm *alarm);
+
+s32 Retry(s32 chan);
+
+void OSSetAlarm(OSAlarm *alarm, OSTime tick, OSAlarmHandler handler);
+
+void TimeoutHandler(OSAlarm *alarm, OSContext *context);
+
 #include "sdk_addresses.h"
 
 u32 __OSBusClock : FZGX_ADDR___OSBusClock;

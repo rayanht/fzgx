@@ -1,5 +1,7 @@
-#include "types.h"
-#include "dolphin/sdk/mkdd/card/CARDUnlock.h"
+#include <dolphin/card/CARDPriv.h>
+
+u32 DSPCheckMailToDSP(void);
+void DSPSendMailToDSP(u32 mail);
 
 extern CARDControl lbl_80177960[2];
 

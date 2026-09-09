@@ -1,5 +1,4 @@
-#include "types.h"
-#include "dolphin/sdk/mkdd/card/CARDBlock.h"
+#include <dolphin/card/CARDPriv.h>
 
 extern CARDControl lbl_80177960[2];
 

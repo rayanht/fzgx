@@ -34,6 +34,8 @@ SECTIONS
     __EXIRegs = 0xCC006800;
     EXIRegs = 0xCC006800;
     __AIRegs = 0xCC006C00;
+    __OSBusClock = 0x800000F8;
+    GameChoice = 0x800030E3;
     __GXFifo = 0xCC008000;
 }
 

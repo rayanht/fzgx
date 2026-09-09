@@ -1,5 +1,6 @@
-#include "types.h"
-#include "dolphin/sdk/mkdd/card/CARDStat.h"
+#include <dolphin/card/CARDPriv.h>
+
+void UpdateIconOffsets(CARDDir *ent, CARDStat *stat);
 
 void UpdateIconOffsets(CARDDir *ent, CARDStat *stat) {
     u32 offset;

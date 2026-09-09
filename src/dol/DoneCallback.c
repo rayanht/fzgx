@@ -1,5 +1,8 @@
-#include "types.h"
-#include "dolphin/sdk/mkdd/card/CARDUnlock.h"
+#include <dolphin/card/CARDPriv.h>
+
+BOOL EXIProbe(s32 chan);
+s32 ReadArrayUnlock(s32 chan, u32 data, void *rbuf, s32 rlen, s32 mode);
+s32 fn_8002AE70(void);
 
 extern CARDControl lbl_80177960[2];
 

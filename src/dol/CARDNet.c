@@ -1,5 +1,4 @@
-#include "types.h"
-#include "dolphin/sdk/mkdd/card/CARDNet.h"
+#include <dolphin/card/CARDPriv.h>
 
 s32 CARDGetSerialNo(s32 chan, u64 *serialNo) {
     CARDControl *card;

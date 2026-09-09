@@ -19,6 +19,17 @@
 - [doldecomp/melee](https://github.com/doldecomp/melee), [doldecomp/sms](https://github.com/doldecomp/sms), [doldecomp/mkdd](https://github.com/doldecomp/mkdd) — MSL, MetroTRK and middleware references.
 - [camthesaxman/smb-decomp](https://github.com/camthesaxman/smb-decomp) — the closest engine relative (Amusement Vision). Read for vocabulary only: no licence, nothing copied.
 
+### CARD source adaptation
+
+The CARD implementations and Dolphin declarations are adapted from the CC0
+[MKDD](https://github.com/doldecomp/mkdd) and
+[TWW](https://github.com/zeldaret/tww) SDK sources. Exact upstream files,
+revisions, function identities and relocation bindings are recorded in
+[`state/sdkimports/card.json`](../state/sdkimports/card.json). The complete
+`CARDCheck.c`, `CARDCreate.c`, `CARDNet.c` and `CARDRdwr.c` files use MKDD;
+`CARDOpen.c` uses TWW. All build includes belong to this repository under
+`include/dolphin/`; upstream checkouts are only inputs to the import tool.
+
 ## Community knowledge (vocabulary only)
 
 - [Manifold Project](https://github.com/RaphaelTetreault/ManifoldProject) by Raphael Tetreault — stage, collision and asset format work for F-Zero GX/AX.

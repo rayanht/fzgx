@@ -1,5 +1,6 @@
-#include "types.h"
-#include "dolphin/sdk/mkdd/card/CARDDir.h"
+#include <dolphin/card/CARDPriv.h>
+
+void WriteCallback_CARDDir(s32 chan, s32 result);
 
 extern CARDControl lbl_80177960[2];
 

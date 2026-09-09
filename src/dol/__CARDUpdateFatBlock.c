@@ -1,5 +1,8 @@
-#include "types.h"
-#include "dolphin/sdk/mkdd/card/CARDBlock.h"
+#include <dolphin/card/CARDPriv.h>
+
+void DCStoreRange(void *addr, u32 nBytes);
+
+void EraseCallback(s32 chan, s32 result);
 
 extern CARDControl lbl_80177960[2];
 

@@ -1,5 +1,7 @@
-#include "types.h"
-#include "dolphin/sdk/mkdd/card/CARDMount.h"
+#include <dolphin/card/CARDPriv.h>
+
+void DoUnmount(s32 chan, s32 result);
+s32 fn_8002D8F8(s32 chan);
 
 extern CARDControl lbl_80177960[2];
 

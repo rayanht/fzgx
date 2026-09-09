@@ -1,0 +1,987 @@
+{
+  "CARDCheckExAsync": {
+    "absolutes": {},
+    "bindings": {
+      "CARDCheckExAsync": "CARDCheckExAsync",
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "VerifyDir": "VerifyDir",
+      "VerifyFAT": "VerifyFAT",
+      "VerifyID": "VerifyID",
+      "__CARDGetControlBlock": "__CARDGetControlBlock",
+      "__CARDPutControlBlock": "__CARDPutControlBlock",
+      "__CARDUpdateDir": "__CARDUpdateDir",
+      "__CARDUpdateFatBlock": "__CARDUpdateFatBlock",
+      "memcpy": "memcpy",
+      "memset": "memset"
+    },
+    "mw": "GC/1.2.5n",
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "CARDCheckExAsync",
+    "size": 1424,
+    "source": "libs/dolphin/card/CARDCheck.c",
+    "symbol": "CARDCheckExAsync"
+  },
+  "CARDCreateAsync": {
+    "absolutes": {},
+    "bindings": {
+      "CARDCreateAsync": "CARDCreateAsync",
+      "CreateCallbackFat": "CreateCallbackFat",
+      "__CARDAllocBlock": "__CARDAllocBlock",
+      "__CARDCompareFileName": "__CARDCompareFileName",
+      "__CARDDefaultApiCallback": "fn_80029824",
+      "__CARDGetControlBlock": "__CARDGetControlBlock",
+      "__CARDGetDirBlock": "fn_8002C4BC",
+      "__CARDGetFatBlock": "fn_8002C0B8",
+      "__CARDPutControlBlock": "__CARDPutControlBlock",
+      "memcmp": "fn_8008023C",
+      "strlen": "strlen",
+      "strncpy": "strncpy"
+    },
+    "mw": "GC/1.2.5n",
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "CARDCreateAsync",
+    "size": 544,
+    "source": "libs/dolphin/card/CARDCreate.c",
+    "symbol": "CARDCreateAsync"
+  },
+  "CARDDeleteAsync": {
+    "absolutes": {},
+    "bindings": {
+      "CARDDeleteAsync": "CARDDeleteAsync",
+      "DeleteCallback": "DeleteCallback",
+      "__CARDDefaultApiCallback": "fn_80029824",
+      "__CARDGetControlBlock": "__CARDGetControlBlock",
+      "__CARDGetDirBlock": "fn_8002C4BC",
+      "__CARDGetFileNo": "__CARDGetFileNo",
+      "__CARDIsOpened": "fn_8002EDA0",
+      "__CARDPutControlBlock": "__CARDPutControlBlock",
+      "__CARDUpdateDir": "__CARDUpdateDir",
+      "memset": "memset"
+    },
+    "mw": "GC/1.2.5n",
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "CARDDeleteAsync",
+    "size": 272,
+    "source": "libs/dolphin/card/CARDDelete.c",
+    "symbol": "CARDDeleteAsync"
+  },
+  "CARDFastDeleteAsync": {
+    "absolutes": {},
+    "bindings": {
+      "CARDFastDeleteAsync": "CARDFastDeleteAsync",
+      "DeleteCallback": "DeleteCallback",
+      "__CARDDefaultApiCallback": "fn_80029824",
+      "__CARDGetControlBlock": "__CARDGetControlBlock",
+      "__CARDGetDirBlock": "fn_8002C4BC",
+      "__CARDIsOpened": "fn_8002EDA0",
+      "__CARDIsWritable": "__CARDAccess",
+      "__CARDPutControlBlock": "__CARDPutControlBlock",
+      "__CARDUpdateDir": "__CARDUpdateDir",
+      "memset": "memset"
+    },
+    "mw": "GC/1.2.5n",
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "CARDFastDeleteAsync",
+    "size": 300,
+    "source": "libs/dolphin/card/CARDDelete.c",
+    "symbol": "CARDFastDeleteAsync"
+  },
+  "CARDFreeBlocks": {
+    "absolutes": {},
+    "bindings": {
+      "CARDFreeBlocks": "CARDFreeBlocks",
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "__CARDGetControlBlock": "__CARDGetControlBlock",
+      "__CARDGetDirBlock": "fn_8002C4BC",
+      "__CARDGetFatBlock": "fn_8002C0B8"
+    },
+    "mw": "GC/1.2.5n",
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "CARDFreeBlocks",
+    "size": 336,
+    "source": "libs/dolphin/card/CARDBios.c",
+    "symbol": "CARDFreeBlocks"
+  },
+  "CARDGetSerialNo": {
+    "absolutes": {},
+    "bindings": {
+      "CARDGetSerialNo": "CARDGetSerialNo",
+      "__CARDGetControlBlock": "__CARDGetControlBlock",
+      "__CARDPutControlBlock": "__CARDPutControlBlock"
+    },
+    "mw": "GC/1.2.5n",
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "CARDGetSerialNo",
+    "size": 196,
+    "source": "libs/dolphin/card/CARDNet.c",
+    "symbol": "CARDGetSerialNo"
+  },
+  "CARDGetStatus": {
+    "absolutes": {},
+    "bindings": {
+      "CARDGetStatus": "CARDGetStatus",
+      "UpdateIconOffsets": "UpdateIconOffsets",
+      "__CARDAccess": "__CARDAccess",
+      "__CARDGetControlBlock": "__CARDGetControlBlock",
+      "__CARDGetDirBlock": "fn_8002C4BC",
+      "__CARDIsPublic": "__CARDIsPublic",
+      "__CARDPutControlBlock": "__CARDPutControlBlock",
+      "memcpy": "memcpy"
+    },
+    "mw": "GC/1.2.5n",
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "CARDGetStatus",
+    "size": 300,
+    "source": "src/dolphin/card/CARDStat.c",
+    "symbol": "CARDGetStatus"
+  },
+  "CARDMountAsync": {
+    "absolutes": {
+      "GameChoice": 2147496163
+    },
+    "bindings": {
+      "CARDMountAsync": "CARDMountAsync",
+      "DoMount": "fn_8002D8F8",
+      "EXIAttach": "EXIAttach",
+      "EXIGetState": "EXIGetState",
+      "EXILock": "EXILock",
+      "EXISetExiCallback": "EXISetExiCallback",
+      "OSCancelAlarm": "fn_8000AF78",
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "__CARDBlock": "lbl_80177960",
+      "__CARDDefaultApiCallback": "fn_80029824",
+      "__CARDExtHandler": "__CARDExtHandler",
+      "__CARDMountCallback": "__CARDMountCallback",
+      "__CARDUnlockedHandler": "__CARDUnlockedHandler"
+    },
+    "mw": "GC/1.2.5n",
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "CARDMountAsync",
+    "size": 416,
+    "source": "libs/dolphin/card/CARDMount.c",
+    "symbol": "CARDMountAsync"
+  },
+  "CARDOpen": {
+    "absolutes": {},
+    "bindings": {
+      "CARDOpen": "CARDOpen",
+      "__CARDCompareFileName": "__CARDCompareFileName",
+      "__CARDDiskNone": "lbl_80177B80",
+      "__CARDGetControlBlock": "__CARDGetControlBlock",
+      "__CARDGetDirBlock": "fn_8002C4BC",
+      "__CARDPutControlBlock": "__CARDPutControlBlock",
+      "memcmp": "fn_8008023C"
+    },
+    "mw": "GC/1.2.5n",
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "CARDOpen",
+    "size": 376,
+    "source": "src/dolphin/card/CARDOpen.c",
+    "symbol": "CARDOpen"
+  },
+  "CARDProbeEx": {
+    "absolutes": {
+      "GameChoice": 2147496163
+    },
+    "bindings": {
+      "CARDProbeEx": "CARDProbeEx",
+      "EXIGetID": "EXIGetID",
+      "EXIGetState": "EXIGetState",
+      "EXIProbeEx": "EXIProbeEx",
+      "IsCard": "fn_8002D6B0",
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "SectorSizeTable": "lbl_8012ABC0",
+      "__CARDBlock": "lbl_80177960"
+    },
+    "mw": "GC/1.2.5n",
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "CARDProbeEx",
+    "size": 380,
+    "source": "libs/dolphin/card/CARDMount.c",
+    "symbol": "CARDProbeEx"
+  },
+  "CARDReadAsync": {
+    "absolutes": {},
+    "bindings": {
+      "CARDReadAsync": "CARDReadAsync",
+      "DCInvalidateRange": "DCInvalidateRange",
+      "ReadCallback": "ReadCallback",
+      "__CARDAccess": "__CARDAccess",
+      "__CARDDefaultApiCallback": "fn_80029824",
+      "__CARDGetDirBlock": "fn_8002C4BC",
+      "__CARDIsPublic": "__CARDIsPublic",
+      "__CARDPutControlBlock": "__CARDPutControlBlock",
+      "__CARDRead": "__CARDRead",
+      "__CARDSeek": "__CARDSeek"
+    },
+    "mw": "GC/1.2.5n",
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "CARDReadAsync",
+    "size": 328,
+    "source": "src/dolphin/card/CARDRead.c",
+    "symbol": "CARDReadAsync"
+  },
+  "CARDRenameAsync": {
+    "absolutes": {
+      "__OSBusClock": 2147483896
+    },
+    "bindings": {
+      "CARDRenameAsync": "CARDRenameAsync",
+      "OSGetTime": "OSGetTime",
+      "__CARDCompareFileName": "__CARDCompareFileName",
+      "__CARDGetControlBlock": "__CARDGetControlBlock",
+      "__CARDGetDirBlock": "fn_8002C4BC",
+      "__CARDIsWritable": "__CARDAccess",
+      "__CARDPutControlBlock": "__CARDPutControlBlock",
+      "__CARDUpdateDir": "__CARDUpdateDir",
+      "__div2i": "__div2i",
+      "memcmp": "fn_8008023C",
+      "strlen": "strlen",
+      "strncpy": "strncpy"
+    },
+    "mw": "GC/1.2.5n",
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "CARDRenameAsync",
+    "size": 508,
+    "source": "libs/dolphin/card/CARDRename.c",
+    "symbol": "CARDRenameAsync"
+  },
+  "CARDSetStatusAsync": {
+    "absolutes": {
+      "__OSBusClock": 2147483896
+    },
+    "bindings": {
+      "CARDSetStatusAsync": "CARDSetStatusAsync",
+      "OSGetTime": "OSGetTime",
+      "UpdateIconOffsets": "UpdateIconOffsets",
+      "__CARDGetControlBlock": "__CARDGetControlBlock",
+      "__CARDGetDirBlock": "fn_8002C4BC",
+      "__CARDIsWritable": "__CARDAccess",
+      "__CARDPutControlBlock": "__CARDPutControlBlock",
+      "__CARDUpdateDir": "__CARDUpdateDir",
+      "__div2i": "__div2i"
+    },
+    "mw": "GC/1.2.5n",
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "CARDSetStatusAsync",
+    "size": 372,
+    "source": "libs/dolphin/card/CARDStat.c",
+    "symbol": "CARDSetStatusAsync"
+  },
+  "CARDUnmount": {
+    "absolutes": {},
+    "bindings": {
+      "CARDUnmount": "CARDUnmount",
+      "EXIDetach": "EXIDetach",
+      "EXISetExiCallback": "EXISetExiCallback",
+      "OSCancelAlarm": "fn_8000AF78",
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "__CARDBlock": "lbl_80177960",
+      "__CARDGetControlBlock": "__CARDGetControlBlock"
+    },
+    "mw": "GC/1.2.5n",
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "CARDUnmount",
+    "size": 172,
+    "source": "libs/dolphin/card/CARDMount.c",
+    "symbol": "CARDUnmount"
+  },
+  "CARDWriteAsync": {
+    "absolutes": {},
+    "bindings": {
+      "CARDWriteAsync": "CARDWriteAsync",
+      "DCStoreRange": "DCStoreRange",
+      "EraseCallback": "EraseCallback_CARDWrite",
+      "__CARDDefaultApiCallback": "fn_80029824",
+      "__CARDEraseSector": "__CARDEraseSector",
+      "__CARDGetDirBlock": "fn_8002C4BC",
+      "__CARDIsWritable": "__CARDAccess",
+      "__CARDPutControlBlock": "__CARDPutControlBlock",
+      "__CARDSeek": "__CARDSeek"
+    },
+    "mw": "GC/1.2.5n",
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "CARDWriteAsync",
+    "size": 276,
+    "source": "libs/dolphin/card/CARDWrite.c",
+    "symbol": "CARDWriteAsync"
+  },
+  "CreateCallbackFat": {
+    "absolutes": {
+      "__OSBusClock": 2147483896
+    },
+    "bindings": {
+      "CreateCallbackFat": "CreateCallbackFat",
+      "OSGetTime": "OSGetTime",
+      "__CARDBlock": "lbl_80177960",
+      "__CARDGetDirBlock": "fn_8002C4BC",
+      "__CARDPutControlBlock": "__CARDPutControlBlock",
+      "__CARDUpdateDir": "__CARDUpdateDir",
+      "__div2i": "__div2i",
+      "memcpy": "memcpy"
+    },
+    "mw": "GC/1.2.5n",
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "CreateCallbackFat",
+    "size": 304,
+    "source": "libs/dolphin/card/CARDCreate.c",
+    "symbol": "CreateCallbackFat"
+  },
+  "DoneCallback": {
+    "absolutes": {},
+    "bindings": {
+      "DoneCallback": "DoneCallback",
+      "DummyLen": "fn_8002AE70",
+      "EXIProbe": "EXIProbe",
+      "EXIUnlock": "EXIUnlock",
+      "ReadArrayUnlock": "ReadArrayUnlock",
+      "__CARDBlock": "lbl_80177960",
+      "__CARDMountCallback": "__CARDMountCallback",
+      "__CARDReadStatus": "__CARDReadStatus"
+    },
+    "mw": "GC/1.2.5n",
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "DoneCallback",
+    "size": 804,
+    "source": "libs/dolphin/card/CARDUnlock.c",
+    "symbol": "DoneCallback"
+  },
+  "EraseCallback": {
+    "absolutes": {},
+    "bindings": {
+      "EraseCallback": "EraseCallback",
+      "WriteCallback": "WriteCallback",
+      "__CARDBlock": "lbl_80177960",
+      "__CARDPutControlBlock": "__CARDPutControlBlock",
+      "__CARDWrite": "__CARDWrite"
+    },
+    "mw": "GC/1.2.5n",
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "EraseCallback",
+    "size": 200,
+    "source": "libs/dolphin/card/CARDBlock.c",
+    "symbol": "EraseCallback"
+  },
+  "EraseCallback_CARDDir": {
+    "absolutes": {},
+    "bindings": {
+      "EraseCallback": "EraseCallback_CARDDir",
+      "WriteCallback": "WriteCallback_CARDDir",
+      "__CARDBlock": "lbl_80177960",
+      "__CARDPutControlBlock": "__CARDPutControlBlock",
+      "__CARDWrite": "__CARDWrite"
+    },
+    "mw": "GC/1.2.5n",
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "EraseCallback",
+    "size": 200,
+    "source": "libs/dolphin/card/CARDDir.c",
+    "symbol": "EraseCallback_CARDDir"
+  },
+  "FormatCallback": {
+    "absolutes": {},
+    "bindings": {
+      "FormatCallback": "FormatCallback",
+      "__CARDBlock": "lbl_80177960",
+      "__CARDEraseSector": "__CARDEraseSector",
+      "__CARDPutControlBlock": "__CARDPutControlBlock",
+      "__CARDWrite": "__CARDWrite",
+      "memcpy": "memcpy"
+    },
+    "mw": "GC/1.2.5n",
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "FormatCallback",
+    "size": 324,
+    "source": "libs/dolphin/card/CARDFormat.c",
+    "symbol": "FormatCallback"
+  },
+  "InitCallback": {
+    "absolutes": {},
+    "bindings": {
+      "DSPCheckMailToDSP": "DSPCheckMailToDSP",
+      "DSPSendMailToDSP": "DSPSendMailToDSP",
+      "InitCallback": "InitCallback",
+      "__CARDBlock": "lbl_80177960"
+    },
+    "mw": "GC/1.2.5n",
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "InitCallback",
+    "size": 112,
+    "source": "libs/dolphin/card/CARDUnlock.c",
+    "symbol": "InitCallback"
+  },
+  "ReadCallback": {
+    "absolutes": {},
+    "bindings": {
+      "ReadCallback": "ReadCallback",
+      "__CARDBlock": "lbl_80177960",
+      "__CARDGetFatBlock": "fn_8002C0B8",
+      "__CARDPutControlBlock": "__CARDPutControlBlock",
+      "__CARDRead": "__CARDRead"
+    },
+    "mw": "GC/1.2.5n",
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "ReadCallback",
+    "size": 304,
+    "source": "libs/dolphin/card/CARDRead.c",
+    "symbol": "ReadCallback"
+  },
+  "Retry": {
+    "absolutes": {
+      "__OSBusClock": 2147483896
+    },
+    "bindings": {
+      "EXIDeselect": "EXIDeselect",
+      "EXIDma": "EXIDma",
+      "EXIImmEx": "EXIImmEx",
+      "EXISelect": "EXISelect",
+      "EXIUnlock": "EXIUnlock",
+      "OSCancelAlarm": "fn_8000AF78",
+      "OSSetAlarm": "OSSetAlarm",
+      "Retry": "Retry",
+      "TimeoutHandler": "TimeoutHandler",
+      "__CARDBlock": "lbl_80177960",
+      "__CARDTxHandler": "__CARDTxHandler"
+    },
+    "mw": "GC/1.2.5n",
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "Retry",
+    "size": 556,
+    "source": "libs/dolphin/card/CARDBios.c",
+    "symbol": "Retry"
+  },
+  "TimeoutHandler": {
+    "absolutes": {},
+    "bindings": {
+      "EXISetExiCallback": "EXISetExiCallback",
+      "TimeoutHandler": "TimeoutHandler",
+      "__CARDBlock": "lbl_80177960"
+    },
+    "mw": "GC/1.2.5n",
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "TimeoutHandler",
+    "size": 164,
+    "source": "libs/dolphin/card/CARDBios.c",
+    "symbol": "TimeoutHandler"
+  },
+  "UnlockedCallback": {
+    "absolutes": {},
+    "bindings": {
+      "EXILock": "EXILock",
+      "Retry": "Retry",
+      "UnlockedCallback": "UnlockedCallback",
+      "__CARDBlock": "lbl_80177960",
+      "__CARDUnlockedHandler": "__CARDUnlockedHandler"
+    },
+    "mw": "GC/1.2.5n",
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "UnlockedCallback",
+    "size": 272,
+    "source": "libs/dolphin/card/CARDBios.c",
+    "symbol": "UnlockedCallback"
+  },
+  "UpdateIconOffsets": {
+    "absolutes": {},
+    "bindings": {
+      "UpdateIconOffsets": "UpdateIconOffsets"
+    },
+    "mw": "GC/1.2.5n",
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "UpdateIconOffsets",
+    "size": 504,
+    "source": "libs/dolphin/card/CARDStat.c",
+    "symbol": "UpdateIconOffsets"
+  },
+  "VerifyDir": {
+    "absolutes": {},
+    "bindings": {
+      "VerifyDir": "VerifyDir",
+      "memcpy": "memcpy"
+    },
+    "mw": "GC/1.2.5n",
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "VerifyDir",
+    "size": 576,
+    "source": "libs/dolphin/card/CARDCheck.c",
+    "symbol": "VerifyDir"
+  },
+  "VerifyFAT": {
+    "absolutes": {},
+    "bindings": {
+      "VerifyFAT": "VerifyFAT",
+      "memcpy": "memcpy"
+    },
+    "mw": "GC/1.2.5n",
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "VerifyFAT",
+    "size": 644,
+    "source": "libs/dolphin/card/CARDCheck.c",
+    "symbol": "VerifyFAT"
+  },
+  "VerifyID": {
+    "absolutes": {},
+    "bindings": {
+      "VerifyID": "VerifyID",
+      "__CARDBlock": "lbl_80177960",
+      "__CARDGetFontEncode": "fn_8002A744",
+      "__OSLockSramEx": "__OSLockSramEx",
+      "__OSUnlockSramEx": "__OSUnlockSramEx",
+      "__shr2i": "__shr2i"
+    },
+    "mw": "GC/1.2.5n",
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "VerifyID",
+    "size": 644,
+    "source": "libs/dolphin/card/CARDCheck.c",
+    "symbol": "VerifyID"
+  },
+  "WriteCallback_CARDDir": {
+    "absolutes": {},
+    "bindings": {
+      "WriteCallback": "WriteCallback_CARDDir",
+      "__CARDBlock": "lbl_80177960",
+      "__CARDPutControlBlock": "__CARDPutControlBlock",
+      "memcpy": "memcpy"
+    },
+    "mw": "GC/1.2.5n",
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "WriteCallback",
+    "size": 208,
+    "source": "libs/dolphin/card/CARDDir.c",
+    "symbol": "WriteCallback_CARDDir"
+  },
+  "WriteCallback_CARDWrite": {
+    "absolutes": {
+      "__OSBusClock": 2147483896
+    },
+    "bindings": {
+      "EraseCallback": "EraseCallback_CARDWrite",
+      "OSGetTime": "OSGetTime",
+      "WriteCallback": "WriteCallback_CARDWrite",
+      "__CARDBlock": "lbl_80177960",
+      "__CARDEraseSector": "__CARDEraseSector",
+      "__CARDGetDirBlock": "fn_8002C4BC",
+      "__CARDGetFatBlock": "fn_8002C0B8",
+      "__CARDPutControlBlock": "__CARDPutControlBlock",
+      "__CARDUpdateDir": "__CARDUpdateDir",
+      "__div2i": "__div2i"
+    },
+    "mw": "GC/1.2.5n",
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "WriteCallback",
+    "size": 368,
+    "source": "libs/dolphin/card/CARDWrite.c",
+    "symbol": "WriteCallback_CARDWrite"
+  },
+  "__CARDAccess": {
+    "absolutes": {},
+    "bindings": {
+      "__CARDAccess": "__CARDAccess",
+      "__CARDDiskNone": "lbl_80177B80",
+      "memcmp": "fn_8008023C"
+    },
+    "mw": "GC/1.2.5n",
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "__CARDAccess",
+    "size": 152,
+    "source": "src/dolphin/card/CARDOpen.c",
+    "symbol": "__CARDAccess"
+  },
+  "__CARDAllocBlock": {
+    "absolutes": {},
+    "bindings": {
+      "__CARDAllocBlock": "__CARDAllocBlock",
+      "__CARDBlock": "lbl_80177960",
+      "__CARDUpdateFatBlock": "__CARDUpdateFatBlock"
+    },
+    "mw": "GC/1.2.5n",
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "__CARDAllocBlock",
+    "size": 280,
+    "source": "libs/dolphin/card/CARDBlock.c",
+    "symbol": "__CARDAllocBlock"
+  },
+  "__CARDCheckSum": {
+    "absolutes": {},
+    "bindings": {
+      "__CARDCheckSum": "__CARDCheckSum"
+    },
+    "mw": "GC/1.2.5n",
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "__CARDCheckSum",
+    "size": 432,
+    "source": "libs/dolphin/card/CARDCheck.c",
+    "symbol": "__CARDCheckSum"
+  },
+  "__CARDEraseSector": {
+    "absolutes": {},
+    "bindings": {
+      "EXIDeselect": "EXIDeselect",
+      "EXIImmEx": "EXIImmEx",
+      "EXIUnlock": "EXIUnlock",
+      "__CARDBlock": "lbl_80177960",
+      "__CARDEraseSector": "__CARDEraseSector",
+      "__CARDStart": "__CARDStart"
+    },
+    "mw": "GC/1.2.5n",
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "__CARDEraseSector",
+    "size": 224,
+    "source": "libs/dolphin/card/CARDBios.c",
+    "symbol": "__CARDEraseSector"
+  },
+  "__CARDExiHandler": {
+    "absolutes": {},
+    "bindings": {
+      "EXILock": "EXILock",
+      "EXIUnlock": "EXIUnlock",
+      "OSCancelAlarm": "fn_8000AF78",
+      "Retry": "Retry",
+      "__CARDBlock": "lbl_80177960",
+      "__CARDClearStatus": "__CARDClearStatus",
+      "__CARDExiHandler": "__CARDExiHandler",
+      "__CARDReadStatus": "__CARDReadStatus"
+    },
+    "mw": "GC/1.2.5n",
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "__CARDExiHandler",
+    "size": 280,
+    "source": "libs/dolphin/card/CARDBios.c",
+    "symbol": "__CARDExiHandler"
+  },
+  "__CARDFormatRegionAsync": {
+    "absolutes": {
+      "__VIRegs": 3422560256
+    },
+    "bindings": {
+      "DCStoreRange": "DCStoreRange",
+      "FormatCallback": "FormatCallback",
+      "OSGetTime": "OSGetTime",
+      "__CARDCheckSum": "__CARDCheckSum",
+      "__CARDDefaultApiCallback": "fn_80029824",
+      "__CARDEraseSector": "__CARDEraseSector",
+      "__CARDFormatRegionAsync": "__CARDFormatRegionAsync",
+      "__CARDGetControlBlock": "__CARDGetControlBlock",
+      "__CARDPutControlBlock": "__CARDPutControlBlock",
+      "__OSLockSram": "__OSLockSram",
+      "__OSLockSramEx": "__OSLockSramEx",
+      "__OSUnlockSram": "__OSUnlockSram",
+      "__OSUnlockSramEx": "__OSUnlockSramEx",
+      "__shr2i": "__shr2i",
+      "memset": "memset"
+    },
+    "mw": "GC/1.2.5n",
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "__CARDFormatRegionAsync",
+    "size": 1624,
+    "source": "libs/dolphin/card/CARDFormat.c",
+    "symbol": "__CARDFormatRegionAsync"
+  },
+  "__CARDFreeBlock": {
+    "absolutes": {},
+    "bindings": {
+      "__CARDBlock": "lbl_80177960",
+      "__CARDFreeBlock": "__CARDFreeBlock",
+      "__CARDUpdateFatBlock": "__CARDUpdateFatBlock"
+    },
+    "mw": "GC/1.2.5n",
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "__CARDFreeBlock",
+    "size": 156,
+    "source": "libs/dolphin/card/CARDBlock.c",
+    "symbol": "__CARDFreeBlock"
+  },
+  "__CARDGetControlBlock": {
+    "absolutes": {},
+    "bindings": {
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "__CARDBlock": "lbl_80177960",
+      "__CARDGetControlBlock": "__CARDGetControlBlock"
+    },
+    "mw": "GC/1.2.5n",
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "__CARDGetControlBlock",
+    "size": 184,
+    "source": "libs/dolphin/card/CARDBios.c",
+    "symbol": "__CARDGetControlBlock"
+  },
+  "__CARDGetFileNo": {
+    "absolutes": {},
+    "bindings": {
+      "__CARDDiskNone": "lbl_80177B80",
+      "__CARDGetDirBlock": "fn_8002C4BC",
+      "__CARDGetFileNo": "__CARDGetFileNo",
+      "memcmp": "fn_8008023C"
+    },
+    "mw": "GC/1.2.5n",
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "__CARDGetFileNo",
+    "size": 336,
+    "source": "src/dolphin/card/CARDOpen.c",
+    "symbol": "__CARDGetFileNo"
+  },
+  "__CARDMountCallback": {
+    "absolutes": {},
+    "bindings": {
+      "DoMount": "fn_8002D8F8",
+      "DoUnmount": "DoUnmount",
+      "EXILock": "EXILock",
+      "__CARDBlock": "lbl_80177960",
+      "__CARDMountCallback": "__CARDMountCallback",
+      "__CARDPutControlBlock": "__CARDPutControlBlock",
+      "__CARDUnlockedHandler": "__CARDUnlockedHandler",
+      "__CARDVerify": "__CARDVerify"
+    },
+    "mw": "GC/1.2.5n",
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "__CARDMountCallback",
+    "size": 312,
+    "source": "libs/dolphin/card/CARDMount.c",
+    "symbol": "__CARDMountCallback"
+  },
+  "__CARDReadSegment": {
+    "absolutes": {},
+    "bindings": {
+      "EXIDeselect": "EXIDeselect",
+      "EXIDma": "EXIDma",
+      "EXIImmEx": "EXIImmEx",
+      "EXIUnlock": "EXIUnlock",
+      "__CARDBlock": "lbl_80177960",
+      "__CARDReadSegment": "__CARDReadSegment",
+      "__CARDStart": "__CARDStart",
+      "__CARDTxHandler": "__CARDTxHandler"
+    },
+    "mw": "GC/1.2.5n",
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "__CARDReadSegment",
+    "size": 308,
+    "source": "libs/dolphin/card/CARDBios.c",
+    "symbol": "__CARDReadSegment"
+  },
+  "__CARDSeek": {
+    "absolutes": {},
+    "bindings": {
+      "__CARDGetControlBlock": "__CARDGetControlBlock",
+      "__CARDGetDirBlock": "fn_8002C4BC",
+      "__CARDGetFatBlock": "fn_8002C0B8",
+      "__CARDPutControlBlock": "__CARDPutControlBlock",
+      "__CARDSeek": "__CARDSeek"
+    },
+    "mw": "GC/1.2.5n",
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "__CARDSeek",
+    "size": 440,
+    "source": "libs/dolphin/card/CARDRead.c",
+    "symbol": "__CARDSeek"
+  },
+  "__CARDSetDiskID": {
+    "absolutes": {},
+    "bindings": {
+      "...bss.0": "lbl_80177960",
+      "__CARDBlock": "(sdk_storage____bss_0->sdk___CARDBlock)",
+      "__CARDDiskNone": "(sdk_storage____bss_0->sdk___CARDDiskNone)",
+      "__CARDSetDiskID": "__CARDSetDiskID"
+    },
+    "mw": "GC/1.2.5n",
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "__CARDSetDiskID",
+    "size": 56,
+    "source": "libs/dolphin/card/CARDBios.c",
+    "symbol": "__CARDSetDiskID"
+  },
+  "__CARDStart": {
+    "absolutes": {
+      "__OSBusClock": 2147483896
+    },
+    "bindings": {
+      "EXILock": "EXILock",
+      "EXISelect": "EXISelect",
+      "EXIUnlock": "EXIUnlock",
+      "OSCancelAlarm": "fn_8000AF78",
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "OSSetAlarm": "OSSetAlarm",
+      "TimeoutHandler": "TimeoutHandler",
+      "UnlockedCallback": "UnlockedCallback",
+      "__CARDBlock": "lbl_80177960",
+      "__CARDStart": "__CARDStart",
+      "__CARDUnlockedHandler": "__CARDUnlockedHandler"
+    },
+    "mw": "GC/1.2.5n",
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "__CARDStart",
+    "size": 436,
+    "source": "libs/dolphin/card/CARDBios.c",
+    "symbol": "__CARDStart"
+  },
+  "__CARDSync": {
+    "absolutes": {},
+    "bindings": {
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "OSSleepThread": "fn_800110A8",
+      "__CARDBlock": "lbl_80177960",
+      "__CARDSync": "__CARDSync"
+    },
+    "mw": "GC/1.2.5n",
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "__CARDSync",
+    "size": 152,
+    "source": "libs/dolphin/card/CARDBios.c",
+    "symbol": "__CARDSync"
+  },
+  "__CARDTxHandler": {
+    "absolutes": {},
+    "bindings": {
+      "EXIDeselect": "EXIDeselect",
+      "EXIProbe": "EXIProbe",
+      "EXIUnlock": "EXIUnlock",
+      "__CARDBlock": "lbl_80177960",
+      "__CARDTxHandler": "__CARDTxHandler"
+    },
+    "mw": "GC/1.2.5n",
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "__CARDTxHandler",
+    "size": 168,
+    "source": "libs/dolphin/card/CARDBios.c",
+    "symbol": "__CARDTxHandler"
+  },
+  "__CARDUpdateDir": {
+    "absolutes": {},
+    "bindings": {
+      "DCStoreRange": "DCStoreRange",
+      "EraseCallback": "EraseCallback_CARDDir",
+      "__CARDBlock": "lbl_80177960",
+      "__CARDCheckSum": "__CARDCheckSum",
+      "__CARDEraseSector": "__CARDEraseSector",
+      "__CARDUpdateDir": "__CARDUpdateDir"
+    },
+    "mw": "GC/1.2.5n",
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "__CARDUpdateDir",
+    "size": 196,
+    "source": "libs/dolphin/card/CARDDir.c",
+    "symbol": "__CARDUpdateDir"
+  },
+  "__CARDUpdateFatBlock": {
+    "absolutes": {},
+    "bindings": {
+      "DCStoreRange": "DCStoreRange",
+      "EraseCallback": "EraseCallback",
+      "__CARDBlock": "lbl_80177960",
+      "__CARDCheckSum": "__CARDCheckSum",
+      "__CARDEraseSector": "__CARDEraseSector",
+      "__CARDUpdateFatBlock": "__CARDUpdateFatBlock"
+    },
+    "mw": "GC/1.2.5n",
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "__CARDUpdateFatBlock",
+    "size": 172,
+    "source": "libs/dolphin/card/CARDBlock.c",
+    "symbol": "__CARDUpdateFatBlock"
+  },
+  "__CARDVerify": {
+    "absolutes": {},
+    "bindings": {
+      "VerifyDir": "VerifyDir",
+      "VerifyFAT": "VerifyFAT",
+      "VerifyID": "VerifyID",
+      "__CARDVerify": "__CARDVerify"
+    },
+    "mw": "GC/1.2.5n",
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "__CARDVerify",
+    "size": 140,
+    "source": "libs/dolphin/card/CARDCheck.c",
+    "symbol": "__CARDVerify"
+  },
+  "__CARDWritePage": {
+    "absolutes": {},
+    "bindings": {
+      "EXIDeselect": "EXIDeselect",
+      "EXIDma": "EXIDma",
+      "EXIImmEx": "EXIImmEx",
+      "EXIUnlock": "EXIUnlock",
+      "__CARDBlock": "lbl_80177960",
+      "__CARDStart": "__CARDStart",
+      "__CARDTxHandler": "__CARDTxHandler",
+      "__CARDWritePage": "__CARDWritePage"
+    },
+    "mw": "GC/1.2.5n",
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "__CARDWritePage",
+    "size": 284,
+    "source": "libs/dolphin/card/CARDBios.c",
+    "symbol": "__CARDWritePage"
+  },
+  "bitrev": {
+    "absolutes": {},
+    "bindings": {
+      "bitrev": "bitrev"
+    },
+    "mw": "GC/1.2.5n",
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "bitrev",
+    "size": 364,
+    "source": "libs/dolphin/card/CARDUnlock.c",
+    "symbol": "bitrev"
+  }
+}

@@ -1,5 +1,6 @@
-#include "types.h"
-#include "dolphin/sdk/mkdd/card/CARDBios.h"
+#include <dolphin/card/CARDPriv.h>
+
+BOOL EXIProbe(s32 chan);
 
 extern CARDControl lbl_80177960[2];
 

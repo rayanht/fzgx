@@ -1,5 +1,11 @@
-#include "types.h"
-#include "dolphin/sdk/mkdd/card/CARDMount.h"
+#include <dolphin/card/CARDPriv.h>
+
+BOOL OSDisableInterrupts(void);
+BOOL OSRestoreInterrupts(BOOL level);
+
+void DoUnmount(s32 chan, s32 result);
+
+void fn_8000AF78(OSAlarm *alarm);
 
 extern CARDControl lbl_80177960[2];
 

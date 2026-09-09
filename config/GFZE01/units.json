@@ -1898,49 +1898,16 @@
   },
   {
     "module": "main",
-    "source": "dol/BlockReadCallback.c",
-    "symbols": [
-      "BlockReadCallback"
-    ],
-    "status": "matching",
-    "mw_version": null,
-    "extra_cflags": []
-  },
-  {
-    "module": "main",
-    "source": "dol/BlockWriteCallback.c",
-    "symbols": [
-      "BlockWriteCallback"
-    ],
-    "status": "matching",
-    "mw_version": null,
-    "extra_cflags": []
-  },
-  {
-    "module": "main",
     "source": "dol/CARDCheck.c",
     "symbols": [
+      "__CARDCheckSum",
+      "VerifyID",
+      "VerifyDir",
+      "VerifyFAT",
+      "__CARDVerify",
+      "CARDCheckExAsync",
+      "CARDCheckAsync",
       "CARDCheck"
-    ],
-    "status": "matching",
-    "mw_version": null,
-    "extra_cflags": []
-  },
-  {
-    "module": "main",
-    "source": "dol/CARDCheckAsync.c",
-    "symbols": [
-      "CARDCheckAsync"
-    ],
-    "status": "matching",
-    "mw_version": null,
-    "extra_cflags": []
-  },
-  {
-    "module": "main",
-    "source": "dol/CARDCheckExAsync.c",
-    "symbols": [
-      "CARDCheckExAsync"
     ],
     "status": "matching",
     "mw_version": "GC/1.2.5n",
@@ -1955,33 +1922,16 @@
       "signed",
       "-common",
       "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/CARDClose.c",
-    "symbols": [
-      "CARDClose"
     ],
-    "status": "matching",
-    "mw_version": null,
-    "extra_cflags": []
+    "collapsed": true
   },
   {
     "module": "main",
     "source": "dol/CARDCreate.c",
     "symbols": [
+      "CreateCallbackFat",
+      "CARDCreateAsync",
       "CARDCreate"
-    ],
-    "status": "matching",
-    "mw_version": null,
-    "extra_cflags": []
-  },
-  {
-    "module": "main",
-    "source": "dol/CARDCreateAsync.c",
-    "symbols": [
-      "CARDCreateAsync"
     ],
     "status": "matching",
     "mw_version": "GC/1.2.5n",
@@ -1996,7 +1946,8 @@
       "signed",
       "-common",
       "off"
-    ]
+    ],
+    "collapsed": true
   },
   {
     "module": "main",
@@ -2083,27 +2034,6 @@
   },
   {
     "module": "main",
-    "source": "dol/CARDGetSerialNo.c",
-    "symbols": [
-      "CARDGetSerialNo"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
     "source": "dol/CARDGetStatus.c",
     "symbols": [
       "CARDGetStatus"
@@ -2146,9 +2076,9 @@
   },
   {
     "module": "main",
-    "source": "dol/CARDOpen.c",
+    "source": "dol/CARDNet.c",
     "symbols": [
-      "CARDOpen"
+      "CARDGetSerialNo"
     ],
     "status": "matching",
     "mw_version": "GC/1.2.5n",
@@ -2163,7 +2093,35 @@
       "signed",
       "-common",
       "off"
-    ]
+    ],
+    "collapsed": true
+  },
+  {
+    "module": "main",
+    "source": "dol/CARDOpen.c",
+    "symbols": [
+      "__CARDCompareFileName",
+      "__CARDAccess",
+      "__CARDIsPublic",
+      "__CARDGetFileNo",
+      "CARDOpen",
+      "CARDClose"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ],
+    "collapsed": true
   },
   {
     "module": "main",
@@ -2185,6 +2143,31 @@
       "-common",
       "off"
     ]
+  },
+  {
+    "module": "main",
+    "source": "dol/CARDRdwr.c",
+    "symbols": [
+      "BlockReadCallback",
+      "__CARDRead",
+      "BlockWriteCallback",
+      "__CARDWrite"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ],
+    "collapsed": true
   },
   {
     "module": "main",
@@ -2312,27 +2295,6 @@
     "mw_version": null,
     "extra_cflags": [],
     "asm": true
-  },
-  {
-    "module": "main",
-    "source": "dol/CreateCallbackFat.c",
-    "symbols": [
-      "CreateCallbackFat"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
   },
   {
     "module": "main",
@@ -3786,69 +3748,6 @@
   },
   {
     "module": "main",
-    "source": "dol/VerifyDir.c",
-    "symbols": [
-      "VerifyDir"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/VerifyFAT.c",
-    "symbols": [
-      "VerifyFAT"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/VerifyID.c",
-    "symbols": [
-      "VerifyID"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
     "source": "dol/WriteCallback.c",
     "symbols": [
       "WriteCallback"
@@ -3921,27 +3820,6 @@
   },
   {
     "module": "main",
-    "source": "dol/__CARDAccess.c",
-    "symbols": [
-      "__CARDAccess"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
     "source": "dol/__CARDAllocBlock.c",
     "symbols": [
       "__CARDAllocBlock"
@@ -3963,40 +3841,9 @@
   },
   {
     "module": "main",
-    "source": "dol/__CARDCheckSum.c",
-    "symbols": [
-      "__CARDCheckSum"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
     "source": "dol/__CARDClearStatus.c",
     "symbols": [
       "__CARDClearStatus"
-    ],
-    "status": "matching",
-    "mw_version": null,
-    "extra_cflags": []
-  },
-  {
-    "module": "main",
-    "source": "dol/__CARDCompareFileName.c",
-    "symbols": [
-      "__CARDCompareFileName"
     ],
     "status": "matching",
     "mw_version": null,
@@ -4129,37 +3976,6 @@
   },
   {
     "module": "main",
-    "source": "dol/__CARDGetFileNo.c",
-    "symbols": [
-      "__CARDGetFileNo"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/__CARDIsPublic.c",
-    "symbols": [
-      "__CARDIsPublic"
-    ],
-    "status": "matching",
-    "mw_version": null,
-    "extra_cflags": []
-  },
-  {
-    "module": "main",
     "source": "dol/__CARDMountCallback.c",
     "symbols": [
       "__CARDMountCallback"
@@ -4184,16 +4000,6 @@
     "source": "dol/__CARDPutControlBlock.c",
     "symbols": [
       "__CARDPutControlBlock"
-    ],
-    "status": "matching",
-    "mw_version": null,
-    "extra_cflags": []
-  },
-  {
-    "module": "main",
-    "source": "dol/__CARDRead.c",
-    "symbols": [
-      "__CARDRead"
     ],
     "status": "matching",
     "mw_version": null,
@@ -4396,37 +4202,6 @@
       "-common",
       "off"
     ]
-  },
-  {
-    "module": "main",
-    "source": "dol/__CARDVerify.c",
-    "symbols": [
-      "__CARDVerify"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/__CARDWrite.c",
-    "symbols": [
-      "__CARDWrite"
-    ],
-    "status": "matching",
-    "mw_version": null,
-    "extra_cflags": []
   },
   {
     "module": "main",

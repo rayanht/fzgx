@@ -1,5 +1,10 @@
-#include "types.h"
-#include "dolphin/sdk/mkdd/card/CARDWrite.h"
+#include <dolphin/card/CARDPriv.h>
+
+CARDDir *fn_8002C4BC(CARDControl *card);
+
+void EraseCallback_CARDWrite(s32 chan, s32 result);
+void DCStoreRange(void *addr, u32 nBytes);
+void fn_80029824(s32 chan, s32 result);
 
 s32 CARDWriteAsync(CARDFileInfo *fileInfo, const void *buf, s32 length, s32 offset,
                    CARDCallback callback) {
