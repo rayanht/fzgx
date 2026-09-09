@@ -263,6 +263,38 @@ void fn_1_127FB8(Fn127FB8Object *obj) {
 }
 /* fzgx:end fn_1_127FB8 */
 
+/* fzgx:begin fn_1_1289BC */
+#include "rel/main_rel/cloth.h"
+
+extern void fn_1_105744(void);
+extern void fn_1_106DB4(void);
+extern void fn_1_9D0EC(u32, u32, void*, void*);
+extern void fn_1_103AA8(void);
+extern u32 lbl_1_bss_85288[2];
+extern void fn_1_103AD4(void);
+extern void fn_1_105768(void);
+extern void fn_1_9E5B8(void *);
+extern struct fn_1_10240C_lbl_801A6410 lbl_801A6410;
+extern u32 fn_1_45D0(u32, u32, void *, u32);
+extern u32 fn_1_46B4(u32, u32, void *, u32);
+extern u32 fn_80008BA8(u32, u32, u32);
+
+typedef struct Point1024C4 {
+    u8 pad[0x10];
+    f32 v[3];
+} Point1024C4;
+
+f32 fn_1_1289BC(const Point1024C4 *a, const Point1024C4 *b) {
+    f32 dz = a->v[2] - b->v[2];
+    f32 dy = a->v[1] - b->v[1];
+    f32 dx = a->v[0] - b->v[0];
+    f32 result = dx * dx;
+    result += dy * dy;
+    result += dz * dz;
+    return result;
+}
+/* fzgx:end fn_1_1289BC */
+
 /* fzgx:begin fn_1_128B00 */
 s32 fn_1_128B00(s16 value) {
     switch (value) {

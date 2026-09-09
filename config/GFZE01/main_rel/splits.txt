@@ -5015,3 +5015,12 @@ rel/main_rel/accessory/fn_1_127FB8.c:
 
 rel/main_rel/font/fn_1_51BFC.c:
 	.text       start:0x00051BFC end:0x00051C74 align:4
+
+rel/main_rel/memcard/fn_1_B5258.c:
+	.text       start:0x000B5258 end:0x000B5310 align:4
+
+rel/main_rel/bg_cas/fn_1_FD1D4.c:
+	.text       start:0x000FD1D4 end:0x000FD27C align:4
+
+rel/main_rel/accessory/fn_1_1289BC.c:
+	.text       start:0x001289BC end:0x001289F0 align:4

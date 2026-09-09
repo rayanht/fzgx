@@ -3211,3 +3211,15 @@ dol/AlarmHandler.c:
 
 dol/fn_80006D1C.c:
 	.text       start:0x80006D1C end:0x80006DAC align:4
+
+dol/fn_8002F8EC.c:
+	.text       start:0x8002F8EC end:0x8002F934 align:4
+
+dol/fn_8002DFE0.c:
+	.text       start:0x8002DFE0 end:0x8002E028 align:4
+
+dol/fn_80030338.c:
+	.text       start:0x80030338 end:0x80030380 align:4
+
+dol/fn_80058ED4.c:
+	.text       start:0x80058ED4 end:0x80058EE4 align:4

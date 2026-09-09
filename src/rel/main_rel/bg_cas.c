@@ -143,6 +143,75 @@ void fn_1_FCF74(void) {
 }
 /* fzgx:end fn_1_FCF74 */
 
+/* fzgx:begin fn_1_FD1D4 */
+extern void fn_80008BEC(void *arg0, int arg1, int arg2);
+extern void fn_1_FCA10(void);
+extern int fn_1_FCF50(void);
+extern void *fn_1_563B8(void *);
+extern f32 lbl_1_rodata_761C[13];
+extern void fn_1_7EB8C(void *, f32);
+extern void fn_1_7F230(void *, s32, f32);
+extern void lbl_8006DB74(void *);
+extern void lbl_8006DBAC(void *);
+extern void fn_1_FD3A8(void);
+extern void *memset(void *, int, u32);
+extern void fn_1_FE7D8(u8 *, s32);
+extern void fn_1_FF420(u8 *);
+extern void fn_80074788(int);
+extern void fn_80072864(int);
+extern void fn_800745A4(int, int, int, int, int, int);
+extern void fn_800734A8(int, int, int, int);
+extern void fn_80072AB0(int, int, int);
+extern void fn_800735C8(int, int);
+extern void fn_80073620(int, int);
+extern void fn_80073C6C(int);
+extern void fn_80072C24(int, int, int, int, int);
+extern void fn_80072D64(int, int, int, int, int, int);
+extern void fn_80072CC4(int, int, int, int, int);
+extern void fn_80072E20(int, int, int, int, int, int);
+extern void fn_80073678(int);
+extern void fn_80074660(int);
+extern void fn_80074918(int, int, int);
+extern void fn_800720B0(int);
+extern void fn_1_9A508(Obj_1_data_2A7E0 *arg0);
+extern void fn_1_9AD54(void);
+extern void fn_1_9AD88(void);
+extern void fn_1_10069C(Obj_1_data_2A7E0_At3C *);
+extern void fn_1_FF038(Obj_1_data_2A7E0_At3C *);
+
+typedef struct {
+    void *value;
+} Fn1FD27CArg0;
+
+typedef struct {
+    u8 pad[0x40f0];
+    void *value;
+} Fn1FD27CArg1;
+
+void fn_1_FD1D4(Fn1FD27CArg0 *arg0, Fn1FD27CArg1 *arg1) {
+    Fn1FD27CArg1 *persistent;
+    void *value;
+    void *result;
+    s16 mode;
+    u8 local[0x30];
+
+    persistent = arg1;
+    value = arg0->value;
+    lbl_8006DB74(local);
+    if (persistent->value != 0 && (*(u32 *)((u8 *)persistent->value + 4) & ~0x7fffffffU) != 0) {
+        result = fn_1_563B8((void *)fn_1_FCF50);
+        mode = *(s16 *)persistent->value;
+        if (mode == 0) {
+            fn_1_7EB8C(value, lbl_1_rodata_761C[0]);
+        } else {
+            fn_1_7F230(value, (s32)mode, lbl_1_rodata_761C[0]);
+        }
+        lbl_8006DBAC(local);
+        fn_1_563B8(result);
+    }
+}
+/* fzgx:end fn_1_FD1D4 */
+
 /* fzgx:begin fn_1_FD27C */
 typedef struct {
     void *value;

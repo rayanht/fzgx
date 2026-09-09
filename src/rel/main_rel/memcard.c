@@ -1625,6 +1625,40 @@ void fn_1_B40B4(int unused, void *ptr) {
 }
 /* fzgx:end fn_1_B40B4 */
 
+/* fzgx:begin fn_1_B5258 noprologue */
+#include "types.h"
+
+extern void fn_80083DB0(char *destination, const char *source);
+extern char *fn_80083970(char *buffer, const char *source);
+extern unsigned int strlen(const char *string);
+extern char *strncpy(char *destination, const char *source, unsigned int count);
+extern char *strcat(char *destination, const char *source);
+
+void fn_1_B5258(char *destination, void *unused, const char *source, const char *suffix) {
+    char buffer[0x400];
+    char *prefix;
+    unsigned int source_length;
+    unsigned int prefix_length;
+
+    fn_80083DB0(buffer, unused);
+    prefix = fn_80083970(buffer, source);
+    if (prefix == 0) {
+        fn_80083DB0(destination, buffer);
+    } else {
+        source_length = strlen(source);
+        if (prefix != buffer) {
+            prefix_length = (unsigned int)(prefix - buffer);
+            strncpy(destination, buffer, prefix_length);
+            destination[prefix_length] = 0;
+        } else {
+            destination[0] = 0;
+        }
+        strcat(destination, suffix);
+        strcat(destination, prefix + source_length);
+    }
+}
+/* fzgx:end fn_1_B5258 */
+
 /* fzgx:begin fn_1_B5F00 */
 typedef struct {
     u8 pad0[0x54];
