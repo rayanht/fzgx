@@ -1,4 +1,19 @@
 #include "types.h"
+#include "rel/option/globals.h"
+
+extern s16 lbl_1_bss_960;
+extern struct fn_4_D760_lbl_801A6410 lbl_801A6410;
+extern u32 fn_1_412A0(u32);
+extern u32 fn_1_426C(u32);
+extern u32 fn_1_435C(u32);
+extern u32 fn_1_46B4(u32, u32, u32, u32);
+extern u32 fn_1_48140(u32);
+extern u32 fn_1_A8F78(void);
+extern u32 lbl_4_data_3018;
+
+/* fzgx:begin fn_4_D760 noprologue */
+#include "types.h"
+
 extern s16 lbl_1_bss_960;
 extern struct fn_4_D760_lbl_801A6410 lbl_801A6410;
 extern u32 fn_1_412A0(u32);
@@ -9,9 +24,7 @@ extern u32 fn_1_48140(u32);
 extern u32 fn_1_A8F78(void);
 extern u32 lbl_4_data_3018;
 extern u8 lbl_4_bss_5684;
-extern u8 lbl_4_bss_5685;
 
-/* fzgx:begin fn_4_D760 */
 struct fn_4_D760_lbl_4_bss_5680 {
     u32 unk_0;
 };
@@ -50,7 +63,9 @@ void fn_4_D760(void) {
 }
 /* fzgx:end fn_4_D760 */
 
-/* fzgx:begin fn_4_D848 */
+/* fzgx:begin fn_4_D848 noprologue */
+#include "types.h"
+
 extern struct fn_4_D848_lbl_4_bss_5680 lbl_4_bss_5680;
 extern u32 fn_80083DB0(u32, u32);
 

@@ -35238,6 +35238,17 @@
   },
   {
     "module": "replay",
+    "source": "rel/replay/replay_mode/fn_13_BCC.c",
+    "symbols": [
+      "fn_13_BCC"
+    ],
+    "status": "nonmatching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/replay/replay_mode.c"
+  },
+  {
+    "module": "replay",
     "source": "rel/replay/replay_mode/fn_13_E8C.c",
     "symbols": [
       "fn_13_E8C"
