@@ -2002,3 +2002,30 @@ dol/fn_80065AD0.c:
 
 dol/fn_8004B180.c:
 	.text       start:0x8004B180 end:0x8004B1DC align:4
+
+dol/fn_800622B0.c:
+	.text       start:0x800622B0 end:0x80062360 align:4
+
+dol/fn_8001D32C.c:
+	.text       start:0x8001D32C end:0x8001D3E4 align:4
+
+dol/fn_800136E8.c:
+	.text       start:0x800136E8 end:0x8001375C align:4
+
+dol/fn_80089244.c:
+	.text       start:0x80089244 end:0x8008930C align:4
+
+dol/OSSetAlarm.c:
+	.text       start:0x8000AE94 end:0x8000AEFC align:4
+
+dol/fn_80051E64.c:
+	.text       start:0x80051E64 end:0x80051F38 align:4
+
+dol/ReadArrayUnlock.c:
+	.text       start:0x8002AD2C end:0x8002AE70 align:4
+
+dol/fn_8004C980.c:
+	.text       start:0x8004C980 end:0x8004CAC8 align:4
+
+dol/fn_8006A1F8.c:
+	.text       start:0x8006A1F8 end:0x8006A3DC align:4
