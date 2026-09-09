@@ -4826,3 +4826,6 @@ rel/main_rel/spline/fn_1_FA154.c:
 
 rel/main_rel/car/fn_1_80C18.c:
 	.text       start:0x00080C18 end:0x00080CC4 align:4
+
+rel/main_rel/ranking/fn_1_1578C4.c:
+	.text       start:0x001578C4 end:0x00157920 align:4

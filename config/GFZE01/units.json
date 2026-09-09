@@ -21767,6 +21767,17 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/ranking/fn_1_1578C4.c",
+    "symbols": [
+      "fn_1_1578C4"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/ranking.c"
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/ranking/fn_1_157920.c",
     "symbols": [
       "fn_1_157920"

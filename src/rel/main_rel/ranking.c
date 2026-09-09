@@ -495,6 +495,33 @@ f32 fn_1_1577D0(u32 arg0, u32 arg1, f32 arg2) {
 }
 /* fzgx:end fn_1_1577D0 */
 
+/* fzgx:begin fn_1_1578C4 noprologue */
+#include "types.h"
+
+extern u32 fn_1_157920(void);
+extern u32 fn_1_157950(void);
+extern u32 fn_1_157FC8(void);
+extern u32 fn_1_4060(void);
+extern u8 lbl_1_bss_8F568;
+
+void fn_1_1578C4(void) {
+    s8 v0;
+    u32 t2;
+    v0 = (s8)lbl_1_bss_8F568;
+    switch (v0) {
+    case 0:
+    fn_1_157950();
+    break;
+    case 1:
+    fn_1_157FC8();
+    }
+    t2 = fn_1_157920();
+    if ((s32)t2 == 0) {
+    fn_1_4060();
+    }
+}
+/* fzgx:end fn_1_1578C4 */
+
 /* fzgx:begin fn_1_157920 */
 // Return the current ranking value.
 u32 fn_1_157920(void) {
