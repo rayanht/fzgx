@@ -48,29 +48,22 @@ extern struct fn_4_9B0_lbl_4_data_1260 lbl_4_data_1260;
 extern u32 lbl_1_bss_71688;
 extern u32 lbl_1_bss_7168C;
 
-/* fzgx:begin fn_4_894 noprologue */
-#include "types.h"
-
-extern struct fn_4_894_lbl_4_bss_4 lbl_4_bss_4;
-extern struct fn_4_894_lbl_4_bss_8 lbl_4_bss_8;
+/* fzgx:begin fn_4_894 */
 extern u32 fn_1_3CC4(u32);
 extern u32 fn_1_407C(u32);
 extern u32 fn_1_435C(u32);
 
-struct fn_4_894_lbl_4_bss_4 {
-    u32 unk_0;
-};
-struct fn_4_894_lbl_4_bss_8 {
-    u32 unk_0;
-};
-
+// Initializes both option subsystems in sequence.
 void fn_4_894(void) {
-    u32 t0, t1, t3;
-    t0 = fn_1_435C(lbl_4_bss_4.unk_0);
-    t1 = fn_1_407C(t0);
-    fn_1_3CC4(t1);
-    t3 = fn_1_435C(lbl_4_bss_8.unk_0);
-    fn_1_407C(t3);
+    u32 first_state;
+    u32 second_state;
+
+    first_state = fn_1_435C(lbl_4_bss_4);
+    first_state = fn_1_407C(first_state);
+    fn_1_3CC4(first_state);
+
+    second_state = fn_1_435C(lbl_4_bss_8);
+    fn_1_407C(second_state);
 }
 /* fzgx:end fn_4_894 */
 
@@ -270,16 +263,13 @@ void fn_4_4784(void) {
 }
 /* fzgx:end fn_4_4784 */
 
-/* fzgx:begin fn_4_4B10 noprologue */
-#include "types.h"
-
+/* fzgx:begin fn_4_4B10 */
+extern u16 lbl_4_bss_0;
 extern u32 fn_1_F7308(void);
-
-extern struct fn_4_4B10_lbl_4_bss_0 lbl_4_bss_0;
 extern u32 fn_1_426C(u32);
 extern u32 fn_1_435C(u32);
 
-struct fn_4_4B10_lbl_4_bss_0 {
+struct fn_4_4B10_state {
     u16 unk_0;
     u8 pad_2[0x2];
     u32 unk_4;
@@ -288,16 +278,18 @@ struct fn_4_4B10_lbl_4_bss_0 {
     u16 unk_C0;
 };
 
+/* Stop active option sounds and clear the pending sound handle. */
 void fn_4_4B10(void) {
-    struct fn_4_4B10_lbl_4_bss_0 *p_lbl_4_bss_0;
-    p_lbl_4_bss_0 = (struct fn_4_4B10_lbl_4_bss_0 *)&lbl_4_bss_0;
+    struct fn_4_4B10_state *state;
+
+    state = (struct fn_4_4B10_state *)&lbl_4_bss_0;
     fn_1_F7308();
-    fn_1_435C(p_lbl_4_bss_0->unk_4);
-    fn_1_426C(p_lbl_4_bss_0->unk_C0);
-    if (p_lbl_4_bss_0->unk_0 != 0) {
-    fn_1_435C(p_lbl_4_bss_0->unk_8);
-    fn_1_426C(p_lbl_4_bss_0->unk_0);
-    p_lbl_4_bss_0->unk_0 = 0;
+    fn_1_435C(state->unk_4);
+    fn_1_426C(state->unk_C0);
+    if (state->unk_0 != 0) {
+        fn_1_435C(state->unk_8);
+        fn_1_426C(state->unk_0);
+        state->unk_0 = 0;
     }
 }
 /* fzgx:end fn_4_4B10 */
@@ -395,9 +387,7 @@ void fn_4_7C38(void) {
 }
 /* fzgx:end fn_4_7C38 */
 
-/* fzgx:begin fn_4_7CA4 noprologue */
-#include "types.h"
-
+/* fzgx:begin fn_4_7CA4 */
 extern int fn_1_4C10(void);
 extern u16 lbl_1_bss_96A;
 extern u32 fn_4_0(u32, u32, u32, u32, u32);
@@ -414,52 +404,52 @@ struct fn_4_7CA4_lbl_4_bss_0 {
     u16 unk_10;
 };
 
-extern struct fn_4_7CA4_lbl_4_bss_0 lbl_4_bss_0;
 extern u32 fn_1_4A00(u32, u32, u32);
 
 void fn_4_7CA4(void) {
-    struct fn_4_7CA4_lbl_4_bss_0 *p_lbl_4_bss_0;
-    u32 v0;
-    u32 t0, t2, t5;
+    struct fn_4_7CA4_lbl_4_bss_0 *option_state;
+    u32 result;
+    u32 availability, selected_mode, notification_result;
 
-    p_lbl_4_bss_0 = (struct fn_4_7CA4_lbl_4_bss_0 *)&lbl_4_bss_0;
-    if (p_lbl_4_bss_0->unk_10 != 0) {
-        t0 = fn_1_4C10();
-        v0 = t0;
-        if ((s32)v0 != 0) {
+    /* Apply pending option changes, then update the active option state. */
+    option_state = (struct fn_4_7CA4_lbl_4_bss_0 *)&lbl_4_bss_0;
+    if (option_state->unk_10 != 0) {
+        availability = fn_1_4C10();
+        result = availability;
+        if ((s32)result != 0) {
             return;
         }
-        v0 = 1;
-        fn_1_1280(v0);
-        lbl_1_bss_96A = p_lbl_4_bss_0->unk_10;
-        p_lbl_4_bss_0->unk_10 = 0;
+        result = 1;
+        fn_1_1280(result);
+        lbl_1_bss_96A = option_state->unk_10;
+        option_state->unk_10 = 0;
         return;
     }
-    v0 = p_lbl_4_bss_0->unk_C;
-    t2 = fn_4_0(v0, 0, 2, -1, 0);
-    v0 = t2;
-    p_lbl_4_bss_0->unk_C = v0;
-    v0 = (u32)&lbl_1_bss_9F8;
-    v0 = *(u16 *)((u8 *)v0 + 8);
-    if (((v0 >> 9) & 0x1) != 0) {
-        v0 = 0xA9010000;
-        v0 += 512;
-        fn_1_A2D84(v0);
-        p_lbl_4_bss_0->unk_10 = 75;
+    result = option_state->unk_C;
+    selected_mode = fn_4_0(result, 0, 2, -1, 0);
+    result = selected_mode;
+    option_state->unk_C = result;
+    result = (u32)&lbl_1_bss_9F8;
+    result = *(u16 *)((u8 *)result + 8);
+    if (((result >> 9) & 0x1) != 0) {
+        result = 0xA9010000;
+        result += 512;
+        fn_1_A2D84(result);
+        option_state->unk_10 = 75;
     } else {
-        if (((v0 >> 8) & 0x1) != 0) {
-            v0 = 0xA9010000;
-            v0 += 256;
-            fn_1_A2D84(v0);
-            v0 = (u32)&lbl_4_data_2C58;
-            p_lbl_4_bss_0->unk_10 = *(s16 *)((u8 *)v0 + (p_lbl_4_bss_0->unk_C * 28));
+        if (((result >> 8) & 0x1) != 0) {
+            result = 0xA9010000;
+            result += 256;
+            fn_1_A2D84(result);
+            result = (u32)&lbl_4_data_2C58;
+            option_state->unk_10 = *(s16 *)((u8 *)result + (option_state->unk_C * 28));
         } else {
             return;
         }
     }
-    v0 = 0;
-    t5 = fn_1_4A00(v0, 15, p_lbl_4_bss_0->unk_8);
-    v0 = t5;
+    result = 0;
+    notification_result = fn_1_4A00(result, 15, option_state->unk_8);
+    result = notification_result;
 }
 /* fzgx:end fn_4_7CA4 */
 
@@ -610,31 +600,28 @@ void fn_4_89E4(void) {
 }
 /* fzgx:end fn_4_89E4 */
 
-/* fzgx:begin fn_4_8A54 noprologue */
-#include "types.h"
-
+/* fzgx:begin fn_4_8A54 */
 extern int fn_1_4C10(void);
 extern u16 lbl_1_bss_96A;
 extern void fn_1_1280(u32);
-extern u16 lbl_4_bss_10[90];
 extern u32 fn_4_ABB0(void);
-
 extern u32 lbl_4_bss_8;
 extern u32 fn_1_4A00(u32, u32, u32);
 
+/* Advance the option resource state and clear a completed selection. */
 void fn_4_8A54(void) {
     u16 value;
 
-    if (lbl_4_bss_10[0] != 0) {
+    if (lbl_4_bss_10.unk_0 != 0) {
         if (fn_1_4C10() == 0) {
             fn_1_1280(1);
-            value = lbl_4_bss_10[0];
+            value = lbl_4_bss_10.unk_0;
             lbl_1_bss_96A = value;
-            lbl_4_bss_10[0] = 0;
+            lbl_4_bss_10.unk_0 = 0;
         }
     } else {
         value = fn_4_ABB0();
-        lbl_4_bss_10[0] = value;
+        lbl_4_bss_10.unk_0 = value;
         if (value != 0) {
             fn_1_4A00(0, 15, lbl_4_bss_8);
         }
@@ -642,34 +629,19 @@ void fn_4_8A54(void) {
 }
 /* fzgx:end fn_4_8A54 */
 
-/* fzgx:begin fn_4_8AE0 noprologue */
-#include "types.h"
-
-struct fn_4_8AE0_lbl_4_bss_0 {
-    u16 unk_0;
-};
-
-extern struct fn_4_8AE0_lbl_4_bss_0 lbl_4_bss_0;
+/* fzgx:begin fn_4_8AE0 */
 extern u32 fn_1_426C(u32);
 extern u32 fn_1_435C(u32);
-extern u32 fn_4_AB90(void);
-extern u32 lbl_4_bss_8;
+extern void fn_4_AB90(void);
 
-void fn_4_8AE0(u32 arg0) {
-    u32 v0;
-    u32 t1, t2;
+// Completes the pending option callback and clears its handle.
+void fn_4_8AE0(void) {
     fn_4_AB90();
-    v0 = arg0;
-    if (lbl_4_bss_0.unk_0 != 0) {
-    v0 = (u32)&lbl_4_bss_8;
-    v0 = *(u32 *)((u8 *)v0 + 0);
-    t1 = fn_1_435C(v0);
-    v0 = t1;
-    v0 = (u32)&lbl_4_bss_0;
-    v0 = *(u16 *)((u8 *)v0 + 0);
-    t2 = fn_1_426C(v0);
-    v0 = t2;
-    lbl_4_bss_0.unk_0 = 0;
+
+    if (lbl_4_bss_0 != 0) {
+        fn_1_435C(lbl_4_bss_8);
+        fn_1_426C(lbl_4_bss_0);
+        lbl_4_bss_0 = 0;
     }
 }
 /* fzgx:end fn_4_8AE0 */
@@ -709,32 +681,16 @@ void fn_4_8DC0(void) {
 }
 /* fzgx:end fn_4_8DC0 */
 
-/* fzgx:begin fn_4_9A78 noprologue */
-#include "types.h"
-
-struct fn_4_9A78_lbl_4_bss_0 {
-    u16 unk_0;
-};
-
-extern struct fn_4_9A78_lbl_4_bss_0 lbl_4_bss_0;
+/* fzgx:begin fn_4_9A78 */
 extern u32 fn_1_426C(u32);
 extern u32 fn_1_435C(u32);
-extern u32 lbl_4_bss_8;
 
-void fn_4_9A78(u32 arg0) {
-    u32 v0;
-    u32 t0, t1;
-    v0 = arg0;
-    if (lbl_4_bss_0.unk_0 != 0) {
-    v0 = (u32)&lbl_4_bss_8;
-    v0 = *(u32 *)((u8 *)v0 + 0);
-    t0 = fn_1_435C(v0);
-    v0 = t0;
-    v0 = (u32)&lbl_4_bss_0;
-    v0 = *(u16 *)((u8 *)v0 + 0);
-    t1 = fn_1_426C(v0);
-    v0 = t1;
-    lbl_4_bss_0.unk_0 = 0;
+// Finalizes the pending option callback and clears its handle.
+void fn_4_9A78(void) {
+    if (lbl_4_bss_0 != 0) {
+        fn_1_435C(lbl_4_bss_8);
+        fn_1_426C(lbl_4_bss_0);
+        lbl_4_bss_0 = 0;
     }
 }
 /* fzgx:end fn_4_9A78 */
@@ -830,32 +786,13 @@ s32 fn_4_9B20(void) {
 }
 /* fzgx:end fn_4_9B20 */
 
-/* fzgx:begin fn_4_A734 noprologue */
-#include "types.h"
-
-struct fn_4_A734_lbl_4_bss_0 {
-    u16 unk_0;
-};
-
-extern struct fn_4_A734_lbl_4_bss_0 lbl_4_bss_0;
-extern u32 fn_1_426C(u32);
-extern u32 fn_1_435C(u32);
-extern u32 lbl_4_bss_8;
-
-void fn_4_A734(u32 arg0) {
-    u32 v0;
-    u32 t0, t1;
-    v0 = arg0;
-    if (lbl_4_bss_0.unk_0 != 0) {
-    v0 = (u32)&lbl_4_bss_8;
-    v0 = *(u32 *)((u8 *)v0 + 0);
-    t0 = fn_1_435C(v0);
-    v0 = t0;
-    v0 = (u32)&lbl_4_bss_0;
-    v0 = *(u16 *)((u8 *)v0 + 0);
-    t1 = fn_1_426C(v0);
-    v0 = t1;
-    lbl_4_bss_0.unk_0 = 0;
+/* fzgx:begin fn_4_A734 */
+// Finalizes the pending option callback and clears its handle.
+void fn_4_A734(void) {
+    if (lbl_4_bss_0 != 0) {
+        fn_1_435C(lbl_4_bss_8);
+        fn_1_426C(lbl_4_bss_0);
+        lbl_4_bss_0 = 0;
     }
 }
 /* fzgx:end fn_4_A734 */
@@ -889,21 +826,15 @@ void fn_4_A78C(u32 arg0) {
 }
 /* fzgx:end fn_4_A78C */
 
-/* fzgx:begin fn_4_AB30 noprologue */
-#include "types.h"
-
-extern void fn_1_B9BE0(void);
-extern void fn_1_B9DE8(u32);
-extern u32 lbl_4_bss_5630[];
-extern u32 lbl_4_data_2F1C;
-
+/* fzgx:begin fn_4_AB30 */
+// Initialize the option state and reset its associated data value.
 void fn_4_AB30(void) {
     fn_1_B9BE0();
     fn_1_B9DE8((u32)&lbl_4_bss_5630);
-    lbl_4_bss_5630[0] = 4;
-    lbl_4_bss_5630[0] = lbl_4_bss_5630[0] | 0x10;
-    lbl_4_bss_5630[0] = lbl_4_bss_5630[0] | 0x20;
-    *((u8 *)&lbl_4_bss_5630 + 4) = 0xc;
+    lbl_4_bss_5630.unk_0 = 4;
+    lbl_4_bss_5630.unk_0 |= 0x10;
+    lbl_4_bss_5630.unk_0 |= 0x20;
+    lbl_4_bss_5630.unk_4 = 0xc;
     lbl_4_data_2F1C = 0;
 }
 /* fzgx:end fn_4_AB30 */
