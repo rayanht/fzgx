@@ -13,6 +13,8 @@
 #include <dolphin/os/OSReset.h>
 
 
+void* OSGetArenaHi(void);
+
 void OSClearContext(register OSContext *context);
 void OSClearStack(u8 val);
 void OSDumpContext(OSContext *context);

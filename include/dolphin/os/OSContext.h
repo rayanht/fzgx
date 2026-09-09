@@ -21,4 +21,6 @@ typedef struct OSContext {
     f64 psf[32];
 } OSContext;
 
+void OSSetCurrentContext(OSContext* context);
+
 #endif

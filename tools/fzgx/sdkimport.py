@@ -555,6 +555,8 @@ def materialize(result: dict) -> list:
             text = re.sub(r'^asm\s+', '', piece.text)
             if piece.kind == 'prototype' and not piece.names & defined:
                 text = re.sub(r'^static\s+', '', text)
+            if Path(rec['source']).stem == 'OSAudioSystem':
+                text = re.sub(r'\br3 != 42069;', '(void)(r3 != 0x8000); // Retain the mailbox halfword conversion.', text)
             if result['library'] == 'si':
                 text = re.sub(r'\b0x80000001\b', '(SI_COMCSR_TCINT | SI_COMCSR_TSTART)', text)
             if piece.address is not None:
@@ -575,6 +577,13 @@ def materialize(result: dict) -> list:
             for i in new:
                 needed.update(set(IDENT.findall(masked(pieces[i].text))) - provided)
         local_types = [pieces[i].text for i in sorted(selected)]
+        declared = set().union(*(x.names for x in pieces if x.kind in ('prototype', 'function'))) | shared_prototypes
+        for name, prototype in {
+            'memcpy': 'void* memcpy(void* dest, const void* src, size_t n);',
+            'memset': 'void* memset(void* dest, int value, size_t n);',
+        }.items():
+            if name in used and name not in declared:
+                body.insert(0, prototype)
         prefix = f'#include <{header}>\n'
         referenced = set(IDENT.findall(masked('\n'.join(local_types + body))))
         for dependency in sorted({owners[n] for n in referenced & owners.keys()} - {header}):
@@ -844,8 +853,12 @@ def consolidate(p: Project, library: str) -> dict:
                 text = shared_storage(p, rec, pieces, text, mapping)
                 path = STATE_DIR / 'sdkimport' / library / f'{stem}.{sdk}.whole.c'
                 path.write_text(replace_c_symbols(text, mapping))
-                row = {**rec, 'path': str(path), 'bindings': mapping, 'absolutes': absolutes}
+                pragmas = [source_pragmas(sdk, source, fn['name']) for fn in functions]
+                if any(x != pragmas[0] for x in pragmas):
+                    raise ValueError('source has mixed compiler pragmas')
+                row = {**rec, 'path': str(path), 'bindings': mapping, 'absolutes': absolutes, 'pragmas': pragmas[0]}
                 imported = materialize({'library': library, 'prepared': [row]})[0]
+                Path(imported['path']).write_text(finish_source(Path(imported['path']).read_text()))
                 install_addresses(p, [row])
                 compiled = path.with_suffix('.o')
                 cp = oracle.compile_source(p, 'main', Path(imported['path']), compiled, data['mw'], FLAGS)

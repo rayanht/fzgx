@@ -1,5 +1,7 @@
 #include "sdk_addresses.h"
 #include <dolphin/os.h>
+
+void *memcpy(void *dest, const void *src, size_t n);
 #pragma peephole off
 
 void __OSSystemCallVectorStart();

@@ -77,6 +77,19 @@
       ],
       "sdk": "tww",
       "source": "src/dolphin/card/CARDOpen.c"
+    },
+    {
+      "file": "OSAudioSystem.c",
+      "text": [
+        2147529600,
+        2147530260
+      ],
+      "functions": [
+        "__OSInitAudioSystem",
+        "__OSStopAudioSystem"
+      ],
+      "sdk": "mkdd",
+      "source": "libs/dolphin/os/OSAudioSystem.c"
     }
   ]
 }

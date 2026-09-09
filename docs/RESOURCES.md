@@ -29,7 +29,7 @@ revisions, function identities and relocation bindings are recorded in
 [`os.json`](../state/sdkimports/os.json), [`exi.json`](../state/sdkimports/exi.json)
 and [`si.json`](../state/sdkimports/si.json). The complete
 `CARDCheck.c`, `CARDCreate.c`, `CARDNet.c` and `CARDRdwr.c` files use MKDD;
-`CARDOpen.c` uses TWW. All build includes belong to this repository under
+`CARDOpen.c` uses TWW. `OSAudioSystem.c` is consolidated from MKDD. All build includes belong to this repository under
 `include/dolphin/`; upstream checkouts are only inputs to the import tool.
 
 ## Community knowledge (vocabulary only)

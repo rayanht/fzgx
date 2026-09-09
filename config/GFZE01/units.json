@@ -3356,6 +3356,29 @@
   },
   {
     "module": "main",
+    "source": "dol/OSAudioSystem.c",
+    "symbols": [
+      "__OSInitAudioSystem",
+      "__OSStopAudioSystem"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ],
+    "collapsed": true
+  },
+  {
+    "module": "main",
     "source": "dol/OSClearContext.c",
     "symbols": [
       "OSClearContext"
@@ -5839,27 +5862,6 @@
   },
   {
     "module": "main",
-    "source": "dol/__OSInitAudioSystem.c",
-    "symbols": [
-      "__OSInitAudioSystem"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
     "source": "dol/__OSInitMemoryProtection.c",
     "symbols": [
       "__OSInitMemoryProtection"
@@ -6048,27 +6050,6 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
-  },
-  {
-    "module": "main",
-    "source": "dol/__OSStopAudioSystem.c",
-    "symbols": [
-      "__OSStopAudioSystem"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
   },
   {
     "module": "main",
