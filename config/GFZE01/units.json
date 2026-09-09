@@ -36154,36 +36154,16 @@
   },
   {
     "module": "option",
-    "source": "rel/option/name_entry/fn_4_D760.c",
+    "source": "rel/option/name_entry.c",
     "symbols": [
-      "fn_4_D760"
-    ],
-    "status": "matching",
-    "mw_version": null,
-    "extra_cflags": [],
-    "tu": "rel/option/name_entry.c"
-  },
-  {
-    "module": "option",
-    "source": "rel/option/name_entry/fn_4_D848.c",
-    "symbols": [
-      "fn_4_D848"
-    ],
-    "status": "matching",
-    "mw_version": null,
-    "extra_cflags": [],
-    "tu": "rel/option/name_entry.c"
-  },
-  {
-    "module": "option",
-    "source": "rel/option/name_entry/fn_4_D878.c",
-    "symbols": [
+      "fn_4_D760",
+      "fn_4_D848",
       "fn_4_D878"
     ],
     "status": "matching",
     "mw_version": null,
     "extra_cflags": [],
-    "tu": "rel/option/name_entry.c"
+    "collapsed": true
   },
   {
     "module": "pilotpoint",
