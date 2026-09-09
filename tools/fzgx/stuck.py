@@ -4,7 +4,7 @@ For every unmatched function whose best saved body scores at least `min_percent`
 body is recompiled and diffed row by row against retail (objdiff). Each differing row is
 classified, and the function gets the set of modes it exhibits plus a "pure" mode when
 one kind of difference explains everything. Pure modes are the deterministic-repair
-candidates: a permuter search for register allocation and scheduling, a symbol or pool
+candidates: the spelling search for register allocation and scheduling, a symbol or pool
 fix for relocations, a type change for missing sign extensions.
 """
 
