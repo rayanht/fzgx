@@ -1,5 +1,5 @@
 #include "types.h"
-#include "sofdec/sj.h"
+#include "sofdec/mpv.h"
 
 int MPV_MoveChunk(SJ *stream, int channel, int size) {
     SJCK chunk;

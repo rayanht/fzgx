@@ -33,4 +33,8 @@ typedef struct MwsStManager {
     int active_count;
 } MwsStManager;
 
+void MWSST_Pause(MwsStHandle* handle, int paused);
+int MWSST_GetStat(MwsStHandle* handle);
+void MWSST_StartSj(MwsStHandle* handle);
+
 #endif

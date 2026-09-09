@@ -3,8 +3,6 @@
 
 extern const int lbl_12_rodata_E10[9];
 
-extern void (*SFPLY_ResetPtsm)(unsigned int *pts);
-
 void SFTIM_GetTimeOneFrmVideo(SfdHandle *handle, int *value, int *scale) {
     int code = handle->playback_settings.frame_rate_code;
     if (code == 0) {

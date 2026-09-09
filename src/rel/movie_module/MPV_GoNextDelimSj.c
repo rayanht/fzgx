@@ -1,4 +1,4 @@
-#include "sofdec/sj.h"
+#include "sofdec/mpv.h"
 
 void fn_800589BC(const SJCK *source, int nbyte, SJCK *first, SJCK *remainder);
 
