@@ -3199,3 +3199,6 @@ dol/fn_80003590.c:
 
 dol/GXInitFifoBase.c:
 	.text       start:0x80031C84 end:0x80031CF0 align:4
+
+dol/__get_debug_bba.c:
+	.init       start:0x8000314C end:0x80003154 align:4
