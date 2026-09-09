@@ -47,3 +47,6 @@ rel/replay/replay_mode/fn_13_F00.c:
 
 rel/replay/_prolog/fn_13_B08.c:
 	.text       start:0x00000B08 end:0x00000B64 align:4
+
+rel/replay/replay_mode/fn_13_BCC.c:
+	.text       start:0x00000BCC end:0x00000CDC align:4

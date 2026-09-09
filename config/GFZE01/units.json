@@ -35264,7 +35264,7 @@
     "symbols": [
       "fn_13_BCC"
     ],
-    "status": "nonmatching",
+    "status": "matching",
     "mw_version": null,
     "extra_cflags": [],
     "tu": "rel/replay/replay_mode.c"
