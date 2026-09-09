@@ -110,3 +110,9 @@ rel/option/_prolog/fn_4_A78C.c:
 
 rel/option/_prolog/fn_4_7CA4.c:
 	.text       start:0x00007CA4 end:0x00007D94 align:4
+
+rel/option/_prolog/fn_4_9B0.c:
+	.text       start:0x000009B0 end:0x00000A0C align:4
+
+rel/option/_prolog/fn_4_AB30.c:
+	.text       start:0x0000AB30 end:0x0000AB90 align:4

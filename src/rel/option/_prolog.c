@@ -43,6 +43,10 @@ extern u32 fn_1_B7C00(void);
 extern u32 fn_1_BC310(void *);
 extern u32 fn_1_C0510(u32);
 extern u32 fn_1_C1394(void *);
+extern s16 lbl_1_bss_962;
+extern struct fn_4_9B0_lbl_4_data_1260 lbl_4_data_1260;
+extern u32 lbl_1_bss_71688;
+extern u32 lbl_1_bss_7168C;
 
 /* fzgx:begin fn_4_894 noprologue */
 #include "types.h"
@@ -69,6 +73,31 @@ void fn_4_894(void) {
     fn_1_407C(t3);
 }
 /* fzgx:end fn_4_894 */
+
+/* fzgx:begin fn_4_9B0 */
+typedef u32 (*fn_4_9B0_Fn0)(void);
+struct fn_4_9B0_lbl_4_data_1260_0_E44 {
+    u8 pad_0[0x20];
+    u32 unk_20;
+    u32 unk_24;
+    u32 unk_28;
+};
+struct fn_4_9B0_lbl_4_data_1260 {
+    struct fn_4_9B0_lbl_4_data_1260_0_E44 unk_0[1];
+};
+
+void fn_4_9B0(void) {
+    struct fn_4_9B0_lbl_4_data_1260_0_E44 *p;
+    s16 idx;
+    u32 v0;
+    p = (struct fn_4_9B0_lbl_4_data_1260_0_E44 *)&lbl_4_data_1260;
+    idx = lbl_1_bss_962;
+    p = (struct fn_4_9B0_lbl_4_data_1260_0_E44 *)((u8 *)p + (idx - 75) * 44);
+    lbl_1_bss_71688 = p->unk_24;
+    lbl_1_bss_7168C = (p->unk_28);
+    ((fn_4_9B0_Fn0)p->unk_20)();
+}
+/* fzgx:end fn_4_9B0 */
 
 /* fzgx:begin fn_4_D10 noprologue */
 #include "types.h"
@@ -961,6 +990,25 @@ void fn_4_A78C(u32 arg0) {
     }
 }
 /* fzgx:end fn_4_A78C */
+
+/* fzgx:begin fn_4_AB30 noprologue */
+#include "types.h"
+
+extern void fn_1_B9BE0(void);
+extern void fn_1_B9DE8(u32);
+extern u32 lbl_4_bss_5630[];
+extern u32 lbl_4_data_2F1C;
+
+void fn_4_AB30(void) {
+    fn_1_B9BE0();
+    fn_1_B9DE8((u32)&lbl_4_bss_5630);
+    lbl_4_bss_5630[0] = 4;
+    lbl_4_bss_5630[0] = lbl_4_bss_5630[0] | 0x10;
+    lbl_4_bss_5630[0] = lbl_4_bss_5630[0] | 0x20;
+    *((u8 *)&lbl_4_bss_5630 + 4) = 0xc;
+    lbl_4_data_2F1C = 0;
+}
+/* fzgx:end fn_4_AB30 */
 
 /* fzgx:begin fn_4_AB90 */
 void fn_4_AB90(void) {
