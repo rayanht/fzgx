@@ -1458,6 +1458,11 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                     pm, pa = ins[tgt - 1]
                     if pm == "b" and pa and pa[-1].startswith(".L_") and labels.get(pa[-1], -1) > tgt:
                         end = labels[pa[-1]]
+                        # the then-block's jump may leave an enclosing region too: this region
+                        # still closes where the enclosing one continues
+                        enclosing = min((idx for idx, _ in open_ifs if idx > i), default=None)
+                        if enclosing is not None and end > enclosing:
+                            end = enclosing
                         skip.add(tgt - 1)
                         stmts.append(f"if ({enter_text}) {{")
                         # closers are pushed innermost-last: the stack pops the else first, then the end
@@ -2283,9 +2288,10 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
         if not offs:
             continue
         pat = re.compile(rf"(?<![\w.>&]){re.escape(g)}\b(?![\w.\[]|\s*=\s*\(struct)")
-        if any(pat.search(b) for b in stmts):
-            offs.setdefault(0, "u32")
-            stmts[:] = [pat.sub(f"{g}.unk_0", b) for b in stmts]
+        if any(pat.search(b) for b in body if not b.startswith("extern")):
+            w0 = next((t_ for o_, t_ in sorted(offs.items()) if o_ > 0 and not str(t_).startswith("arr:")), "u32")
+            offs.setdefault(0, w0 if w0 in ("u8", "s8", "u16", "s16", "u32", "s32", "f32") else "u32")
+            body = [pat.sub(f"{g}.unk_0", b) if not b.startswith("extern") else b for b in body]
     structs.extend(elem_struct_texts())
     structs = fn_typedefs + structs
     # parameters and struct parameters
