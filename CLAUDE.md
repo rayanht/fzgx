@@ -68,7 +68,7 @@ Rules that hold for everyone:
   direction while dtk prints the raw hint bit, so `asmunit.fix_branch_hints` respells hinted
   backward branches on copy. 107 landed on 2026-09-09; the ledger has no `blocked` rows left.
 - Hardware register blocks: retail addresses them through linker-defined absolute symbols
-  (`lis/addi` of `__DIRegs`, `__viReg`, `__SIRegs`... resolved by the link, never a folded
+  (`lis/addi` of `__DIRegs`, `__VIRegs`, `__SIRegs`... resolved by the link, never a folded
   literal). `config/GFZE01/ldscript.tpl` (dtk `ldscript_template`) defines them; C declares
   `extern vu32 __DIRegs[];`. The object oracle cannot see the link, so `oracle._abs_rows`
   accepts a relocation against a template symbol wherever retail carries the resolved literal

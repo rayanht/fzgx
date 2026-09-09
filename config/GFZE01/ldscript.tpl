@@ -20,13 +20,13 @@ SECTIONS
 
     /* Hardware register blocks: retail addresses them through linker-defined absolute symbols
        (lis/addi of the symbol, never a folded literal), as the SDK's own link script did.
-       Declare them `extern vu32 __DIRegs[];` (or a register struct) in C. */
-    __cpReg = 0xCC000000;
-    __peReg = 0xCC001000;
-    __viReg = 0xCC002000;
-    __piReg = 0xCC003000;
-    __memReg = 0xCC004000;
-    __dspReg = 0xCC005000;
+       Declare them `extern vu32 __DIRegs[];` (or a register struct) in C. A name here must
+       not exist in symbols.txt: GX's __cpReg/__peReg/__piReg/__memReg are .sbss pointer
+       variables, not these. */
+    __VIRegs = 0xCC002000;
+    __PIRegs = 0xCC003000;
+    __MEMRegs = 0xCC004000;
+    __DSPRegs = 0xCC005000;
     __DIRegs = 0xCC006000;
     __DVDRegs = 0xCC006000;
     __SIRegs = 0xCC006400;

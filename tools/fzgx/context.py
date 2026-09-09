@@ -152,8 +152,8 @@ def build_context(project: Project, ledger: Optional[Ledger], symbol: str,
     mw = unit_cfg.get("mw_version") or ("GC/1.2.5n" if module == "main" else "GC/1.3.2")
     if any(re.search(r"\blis r\d+, 0xcc00\b", ln) for ln in fn.asm) if fn else False:
         parts.append("- hardware registers: the target's `lis rX, 0xcc00` / `addi rX, rX, 0xN000` pair is a link-defined absolute "
-                     "symbol; declare `extern vu32 __DIRegs[];` (0xCC006000; __viReg 0xCC002000, __piReg 0xCC003000, __memReg "
-                     "0xCC004000, __dspReg 0xCC005000, __SIRegs 0xCC006400, __EXIRegs 0xCC006800, __AIRegs 0xCC006C00) and index it, "
+                     "symbol; declare `extern vu32 __DIRegs[];` (0xCC006000; __VIRegs 0xCC002000, __PIRegs 0xCC003000, __MEMRegs "
+                     "0xCC004000, __DSPRegs 0xCC005000, __SIRegs 0xCC006400, __EXIRegs 0xCC006800, __AIRegs 0xCC006C00) and index it, "
                      "never a literal address (it folds into the load offset).")
     parts.append(f"- compiler: `{mw}` `-O4,p -inline auto -fp hardware -enum int`"
                  + (" `-sdata 0 -sdata2 0`" if module != "main" else "")
