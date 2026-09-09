@@ -283,6 +283,91 @@ void fn_1_49778(s16 value1, s16 value2, s16 value3, s16 value4) {
 }
 /* fzgx:end fn_1_49778 */
 
+/* fzgx:begin fn_1_499BC */
+extern u8 jumptable_1_data_1BEFC[220];
+
+u16 fn_1_499BC(const u8 *value) {
+    u16 result;
+    s32 i;
+    s32 shift;
+    const u8 *p;
+
+    if (value[0] != 'c') {
+        return value[0];
+    }
+    if (value[1] != '0') {
+        return value[0];
+    }
+    p = value + 2;
+    if (value[2] != 'x') {
+        return value[0];
+    }
+    result = 0;
+    shift = 12;
+    for (i = 0; i < 4; i++) {
+        switch (p[i + 1]) {
+        case '0':
+            result |= 1 << shift;
+            break;
+        case '1':
+            result |= 2 << shift;
+            break;
+        case '2':
+            result |= 3 << shift;
+            break;
+        case '3':
+            result |= 4 << shift;
+            break;
+        case '4':
+            result |= 5 << shift;
+            break;
+        case '5':
+            result |= 6 << shift;
+            break;
+        case '6':
+            result |= 7 << shift;
+            break;
+        case '7':
+            result |= 8 << shift;
+            break;
+        case '8':
+            result |= 9 << shift;
+            break;
+        case '9':
+            result |= 10 << shift;
+            break;
+        case 'A':
+        case 'a':
+            result |= 11 << shift;
+            break;
+        case 'B':
+        case 'b':
+            result |= 12 << shift;
+            break;
+        case 'C':
+        case 'c':
+            result |= 13 << shift;
+            break;
+        case 'D':
+        case 'd':
+            result |= 14 << shift;
+            break;
+        case 'E':
+        case 'e':
+            result |= 15 << shift;
+            break;
+        case 'F':
+        case 'f':
+            break;
+        default:
+            break;
+        }
+        shift -= 4;
+    }
+    return result;
+}
+/* fzgx:end fn_1_499BC */
+
 /* fzgx:begin fn_1_4AEB4 */
 void fn_1_4AEB4(f32 value) {
     lbl_1_bss_3E05C = value;

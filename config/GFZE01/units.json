@@ -16771,6 +16771,20 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/font/fn_1_499BC.c",
+    "symbols": [
+      "fn_1_499BC"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/font.c",
+    "pool": {
+      "@42": "jumptable_1_data_1BEFC"
+    }
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/font/fn_1_4AEB4.c",
     "symbols": [
       "fn_1_4AEB4"
