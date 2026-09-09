@@ -1,5 +1,49 @@
 #include "types.h"
 
+/* fzgx:begin fn_15_1F4 */
+extern s32 lbl_15_bss_14;
+extern s32 lbl_15_bss_1C;
+extern void fn_15_B90(void);
+
+void fn_15_1F4(void) {
+    if ((lbl_15_bss_14 & 0x10000000) != 0) {
+        if (lbl_15_bss_1C != 0) {
+            lbl_15_bss_1C -= 1;
+        }
+        if (lbl_15_bss_1C == 0) {
+            lbl_15_bss_14 &= ~0x10000000;
+            fn_15_B90();
+        }
+    }
+}
+/* fzgx:end fn_15_1F4 */
+
+/* fzgx:begin fn_15_350 */
+typedef void (*fn_15_350_Fn0)(void);
+struct fn_15_350_lbl_15_data_70_0_E16 {
+    u8 pad_0[0x4];
+    u32 unk_4;
+    u32 unk_8;
+    u32 unk_C;
+};
+
+extern s16 lbl_1_bss_962;
+extern u8 lbl_15_data_70[32];
+extern u32 lbl_1_bss_71688;
+extern u32 lbl_1_bss_7168C;
+
+void fn_15_350(void) {
+    u32 v0;
+    struct fn_15_350_lbl_15_data_70_0_E16 *p;
+    p = (struct fn_15_350_lbl_15_data_70_0_E16 *)&lbl_15_data_70;
+    p += lbl_1_bss_962 - 183;
+    lbl_1_bss_71688 = p->unk_8;
+    v0 = p->unk_C;
+    lbl_1_bss_7168C = v0;
+    ((fn_15_350_Fn0)p->unk_4)();
+}
+/* fzgx:end fn_15_350 */
+
 /* fzgx:begin fn_15_B8C */
 // fn_15_B8C: empty in retail (single blr).
 void fn_15_B8C(void) {
@@ -97,6 +141,83 @@ void fn_15_2228(void) {
 }
 /* fzgx:end fn_15_2228 */
 
+/* fzgx:begin fn_15_2274 */
+struct fn_15_2274_lbl_15_bss_0 {
+    u8 pad_0[0x14];
+    u32 unk_14;
+    u8 pad_18[0x9];
+    u8 unk_21;
+    u8 pad_22[0x4E];
+    u32 unk_70;
+};
+
+struct fn_15_2274_lbl_15_rodata_0 {
+    u8 pad_0[0xA8];
+    u32 unk_A8;
+    u32 unk_AC;
+    u32 unk_B0;
+    u32 unk_B4;
+    u32 unk_B8;
+};
+
+extern struct fn_15_2274_lbl_15_bss_0 lbl_15_bss_0;
+extern struct fn_15_2274_lbl_15_rodata_0 lbl_15_rodata_0;
+extern void fn_15_435C(void);
+extern void fn_15_405C(void);
+extern void fn_15_2D74(void);
+extern void fn_80007AB4(void *);
+
+void fn_15_2274(void) {
+    struct fn_15_2274_lbl_15_rodata_0 *p_lbl_15_rodata_0;
+    struct fn_15_2274_lbl_15_bss_0 *p_lbl_15_bss_0;
+    u32 v0;
+    p_lbl_15_rodata_0 = &lbl_15_rodata_0;
+    p_lbl_15_bss_0 = &lbl_15_bss_0;
+    if ((p_lbl_15_bss_0->unk_14 & 0x80000000) != 0) {
+        fn_15_435C();
+    }
+    v0 = p_lbl_15_bss_0->unk_70;
+    switch (v0) {
+    case 0: {
+        u32 local0;
+        local0 = p_lbl_15_rodata_0->unk_A8;
+        fn_80007AB4(&local0);
+        break;
+    }
+    case 1: {
+        u32 local1;
+        local1 = p_lbl_15_rodata_0->unk_AC;
+        fn_80007AB4(&local1);
+        break;
+    }
+    case 2: {
+        u32 local2;
+        local2 = p_lbl_15_rodata_0->unk_B0;
+        fn_80007AB4(&local2);
+        break;
+    }
+    case 3: {
+        u32 local3;
+        local3 = p_lbl_15_rodata_0->unk_B4;
+        fn_80007AB4(&local3);
+        break;
+    }
+    default: {
+        u32 local4;
+        local4 = p_lbl_15_rodata_0->unk_B8;
+        fn_80007AB4(&local4);
+        break;
+    }
+    }
+    if (p_lbl_15_bss_0->unk_21 != 0) {
+        fn_15_405C();
+    }
+    if ((p_lbl_15_bss_0->unk_14 & 0x80) != 0) {
+        fn_15_2D74();
+    }
+}
+/* fzgx:end fn_15_2274 */
+
 /* fzgx:begin fn_15_236C */
 struct fn_15_236C_lbl_15_bss_0 {
     u8 pad_0[0x8];
@@ -172,6 +293,51 @@ void fn_15_236C(u32 arg0, u32 arg1, u32 arg2, u32 arg3) {
 void fn_15_2CEC(void) {
 }
 /* fzgx:end fn_15_2CEC */
+
+/* fzgx:begin fn_15_30E8 */
+extern struct fn_15_30E8_lbl_15_bss_0 lbl_15_bss_0;
+extern void fn_15_3368(s16);
+
+struct fn_15_30E8_entry {
+    u32 unk_0;
+    u8 unk_4;
+    u8 value;
+    u8 unk_6[2];
+};
+
+struct fn_15_30E8_object {
+    u8 unk_0[0x81a0];
+    u8 value;
+};
+
+struct fn_15_30E8_lbl_15_bss_0 {
+    u8 unk_0[0x2c];
+    struct fn_15_30E8_entry *entries;
+    u8 unk_30[8];
+    s16 entry_offset;
+    u8 unk_3a[0x112];
+    s16 entry_count;
+};
+
+void fn_15_30E8(void) {
+    struct fn_15_30E8_lbl_15_bss_0 *state;
+    struct fn_15_30E8_entry *entry;
+    s32 i;
+    s16 value;
+
+    state = &lbl_15_bss_0;
+    entry = state->entries;
+    i = 0;
+    while (i < state->entry_count) {
+        value = entry[i + state->entry_offset].value;
+        if ((s16)value >= 0x29) {
+            value = ((struct fn_15_30E8_object *)entry[i + state->entry_offset].unk_0)->value;
+        }
+        fn_15_3368((s16)value);
+        i++;
+    }
+}
+/* fzgx:end fn_15_30E8 */
 
 /* fzgx:begin fn_15_3A14 */
 extern struct fn_15_3A14_lbl_15_bss_74 lbl_15_bss_74;

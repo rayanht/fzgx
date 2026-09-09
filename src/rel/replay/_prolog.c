@@ -53,6 +53,36 @@ void _epilog(void) {
 }
 /* fzgx:end _epilog */
 
+/* fzgx:begin fn_13_B08 */
+typedef u32 (*fn_13_B08_Fn0)(void);
+struct fn_13_B08_lbl_13_data_18_0_E16 {
+    u8 pad_0[0x4];
+    u32 unk_4;
+    u32 unk_8;
+    u32 unk_C;
+};
+struct fn_13_B08_lbl_13_data_18 {
+    struct fn_13_B08_lbl_13_data_18_0_E16 unk_0[1];
+};
+
+extern s16 lbl_1_bss_962;
+extern struct fn_13_B08_lbl_13_data_18 lbl_13_data_18;
+extern u32 lbl_1_bss_71688;
+extern u32 lbl_1_bss_7168C;
+
+void fn_13_B08(void) {
+    s32 index;
+    struct fn_13_B08_lbl_13_data_18_0_E16 *p;
+    index = lbl_1_bss_962;
+    index -= 167;
+    p = &lbl_13_data_18.unk_0[0];
+    p += index;
+    lbl_1_bss_71688 = p->unk_8;
+    lbl_1_bss_7168C = p->unk_C;
+    ((fn_13_B08_Fn0)p->unk_4)();
+}
+/* fzgx:end fn_13_B08 */
+
 /* fzgx:begin fn_13_B64 */
 extern u32 lbl_1_bss_26C60;
 extern void fn_13_3FC(void);

@@ -113,3 +113,18 @@ rel/story/story_mode/fn_7_1544.c:
 
 rel/story/story_mode/fn_7_3FCC.c:
 	.text       start:0x00003FCC end:0x00004050 align:4
+
+rel/story/story_mode/fn_7_4050.c:
+	.text       start:0x00004050 end:0x00004094 align:4
+
+rel/story/story_mode/fn_7_4E28.c:
+	.text       start:0x00004E28 end:0x00004EF8 align:4
+
+rel/story/story_mode/fn_7_388.c:
+	.text       start:0x00000388 end:0x000003E4 align:4
+
+rel/story/story_mode/fn_7_4EF8.c:
+	.text       start:0x00004EF8 end:0x00004FD0 align:4
+
+rel/story/story_mode/fn_7_1BA8.c:
+	.text       start:0x00001BA8 end:0x00001C0C align:4

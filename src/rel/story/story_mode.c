@@ -76,6 +76,36 @@ void fn_7_25C(void) {
 }
 /* fzgx:end fn_7_25C */
 
+/* fzgx:begin fn_7_388 */
+typedef u32 (*fn_7_388_Fn0)(void);
+struct fn_7_388_lbl_7_data_13A58_0_E44 {
+    u8 pad_0[0x20];
+    u32 unk_20;
+    u32 unk_24;
+    u32 unk_28;
+};
+extern s16 lbl_1_bss_962;
+extern struct fn_7_388_lbl_7_data_13A58_0_E44 lbl_7_data_13A58[];
+extern u32 lbl_1_bss_71688;
+extern u32 lbl_1_bss_7168C;
+
+void fn_7_388(void) {
+    u32 v0;
+    u32 v1;
+    struct fn_7_388_lbl_7_data_13A58_0_E44 *p;
+    s32 index;
+    p = lbl_7_data_13A58;
+    index = lbl_1_bss_962;
+    index -= 133;
+    p += index;
+    v0 = p->unk_24;
+    lbl_1_bss_71688 = v0;
+    v1 = p->unk_28;
+    lbl_1_bss_7168C = v1;
+    ((fn_7_388_Fn0)p->unk_20)();
+}
+/* fzgx:end fn_7_388 */
+
 /* fzgx:begin fn_7_50C */
 extern u16 lbl_1_bss_96A;
 
@@ -214,6 +244,41 @@ void fn_7_16FC(void) {
 void fn_7_170C(void) {
 }
 /* fzgx:end fn_7_170C */
+
+/* fzgx:begin fn_7_1BA8 */
+struct StoryState_1BA8 {
+    u8 pad_00[0xe0];
+    u8 value_e0;
+    u8 pad_e1[1];
+    u8 flag_e2;
+};
+
+struct StoryFlags_1BA8 {
+    u8 pad_00[8];
+    u16 flags;
+};
+
+extern struct StoryState_1BA8 lbl_1_bss_5138;
+extern struct StoryFlags_1BA8 lbl_1_bss_9F8;
+extern u16 lbl_1_bss_96A;
+
+void fn_7_1BA8(void) {
+    u16 flags = lbl_1_bss_9F8.flags;
+    s32 bit = (flags >> 8) & 1;
+    struct StoryState_1BA8 *state = &lbl_1_bss_5138;
+    if (state->flag_e2 != 0) {
+        if (bit != 0) {
+            if (state->value_e0 >= 15 && state->value_e0 <= 120) {
+                state->value_e0 = 120;
+            }
+        }
+    }
+
+    if (state->flag_e2 == 0) {
+        lbl_1_bss_96A = 146;
+    }
+}
+/* fzgx:end fn_7_1BA8 */
 
 /* fzgx:begin fn_7_1C0C */
 extern u32 fn_1_48140(u32);
@@ -456,6 +521,22 @@ void fn_7_3FCC(void) {
 }
 /* fzgx:end fn_7_3FCC */
 
+/* fzgx:begin fn_7_4050 */
+extern s32 fn_1_13018(void);
+extern s32 fn_1_467F4(void);
+extern void fn_1_451E4(void);
+extern void fn_1_D3214(void);
+extern void fn_8001AF64(void);
+
+void fn_7_4050(void) {
+    while (fn_1_467F4() || fn_1_13018()) {
+        fn_1_451E4();
+        fn_1_D3214();
+        fn_8001AF64();
+    }
+}
+/* fzgx:end fn_7_4050 */
+
 /* fzgx:begin fn_7_4094 */
 extern u32 fn_1_4404(u32);
 extern u32 fn_1_46B4(u32, u32, u32, u32);
@@ -489,3 +570,97 @@ u32 fn_7_4094(u32 arg0, u32 arg1, u32 arg2, u32 arg3) {
     return v2;
 }
 /* fzgx:end fn_7_4094 */
+
+/* fzgx:begin fn_7_4E28 */
+extern char lbl_7_data_13FFC[15];
+extern void OSReport(char *, ...);
+
+s32 fn_7_4E28(s32 arg0, s32 arg1, s32 arg2) {
+    s32 result;
+
+    result = 0;
+    switch (arg0) {
+    case 0:
+        if (arg1 == arg2) {
+            result = 1;
+        }
+        break;
+    case 1:
+        if (arg1 != arg2) {
+            result = 1;
+        }
+        break;
+    case 2:
+        if (arg1 >= arg2) {
+            result = 1;
+        }
+        break;
+    case 3:
+        if (arg1 > arg2) {
+            result = 1;
+        }
+        break;
+    case 4:
+        if (arg1 <= arg2) {
+            result = 1;
+        }
+        break;
+    case 5:
+        if (arg1 < arg2) {
+            result = 1;
+        }
+        break;
+    default:
+        OSReport(lbl_7_data_13FFC);
+        break;
+    }
+    return result;
+}
+/* fzgx:end fn_7_4E28 */
+
+/* fzgx:begin fn_7_4EF8 */
+extern char lbl_7_data_13FFC[15];
+extern void OSReport(char *, ...);
+
+s32 fn_7_4EF8(u32 arg0, f32 arg1, f32 arg2) {
+    s32 result;
+
+    result = 0;
+    switch ((s32)arg0) {
+    case 0:
+        if (arg1 == arg2) {
+            result = 1;
+        }
+        break;
+    case 1:
+        if (arg1 != arg2) {
+            result = 1;
+        }
+        break;
+    case 2:
+        if (arg1 >= arg2) {
+            result = 1;
+        }
+        break;
+    case 3:
+        if (arg1 > arg2) {
+            result = 1;
+        }
+        break;
+    case 4:
+        if (arg1 <= arg2) {
+            result = 1;
+        }
+        break;
+    case 5:
+        if (arg1 < arg2) {
+            result = 1;
+        }
+        break;
+    default:
+        OSReport(lbl_7_data_13FFC);
+        break;
+    }
+    return result;
+}
+/* fzgx:end fn_7_4EF8 */

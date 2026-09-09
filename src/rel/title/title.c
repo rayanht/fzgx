@@ -24,6 +24,35 @@ void fn_8_AA8(void) {
 }
 /* fzgx:end fn_8_AA8 */
 
+/* fzgx:begin fn_8_B7C */
+typedef u32 (*fn_8_B7C_Fn0)(void);
+struct fn_8_B7C_lbl_8_data_318_0_E16 {
+    u8 pad_0[0x4];
+    u32 unk_4;
+    u32 unk_8;
+    u32 unk_C;
+};
+struct fn_8_B7C_lbl_8_data_318 {
+    struct fn_8_B7C_lbl_8_data_318_0_E16 unk_0[1];
+};
+
+extern s16 lbl_1_bss_962;
+extern struct fn_8_B7C_lbl_8_data_318 lbl_8_data_318;
+extern u32 lbl_1_bss_71688;
+extern u32 lbl_1_bss_7168C;
+
+void fn_8_B7C(void) {
+    struct fn_8_B7C_lbl_8_data_318_0_E16 *p;
+    s16 idx;
+    p = (struct fn_8_B7C_lbl_8_data_318_0_E16 *)&lbl_8_data_318;
+    idx = lbl_1_bss_962;
+    p += idx - 153;
+    lbl_1_bss_71688 = p->unk_8;
+    lbl_1_bss_7168C = p->unk_C;
+    ((fn_8_B7C_Fn0)p->unk_4)();
+}
+/* fzgx:end fn_8_B7C */
+
 /* fzgx:begin fn_8_BD8 */
 // fn_8_BD8: empty in retail (single blr).
 void fn_8_BD8(void) {
@@ -269,6 +298,62 @@ void fn_8_5210(void) {
 void fn_8_5214(void) {
 }
 /* fzgx:end fn_8_5214 */
+
+/* fzgx:begin fn_8_5218 */
+extern u8 lbl_8_bss_0;
+extern char lbl_8_data_0[4];
+extern void *lbl_801A6410;
+extern void fn_8_6A50(void);
+extern void fn_8_C038(void);
+extern void *fn_1_7BA08(u32, u32, u32);
+extern void fn_1_7BA48(void);
+extern void fn_1_435C(void *);
+extern void *fn_1_46B4(void *, void *, void *, u32);
+extern void *fn_1_45D0(void *, void *, void *, u32);
+extern void *fn_1_3F8C(void *, void *, void *, u32);
+extern void fn_1_7BAF8(void);
+
+typedef struct TitleState {
+    u8 unk0[0x8];
+    void *resource;
+    u8 unkC[0x22c];
+    void *unk238;
+    u8 unk23c[1];
+    u8 initialized;
+    u8 unk23e[3];
+    u8 unk241;
+    u8 reset;
+    u8 unk243[0x45];
+    void *unk288;
+    void *unk28c;
+} TitleState;
+
+typedef struct TitleData {
+    u8 unk0[0x7cdc];
+    u8 unk7cdc[0xc];
+} TitleData;
+
+void fn_8_5218(void) {
+    TitleState *state = (TitleState *)&lbl_8_bss_0;
+    TitleData *data = (TitleData *)&lbl_8_data_0;
+
+    if (!state->initialized) {
+        state->reset = 0;
+        fn_8_6A50();
+        if (state->resource != 0) {
+            fn_1_46B4(lbl_801A6410, state->resource, &data->unk0[0x434], 0xdb2);
+            state->resource = 0;
+        }
+        state->resource = fn_1_45D0(lbl_801A6410, fn_1_7BA08(0x20, 0x20, 0x40),
+                                    &data->unk0[0x434], 0xdb5);
+        fn_1_7BA48();
+        fn_1_435C(state->unk238);
+        state->unk288 = fn_1_3F8C(&data->unk0[0x7cdc], fn_1_7BAF8,
+                                  state->resource, 2);
+        state->unk28c = fn_1_3F8C(&data->unk0[0x7ce8], fn_8_C038, 0, 0x1c);
+    }
+}
+/* fzgx:end fn_8_5218 */
 
 /* fzgx:begin fn_8_5514 */
 extern struct fn_8_5514_lbl_1_bss_7C850 lbl_1_bss_7C850;

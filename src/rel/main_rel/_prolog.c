@@ -74,6 +74,76 @@ void fn_1_668(void) {
 }
 /* fzgx:end fn_1_668 */
 
+/* fzgx:begin fn_1_6D4 */
+extern u32 fn_80008BEC(void *, u32, u32);
+
+struct fn_1_6D4_Data {
+    s16 unk_0;
+    s16 unk_2;
+    u16 unk_4;
+    u16 unk_6;
+    u16 unk_8;
+    s16 unk_A;
+    u8 unk_C[2];
+    s16 unk_E;
+    u8 pad_10[0x1e];
+    s16 unk_2E;
+    u8 pad_30[0x1e];
+    s16 unk_4E;
+    u8 pad_50[0x1e];
+    s16 unk_6E;
+    u8 pad_70[0x22];
+    u16 unk_92;
+    u8 pad_94[0xb];
+    u8 unk_9F;
+    u8 unk_A0;
+    u8 unk_A1;
+    u8 unk_A2;
+    u8 pad_A3;
+    u32 unk_A4;
+    u8 pad_A8[0x84];
+    u16 unk_12C;
+    u16 unk_12E;
+    u16 unk_130;
+    u16 unk_132;
+    u16 unk_134;
+    u16 unk_136;
+    u16 unk_138;
+    u16 unk_13A;
+    u16 unk_13C;
+};
+
+void fn_1_6D4(struct fn_1_6D4_Data *data) {
+    fn_80008BEC(data, 0, 0x14c);
+    data->unk_A4 = 0;
+    fn_80008BEC(data->unk_C, 0, 0x80);
+    data->unk_E = (u16)-1;
+    data->unk_9F = 0;
+    data->unk_2E = (u16)-1;
+    data->unk_A0 = 0;
+    data->unk_4E = (u16)-1;
+    data->unk_A1 = 0;
+    data->unk_6E = (u16)-1;
+    data->unk_A2 = 0;
+    data->unk_0 = (u16)-1;
+    data->unk_2 = (u16)-1;
+    data->unk_4 = 1;
+    data->unk_6 = 0x1e;
+    data->unk_8 = 0;
+    data->unk_A = (u16)-1;
+    data->unk_92 = 8;
+    data->unk_12C = 0;
+    data->unk_12E = 0;
+    data->unk_130 = 0;
+    data->unk_132 = 1;
+    data->unk_134 = 1;
+    data->unk_136 = 1;
+    data->unk_138 = 1;
+    data->unk_13C = 3;
+    data->unk_13A = 0;
+}
+/* fzgx:end fn_1_6D4 */
+
 /* fzgx:begin fn_1_8D4 */
 void fn_1_8D4(void) {
     lbl_801A66B4 = lbl_801A66BC;
@@ -488,6 +558,18 @@ u32 fn_1_434C(void) {
 }
 /* fzgx:end fn_1_434C */
 
+/* fzgx:begin fn_1_435C */
+extern u32 lbl_1_bss_DAC;
+
+u32 fn_1_435C(u32 value) {
+    u32 old;
+
+    old = lbl_1_bss_DAC;
+    lbl_1_bss_DAC = value;
+    return old;
+}
+/* fzgx:end fn_1_435C */
+
 /* fzgx:begin fn_1_4370 */
 // fn_1_4370: empty in retail (single blr).
 void fn_1_4370(void) {
@@ -756,6 +838,19 @@ u32 fn_1_4630(u32 arg0, u32 arg1) {
     return v0;
 }
 /* fzgx:end fn_1_4630 */
+
+/* fzgx:begin fn_1_46B4 */
+extern char lbl_1_data_2C9C[20];
+extern void OSPanic(const char *message, int line, const char *file, ...);
+extern void fn_80009AA8(u32 value, u32 count, const char *file, int line);
+
+void fn_1_46B4(u32 arg0, u32 arg1, const char *arg2, int arg3) {
+    if (arg1 == 0) {
+        OSPanic(arg2, arg3, lbl_1_data_2C9C);
+    }
+    fn_80009AA8(arg0, arg1, arg2, arg3);
+}
+/* fzgx:end fn_1_46B4 */
 
 /* fzgx:begin fn_1_4730 */
 typedef struct {

@@ -332,6 +332,29 @@ void fn_14_DC28(void) {
 }
 /* fzgx:end fn_14_DC28 */
 
+/* fzgx:begin fn_14_DC2C */
+typedef struct LocalData {
+    u8 data[0x1471];
+    u8 field_1479;
+    u8 field_147a;
+    u8 tail[0x38];
+} LocalData;
+
+extern void fn_1_3EF14(void *);
+
+u32 fn_14_DC2C(void) {
+    LocalData local;
+    u8 result;
+    fn_1_3EF14(&local);
+    if (local.field_147a != 0) {
+        result = 0;
+    } else {
+        result = local.field_1479;
+    }
+    return result;
+}
+/* fzgx:end fn_14_DC2C */
+
 /* fzgx:begin fn_14_DC6C */
 extern u32 lbl_14_data_6C8;
 
@@ -339,3 +362,26 @@ u32 fn_14_DC6C(u32 arg0, u32 arg1) {
     return *(u32 *)((u8 *)((u8 *)&lbl_14_data_6C8 + ((s16)arg0 * 24)) + ((s16)arg1 << 2));
 }
 /* fzgx:end fn_14_DC6C */
+
+/* fzgx:begin fn_14_DF70 */
+extern s16 lbl_1_bss_8B3A0;
+extern u8 fn_1_128DD8(u8);
+extern void fn_1_128E8C(u8, void *);
+
+s32 fn_14_DF70(void) {
+    u8 buffer[40];
+    s16 *p = &lbl_1_bss_8B3A0;
+
+    if (*p++ == 9) {
+        return 0;
+    }
+
+    fn_1_128E8C(fn_1_128DD8((u8)(p[0x47] & 0xFF)), buffer);
+
+    if (buffer[0] == 8 && buffer[1] == 44 && *(u16 *)&buffer[2] == 287) {
+        return 0;
+    }
+
+    return 1;
+}
+/* fzgx:end fn_14_DF70 */

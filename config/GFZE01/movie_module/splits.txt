@@ -1289,3 +1289,15 @@ rel/movie_module/fn_12_13D0.c:
 
 rel/movie_module/fn_12_24EA0.c:
 	.text       start:0x00024EA0 end:0x00024FBC align:4
+
+rel/movie_module/fn_12_21714.c:
+	.text       start:0x00021714 end:0x0002178C align:4
+
+rel/movie_module/fn_12_2D420.c:
+	.text       start:0x0002D420 end:0x0002D450 align:4
+
+rel/movie_module/fn_12_33178.c:
+	.text       start:0x00033178 end:0x000331A8 align:4
+
+rel/movie_module/fn_12_22668.c:
+	.text       start:0x00022668 end:0x0002269C align:4

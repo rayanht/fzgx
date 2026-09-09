@@ -30,6 +30,38 @@ void fn_5_220(void) {
 }
 /* fzgx:end fn_5_220 */
 
+/* fzgx:begin fn_5_320 */
+typedef u32 (*fn_5_320_Fn0)(void);
+struct fn_5_320_lbl_5_data_40_0_E44 {
+    u8 pad_0[0x20];
+    u32 unk_20;
+    u32 unk_24;
+    u32 unk_28;
+};
+struct fn_5_320_lbl_5_data_40 {
+    struct fn_5_320_lbl_5_data_40_0_E44 unk_0[1];
+};
+
+extern s16 lbl_1_bss_962;
+extern struct fn_5_320_lbl_5_data_40 lbl_5_data_40;
+extern u32 lbl_1_bss_71688;
+extern u32 lbl_1_bss_7168C;
+
+void fn_5_320(void) {
+    s32 i;
+    struct fn_5_320_lbl_5_data_40_0_E44 *p;
+    u32 v0;
+    p = lbl_5_data_40.unk_0;
+    i = lbl_1_bss_962;
+    i -= 129;
+    p += i;
+    lbl_1_bss_71688 = p->unk_24;
+    v0 = p->unk_28;
+    lbl_1_bss_7168C = v0;
+    ((fn_5_320_Fn0)p->unk_20)();
+}
+/* fzgx:end fn_5_320 */
+
 /* fzgx:begin fn_5_684 */
 extern u32 fn_1_412A0(u32);
 extern u32 fn_1_48140(u32);

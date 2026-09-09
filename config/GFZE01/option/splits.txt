@@ -101,3 +101,12 @@ rel/option/_prolog/fn_4_ACF0.c:
 
 rel/option/_prolog/fn_4_347C.c:
 	.text       start:0x0000347C end:0x00003568 align:4
+
+rel/option/_prolog/fn_4_8A54.c:
+	.text       start:0x00008A54 end:0x00008AE0 align:4
+
+rel/option/_prolog/fn_4_A78C.c:
+	.text       start:0x0000A78C end:0x0000A82C align:4
+
+rel/option/_prolog/fn_4_7CA4.c:
+	.text       start:0x00007CA4 end:0x00007D94 align:4
