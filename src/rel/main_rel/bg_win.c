@@ -43,6 +43,24 @@ s32 fn_1_15C35C(s32 a, s32 b, s32 c, s32 d) {
 }
 /* fzgx:end fn_1_15C35C */
 
+/* fzgx:begin fn_1_15E1D0 noprologue */
+#include "types.h"
+
+struct fn_1_15E1D0_lbl_1_bss_8FDA8_0_E52 {
+    u8 pad_0[0x30];
+    f32 unk_30;
+};
+struct fn_1_15E1D0_lbl_1_bss_8FDA8 {
+    struct fn_1_15E1D0_lbl_1_bss_8FDA8_0_E52 unk_0[1];
+};
+
+extern struct fn_1_15E1D0_lbl_1_bss_8FDA8 lbl_1_bss_8FDA8;
+
+f32 fn_1_15E1D0(u32 arg0) {
+    return lbl_1_bss_8FDA8.unk_0[arg0].unk_30;
+}
+/* fzgx:end fn_1_15E1D0 */
+
 /* fzgx:begin fn_1_15E1E8 */
 void fn_1_15E1E8(u8 *value) {
     u8 state = *value;

@@ -269,6 +269,25 @@ void fn_1_D07AC(u32 index, u32 value) {
 }
 /* fzgx:end fn_1_D07AC */
 
+/* fzgx:begin fn_1_D07C4 noprologue */
+#include "types.h"
+
+struct fn_1_D07C4_lbl_1_bss_7ACA0_0_E12 {
+    u8 pad_0[0x4];
+    u32 unk_4;
+    u8 pad_8[0x4];
+};
+struct fn_1_D07C4_lbl_1_bss_7ACA0 {
+    struct fn_1_D07C4_lbl_1_bss_7ACA0_0_E12 unk_0[1];
+};
+
+extern struct fn_1_D07C4_lbl_1_bss_7ACA0 lbl_1_bss_7ACA0;
+
+void fn_1_D07C4(u32 arg0, u32 arg1) {
+    lbl_1_bss_7ACA0.unk_0[(arg0 & 0xFF)].unk_4 = arg1;
+}
+/* fzgx:end fn_1_D07C4 */
+
 /* fzgx:begin fn_1_D0D68 */
 void fn_1_D0D68(void) {
     fn_1_C8DC0();

@@ -1957,3 +1957,15 @@ dol/fn_80074A8C.c:
 
 dol/fn_80078CDC.c:
 	.text       start:0x80078CDC end:0x80078D48 align:4
+
+dol/fn_80039AFC.c:
+	.text       start:0x80039AFC end:0x80039B0C align:4
+
+dol/fn_80034200.c:
+	.text       start:0x80034200 end:0x80034214 align:4
+
+dol/fn_80072864.c:
+	.text       start:0x80072864 end:0x800728A8 align:4
+
+dol/fn_8003D4E0.c:
+	.text       start:0x8003D4E0 end:0x8003D588 align:4
