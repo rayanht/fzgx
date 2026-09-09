@@ -1,6 +1,6 @@
 __check_pad3 = .init:0x80003100; // type:function size:0x40 scope:local
-__set_debug_bba = .init:0x80003140; // type:function size:0xC scope:local
-__get_debug_bba = .init:0x8000314C; // type:function size:0x8 scope:local
+__set_debug_bba = .init:0x80003140; // type:function size:0xC scope:local force_active
+__get_debug_bba = .init:0x8000314C; // type:function size:0x8 scope:local force_active
 __start = .init:0x80003154; // type:function size:0x15C scope:weak force_active
 __init_registers = .init:0x800032B0; // type:function size:0x90 scope:local
 __init_data = .init:0x80003340; // type:function size:0xC0 scope:local

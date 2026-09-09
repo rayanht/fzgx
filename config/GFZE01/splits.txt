@@ -3184,3 +3184,18 @@ dol/fn_80047464.c:
 
 dol/OSSetPeriodicAlarm.c:
 	.text       start:0x8000AEFC end:0x8000AF78 align:4
+
+dol/fn_80073A58.c:
+	.text       start:0x80073A58 end:0x80073B50 align:4
+
+dol/fn_80005518.c:
+	.init       start:0x80005518 end:0x80005544 align:4
+
+dol/memset.c:
+	.init       start:0x80003458 end:0x80003488 align:4
+
+dol/fn_80003590.c:
+	.init       start:0x80003590 end:0x800035C0 align:4
+
+dol/GXInitFifoBase.c:
+	.text       start:0x80031C84 end:0x80031CF0 align:4

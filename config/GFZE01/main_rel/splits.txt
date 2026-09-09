@@ -5012,3 +5012,6 @@ rel/main_rel/ranking/fn_1_156198.c:
 
 rel/main_rel/accessory/fn_1_127FB8.c:
 	.text       start:0x00127FB8 end:0x00128038 align:4
+
+rel/main_rel/font/fn_1_51BFC.c:
+	.text       start:0x00051BFC end:0x00051C74 align:4

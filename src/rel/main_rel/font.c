@@ -968,6 +968,28 @@ void fn_1_51990(void *obj) {
 }
 /* fzgx:end fn_1_51990 */
 
+/* fzgx:begin fn_1_51BFC */
+typedef struct {
+    u8 pad[0x0c];
+    f32 value;
+    u8 tail[8];
+} Fn51BFCData;
+
+extern void fn_80038F10(Fn51BFCData *data);
+extern u32 fn_1_A5DB0(void);
+extern const f64 lbl_1_rodata_2758;
+
+f32 fn_1_51BFC(f32 value) {
+    Fn51BFCData data;
+    f32 factor;
+    u32 count;
+
+    fn_80038F10(&data);
+    factor = data.value;
+    return value * factor / (f32)(fn_1_A5DB0() & 0xffff);
+}
+/* fzgx:end fn_1_51BFC */
+
 /* fzgx:begin fn_1_52070 */
 void fn_1_52070(u32 value) {
     lbl_1_bss_4E6A8 = 1;

@@ -2194,6 +2194,16 @@
   },
   {
     "module": "main",
+    "source": "dol/GXInitFifoBase.c",
+    "symbols": [
+      "GXInitFifoBase"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
     "source": "dol/GXInitFifoPtrs.c",
     "symbols": [
       "GXInitFifoPtrs"
@@ -3884,6 +3894,26 @@
     ],
     "status": "matching",
     "mw_version": null,
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_80003590.c",
+    "symbols": [
+      "fn_80003590"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_80005518.c",
+    "symbols": [
+      "fn_80005518"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
     "extra_cflags": []
   },
   {
@@ -10806,6 +10836,16 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_80073A58.c",
+    "symbols": [
+      "fn_80073A58"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
     "source": "dol/fn_80073C6C.c",
     "symbols": [
       "fn_80073C6C"
@@ -12291,6 +12331,16 @@
     "source": "dol/memchr.c",
     "symbols": [
       "memchr"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/memset.c",
+    "symbols": [
+      "memset"
     ],
     "status": "matching",
     "mw_version": "GC/1.3.2",
@@ -21741,6 +21791,20 @@
     "mw_version": null,
     "extra_cflags": [],
     "tu": "rel/main_rel/font.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/font/fn_1_51BFC.c",
+    "symbols": [
+      "fn_1_51BFC"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/font.c",
+    "pool": {
+      "@6": "lbl_1_rodata_2758"
+    }
   },
   {
     "module": "main_rel",
