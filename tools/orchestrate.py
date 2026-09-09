@@ -293,7 +293,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--harness", choices=["claude", "codex"], default="claude")
     ap.add_argument("--model", help="claude: haiku|sonnet|opus (default haiku); codex: model name (default gpt-5.6-luna)")
-    ap.add_argument("--parallel", type=int, default=16)
+    ap.add_argument("--parallel", type=int, default=48)
     ap.add_argument("--timeout", type=int, default=900, help="seconds per agent")
     ap.add_argument("--symbols", nargs="*", default=[])
     ap.add_argument("--select", help="module:min_size:max_size:count, e.g. main_rel:8:96:48")

@@ -31,8 +31,8 @@ from .project import ROOT, STATE_DIR, Project
 
 DEFAULT_TTL = 1800
 MAX_ATTEMPTS = int(os.environ.get("FZGX_MAX_ATTEMPTS", 3))  # a stronger-tier round raises it for its agents
-MAX_CHECKS = 8       # per attempt
-MAX_STALE = 2        # consecutive checks without improving the attempt's best %
+MAX_CHECKS = int(os.environ.get("FZGX_MAX_CHECKS", 16))   # per attempt
+MAX_STALE = int(os.environ.get("FZGX_MAX_STALE", 5))     # consecutive checks without improving the attempt's best %
 STUB = '#include "types.h"\n\n// {symbol}: carved by fzgx; {note}\n'
 SHADOW_PREFIX = "shadow-"   # agent ids with this prefix run A/B trials that never relink or commit
 REVISE_PREFIX = "revise-"   # rewrite an already-matched unit for readability; kept only if still 100%
