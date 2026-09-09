@@ -1884,6 +1884,16 @@
   },
   {
     "module": "main",
+    "source": "dol/DBInit.c",
+    "symbols": [
+      "DBInit"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
     "source": "dol/DBPrintf.c",
     "symbols": [
       "DBPrintf"
@@ -2776,6 +2786,16 @@
   },
   {
     "module": "main",
+    "source": "dol/SISetCommand.c",
+    "symbols": [
+      "SISetCommand"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
     "source": "dol/SystemCallVector.c",
     "symbols": [
       "SystemCallVector"
@@ -3094,6 +3114,16 @@
   },
   {
     "module": "main",
+    "source": "dol/__CARDEnableInterrupt.c",
+    "symbols": [
+      "__CARDEnableInterrupt"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
     "source": "dol/__CARDExtHandler.c",
     "symbols": [
       "__CARDExtHandler"
@@ -3275,6 +3305,16 @@
   },
   {
     "module": "main",
+    "source": "dol/__FileWrite.c",
+    "symbols": [
+      "__FileWrite"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
     "source": "dol/__GXFifoInit.c",
     "symbols": [
       "__GXFifoInit"
@@ -3325,6 +3365,16 @@
     "mw_version": null,
     "extra_cflags": [],
     "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/__OSGetDIConfig.c",
+    "symbols": [
+      "__OSGetDIConfig"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": []
   },
   {
     "module": "main",
@@ -4578,6 +4628,16 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_80017E10.c",
+    "symbols": [
+      "fn_80017E10"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
     "source": "dol/fn_80017EA8.c",
     "symbols": [
       "fn_80017EA8"
@@ -5620,6 +5680,19 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_80028130.c",
+    "symbols": [
+      "fn_80028130"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "pool": {
+      "@3": "lbl_801A7008"
+    }
+  },
+  {
+    "module": "main",
     "source": "dol/fn_80028424.c",
     "symbols": [
       "fn_80028424"
@@ -6307,6 +6380,29 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_80038B3C.c",
+    "symbols": [
+      "fn_80038B3C"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_80038BFC.c",
+    "symbols": [
+      "fn_80038BFC"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "pool": {
+      "@4": "lbl_801A7168"
+    }
   },
   {
     "module": "main",
@@ -8623,6 +8719,16 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_80055580.c",
+    "symbols": [
+      "fn_80055580"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
     "source": "dol/fn_800555C0.c",
     "symbols": [
       "fn_800555C0"
@@ -8733,6 +8839,16 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_8005676C.c",
+    "symbols": [
+      "fn_8005676C"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
     "source": "dol/fn_800567AC.c",
     "symbols": [
       "fn_800567AC"
@@ -8803,6 +8919,16 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_80057114.c",
+    "symbols": [
+      "fn_80057114"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
     "source": "dol/fn_80057728.c",
     "symbols": [
       "fn_80057728"
@@ -8856,6 +8982,16 @@
     "source": "dol/fn_80057B5C.c",
     "symbols": [
       "fn_80057B5C"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_80057CC4.c",
+    "symbols": [
+      "fn_80057CC4"
     ],
     "status": "matching",
     "mw_version": "GC/1.3.2",
@@ -9063,6 +9199,16 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_80059D68.c",
+    "symbols": [
+      "fn_80059D68"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
     "source": "dol/fn_8005A060.c",
     "symbols": [
       "fn_8005A060"
@@ -9186,6 +9332,16 @@
     "source": "dol/fn_8005B068.c",
     "symbols": [
       "fn_8005B068"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_8005B464.c",
+    "symbols": [
+      "fn_8005B464"
     ],
     "status": "matching",
     "mw_version": "GC/1.3.2",
@@ -9436,6 +9592,19 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_8006CCC8.c",
+    "symbols": [
+      "fn_8006CCC8"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "pool": {
+      "@6": "lbl_801A73A0"
+    }
   },
   {
     "module": "main",
@@ -9712,6 +9881,16 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_80071044.c",
+    "symbols": [
+      "fn_80071044"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
     "source": "dol/fn_80071268.c",
     "symbols": [
       "fn_80071268"
@@ -9755,6 +9934,16 @@
     "source": "dol/fn_8007174C.c",
     "symbols": [
       "fn_8007174C"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_80071794.c",
+    "symbols": [
+      "fn_80071794"
     ],
     "status": "matching",
     "mw_version": "GC/1.3.2",
@@ -9912,6 +10101,16 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_80072404.c",
+    "symbols": [
+      "fn_80072404"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
     "source": "dol/fn_8007245C.c",
     "symbols": [
       "fn_8007245C"
@@ -9975,6 +10174,16 @@
     "source": "dol/fn_800729B0.c",
     "symbols": [
       "fn_800729B0"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_80072A50.c",
+    "symbols": [
+      "fn_80072A50"
     ],
     "status": "matching",
     "mw_version": "GC/1.3.2",
@@ -10584,6 +10793,16 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_8007F48C.c",
+    "symbols": [
+      "fn_8007F48C"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
     "source": "dol/fn_8008068C.c",
     "symbols": [
       "fn_8008068C"
@@ -10657,6 +10876,16 @@
     "source": "dol/fn_80085814.c",
     "symbols": [
       "fn_80085814"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_80087BA4.c",
+    "symbols": [
+      "fn_80087BA4"
     ],
     "status": "matching",
     "mw_version": "GC/1.3.2",
@@ -10857,6 +11086,16 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_8008944C.c",
+    "symbols": [
+      "fn_8008944C"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
     "source": "dol/fn_80089BAC.c",
     "symbols": [
       "fn_80089BAC"
@@ -10883,6 +11122,16 @@
     ],
     "status": "matching",
     "mw_version": null,
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_8008A614.c",
+    "symbols": [
+      "fn_8008A614"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
     "extra_cflags": []
   },
   {
@@ -11401,6 +11650,16 @@
     "mw_version": null,
     "extra_cflags": [],
     "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/memchr.c",
+    "symbols": [
+      "memchr"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
   },
   {
     "module": "main",
@@ -16468,6 +16727,17 @@
     "source": "rel/main_rel/car/fn_1_881F8.c",
     "symbols": [
       "fn_1_881F8"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/car.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/car/fn_1_88290.c",
+    "symbols": [
+      "fn_1_88290"
     ],
     "status": "matching",
     "mw_version": null,
@@ -23374,6 +23644,17 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/memcard/fn_1_ABE14.c",
+    "symbols": [
+      "fn_1_ABE14"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/memcard.c"
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/memcard/fn_1_ABF44.c",
     "symbols": [
       "fn_1_ABF44"
@@ -24092,6 +24373,17 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/memcard/fn_1_C0510.c",
+    "symbols": [
+      "fn_1_C0510"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/memcard.c"
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/memcard/fn_1_C132C.c",
     "symbols": [
       "fn_1_C132C"
@@ -24737,6 +25029,17 @@
     "source": "rel/main_rel/phys/fn_1_E95B4.c",
     "symbols": [
       "fn_1_E95B4"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/phys.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/phys/fn_1_E9680.c",
+    "symbols": [
+      "fn_1_E9680"
     ],
     "status": "matching",
     "mw_version": null,
@@ -33968,6 +34271,16 @@
     "source": "rel/movie_module/fn_12_A9C4.c",
     "symbols": [
       "fn_12_A9C4"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": []
+  },
+  {
+    "module": "movie_module",
+    "source": "rel/movie_module/fn_12_AA38.c",
+    "symbols": [
+      "fn_12_AA38"
     ],
     "status": "matching",
     "mw_version": null,

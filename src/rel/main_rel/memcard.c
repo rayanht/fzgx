@@ -629,6 +629,42 @@ void fn_1_ABDB8(fn_1_ABDB8_ArgStruct *arg) {
 }
 /* fzgx:end fn_1_ABDB8 */
 
+/* fzgx:begin fn_1_ABE14 */
+typedef struct Fn1ABE14Sub {
+    u8 pad_00[0x2];
+    u16 value;
+    u8 pad_04[0x8];
+    void *arg_0xC;
+    u8 pad_10[0x84];
+    void *arg_0x94;
+} Fn1ABE14Sub;
+
+typedef struct Fn1ABE14Arg {
+    u8 id;
+    u8 pad_01[0x23];
+    Fn1ABE14Sub *sub;
+    u8 pad_28[0x2];
+    u8 flags;
+    u8 pad_2B[0x4];
+    s32 result;
+    u8 pad_34[0x4];
+    f32 value;
+    u8 pad_3C[0x58];
+} Fn1ABE14Arg;
+
+extern const f32 lbl_1_rodata_4CA8;
+extern s32 fn_8002C0A0(u8 id);
+extern void CARDWriteAsync(void *data, void *arg_0x94, void *arg_0xC, int zero_1, int zero_2);
+
+void fn_1_ABE14(Fn1ABE14Arg *arg) {
+    arg->sub->value = 300;
+    arg->result = fn_8002C0A0(arg->id);
+    arg->value = lbl_1_rodata_4CA8;
+    arg->flags |= 2;
+    CARDWriteAsync((u8 *)arg + 0x10, arg->sub->arg_0x94, arg->sub->arg_0xC, 0, 0);
+}
+/* fzgx:end fn_1_ABE14 */
+
 /* fzgx:begin fn_1_ABF44 */
 typedef struct {
     u8 pad_00[0x2];
@@ -1857,6 +1893,66 @@ void fn_1_BC29C(void) {
     }
 }
 /* fzgx:end fn_1_BC29C */
+
+/* fzgx:begin fn_1_C0510 noprologue */
+#include "types.h"
+
+typedef struct {
+    u8 pad_0[0x14];
+    s8 type;
+    s16 first;
+    s16 second;
+    s16 third;
+    s16 fourth;
+} Fn1C0510Obj;
+
+extern u64 OSGetTime(void);
+extern u64 __div2i(u64, u32, u32);
+extern u8 lbl_1_bss_77380[];
+extern u32 lbl_1_bss_7AB90[36];
+extern void fn_1_C062C(Fn1C0510Obj *, void *, void *);
+extern void fn_1_C0B0C(Fn1C0510Obj *, void *, void *);
+extern void fn_1_C0E00(Fn1C0510Obj *, void *, void *);
+extern void fn_1_C132C(Fn1C0510Obj *, void *, void *);
+
+void fn_1_C0510(Fn1C0510Obj *obj) {
+    u64 time;
+    void *first;
+    void *second;
+
+    time = OSGetTime();
+    // fzgx-allow: A1 fixed SDK OS global
+    // fzgx-allow: A2 fixed SDK OS global
+    lbl_1_bss_7AB90[0] = __div2i(time, 0, (*(u32 *)0x800000F8) >> 2);  /* fzgx-allow: A1,A2 unnamed OS/hardware memory */
+
+    if (obj->first != -1 && obj->second != -1) {
+        first = lbl_1_bss_77380 + obj->first * 0x1800 + obj->second * 0x30;
+    } else {
+        first = 0;
+    }
+
+    if (obj->third != -1 && obj->fourth != -1) {
+        second = lbl_1_bss_77380 + obj->third * 0x1800 + obj->fourth * 0x30;
+    } else {
+        second = 0;
+    }
+
+    switch (obj->type) {
+    case 1:
+        fn_1_C062C(obj, first, second);
+        break;
+    case 2:
+        fn_1_C0B0C(obj, first, second);
+        break;
+    case 4:
+        fn_1_C0E00(obj, first, second);
+        break;
+    case 8:
+        fn_1_C132C(obj, first, second);
+        break;
+    }
+}
+/* fzgx:end fn_1_C0510 */
 
 /* fzgx:begin fn_1_C132C */
 typedef struct {

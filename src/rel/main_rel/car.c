@@ -1636,6 +1636,54 @@ void fn_1_881F8(Fn881F8Object *object) {
 }
 /* fzgx:end fn_1_881F8 */
 
+/* fzgx:begin fn_1_88290 */
+extern f32 lbl_1_rodata_3C2C[33];
+
+extern void fn_80008BA8(void *dst, const void *src, int size);
+extern void lbl_8006D7DC(void *value);
+extern void mathutil_mtxA_rotate_z(int value);
+extern void lbl_8006DB74(void *value);
+
+typedef struct Fn88290Inner {
+    u8 pad_000[0x1FC];
+    f32 value_1FC;
+} Fn88290Inner;
+
+typedef struct Fn88290Object {
+    u8 pad_000[2];
+    s8 field_002;
+    u8 pad_003[0x208 - 3];
+    u8 field_208[0x124];
+    Fn88290Inner *field_32C;
+    void *field_330;
+    u8 pad_334[0x86];
+    s16 field_3BA;
+} Fn88290Object;
+
+void fn_1_88290(Fn88290Object *object) {
+    s8 value[12];
+
+    if (object == 0) {
+        return;
+    }
+    if (object->field_3BA != 0) {
+        return;
+    }
+    if (object->field_002 - 1 < 0) {
+        return;
+    }
+
+    fn_80008BA8(value, object->field_208, 12);
+    lbl_8006D7DC(value);
+
+    if (object->field_32C != 0) {
+        mathutil_mtxA_rotate_z((int)(lbl_1_rodata_3C2C[0] * -object->field_32C->value_1FC));
+    }
+
+    lbl_8006DB74(object->field_330);
+}
+/* fzgx:end fn_1_88290 */
+
 /* fzgx:begin fn_1_88328 */
 typedef struct Fn88328Inner {
     u8 pad_000[0x1FC];

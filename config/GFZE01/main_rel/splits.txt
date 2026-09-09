@@ -4874,3 +4874,15 @@ rel/main_rel/_prolog/fn_1_46B4.c:
 
 rel/main_rel/_prolog/fn_1_6D4.c:
 	.text       start:0x000006D4 end:0x00000798 align:4
+
+rel/main_rel/phys/fn_1_E9680.c:
+	.text       start:0x000E9680 end:0x000E9770 align:4
+
+rel/main_rel/car/fn_1_88290.c:
+	.text       start:0x00088290 end:0x00088328 align:4
+
+rel/main_rel/memcard/fn_1_C0510.c:
+	.text       start:0x000C0510 end:0x000C062C align:4
+
+rel/main_rel/memcard/fn_1_ABE14.c:
+	.text       start:0x000ABE14 end:0x000ABE88 align:4

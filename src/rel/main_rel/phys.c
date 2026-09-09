@@ -530,6 +530,59 @@ void fn_1_E95B4(void) {
 }
 /* fzgx:end fn_1_E95B4 */
 
+/* fzgx:begin fn_1_E9680 noprologue */
+#include "types.h"
+#include "rel/main_rel/phys.h"
+
+extern void fn_80008BEC(void* dst, int value, int size);
+
+void fn_1_E9680(void) {
+    u8* base = (u8*)&lbl_1_bss_7B180;
+    u32* p0;
+    u32* p1;
+    u32* p2;
+    u32* p3;
+    u32* p4;
+    u32* p5;
+    u32* p6;
+    u32* p7;
+    u32* p8;
+    u32* p9;
+    int i;
+
+    fn_80008BEC(base + 0x2c, 0, 0x13d8);
+    fn_80008BEC(base + 0x1404, 0, 0x1fc);
+
+    p0 = (u32*)(base + 0x1600);
+    p1 = (u32*)(base + 0x1614);
+    p2 = (u32*)(base + 0x1628);
+    p3 = (u32*)(base + 0x163c);
+    p4 = (u32*)(base + 0x1650);
+    p5 = (u32*)(base + 0x1664);
+    p6 = (u32*)(base + 0x1678);
+    p7 = (u32*)(base + 0x168c);
+    p8 = (u32*)(base + 0x16a0);
+    p9 = (u32*)(base + 0x16b4);
+
+    for (i = 5; i != 0; i--) {
+        *p0++ = 0;
+        *p1++ = 0;
+        *p2++ = 0;
+        *p3++ = 0;
+        *p4++ = 0;
+        *p5++ = 0;
+        *p6++ = 0;
+        *p7++ = 0;
+        *p8++ = 0;
+        *p9++ = 0;
+    }
+
+    *(s32*)(base + 0x16c8) = -1;
+    *(u8*)(base + 0x16cc) = 0xff;
+    *(u32*)(base + 0x16d0) = 0;
+}
+/* fzgx:end fn_1_E9680 */
+
 /* fzgx:begin fn_1_E9C68 */
 // Updates the active physics callback and refreshes its associated state.
 void fn_1_E9C68(void) {

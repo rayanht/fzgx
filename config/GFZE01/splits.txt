@@ -2932,3 +2932,78 @@ dol/InitMetroTRK_BBA.c:
 
 dol/TRKLoadContext.c:
 	.text       start:0x8008D224 end:0x8008D2AC align:4
+
+dol/fn_8005B464.c:
+	.text       start:0x8005B464 end:0x8005B534 align:4
+
+dol/fn_80059D68.c:
+	.text       start:0x80059D68 end:0x80059DD8 align:4
+
+dol/fn_80055580.c:
+	.text       start:0x80055580 end:0x800555C0 align:4
+
+dol/fn_8005676C.c:
+	.text       start:0x8005676C end:0x800567AC align:4
+
+dol/memchr.c:
+	.text       start:0x800802B4 end:0x800802E0 align:4
+
+dol/fn_8008944C.c:
+	.text       start:0x8008944C end:0x8008949C align:4
+
+dol/fn_80071794.c:
+	.text       start:0x80071794 end:0x800717BC align:4
+
+dol/fn_80072404.c:
+	.text       start:0x80072404 end:0x8007245C align:4
+
+dol/fn_80057CC4.c:
+	.text       start:0x80057CC4 end:0x80057D0C align:4
+
+dol/fn_80071044.c:
+	.text       start:0x80071044 end:0x80071100 align:4
+
+dol/fn_8007F48C.c:
+	.text       start:0x8007F48C end:0x8007F508 align:4
+
+dol/fn_8008A614.c:
+	.text       start:0x8008A614 end:0x8008A66C align:4
+
+dol/fn_80072A50.c:
+	.text       start:0x80072A50 end:0x80072AB0 align:4
+
+dol/fn_80087BA4.c:
+	.text       start:0x80087BA4 end:0x80087C44 align:4
+
+dol/__FileWrite.c:
+	.text       start:0x800809E0 end:0x80080A38 align:4
+
+dol/fn_80038BFC.c:
+	.text       start:0x80038BFC end:0x80038C5C align:4
+
+dol/fn_8006CCC8.c:
+	.text       start:0x8006CCC8 end:0x8006CD20 align:4
+
+dol/fn_80028130.c:
+	.text       start:0x80028130 end:0x80028164 align:4
+
+dol/fn_80017E10.c:
+	.text       start:0x80017E10 end:0x80017EA8 align:4
+
+dol/__CARDEnableInterrupt.c:
+	.text       start:0x80029B78 end:0x80029C38 align:4
+
+dol/DBInit.c:
+	.text       start:0x80015A38 end:0x80015A60 align:4
+
+dol/fn_80057114.c:
+	.text       start:0x80057114 end:0x800571EC align:4
+
+dol/__OSGetDIConfig.c:
+	.text       start:0x8000ABA8 end:0x8000ABBC align:4
+
+dol/SISetCommand.c:
+	.text       start:0x8001254C end:0x80012560 align:4
+
+dol/fn_80038B3C.c:
+	.text       start:0x80038B3C end:0x80038BFC align:4
