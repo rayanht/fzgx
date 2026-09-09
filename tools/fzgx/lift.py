@@ -981,7 +981,7 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                 continue  # MWCC rematerialises addresses: no local
             tn = f"v{len(temps)}"
             init = regs.get(rw)
-            if init is None and re.fullmatch(r"r([3-9]|10)|f[1-8]", rw) and rw not in params:
+            if init is None and re.fullmatch(r"r([3-9]|10)|f[1-8]", rw) and rw not in params and rw not in def_idx:
                 init = use(rw)  # a parameter not seen before: its value is the argument
             temps.append(f"{rtype.get(rw, 'u32')} {tn};")
             if init is not None:
@@ -1937,8 +1937,8 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                         ptypes_.append("u32")
                 for k in range(1, ftop + 1):
                     ptypes_.append(rtype.get(f"f{k}", "f32"))
-                while top >= 3 and ((f"r{top}" not in regs and f"r{top}" in params) or regs.get(f"r{top}") == ""):
-                    top -= 1  # a parameter register cleared by an earlier call: stale, not an argument
+                while top >= 3 and ((f"r{top}" not in regs and (f"r{top}" in params or f"r{top}" in def_idx)) or regs.get(f"r{top}") == ""):
+                    top -= 1  # a register cleared by an earlier call or region: stale, not an argument
                 ptypes_ = ptypes_[:max(0, top - 2)] + ptypes_[len(ptypes_) - len(fargs):] if fargs else ptypes_[:max(0, top - 2)]
                 args = [use(f"r{k}") for k in range(3, top + 1)] + fargs  # after the casts
                 seen_args: Dict[str, int] = {}
