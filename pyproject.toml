@@ -7,13 +7,8 @@ dependencies = ["mcp>=1.2,<2", "anyio>=4"]
 
 [dependency-groups]
 dev = [
-    "pytest>=8",
     "capstone>=5",
     "pyyaml>=6",
     "toml>=0.10.2",
     "levenshtein>=0.27.4",
 ]
-
-[tool.pytest.ini_options]
-testpaths = ["tests"]
-pythonpath = ["tools"]
