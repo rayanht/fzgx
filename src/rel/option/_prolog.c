@@ -693,6 +693,27 @@ void fn_4_AB90(void) {
 }
 /* fzgx:end fn_4_AB90 */
 
+/* fzgx:begin fn_4_ACF0 */
+extern s8 fn_1_BA144(u32 *);
+extern u32 lbl_4_bss_5630;
+extern u32 lbl_4_bss_5678;
+extern u32 lbl_4_data_2F1C;
+
+void fn_4_ACF0(void) {
+    u32 v0;
+    u32 t0;
+    t0 = fn_1_BA144((u32 *)(u32)&lbl_4_bss_5630);
+    v0 = t0;
+    if ((s8)t0 == 0) {
+    lbl_4_data_2F1C = 1;
+    } else {
+    if ((s8)t0 == 1) {
+    lbl_4_bss_5678 = 78;
+    }
+    }
+}
+/* fzgx:end fn_4_ACF0 */
+
 /* fzgx:begin fn_4_AD44 */
 extern u32 fn_1_B7C00(void);
 extern u32 fn_1_BC310(void *);

@@ -44,3 +44,6 @@ rel/winning/winning/fn_15_2228.c:
 
 rel/winning/winning/fn_15_1D7C.c:
 	.text       start:0x00001D7C end:0x00001DF4 align:4
+
+rel/winning/winning/fn_15_236C.c:
+	.text       start:0x0000236C end:0x00002458 align:4

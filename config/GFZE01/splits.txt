@@ -1975,3 +1975,6 @@ dol/fn_80074438.c:
 
 dol/fn_8007423C.c:
 	.text       start:0x8007423C end:0x80074300 align:4
+
+dol/fn_8004ADF4.c:
+	.text       start:0x8004ADF4 end:0x8004AE78 align:4

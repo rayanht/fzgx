@@ -95,3 +95,6 @@ rel/option/_prolog/fn_4_9B20.c:
 
 rel/option/_prolog/fn_4_8AE0.c:
 	.text       start:0x00008AE0 end:0x00008B3C align:4
+
+rel/option/_prolog/fn_4_ACF0.c:
+	.text       start:0x0000ACF0 end:0x0000AD44 align:4
