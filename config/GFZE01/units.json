@@ -1877,6 +1877,16 @@
   },
   {
     "module": "main",
+    "source": "dol/AlarmHandler.c",
+    "symbols": [
+      "AlarmHandler"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
     "source": "dol/BlockReadCallback.c",
     "symbols": [
       "BlockReadCallback"
