@@ -93,6 +93,23 @@ def carve(project: Project, symbol: str, dry_run: bool = False) -> CarveResult:
     if dry_run:
         return res
 
+    # a switch jump table the function references stays in the data unit that owns its range:
+    # our object references it by name, so the retail symbol must be global (dtk emits locals
+    # without `.global`, unreachable from another object)
+    sp_ = project.module_config_dir(module) / "symbols.txt"
+    text_ = sp_.read_text(); changed_ = False
+    for ref in fn.refs:
+        if not ref.startswith("jumptable_"):
+            continue
+        new_text_, k = re.subn(rf"^({re.escape(ref)} = [^\n]*?)scope:local", r"\1scope:global", text_, count=1, flags=re.M)
+        if k:
+            text_ = new_text_; changed_ = True; res.notes.append(f"{ref}: scope local -> global (referenced from this unit)")
+    if changed_:
+        sp_.write_text(text_)
+        project._symbols.pop(module, None)
+    # the table's own range stays with the data unit that has it
+    res.ranges = [r_ for r_ in res.ranges if not (r_[0] == ".data" and any(ref.startswith("jumptable_") and project.symbols(module)[ref].addr == r_[1] for ref in fn.refs if ref in project.symbols(module)))]
+
     splits_path = project.module_config_dir(module) / "splits.txt"
     with splits_path.open("a") as f:
         f.write(f"\n{source}:\n")

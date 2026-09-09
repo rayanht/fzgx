@@ -33,6 +33,7 @@ STB_GLOBAL = 1
 STT_NOTYPE = 0
 STT_OBJECT = 1
 SHT_SYMTAB = 2
+SHT_RELA = 4
 SHT_STRTAB = 3
 
 
@@ -110,6 +111,44 @@ class Elf:
                 self._write_shdr(symtab)
         return done, skipped
 
+    def rename_defined(self, mapping: Dict[str, str]) -> Tuple[List[str], List[str]]:
+        """Rename private symbols in place (they stay defined in this object): a switch jump
+        table whose retail range the unit owns takes the retail name."""
+        symtab = next(s for s in self.sections if s["type"] == SHT_SYMTAB)
+        strtab = self.sections[symtab["link"]]
+        done, skipped = [], []
+        by_name = {s["name"]: s for s in self.symbols()}
+        for private, retail in mapping.items():
+            s = by_name.get(private)
+            if s is None:
+                skipped.append(f"{private}: no such symbol")
+                continue
+            name_off = self.add_string(strtab, retail)
+            self.data[s["off"]:s["off"] + 4] = struct.pack(">I", name_off)
+            done.append(f"{private}->{retail}")
+        return done, skipped
+
+    def drop_private_data(self, private_names: List[str]) -> bool:
+        """Empty .data when every object symbol in it was retargeted (a switch jump table the
+        retail data unit already holds); else leave it."""
+        dsec = self.section(".data")
+        if dsec is None:
+            return True
+        others = [s for s in self.symbols()
+                  if s["shndx"] == dsec["index"] and (s["info"] & 0xF) == STT_OBJECT and s["name"] not in private_names]
+        if others:
+            return False
+        dsec["size"] = 0
+        dsec["addralign"] = 1
+        dsec["flags"] = 0
+        self._write_shdr(dsec)
+        # the table's own relocations (its entries point at the function's labels) go with it
+        for rs in self.sections:
+            if rs["type"] == SHT_RELA and rs["info"] == dsec["index"]:
+                rs["size"] = 0
+                self._write_shdr(rs)
+        return True
+
     def drop_private_rodata(self, private_names: List[str]) -> bool:
         """Empty .rodata when every object symbol in it was retargeted; else leave it."""
         ro = self.section(".rodata")
@@ -131,8 +170,12 @@ class Elf:
 def apply(obj: Path, mapping: Dict[str, str]) -> Dict[str, object]:
     """Rewrite `obj` in place. mapping: private literal symbol -> pooled retail symbol."""
     elf = Elf(obj.read_bytes())
+    tables = {k: v for k, v in mapping.items() if v.startswith("jumptable_")}
+    pooled = {k: v for k, v in mapping.items() if k not in tables}
+    # both kinds become references to the retail symbol (the data unit that owns the retail
+    # range keeps the bytes); our private copies are dropped with their section
     done, skipped = elf.retarget(mapping)
-    emptied = elf.drop_private_rodata(list(mapping))
+    emptied = (elf.drop_private_rodata(list(pooled)) if pooled else True) and (elf.drop_private_data(list(tables)) if tables else True)
     obj.write_bytes(bytes(elf.data))
     return {"retargeted": done, "skipped": skipped, "rodata_emptied": emptied}
 

@@ -305,6 +305,15 @@ def _pool_rows(project: Project, module: str, left: dict, right: dict,
         except (IndexError, KeyError, TypeError):
             continue
         s = syms.get(lname)
+        if s and s.kind == "object" and lname.startswith("jumptable_") and rsym.get("name", "").startswith("@") \
+                and int(rsym.get("size") or 0) == s.size:
+            # a switch jump table: ours is a private data symbol of the same size; the unit owns
+            # the retail table's range (carve), so ours is renamed in place, not dropped
+            rows.add(i)
+            pair = (rsym["name"], lname, f"{lname}=jumptable[{s.size}]")
+            if pair not in pairs:
+                pairs.append(pair)
+            continue
         if not s or s.kind != "object" or s.section not in (".rodata", ".sdata2"):
             continue
         # dtk often merges a run of pooled literals into one symbol (0x18, 0x1C, even 5504 bytes):

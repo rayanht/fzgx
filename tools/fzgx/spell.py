@@ -121,6 +121,18 @@ def extra_families(body: str, name: str) -> List[Tuple[str, str, str]]:
         ncond = f"{mm.group(1)} {inv[mm.group(2)]} {mm.group(3)}" if mm else f"!({cond})"
         new_inner = inner[:m.start()] + f"{m.group(1)}if ({ncond}) {{\n" + stmts_tail + f"\n{m.group(1)}}}" + tail[close:]
         out.append(("return-to-block", "early return -> if block", body[:span[1]] + new_inner + body[span[2]:]))
+    # 8a. a call assigned to a field or global goes through a local first (the scheduler places
+    #     the store differently when the value has a home)
+    for m in re.finditer(r"^(\s*)([A-Za-z_][\w>.\-\[\]]*) = ([A-Za-z_]\w*\([^;]*\));\n", inner, re.M):
+        ind, lhs, call = m.groups()
+        if re.fullmatch(r"[A-Za-z_]\w*", lhs) and not re.search(rf"(?:->|\.)", lhs):
+            continue  # already a plain local
+        decl_at = regalloc._locals(body, span)
+        ins_at = decl_at[-1][1] if decl_at else span[1] + 1
+        new_inner = inner[:m.start()] + f"{ind}spell_call = {call};\n{ind}{lhs} = spell_call;\n" + inner[m.end():]
+        text = body[:span[1]] + new_inner + body[span[2]:]
+        text = text[:ins_at] + "    u32 spell_call;\n" + text[ins_at:]
+        out.append(("call-to-local", f"local for {call[:30]}", text))
     # 8. a temporary for a call result used once: inline it
     for m in re.finditer(r"^(\s*)(t\d+) = ([A-Za-z_]\w*\([^;]*\));\n", inner, re.M):
         tn, call = m.group(2), m.group(3)
