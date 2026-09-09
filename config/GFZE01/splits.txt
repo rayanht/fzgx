@@ -1999,3 +1999,6 @@ dol/fn_80088624.c:
 
 dol/fn_80065AD0.c:
 	.text       start:0x80065AD0 end:0x80065B08 align:4
+
+dol/fn_8004B180.c:
+	.text       start:0x8004B180 end:0x8004B1DC align:4

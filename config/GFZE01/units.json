@@ -5578,6 +5578,19 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_8004B180.c",
+    "symbols": [
+      "fn_8004B180"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on"
+    ]
+  },
+  {
+    "module": "main",
     "source": "dol/fn_8004B79C.c",
     "symbols": [
       "fn_8004B79C"
@@ -28975,6 +28988,19 @@
   },
   {
     "module": "movie_module",
+    "source": "rel/movie_module/fn_12_34F04.c",
+    "symbols": [
+      "fn_12_34F04"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on"
+    ]
+  },
+  {
+    "module": "movie_module",
     "source": "rel/movie_module/fn_12_34F64.c",
     "symbols": [
       "fn_12_34F64"
@@ -29302,6 +29328,19 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
+  },
+  {
+    "module": "movie_module",
+    "source": "rel/movie_module/fn_12_35914.c",
+    "symbols": [
+      "fn_12_35914"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on"
+    ]
   },
   {
     "module": "movie_module",

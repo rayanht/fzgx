@@ -1277,3 +1277,9 @@ rel/movie_module/fn_12_2E63C.c:
 
 rel/movie_module/fn_12_269E4.c:
 	.text       start:0x000269E4 end:0x00026B18 align:4
+
+rel/movie_module/fn_12_35914.c:
+	.text       start:0x00035914 end:0x000359B0 align:4
+
+rel/movie_module/fn_12_34F04.c:
+	.text       start:0x00034F04 end:0x00034F64 align:4
