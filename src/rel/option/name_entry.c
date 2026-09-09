@@ -1,15 +1,5 @@
 #include "types.h"
-
-/* fzgx:begin fn_4_D760 */
-struct fn_4_D760_lbl_4_bss_5680 {
-    u32 unk_0;
-};
-struct fn_4_D760_lbl_801A6410 {
-    u32 unk_0;
-};
-
 extern s16 lbl_1_bss_960;
-extern struct fn_4_D760_lbl_4_bss_5680 lbl_4_bss_5680;
 extern struct fn_4_D760_lbl_801A6410 lbl_801A6410;
 extern u32 fn_1_412A0(u32);
 extern u32 fn_1_426C(u32);
@@ -19,6 +9,17 @@ extern u32 fn_1_48140(u32);
 extern u32 fn_1_A8F78(void);
 extern u32 lbl_4_data_3018;
 extern u8 lbl_4_bss_5684;
+extern u8 lbl_4_bss_5685;
+
+/* fzgx:begin fn_4_D760 */
+struct fn_4_D760_lbl_4_bss_5680 {
+    u32 unk_0;
+};
+struct fn_4_D760_lbl_801A6410 {
+    u32 unk_0;
+};
+
+extern struct fn_4_D760_lbl_4_bss_5680 lbl_4_bss_5680;
 
 void fn_4_D760(void) {
     u32 v0;
@@ -63,8 +64,6 @@ void fn_4_D848(u32 arg0) {
 /* fzgx:end fn_4_D848 */
 
 /* fzgx:begin fn_4_D878 */
-extern u8 lbl_4_bss_5685;
-
 void fn_4_D878(void) {
     lbl_4_bss_5685 = 1;
 }
