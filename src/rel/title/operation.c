@@ -1,5 +1,78 @@
 #include "types.h"
 
+/* fzgx:begin fn_8_67F8 */
+struct fn_8_67F8_lbl_8_bss_2B8 {
+    u32 unk_0;
+};
+struct fn_8_67F8_lbl_8_bss_2BC {
+    u32 unk_0;
+};
+
+extern struct fn_8_67F8_lbl_8_bss_2B8 lbl_8_bss_2B8;
+extern struct fn_8_67F8_lbl_8_bss_2BC lbl_8_bss_2BC;
+extern u32 fn_1_3F8C0(void);
+extern u32 fn_1_46B4(u32, u32, u32, u32);
+extern u32 fn_80008E84(u32);
+extern u32 fn_8_8C80(u32);
+extern u32 lbl_801A6410;
+extern u32 lbl_8_data_8AD4;
+extern void fn_1_14DBCC(void *);
+extern void fn_1_48140(int);
+
+void fn_8_67F8(u32 arg0, u32 arg1, u32 arg2, u32 arg3) {
+    u32 v0;
+    u32 v1;
+    u32 v2;
+    u32 v3;
+    u32 v4;
+    u32 v5;
+    u32 v6;
+    u32 v7;
+    u32 v8;
+    s32 v9;
+    u32 t0, t1, t4, t6, t7;
+    t0 = fn_1_3F8C0();
+    t1 = fn_80008E84(t0);
+    fn_1_48140(148);
+    v0 = lbl_8_bss_2B8.unk_0;
+    v1 = arg1;
+    v2 = v0;
+    v3 = arg2;
+    v4 = arg3;
+    if (v0 != 0) {
+    fn_1_14DBCC((void *)v2);
+    v3 = (u32)&lbl_801A6410;
+    v4 = (u32)&lbl_8_bss_2B8;
+    v2 = *(u32 *)((u8 *)v3 + 0);
+    v3 = (u32)&lbl_8_data_8AD4;
+    v1 = *(u32 *)((u8 *)v4 + 0);
+    v4 = 1035;
+    t4 = fn_1_46B4(v2, v1, (u32)v3, v4);
+    v2 = t4;
+    lbl_8_bss_2B8.unk_0 = 0;
+    }
+    v5 = lbl_8_bss_2BC.unk_0;
+    v6 = v1;
+    v7 = v5;
+    v8 = v3;
+    v9 = v4;
+    if (v5 != 0) {
+    fn_1_14DBCC((void *)v7);
+    v8 = (u32)&lbl_801A6410;
+    v9 = (u32)&lbl_8_bss_2BC;
+    v7 = *(u32 *)((u8 *)v8 + 0);
+    v8 = (u32)&lbl_8_data_8AD4;
+    v6 = *(u32 *)((u8 *)v9 + 0);
+    v9 = 1040;
+    t6 = fn_1_46B4(v7, v6, (u32)v8, v9);
+    v7 = t6;
+    lbl_8_bss_2BC.unk_0 = 0;
+    }
+    t7 = fn_80008E84(t1);
+    fn_8_8C80(t7);
+}
+/* fzgx:end fn_8_67F8 */
+
 /* fzgx:begin fn_8_68D8 */
 extern u32 lbl_8_bss_2A8;
 extern u32 lbl_8_bss_2C0;

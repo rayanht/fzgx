@@ -863,3 +863,72 @@ void fn_3_968C(u32 arg0) {
     fn_3_7B94();
 }
 /* fzgx:end fn_3_968C */
+
+/* fzgx:begin fn_3_9710 */
+struct fn_3_9710_lbl_3_data_11D8 {
+    u32 unk_0;
+};
+struct fn_3_9710_lbl_3_data_B8 {
+    u32 unk_0;
+};
+
+extern struct fn_3_9710_lbl_3_data_11D8 lbl_3_data_11D8;
+extern struct fn_3_9710_lbl_3_data_B8 lbl_3_data_B8;
+extern u32 fn_1_12A734(u32);
+extern u32 fn_1_426C(u32);
+extern u32 fn_1_435C(u32);
+extern u32 lbl_3_bss_20850;
+extern u32 lbl_3_bss_6DE20;
+extern u32 lbl_3_bss_F0;
+extern void fn_1_12A2B8(u32);
+extern void fn_1_12A2D0(s32);
+extern void fn_1_14DC68(void *, int);
+extern void fn_1_151BDC(u32);
+extern void fn_1_FE5C4(u8, u32, u32, u8);
+extern void fn_3_7B94(void);
+extern void fn_3_BC60(void);
+
+void fn_3_9710(u32 arg0, u32 arg1) {
+    u32 v0;
+    u32 v1;
+    u32 t4, t6, t7;
+    v1 = arg1;
+    if ((lbl_3_bss_F0 & 0x40000000) == 0) {
+    if ((s32)lbl_3_data_11D8.unk_0 != -1) {
+    v0 = 1;
+    fn_1_12A2B8(v0);
+    v0 = (u32)&lbl_3_data_11D8;
+    v0 = *(u32 *)((u8 *)v0 + 0);
+    fn_1_12A2D0(v0);
+    }
+    v1 = 25;
+    v0 = (u32)&lbl_3_bss_6DE20;
+    fn_1_14DC68((void *)(u32)v0, v1);
+    v0 = 0;
+    fn_1_12A2B8(v0);
+    v0 = (u32)&lbl_3_data_11D8;
+    v0 = *(u32 *)((u8 *)v0 + 0);
+    if ((s32)v0 != -1) {
+    t4 = fn_1_12A734(v0);
+    v0 = t4;
+    }
+    lbl_3_data_11D8.unk_0 = -1;
+    fn_3_7B94();
+    if ((s32)lbl_3_data_B8.unk_0 != -1) {
+    v0 = (u32)&lbl_3_bss_20850;
+    v0 = *(u32 *)((u8 *)v0 + 0);
+    t6 = fn_1_435C(v0);
+    v0 = t6;
+    v0 = (u32)&lbl_3_data_B8;
+    v0 = *(u32 *)((u8 *)v0 + 0);
+    t7 = fn_1_426C(v0);
+    v0 = t7;
+    lbl_3_data_B8.unk_0 = -1;
+    }
+    v0 = 0;
+    fn_1_151BDC(v0);
+    }
+    fn_3_BC60();
+    fn_1_FE5C4(0, 0, 0, 0);
+}
+/* fzgx:end fn_3_9710 */

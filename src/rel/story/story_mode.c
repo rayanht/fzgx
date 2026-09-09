@@ -410,6 +410,52 @@ s32 fn_7_2514(void) {
 }
 /* fzgx:end fn_7_2514 */
 
+/* fzgx:begin fn_7_3FCC */
+struct fn_7_3FCC_lbl_7_bss_18 {
+    u32 unk_0;
+};
+struct fn_7_3FCC_lbl_7_data_12E68 {
+    u32 unk_0;
+};
+struct fn_7_3FCC_lbl_7_bss_1C {
+    u32 unk_0;
+};
+struct fn_7_3FCC_lbl_7_data_12E6C {
+    u32 unk_0;
+};
+
+extern struct fn_7_3FCC_lbl_7_bss_18 lbl_7_bss_18;
+extern struct fn_7_3FCC_lbl_7_bss_1C lbl_7_bss_1C;
+extern struct fn_7_3FCC_lbl_7_data_12E68 lbl_7_data_12E68;
+extern struct fn_7_3FCC_lbl_7_data_12E6C lbl_7_data_12E6C;
+extern u32 fn_1_426C(u32);
+extern u32 fn_1_435C(u32);
+
+void fn_7_3FCC(void) {
+    u32 v0;
+    u32 v1;
+    u32 v2;
+    u32 v3;
+    u32 t1, t3;
+    fn_1_435C(lbl_7_bss_18.unk_0);
+    v0 = lbl_7_data_12E68.unk_0;
+    v1 = v0;
+    if ((s32)v0 != -1) {
+    t1 = fn_1_426C(v1);
+    v1 = t1;
+    lbl_7_data_12E68.unk_0 = -1;
+    }
+    fn_1_435C(lbl_7_bss_1C.unk_0);
+    v2 = lbl_7_data_12E6C.unk_0;
+    v3 = v2;
+    if ((s32)v2 != -1) {
+    t3 = fn_1_426C(v3);
+    v3 = t3;
+    lbl_7_data_12E6C.unk_0 = -1;
+    }
+}
+/* fzgx:end fn_7_3FCC */
+
 /* fzgx:begin fn_7_4094 */
 extern u32 fn_1_4404(u32);
 extern u32 fn_1_46B4(u32, u32, u32, u32);

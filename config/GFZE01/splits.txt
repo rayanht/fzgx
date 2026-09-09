@@ -1978,3 +1978,9 @@ dol/fn_8007423C.c:
 
 dol/fn_8004ADF4.c:
 	.text       start:0x8004ADF4 end:0x8004AE78 align:4
+
+dol/fn_80009064.c:
+	.text       start:0x80009064 end:0x800090A4 align:4
+
+dol/fn_8004D18C.c:
+	.text       start:0x8004D18C end:0x8004D220 align:4
