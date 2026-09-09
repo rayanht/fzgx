@@ -146,7 +146,8 @@ def cmd_reuse(a, p):
 
 def cmd_lift(a, p):
     from . import lift
-    _print(lift.apply(p, tu=a.tu, callees=a.callee, submit=not a.no_submit), a.json)
+    _print(lift.apply(p, tu=a.tu, callees=a.callee, submit=not a.no_submit, engine=a.engine,
+                      max_size=0xFFFFFFFF if a.all else 160, limit=0 if a.all else 2000), a.json)
     return 0
 
 
@@ -455,6 +456,8 @@ def build_parser() -> argparse.ArgumentParser:
     scope = s.add_mutually_exclusive_group(required=True)
     scope.add_argument('--tu', help='TU path relative to src/, e.g. rel/main_rel/accessory.c')
     scope.add_argument('--callee', action='append', help='direct callee to select callers of; repeat for a shared interface')
+    scope.add_argument('--all', action='store_true', help='all unmatched functions, without a size or count cap')
+    s.add_argument('--engine', choices=('lift', 'm2c'), default='lift')
     s.add_argument('--no-submit', action='store_true')
     return ap
 

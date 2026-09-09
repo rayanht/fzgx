@@ -2225,8 +2225,15 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                     ARITY_SEEN[0].setdefault(callee, []).append(top - 2)
                     if any(f"f{k}" in regs and f"f{k}" in written_since_call for k in range(1, 9)):
                         FLOAT_CALLEES[0].add(callee)
-                fset = [k for k in range(1, 9) if f"f{k}" in regs and (f"f{k}" in written_since_call or f"f{k}" in params)]
-                ftop = max(fset) if fset else 0
+                if slots is not None:
+                    top = max((int(reg[1:]) for reg, _ in slots if reg.startswith('r')), default=2)
+                    ftop = sum(reg.startswith('f') for reg, _ in slots)
+                else:
+                    # Unknown/variadic calls still use consecutive ABI argument registers;
+                    # a live f7 temporary does not imply six missing float arguments.
+                    ftop = 0
+                    while ftop < 8 and is_arg(f'f{ftop + 1}'):
+                        ftop += 1
                 fargs = [use(f"f{k}") for k in range(1, ftop + 1)]
                 ptypes_ = []
                 for k in range(3, top + 1):
@@ -2282,10 +2289,6 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                 elif known is not None and no_proto:
                     externs[callee] = f"extern {known[0]} {callee}();"
                 elif known is not None:
-                    n_f = sum(1 for t_ in known[1] if signature_index.category(t_) == "float")
-                    if slots is None and n_f != len(fargs) and all(f"f{k}" in regs or f"f{k}" not in def_idx for k in range(1, n_f + 1)):
-                        fargs = [use(f"f{k}") for k in range(1, n_f + 1)]  # the float arguments the prototype says
-                        args = [use(f"r{k}") for k in range(3, top + 1)] + fargs
                     externs[callee] = f"extern {known[0]} {callee}({', '.join(known[1]) or 'void'});"
                 elif variadic_next[0]:
                     variadic_next[0] = False
@@ -2296,6 +2299,7 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                     prev = externs.get(callee)
                     if prev is None or prev.endswith("(void);") or (prev.count(",") < proto.count(",") and "..." not in prev):
                         externs[callee] = proto
+                variadic_next[0] = False
                 stmts.append(f"__CALL__{len(calls) - 1}({', '.join(args)});")
                 for r in list(regs):
                     if re.fullmatch(r"r([0-9]|1[0-2])|f([0-9]|1[0-3])", r):
@@ -2722,7 +2726,7 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
 
 def apply(p: Project, modules: Optional[List[str]] = None, max_size: int = 160, limit: int = 2000,
           workers: int = 12, submit: bool = True, tu: Optional[str] = None,
-          callees: Optional[List[str]] = None) -> Dict[str, object]:
+          callees: Optional[List[str]] = None, engine: str = 'lift') -> Dict[str, object]:
     """Lift every unmatched function of the given size that the lifter accepts, check each
     against retail, submit the matches (carve-at-submit; `fzgx verify` relinks once)."""
     import sqlite3
@@ -2750,7 +2754,7 @@ def apply(p: Project, modules: Optional[List[str]] = None, max_size: int = 160, 
         targets = set()
         for name in callees:
             sym = p.resolve(name)
-            if sym is None or sym.kind != 'function':
+            if sym is None or p.callable_asm(sym) is None:
                 raise ValueError(f'unknown or ambiguous callee: {name}')
             targets.add(p.key(sym))
         selected = []
@@ -2772,24 +2776,42 @@ def apply(p: Project, modules: Optional[List[str]] = None, max_size: int = 160, 
         args += selected
     if modules:
         q += " and module in (%s)" % ",".join("?" * len(modules)); args += list(modules)
-    rows = db.execute(q + " order by size limit ?", args + [limit or 2000]).fetchall()
+    rows = db.execute(q + " order by size limit ?", args + [limit or -1]).fetchall()
     linkfail = {s for (s,) in db.execute("select symbol from attempts a where id = (select max(id) from attempts b where b.symbol = a.symbol) and outcome = 'link-mismatch'")}
     lifted = []
-    for s, m, size in rows:
+    errors = {}
+    for row_index, (s, m, size) in enumerate(rows):
         if s in linkfail:
             continue  # matched the object and failed the link before: the same body fails again
         name = s.split(":", 1)[1] if ":" in s else s
         try:
-            if tu or callees:
+            if engine == 'm2c':
+                from . import machine
+                variants = []
+                draft = lift_total(p, m, name, max_ins=max(1200, size // 4))
+                for descending in (False, True):
+                    text, error = machine.generate(p, m, name, draft=draft, descending=descending)
+                    if text and text not in variants:
+                        variants.append(text)
+                    elif error:
+                        errors[s] = error
+                        break
+            elif tu or callees or max_size > 640:
                 draft = lift_total(p, m, name, max_ins=max(1200, size // 4))
                 variants = [draft] if draft else []
             else:
                 variants = lift_variants(p, m, name)
-        except Exception:
+        except Exception as error:
             variants = []
+            errors[s] = str(error)
         for vi, t in enumerate(variants):
             lifted.append((s if vi == 0 else f"{s}#{vi}", size, t))
-    out_dir = STATE_DIR / "lift"; out_dir.mkdir(exist_ok=True)
+        if engine == 'm2c' and row_index % 50 == 0:
+            import sys
+            print(f'm2c: {row_index + 1}/{len(rows)} functions, {len(lifted)} candidates', file=sys.stderr, flush=True)
+    out_dir = STATE_DIR / "lift" / engine if engine != 'lift' else STATE_DIR / "lift"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    (out_dir / 'errors.json').write_text(json.dumps(errors, indent=2))
 
     # one mwcc run per module over every lifted body, one cheap score each, the full check only
     # for the ones that score 100 (pool rows, data sections)
@@ -2835,18 +2857,31 @@ def apply(p: Project, modules: Optional[List[str]] = None, max_size: int = 160, 
     todo_fx = [idx for idx, (s, size, t, ok, pct) in enumerate(results) if not ok and pct >= 60
                and not re.search(r'\?\?\?|__(?:MULHU|I2D|XORIS|FCTIWZ)__', t)]
 
-    def fix_one(idx):
-        s, size, t, ok, pct = results[idx]
-        try:
-            return idx, fixup.try_fix(p, s, t, budget_s=10.0)
-        except Exception:
-            return idx, {}
+    groups = {}
+    for idx in todo_fx:
+        groups.setdefault(results[idx][0], []).append(idx)
+
+    def fix_group(indices):
+        out = []
+        # Fixup and the oracle have per-symbol scratch objects. Layout variants
+        # of one function must be serial, even while other functions run in parallel.
+        for idx in sorted(indices, key=lambda i: -results[i][4]):
+            s, size, t, ok, pct = results[idx]
+            try:
+                result = fixup.try_fix(p, s, t, budget_s=10.0)
+            except Exception:
+                result = {}
+            out.append((idx, result))
+            if result.get('matched'):
+                break
+        return out
     # the repairs land on drafts from 60% up (register order and declaration style close them)
     with ThreadPoolExecutor(max_workers=6) as ex:
-        for idx, fx in ex.map(fix_one, todo_fx):
-            if fx.get("matched") and fx.get("body"):
-                s, size, t, ok, pct = results[idx]
-                results[idx] = (s, size, fx["body"], True, 100.0); fixed += 1
+        for group in ex.map(fix_group, groups.values()):
+            for idx, fx in group:
+                if fx.get("matched") and fx.get("body"):
+                    s, size, t, ok, pct = results[idx]
+                    results[idx] = (s, size, fx["body"], True, 100.0); fixed += 1
     best: Dict[str, tuple] = {}
     for s, size, t, ok, pct in results:
         if s not in best or (ok, pct) > (best[s][3], best[s][4]):
@@ -2859,7 +2894,9 @@ def apply(p: Project, modules: Optional[List[str]] = None, max_size: int = 160, 
     except ValueError:
         prev = {}
     for s, size, t, ok, pct in results:
-        prev[s] = {"percent": pct, "matched": bool(ok), "text": t}
+        previous = prev.get(s, {})
+        if (bool(ok), pct) >= (previous.get('matched', False), previous.get('percent', -1)):
+            prev[s] = {"percent": pct, "matched": bool(ok), "text": t, "engine": engine}
     scores_path.write_text(json.dumps(prev))
     matched = [(s, size, t) for s, size, t, ok, _ in results if ok]
     submitted, failed = [], []
@@ -2868,8 +2905,11 @@ def apply(p: Project, modules: Optional[List[str]] = None, max_size: int = 160, 
             work = p.work_path(s if ":" in s else p.key(p.resolve(s)))
             work.parent.mkdir(parents=True, exist_ok=True)
             work.write_text(t)
-            r = api.submit(p, s, agent="lift", message="lifted from the disassembly (fzgx trivial)", harness="fzgx", model="lift")
+            r = api.submit(p, s, agent="lift", message=f"deterministic {engine} output", harness="fzgx", model=engine)
             (submitted if r.get("ok") else failed).append(s if r.get("ok") else (s, str(r.get("error"))[:80]))
+            if not r.get('ok'):
+                prev[s] = {'percent': r.get('percent', 0), 'matched': False, 'text': t, 'engine': engine}
+        scores_path.write_text(json.dumps(prev))
     return {"candidates": len(rows), "lifted": len(lifted), "matched": len(matched), "fixed": fixed, "bytes": sum(x[1] for x in matched),
             "submitted": len(submitted), "failed": failed[:10],
             "near": sorted(((s, round(pc, 1)) for s, _, _, ok, pc in results if not ok and pc >= 80), key=lambda x: -x[1])[:10]}

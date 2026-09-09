@@ -203,8 +203,9 @@ class Index:
         key = self.p.key(sym)
         sig = self.signatures.get(key) or self.scoped.get((source, key))
         constraints = self.inferred.get(key, {})
-        required = getattr(self, 'required', {}).get(key, set())
-        if not constraints and not required:
+        entries = getattr(self, 'required', {})
+        required = entries.get(key, set())
+        if not constraints and key not in entries:
             return sig
         args = sig.args if sig else None
         slots = self.registers(sig) if sig else None
@@ -214,7 +215,7 @@ class Index:
             missing = required - {r for r, _ in slots}
             args = args + tuple('f32' if r.startswith('f') else 'u32'
                                 for r in sorted(missing, key=lambda r: (r[0], int(r[1:]))))
-        if args is None and required:
+        if args is None and key in entries:
             regs = [f'r{k}' for k in range(3, max([int(r[1:]) for r in required if r.startswith('r')], default=2) + 1)]
             regs += [f'f{k}' for k in range(1, max([int(r[1:]) for r in required if r.startswith('f')], default=0) + 1)]
             args = tuple(constraints.get(('arg', r), ('f32' if r.startswith('f') else 'u32', None))[0] for r in regs)
@@ -400,9 +401,11 @@ def propagate(index, module, names):
         for fn in frontier:
             for line in fn.asm:
                 call = re.match(r'^[0-9A-Fa-f]+:\s*bl\s+(\w+)$', line.strip())
+                if call and re.fullmatch(r'_(save|rest)(gpr|fpr)_\d+', call[1]):
+                    continue
                 sym = (p.symbols(fn.symbol.module).get(call[1]) or p.find_symbol(call[1])) if call else None
                 if sym and p.key(sym) not in functions:
-                    other = p.function_asm(sym.module).get(sym.name)
+                    other = p.callable_asm(sym)
                     if other:
                         functions[p.key(sym)] = other; next_frontier.append(other)
         frontier = next_frontier
@@ -460,6 +463,8 @@ def propagate(index, module, names):
         fn, ins, _ = parsed[key]; mn, a = ins[i]
         regs = set(re.findall(r'\b[rf]\d+\b', ','.join(a)))
         if mn in ('bl', 'bctrl', 'blrl'):
+            if mn == 'bl' and a and re.fullmatch(r'_(save|rest)(gpr|fpr)_\d+', a[0]):
+                return set(), set()
             callee = p.symbols(fn.symbol.module).get(a[0]) or p.find_symbol(a[0]) if a else None
             if not callee:
                 return set(), volatile
@@ -468,6 +473,10 @@ def propagate(index, module, names):
         if mn.startswith(('st', 'cmp', 'fcmp', 'b', 'mt', 'cr')):
             return regs, set()
         dest = {a[0]} if a and re.fullmatch(r'[rf]\d+', a[0]) else set()
+        if mn.rstrip('.') in ('xor', 'subf') and len(a) == 3 and a[1] == a[2]:
+            # Zeroing idioms do not consume the incoming value. Counting xor r3,r3,r3
+            # as an input invents a parameter and propagates it through every caller.
+            return set(), dest
         # Read-modify-write instructions retain their input when it aliases the destination.
         read = set(re.findall(r'\b[rf]\d+\b', ','.join(a[1:])))
         return read, dest
@@ -499,6 +508,10 @@ def propagate(index, module, names):
         def transfer(i, state, record=False):
             mn, a = ins[i]; out = dict(state)
             reads, writes = rw(key, i)
+            if mn == 'bl' and a and re.fullmatch(r'_(save|rest)(gpr|fpr)_\d+', a[0]):
+                # MWCC's frame helpers preserve argument and return registers;
+                # treating them as C calls erases parameters before the first statement.
+                return out
             if record:
                 for operand in a[1:] if mn.startswith(('l', 'st')) else []:
                     mem = re.search(r'\((r\d+)\)', operand)

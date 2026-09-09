@@ -1421,3 +1421,9 @@ rel/movie_module/DCT_FsriInitScanTbl.c:
 
 rel/movie_module/mwSfdPause.c:
 	.text       start:0x00038F04 end:0x0003901C align:4
+
+rel/movie_module/fn_12_2FB84.c:
+	.text       start:0x0002FB84 end:0x0002FC18 align:4
+
+rel/movie_module/fn_12_3379C.c:
+	.text       start:0x0003379C end:0x00033874 align:4

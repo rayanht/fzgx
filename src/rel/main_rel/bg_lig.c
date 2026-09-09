@@ -99,6 +99,28 @@ void fn_1_D66F4(void) {
 }
 /* fzgx:end fn_1_D66F4 */
 
+/* fzgx:begin fn_1_D66F8 */
+struct fn_1_D66F8_Arg1 {
+    u8 unk_0;
+};
+struct fn_1_D66F8_Arg2 {
+    u8 unk_0;
+};
+struct fn_1_D66F8_lbl_801A66A0 {
+    u32 unk_0;
+};
+extern struct fn_1_D66F8_lbl_801A66A0 lbl_801A66A0;
+extern u32 lbl_1_rodata_6358;
+
+void fn_1_D66F8(u8 arg0, u8 *arg1, s8 *arg2) {
+    u32 sp8;
+
+    sp8 = *(u32 *)((u8 *)(&lbl_1_rodata_6358) + 0);
+    (*(u8 *)((u8 *)(arg1) + 0)) = *(u8 *)((u8 *)(((u8 *)(&sp8) + arg0)) + 0);
+    (*(s8 *)((u8 *)(arg2) + 0)) = ((u32) lbl_801A66A0.unk_0 / (u32) ((arg0 + 1) * 0x1E)) & 3;
+}
+/* fzgx:end fn_1_D66F8 */
+
 /* fzgx:begin fn_1_D6740 */
 // fn_1_D6740: returns a constant.
 int fn_1_D6740(void) {
@@ -197,6 +219,61 @@ void fn_1_D74C4(void) {
     lbl_1_data_2A7E0.unk_2C = (u32)fn_1_E87FC;
 }
 /* fzgx:end fn_1_D74C4 */
+
+/* fzgx:begin fn_1_D75CC noprologue */
+#include "types.h"
+
+typedef struct {
+    u8 data[0xac];
+} Sig_fn_1_D8D08_fn_1_D8D08_LigEntry;
+
+typedef struct {
+    u8 pad[0x6d4];
+    s32 count;
+    Sig_fn_1_D8D08_fn_1_D8D08_LigEntry entries[1];
+} Sig_fn_1_D8D08_LigContainer;
+
+struct fn_1_D75CC_lbl_1_data_2A7E0 {
+    u8 pad_0[0x3C];
+    u32 unk_3C;
+};
+extern struct fn_1_D75CC_lbl_1_data_2A7E0 lbl_1_data_2A7E0;
+extern u32 lbl_1_bss_7AD78;
+extern void fn_1_4404(void);
+extern u32 fn_1_DA6A8(void *, u32);
+extern void fn_80008BEC(void *, int, u32);
+extern void fn_1_446C(void);
+extern void fn_1_76BF8(void);
+extern void fn_1_72648(void);
+extern void fn_1_D8D08(Sig_fn_1_D8D08_LigContainer *);
+
+void fn_1_D75CC(void) {
+    u32 *temp_r31;
+    u32 temp_r30;
+    u32 temp_r4;
+    u32 temp_r4_2;
+
+    temp_r30 = lbl_1_data_2A7E0.unk_3C;
+    fn_1_4404();
+    temp_r4 = *(u32 *)((u8 *)(temp_r30) + 7256);
+    if (temp_r4 != 0) {
+        fn_1_DA6A8((void *)(&lbl_1_bss_7AD78), temp_r4);
+        fn_80008BEC((void *)(&lbl_1_bss_7AD78), 0, 0x20U);
+        (*(u32 *)((u8 *)(temp_r30) + 7256)) = 0U;
+    }
+    temp_r4_2 = *(u32 *)((u8 *)(temp_r30) + 7260);
+    if (temp_r4_2 != 0) {
+        temp_r31 = (u32 *)((u8 *)(&lbl_1_bss_7AD78) + 0x20);
+        fn_1_DA6A8((void *)(temp_r31), temp_r4_2);
+        fn_80008BEC((void *)(temp_r31), 0, 0x20U);
+        (*(u32 *)((u8 *)(temp_r30) + 7260)) = 0U;
+    }
+    fn_1_446C();
+    fn_1_76BF8();
+    fn_1_72648();
+    fn_1_D8D08((Sig_fn_1_D8D08_LigContainer *)((Sig_fn_1_D8D08_LigContainer *)(temp_r30)));
+}
+/* fzgx:end fn_1_D75CC */
 
 /* fzgx:begin fn_1_D7688 */
 extern void fn_1_D8784(Obj_1_data_2A7E0_At3C *obj);

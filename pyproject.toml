@@ -3,7 +3,11 @@ name = "fzgx-tools"
 version = "0.1.0"
 description = "Tooling for the F-Zero GX (GFZE01) matching decompilation"
 requires-python = ">=3.12"
-dependencies = ["mcp>=1.2,<2", "anyio>=4"]
+dependencies = [
+    "mcp>=1.2,<2",
+    "anyio>=4",
+    "m2c",
+]
 
 [dependency-groups]
 dev = [
@@ -12,3 +16,6 @@ dev = [
     "toml>=0.10.2",
     "levenshtein>=0.27.4",
 ]
+
+[tool.uv.sources]
+m2c = { git = "https://github.com/matt-kempster/m2c.git", rev = "1d1c4454a445326541305f83f2b0cb680a9ecb2d" }

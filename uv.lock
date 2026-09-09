@@ -214,6 +214,7 @@ version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
     { name = "anyio" },
+    { name = "m2c" },
     { name = "mcp" },
 ]
 
@@ -228,6 +229,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "anyio", specifier = ">=4" },
+    { name = "m2c", git = "https://github.com/matt-kempster/m2c.git?rev=1d1c4454a445326541305f83f2b0cb680a9ecb2d" },
     { name = "mcp", specifier = ">=1.2,<2" },
 ]
 
@@ -237,6 +239,15 @@ dev = [
     { name = "levenshtein", specifier = ">=0.27.4" },
     { name = "pyyaml", specifier = ">=6" },
     { name = "toml", specifier = ">=0.10.2" },
+]
+
+[[package]]
+name = "graphviz"
+version = "0.20.3"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/fa/83/5a40d19b8347f017e417710907f824915fba411a9befd092e52746b63e9f/graphviz-0.20.3.zip", hash = "sha256:09d6bc81e6a9fa392e7ba52135a9d49f1ed62526f96499325930e87ca1b5925d", size = 256455, upload-time = "2024-03-21T07:50:45.772Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/00/be/d59db2d1d52697c6adc9eacaf50e8965b6345cc143f671e1ed068818d5cf/graphviz-0.20.3-py3-none-any.whl", hash = "sha256:81f848f2904515d8cd359cc611faba817598d2feaac4027b266aa3eda7b3dde5", size = 47126, upload-time = "2024-03-21T07:50:43.091Z" },
 ]
 
 [[package]]
@@ -374,6 +385,14 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/65/11/0fce9f771f6decefaa0a814b87f3e8d42d382b59af2176fdae805c244a2b/levenshtein-0.27.4-cp314-cp314t-win32.whl", hash = "sha256:7d180894a008367953cf076525421a5488619ce1c4636c9d34b1c836bf8bee03", size = 284631, upload-time = "2026-08-08T20:26:52.558Z" },
     { url = "https://files.pythonhosted.org/packages/a4/ad/3d6c65d5bf7094c953ea0358b1499d62e935d93c3fb9c3b324cbe0711706/levenshtein-0.27.4-cp314-cp314t-win_amd64.whl", hash = "sha256:8ff7e95d8fff15a0889e2305274b089cb4726bd545952e17e06382a3a9da083c", size = 294923, upload-time = "2026-08-08T20:26:53.987Z" },
     { url = "https://files.pythonhosted.org/packages/0d/5f/fd7b0982024b1b902f301c297b9be38214a43ef7781141879bd3aeac031e/levenshtein-0.27.4-cp314-cp314t-win_arm64.whl", hash = "sha256:4416e14abcae7394647b0c57aa2ca00d96e99c53c4a1a4cc23745f8eb7412909", size = 469057, upload-time = "2026-08-08T20:26:55.8Z" },
+]
+
+[[package]]
+name = "m2c"
+version = "0.1.0"
+source = { git = "https://github.com/matt-kempster/m2c.git?rev=1d1c4454a445326541305f83f2b0cb680a9ecb2d#1d1c4454a445326541305f83f2b0cb680a9ecb2d" }
+dependencies = [
+    { name = "graphviz" },
 ]
 
 [[package]]

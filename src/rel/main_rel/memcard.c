@@ -954,6 +954,73 @@ void fn_1_AC4C4(Fn1AC4C4Target *target) {
 }
 /* fzgx:end fn_1_AC4C4 */
 
+/* fzgx:begin fn_1_AC53C noprologue */
+#include "types.h"
+
+struct fn_1_AC53C_Arg0 {
+    u8 pad_0[0xC];
+    u32 unk_C;
+};
+struct fn_1_AC53C_lbl_801A6410 {
+    u32 unk_0;
+};
+struct fn_1_AC53C_lbl_1_bss_716C0 {
+    u8 unk_0;
+};
+extern struct fn_1_AC53C_lbl_1_bss_716C0 lbl_1_bss_716C0;
+extern struct fn_1_AC53C_lbl_801A6410 lbl_801A6410;
+extern u32 lbl_1_data_3C7B8;
+extern s32 CARDUnmount(void *);
+extern void fn_1_46B4(u32, u32, const char *, int);
+
+void fn_1_AC53C(void *arg0) {
+    u32 temp_r4;
+    u32 temp_r5_2;
+    void *temp_r3;
+    void *temp_r3_2;
+    void *temp_r5;
+    void *temp_r6;
+
+    if ((u32) (*(u32 *)((u8 *)(arg0) + 12)) != 0) {
+        do {
+
+        } while (CARDUnmount((void *)((void *)((*(u8 *)((u8 *)(arg0) + 0))))) == -1);
+        fn_1_46B4(lbl_801A6410.unk_0, *(u32 *)((u8 *)(arg0) + 12), (const char *)((s8 *) &lbl_1_data_3C7B8), 0x3C8);
+        (*(s8 *)((u8 *)(arg0) + 7)) = 0;
+        (*(u32 *)((u8 *)(arg0) + 12)) = 0U;
+        temp_r3 = (void *)(*(void **)((u8 *)(arg0) + 36));
+        (*(s32 *)((u8 *)(temp_r3) + 28)) = 0;
+        (*(s32 *)((u8 *)(temp_r3) + 24)) = 0;
+    }
+    temp_r3_2 = (void *)(*(void **)((u8 *)(arg0) + 36));
+    if ((*(s32 *)((u8 *)(temp_r3_2) + 8)) & 0x80) {
+        (*(s32 *)((u8 *)(arg0) + 60)) = (s32) ((s32) (*(s32 *)((u8 *)(temp_r3_2) + 16)) / 8192);
+        (*(s32 *)((u8 *)(arg0) + 64)) = (s32) (*(s32 *)((u8 *)((*(void **)((u8 *)(arg0) + 36))) + 20));
+    }
+    temp_r5 = (void *)(*(void **)((u8 *)(arg0) + 36));
+    if (!((*(s32 *)((u8 *)(temp_r5) + 8)) & 0x20)) {
+        fn_1_46B4(lbl_801A6410.unk_0, *(u32 *)((u8 *)(temp_r5) + 148), (const char *)((s8 *) &lbl_1_data_3C7B8), 0x3D4);
+    }
+    if ((u8) (*(u8 *)((u8 *)(arg0) + 2)) == 4) {
+        if ((u8) lbl_1_bss_716C0.unk_0 != 0) {
+            temp_r6 = (void *)(*(void **)((u8 *)(arg0) + 36));
+            temp_r5_2 = *(u32 *)((u8 *)(temp_r6) + 148);
+            (*(u32 *)((u8 *)(temp_r6) + 148)) = (u32) (*(u32 *)((u8 *)(temp_r6) + 220));
+            (*(u32 *)((u8 *)(temp_r6) + 220)) = temp_r5_2;
+            lbl_1_bss_716C0.unk_0 = 0;
+        }
+        temp_r4 = *(u32 *)((u8 *)((*(void **)((u8 *)(arg0) + 36))) + 220);
+        if (temp_r4 != 0) {
+            fn_1_46B4(lbl_801A6410.unk_0, temp_r4, (const char *)((s8 *) &lbl_1_data_3C7B8), 0x3DE);
+            (*(u32 *)((u8 *)((*(void **)((u8 *)(arg0) + 36))) + 220)) = 0U;
+        }
+    }
+    (*(s16 *)((u8 *)(arg0) + 8)) = 0x30;
+    (*(s16 *)((u8 *)(arg0) + 10)) = 0xE;
+    (*(u8 *)((u8 *)(arg0) + 42)) = (u8) ((*(u8 *)((u8 *)(arg0) + 42)) | 4);
+}
+/* fzgx:end fn_1_AC53C */
+
 /* fzgx:begin fn_1_AC6A4 */
 // fn_1_AC6A4: empty in retail (single blr).
 void fn_1_AC6A4(void) {
@@ -1036,6 +1103,73 @@ void fn_1_AC74C(void *r3) {
     }
 }
 /* fzgx:end fn_1_AC74C */
+
+/* fzgx:begin fn_1_AC79C noprologue */
+#include "types.h"
+
+struct fn_1_AC79C_Arg0 {
+    u8 pad_0[0xC];
+    u32 unk_C;
+};
+struct fn_1_AC79C_lbl_801A6410 {
+    u32 unk_0;
+};
+struct fn_1_AC79C_lbl_1_bss_716C0 {
+    u8 unk_0;
+};
+extern struct fn_1_AC79C_lbl_1_bss_716C0 lbl_1_bss_716C0;
+extern struct fn_1_AC79C_lbl_801A6410 lbl_801A6410;
+extern u32 lbl_1_data_3C7B8;
+extern s32 CARDUnmount(void *);
+extern void fn_1_46B4(u32, u32, const char *, int);
+
+void fn_1_AC79C(void *arg0) {
+    u32 temp_r4;
+    u32 temp_r5_2;
+    void *temp_r3;
+    void *temp_r3_2;
+    void *temp_r5;
+    void *temp_r6;
+
+    if ((u32) (*(u32 *)((u8 *)(arg0) + 12)) != 0) {
+        do {
+
+        } while (CARDUnmount((void *)((void *)((*(u8 *)((u8 *)(arg0) + 0))))) == -1);
+        fn_1_46B4(lbl_801A6410.unk_0, *(u32 *)((u8 *)(arg0) + 12), (const char *)((s8 *) &lbl_1_data_3C7B8), 0x3C8);
+        (*(s8 *)((u8 *)(arg0) + 7)) = 0;
+        (*(u32 *)((u8 *)(arg0) + 12)) = 0U;
+        temp_r3 = (void *)(*(void **)((u8 *)(arg0) + 36));
+        (*(s32 *)((u8 *)(temp_r3) + 28)) = 0;
+        (*(s32 *)((u8 *)(temp_r3) + 24)) = 0;
+    }
+    temp_r3_2 = (void *)(*(void **)((u8 *)(arg0) + 36));
+    if ((*(s32 *)((u8 *)(temp_r3_2) + 8)) & 0x80) {
+        (*(s32 *)((u8 *)(arg0) + 60)) = (s32) ((s32) (*(s32 *)((u8 *)(temp_r3_2) + 16)) / 8192);
+        (*(s32 *)((u8 *)(arg0) + 64)) = (s32) (*(s32 *)((u8 *)((*(void **)((u8 *)(arg0) + 36))) + 20));
+    }
+    temp_r5 = (void *)(*(void **)((u8 *)(arg0) + 36));
+    if (!((*(s32 *)((u8 *)(temp_r5) + 8)) & 0x20)) {
+        fn_1_46B4(lbl_801A6410.unk_0, *(u32 *)((u8 *)(temp_r5) + 148), (const char *)((s8 *) &lbl_1_data_3C7B8), 0x3D4);
+    }
+    if ((u8) (*(u8 *)((u8 *)(arg0) + 2)) == 4) {
+        if ((u8) lbl_1_bss_716C0.unk_0 != 0) {
+            temp_r6 = (void *)(*(void **)((u8 *)(arg0) + 36));
+            temp_r5_2 = *(u32 *)((u8 *)(temp_r6) + 148);
+            (*(u32 *)((u8 *)(temp_r6) + 148)) = (u32) (*(u32 *)((u8 *)(temp_r6) + 220));
+            (*(u32 *)((u8 *)(temp_r6) + 220)) = temp_r5_2;
+            lbl_1_bss_716C0.unk_0 = 0;
+        }
+        temp_r4 = *(u32 *)((u8 *)((*(void **)((u8 *)(arg0) + 36))) + 220);
+        if (temp_r4 != 0) {
+            fn_1_46B4(lbl_801A6410.unk_0, temp_r4, (const char *)((s8 *) &lbl_1_data_3C7B8), 0x3DE);
+            (*(u32 *)((u8 *)((*(void **)((u8 *)(arg0) + 36))) + 220)) = 0U;
+        }
+    }
+    (*(s16 *)((u8 *)(arg0) + 8)) = 0x35;
+    (*(s16 *)((u8 *)(arg0) + 10)) = 0xE;
+    (*(u8 *)((u8 *)(arg0) + 42)) = (u8) ((*(u8 *)((u8 *)(arg0) + 42)) | 4);
+}
+/* fzgx:end fn_1_AC79C */
 
 /* fzgx:begin fn_1_AC904 */
 // fn_1_AC904: empty in retail (single blr).

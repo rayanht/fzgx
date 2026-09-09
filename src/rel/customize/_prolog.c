@@ -1105,6 +1105,16 @@ void fn_3_7B94(void) {
 }
 /* fzgx:end fn_3_7B94 */
 
+/* fzgx:begin fn_3_837C */
+extern u32 lbl_3_bss_140;
+extern u32 lbl_3_bss_243C0;
+extern s32 fn_8008023C(u32, u32, u32);
+
+s32 fn_3_837C(s16 arg0) {
+    return fn_8008023C((u32)(&lbl_3_bss_243C0), (u32)(((u8 *)(&lbl_3_bss_140) + (arg0 * 0x81C0))), 0x81C0U) != 0;
+}
+/* fzgx:end fn_3_837C */
+
 /* fzgx:begin fn_3_968C */
 struct fn_3_968C_lbl_3_data_11D8 {
     u32 unk_0;

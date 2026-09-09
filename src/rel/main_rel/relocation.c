@@ -81,6 +81,33 @@ s32 fn_1_A66FC(s32 value) {
 }
 /* fzgx:end fn_1_A66FC */
 
+/* fzgx:begin fn_1_A67E8 noprologue */
+#include "types.h"
+
+struct fn_1_A67E8_lbl_1_bss_6F5F0 {
+    u32 unk_0;
+};
+extern struct fn_1_A67E8_lbl_1_bss_6F5F0 lbl_1_bss_6F5F0;
+extern void fn_1_A6870(u32 *);
+
+void fn_1_A67E8(void) {
+    s32 var_r0;
+    s32 temp_r3;
+
+    temp_r3 = lbl_1_bss_6F5F0.unk_0 + 1;
+    if (temp_r3 > 3) {
+        var_r0 = 0;
+    } else {
+        var_r0 = 3;
+        if (temp_r3 >= 0) {
+            var_r0 = temp_r3;
+        }
+    }
+    lbl_1_bss_6F5F0.unk_0 = (u32) var_r0;
+    fn_1_A6870((u32 *)(&lbl_1_bss_6F5F0.unk_0));
+}
+/* fzgx:end fn_1_A67E8 */
+
 /* fzgx:begin fn_1_A6840 */
 void fn_1_A6840(u32 value) {
     u32 *value_ptr;

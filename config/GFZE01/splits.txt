@@ -3575,3 +3575,27 @@ dol/OSGetTime.c:
 
 dol/OSAudioSystem.c:
 	.text       start:0x8000B380 end:0x8000B614 align:4
+
+dol/fn_8006FFDC.c:
+	.text       start:0x8006FFDC end:0x8007001C align:4
+
+dol/fn_80047A50.c:
+	.text       start:0x80047A50 end:0x80047ADC align:4
+
+dol/fn_80054AB0.c:
+	.text       start:0x80054AB0 end:0x80054B6C align:4
+
+dol/fn_800230A4.c:
+	.text       start:0x800230A4 end:0x80023168 align:4
+
+dol/fn_800579F0.c:
+	.text       start:0x800579F0 end:0x80057AD8 align:4
+
+dol/fn_80077384.c:
+	.text       start:0x80077384 end:0x80077488 align:4
+
+dol/GXSetCPUFifo.c:
+	.text       start:0x80031D6C end:0x80031E7C align:4
+
+dol/fn_80075D48.c:
+	.text       start:0x80075D48 end:0x80076134 align:4

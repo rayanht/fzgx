@@ -1470,6 +1470,30 @@ u32 fn_1_54320(void) {
 }
 /* fzgx:end fn_1_54320 */
 
+/* fzgx:begin fn_1_54448 noprologue */
+#include "types.h"
+
+struct fn_1_54448_lbl_801A66CC {
+    u32 unk_0;
+};
+extern struct fn_1_54448_lbl_801A66CC lbl_801A66CC;
+extern void * * fn_1_54448(s32);
+
+void **fn_1_54448(s32 arg0) {
+    void **temp_r3;
+
+    temp_r3 = (void **)((*(s32 *)((u8 *)(lbl_801A66CC.unk_0) + 48)) + (arg0 * 8));
+    if ((void **) (*(void ***)((u8 *)(lbl_801A66CC.unk_0) + 68)) > temp_r3) {
+        (*(void ***)((u8 *)(lbl_801A66CC.unk_0) + 68)) = (void **)(temp_r3);
+    }
+    if ((void **) (*(void ***)((u8 *)(lbl_801A66CC.unk_0) + 72)) < temp_r3) {
+        (*(void ***)((u8 *)(lbl_801A66CC.unk_0) + 72)) = (void **)(temp_r3);
+        return temp_r3;
+    }
+    return temp_r3;
+}
+/* fzgx:end fn_1_54448 */
+
 /* fzgx:begin fn_1_545B8 */
 typedef struct fn_1_545B8_manager {
     u8 unk_00[0x30];

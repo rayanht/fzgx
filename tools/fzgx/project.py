@@ -221,6 +221,64 @@ class Project:
         d = self.module_build_dir(module) / "asm"
         return sorted(d.rglob("*.s")) if d.exists() else []
 
+    def callable_asm(self, sym: Symbol) -> Optional[Function]:
+        """Read an assembly entry labelled by dtk without changing its ownership or kind."""
+        found = self.function_asm(sym.module).get(sym.name)
+        if found or sym.section not in ('.text', '.init'):
+            return found
+        cache = self.__dict__.setdefault('_callable_asm', {})
+        key = self.key(sym)
+        if key in cache:
+            return cache[key]
+        modules = self.__dict__.setdefault('_instruction_maps', {})
+        if sym.module not in modules:
+            instructions = {}
+            for path in sorted(self._asm_files(sym.module), key=lambda p: p.stat().st_mtime_ns):
+                section = None
+                for line in path.read_text().splitlines():
+                    sec = re.match(r'\.section\s+([^,\s]+)', line)
+                    if sec:
+                        section = sec[1]
+                    elif line.strip() in ('.text', '.data', '.bss', '.rodata'):
+                        section = line.strip()
+                    match = ASM_LINE_RE.match(line)
+                    if match and section in ('.text', '.init'):
+                        instructions[(section, int(match['addr'], 16))] = match['insn'].strip()
+            modules[sym.module] = instructions
+        instructions = modules[sym.module]
+        todo, seen, labels = [sym.addr], set(), {}
+        while todo:
+            addr = todo.pop()
+            if addr in seen:
+                continue
+            insn = instructions.get((sym.section, addr))
+            if insn is None:
+                cache[key] = None
+                return None
+            seen.add(addr)
+            mnemonic = insn.split()[0].rstrip('+-')
+            if mnemonic in ('blr', 'bctr'):
+                continue
+            branch = re.search(r'\b(\.L_([0-9A-Fa-f]+))$', insn)
+            if mnemonic.startswith('b') and mnemonic not in ('bl', 'bctrl', 'blrl'):
+                if branch:
+                    dest = int(branch[2], 16)
+                    if dest < sym.addr:
+                        cache[key] = None
+                        return None
+                    labels[dest] = branch[1]
+                    todo.append(dest)
+                if mnemonic == 'b':
+                    continue
+            todo.append(addr + 4)
+        lines = []
+        for addr in sorted(seen):
+            if addr in labels:
+                lines.append(labels[addr] + ':')
+            lines.append(f'{addr:08X}: {instructions[(sym.section, addr)]}')
+        cache[key] = Function(sym, lines, self._refs(lines, self.symbols(sym.module)), None)
+        return cache[key]
+
     def function_asm(self, module: str) -> Dict[str, Function]:
         """Parse every .s of a module once per process; cached on disk by mtime."""
         if module in self._asm_index:

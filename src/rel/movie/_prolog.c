@@ -1,5 +1,18 @@
 #include "types.h"
 
+/* fzgx:begin fn_5_200 */
+struct fn_5_200_lbl_1_bss_970 {
+    u32 unk_0;
+};
+extern struct fn_5_200_lbl_1_bss_970 lbl_1_bss_970;
+
+void fn_5_200(void) {
+    if ((s32) lbl_1_bss_970.unk_0 > 0) {
+        lbl_1_bss_970.unk_0 -= 1;
+    }
+}
+/* fzgx:end fn_5_200 */
+
 /* fzgx:begin fn_5_220 */
 extern struct fn_5_220_lbl_5_bss_0 lbl_5_bss_0;
 extern u32 fn_1_3CC4(u32);

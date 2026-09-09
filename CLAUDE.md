@@ -107,6 +107,17 @@ Rules that hold for everyone:
   across TUs; `--no-submit` retains drafts without carving. Header layouts constrain copied
   stack objects. Integer-to-float recovery tracks both scratch-word stores in either order
   and keeps the encoding internal until its bias subtraction.
+- `fzgx lift --all --engine m2c` runs the pinned PowerPC/CodeWarrior backend across every
+  unmatched function; `--tu` and `--callee` also support this backend. It consumes owned
+  declarations and recovered stack aggregates, lowers byte-addressed accesses to C, and
+  rejects unresolved operations rather than including m2c's placeholder macros. Intermediate
+  assembly, contexts and drafts live under `.fzgx/machine/`; generated candidates still go
+  through the object oracle, `submit`, and all 16 hashes. No reconstructed C is edited by hand.
+  Signature recovery follows callable assembly labels without changing their ownership.
+  MWCC `_savegpr`/`_restgpr` and FPR frame helpers preserve arguments and return registers;
+  never model them as ordinary calls. Self-xor/subtract zeroing idioms have no input.
+  Fixup variants of the same symbol run serially because their scratch files are shared;
+  different symbols may run in parallel. Keep the best saved draft when trying another backend.
 - The largest measured coherent game-code target is the font/sprite UI interface: `font.c`
   plus its unmatched callers, especially `sel.c`, `sel_static_disp.c` and `toolkit.c`.
   Recover the shared font state, 0x58-byte draw packets and call ABI before another broad

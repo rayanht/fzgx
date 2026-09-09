@@ -18,6 +18,118 @@ extern void fn_8008069C(char *buffer, u8 *format, ...);
 extern s32 fn_1_12A32C(char *buffer);
 extern s16 fn_1_98104(void);
 
+/* fzgx:begin fn_1_95EF0 noprologue */
+#include "types.h"
+
+struct fn_1_95EF0_Arg0 {
+    u8 pad_0[0x14C];
+    u32 unk_14C;
+};
+struct fn_1_95EF0_lbl_801A6410 {
+    u32 unk_0;
+};
+extern struct fn_1_95EF0_lbl_801A6410 lbl_801A6410;
+extern u8 lbl_1_data_27C00[];
+extern void fn_1_12ABB4(void *);
+extern void fn_1_46B4(u32, u32, const char *, int);
+
+void fn_1_95EF0(void *arg0, s32 arg_sp0) {
+    void *var_r28;
+    void *temp_r3_7;
+    void *temp_r3_6;
+    void *temp_r3_5;
+    void *temp_r3_4;
+    void *temp_r3_3;
+    void *temp_r3_2;
+    void *temp_r3;
+    u32 var_r27;
+    u32 temp_r4_7;
+    u32 temp_r4_6;
+    u32 temp_r4_5;
+    u32 temp_r4_4;
+    u32 temp_r4_3;
+    u32 temp_r4_2;
+    u32 temp_r4;
+
+    temp_r3 = (void *)(*(void **)((u8 *)(arg0) + 332));
+    if (temp_r3 != NULL) {
+        fn_1_12ABB4((void *)(temp_r3));
+        (*(void **)((u8 *)(arg0) + 332)) = (void *)(NULL);
+    }
+    temp_r4 = *(u32 *)((u8 *)(arg0) + 336);
+    if (temp_r4 != 0) {
+        fn_1_46B4(lbl_801A6410.unk_0, temp_r4, (const char *)((s8 *) lbl_1_data_27C00), 0xB44);
+        (*(u32 *)((u8 *)(arg0) + 336)) = 0U;
+    }
+    temp_r3_2 = (void *)(*(void **)((u8 *)(arg0) + 364));
+    if (temp_r3_2 != NULL) {
+        fn_1_12ABB4((void *)(temp_r3_2));
+        (*(void **)((u8 *)(arg0) + 364)) = (void *)(NULL);
+    }
+    temp_r4_2 = *(u32 *)((u8 *)(arg0) + 368);
+    if (temp_r4_2 != 0) {
+        fn_1_46B4(lbl_801A6410.unk_0, temp_r4_2, (const char *)((s8 *) lbl_1_data_27C00), 0xB49);
+        (*(u32 *)((u8 *)(arg0) + 368)) = 0U;
+    }
+    temp_r3_3 = (void *)(*(void **)((u8 *)(arg0) + 396));
+    if (temp_r3_3 != NULL) {
+        fn_1_12ABB4((void *)(temp_r3_3));
+        (*(void **)((u8 *)(arg0) + 396)) = (void *)(NULL);
+    }
+    temp_r4_3 = *(u32 *)((u8 *)(arg0) + 400);
+    if (temp_r4_3 != 0) {
+        fn_1_46B4(lbl_801A6410.unk_0, temp_r4_3, (const char *)((s8 *) lbl_1_data_27C00), 0xB4B);
+        (*(u32 *)((u8 *)(arg0) + 400)) = 0U;
+    }
+    temp_r3_4 = (void *)(*(void **)((u8 *)(arg0) + 428));
+    if (temp_r3_4 != NULL) {
+        fn_1_12ABB4((void *)(temp_r3_4));
+        (*(void **)((u8 *)(arg0) + 428)) = (void *)(NULL);
+    }
+    temp_r4_4 = *(u32 *)((u8 *)(arg0) + 432);
+    if (temp_r4_4 != 0) {
+        fn_1_46B4(lbl_801A6410.unk_0, temp_r4_4, (const char *)((s8 *) lbl_1_data_27C00), 0xB4D);
+        (*(u32 *)((u8 *)(arg0) + 432)) = 0U;
+    }
+    temp_r3_5 = (void *)(*(void **)((u8 *)(arg0) + 460));
+    if (temp_r3_5 != NULL) {
+        fn_1_12ABB4((void *)(temp_r3_5));
+        (*(void **)((u8 *)(arg0) + 460)) = (void *)(NULL);
+    }
+    temp_r4_5 = *(u32 *)((u8 *)(arg0) + 464);
+    if (temp_r4_5 != 0) {
+        fn_1_46B4(lbl_801A6410.unk_0, temp_r4_5, (const char *)((s8 *) lbl_1_data_27C00), 0xB4F);
+        (*(u32 *)((u8 *)(arg0) + 464)) = 0U;
+    }
+    temp_r3_6 = (void *)(*(void **)((u8 *)(arg0) + 492));
+    if (temp_r3_6 != NULL) {
+        fn_1_12ABB4((void *)(temp_r3_6));
+        (*(void **)((u8 *)(arg0) + 492)) = (void *)(NULL);
+    }
+    temp_r4_6 = *(u32 *)((u8 *)(arg0) + 496);
+    if (temp_r4_6 != 0) {
+        fn_1_46B4(lbl_801A6410.unk_0, temp_r4_6, (const char *)((s8 *) lbl_1_data_27C00), 0xB51);
+        (*(u32 *)((u8 *)(arg0) + 496)) = 0U;
+    }
+    var_r28 = (void *)(arg0);
+    var_r27 = 0U;
+    do {
+        temp_r3_7 = (void *)(*(void **)((u8 *)(var_r28) + 524));
+        if (temp_r3_7 != NULL) {
+            fn_1_12ABB4((void *)(temp_r3_7));
+            (*(void **)((u8 *)(var_r28) + 524)) = (void *)(NULL);
+        }
+        temp_r4_7 = *(u32 *)((u8 *)(var_r28) + 528);
+        if (temp_r4_7 != 0) {
+            fn_1_46B4(lbl_801A6410.unk_0, temp_r4_7, (const char *)((s8 *) lbl_1_data_27C00), 0xB54);
+            (*(u32 *)((u8 *)(var_r28) + 528)) = 0U;
+        }
+        var_r27 += 1;
+        var_r28 = (void *)((u8 *)(var_r28) + 0x20);
+    } while (var_r27 < 0x14U);
+}
+/* fzgx:end fn_1_95EF0 */
+
 /* fzgx:begin fn_1_961F0 */
 typedef struct Fn1961F0Owner Fn1961F0Owner;
 
