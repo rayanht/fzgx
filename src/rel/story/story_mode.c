@@ -166,6 +166,35 @@ void fn_7_1540(void) {
 }
 /* fzgx:end fn_7_1540 */
 
+/* fzgx:begin fn_7_1544 */
+extern u16 lbl_1_bss_96A;
+extern u32 fn_1_3F038(void);
+extern u32 fn_1_3F0C8(void);
+
+void fn_7_1544(void) {
+    u32 v0;
+    s16 v1;
+    u32 t0, t1;
+    t0 = fn_1_3F038();
+    v0 = t0;
+    if ((s32)t0 != 0) {
+    t1 = fn_1_3F0C8();
+    v0 = t1;
+    v1 = (s16)v0;
+    switch (v1) {
+    case 42:
+    lbl_1_bss_96A = 141;
+    break;
+    case 43:
+    lbl_1_bss_96A = 149;
+    break;
+    default:
+    lbl_1_bss_96A = 135;
+    }
+    }
+}
+/* fzgx:end fn_7_1544 */
+
 /* fzgx:begin fn_7_15B8 */
 // fn_7_15B8: empty in retail (single blr).
 void fn_7_15B8(void) {

@@ -111,6 +111,41 @@ void fn_8_2120(void) {
 }
 /* fzgx:end fn_8_2120 */
 
+/* fzgx:begin fn_8_25F8 */
+struct fn_8_25F8_lbl_8_bss_0 {
+    u8 pad_0[0x244];
+    u32 unk_244;
+    u8 unk_248;
+    u8 pad_249[0x3];
+    u32 unk_24C;
+};
+
+extern struct fn_8_25F8_lbl_8_bss_0 lbl_8_bss_0;
+extern u32 fn_1_4FEC(void);
+extern u32 fn_1_C3378(void);
+extern u32 fn_1_F7A20(void);
+extern u8 lbl_801A66B9;
+
+void fn_8_25F8(void) {
+    struct fn_8_25F8_lbl_8_bss_0 *p_lbl_8_bss_0;
+    u32 v0;
+    u32 t0, t1, t2;
+    p_lbl_8_bss_0 = (struct fn_8_25F8_lbl_8_bss_0 *)&lbl_8_bss_0;
+    if (lbl_801A66B9 == 0) {
+    t0 = fn_1_4FEC();
+    v0 = t0;
+    t1 = fn_1_C3378();
+    v0 = t1;
+    t2 = fn_1_F7A20();
+    v0 = t2;
+    lbl_801A66B9 = 1;
+    }
+    p_lbl_8_bss_0->unk_244 = 0;
+    p_lbl_8_bss_0->unk_248 = 255;
+    p_lbl_8_bss_0->unk_24C = 0;
+}
+/* fzgx:end fn_8_25F8 */
+
 /* fzgx:begin fn_8_4E8C */
 // fn_8_4E8C: empty in retail (single blr).
 void fn_8_4E8C(void) {

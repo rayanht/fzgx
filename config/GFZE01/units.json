@@ -31993,6 +31993,17 @@
   },
   {
     "module": "story",
+    "source": "rel/story/story_mode/fn_7_1544.c",
+    "symbols": [
+      "fn_7_1544"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/story/story_mode.c"
+  },
+  {
+    "module": "story",
     "source": "rel/story/story_mode/fn_7_16FC.c",
     "symbols": [
       "fn_7_16FC"
@@ -32612,6 +32623,17 @@
     "source": "rel/title/title/fn_8_1F74.c",
     "symbols": [
       "fn_8_1F74"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/title/title.c"
+  },
+  {
+    "module": "title",
+    "source": "rel/title/title/fn_8_25F8.c",
+    "symbols": [
+      "fn_8_25F8"
     ],
     "status": "matching",
     "mw_version": null,
