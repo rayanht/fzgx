@@ -134,6 +134,49 @@ void fn_1_7F934(void *arg0) {
 }
 /* fzgx:end fn_1_7F934 */
 
+/* fzgx:begin fn_1_7F954 noprologue */
+#include "types.h"
+
+struct fn_1_7F954_lbl_801A6410 {
+    u32 unk_0;
+};
+struct fn_1_7F954_lbl_1_bss_6D82C {
+    u32 unk_0;
+};
+
+extern struct fn_1_7F954_lbl_1_bss_6D82C lbl_1_bss_6D82C;
+extern struct fn_1_7F954_lbl_801A6410 lbl_801A6410;
+extern u32 fn_1_46B4(u32, u32, u32, u32);
+extern u32 lbl_1_data_1FFF0;
+extern void fn_1_7F658(void *);
+extern void fn_80071718(void *);
+
+void fn_1_7F954(u32 arg0, u32 arg1) {
+    s8 v0;
+    u32 v2;
+    u32 v3;
+    u32 v4;
+    v0 = (s8)arg1;
+{
+    s32 v1;
+    v1 = 0;
+    v2 = arg0;
+    while ((s8)v1 < v0) {
+    fn_1_7F658((void *)v2);
+    v2 += 1088;
+    v1++;
+}
+    }
+    fn_1_46B4(lbl_801A6410.unk_0, arg0, (u32)&lbl_1_data_1FFF0, 691);
+    v3 = lbl_1_bss_6D82C.unk_0;
+    v4 = v3;
+    if (v3 != 0) {
+    fn_80071718((void *)v4);
+    lbl_1_bss_6D82C.unk_0 = 0;
+    }
+}
+/* fzgx:end fn_1_7F954 */
+
 /* fzgx:begin fn_1_7FA04 noprologue */
 #include "types.h"
 
@@ -294,6 +337,38 @@ void fn_1_80F1C(s32 arg0, void *arg1) {
     }
 }
 /* fzgx:end fn_1_80F1C */
+
+/* fzgx:begin fn_1_810E4 noprologue */
+#include "types.h"
+
+extern void fn_800711A8(void *);
+extern void fn_80071718(void *);
+
+void fn_1_810E4(u32 arg0) {
+    u32 v1;
+    u32 v2;
+    u32 v3;
+{
+    s32 v0;
+    v0 = 0;
+    v1 = arg0;
+    while ((s16)v0 < 3) {
+    v2 = *(u32 *)((u8 *)v1 + 4);
+    if (v2 != 0) {
+    fn_80071718((void *)v2);
+    *(u32 *)((u8 *)v1 + 4) = 0;
+    }
+    v3 = *(u32 *)((u8 *)v1 + 0);
+    if (v3 != 0) {
+    fn_800711A8((void *)v3);
+    *(u32 *)((u8 *)v1 + 0) = 0;
+    }
+    v1 += 8;
+    v0++;
+}
+    }
+}
+/* fzgx:end fn_1_810E4 */
 
 /* fzgx:begin fn_1_8171C */
 // Maps a car mode to its corresponding status code.

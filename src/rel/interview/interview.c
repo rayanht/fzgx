@@ -195,6 +195,105 @@ void fn_17_4E50(void) {
 }
 /* fzgx:end fn_17_4E50 */
 
+/* fzgx:begin fn_17_4FE0 */
+struct fn_17_4FE0_lbl_17_bss_0 {
+    u8 pad_0[0x8];
+    u32 unk_8;
+    u8 pad_C[0x2FC];
+    u32 unk_308;
+    u32 unk_30C;
+};
+struct fn_17_4FE0_lbl_1_bss_6D82C {
+    u32 unk_0;
+};
+struct fn_17_4FE0_lbl_801A6410 {
+    u32 unk_0;
+};
+
+extern struct fn_17_4FE0_lbl_17_bss_0 lbl_17_bss_0;
+extern struct fn_17_4FE0_lbl_1_bss_6D82C lbl_1_bss_6D82C;
+extern struct fn_17_4FE0_lbl_801A6410 lbl_801A6410;
+extern u32 fn_1_12A734(u32);
+extern u32 fn_1_46B4(u32, u32, u32, u32);
+extern u32 lbl_17_data_63E50;
+extern void fn_1_14DBCC(void *);
+extern void fn_1_7F934(void *);
+extern void fn_1_FDFF4(void);
+extern void fn_80071718(void *);
+
+void fn_17_4FE0(u32 arg0, u32 arg1, u32 arg2, u32 arg3) {
+    struct fn_17_4FE0_lbl_17_bss_0 *p_lbl_17_bss_0;
+    u32 v0;
+    u32 v1;
+    u32 v2;
+    u32 v3;
+    u32 v4;
+    u32 v5;
+    u32 v6;
+    u32 v7;
+    s32 v8;
+    u32 v9;
+    u32 v10;
+    u32 v11;
+    u32 v12;
+    u32 t0, t2, t4, t7;
+    p_lbl_17_bss_0 = (struct fn_17_4FE0_lbl_17_bss_0 *)&lbl_17_bss_0;
+    v0 = p_lbl_17_bss_0->unk_308;
+    v1 = v0;
+    v2 = arg1;
+    v3 = arg3;
+    v4 = arg2;
+    if (v0 != 0) {
+    v1 = *(u32 *)((u8 *)v1 + 804);
+    if ((s32)v1 != -1) {
+    t0 = fn_1_12A734(v1);
+    v1 = t0;
+    v1 = p_lbl_17_bss_0->unk_308;
+    *(u32 *)((u8 *)v1 + 804) = -1;
+    }
+    v1 = p_lbl_17_bss_0->unk_308;
+    fn_1_7F934((void *)v1);
+    v3 = (u32)&lbl_801A6410;
+    v2 = p_lbl_17_bss_0->unk_308;
+    v4 = (u32)&lbl_17_data_63E50;
+    v1 = *(u32 *)((u8 *)v3 + 0);
+    v3 = 3134;
+    t2 = fn_1_46B4(v1, v2, (u32)v4, v3);
+    v1 = t2;
+    p_lbl_17_bss_0->unk_308 = 0;
+    }
+    v5 = p_lbl_17_bss_0->unk_30C;
+    v6 = v2;
+    v7 = v5;
+    v8 = v3;
+    v9 = v4;
+    if (v5 != 0) {
+    fn_1_14DBCC((void *)v7);
+    v8 = (u32)&lbl_801A6410;
+    v6 = p_lbl_17_bss_0->unk_30C;
+    v9 = (u32)&lbl_17_data_63E50;
+    v7 = *(u32 *)((u8 *)v8 + 0);
+    v8 = 3139;
+    t4 = fn_1_46B4(v7, v6, (u32)v9, v8);
+    v7 = t4;
+    p_lbl_17_bss_0->unk_30C = 0;
+    }
+    v10 = lbl_1_bss_6D82C.unk_0;
+    v11 = v10;
+    if (v10 != 0) {
+    fn_80071718((void *)v11);
+    lbl_1_bss_6D82C.unk_0 = 0;
+    }
+    v12 = v11;
+    if (p_lbl_17_bss_0->unk_8 != 0) {
+    fn_1_FDFF4();
+    v12 = lbl_801A6410.unk_0;
+    t7 = fn_1_46B4(v12, p_lbl_17_bss_0->unk_8, (u32)&lbl_17_data_63E50, 3152);
+    v12 = t7;
+    }
+}
+/* fzgx:end fn_17_4FE0 */
+
 /* fzgx:begin fn_17_5FA8 */
 typedef struct InterviewState {
     u8 pad_00[0x84];

@@ -164,3 +164,6 @@ rel/title/title/fn_8_25F8.c:
 
 rel/title/operation/fn_8_67F8.c:
 	.text       start:0x000067F8 end:0x000068D8 align:4
+
+rel/title/operation/fn_8_6A50.c:
+	.text       start:0x00006A50 end:0x00006A70 align:4

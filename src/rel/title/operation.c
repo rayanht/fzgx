@@ -180,6 +180,25 @@ void fn_8_69D8(void) {
 }
 /* fzgx:end fn_8_69D8 */
 
+/* fzgx:begin fn_8_6A50 */
+struct fn_8_6A50_lbl_8_bss_2A8 {
+    u32 unk_0;
+    u8 pad_4[0x14];
+    u32 unk_18;
+    u32 unk_1C;
+};
+
+extern struct fn_8_6A50_lbl_8_bss_2A8 lbl_8_bss_2A8;
+
+void fn_8_6A50(void) {
+    struct fn_8_6A50_lbl_8_bss_2A8 *p_lbl_8_bss_2A8;
+    p_lbl_8_bss_2A8 = (struct fn_8_6A50_lbl_8_bss_2A8 *)&lbl_8_bss_2A8;
+    p_lbl_8_bss_2A8->unk_1C = 0;
+    p_lbl_8_bss_2A8->unk_18 = 4;
+    p_lbl_8_bss_2A8->unk_0 = 0;
+}
+/* fzgx:end fn_8_6A50 */
+
 /* fzgx:begin fn_8_6C50 */
 extern u32 fn_1_412A0(u32);
 extern u32 lbl_801A66B4;

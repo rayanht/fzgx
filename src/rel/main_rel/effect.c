@@ -416,6 +416,52 @@ void fn_1_5B074(void) {
 }
 /* fzgx:end fn_1_5B074 */
 
+/* fzgx:begin fn_1_5B30C noprologue */
+#include "types.h"
+
+struct fn_1_5B30C_Arg0 {
+    u8 pad_0[0x34];
+    u32 unk_34;
+};
+
+extern f32 lbl_1_rodata_2978;
+extern s32 fn_1_54E34(void *, f32);
+extern void fn_1_557C4(void *);
+extern void fn_1_56000(u8, u8, u8);
+extern void fn_1_5621C(f32, f32, f32, f32);
+extern void lbl_8006D7B0(void);
+extern void lbl_8006D9D8(void *);
+extern void lbl_8006E14C(f32);
+extern void mathutil_mtxA_rotate_z(int);
+
+void fn_1_5B30C(struct fn_1_5B30C_Arg0 *arg0) {
+    u32 v0;
+    u32 v1;
+    f32 v2;
+    u32 t3;
+    v0 = arg0->unk_34;
+    lbl_8006D9D8((void *)((u32)arg0 + 60));
+    lbl_8006D7B0();
+    lbl_8006E14C((*(f32 *)((u8 *)(u32)arg0 + 40) / *(f32 *)((u8 *)v0 + 20)));
+    t3 = fn_1_54E34((void *)(v0 + 8), *(f32 *)((u8 *)(u32)arg0 + 40));
+    v1 = t3;
+    if ((s32)t3 != 0) {
+    v1 = *(s16 *)((u8 *)(u32)arg0 + 88);
+    mathutil_mtxA_rotate_z(v1);
+    v2 = *(f32 *)((u8 *)(u32)arg0 + 28);
+    fn_1_5621C(v2, *(f32 *)((u8 *)(u32)arg0 + 32), *(f32 *)((u8 *)(u32)arg0 + 36), *(f32 *)((u8 *)(u32)arg0 + 180));
+    v1 = 1;
+    fn_1_56000(v1, 3, 0);
+    v1 = v0;
+    fn_1_557C4((void *)v1);
+    v2 = lbl_1_rodata_2978;
+    fn_1_5621C(v2, v2, v2, v2);
+    v1 = 1;
+    fn_1_56000(v1, 3, 1);
+    }
+}
+/* fzgx:end fn_1_5B30C */
+
 /* fzgx:begin fn_1_5B3CC */
 // fn_1_5B3CC: empty in retail (single blr).
 void fn_1_5B3CC(void) {

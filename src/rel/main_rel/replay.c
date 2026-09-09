@@ -61,6 +61,40 @@ u8 fn_1_F2D30(u8 *value, u8 **cursor, u32 index) {
 }
 /* fzgx:end fn_1_F2D30 */
 
+/* fzgx:begin fn_1_F2EB8 noprologue */
+#include "types.h"
+
+struct fn_1_F2EB8_lbl_1_bss_7EFD4 {
+    s8 unk_0;
+};
+
+extern struct fn_1_F2EB8_lbl_1_bss_7EFD4 lbl_1_bss_7EFD4;
+
+void fn_1_F2EB8(void) {
+    u8 v0;
+    v0 = lbl_1_bss_7EFD4.unk_0;
+    if ((v0 & 0x1) == 0) { return; }
+    lbl_1_bss_7EFD4.unk_0 = (v0 & -41);
+}
+/* fzgx:end fn_1_F2EB8 */
+
+/* fzgx:begin fn_1_F2EDC noprologue */
+#include "types.h"
+
+struct fn_1_F2EDC_lbl_1_bss_7EFD4 {
+    s8 unk_0;
+};
+
+extern struct fn_1_F2EDC_lbl_1_bss_7EFD4 lbl_1_bss_7EFD4;
+
+void fn_1_F2EDC(void) {
+    u8 v0;
+    v0 = lbl_1_bss_7EFD4.unk_0;
+    if ((v0 & 0x1) == 0) { return; }
+    lbl_1_bss_7EFD4.unk_0 = (v0 | 8);
+}
+/* fzgx:end fn_1_F2EDC */
+
 /* fzgx:begin fn_1_F2EFC */
 // Clears the active replay flag and marks the replay entry as ready.
 void fn_1_F2EFC(void) {

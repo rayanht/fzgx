@@ -80,6 +80,70 @@ void fn_4_EA0(u32 arg0) {
 }
 /* fzgx:end fn_4_EA0 */
 
+/* fzgx:begin fn_4_347C */
+struct fn_4_347C_lbl_1_bss_9C8_0_E12 {
+    u8 pad_0[0x2];
+    u8 unk_2;
+    u8 unk_3;
+    u8 pad_4[0x8];
+};
+struct fn_4_347C_lbl_4_bss_0 {
+    u16 unk_0;
+    u8 pad_2[0x6];
+    u32 unk_8;
+    u8 pad_C[0x4];
+    u16 unk_10;
+    u8 pad_12[0x46];
+    u8 unk_58;
+    u8 unk_59;
+    u8 unk_5A;
+    u8 unk_5B;
+    u8 unk_5C;
+    u8 unk_5D;
+};
+struct fn_4_347C_lbl_1_bss_9C8 {
+    struct fn_4_347C_lbl_1_bss_9C8_0_E12 unk_0[1];
+};
+
+extern s32 fn_1_3F8C(u32, u32, u32, u32);
+extern struct fn_4_347C_lbl_1_bss_9C8 lbl_1_bss_9C8;
+extern struct fn_4_347C_lbl_4_bss_0 lbl_4_bss_0;
+extern u32 fn_1_435C(u32);
+extern u32 fn_1_4A00(u32, u32, u32);
+extern u32 lbl_1_data_2AC0;
+extern u32 lbl_1_data_2B40;
+extern u32 lbl_1_data_2B50;
+extern u32 lbl_1_data_2B58;
+extern u32 lbl_4_data_14D0;
+extern void fn_4_3128(void);
+extern void fn_80008BA8(u32, u32, u32);
+
+void fn_4_347C(void) {
+    struct fn_4_347C_lbl_4_bss_0 *p_lbl_4_bss_0;
+    u32 v0;
+    u8 v1;
+    u8 v2;
+    u32 t1;
+    p_lbl_4_bss_0 = (struct fn_4_347C_lbl_4_bss_0 *)&lbl_4_bss_0;
+    fn_1_435C(p_lbl_4_bss_0->unk_8);
+    t1 = fn_1_3F8C((u32)&lbl_4_data_14D0, (u32)fn_4_3128, 0, 20);
+    p_lbl_4_bss_0->unk_0 = t1;
+    fn_80008BA8((u32)((u8 *)(u32)p_lbl_4_bss_0 + 96), (u32)&lbl_1_data_2AC0, 64);
+    fn_80008BA8((u32)((u8 *)(u32)p_lbl_4_bss_0 + 160), (u32)&lbl_1_data_2B40, 8);
+    fn_80008BA8((u32)((u8 *)(u32)p_lbl_4_bss_0 + 168), (u32)&lbl_1_data_2B50, 8);
+    fn_80008BA8((u32)((u8 *)(u32)p_lbl_4_bss_0 + 176), (u32)&lbl_1_data_2B58, 8);
+    v0 = p_lbl_4_bss_0->unk_8;
+    p_lbl_4_bss_0->unk_5A = 0;
+    p_lbl_4_bss_0->unk_5C = 0;
+    p_lbl_4_bss_0->unk_5B = 0;
+    p_lbl_4_bss_0->unk_10 = 0;
+    fn_1_4A00(1, 15, v0);
+    v1 = lbl_1_bss_9C8.unk_0[p_lbl_4_bss_0->unk_5D].unk_2;
+    p_lbl_4_bss_0->unk_58 = v1;
+    p_lbl_4_bss_0->unk_59 = (lbl_1_bss_9C8.unk_0[p_lbl_4_bss_0->unk_5D].unk_3);
+}
+/* fzgx:end fn_4_347C */
+
 /* fzgx:begin fn_4_406C */
 struct fn_4_406C_lbl_4_bss_0 {
     u16 unk_0;
