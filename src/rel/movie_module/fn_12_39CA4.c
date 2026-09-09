@@ -8,7 +8,7 @@ typedef struct MovieObject {
 } MovieObject;
 
 extern char lbl_12_rodata_28B0[46];
-extern void fn_12_34B88(const char *message, ...);
+extern void MWSFSVM_Error(const char *message, ...);
 
 s32 fn_12_39CA4(MovieObject *object) {
     s32 value;
@@ -20,7 +20,7 @@ s32 fn_12_39CA4(MovieObject *object) {
     }
 
     if (value == 0) {
-        fn_12_34B88(lbl_12_rodata_28B0);
+        MWSFSVM_Error(lbl_12_rodata_28B0);
         return 0;
     }
 

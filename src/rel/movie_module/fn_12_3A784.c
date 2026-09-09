@@ -8,7 +8,7 @@ typedef struct Fn12_3A784_Object {
 } Fn12_3A784_Object;
 
 extern char lbl_12_rodata_2CC4[45];
-extern void fn_12_34B88(char *, ...);
+extern void MWSFSVM_Error(char *, ...);
 
 u32 fn_12_3A784(Fn12_3A784_Object *object) {
     s32 value;
@@ -20,7 +20,7 @@ u32 fn_12_3A784(Fn12_3A784_Object *object) {
     }
 
     if (value == 0) {
-        fn_12_34B88(lbl_12_rodata_2CC4);
+        MWSFSVM_Error(lbl_12_rodata_2CC4);
         return 0;
     }
 

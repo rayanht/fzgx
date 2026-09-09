@@ -110,8 +110,12 @@ def declarations(text: str) -> list:
                 names.add(re.match(r"\w+\s+(\w+)", part)[1])
                 kind = 'type'
             else:
+                pointer = re.search(r"\(\s*\*\s*(\w+)\s*\)\s*\(", part.split('=', 1)[0])
                 proto = re.search(r"\b(\w+)\s*\([^;{}]*\)\s*;\s*$", part)
-                if proto and '=' not in part:
+                if pointer:
+                    names.add(pointer[1])
+                    kind = 'object'
+                elif proto and '=' not in part:
                     names.add(proto[1])
                     kind = 'prototype'
                 else:

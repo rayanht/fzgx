@@ -33918,6 +33918,16 @@
   },
   {
     "module": "movie_module",
+    "source": "rel/movie_module/SFD_IsSvrWait.c",
+    "symbols": [
+      "SFD_IsSvrWait"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "movie_module",
     "source": "rel/movie_module/SFTIM_GetTimeOneFrmVideo.c",
     "symbols": [
       "SFTIM_GetTimeOneFrmVideo"

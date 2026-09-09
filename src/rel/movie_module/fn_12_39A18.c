@@ -8,12 +8,12 @@ typedef struct Fn12_39A18_Object {
 extern s32 fn_12_2B634(u32 value);
 extern void fn_12_38A0C(s32 value);
 extern const char lbl_12_rodata_26FC[27];
-extern void fn_12_34B88(const char *format, ...);
+extern void MWSFSVM_Error(const char *format, ...);
 
 s32 fn_12_39A18(Fn12_39A18_Object *object) {
     if (fn_12_2B634(object->unk40) != 0) {
         fn_12_38A0C(-0x133);
-        fn_12_34B88(lbl_12_rodata_26FC);
+        MWSFSVM_Error(lbl_12_rodata_26FC);
         return -0x133;
     }
     return 0;

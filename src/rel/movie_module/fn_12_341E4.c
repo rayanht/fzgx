@@ -10,13 +10,13 @@ typedef struct MovieState {
 
 extern int fn_12_3A36C(MovieState *movie);
 extern char lbl_12_rodata_12E0[43];
-extern void fn_12_34B88(const char *message, ...);
+extern void MWSFSVM_Error(const char *message, ...);
 extern int fn_12_23280(void *value);
 extern char lbl_12_rodata_130C[42];
 
 void fn_12_341E4(MovieState *movie, int value) {
     if (fn_12_3A36C(movie) == 0) {
-        fn_12_34B88(lbl_12_rodata_12E0);
+        MWSFSVM_Error(lbl_12_rodata_12E0);
     } else {
         void *field = movie->field40;
 
@@ -25,7 +25,7 @@ void fn_12_341E4(MovieState *movie, int value) {
         }
         if ((s8)movie->state70 == 0 && value == 1 &&
             fn_12_23280(field) != 0) {
-            fn_12_34B88(lbl_12_rodata_130C);
+            MWSFSVM_Error(lbl_12_rodata_130C);
         }
         movie->state70 = value;
     }

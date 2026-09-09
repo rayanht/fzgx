@@ -11,19 +11,19 @@ struct MovieModule {
 
 extern int fn_12_3A36C(struct MovieModule *, void *);
 extern const u8 lbl_12_rodata_12E0[];
-extern void fn_12_34B88(const u8 *, ...);
+extern void MWSFSVM_Error(const u8 *, ...);
 extern int fn_800570DC(void *, void *);
 
 void fn_12_34AB0(struct MovieModule *self, void *arg) {
     const u8 *base = lbl_12_rodata_12E0;
 
     if (fn_12_3A36C(self, arg) == 0) {
-        fn_12_34B88(base + 0x260);
+        MWSFSVM_Error(base + 0x260);
     } else if (arg == 0) {
-        fn_12_34B88(base + 0x290);
+        MWSFSVM_Error(base + 0x290);
     } else if (fn_800570DC(self->field_4c, arg) < 0) {
         self->field_08 = 4;
-        fn_12_34B88(base + 0x2bc, arg);
+        MWSFSVM_Error(base + 0x2bc, arg);
     } else {
         self->field_74++;
     }

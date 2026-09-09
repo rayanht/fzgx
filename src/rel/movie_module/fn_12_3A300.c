@@ -8,7 +8,7 @@ typedef struct Fn12_3A300_Object {
 } Fn12_3A300_Object;
 
 extern char lbl_12_rodata_2B50[48];
-extern void fn_12_34B88(char *message, ...);
+extern void MWSFSVM_Error(char *message, ...);
 extern void fn_12_2D888(u32 value, u32 type, u32 duration);
 
 void fn_12_3A300(Fn12_3A300_Object *object, u32 value) {
@@ -23,7 +23,7 @@ void fn_12_3A300(Fn12_3A300_Object *object, u32 value) {
     }
 
     if (state == 0) {
-        fn_12_34B88(lbl_12_rodata_2B50);
+        MWSFSVM_Error(lbl_12_rodata_2B50);
     } else {
         duration = value * 1000;
         if (object) {

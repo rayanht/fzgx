@@ -14,7 +14,7 @@ typedef struct MovieModule {
 
 extern u32 lbl_12_rodata_E10[9];
 extern u32 lbl_12_bss_7C64[137];
-extern s32 fn_12_334A0(s32 arg0, s32 arg1, s32 arg2);
+extern s32 UTY_MulDiv(s32 arg0, s32 arg1, s32 arg2);
 
 void fn_12_2DFF0(MovieModule *module, s32 mode) {
     s32 value;
@@ -34,10 +34,10 @@ void fn_12_2DFF0(MovieModule *module, s32 mode) {
             duration = lbl_12_rodata_E10[module->movie_index];
         }
 
-        result = fn_12_334A0(lbl_12_bss_7C64[0x6e], value, duration);
+        result = UTY_MulDiv(lbl_12_bss_7C64[0x6e], value, duration);
         module->total_a += result;
         module->total_b += result;
-        result = fn_12_334A0(module->movie_id, value, duration);
+        result = UTY_MulDiv(module->movie_id, value, duration);
         module->total_c += result;
         break;
     }

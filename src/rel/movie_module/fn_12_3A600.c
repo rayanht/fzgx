@@ -16,7 +16,7 @@ typedef struct Fn12_3A600_Result {
 } Fn12_3A600_Result;
 
 extern char lbl_12_rodata_2848[49];
-extern void fn_12_34B88(const char *format, ...);
+extern void MWSFSVM_Error(const char *format, ...);
 extern char lbl_12_rodata_2718[304];
 extern void fn_12_2D58C(void *data, Fn12_3A600_Result *result);
 
@@ -32,7 +32,7 @@ s32 fn_12_3A600(Fn12_3A600_Object *object) {
     }
 
     if (value == 0) {
-        fn_12_34B88(lbl_12_rodata_2848);
+        MWSFSVM_Error(lbl_12_rodata_2848);
         return 0;
     }
 
@@ -43,7 +43,7 @@ s32 fn_12_3A600(Fn12_3A600_Object *object) {
     }
 
     if (value == 0) {
-        fn_12_34B88(lbl_12_rodata_2718);
+        MWSFSVM_Error(lbl_12_rodata_2718);
         data = 0;
     } else {
         data = object->data;

@@ -7,12 +7,12 @@ struct MovieModule {
 
 extern int fn_12_3A36C(struct MovieModule *, void *);
 extern const u8 lbl_12_rodata_1420[];
-extern void fn_12_34B88(const u8 *, ...);
+extern void MWSFSVM_Error(const u8 *, ...);
 extern void fn_80056730(void *, void *);
 
 void fn_12_3496C(struct MovieModule *self, void *arg) {
     if (fn_12_3A36C(self, arg) == 0) {
-        fn_12_34B88(lbl_12_rodata_1420);
+        MWSFSVM_Error(lbl_12_rodata_1420);
     } else {
         fn_80056730(self->field_4c, arg);
     }

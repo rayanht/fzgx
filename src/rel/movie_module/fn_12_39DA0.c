@@ -14,7 +14,7 @@ typedef struct Fn12_39DA0_Result {
 } Fn12_39DA0_Result;
 
 extern char lbl_12_rodata_287C[52];
-extern void fn_12_34B88(const char *format, ...);
+extern void MWSFSVM_Error(const char *format, ...);
 extern void fn_12_2D58C(void *object, Fn12_39DA0_Result *result);
 
 u32 fn_12_39DA0(Fn12_39DA0_Object *object) {
@@ -27,7 +27,7 @@ u32 fn_12_39DA0(Fn12_39DA0_Object *object) {
         valid = object->unk4;
     }
     if (valid == 0) {
-        fn_12_34B88(lbl_12_rodata_287C);
+        MWSFSVM_Error(lbl_12_rodata_287C);
         return 0;
     }
     fn_12_2D58C(object->unk40, &result);

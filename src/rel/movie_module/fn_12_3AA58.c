@@ -14,7 +14,7 @@ typedef struct MovieManager {
 
 extern s32 lbl_12_bss_1B9DC[52];
 extern u8 lbl_12_rodata_2D5C[180];
-extern void fn_12_34B88(const u8 *message, ...);
+extern void MWSFSVM_Error(const u8 *message, ...);
 extern MovieManager *fn_12_38DBC(void);
 extern u32 fn_12_3A9A0(MovieObject *self);
 
@@ -23,7 +23,7 @@ u32 fn_12_3AA58(MovieObject *self) {
         return 0;
     }
     if (self == 0) {
-        fn_12_34B88(lbl_12_rodata_2D5C);
+        MWSFSVM_Error(lbl_12_rodata_2D5C);
         return 0;
     }
     if (self->state != 1) {

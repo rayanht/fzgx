@@ -30,7 +30,7 @@ typedef struct MovieRequest {
 extern s32 fn_12_2B188(void*, MovieRequest*);
 extern void fn_12_38A0C(s32);
 extern char lbl_12_rodata_221C[33];
-extern void fn_12_34B88(char*, ...);
+extern void MWSFSVM_Error(char*, ...);
 
 void fn_12_3858C(MovieModule* module) {
     void* movie;
@@ -64,7 +64,7 @@ void fn_12_3858C(MovieModule* module) {
         }
         if (fn_12_2B188(player, &request) != 0) {
             fn_12_38A0C(-0x138);
-            fn_12_34B88(lbl_12_rodata_221C);
+            MWSFSVM_Error(lbl_12_rodata_221C);
         }
     }
 }

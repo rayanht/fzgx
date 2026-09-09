@@ -10,7 +10,7 @@ typedef struct Fn12_3A264_Object {
 
 extern const char lbl_12_rodata_2B28[38];
 extern void fn_12_38A0C(s32 value);
-extern void fn_12_34B88(const char *message, ...);
+extern void MWSFSVM_Error(const char *message, ...);
 extern s32 fn_12_2DA6C(u32 resource);
 
 s32 fn_12_3A264(Fn12_3A264_Object *object) {
@@ -24,7 +24,7 @@ s32 fn_12_3A264(Fn12_3A264_Object *object) {
 
     if (state == 0) {
         fn_12_38A0C(-12);
-        fn_12_34B88(lbl_12_rodata_2B28);
+        MWSFSVM_Error(lbl_12_rodata_2B28);
         return 0;
     }
 

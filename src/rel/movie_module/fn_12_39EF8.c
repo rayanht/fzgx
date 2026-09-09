@@ -6,7 +6,7 @@ typedef struct Fn12_39EF8_Object {
 } Fn12_39EF8_Object;
 
 extern char lbl_12_rodata_2998[44];
-extern void fn_12_34B88(char *message, ...);
+extern void MWSFSVM_Error(char *message, ...);
 extern void fn_12_34198(void);
 
 void fn_12_39EF8(Fn12_39EF8_Object *object) {
@@ -19,7 +19,7 @@ void fn_12_39EF8(Fn12_39EF8_Object *object) {
     }
 
     if (value == 0) {
-        fn_12_34B88(lbl_12_rodata_2998);
+        MWSFSVM_Error(lbl_12_rodata_2998);
     } else {
         fn_12_34198();
     }

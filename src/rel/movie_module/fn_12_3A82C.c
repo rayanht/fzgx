@@ -8,7 +8,7 @@ typedef struct Fn12_3A82C_Object {
 } Fn12_3A82C_Object;
 
 extern char lbl_12_rodata_2CF4[45];
-extern void fn_12_34B88(char *message, ...);
+extern void MWSFSVM_Error(char *message, ...);
 extern void fn_12_2D888(void *target, s32 value, void *argument);
 
 void fn_12_3A82C(Fn12_3A82C_Object *object, void *argument) {
@@ -20,7 +20,7 @@ void fn_12_3A82C(Fn12_3A82C_Object *object, void *argument) {
         value = object->value;
     }
     if (value == 0) {
-        fn_12_34B88(lbl_12_rodata_2CF4);
+        MWSFSVM_Error(lbl_12_rodata_2CF4);
     } else {
         fn_12_2D888(object->target, 6, argument);
     }

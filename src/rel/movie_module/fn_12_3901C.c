@@ -2,7 +2,7 @@
 
 extern s32 fn_12_3A36C(void);
 extern char lbl_12_rodata_2558[39];
-extern void fn_12_34B88(const void *, ...);
+extern void MWSFSVM_Error(const void *, ...);
 extern void fn_12_3A888(void *);
 extern s32 fn_12_2B358(void *);
 extern void fn_12_38A0C(s32);
@@ -30,7 +30,7 @@ void fn_12_3901C(MovieModule *module) {
     void *movie;
 
     if (fn_12_3A36C() == 0) {
-        fn_12_34B88(lbl_12_rodata_2558);
+        MWSFSVM_Error(lbl_12_rodata_2558);
     } else {
         movie = module->field40;
         if (movie != 0) {
@@ -38,7 +38,7 @@ void fn_12_3901C(MovieModule *module) {
             module->field8 = 0;
             if (fn_12_2B358(movie) != 0) {
                 fn_12_38A0C(-0x134);
-                fn_12_34B88(lbl_12_rodata_2580);
+                MWSFSVM_Error(lbl_12_rodata_2580);
             }
             fn_12_3B540(&module->field1ec);
             movie = module->field44;

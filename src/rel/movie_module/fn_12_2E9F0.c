@@ -8,7 +8,7 @@ struct fn_12_2E9F0_Arg2 {
     u32 unk_0;
 };
 
-extern u32 fn_12_334A0(u32, u32, u32);
+extern u32 UTY_MulDiv(u32, u32, u32);
 extern u32 lbl_12_bss_1B730;
 extern u32 lbl_12_bss_1B734;
 
@@ -35,7 +35,7 @@ u32 fn_12_2E9F0(struct fn_12_2E9F0_Arg0 *arg0, u32 arg1, struct fn_12_2E9F0_Arg2
     }
     }
     v2 = v0;
-    t0 = fn_12_334A0(v2, arg1, v1);
+    t0 = UTY_MulDiv(v2, arg1, v1);
     v2 = t0;
     lbl_12_bss_1B734 = v0;
     lbl_12_bss_1B730 = v2;

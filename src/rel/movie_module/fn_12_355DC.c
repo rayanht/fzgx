@@ -7,12 +7,12 @@ typedef struct MovieModuleState {
 
 extern s32 fn_12_3A36C(MovieModuleState *self);
 extern char lbl_12_rodata_1900[51];
-extern void fn_12_34B88(const char *message, ...);
+extern void MWSFSVM_Error(const char *message, ...);
 extern void fn_12_8C8(void *movie, void *arg1, void *arg2);
 
 void fn_12_355DC(MovieModuleState *self, void *arg1, void *arg2) {
     if (fn_12_3A36C(self) == 0) {
-        fn_12_34B88(lbl_12_rodata_1900);
+        MWSFSVM_Error(lbl_12_rodata_1900);
     } else {
         fn_12_8C8(self->movie, arg1, arg2);
     }

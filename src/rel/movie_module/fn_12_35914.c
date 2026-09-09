@@ -12,7 +12,7 @@ typedef struct MovieModuleState {
 extern int fn_12_3A36C(MovieModuleState *self);
 extern char lbl_12_rodata_1BC0[49];
 extern char lbl_12_rodata_1BF4[49];
-extern void fn_12_34B88(const char *format, ...);
+extern void MWSFSVM_Error(const char *format, ...);
 extern void fn_12_35B08(MovieModuleState *self, Movie *movie, void *out);
 extern void fn_12_D88(void *movie_data, void *out, s32 arg2, s32 arg3);
 
@@ -21,9 +21,9 @@ void fn_12_35914(MovieModuleState *self, Movie *movie, s32 arg2, s32 arg3) {
     u8 local[0x90];
 
     if (!fn_12_3A36C(self)) {
-        fn_12_34B88(lbl_12_rodata_1BC0);
+        MWSFSVM_Error(lbl_12_rodata_1BC0);
     } else if (movie->value == 0) {
-        fn_12_34B88(lbl_12_rodata_1BF4);
+        MWSFSVM_Error(lbl_12_rodata_1BF4);
     } else {
         movie_data = self->movie;
         fn_12_35B08(self, movie, local);

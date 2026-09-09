@@ -14,7 +14,7 @@ typedef struct Fn12_3A4CC_Result {
 } Fn12_3A4CC_Result;
 
 extern char lbl_12_rodata_2C0C[48];
-extern void fn_12_34B88(const char *format, ...);
+extern void MWSFSVM_Error(const char *format, ...);
 extern void fn_12_2D664(void *data, Fn12_3A4CC_Result *result);
 
 s32 fn_12_3A4CC(Fn12_3A4CC_Object *object) {
@@ -28,7 +28,7 @@ s32 fn_12_3A4CC(Fn12_3A4CC_Object *object) {
     }
 
     if (value == 0) {
-        fn_12_34B88(lbl_12_rodata_2C0C);
+        MWSFSVM_Error(lbl_12_rodata_2C0C);
         return -1;
     }
 

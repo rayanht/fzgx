@@ -2,7 +2,7 @@
 
 extern int fn_12_3A36C(void *);
 extern char lbl_12_rodata_1180[136];
-extern void fn_12_34B88(const char *, ...);
+extern void MWSFSVM_Error(const char *, ...);
 extern int fn_12_3A7D8(void *);
 extern int fn_12_2B1E8(int, s32);
 
@@ -20,7 +20,7 @@ void fn_12_3391C(MovieState *self) {
     int result;
 
     if (fn_12_3A36C(self) == 0) {
-        fn_12_34B88(lbl_12_rodata_1180);
+        MWSFSVM_Error(lbl_12_rodata_1180);
         return;
     }
 

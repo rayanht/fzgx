@@ -8,7 +8,7 @@ typedef struct Fn12_3A0F0_Object {
 } Fn12_3A0F0_Object;
 
 extern char lbl_12_rodata_2A98[47];
-extern void fn_12_34B88(const char *message, ...);
+extern void MWSFSVM_Error(const char *message, ...);
 extern void fn_12_2D74C(u32 value, u32 type, s32 *result);
 extern char lbl_12_rodata_2AC8[45];
 
@@ -22,7 +22,7 @@ s32 fn_12_3A0F0(Fn12_3A0F0_Object *object) {
         value = object->unk4;
     }
     if (value == 0) {
-        fn_12_34B88(lbl_12_rodata_2A98);
+        MWSFSVM_Error(lbl_12_rodata_2A98);
         return -1;
     }
 
@@ -35,7 +35,7 @@ s32 fn_12_3A0F0(Fn12_3A0F0_Object *object) {
     case 2:
         return 2;
     default:
-        fn_12_34B88(lbl_12_rodata_2AC8);
+        MWSFSVM_Error(lbl_12_rodata_2AC8);
         return -1;
     }
 }

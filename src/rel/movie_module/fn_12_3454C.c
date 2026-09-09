@@ -8,7 +8,7 @@ typedef struct MovieModule {
 extern int fn_12_3A36C(MovieModule *);
 extern const char lbl_12_rodata_13C0[];
 extern const char lbl_12_rodata_13EC[];
-extern void fn_12_34B88(const char *, ...);
+extern void MWSFSVM_Error(const char *, ...);
 extern u8 lbl_12_bss_1B780[0x120];
 extern int fn_8004F818(const char *, const char *, u8 *, u32 *, u32 *, u32 *);
 extern void fn_80056E9C(void *, u8 *, u32, u32, u32);
@@ -19,7 +19,7 @@ void fn_12_3454C(MovieModule *self, const char *arg1, const char *arg2) {
     u32 value_08;
 
     if (fn_12_3A36C(self) == 0) {
-        fn_12_34B88(lbl_12_rodata_13C0);
+        MWSFSVM_Error(lbl_12_rodata_13C0);
     } else {
         void *movie = self->movie;
 
@@ -28,7 +28,7 @@ void fn_12_3454C(MovieModule *self, const char *arg1, const char *arg2) {
             fn_80056E9C(movie, lbl_12_bss_1B780,
                         value_10, value_0c, value_08);
         } else {
-            fn_12_34B88(lbl_12_rodata_13EC, arg1, arg2);
+            MWSFSVM_Error(lbl_12_rodata_13EC, arg1, arg2);
         }
     }
 }
