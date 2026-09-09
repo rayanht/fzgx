@@ -457,6 +457,21 @@ u16 fn_1_499BC(const u8 *value) {
 }
 /* fzgx:end fn_1_499BC */
 
+/* fzgx:begin fn_1_4AE0C */
+#include "runtime/va_list.h"
+#include "font.h"
+
+int fn_8008077C(char* output, const char* format, __va_list args);
+
+void fn_1_4AE0C(const char* format, ...) {
+    char buffer[512];
+    __va_list args;
+    __builtin_va_info(&args);
+    fn_8008077C(buffer, format, args);
+    fn_1_4A0D8(buffer);
+}
+/* fzgx:end fn_1_4AE0C */
+
 /* fzgx:begin fn_1_4AEB4 */
 void fn_1_4AEB4(f32 value) {
     lbl_1_bss_3E05C = value;

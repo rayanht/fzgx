@@ -23922,6 +23922,17 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/font/fn_1_4AE0C.c",
+    "symbols": [
+      "fn_1_4AE0C"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "tu": "rel/main_rel/font.c"
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/font/fn_1_4AEB4.c",
     "symbols": [
       "fn_1_4AEB4"
