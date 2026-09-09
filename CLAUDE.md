@@ -56,8 +56,17 @@ Rules that hold for everyone:
   in the link) at `submit`; until then `check` diffs the agent's work copy against the retail
   auto object that contains the function (symbol-only, two-object objdiff). Reason: units
   are objects in the link and split ranges in the config; 900 stub units of the DOL made a
-  link run for 20 min (139 real units link in seconds, so it was the stubs' mis-sectioned
-  `.init` range, not the count as such). Keep units at matched count regardless.
+  link run for 20 min. Keep units at matched count regardless. mwld also never returns (found
+  by bisection, 2026-09-09) when a dtk split object carrying its CodeWarrior `.comment` section
+  starts with a size-0 label followed by a function at the same offset: dtk emits symbols in
+  symbols.txt line order, so `carve.order_labels_after_functions` keeps every function line
+  before a same-address label (10 such pairs, all in the DOL). If a link hangs, bisect the
+  units with a capped mwld run, never wait on it.
+- Assembly-only functions (privileged instructions, no `blr`, shapes MWCC never emits) are
+  `fzgx asm-unit` units: `asm: true` in units.json, the split's `.s` copied to `src/`, GNU as
+  builds it, ledger status `asm`. GNU as reads branch hints `+`/`-` relative to the branch
+  direction while dtk prints the raw hint bit, so `asmunit.fix_branch_hints` respells hinted
+  backward branches on copy. 107 landed on 2026-09-09; the ledger has no `blocked` rows left.
   `fzgx uncarve --stubs` removes any unit without matched code (verify uncarves what it rejects).
 - Plateaus are data, not agent work. `fzgx stuck` classifies every saved best body at 80%+ by
   failure mode from the object diff (`.fzgx/stuck.json`, rows included). `fzgx sweep` re-checks

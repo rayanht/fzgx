@@ -343,6 +343,10 @@ def load_generated_units() -> None:
         if u.get("tu"):
             opts["src_dir"] = str(Path("build") / config.version / "gen")
         src = u["source"]
+        if u.get("asm"):
+            # an assembly unit: the object keeps the split's unit name (dol/x.c) so the template
+            # finds its configuration; the source is the split's asm copied into src/
+            opts["source"] = src[:-2] + ".s"
         if u["module"] == "main":
             sdk = src.startswith(("dol/dolphin/", "dol/msl/", "dol/trk/", "dol/runtime/"))
             opts["progress_category"] = "sdk" if sdk else "game"

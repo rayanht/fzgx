@@ -62,6 +62,32 @@ def exclusive_data(project: Project, fn: Function) -> Dict[str, List[Symbol]]:
     return out
 
 
+def order_labels_after_functions(symbols_path: Path) -> bool:
+    """mwld hangs (never returns) on an object whose first symbol is a size-0 label followed by
+    a function at the same offset while the object carries dtk's CodeWarrior `.comment`
+    section; dtk emits symbols in symbols.txt line order, so at every address a function
+    shares with a label the function line goes first. A carve boundary can land on any label,
+    so this runs after every carve. Returns True if the file changed."""
+    lines = symbols_path.read_text().splitlines()
+    key = {}
+    for i, l in enumerate(lines):
+        m = re.match(r"\S+ = (\.\w+):0x([0-9A-Fa-f]+); // type:(\w+)", l)
+        if m:
+            key.setdefault((m.group(1), int(m.group(2), 16)), []).append((i, m.group(3)))
+    changed = False
+    for entries in key.values():
+        idx = [i for i, _ in entries]
+        order = sorted(entries, key=lambda e: (e[1] != "function", e[0]))
+        new = [lines[i] for i, _ in order]
+        if new != [lines[i] for i in idx]:
+            for i, l in zip(idx, new):
+                lines[i] = l
+            changed = True
+    if changed:
+        symbols_path.write_text("\n".join(lines) + "\n")
+    return changed
+
+
 def carve(project: Project, symbol: str, dry_run: bool = False) -> CarveResult:
     sym = project.resolve(symbol)
     if sym is None or sym.kind != "function":
@@ -126,6 +152,10 @@ def carve(project: Project, symbol: str, dry_run: bool = False) -> CarveResult:
             sp.write_text(new_text)
             project._symbols.pop(module, None)
             res.notes.append("force_active: no callers")
+
+    if order_labels_after_functions(project.module_config_dir(module) / "symbols.txt"):
+        project._symbols.pop(module, None)
+        res.notes.append("symbols.txt: function lines moved before same-address labels (mwld hang)")
 
     tu_src = tufile.tu_source_for(project, sym)
     with oracle.build_lock("units.lock"):  # submits flip statuses concurrently

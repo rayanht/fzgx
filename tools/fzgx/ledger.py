@@ -17,7 +17,7 @@ from .project import ROOT, STATE_DIR
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS functions (
   symbol TEXT PRIMARY KEY, module TEXT, unit TEXT, addr INTEGER, size INTEGER,
-  status TEXT CHECK(status IN ('unmatched','claimed','matched','blocked','seeded')) DEFAULT 'unmatched',
+  status TEXT CHECK(status IN ('unmatched','claimed','matched','blocked','seeded','asm')) DEFAULT 'unmatched',
   attempts INTEGER DEFAULT 0, best_percent REAL DEFAULT 0,
   claimed_by TEXT, claimed_at INTEGER, claim_ttl INTEGER,
   matched_commit TEXT, blocked_issue INTEGER, blocked_reason TEXT
@@ -62,6 +62,16 @@ class Ledger:
         if "link_state" not in fcols:
             # 'pending' = accepted on the object oracle, awaiting batch relink; 'verified' = hashes checked
             self.db.execute("ALTER TABLE functions ADD COLUMN link_state TEXT")
+        sql = self.db.execute("select sql from sqlite_master where name='functions'").fetchone()[0]
+        if "'asm'" not in sql:
+            # 'asm' = links from its own assembly (no C can produce the body); widen the CHECK in place
+            self.db.execute("PRAGMA writable_schema=ON")
+            self.db.execute("UPDATE sqlite_master SET sql=replace(sql, \"'seeded')\", \"'seeded','asm')\") WHERE name='functions'")
+            self.db.execute("PRAGMA writable_schema=OFF")
+            self.db.close()
+            self.db = sqlite3.connect(self.path, timeout=30, isolation_level=None)
+            self.db.row_factory = sqlite3.Row
+            self.db.execute("PRAGMA busy_timeout=30000")
 
     # ------------------------------------------------------------- inventory
     def sync_functions(self, rows: Iterable[dict]) -> int:

@@ -65,11 +65,24 @@ def run(cmd: List[str], cwd: Path = ROOT, timeout: int = 600) -> subprocess.Comp
 
 
 @contextmanager
-def build_lock(name: str = "build.lock"):
+def build_lock(name: str = "build.lock", timeout_s: float = 120.0):
+    """The build lock. Never waits silently: after `timeout_s` it raises and names the lock,
+    so a child of an interrupted run that still holds it is found instead of waited on."""
+    import time as _time  # scoped: one polling loop
     path = STATE_DIR / name
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w") as f:
-        fcntl.flock(f, fcntl.LOCK_EX)
+        t0 = _time.time(); warned = False
+        while True:
+            try:
+                fcntl.flock(f, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                break
+            except BlockingIOError:
+                if _time.time() - t0 > timeout_s:
+                    raise TimeoutError(f"{path.name}: held by another process for over {int(timeout_s)} s (an interrupted run's child? see `pgrep -fl 'dtk|ninja|mwld'`)")
+                if not warned and _time.time() - t0 > 5:
+                    print(f"  waiting for {path.name} (held by another process)...", file=sys.stderr, flush=True); warned = True
+                _time.sleep(0.2)
         try:
             yield
         finally:
