@@ -23,7 +23,7 @@ from .project import STATE_DIR, Project
 
 # which rewrite families the objdiff row kinds of a diff point at (fixup's targeting)
 KIND_FAMILIES = {
-    "regalloc": ("decl-order", "inner-scope", "regalloc", "inline-temp", "repeat-to-local", "stmt-swap", "commute", "ptr-local"),
+    "regalloc": ("decl-order", "inner-scope", "regalloc", "inline-temp", "repeat-to-local", "stmt-swap", "commute", "ptr-local", "u64"),
     "ins": ("inline-temp", "inner-scope", "void-return", "return-to-block", "local-type", "hoist-arg", "repeat-to-local"),
     "ins:ext": ("local-type", "param-type", "field-type", "compare-cast"),
     "ins:cmp": ("compare-cast", "local-type", "compare-form"),
@@ -133,6 +133,20 @@ def extra_families(body: str, name: str) -> List[Tuple[str, str, str]]:
         text = body[:span[1]] + new_inner + body[span[2]:]
         text = text[:ins_at] + "    u32 spell_call;\n" + text[ins_at:]
         out.append(("call-to-local", f"local for {call[:30]}", text))
+    # 9. 64-bit values the body split into two u32 halves (OSTime everywhere in the OS SDK): the
+    #    halves travel as an adjacent register pair, so the split is invisible in the diff except
+    #    as register order. Pairs are rejoined in the signature, at call sites, in stores, and in
+    #    the callee's prototype.
+    u64_1 = _u64_family(body, name, span, inner)
+    out += u64_1
+    seen_u64 = {t for _, _, t in u64_1}
+    for _, label1, t1 in u64_1[:12]:
+        sp1 = _fn_span(t1, name)
+        if not sp1:
+            continue
+        for _, label2, t2 in _u64_family(t1, name, sp1, t1[sp1[1]:sp1[2]])[:12]:
+            if t2 not in seen_u64 and t2 != body:
+                seen_u64.add(t2); out.append(("u64", f"{label1} + {label2}", t2))
     # 8. a temporary for a call result used once: inline it
     for m in re.finditer(r"^(\s*)(t\d+) = ([A-Za-z_]\w*\([^;]*\));\n", inner, re.M):
         tn, call = m.group(2), m.group(3)
@@ -140,6 +154,118 @@ def extra_families(body: str, name: str) -> List[Tuple[str, str, str]]:
         if len(re.findall(rf"\b{tn}\b", rest)) == 1:
             new_inner = inner[:m.start()] + re.sub(rf"\b{tn}\b", call, rest, count=1)
             out.append(("inline-call", f"inline {tn}", body[:span[1]] + new_inner + body[span[2]:]))
+    return out
+
+
+# a call with its argument list; casts inside the arguments are one level of parentheses
+CALL_RE = re.compile(r"\b([A-Za-z_]\w*)\(((?:[^()]|\([^()]*\))*)\)")
+
+
+def _pair_proto(text: str, callee: str, idx: int) -> Optional[str]:
+    """The callee's extern prototype with parameters idx and idx+1 (both 32-bit ints) as one u64."""
+    m = re.search(rf"^extern ([\w ]+?\*?) {re.escape(callee)}\(([^)]*)\);$", text, re.M)
+    if not m:
+        return None
+    ps = [x.strip() for x in m.group(2).split(",")]
+    if len(ps) <= idx + 1 or not all(re.fullmatch(r"(u32|s32|int|unsigned int|unsigned|long|unsigned long)", ps[k]) for k in (idx, idx + 1)):
+        return None
+    ps[idx:idx + 2] = ["u64"]
+    return text[:m.start(2)] + ", ".join(ps) + text[m.end(2):]
+
+
+def _u64_family(body: str, name: str, span, inner: str) -> List[Tuple[str, str, str]]:
+    out: List[Tuple[str, str, str]] = []
+    protos = set(re.findall(r"^extern [\w ]+?\*? ([A-Za-z_]\w*)\([^)]*\);$", body, re.M))
+    # `#define InsertAlarm InsertAlarm_8000AC44`: the call names the alias, the prototype the symbol
+    aliases = dict(re.findall(r"^#define (\w+) (\w+)$", body, re.M))
+    protos |= {a for a, t in aliases.items() if t in protos}
+    def proto_name(c):
+        return aliases.get(c, c)
+    # (a) two adjacent zero arguments: one u64 zero (materialised low word first, as retail does)
+    declared = {m.group(1) for m in re.finditer(r"^extern [\w ]+?\*? ([A-Za-z_]\w*)\(", body, re.M)} | set(aliases)
+    keywords = {"if", "while", "for", "switch", "return", "sizeof"}
+    for cm in re.finditer(CALL_RE, inner):
+        callee, args = cm.group(1), cm.group(2)
+        if callee == name or callee in keywords or not args.strip():
+            continue
+        al = [a.strip() for a in args.split(",")]
+        for k in range(len(al) - 1):
+            if al[k] == "0" and al[k + 1] == "0":
+                new_inner = inner[:cm.start(2)] + ", ".join(al[:k] + ["(u64)0"] + al[k + 2:]) + inner[cm.end(2):]
+                text = body[:span[1]] + new_inner + body[span[2]:]
+                text = _pair_proto(text, proto_name(callee), k) if callee in declared else text
+                if text:
+                    out.append(("u64", f"{callee}: zero pair at {k} -> (u64)0", text))
+    # (b) two adjacent 32-bit parameters that only ever travel together: one u64 parameter
+    sig = re.search(rf"\b{re.escape(name)}\s*\(([^)]*)\)\s*\{{", body)
+    if sig and sig.group(1).strip() not in ("", "void"):
+        ps = [x.strip() for x in sig.group(1).split(",")]
+        for k in range(len(ps) - 1):
+            ma = re.fullmatch(r"(u32|s32) (\w+)", ps[k]); mb = re.fullmatch(r"(u32|s32) (\w+)", ps[k + 1])
+            if not (ma and mb):
+                continue
+            A, B = ma.group(2), mb.group(2)
+            pair_re = rf"\b{A}, {B}\b"
+            # a store of both halves to fields 4 bytes apart, in either order
+            store_re = (rf"^(\s*)([A-Za-z_][\w>.\-\[\]]*?)unk_([0-9A-Fa-f]+) = ({A}|{B});\n\s*\2unk_([0-9A-Fa-f]+) = ({A}|{B});\n")
+            stores = [m for m in re.finditer(store_re, inner, re.M) if {m.group(4), m.group(6)} == {A, B}
+                      and abs(int(m.group(3), 16) - int(m.group(5), 16)) == 4]
+            n_pair = len(re.findall(pair_re, inner))
+            if n_pair + len(stores) == 0:
+                continue
+            if len(re.findall(rf"\b{A}\b", inner)) != n_pair + len(stores) or len(re.findall(rf"\b{B}\b", inner)) != n_pair + len(stores):
+                continue
+            P = f"{A}_{B}"
+            new_inner = inner
+            for m in reversed(stores):
+                lo = min(int(m.group(3), 16), int(m.group(5), 16))
+                # the high half is the first parameter (the lower register); the u64 store covers both
+                new_inner = new_inner[:m.start()] + f"{m.group(1)}*(u64 *)&{m.group(2)}unk_{lo:X} = {P};\n" + new_inner[m.end():]
+            # call sites: the pair becomes one argument; the callee's prototype pairs the same slot
+            text = body[:span[1]] + new_inner + body[span[2]:]
+            ok = True
+            for cm in list(re.finditer(CALL_RE, new_inner)):
+                al = [a.strip() for a in cm.group(2).split(",")]
+                for j in range(len(al) - 1):
+                    if al[j] == A and al[j + 1] == B:
+                        t2 = _pair_proto(text, proto_name(cm.group(1)), j)
+                        if t2 is None:
+                            ok = False
+                        else:
+                            text = t2
+            if not ok:
+                continue
+            text = re.sub(pair_re, P, text)
+            text = text.replace(sig.group(1), ", ".join(ps[:k] + [f"u64 {P}"] + ps[k + 2:]), 1)
+            out.append(("u64", f"parameters {A}, {B} -> u64 {P}", text))
+    # (d) a call argument that is a cast local or a plain local: dropped, with the prototype
+    #     shortened (retail's register there was scratch; the body invented the argument)
+    for cm in re.finditer(CALL_RE, inner):
+        callee, args = cm.group(1), cm.group(2)
+        if callee == name or callee in keywords or not args.strip():
+            continue
+        al = [a.strip() for a in args.split(",")]
+        for k, arg in enumerate(al):
+            if not re.fullmatch(r"\((?:u32|s32)\)\w+|[a-z]\w*", arg) or len(al) < 2:
+                continue
+            new_inner = inner[:cm.start(2)] + ", ".join(al[:k] + al[k + 1:]) + inner[cm.end(2):]
+            text = body[:span[1]] + new_inner + body[span[2]:]
+            if callee in declared:
+                pm = re.search(rf"^extern ([\w ]+?\*?) {re.escape(proto_name(callee))}\(([^)]*)\);$", text, re.M)
+                if not pm:
+                    continue
+                ps = [x.strip() for x in pm.group(2).split(",")]
+                if len(ps) != len(al):
+                    continue
+                del ps[k]
+                text = text[:pm.start(2)] + ", ".join(ps) + text[pm.end(2):]
+            out.append(("u64", f"{callee}: drop argument {k} ({arg})", text))
+    # (c) a u64 value stored as two halves: one store
+    for m in re.finditer(r"^(\s*)([A-Za-z_][\w>.\-\[\]]*?)unk_([0-9A-Fa-f]+) = \(u32\)\((\w+) >> 32\);\n\s*\2unk_([0-9A-Fa-f]+) = \(u32\)\4;\n", inner, re.M):
+        if int(m.group(5), 16) - int(m.group(3), 16) != 4:
+            continue
+        new_inner = inner[:m.start()] + f"{m.group(1)}*(u64 *)&{m.group(2)}unk_{m.group(3)} = {m.group(4)};\n" + inner[m.end():]
+        out.append(("u64", f"{m.group(4)}: halves -> one u64 store", body[:span[1]] + new_inner + body[span[2]:]))
     return out
 
 

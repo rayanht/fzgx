@@ -192,6 +192,16 @@ def cmd_naming_apply(a, p):
 
 
 def cmd_headers(a, p):
+    if a.merge_u64:
+        r = structs.merge_u64(p, a.module, dry_run=a.dry_run)
+        if a.json:
+            _print(r, True); return 0 if r["ok"] else 1
+        for lo, hi, n, users in r["pairs"]:
+            print(f"{lo:22s} + {hi:22s} pair sightings {n:2d}, refs to the high half {users:2d}")
+        print(f"merged {len(r['merged'])}, skipped {len(r['skipped'])}{' (dry run)' if a.dry_run else ''}", r.get("error", ""))
+        for a_, b_, why in r["skipped"]:
+            print(f"  skipped {a_}+{b_}: {why}")
+        return 0 if r["ok"] else 1
     if a.symbol:
         info = structs.analyze(p, a.module, a.symbol)
         if a.json:
@@ -382,6 +392,7 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--module", default="main_rel"); s.add_argument("--min-refs", type=int, default=20); s.add_argument("--write", action="store_true")
     s.add_argument("--tu", help="per-file header for this TU (e.g. camera.c) instead of globals.h")
     s.add_argument("--symbol", help="print the recovered struct layout of one global"); s.add_argument("--oversize", action="store_true")
+    s.add_argument("--merge-u64", action="store_true", help="merge adjacent 4-byte symbols retail moves as a register pair into one u64 (relink-verified)"); s.add_argument("--dry-run", action="store_true")
     s = sub.add_parser("tu-migrate", help="stitch a module's per-function units into TU files (blocks; objects generated)"); s.set_defaults(fn=cmd_tu_migrate)
     s.add_argument("--module", default="main_rel"); s.add_argument("--no-verify", action="store_true")
     s = sub.add_parser("tu-check", help="compile a whole TU file as one unit (the goal state)"); s.set_defaults(fn=cmd_tu_check)

@@ -2524,7 +2524,11 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
     if structs:
         text += structs + [""]
     text += sorted(externs.values())
-    text += ["", f"{rtype_c} {name}({', '.join(decl_params) or 'void'}) {{"]
+    # a function retail placed in .init (boot, cache and debug code) must be sectioned the same
+    # way, or objdiff pairs nothing and the link puts it in .text
+    sect = p.symbols(module).get(name)
+    decl_sec = '__declspec(section ".init") ' if sect is not None and sect.section == ".init" else ""
+    text += ["", f"{decl_sec}{rtype_c} {name}({', '.join(decl_params) or 'void'}) {{"]
     text += [f"    {b}" for b in body]
     text += ["}", ""]
     return "\n".join(text)

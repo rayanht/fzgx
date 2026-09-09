@@ -533,3 +533,77 @@ def regenerate_module(p, module: str, min_refs: int = 20) -> Dict[str, str]:
             if err:
                 failures[t["file"]] = err
     return failures
+
+
+def u64_pairs(p, module: str):
+    """Adjacent 4-byte data symbols retail's code moves as a register pair (r3:r4 from a
+    u64-returning call, rN:rN+1 loads): one 8-byte object dtk split in two. Returns
+    [(low, high, sightings, other_refs_to_high)]."""
+    import re as _re
+    syms = p.symbols(module)
+    idx = p.function_asm(module)
+    pairs = {}
+    users_hi = {}
+    for fn in idx.values():
+        lines = [ln.split(": ", 1)[1] for ln in fn.asm if ": " in ln]
+        for i, ln in enumerate(lines):
+            m1 = _re.match(r"(stw|lwz) r(\d+), (\w+)(?:\+0x[0-9a-fA-F]+)?@(sda21|l)\b", ln)
+            if not m1:
+                continue
+            for j in range(i + 1, min(i + 4, len(lines))):
+                m2 = _re.match(r"(stw|lwz) r(\d+), (\w+)@(sda21|l)\b", lines[j])
+                if not m2 or m2.group(1) != m1.group(1) or int(m2.group(2)) != int(m1.group(2)) + 1:
+                    continue
+                a, b = syms.get(m1.group(3)), syms.get(m2.group(3))
+                if a and b and a.kind == "object" and b.kind == "object" and a.size == 4 and b.size == 4 \
+                        and b.addr == a.addr + 4 and a.section == b.section:
+                    pairs[(a.name, b.name)] = pairs.get((a.name, b.name), 0) + 1
+    for (a, b), n in list(pairs.items()):
+        users = [fn.symbol.name for fn in idx.values() if b in fn.refs]
+        users_hi[(a, b)] = len(users)
+    return [(a, b, n, users_hi[(a, b)]) for (a, b), n in sorted(pairs.items())]
+
+
+def merge_u64(p, module: str, dry_run: bool = False):
+    """Merge each u64 pair into the low symbol (size 8, data:8byte) and drop the high one, when
+    every reference to the high symbol is the pair and no source names it. Re-splits and relinks
+    under the build lock; restores symbols.txt if the tree no longer hashes."""
+    import re as _re, shutil
+    from . import oracle
+    from .project import ROOT
+    rows = u64_pairs(p, module)
+    path = p.module_config_dir(module) / "symbols.txt"
+    text = path.read_text()
+    merged, skipped = [], []
+    src_text = "\n".join(f.read_text() for f in (ROOT / "src").rglob("*.c"))
+    hdr_text = "\n".join(f.read_text() for f in (ROOT / "include").rglob("*.h"))
+    for a, b, n, users in rows:
+        if _re.search(rf"\b{_re.escape(b)}\b", src_text) or _re.search(rf"\b{_re.escape(b)}\b", hdr_text):
+            skipped.append((a, b, "named in src/ or include/")); continue
+        ma = _re.search(rf"^{_re.escape(a)} = [^\n]*$", text, _re.M); mb = _re.search(rf"^{_re.escape(b)} = [^\n]*\n", text, _re.M)
+        if not ma or not mb:
+            skipped.append((a, b, "not in symbols.txt")); continue
+        line = ma.group(0)
+        line = _re.sub(r"size:0x4\b", "size:0x8", line)
+        line = _re.sub(r"data:4byte", "data:8byte", line) if "data:" in line else line + " data:8byte"
+        line = _re.sub(r"align:4\b", "align:8", line)
+        text = text.replace(ma.group(0), line, 1).replace(mb.group(0), "", 1)
+        merged.append((a, b))
+    out = {"module": module, "pairs": rows, "merged": merged, "skipped": skipped, "ok": True}
+    if dry_run or not merged:
+        return out
+    backup = path.with_suffix(".txt.bak")
+    shutil.copy(path, backup)
+    path.write_text(text)
+    p._symbols.pop(module, None)
+    with oracle.build_lock():
+        cp = oracle.configure(p)
+        ok = cp.returncode == 0 and oracle.relink(p).returncode == 0
+        if not ok:
+            shutil.copy(backup, path); p._symbols.pop(module, None)
+            oracle.configure(p); oracle.relink(p)
+    backup.unlink(missing_ok=True)
+    out["ok"] = ok
+    if not ok:
+        out["error"] = "the tree no longer hashed with the merged symbols; symbols.txt restored"
+    return out

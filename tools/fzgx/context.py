@@ -155,6 +155,9 @@ def build_context(project: Project, ledger: Optional[Ledger], symbol: str,
                      "symbol; declare `extern vu32 __DIRegs[];` (0xCC006000; __VIRegs 0xCC002000, __PIRegs 0xCC003000, __MEMRegs "
                      "0xCC004000, __DSPRegs 0xCC005000, __SIRegs 0xCC006400, __EXIRegs 0xCC006800, __AIRegs 0xCC006C00) and index it, "
                      "never a literal address (it folds into the load offset).")
+    if sym.section == ".init":
+        parts.append('- section: retail placed this function in `.init`; write `__declspec(section ".init")` before the '
+                     "return type (the object oracle pairs nothing across sections, and the link needs it there)")
     parts.append(f"- compiler: `{mw}` `-O4,p -inline auto -fp hardware -enum int`"
                  + (" `-sdata 0 -sdata2 0`" if module != "main" else "")
                  + (f" extra: `{' '.join(unit_cfg.get('extra_cflags', []))}`" if unit_cfg.get("extra_cflags") else ""))
