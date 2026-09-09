@@ -75,6 +75,32 @@ def _exclusive_symbols(p: Project, module: str, funcs: List[str]) -> Dict[str, L
     return out
 
 
+def _pool_map(p: Project, module: str, funcs: List[str], obj: Path) -> Dict[str, str]:
+    """private literal symbol -> retail pooled symbol, over every function of the TU object."""
+    out: Dict[str, str] = {}
+    for name in funcs:
+        sym = p.symbols(module).get(name)
+        target = p.target_object_for(sym) if sym else None
+        if target is None:
+            continue
+        cp = oracle.run([str(oracle.OBJDIFF), "diff", "-1", str(target), "-2", str(obj), "-o", "-", "--format", "json", name])
+        if cp.returncode != 0:
+            continue
+        try:
+            data = json.loads(cp.stdout)
+        except ValueError:
+            continue
+        left, right = data.get("left", {}), data.get("right", {})
+        l = next((s_ for s_ in left.get("symbols", []) if s_.get("name") == name), None)
+        r = next((s_ for s_ in right.get("symbols", []) if s_.get("name") == name), None)
+        if l is None or r is None:
+            continue
+        _, pairs = oracle._pool_rows(p, module, left, right, l.get("instructions", []), r.get("instructions", []))
+        for private, pooled, _desc in pairs:
+            out.setdefault(private, pooled)
+    return out
+
+
 def plan(p: Project, tu_source: str) -> Dict[str, object]:
     """Compute the collapsed unit's ranges without touching anything."""
     module = _module_of(tu_source)
@@ -89,6 +115,15 @@ def plan(p: Project, tu_source: str) -> Dict[str, object]:
     obj, msg = tutrial.compile_tu(p, tu_source)
     if obj is None:
         return {"ok": False, "error": "whole-TU compile failed: " + msg[-600:]}
+    # the TU's private literals that retail pooled elsewhere (the 2^52 int-to-double constant,
+    # shared floats): the same retarget the per-function units get (units.json `pool`, applied
+    # by the mwcc_pool rule), so the private .rodata disappears and needs no placement
+    pool = _pool_map(p, module, funcs, obj)
+    if pool:
+        fixed = obj.with_name(obj.stem + ".pool.o")
+        shutil.copy(obj, fixed)
+        poolfix.apply(fixed, pool)
+        obj = fixed
     secs = _object_sections(obj)
     syms = p.symbols(module)
     by_addr = sorted((s.addr, s.end, s.name) for s in syms.values() if s.kind == "object")
@@ -122,7 +157,7 @@ def plan(p: Project, tu_source: str) -> Dict[str, object]:
             notes.append(f"{sec}: exclusive symbols outside the placed range: {outside[:6]}")
         ranges.append((sec, start, end, align))
     return {"ok": True, "tu": tu_source, "module": module, "functions": funcs, "ranges": ranges,
-            "notes": notes, "object": p.rel(obj)}
+            "notes": notes, "object": p.rel(obj), "pool": pool}
 
 
 def _splits_without(text: str, units: List[str]) -> str:
@@ -159,8 +194,11 @@ def collapse(p: Project, tu_source: str, keep_on_failure: bool = False) -> Dict[
             text += f"\t{sec:<11} start:0x{lo:08X} end:0x{hi:08X} align:{align}\n"
         spath.write_text(text)
         units = [u for u in units if u.get("tu") != tu_source]
-        units.append({"module": module, "source": tu_source, "symbols": list(pl["functions"]),
-                      "status": "matching", "mw_version": mw, "extra_cflags": extra, "collapsed": True})
+        rec = {"module": module, "source": tu_source, "symbols": list(pl["functions"]),
+               "status": "matching", "mw_version": mw, "extra_cflags": extra, "collapsed": True}
+        if pl.get("pool"):
+            rec["pool"] = dict(pl["pool"])  # ninja retargets the literals after compiling
+        units.append(rec)
         p.save_units(units)
         for src in old_sources:  # the generated per-function units are gone
             tufile.gen_path(p, src).unlink(missing_ok=True)

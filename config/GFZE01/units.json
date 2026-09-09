@@ -26371,72 +26371,22 @@
   },
   {
     "module": "main_rel",
-    "source": "rel/main_rel/reset/fn_1_D3214.c",
+    "source": "rel/main_rel/reset.c",
     "symbols": [
-      "fn_1_D3214"
-    ],
-    "status": "matching",
-    "mw_version": null,
-    "extra_cflags": [],
-    "tu": "rel/main_rel/reset.c"
-  },
-  {
-    "module": "main_rel",
-    "source": "rel/main_rel/reset/fn_1_D332C.c",
-    "symbols": [
-      "fn_1_D332C"
-    ],
-    "status": "matching",
-    "mw_version": null,
-    "extra_cflags": [],
-    "tu": "rel/main_rel/reset.c",
-    "pool": {
-      "@29": "lbl_1_rodata_6160"
-    }
-  },
-  {
-    "module": "main_rel",
-    "source": "rel/main_rel/reset/fn_1_D3474.c",
-    "symbols": [
-      "fn_1_D3474"
-    ],
-    "status": "matching",
-    "mw_version": null,
-    "extra_cflags": [],
-    "tu": "rel/main_rel/reset.c"
-  },
-  {
-    "module": "main_rel",
-    "source": "rel/main_rel/reset/fn_1_D357C.c",
-    "symbols": [
-      "fn_1_D357C"
-    ],
-    "status": "matching",
-    "mw_version": null,
-    "extra_cflags": [],
-    "tu": "rel/main_rel/reset.c"
-  },
-  {
-    "module": "main_rel",
-    "source": "rel/main_rel/reset/fn_1_D358C.c",
-    "symbols": [
-      "fn_1_D358C"
-    ],
-    "status": "matching",
-    "mw_version": null,
-    "extra_cflags": [],
-    "tu": "rel/main_rel/reset.c"
-  },
-  {
-    "module": "main_rel",
-    "source": "rel/main_rel/reset/fn_1_D35B0.c",
-    "symbols": [
+      "fn_1_D3214",
+      "fn_1_D332C",
+      "fn_1_D3474",
+      "fn_1_D357C",
+      "fn_1_D358C",
       "fn_1_D35B0"
     ],
     "status": "matching",
     "mw_version": null,
     "extra_cflags": [],
-    "tu": "rel/main_rel/reset.c"
+    "collapsed": true,
+    "pool": {
+      "@44": "lbl_1_rodata_6160"
+    }
   },
   {
     "module": "main_rel",

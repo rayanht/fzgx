@@ -2742,24 +2742,6 @@ rel/main_rel/face/fn_1_D31AC.c:
 rel/main_rel/face/fn_1_D31E0.c:
 	.text       start:0x000D31E0 end:0x000D3214
 
-rel/main_rel/reset/fn_1_D3214.c:
-	.text       start:0x000D3214 end:0x000D332C
-
-rel/main_rel/reset/fn_1_D332C.c:
-	.text       start:0x000D332C end:0x000D3474
-
-rel/main_rel/reset/fn_1_D3474.c:
-	.text       start:0x000D3474 end:0x000D357C
-
-rel/main_rel/reset/fn_1_D357C.c:
-	.text       start:0x000D357C end:0x000D358C
-
-rel/main_rel/reset/fn_1_D358C.c:
-	.text       start:0x000D358C end:0x000D35B0
-
-rel/main_rel/reset/fn_1_D35B0.c:
-	.text       start:0x000D35B0 end:0x000D35D4
-
 rel/main_rel/mdlload/fn_1_D3768.c:
 	.text       start:0x000D3768 end:0x000D3884
 
@@ -4886,3 +4868,6 @@ rel/main_rel/memcard/fn_1_C0510.c:
 
 rel/main_rel/memcard/fn_1_ABE14.c:
 	.text       start:0x000ABE14 end:0x000ABE88 align:4
+
+rel/main_rel/reset.c:
+	.text       start:0x000D3214 end:0x000D35D4 align:4
