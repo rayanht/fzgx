@@ -12,7 +12,7 @@ constants the tooling accepts). On MATCH or MATCH (pool) call submit(symbol, age
 release(symbol, agent, reason) with one precise sentence on what still differs.
 Float constants the target loads from a lbl_*_rodata_* symbol live in a shared literal pool: declare
 `extern const f64 NAME;` (or f32) exactly as the context shows and use the symbol; a literal in C emits a
-private constant with a different relocation and can never match. If the context shows a prologue "already in scope", its declarations precede your block: do not redeclare
+private constant with a different relocation and can never match. Hardware register blocks (`lis rX, 0xcc00` then `addi rX, rX, 0xN000` in the target) are link-defined absolute symbols: declare `extern vu32 __DIRegs[];` (0xCC006000; `__viReg` 0xCC002000, `__piReg` 0xCC003000, `__memReg` 0xCC004000, `__dspReg` 0xCC005000, `__SIRegs` 0xCC006400, `__EXIRegs` 0xCC006800, `__AIRegs` 0xCC006C00, `__cpReg` 0xCC000000, `__peReg` 0xCC001000) and index it; the check shows those rows as `p` and accepts them. A literal address folds into the load offset and never matches. If the context shows a prologue "already in scope", its declarations precede your block: do not redeclare
 them, and treat a PROLOGUE CONFLICT in a check as something to fix. Declare globals the way the module header and the
 matched neighbours in the same file do (plain externs by symbol, the header's types); a private struct overlay
 on a bss/data symbol the header already declares changes address materialisation and rarely matches. Unit shape: the includes named in the context; extern declarations for referenced symbols; minimal
