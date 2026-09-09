@@ -116,6 +116,48 @@ def lift(p: Project, module: str, name: str) -> Optional[str]:
         return None
 
 
+
+def explain(p: Project, module: str, name: str) -> str:
+    """Why `lift` declines a function: the control-flow filter, the size cap, a Give (with its
+    message) or the exception the inner lifter raised (with its line)."""
+    import traceback  # scoped: diagnostics only
+    fa = p.function_asm(module).get(name)
+    if fa is None:
+        return "no disassembly"
+    ins, labels = [], {}
+    for ln in fa.asm:
+        t = ln.strip()
+        if t.startswith(".L_") and t.endswith(":"):
+            labels[t[:-1]] = len(ins); continue
+        m = LINE_RE.match(t)
+        if m:
+            ins.append((m.group(1), [a.strip() for a in m.group(2).split(",")] if m.group(2) else []))
+    LABELS[0] = labels
+    if not ins or ins[-1][0] != "blr":
+        return "filter: no final blr" if ins else "filter: empty"
+    for i, (mn, a) in enumerate(ins):
+        if not mn.startswith("b") or mn in ("bl", "blr"):
+            continue
+        if (mn.endswith("lr") and mn[1:-2] in COND) or mn == "bdnz":
+            continue
+        if mn == "b" and a and a[-1].startswith(".L_") and labels.get(a[-1], -1) > i:
+            continue
+        m = re.fullmatch(r"b(\w+)", mn)
+        if not (m and m.group(1) in COND and a and a[-1].startswith(".L_")):
+            return f"filter: control flow `{mn} {' '.join(a)}`"
+    if len(ins) > 160:
+        return "filter: over 160 instructions"
+    ARITY_HINT[0] = {}; ARITY_SEEN[0] = {}; FLOAT_CALLEES[0] = set()
+    try:
+        _lift(p, module, name, ins)
+        return "lifted"
+    except Give as e:
+        return f"give: {e}" if str(e) else "give: (no reason)"
+    except Exception as e:
+        tb = traceback.extract_tb(e.__traceback__)[-1]
+        return f"{type(e).__name__} at lift.py:{tb.lineno}: {str(e)[:60]}"
+
+
 _PROTOS: Dict[str, Dict[str, tuple]] = {}
 
 
@@ -265,6 +307,15 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
     ret = None
     r3_set = [False]  # r3 written by this function (a returned parameter counts once a call intervened)
 
+    def clobbered(r: str) -> bool:
+        # written by an instruction before the current one (def_idx is set when an instruction
+        # is entered, so the instruction's own write does not count against its reads)
+        try:
+            cur = i
+        except NameError:
+            cur = len(ins)
+        return r in def_idx and def_idx[r] < cur
+
     def use(r: str) -> str:
         if r in regs:
             return regs[r]
@@ -277,13 +328,20 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                 if rk not in params:
                     params.append(rk)
                     ptypes[rk] = "f32" if rk.startswith("f") else "u32"
-                    if rk not in regs and rk not in def_idx:  # not already overwritten by this function
+                    if rk not in regs and not clobbered(rk):  # not already overwritten by this function
                         regs[rk] = f"arg{params.index(rk)}"
                         rtype[rk] = ptypes[rk]
+            if r not in regs:
+                if not clobbered(r):
+                    # a parameter read again after a call cleared the caller-saved registers, or
+                    # one first seen as a load base: the incoming argument, unchanged
+                    regs[r] = f"arg{params.index(r)}"; rtype[r] = ptypes.get(r, "u32")
+                else:
+                    raise Give(f"{r} read after it was clobbered")
             return regs[r]
         if r == "r0":
-            raise Give()
-        raise Give()
+            raise Give("r0 read before it was written")
+        raise Give(f"{r} read before it was written")
 
     def sym_of(a: str) -> Optional[str]:
         m = re.match(r"^([\w.]+)(?:[+-]0x[0-9a-fA-F]+)?@(ha|h|l|sda21)$", a)
@@ -2132,7 +2190,7 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                     if known is not None and known[0].startswith("f"):
                         regs.pop("r3", None); regs["f1"] = f"__CALLRET__{len(calls) - 1}"; rtype["f1"] = known[0]
                 continue
-            raise Give()
+            raise Give(f"unhandled {mn} {' '.join(a)}")
 
         except (Give, KeyError, IndexError, ValueError) as e:
             why = (str(e)[:60] if isinstance(e, Give) else f"{type(e).__name__}: {str(e)[:60]}") if str(e) else ("" if isinstance(e, Give) else type(e).__name__)
@@ -2233,10 +2291,12 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                 ent["t"] = {1: "u8", 2: "u16", 4: "u32", 8: "f64"}[size]; w = size
             elif not ent["w"] and size % 4 == 0:
                 ent["t"] = "u32"; w = 4  # a u8 buffer would be 16-aligned by MWCC; a u32 array is not
+            # the element count follows the final element type: an address-only buffer was
+            # measured in bytes (width unknown at the use) and is declared as u32 here
             if ent.get("wrapped"):
-                decls.append((off_, f"struct {{ {ent['t']} a[{ent['wrapped']}]; }} loc_{off_:X};", "struct")); continue
+                decls.append((off_, f"struct {{ {ent['t']} a[{max(size // w, 1)}]; }} loc_{off_:X};", "struct")); continue
             if ent.get("array"):
-                decls.append((off_, f"{ent['t']} loc_{off_:X}[{ent['array']}];", True)); continue
+                decls.append((off_, f"{ent['t']} loc_{off_:X}[{max(size // w, 1)}];", True)); continue
             if size > w and size >= 16:
                 decls.append((off_, f"struct {{ {ent['t']} a[{max(size // w, 1)}]; }} loc_{off_:X};", "struct")); continue
             if size > w:
