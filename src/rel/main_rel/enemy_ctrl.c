@@ -251,6 +251,42 @@ void fn_1_CC27C(void) {
 }
 /* fzgx:end fn_1_CC27C */
 
+/* fzgx:begin fn_1_CFA4C noprologue */
+#include "types.h"
+#include "font.h"
+
+struct fn_1_CFA4C_Copy88 { u32 a[22]; };
+
+extern f32 lbl_1_rodata_6010;
+extern f64 lbl_1_rodata_5C00;
+extern int fn_1_4F734(FontDrawPacket *);
+extern u32 lbl_1_rodata_26F8;
+extern void fn_1_52070(u32);
+extern void fn_1_520A0(void);
+extern void fn_1_520CC(void);
+
+void fn_1_CFA4C(u32 arg0, u32 arg1) {
+    f32 v0;
+    u32 v1;
+    f32 v2;
+    FontDrawPacket loc_8;
+    /* frame */
+    fn_1_520A0();
+    fn_1_52070(640);
+    loc_8 = *(FontDrawPacket *)&lbl_1_rodata_26F8;
+    v0 = (f32)(s32)(arg0 + 304);
+    v1 = (0x10000 - 27620);
+    loc_8.image = v1;
+    v2 = (f32)(s32)(arg1 - 11);
+    loc_8.x = v0;
+    loc_8.y = v2;
+    loc_8.z = lbl_1_rodata_6010;
+    loc_8.flags = 7;
+    fn_1_4F734((FontDrawPacket *)&loc_8);
+    fn_1_520CC();
+}
+/* fzgx:end fn_1_CFA4C */
+
 /* fzgx:begin fn_1_D0790 */
 void fn_1_D0790(void) {
     u32 *p = (u32 *)&lbl_1_data_3D544;

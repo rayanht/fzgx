@@ -224,6 +224,35 @@ void fn_1_138120(void* arg0) {
 }
 /* fzgx:end fn_1_138120 */
 
+/* fzgx:begin fn_1_13923C noprologue */
+#include "types.h"
+#include "font.h"
+
+struct fn_1_13923C_Copy88 { u32 a[22]; };
+
+extern f32 lbl_1_rodata_8840;
+extern f64 lbl_1_rodata_8600;
+extern int fn_1_4F734(FontDrawPacket *);
+extern u32 lbl_1_rodata_26F8;
+
+void fn_1_13923C(u32 arg0, u32 arg1) {
+    f32 v0;
+    u32 v1;
+    f32 v2;
+    FontDrawPacket loc_8;
+    /* frame */
+    loc_8 = *(FontDrawPacket *)&lbl_1_rodata_26F8;
+    v0 = (f32)(s32)arg0;
+    v1 = (0x10000 - 25334);
+    loc_8.image = v1;
+    v2 = (f32)(s32)arg1;
+    loc_8.x = v0;
+    loc_8.y = v2;
+    loc_8.z = lbl_1_rodata_8840;
+    fn_1_4F734((FontDrawPacket *)&loc_8);
+}
+/* fzgx:end fn_1_13923C */
+
 /* fzgx:begin fn_1_139F18 */
 typedef struct {
     u8 pad_0[0x44];

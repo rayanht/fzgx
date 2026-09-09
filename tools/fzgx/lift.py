@@ -53,6 +53,46 @@ def _hw_blocks():
 
 HW_BLOCKS = _hw_blocks()
 
+def integer_float_pairs(ins, labels):
+    """Find conversion scratch stores by their reaching definitions, in either store order."""
+    constants, stores, pairs, raw_reads = {}, {}, {}, set()
+    boundaries = set(labels.values())
+    for i, (mn, args) in enumerate(ins):
+        if i in boundaries:
+            constants.clear(); stores.clear()
+        if mn.startswith('b'):
+            constants.clear(); stores.clear()
+            continue
+        if not args:
+            continue
+        mem = MEM_RE.fullmatch(args[1]) if len(args) > 1 else None
+        if mem and mem[2] == 'r1' and re.fullmatch(r'-?(?:0x[0-9a-f]+|\d+)', mem[1]):
+            off = _imm(mem[1])
+            if mn in STORE_T:
+                width = WIDTH[mn]
+                for byte in range(off, off + width):
+                    stores.pop(byte, None)
+                if mn == 'stw':
+                    for byte in range(off, off + 4):
+                        stores[byte] = (i, constants.get(args[0]) == 0x43300000, off)
+            elif mn in LOAD_T:
+                width = WIDTH.get(mn, WIDTH.get(mn[:-1]))
+                if width is None:
+                    continue
+                high, low = stores.get(off), stores.get(off + 4)
+                if mn == 'lfd' and high and low and high[1] and high[2] == off and low[2] == off + 4:
+                    pairs[i] = (high[0], low[0])
+                else:
+                    raw_reads.update(stores[byte][0] for byte in range(off, off + width) if byte in stores)
+        if mn == 'lis' and re.fullmatch(r'-?(?:0x[0-9a-f]+|\d+)', args[1]):
+            constants[args[0]] = (_imm(args[1]) & 0xffff) << 16
+        elif mn == 'mr' and args[1] in constants:
+            constants[args[0]] = constants[args[1]]
+        elif mn not in STORE_T and not mn.startswith(('st', 'cmp', 'mt')):
+            constants.pop(args[0], None)
+    return {load: pair for load, pair in pairs.items() if not raw_reads.intersection(pair)}
+
+
 def lift(p: Project, module: str, name: str) -> Optional[str]:
     fa = p.function_asm(module).get(name)
     if fa is None:
@@ -546,8 +586,10 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
     struct_syms = {sym_of(a_[2]) for mn_, a_ in ins if mn_ == "addi" and len(a_) == 3 and sym_of(a_[2]) and not a_[1] == "r1"}
     copy_dst_locals: Dict[int, int] = {}  # frame offset of a copied-into local -> size
     for ctr, (K, rD, rS, end_) in copies.items():
-        for setup, (reg, base, offset) in copy_addresses.items():
-            if setup < ctr and reg == rD and base == 'r1':
+        setup = max((i for i, (reg, _, _) in copy_addresses.items() if i < ctr and reg == rD), default=None)
+        if setup is not None:
+            _, base, offset = copy_addresses[setup]
+            if base == 'r1':
                 copy_dst_locals[offset] = 8 * K
     taken = sorted({_imm(a_[2]) for j_, (mn_, a_) in enumerate(ins)
                     if mn_ == "addi" and len(a_) == 3 and a_[1] == "r1"
@@ -661,6 +703,9 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
         inline_copies.setdefault(-1, ())
     magic_div: Dict[str, Tuple[str, int]] = {}  # register holding mulhwu(x, magic) -> (x, magic)
     pending_div: Dict[int, Tuple[str, str]] = {}  # index of the idiom's last instruction -> (register, quotient expression)
+    int_float_loads = integer_float_pairs(ins, LABELS[0])
+    int_float_stores = {store for pair in int_float_loads.values() for store in pair}
+    int_float_values = {}
     conv_slots: Dict[int, Tuple[str, Optional[str]]] = {}  # stack slot -> int/float conversion in progress
 
     def divisor_of(magic: int, post_shift: int, add: bool) -> Optional[int]:
@@ -1208,7 +1253,7 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
             if i > 0:
                 pm, pa = ins[i - 1]
                 pd = pa[0] if pa and pm not in STORE_T and not pm.startswith(("st", "cmp", "b")) and pm not in ("mtlr", "mtspr", "bl") else None
-                if pd and pd in regs and pd not in carried and not re.fullmatch(r"[A-Za-z_]\w*|-?\d+|0x[0-9A-Fa-f]+|&[A-Za-z_]\w*", regs[pd]) and not regs[pd].startswith(("(struct ", "__CALLRET__", "((u8 *)&", "&")):
+                if pd and pd in regs and pd not in carried and not re.fullmatch(r"[A-Za-z_]\w*|-?\d+|0x[0-9A-Fa-f]+|&[A-Za-z_]\w*", regs[pd]) and not regs[pd].startswith(("(struct ", "__CALLRET__", "__XORIS__", "__I2D__", "__FCTIWZ__", "((u8 *)&", "&")):
                     uses = 0
                     for x in range(i, len(ins)):
                         if reads(x, pd) or (ins[x][0] in ("bl", "bctrl", "blrl") and re.fullmatch(r"r([3-9]|10)|f[1-8]", pd)):
@@ -1231,6 +1276,8 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                     regs[r_] = tn  # cleared by a call: the local still holds the value
                 elif regs.get(r_) != tn:
                     e_ = regs.get(r_)
+                    if e_.startswith(("__I2D__", "__XORIS__", "__FCTIWZ__")):
+                        continue  # Publish the converted value, not the compiler's scratch encoding.
                     if e_.startswith(("((u8 *)", "(u8 *)", "&", "(struct ")):
                         e_ = f"(u32){e_}"  # a register reused for an address: the local is an integer
                     # another register still holds an expression over the old value: that value
@@ -1595,20 +1642,23 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                 local_at(off_, 0, "u8"); slocals[off_]["addr"] = True
                 regs[a[0]] = f"&loc_{off_:X}"; rtype[a[0]] = "void *"; frame = True
                 continue
-            if mn in ("stw", "stfd") and a and a[1].endswith("(r1)"):
-                off_ = _imm(a[1][:-4])
-                e_ = regs.get(a[0], "")
-                if mn == "stw" and e_ in ("0x43300000", "1127219200"):
-                    conv_slots[off_] = ("hi", None); frame = True; continue
-                if mn == "stw" and off_ - 4 in conv_slots and conv_slots[off_ - 4][0] == "hi":
-                    conv_slots[off_ - 4] = ("pair", e_); frame = True; continue
-                if mn == "stfd" and e_.startswith("__FCTIWZ__("):
-                    conv_slots[off_] = ("fctiwz", e_[len("__FCTIWZ__("):-1]); frame = True; continue
-            if mn == "lfd" and a and a[1].endswith("(r1)") and _imm(a[1][:-4]) in conv_slots and conv_slots[_imm(a[1][:-4])][0] == "pair":
-                x = conv_slots[_imm(a[1][:-4])][1]
-                m_ = re.fullmatch(r"__XORIS__\((.+), 32768\)", x)
-                regs[a[0]] = f"__I2D__({m_.group(1)}, signed)" if m_ else f"__I2D__({x}, unsigned)"
-                rtype[a[0]] = "f64"; frame = True; continue
+            if i in int_float_stores:
+                int_float_values[i] = use(a[0])
+                frame = True
+                continue
+            if i in int_float_loads:
+                _, low_store = int_float_loads[i]
+                value = int_float_values[low_store]
+                signed = re.fullmatch(r"__XORIS__\((.+), 32768\)", value)
+                regs[a[0]] = f"__I2D__({signed[1]}, signed)" if signed else f"__I2D__({value}, unsigned)"
+                rtype[a[0]] = "f64"; frame = True
+                continue
+            if mn == "stfd" and a and a[1].endswith("(r1)"):
+                expression = regs.get(a[0], "")
+                if expression.startswith("__FCTIWZ__("):
+                    conv_slots[_imm(a[1][:-4])] = ("fctiwz", expression[len("__FCTIWZ__("):-1])
+                    frame = True
+                    continue
             if mn == "lwz" and a and a[1].endswith("(r1)") and _imm(a[1][:-4]) - 4 in conv_slots and conv_slots[_imm(a[1][:-4]) - 4][0] == "fctiwz":
                 regs[a[0]] = f"(s32){conv_slots[_imm(a[1][:-4]) - 4][1]}"; rtype[a[0]] = "s32"; frame = True; continue
             if mn in LOAD_T and a and a[1].endswith("(r1)"):
@@ -2468,6 +2518,11 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
     if "f1" in regs and any(a and a[0] == "f1" for mn, a in ins if mn != "blr") and not any(b.startswith("return ") for b in body):
         body.append(f"return {re.sub(r'__CALLRET__(\d+)', r't\1', regs['f1'])};"); rtype_c = rtype.get("f1", "f32")
         if rtype_c in ("s8", "s16"): rtype_c = "s32"
+    if own_signature and own_signature.result == 'void':
+        body = ['return;' if b.startswith('return ') else b for b in body]
+        if body and body[-1] == 'return;':
+            body.pop()
+        rtype_c = 'void'
     def field_width(t: str) -> int:
         if t.startswith("arr:"):
             return int(t.rsplit(":", 1)[1])  # one element: enough for the padding that follows
@@ -2666,7 +2721,8 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
 
 
 def apply(p: Project, modules: Optional[List[str]] = None, max_size: int = 160, limit: int = 2000,
-          workers: int = 12, submit: bool = True, tu: Optional[str] = None) -> Dict[str, object]:
+          workers: int = 12, submit: bool = True, tu: Optional[str] = None,
+          callees: Optional[List[str]] = None) -> Dict[str, object]:
     """Lift every unmatched function of the given size that the lifter accepts, check each
     against retail, submit the matches (carve-at-submit; `fzgx verify` relinks once)."""
     import sqlite3
@@ -2690,6 +2746,30 @@ def apply(p: Project, modules: Optional[List[str]] = None, max_size: int = 160, 
         args[0] = 0xFFFFFFFF
         q += ' and symbol in (%s)' % ','.join('?' for _ in selected)
         args += selected
+    if callees:
+        targets = set()
+        for name in callees:
+            sym = p.resolve(name)
+            if sym is None or sym.kind != 'function':
+                raise ValueError(f'unknown or ambiguous callee: {name}')
+            targets.add(p.key(sym))
+        selected = []
+        for mod in modules or p.modules:
+            for fn in p.function_asm(mod).values():
+                for line in fn.asm:
+                    call = re.match(r'^[0-9A-Fa-f]+:\s*b[l]?\s+(\w+)$', line.strip())
+                    if not call:
+                        continue
+                    target = p.symbols(mod).get(call[1]) or p.find_symbol(call[1])
+                    if target and p.key(target) in targets:
+                        selected.append(p.key(fn.symbol))
+                        break
+        if not selected:
+            return {"candidates": 0, "lifted": 0, "matched": 0, "fixed": 0,
+                    "bytes": 0, "submitted": 0, "failed": [], "near": []}
+        args[0] = 0xFFFFFFFF
+        q += ' and symbol in (%s)' % ','.join('?' for _ in selected)
+        args += selected
     if modules:
         q += " and module in (%s)" % ",".join("?" * len(modules)); args += list(modules)
     rows = db.execute(q + " order by size limit ?", args + [limit or 2000]).fetchall()
@@ -2700,7 +2780,7 @@ def apply(p: Project, modules: Optional[List[str]] = None, max_size: int = 160, 
             continue  # matched the object and failed the link before: the same body fails again
         name = s.split(":", 1)[1] if ":" in s else s
         try:
-            if tu:
+            if tu or callees:
                 draft = lift_total(p, m, name, max_ins=max(1200, size // 4))
                 variants = [draft] if draft else []
             else:
@@ -2743,7 +2823,8 @@ def apply(p: Project, modules: Optional[List[str]] = None, max_size: int = 160, 
             if best is None:
                 results.append((s, size, t, False, -1)); continue
             pct, c, bad_, ow_ = best
-            ok_ = not bad_ and len(ow_) == len(tw_) and '???' not in t
+            ok_ = (not bad_ and len(ow_) == len(tw_)
+                   and not re.search(r'\?\?\?|__(?:MULHU|I2D|XORIS|FCTIWZ)__', t))
             if ok_:
                 r = oracle.check(p, s, 4, source=src, mw_version=c[0], extra_cflags=c[1])
                 ok_ = r.ok and (r.matched or r.matched_pool) and oracle.unit_fully_matches(r) is None
@@ -2751,7 +2832,8 @@ def apply(p: Project, modules: Optional[List[str]] = None, max_size: int = 160, 
     # near misses get the deterministic fixup (type flips, symbol substitutions, layout edits)
     from . import fixup
     fixed = 0
-    todo_fx = [idx for idx, (s, size, t, ok, pct) in enumerate(results) if not ok and pct >= 60 and '???' not in t]
+    todo_fx = [idx for idx, (s, size, t, ok, pct) in enumerate(results) if not ok and pct >= 60
+               and not re.search(r'\?\?\?|__(?:MULHU|I2D|XORIS|FCTIWZ)__', t)]
 
     def fix_one(idx):
         s, size, t, ok, pct = results[idx]

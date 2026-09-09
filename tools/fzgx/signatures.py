@@ -342,7 +342,9 @@ class Index:
             return None
         widths = {'u8': 1, 's8': 1, 'u16': 2, 's16': 2, 'u32': 4, 's32': 4, 'f32': 4, 'f64': 8}
         for name, typ, cursor, width, count, array in layout[0]:
-            if cursor <= offset < cursor + width * count and (offset - cursor) % width == 0 and width == widths.get(access):
+            if (cursor <= offset < cursor + width * count and (offset - cursor) % width == 0
+                    and width == widths.get(access)
+                    and (self.category(typ) == "float") == (self.category(access) == "float")):
                 # A word copy of a color array must remain a word access, not one byte.
                 suffix = f'[{(offset - cursor) // width}]' if array else ''
                 return name + suffix, typ

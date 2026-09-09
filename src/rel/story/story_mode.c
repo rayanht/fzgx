@@ -475,6 +475,86 @@ s32 fn_7_2514(void) {
 }
 /* fzgx:end fn_7_2514 */
 
+/* fzgx:begin fn_7_31F4 */
+#include "font.h"
+
+struct fn_7_31F4_Copy88 { u32 a[22]; };
+struct fn_7_31F4_lbl_7_rodata_0 {
+    u8 pad_0[0x528];
+    f32 unk_528;
+    f32 unk_52C;
+    u8 pad_530[0x84];
+    f32 unk_5B4;
+    u8 pad_5B8[0x120];
+    f32 unk_6D8;
+    f32 unk_6DC;
+    f32 unk_6E0;
+    f32 unk_6E4;
+    f32 unk_6E8;
+    f32 unk_6EC;
+};
+
+extern int fn_1_4F734(FontDrawPacket *);
+extern struct fn_7_31F4_lbl_7_rodata_0 lbl_7_rodata_0;
+extern u32 fn_1_49410(void);
+extern u32 lbl_1_rodata_26F8;
+extern u32 lbl_7_data_13F20;
+extern void fn_1_4954C(f32);
+extern void fn_1_4955C(f32, f32);
+extern void fn_1_495A0(f32);
+extern void fn_1_495C8(u8);
+extern void fn_1_4965C(u8);
+extern void fn_1_4966C(f32, f32);
+extern void fn_1_496FC(f32, f32);
+extern void fn_1_4AE0C(const char *, ...);
+
+void fn_7_31F4(u32 arg0, u32 arg1, u32 arg2, f32 arg3, f32 arg4) {
+    struct fn_7_31F4_lbl_7_rodata_0 *p_lbl_7_rodata_0;
+    f32 v0;
+    FontDrawPacket loc_8;
+    /* frame */
+    p_lbl_7_rodata_0 = (struct fn_7_31F4_lbl_7_rodata_0 *)&lbl_7_rodata_0;
+    v0 = p_lbl_7_rodata_0->unk_52C;
+    if ((arg2 & 0xFF) == 0) {
+    v0 = p_lbl_7_rodata_0->unk_5B4;
+    }
+    loc_8 = *(FontDrawPacket *)&lbl_1_rodata_26F8;
+    loc_8.image = (0x10000 - 17887);
+    loc_8.x = arg3;
+    loc_8.y = arg4;
+    loc_8.z = (loc_8.z - p_lbl_7_rodata_0->unk_6D8);
+    loc_8.alpha = v0;
+    loc_8.flags = 11;
+    fn_1_4F734((FontDrawPacket *)&loc_8);
+    loc_8.rotation_z = -32768;
+    fn_1_4F734((FontDrawPacket *)&loc_8);
+    loc_8 = *(FontDrawPacket *)&lbl_1_rodata_26F8;
+    loc_8.image = arg0;
+    loc_8.x = arg3;
+    loc_8.y = arg4;
+    loc_8.z = (loc_8.z - p_lbl_7_rodata_0->unk_6DC);
+    loc_8.alpha = v0;
+    loc_8.flags = 15;
+    fn_1_4F734((FontDrawPacket *)&loc_8);
+    loc_8.flags = (0x100000 + 7);
+    fn_1_4F734((FontDrawPacket *)&loc_8);
+    loc_8.rotation_z = -32768;
+    loc_8.flags = 15;
+    fn_1_4F734((FontDrawPacket *)&loc_8);
+    loc_8.flags = (0x100000 + 7);
+    fn_1_4F734((FontDrawPacket *)&loc_8);
+    fn_1_49410();
+    fn_1_4965C(2);
+    fn_1_495C8(1);
+    fn_1_495A0(v0);
+    fn_1_4966C(p_lbl_7_rodata_0->unk_6E0, p_lbl_7_rodata_0->unk_528);
+    fn_1_4955C(p_lbl_7_rodata_0->unk_5B4, p_lbl_7_rodata_0->unk_6E4);
+    fn_1_4954C(p_lbl_7_rodata_0->unk_6E8);
+    fn_1_496FC(arg3, (arg4 - p_lbl_7_rodata_0->unk_6EC));
+    fn_1_4AE0C((const char *)(u32)&lbl_7_data_13F20, arg1);
+}
+/* fzgx:end fn_7_31F4 */
+
 /* fzgx:begin fn_7_3FCC */
 struct fn_7_3FCC_lbl_7_bss_18 {
     u32 unk_0;

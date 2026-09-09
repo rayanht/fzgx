@@ -100,6 +100,13 @@ Rules that hold for everyone:
   wrapper can still have missing passthrough parameters: follow its callees' entry registers
   (the `memset`/`fn_80008BEC` size argument was one such case). Drafts containing `???` remain
   incomplete and cannot be submitted by this pass.
+- Current work is strictly deterministic tool development. Do not hand-write or manually tune
+  reconstructed C. Fix the generator, type recovery or lowering and submit only its verified
+  output. Use existing retail functions as the repair corpus; do not add unit tests.
+  `fzgx lift --callee fn_1_4F734 --callee fn_1_4AE0C` selects the union of direct callers
+  across TUs; `--no-submit` retains drafts without carving. Header layouts constrain copied
+  stack objects. Integer-to-float recovery tracks both scratch-word stores in either order
+  and keeps the encoding internal until its bias subtraction.
 - The largest measured coherent game-code target is the font/sprite UI interface: `font.c`
   plus its unmatched callers, especially `sel.c`, `sel_static_disp.c` and `toolkit.c`.
   Recover the shared font state, 0x58-byte draw packets and call ABI before another broad

@@ -1171,6 +1171,144 @@ void fn_10_1B6A8(void) {
 }
 /* fzgx:end fn_10_1B6A8 */
 
+/* fzgx:begin fn_10_1BCD0 */
+#include "font.h"
+
+struct fn_10_1BCD0_Copy88 { u32 a[22]; };
+struct fn_10_1BCD0_lbl_10_rodata_158 {
+    u8 pad_0[0x48];
+    f32 unk_48;
+    f32 unk_4C;
+    u8 pad_50[0x8];
+    f32 unk_58;
+    u8 pad_5C[0xF4];
+    f32 unk_150;
+    u8 pad_154[0x23C];
+    f32 unk_390;
+    u8 pad_394[0x10C];
+    f32 unk_4A0;
+    u8 pad_4A4[0x388];
+    f32 unk_82C;
+    u8 pad_830[0x7A8];
+    u32 unk_FD8;
+    u32 unk_FDC;
+    u32 unk_FE0;
+    u32 unk_FE4;
+    f32 unk_FE8;
+    f32 unk_FEC;
+    f32 unk_FF0;
+};
+
+extern int fn_1_4F734(FontDrawPacket *);
+extern struct fn_10_1BCD0_lbl_10_rodata_158 lbl_10_rodata_158;
+extern u32 lbl_1_rodata_26F8;
+
+void fn_10_1BCD0(void) {
+    FontDrawPacket loc_8;
+    f32 v21;
+    u32 v20;
+    f32 v19;
+    f32 v18;
+    f32 v17;
+    u32 v16;
+    f32 v15;
+    f32 v14;
+    f32 v13;
+    u32 v12;
+    f32 v11;
+    f32 v10;
+    u32 v9;
+    u32 v8;
+    f32 v7;
+    f32 v6;
+    f32 v5;
+    f32 v4;
+    f32 v3;
+    f32 v2;
+    f32 v1;
+    f32 v0;
+    struct fn_10_1BCD0_lbl_10_rodata_158 *p_lbl_10_rodata_158;
+    /* frame */
+    p_lbl_10_rodata_158 = (struct fn_10_1BCD0_lbl_10_rodata_158 *)&lbl_10_rodata_158;
+    loc_8 = *(FontDrawPacket *)&lbl_1_rodata_26F8;
+    v0 = p_lbl_10_rodata_158->unk_4C;
+    loc_8.image = (0x10000 - 26107);
+    loc_8.x = v0;
+    loc_8.y = v0;
+    loc_8.z = p_lbl_10_rodata_158->unk_150;
+    fn_1_4F734((FontDrawPacket *)&loc_8);
+    loc_8 = *(FontDrawPacket *)&lbl_1_rodata_26F8;
+    v1 = p_lbl_10_rodata_158->unk_58;
+    v2 = p_lbl_10_rodata_158->unk_4C;
+    loc_8.image = (0x10000 - 26107);
+    loc_8.x = v1;
+    loc_8.y = v2;
+    loc_8.z = p_lbl_10_rodata_158->unk_390;
+    fn_1_4F734((FontDrawPacket *)&loc_8);
+    loc_8 = *(FontDrawPacket *)&lbl_1_rodata_26F8;
+    v3 = p_lbl_10_rodata_158->unk_4C;
+    v4 = p_lbl_10_rodata_158->unk_FE8;
+    loc_8.image = (0x10000 - 26111);
+    loc_8.x = v3;
+    loc_8.y = v4;
+    loc_8.z = p_lbl_10_rodata_158->unk_FEC;
+    fn_1_4F734((FontDrawPacket *)&loc_8);
+    loc_8 = *(FontDrawPacket *)&lbl_1_rodata_26F8;
+    v5 = p_lbl_10_rodata_158->unk_58;
+    v6 = p_lbl_10_rodata_158->unk_4A0;
+    v7 = p_lbl_10_rodata_158->unk_82C;
+    v8 = (0x10000 - 26085);
+    v9 = (0x100000 + 7);
+    loc_8.image = v8;
+    loc_8.x = v5;
+    loc_8.y = v6;
+    loc_8.z = v7;
+    loc_8.flags = v9;
+    *(u32 *)((u8 *)&loc_8 + 56) = p_lbl_10_rodata_158->unk_FD8;
+    loc_8.alpha = p_lbl_10_rodata_158->unk_48;
+    fn_1_4F734((FontDrawPacket *)&loc_8);
+    loc_8 = *(FontDrawPacket *)&lbl_1_rodata_26F8;
+    v10 = p_lbl_10_rodata_158->unk_58;
+    v11 = p_lbl_10_rodata_158->unk_4A0;
+    v12 = (0x10000 - 26085);
+    v13 = p_lbl_10_rodata_158->unk_82C;
+    loc_8.image = v12;
+    loc_8.x = v10;
+    loc_8.y = v11;
+    loc_8.z = v13;
+    loc_8.flags = 0x180000;
+    *(u32 *)((u8 *)&loc_8 + 56) = p_lbl_10_rodata_158->unk_FDC;
+    loc_8.alpha = p_lbl_10_rodata_158->unk_48;
+    fn_1_4F734((FontDrawPacket *)&loc_8);
+    loc_8 = *(FontDrawPacket *)&lbl_1_rodata_26F8;
+    v14 = p_lbl_10_rodata_158->unk_58;
+    v15 = p_lbl_10_rodata_158->unk_FF0;
+    v16 = (0x10000 - 26085);
+    v17 = p_lbl_10_rodata_158->unk_82C;
+    loc_8.image = v16;
+    loc_8.x = v14;
+    loc_8.y = v15;
+    loc_8.z = v17;
+    loc_8.flags = 7;
+    *(u32 *)((u8 *)&loc_8 + 56) = p_lbl_10_rodata_158->unk_FE0;
+    loc_8.alpha = p_lbl_10_rodata_158->unk_48;
+    fn_1_4F734((FontDrawPacket *)&loc_8);
+    loc_8 = *(FontDrawPacket *)&lbl_1_rodata_26F8;
+    v18 = p_lbl_10_rodata_158->unk_58;
+    v19 = p_lbl_10_rodata_158->unk_FF0;
+    v20 = (0x10000 - 26085);
+    v21 = p_lbl_10_rodata_158->unk_82C;
+    loc_8.image = v20;
+    loc_8.x = v18;
+    loc_8.y = v19;
+    loc_8.z = v21;
+    loc_8.flags = 0x80000;
+    *(u32 *)((u8 *)&loc_8 + 56) = p_lbl_10_rodata_158->unk_FE4;
+    loc_8.alpha = p_lbl_10_rodata_158->unk_48;
+    fn_1_4F734((FontDrawPacket *)&loc_8);
+}
+/* fzgx:end fn_10_1BCD0 */
+
 /* fzgx:begin fn_10_1E67C */
 extern struct fn_10_1E67C_lbl_10_rodata_158 lbl_10_rodata_158;
 extern u32 fn_1_49410(u32);

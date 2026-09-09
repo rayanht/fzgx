@@ -68,3 +68,6 @@ rel/interview/interview/fn_17_4214.c:
 
 rel/interview/interview/fn_17_4FE0.c:
 	.text       start:0x00004FE0 end:0x000050F0 align:4
+
+rel/interview/interview/fn_17_8D28.c:
+	.text       start:0x00008D28 end:0x00008E68 align:4

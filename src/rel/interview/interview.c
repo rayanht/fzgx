@@ -528,3 +528,67 @@ void fn_17_87C0(f32 value) {
     }
 }
 /* fzgx:end fn_17_87C0 */
+
+/* fzgx:begin fn_17_8D28 */
+#include "font.h"
+
+typedef struct {
+    u32 words[22];
+} Sig_fn_1_51914_fn_1_51914_state;
+
+
+struct fn_17_8D28_Copy88 { u32 a[22]; };
+struct fn_17_8D28_lbl_17_rodata_0 {
+    u8 pad_0[0x20];
+    f32 unk_20;
+    u8 pad_24[0x84];
+    f32 unk_A8;
+    u8 pad_AC[0x104];
+    f32 unk_1B0;
+    u8 pad_1B4[0x124];
+    f32 unk_2D8;
+    f32 unk_2DC;
+    f32 unk_2E0;
+};
+
+extern int fn_1_4F734(FontDrawPacket *);
+extern struct fn_17_8D28_lbl_17_rodata_0 lbl_17_rodata_0;
+extern u32 fn_17_8E68(u32, u32);
+extern u32 lbl_1_rodata_26F8;
+extern void fn_1_51914(const Sig_fn_1_51914_fn_1_51914_state *);
+extern void fn_1_51990(void *);
+
+void fn_17_8D28(void) {
+    struct fn_17_8D28_lbl_17_rodata_0 *p_lbl_17_rodata_0;
+    f32 v1;
+    f32 v0;
+    f32 v3;
+    f32 v2;
+    struct fn_17_8D28_Copy88 loc_8;
+    /* frame */
+    p_lbl_17_rodata_0 = (struct fn_17_8D28_lbl_17_rodata_0 *)&lbl_17_rodata_0;
+    loc_8 = *(struct fn_17_8D28_Copy88 *)&lbl_1_rodata_26F8;
+    loc_8.a[0] = (0x10000 - 29689);
+    fn_1_51914((const Sig_fn_1_51914_fn_1_51914_state *)&loc_8);
+    loc_8 = *(struct fn_17_8D28_Copy88 *)&lbl_1_rodata_26F8;
+    v0 = p_lbl_17_rodata_0->unk_20;
+    v1 = p_lbl_17_rodata_0->unk_2D8;
+    loc_8.a[0] = (0x10000 - 29694);
+    *(f32 *)((u8 *)&loc_8 + 4) = v0;
+    *(f32 *)((u8 *)&loc_8 + 8) = v1;
+    *(f32 *)((u8 *)&loc_8 + 12) = p_lbl_17_rodata_0->unk_A8;
+    loc_8.a[12] = 5;
+    fn_1_51990((void *)&loc_8);
+    fn_1_4F734((FontDrawPacket *)&loc_8);
+    loc_8 = *(struct fn_17_8D28_Copy88 *)&lbl_1_rodata_26F8;
+    v2 = p_lbl_17_rodata_0->unk_2DC;
+    v3 = p_lbl_17_rodata_0->unk_2E0;
+    loc_8.a[0] = (0x10000 - 29695);
+    *(f32 *)((u8 *)&loc_8 + 4) = v2;
+    *(f32 *)((u8 *)&loc_8 + 8) = v3;
+    *(f32 *)((u8 *)&loc_8 + 12) = p_lbl_17_rodata_0->unk_1B0;
+    loc_8.a[12] = 5;
+    fn_1_4F734((FontDrawPacket *)&loc_8);
+    fn_17_8E68(28, 64);
+}
+/* fzgx:end fn_17_8D28 */
