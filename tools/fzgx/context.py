@@ -110,6 +110,12 @@ def _pooled_constant(project: Project, s: Symbol) -> Optional[str]:
     return f"extern const f64 {s.name};  // = {v!r} (retail literal pool)"
 
 
+def _spell_fitness(tw, ow) -> float:
+    import difflib  # scoped: one alignment
+    sm = difflib.SequenceMatcher(None, tw, ow, autojunk=False)
+    return 100.0 * sum(b.size for b in sm.get_matching_blocks()) / max(len(tw), len(ow))
+
+
 def build_context(project: Project, ledger: Optional[Ledger], symbol: str,
                   budget_tokens: int = 6000) -> str:
     sym0 = project.resolve(symbol)
@@ -303,9 +309,33 @@ def build_context(project: Project, ledger: Optional[Ledger], symbol: str,
                 parts.append(head + "```c\n" + vt + "\n```\n"
                              + ("```\n" + "\n".join(lines) + ("\n..." if len(diffs) > 20 else "") + "\n```" if diffs else ""))
             else:
-                # no full draft: the skeleton is what the lifter recovered before it gave up
-                # (declarations, layouts, calls with argument shapes, locals, leading statements)
-                sk = _lift.skeleton(project, module, symbol)
+                # no full draft: the never-give-up draft (unknown instructions marked `???`) when it
+                # compiles, with the first row where it diverges from retail; else the skeleton
+                total = _lift.lift_total(project, module, symbol)
+                shown_total = False
+                if total and tgt:
+                    try:
+                        from . import repair as _repair
+                        tdir = STATE_DIR / "lift" / "ctx"; tdir.mkdir(parents=True, exist_ok=True)
+                        tf = tdir / f"{project.key(sym).replace(':', '__')}_total.c"; tf.write_text(total)
+                        mw_, extra_ = _oracle.version_for(project, sym, tf)
+                        to = tdir / "obj" / (tf.stem + ".o"); to.parent.mkdir(parents=True, exist_ok=True)
+                        cp_ = _oracle.compile_source(project, module, tf, to, mw_, ((extra_ + " ") if extra_ else "") + "-g")
+                        if cp_.returncode == 0 and to.exists():
+                            tw_ = _oracle.words(tgt, symbol); ow_ = _oracle.words(to, symbol)
+                            aligned = _spell_fitness(tw_, ow_) if tw_ and ow_ else 0.0
+                            div = _repair.first_divergence(project, sym, tgt, to)
+                            where = f"first divergence at row {div[0]} of {div[2]}, produced by line {div[1]} of the draft" if div and div[1] else ("no divergence found" if div is None else f"first divergence at row {div[0]}")
+                            markers = total.count("/* ???")
+                            parts.append(f"\n## Mechanical draft, complete but unverified ({aligned:.0f}% of retail words align; {markers} instruction(s) marked `???`)\n"
+                                         "Every call, struct layout, loop and branch below is taken from the retail code; instructions the\n"
+                                         "lifter could not express are left as `/* ??? mnemonic */` with an `unk_N` local for their result.\n"
+                                         f"{where} (line numbers count from the first line of the code block). Start from this text and\n"
+                                         "repair it with patch_unit: fix the `???` spots and the first divergence first, then re-check.\n```c\n" + total + "\n```")
+                            shown_total = True
+                    except Exception:
+                        shown_total = False
+                sk = None if shown_total else _lift.skeleton(project, module, symbol)
                 if sk and "NOT LIFTED" in sk:
                     parts.append("\n## Mechanical skeleton (unverified): what the lifter recovered before it gave up\n"
                                  "Declarations, struct layouts, call prototypes with argument shapes, locals and the leading\n"
