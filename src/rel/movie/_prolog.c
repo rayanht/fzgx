@@ -97,3 +97,27 @@ void fn_5_13B0(void) {
     fn_1_412A0(1);
 }
 /* fzgx:end fn_5_13B0 */
+
+/* fzgx:begin fn_5_3BF8 */
+typedef u32 (*fn_5_3BF8_Fn0)(u32);
+struct fn_5_3BF8_lbl_5_bss_0 {
+    u32 unk_0;
+    u8 pad_4[0x3C];
+    u8 unk_40;
+    u8 unk_41;
+};
+
+extern struct fn_5_3BF8_lbl_5_bss_0 lbl_5_bss_0;
+
+void fn_5_3BF8(void) {
+    struct fn_5_3BF8_lbl_5_bss_0 *p_lbl_5_bss_0;
+    u32 v0;
+    u32 v1;
+    p_lbl_5_bss_0 = (struct fn_5_3BF8_lbl_5_bss_0 *)&lbl_5_bss_0;
+    v0 = p_lbl_5_bss_0->unk_0;
+    v1 = *(u32 *)v0;
+    ((fn_5_3BF8_Fn0)*(u32 *)((u8 *)v1 + 28))(v0);
+    p_lbl_5_bss_0->unk_40 = 0;
+    p_lbl_5_bss_0->unk_41 = 0;
+}
+/* fzgx:end fn_5_3BF8 */

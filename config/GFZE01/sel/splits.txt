@@ -209,3 +209,9 @@ rel/sel/sel/fn_10_13E18.c:
 
 rel/sel/sel/fn_10_CD90.c:
 	.text       start:0x0000CD90 end:0x0000CDE8 align:4
+
+rel/sel/sel/fn_10_CEC4.c:
+	.text       start:0x0000CEC4 end:0x0000CF30 align:4
+
+rel/sel/sel/fn_10_8780.c:
+	.text       start:0x00008780 end:0x00008800 align:4

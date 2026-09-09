@@ -107,6 +107,34 @@ void fn_3_BC60(void) {
 }
 /* fzgx:end fn_3_BC60 */
 
+/* fzgx:begin fn_3_BD30 noprologue */
+#include "types.h"
+
+extern u16 lbl_3_bss_F0[24];
+
+void fn_3_BD30(void) {
+    s16 current;
+    s16 value;
+
+    if ((*(u32 *)&lbl_3_bss_F0[18] & 0x80000000) == 0) {
+        return;
+    }
+    value = *(s16 *)&lbl_3_bss_F0[20];
+    current = *(s16 *)&lbl_3_bss_F0[21];
+    current += value;
+    *(s16 *)&lbl_3_bss_F0[21] = current;
+    if (value <= 0 || current < *(s16 *)&lbl_3_bss_F0[22]) {
+        if (value >= 0) {
+            return;
+        }
+        if (*(s16 *)&lbl_3_bss_F0[21] > *(s16 *)&lbl_3_bss_F0[22]) {
+            return;
+        }
+    }
+    *(u32 *)&lbl_3_bss_F0[18] = 0;
+}
+/* fzgx:end fn_3_BD30 */
+
 /* fzgx:begin fn_3_BD98 */
 struct CustomizeState {
     u32 flags;

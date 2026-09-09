@@ -78,6 +78,25 @@ void fn_1_9D77C(Fn1_9D77C_Item *items, s32 count) {
 }
 /* fzgx:end fn_1_9D77C */
 
+/* fzgx:begin fn_1_9D93C */
+s32 fn_1_9D93C(s32 arg0, u32 *arg1) {
+    if (arg0 == 0) {
+        lbl_1_data_2A7E0.unk_80 = *arg1;
+    } else {
+        lbl_1_data_2A7E0.unk_7C = *arg1;
+    }
+    {
+        s32 result;
+        result = 0;
+        if (lbl_1_data_2A7E0.unk_80 == 0 ||
+            lbl_1_data_2A7E0.unk_7C == 0) {
+            result = 1;
+        }
+        return result;
+    }
+}
+/* fzgx:end fn_1_9D93C */
+
 /* fzgx:begin fn_1_9D9E4 */
 typedef struct {
     u8 pad[0x468];

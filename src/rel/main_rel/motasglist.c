@@ -267,6 +267,38 @@ done:
 }
 /* fzgx:end fn_1_431B8 */
 
+/* fzgx:begin fn_1_4322C */
+struct fn_1_4322C_Arg0 {
+    u16 unk_0;
+    u16 unk_2;
+    u16 unk_4;
+    u16 unk_6;
+    f32 unk_8;
+    f32 unk_C;
+    f32 unk_10;
+};
+
+extern const f32 lbl_1_rodata_F50;
+extern const f32 lbl_1_rodata_F54;
+
+void fn_1_4322C(struct fn_1_4322C_Arg0 *arg0) {
+    const f32 *value;
+    f32 v0;
+    u16 zero;
+
+    value = &lbl_1_rodata_F50;
+    zero = 0;
+    arg0->unk_0 = zero;
+    v0 = *value;
+    arg0->unk_8 = v0;
+    arg0->unk_C = lbl_1_rodata_F54;
+    arg0->unk_10 = lbl_1_rodata_F54;
+    arg0->unk_2 = zero;
+    arg0->unk_4 = zero;
+    arg0->unk_6 = zero;
+}
+/* fzgx:end fn_1_4322C */
+
 /* fzgx:begin fn_1_433A4 */
 typedef struct Fn1433A4Object {
     u16 value0;

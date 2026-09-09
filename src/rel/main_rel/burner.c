@@ -299,6 +299,17 @@ void fn_1_98640(Obj_1_data_27DE0 *obj) {
 }
 /* fzgx:end fn_1_98640 */
 
+/* fzgx:begin fn_1_987D0 */
+void fn_1_987D0(u32 address) {
+    Obj_1_bss_6EA04_Target *object;
+    u32 offset;
+
+    object = lbl_1_bss_6EA04;
+    offset = (address - ((u32)object + 0x80)) / 1196;
+    object->pad_8[offset] = 0;
+}
+/* fzgx:end fn_1_987D0 */
+
 /* fzgx:begin fn_1_98804 noprologue */
 #include "types.h"
 

@@ -179,6 +179,28 @@ void fn_1_1902C(StcoliNode *root, StcoliVec *vec, void *arg3, f32 value) {
 }
 /* fzgx:end fn_1_1902C */
 
+/* fzgx:begin fn_1_21644 noprologue */
+#include "types.h"
+
+extern int fn_1_16BA0(void *, void *, void *, int *, int);
+extern f32 fn_1_16E68(void *, void *, int);
+
+void *fn_1_21644(void *arg0, f32 *arg1, void *arg2) {
+    int local;
+
+    int status;
+
+    local = 0;
+    status = fn_1_16BA0(arg0, arg1, arg2, &local, 0);
+    if (status < 0) {
+        local = 0;
+        *arg1 = fn_1_16E68(arg0, arg2, 0);
+        return arg2;
+    }
+    return (void *)status;
+}
+/* fzgx:end fn_1_21644 */
+
 /* fzgx:begin fn_1_216C0 */
 void fn_1_216C0(void *arg0, void *arg1, void *arg2) {
     int local;
@@ -617,6 +639,42 @@ void fn_1_28660(Fn_1_28660 *self) {
     lbl_8006DB30();
 }
 /* fzgx:end fn_1_28660 */
+
+/* fzgx:begin fn_1_2A2A4 */
+extern const f32 lbl_1_rodata_84C;
+extern const f32 lbl_1_rodata_854;
+
+typedef struct {
+    u8 pad00[0xec];
+    u8 field_ec[0xd0];
+    u8 pad_1bc[0x1bc];
+} Fn1_2A2A4Object;
+
+extern void lbl_8006E1F0(void *, f32, f32, f32);
+extern void lbl_8006DAEC(void);
+extern void fn_8006E978(void *, void *, void *);
+extern void mathutil_mtxA_from_quat(void *);
+extern void lbl_8006DFC4(void *);
+extern void lbl_8006DB74(void *);
+extern void lbl_8006DB30(void);
+
+void fn_1_2A2A4(Fn1_2A2A4Object *self) {
+    u8 local_14[12];
+    u8 local_8[12];
+    f32 value_1;
+    f32 value_2;
+
+    value_1 = lbl_1_rodata_84C;
+    value_2 = lbl_1_rodata_854;
+    lbl_8006E1F0(local_8, value_1, value_2, value_1);
+    lbl_8006DAEC();
+    fn_8006E978(local_14, local_8, self->pad_1bc);
+    mathutil_mtxA_from_quat(local_14);
+    lbl_8006DFC4(self->field_ec);
+    lbl_8006DB74(self->field_ec);
+    lbl_8006DB30();
+}
+/* fzgx:end fn_1_2A2A4 */
 
 /* fzgx:begin fn_1_2A3E4 */
 typedef struct Fn_1_2A3E4 {

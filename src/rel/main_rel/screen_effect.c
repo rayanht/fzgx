@@ -199,6 +199,28 @@ void fn_1_72980(Fn_1_72980_Obj *arg0) {
 }
 /* fzgx:end fn_1_72980 */
 
+/* fzgx:begin fn_1_761B8 */
+struct fn_1_761B8_Arg0 {
+    u8 pad_0[0xE0];
+    u32 unk_E0;
+};
+
+extern const f32 lbl_1_rodata_31A8;
+extern const f64 lbl_1_rodata_31D8[2];
+extern void fn_1_76C60(void);
+
+void fn_1_761B8(struct fn_1_761B8_Arg0 *arg0, u32 arg1) {
+    u32 v0;
+    f32 v1;
+    v0 = (arg0->unk_E0 + arg1);
+    arg0->unk_E0 = v0;
+    v1 = (f32)(s32)arg0->unk_E0;
+    if (v1 > lbl_1_rodata_31A8) {
+        fn_1_76C60();
+    }
+}
+/* fzgx:end fn_1_761B8 */
+
 /* fzgx:begin fn_1_76448 */
 #include "types.h"
 
@@ -515,6 +537,36 @@ void fn_1_7A648(void *arg0) {
     fn_1_79C88(arg0, 0, lbl_1_rodata_32CC, 0);
 }
 /* fzgx:end fn_1_7A648 */
+
+/* fzgx:begin fn_1_7A67C */
+typedef struct {
+    u32 flags;
+    s32 count;
+    void *entries;
+} EffectTable;
+
+typedef struct {
+    u8 unk00[0x8];
+    void *value;
+    u32 unk0c;
+} EffectEntry;
+
+void *fn_1_7A67C(EffectTable *table) {
+    s32 index;
+    EffectEntry *entry;
+
+    index = table->count - 1;
+    if ((table->flags & 1) != 0) {
+        index--;
+    }
+    if ((table->flags & 0x40) != 0) {
+        index -= 2;
+    }
+    entry = (EffectEntry *)table->entries;
+    entry += index;
+    return entry->value;
+}
+/* fzgx:end fn_1_7A67C */
 
 /* fzgx:begin fn_1_7A9B8 */
 typedef struct {

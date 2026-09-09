@@ -208,6 +208,37 @@ void fn_10_84DC(void) {
 }
 /* fzgx:end fn_10_84DC */
 
+/* fzgx:begin fn_10_8780 */
+extern u8 lbl_10_bss_55601[7];
+extern u8 lbl_10_bss_55600;
+extern int fn_1_4C10(void);
+extern u8 fn_1_D66A8(void);
+extern u8 fn_1_D66A0(int);
+
+u8 fn_10_8780(void) {
+    if (fn_1_4C10() != 0) {
+        return 1;
+    }
+    if (lbl_10_bss_55601[0] == 0) {
+        return 0;
+    }
+    if (fn_1_D66A8() == 0) {
+        if (fn_1_D66A0(0x10) == 0) {
+            /* Retail converges both failure paths here. */
+            goto fail;
+        }
+    }
+    if (lbl_10_bss_55600 == 0) {
+        /* Retail places the success block after the failure block. */
+        goto success;
+    }
+fail:
+    return 0;
+success:
+    return 1;
+}
+/* fzgx:end fn_10_8780 */
+
 /* fzgx:begin fn_10_8800 */
 extern s32 lbl_10_bss_51740;
 extern u32 lbl_10_bss_49388;
@@ -850,6 +881,39 @@ void fn_10_CE6C(void) {
     }
 }
 /* fzgx:end fn_10_CE6C */
+
+/* fzgx:begin fn_10_CEC4 */
+extern u16 lbl_1_bss_96A;
+
+void fn_10_CEC4(u32 flags) {
+    u32 shift;
+    u16 value;
+
+    shift = 1;
+    if (__rlwnm(flags, shift, 31, 31)) {
+        value = 0x17;
+    } else {
+        shift = 2;
+        if (__rlwnm(flags, shift, 31, 31)) {
+            value = 0x19;
+        } else {
+            shift = 3;
+            if (__rlwnm(flags, shift, 31, 31)) {
+                value = 0x15;
+            } else {
+                shift = 4;
+                if (__rlwnm(flags, shift, 31, 31) ||
+                    (shift = 5, __rlwnm(flags, shift, 31, 31))) {
+                    value = 0x0e;
+                } else {
+                    value = 0x17;
+                }
+            }
+        }
+    }
+    lbl_1_bss_96A = value;
+}
+/* fzgx:end fn_10_CEC4 */
 
 /* fzgx:begin fn_10_CF30 */
 extern u32 lbl_10_bss_55670[4];

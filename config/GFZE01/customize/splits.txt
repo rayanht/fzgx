@@ -344,3 +344,15 @@ rel/customize/_prolog/fn_3_65B0.c:
 
 rel/customize/_prolog/fn_3_60C8.c:
 	.text       start:0x000060C8 end:0x000061B8 align:4
+
+rel/customize/toolkit/fn_3_19CE0.c:
+	.text       start:0x00019CE0 end:0x00019D14 align:4
+
+rel/customize/_prolog/fn_3_BA0.c:
+	.text       start:0x00000BA0 end:0x00000BFC align:4
+
+rel/customize/customize/fn_3_BD30.c:
+	.text       start:0x0000BD30 end:0x0000BD98 align:4
+
+rel/customize/_prolog/fn_3_679C.c:
+	.text       start:0x0000679C end:0x0000680C align:4

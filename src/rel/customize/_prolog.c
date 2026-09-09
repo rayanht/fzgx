@@ -102,6 +102,32 @@ s32 fn_3_B68(const s16 *value) {
 }
 /* fzgx:end fn_3_B68 */
 
+/* fzgx:begin fn_3_BA0 */
+typedef struct CustomizeEntry {
+    u8 pad[0x20];
+    void (*function)(void);
+    u32 value24;
+    u32 value28;
+} CustomizeEntry;
+
+extern u8 lbl_3_data_1230[924];
+extern s16 lbl_1_bss_962;
+extern u32 lbl_1_bss_71688;
+extern u32 lbl_1_bss_7168C;
+
+void fn_3_BA0(void) {
+    CustomizeEntry *entry;
+    s16 index;
+
+    entry = (CustomizeEntry *)lbl_3_data_1230;
+    index = lbl_1_bss_962;
+    entry += index - 0x5b;
+    lbl_1_bss_71688 = entry->value24;
+    lbl_1_bss_7168C = entry->value28;
+    entry->function();
+}
+/* fzgx:end fn_3_BA0 */
+
 /* fzgx:begin fn_3_BFC */
 extern void fn_80083DB0(char *destination, const char *source);
 extern char *fn_80083970(char *buffer, const char *source);
@@ -746,6 +772,38 @@ void fn_3_65B0(u32 value) {
     }
 }
 /* fzgx:end fn_3_65B0 */
+
+/* fzgx:begin fn_3_679C */
+struct fn_3_679C_lbl_3_bss_7E080 {
+    u32 unk_0;
+};
+
+extern struct fn_3_679C_lbl_3_bss_7E080 lbl_3_bss_7E080;
+extern u32 fn_1_15BBC4(void);
+extern u32 lbl_3_bss_8;
+extern void fn_1_A2D84(u32);
+extern void fn_3_65B0(u32);
+
+void fn_3_679C(void) {
+    u32 v0;
+    u32 t0;
+
+    t0 = fn_1_15BBC4();
+    v0 = t0;
+    if ((t0 & 0xFFFF) != 65535) {
+        if ((s32)lbl_3_bss_7E080.unk_0 == 0) {
+            lbl_3_bss_7E080.unk_0 = 1;
+            fn_3_65B0(v0);
+            v0 = 0xA9000000;
+            v0 += 1024;
+            fn_1_A2D84(v0);
+            lbl_3_bss_8 = 1;
+        }
+    } else {
+        lbl_3_bss_7E080.unk_0 = 0;
+    }
+}
+/* fzgx:end fn_3_679C */
 
 /* fzgx:begin fn_3_7688 */
 extern s32 lbl_3_bss_8;

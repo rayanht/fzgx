@@ -678,6 +678,24 @@ void fn_1_F8C28(s32 value) {
 }
 /* fzgx:end fn_1_F8C28 */
 
+/* fzgx:begin fn_1_F8C50 noprologue */
+#include "types.h"
+
+struct fn_1_F8C50_lbl_1_bss_7F0C0 {
+    u8 pad_0[0x4910];
+    u32 unk_4910;
+};
+
+extern struct fn_1_F8C50_lbl_1_bss_7F0C0 lbl_1_bss_7F0C0;
+
+u8 fn_1_F8C50(s32 arg0) {
+    u32 shift = 32 - (arg0 * 2);
+    u32 value = lbl_1_bss_7F0C0.unk_4910;
+    shift &= 31;
+    return (u8)__rlwnm(value, shift, 31, 31);
+}
+/* fzgx:end fn_1_F8C50 */
+
 /* fzgx:begin fn_1_F8C74 */
 // Sets the bit corresponding to the supplied spline index.
 void fn_1_F8C74(s32 value) {
@@ -1052,6 +1070,24 @@ u8 fn_1_FA4C0(void) {
 }
 /* fzgx:end fn_1_FA4C0 */
 
+/* fzgx:begin fn_1_FA5A8 */
+extern u32 lbl_1_bss_84420;
+
+void fn_1_FA5A8(s16 index, u8 bit) {
+    u32 base;
+    u16 value;
+
+    if (index >= 0x29) {
+        return;
+    }
+
+    base = lbl_1_bss_84420;
+    base += index << 1;
+    value = *(u16 *)((u8 *)base + 0xa);
+    *(u16 *)((u8 *)base + 0xa) = value | (1 << bit);
+}
+/* fzgx:end fn_1_FA5A8 */
+
 /* fzgx:begin fn_1_FA5E0 */
 extern u32 lbl_1_bss_84420;
 
@@ -1100,6 +1136,20 @@ void fn_1_FA650(void) {
     }
 }
 /* fzgx:end fn_1_FA650 */
+
+/* fzgx:begin fn_1_FA67C */
+extern u32 lbl_1_bss_84420;
+
+void fn_1_FA67C(s32 index) {
+    u8 *base;
+
+    if (index >= 0x29) {
+        return;
+    }
+    base = (u8 *)lbl_1_bss_84420;
+    base[index + 0x5c] = 1;
+}
+/* fzgx:end fn_1_FA67C */
 
 /* fzgx:begin fn_1_FA69C */
 // Return the spline entry value for an in-range index.
@@ -1206,3 +1256,20 @@ void fn_1_FB180(int *value) {
     *value = 1;
 }
 /* fzgx:end fn_1_FB180 */
+
+/* fzgx:begin fn_1_FB770 */
+int fn_1_FB770(int flag, u32 *value) {
+    Obj_1_data_2A7E0_At3C *object = lbl_1_data_2A7E0.unk_3C;
+
+    switch (flag) {
+    case 0:
+        object->unk_170 = *value;
+        break;
+    default:
+        break;
+    }
+
+    return 1;
+    return 1;
+}
+/* fzgx:end fn_1_FB770 */

@@ -1159,6 +1159,24 @@ void fn_1_662D4(void) {
 }
 /* fzgx:end fn_1_662D4 */
 
+/* fzgx:begin fn_1_67414 */
+extern const f64 lbl_1_rodata_2954;
+
+struct fn_1_67414_Arg0 {
+    u8 pad_0[0x10];
+    u32 unk_10;
+    u8 pad_14[0xa0];
+    f32 unk_b4;
+};
+
+void fn_1_67414(struct fn_1_67414_Arg0 *arg0) {
+    // Volatile preserves the retail load-after-store ordering for the pooled value.
+    volatile const f32 *value = (volatile const f32 *)&lbl_1_rodata_2954;
+    arg0->unk_10 = 30;
+    arg0->unk_b4 = *value;
+}
+/* fzgx:end fn_1_67414 */
+
 /* fzgx:begin fn_1_6742C */
 // fn_1_6742C: empty in retail (single blr).
 void fn_1_6742C(void) {

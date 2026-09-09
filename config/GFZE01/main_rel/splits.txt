@@ -4874,3 +4874,141 @@ rel/main_rel/reset.c:
 
 rel/main_rel/spline/fn_1_F8D5C.c:
 	.text       start:0x000F8D5C end:0x000F8DC4 align:4
+
+rel/main_rel/load/fn_1_45E84.c:
+	.text       start:0x00045E84 end:0x00045E98 align:4
+
+rel/main_rel/car/fn_1_8C8C4.c:
+	.text       start:0x0008C8C4 end:0x0008C8DC align:4
+
+rel/main_rel/car/fn_1_86544.c:
+	.text       start:0x00086544 end:0x0008655C align:4
+
+rel/main_rel/car/fn_1_8652C.c:
+	.text       start:0x0008652C end:0x00086544 align:4
+
+rel/main_rel/effect/fn_1_67414.c:
+	.text       start:0x00067414 end:0x0006742C align:4
+
+rel/main_rel/car/fn_1_864FC.c:
+	.text       start:0x000864FC end:0x00086514 align:4
+
+rel/main_rel/spline/fn_1_FA67C.c:
+	.text       start:0x000FA67C end:0x000FA69C align:4
+
+rel/main_rel/car/fn_1_869E0.c:
+	.text       start:0x000869E0 end:0x00086A10 align:4
+
+rel/main_rel/driver/fn_1_A7B30.c:
+	.text       start:0x000A7B30 end:0x000A7B5C align:4
+
+rel/main_rel/car/fn_1_869B0.c:
+	.text       start:0x000869B0 end:0x000869E0 align:4
+
+rel/main_rel/spline/fn_1_F8C50.c:
+	.text       start:0x000F8C50 end:0x000F8C74 align:4
+
+rel/main_rel/spline/fn_1_FB770.c:
+	.text       start:0x000FB770 end:0x000FB798 align:4
+
+rel/main_rel/memcard/fn_1_B7EC4.c:
+	.text       start:0x000B7EC4 end:0x000B7EF8 align:4
+
+rel/main_rel/motasglist/fn_1_4322C.c:
+	.text       start:0x0004322C end:0x00043264 align:4
+
+rel/main_rel/screen_effect/fn_1_7A67C.c:
+	.text       start:0x0007A67C end:0x0007A6B4 align:4
+
+rel/main_rel/spline/fn_1_FA5A8.c:
+	.text       start:0x000FA5A8 end:0x000FA5E0 align:4
+
+rel/main_rel/load/fn_1_45B2C.c:
+	.text       start:0x00045B2C end:0x00045B68 align:4
+
+rel/main_rel/burner/fn_1_987D0.c:
+	.text       start:0x000987D0 end:0x00098804 align:4
+
+rel/main_rel/car/fn_1_816E8.c:
+	.text       start:0x000816E8 end:0x0008171C align:4
+
+rel/main_rel/car/fn_1_8C40C.c:
+	.text       start:0x0008C40C end:0x0008C44C align:4
+
+rel/main_rel/prog/fn_1_A6F2C.c:
+	.text       start:0x000A6F2C end:0x000A6F6C align:4
+
+rel/main_rel/load/fn_1_45850.c:
+	.text       start:0x00045850 end:0x00045890 align:4
+
+rel/main_rel/font/fn_1_4DC20.c:
+	.text       start:0x0004DC20 end:0x0004DC6C align:4
+
+rel/main_rel/font/fn_1_4DC6C.c:
+	.text       start:0x0004DC6C end:0x0004DCB8 align:4
+
+rel/main_rel/bg_san/fn_1_DC1C0.c:
+	.text       start:0x000DC1C0 end:0x000DC204 align:4
+
+rel/main_rel/car/fn_1_87074.c:
+	.text       start:0x00087074 end:0x000870BC align:4
+
+rel/main_rel/car/fn_1_8677C.c:
+	.text       start:0x0008677C end:0x000867CC align:4
+
+rel/main_rel/bg_aur/fn_1_151BE8.c:
+	.text       start:0x00151BE8 end:0x00151C3C align:4
+
+rel/main_rel/background/fn_1_9D93C.c:
+	.text       start:0x0009D93C end:0x0009D994 align:4
+
+rel/main_rel/ghost/fn_1_F210C.c:
+	.text       start:0x000F210C end:0x000F2160 align:4
+
+rel/main_rel/memcard/fn_1_C2454.c:
+	.text       start:0x000C2454 end:0x000C24A4 align:4
+
+rel/main_rel/replay/fn_1_F453C.c:
+	.text       start:0x000F453C end:0x000F4594 align:4
+
+rel/main_rel/screen_effect/fn_1_761B8.c:
+	.text       start:0x000761B8 end:0x00076218 align:4
+
+rel/main_rel/bg_cas/fn_1_FE5E4.c:
+	.text       start:0x000FE5E4 end:0x000FE640 align:4
+
+rel/main_rel/replay/fn_1_F43F0.c:
+	.text       start:0x000F43F0 end:0x000F444C align:4
+
+rel/main_rel/sel_static_disp/fn_1_14FE48.c:
+	.text       start:0x0014FE48 end:0x0014FEAC align:4
+
+rel/main_rel/memcard/fn_1_C3688.c:
+	.text       start:0x000C3688 end:0x000C36EC align:4
+
+rel/main_rel/bg_cas/fn_1_101454.c:
+	.text       start:0x00101454 end:0x001014B4 align:4
+
+rel/main_rel/sel_static_disp/fn_1_141F94.c:
+	.text       start:0x00141F94 end:0x00142004 align:4
+
+rel/main_rel/stcoli/fn_1_2A2A4.c:
+	.text       start:0x0002A2A4 end:0x0002A318 align:4
+
+rel/main_rel/driver/fn_1_A7854.c:
+	.text       start:0x000A7854 end:0x000A78CC align:4
+
+rel/main_rel/font/fn_1_51914.c:
+	.text       start:0x00051914 end:0x00051990 align:4
+
+rel/main_rel/stcoli/fn_1_21644.c:
+	.text       start:0x00021644 end:0x000216C0 align:4
+
+rel/main_rel/sound/fn_1_A514C.c:
+	.text       start:0x000A514C end:0x000A51C8 align:4
+
+rel/main_rel/ranking/fn_1_156198.c:
+	.text       start:0x00156198 end:0x00156218 align:4
+
+rel/main_rel/accessory/fn_1_127FB8.c:
+	.text       start:0x00127FB8 end:0x00128038 align:4

@@ -22,6 +22,33 @@ extern u8 lbl_1_bss_3E024[52];
 extern char lbl_1_data_1A3AC[5];
 extern void fn_80083DB0(void *arg0, void *arg1);
 
+/* fzgx:begin fn_1_45850 */
+struct fn_1_45850_Arg0 {
+    u32 unk_0;
+};
+
+extern u32 fn_80006CE4(u32);
+
+u32 fn_1_45850(struct fn_1_45850_Arg0 *arg0) {
+    u32 v0;
+    u32 t0;
+
+    v0 = (u32)arg0;
+    switch ((s32)arg0->unk_0) {
+    case 1:
+        v0 = 1;
+        break;
+    case 0:
+    default:
+        v0 += 4;
+        t0 = fn_80006CE4(v0);
+        v0 = t0;
+        break;
+    }
+    return v0;
+}
+/* fzgx:end fn_1_45850 */
+
 /* fzgx:begin fn_1_45890 */
 // Clear the load-state flag before starting a new load.
 void fn_1_45890(void) {
@@ -47,6 +74,29 @@ int fn_1_45AD4(void) {
     return 0;
 }
 /* fzgx:end fn_1_45AD4 */
+
+/* fzgx:begin fn_1_45B2C */
+typedef struct Fn145B2CData {
+    s32 kind;
+    u8 pad[0x54];
+    void *value;
+} Fn145B2CData;
+
+extern void *fn_80006DE8(void *);
+
+void *fn_1_45B2C(Fn145B2CData *data) {
+    void *result;
+    switch (data->kind) {
+    case 1:
+        result = data->value;
+        break;
+    default:
+        result = fn_80006DE8(&data->kind + 1);
+        break;
+    }
+    return result;
+}
+/* fzgx:end fn_1_45B2C */
 
 /* fzgx:begin fn_1_45B68 */
 typedef struct Fn45B68Object {
@@ -119,6 +169,16 @@ int fn_1_45D78(u32 start, u32 size, u32 *out_end, s32 mode) {
     return total;
 }
 /* fzgx:end fn_1_45D78 */
+
+/* fzgx:begin fn_1_45E84 */
+s32 fn_1_45E84(s32 value) {
+    value += 1;
+    if (value >= 0x200) {
+        value = 0;
+    }
+    return value;
+}
+/* fzgx:end fn_1_45E84 */
 
 /* fzgx:begin fn_1_465D0 */
 // Queues a completed load operation in the circular load queue.

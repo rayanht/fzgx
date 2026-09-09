@@ -88,6 +88,48 @@ void fn_1_155FA8(u32 value) {
 }
 /* fzgx:end fn_1_155FA8 */
 
+/* fzgx:begin fn_1_156198 */
+extern s32 fn_1_156218(u32 arg, void *out0, void *out1, void *out2);
+extern u32 lbl_1_bss_8F3FC[9];
+
+u32 *fn_1_156198(u32 arg0) {
+    u32 v0;
+    u32 v1;
+    u32 v2;
+    u32 v3;
+    u32 v4;
+    u32 v5;
+    u32 v6;
+    struct { u32 a[14]; } loc_78;
+    struct { u32 a[14]; } loc_40;
+    struct { u32 a[14]; } loc_8;
+    /* frame */
+    u32 t0;
+    t0 = fn_1_156218(arg0, (void *)&loc_78, (void *)&loc_40, (void *)&loc_8);
+    v0 = t0;
+    if ((s32)t0 == 0) {
+        v0 = 0;
+    } else {
+        v1 = loc_78.a[2];
+        v2 = loc_78.a[3];
+        v3 = loc_78.a[4];
+        v4 = loc_78.a[5];
+        v5 = loc_78.a[6];
+        v6 = loc_78.a[7];
+        lbl_1_bss_8F3FC[0] = loc_78.a[0];
+        lbl_1_bss_8F3FC[1] = loc_78.a[1];
+        lbl_1_bss_8F3FC[2] = v1;
+        lbl_1_bss_8F3FC[3] = v2;
+        lbl_1_bss_8F3FC[4] = v3;
+        lbl_1_bss_8F3FC[5] = v4;
+        lbl_1_bss_8F3FC[6] = v5;
+        lbl_1_bss_8F3FC[7] = v6;
+        v0 = (u32)&lbl_1_bss_8F3FC;
+    }
+    return (u32 *)v0;
+}
+/* fzgx:end fn_1_156198 */
+
 /* fzgx:begin fn_1_1564D0 */
 void fn_1_1564D0(void) {
     fn_1_451C();

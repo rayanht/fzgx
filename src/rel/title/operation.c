@@ -271,6 +271,28 @@ void fn_8_9B40(void) {
 }
 /* fzgx:end fn_8_9B40 */
 
+/* fzgx:begin fn_8_CC2C */
+struct OperationValue {
+    f32 value;
+    u8 unk04[0x08];
+    f32 delta;
+};
+
+struct OperationState {
+    u8 unk00[0x54];
+    f32 delta;
+};
+
+void fn_8_CC2C(struct OperationState *state, struct OperationValue *value) {
+    f32 current;
+    f32 delta;
+
+    current = value->value;
+    value->value = current + (delta = state->delta);
+    value->delta = value->delta + delta;
+}
+/* fzgx:end fn_8_CC2C */
+
 /* fzgx:begin fn_8_CF58 */
 // fn_8_CF58: returns a constant.
 int fn_8_CF58(void) {

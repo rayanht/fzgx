@@ -1723,6 +1723,18 @@ int fn_1_B7E98(int index) {
 }
 /* fzgx:end fn_1_B7E98 */
 
+/* fzgx:begin fn_1_B7EC4 */
+int fn_1_B7EC4(int index) {
+    int result = 0;
+    s8 value = (s8)lbl_1_bss_716C8.pad_A0[index * 0xa0 - 0x9f];
+
+    if (value != -1 && value != -3) {
+        result = 1;
+    }
+    return result;
+}
+/* fzgx:end fn_1_B7EC4 */
+
 /* fzgx:begin fn_1_B7EF8 */
 // fn_1_B7EF8: Load and return first byte from lbl_1_bss_718B9
 u8 fn_1_B7EF8(void) {
@@ -1971,6 +1983,20 @@ void fn_1_C17CC(void) {
 }
 /* fzgx:end fn_1_C17CC */
 
+/* fzgx:begin fn_1_C2454 */
+extern void fn_1_C36EC(void);
+
+void fn_1_C2454(void) {
+    u8 *state = (u8 *)&lbl_1_bss_716C0 + 0x10000;
+
+    state[-0x6b04] = 0;
+    state[-0x6afc] = 0;
+    fn_1_C36EC();
+    *(u32 *)(state - 0x6af8) = 3;
+    state[-0x6af4] = 0;
+}
+/* fzgx:end fn_1_C2454 */
+
 /* fzgx:begin fn_1_C34F0 */
 #include "rel/main_rel/globals.h"
 #include "rel/main_rel/memcard.h"
@@ -2003,6 +2029,36 @@ void fn_1_C34F0(void) {
     fn_1_F79C8();
 }
 /* fzgx:end fn_1_C34F0 */
+
+/* fzgx:begin fn_1_C3688 */
+typedef struct TimeParts {
+    u32 unused;
+    u32 field_4;
+    u32 field_8;
+    u32 field_C;
+    u32 field_10;
+    u32 field_14;
+    u32 spare_18;
+    u32 spare_1C;
+} TimeParts;
+
+extern u64 OSGetTime(void);
+extern void OSTicksToCalendarTime(u32 high, u32 low, TimeParts *parts);
+
+u32 fn_1_C3688(void) {
+    TimeParts parts;
+    u64 time;
+    u32 result;
+
+    time = OSGetTime();
+    OSTicksToCalendarTime((u32)(time >> 32), (u32)time, &parts);
+    result = (parts.field_4 & 0x3F) + ((parts.field_8 & 0x1F) << 6);
+    result += (parts.field_C & 0x1F) << 11;
+    result += (parts.field_10 & 0x0F) << 16;
+    result += ((parts.field_14 - 0x7D3) & 0x3F) << 20;
+    return result;
+}
+/* fzgx:end fn_1_C3688 */
 
 /* fzgx:begin fn_1_C36EC */
 #include "rel/main_rel/globals.h"

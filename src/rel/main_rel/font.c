@@ -583,6 +583,25 @@ void fn_1_4D274(u32 *object, f32 value) {
 }
 /* fzgx:end fn_1_4D274 */
 
+/* fzgx:begin fn_1_4DC20 */
+typedef struct {
+    u32 words[23];
+} FontStateCopy;
+
+void fn_1_4DC20(void) {
+    *(FontStateCopy *)&lbl_1_bss_4BB40 =
+        *(FontStateCopy *)&lbl_1_bss_4B9CC;
+    lbl_1_bss_4BB3C = 1;
+}
+/* fzgx:end fn_1_4DC20 */
+
+/* fzgx:begin fn_1_4DC6C */
+void fn_1_4DC6C(void) {
+    lbl_1_bss_4B9CC = *(Obj_1_bss_4B9CC *)&lbl_1_bss_4BB40;
+    lbl_1_bss_4BB3C = 0;
+}
+/* fzgx:end fn_1_4DC6C */
+
 /* fzgx:begin fn_1_4DCB8 */
 // Replaces the stored font state value and returns its previous value.
 u32 fn_1_4DCB8(u32 value) {
@@ -923,6 +942,23 @@ void fn_1_51564(u16 first, u16 second, u16 third, u16 fourth, u16 fifth, u16 six
     ((u16 *)&lbl_1_bss_4C678)[0xC033] = sixth;
 }
 /* fzgx:end fn_1_51564 */
+
+/* fzgx:begin fn_1_51914 */
+typedef struct {
+    u32 words[22];
+} fn_1_51914_state;
+
+extern void fn_1_4F734(void *);
+
+void fn_1_51914(const fn_1_51914_state *src) {
+    fn_1_51914_state state = *src;
+
+    lbl_1_bss_4C678 = (u32)lbl_1_data_1C504 +
+        (u32)lbl_1_bss_646D2.unk_0 * 0x58;
+    state.words[12] |= 0x2000000;
+    fn_1_4F734(&state);
+}
+/* fzgx:end fn_1_51914 */
 
 /* fzgx:begin fn_1_51990 */
 // Copy the font state value and enable the corresponding object flag.

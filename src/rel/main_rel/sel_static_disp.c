@@ -524,6 +524,39 @@ void fn_1_141338(u32 arg0, u32 arg1, u32 arg2, u32 arg3, f32 arg4) {
 }
 /* fzgx:end fn_1_141338 */
 
+/* fzgx:begin fn_1_141F94 noprologue */
+#include "types.h"
+
+typedef struct Entry {
+    u8 pad[0x0E];
+    s16 value;
+    u8 tail[0x10];
+} Entry;
+
+extern Entry lbl_1_bss_8B3A0[10];
+
+u8 fn_1_141F94(u32 arg0) {
+    Entry *entry;
+    u32 index = arg0 & 0xFF;
+    u8 count = 0;
+
+    if (index >= 4) {
+        return 0;
+    }
+    entry = lbl_1_bss_8B3A0;
+    if (lbl_1_bss_8B3A0[(u8)arg0].value == -1) {
+        return 0;
+    }
+    for (; (s32)index > 0; index--) {
+        if (entry->value != -1) {
+            count++;
+        }
+        entry++;
+    }
+    return count;
+}
+/* fzgx:end fn_1_141F94 */
+
 /* fzgx:begin fn_1_1420A4 */
 void fn_1_1420A4(void) {
     ((void (**)(void))lbl_1_data_4244C)[lbl_1_bss_8E51D]();
@@ -1404,6 +1437,28 @@ void fn_1_14FD7C(u32 *arg0, u32 arg1) {
     fn_8008279C(arg0, selector, 4, callback);
 }
 /* fzgx:end fn_1_14FD7C */
+
+/* fzgx:begin fn_1_14FE48 noprologue */
+#include "types.h"
+
+extern void fn_80083DB0(void *arg0, void *arg1);
+extern void *fn_800839D8(void *arg0, void *arg1);
+
+s32 fn_1_14FE48(void *arg0, void *arg1) {
+    u8 data[64];
+    void *value;
+    s32 count;
+
+    fn_80083DB0(data, arg0);
+    value = data;
+    count = 0;
+    while (fn_800839D8(value, arg1) != 0) {
+        value = 0;
+        count += 1;
+    }
+    return count;
+}
+/* fzgx:end fn_1_14FE48 */
 
 /* fzgx:begin fn_1_150500 */
 void fn_1_150500(void) {

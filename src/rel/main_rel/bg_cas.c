@@ -218,6 +218,29 @@ void fn_1_FE5E0(void) {
 }
 /* fzgx:end fn_1_FE5E0 */
 
+/* fzgx:begin fn_1_FE5E4 */
+extern void fn_1_9A508(Obj_1_data_2A7E0 *arg0);
+extern void fn_1_FFC60(Obj_1_data_2A7E0_At3C *arg0);
+extern void fn_1_FEC7C(Obj_1_data_2A7E0_At3C *arg0);
+extern const f32 lbl_1_rodata_76A8;
+
+typedef struct {
+    u8 pad_0[0x1B1E4];
+    u16 unk_1B1E4;
+} Obj_1_data_2A7E0_At3C_Ext;
+
+void fn_1_FE5E4(void) {
+    Obj_1_data_2A7E0_At3C *obj;
+
+    obj = lbl_1_data_2A7E0.unk_3C;
+    fn_1_9A508(&lbl_1_data_2A7E0);
+    fn_1_FFC60(obj);
+    fn_1_FEC7C(obj);
+    ((Obj_1_data_2A7E0_At3C_Ext *)obj)->unk_1B1E4 = 0;
+    obj->unk_430 = lbl_1_rodata_76A8;
+}
+/* fzgx:end fn_1_FE5E4 */
+
 /* fzgx:begin fn_1_FE640 */
 // fn_1_FE640: empty in retail (single blr).
 void fn_1_FE640(void) {
@@ -380,3 +403,27 @@ int fn_1_10144C(void) {
     return 0;
 }
 /* fzgx:end fn_1_10144C */
+
+/* fzgx:begin fn_1_101454 */
+int fn_1_101454(int arg0, u32 *arg1) {
+    Obj_1_data_2A7E0_At3C *entry;
+    u8 *cursor;
+
+    entry = lbl_1_data_2A7E0.unk_3C;
+    switch (arg0) {
+    case 0:
+        cursor = (u8 *)lbl_1_bss_3BE0->unk_54;
+        entry->unk_0 = 0;
+        while (cursor != (u8 *)arg1) {
+            entry->unk_0 += 1;
+            cursor += 0x40;
+        }
+        *arg1 |= 1u << 31;
+        break;
+    default:
+        goto done; /* The default case skips the zero-argument body. */
+    }
+done:
+    return 1;
+}
+/* fzgx:end fn_1_101454 */

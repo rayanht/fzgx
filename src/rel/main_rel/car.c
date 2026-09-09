@@ -370,6 +370,25 @@ void fn_1_810E4(u32 arg0) {
 }
 /* fzgx:end fn_1_810E4 */
 
+/* fzgx:begin fn_1_816E8 */
+s8 fn_1_816E8(u32 base, s8 index) {
+    if (base == 0) {
+        /* shared failure block is required by the retail control flow */
+        goto fail;
+    }
+    base += index * 12;
+    base = *(u32 *)((u8 *)base + 824);
+    if (base != 0) {
+        /* shared success block preserves the retail branch layout */
+        goto success;
+    }
+fail: /* shared failure block is required by the retail control flow */
+    return -1;
+success: /* success is reached only after the non-null entry check */
+    return (s8)*(u32 *)base;
+}
+/* fzgx:end fn_1_816E8 */
+
 /* fzgx:begin fn_1_8171C */
 // Maps a car mode to its corresponding status code.
 s32 fn_1_8171C(s32 value) {
@@ -817,11 +836,45 @@ u32 fn_1_864E8(int index) {
 }
 /* fzgx:end fn_1_864E8 */
 
+/* fzgx:begin fn_1_864FC noprologue */
+#include "types.h"
+
+typedef struct {
+    u8 pad_0[0x58c];
+    u32 value;
+    u8 pad_590[0x90];
+} Fn864FCEntry;
+
+extern Fn864FCEntry *lbl_1_bss_6D838;
+
+u32 fn_1_864FC(u32 index) {
+    return lbl_1_bss_6D838[index].value;
+}
+/* fzgx:end fn_1_864FC */
+
 /* fzgx:begin fn_1_86514 */
 u32 fn_1_86514(int index) {
     return lbl_1_bss_6D838[index].unk_218;
 }
 /* fzgx:end fn_1_86514 */
+
+/* fzgx:begin fn_1_8652C */
+f32 fn_1_8652C(int index) {
+    u32 offset;
+
+    offset = index * 0x620;
+    return lbl_1_bss_6D838[index].unk_17C;
+}
+/* fzgx:end fn_1_8652C */
+
+/* fzgx:begin fn_1_86544 */
+f32 fn_1_86544(s32 index) {
+    Obj_1_bss_6D838_Target *array;
+
+    array = lbl_1_bss_6D838;
+    return array[index].unk_224;
+}
+/* fzgx:end fn_1_86544 */
 
 /* fzgx:begin fn_1_8655C */
 // Returns the requested car record's stored value.
@@ -868,6 +921,27 @@ s8 fn_1_86690(s8 index) {
     return lbl_1_bss_6D838[index].unk_6;
 }
 /* fzgx:end fn_1_86690 */
+
+/* fzgx:begin fn_1_8677C noprologue */
+#include "types.h"
+
+extern u32 lbl_1_bss_6D838;
+
+u32 fn_1_8677C(u32 arg0) {
+    u32 v0;
+    u8 v1;
+
+    v0 = lbl_1_bss_6D838 + (arg0 * 1568);
+    v1 = 0;
+    while (v1 < 4) {
+        if ((*(u32 *)((u8 *)v0 + 580 + (v1 * 92)) & 0x4) != 0) {
+            return 1;
+        }
+        v1++;
+    }
+    return 0;
+}
+/* fzgx:end fn_1_8677C */
 
 /* fzgx:begin fn_1_867CC noprologue */
 #include "types.h"
@@ -932,6 +1006,85 @@ void *fn_1_868C0(s8 index) {
     return 0;
 }
 /* fzgx:end fn_1_868C0 */
+
+/* fzgx:begin fn_1_869B0 noprologue */
+#include "types.h"
+
+typedef struct {
+    u8 pad_0[0x50];
+    u32 value_50;
+    u32 value_54;
+    u32 value_58;
+} Data_1_869B0;
+
+typedef struct {
+    u8 pad_0[0x49c];
+    Data_1_869B0 *data;
+    u8 pad_4a0[0x180];
+} Entry_1_869B0;
+
+extern Entry_1_869B0 *lbl_1_bss_6D838;
+
+typedef struct {
+    u32 x;
+    u32 y;
+    u32 z;
+} Vec3_1_869B0;
+
+void fn_1_869B0(int index, u32 *out) {
+    Data_1_869B0 *data = (Data_1_869B0 *)lbl_1_bss_6D838[index].data;
+    *(Vec3_1_869B0 *)out = *(Vec3_1_869B0 *)&data->value_50;
+}
+/* fzgx:end fn_1_869B0 */
+
+/* fzgx:begin fn_1_869E0 noprologue */
+#include "types.h"
+
+typedef struct {
+    u8 pad_0[0x5c];
+    u32 value_5c;
+    u32 value_60;
+    u32 value_64;
+} CarData;
+
+typedef struct {
+    u8 pad_0[0x49c];
+    CarData *unk_49c;
+    u8 pad_4a0[0x180];
+} Car;
+
+typedef struct {
+    u32 value_0;
+    u32 value_4;
+    u32 value_8;
+} Copy12;
+
+extern Car *lbl_1_bss_6D838;
+
+void fn_1_869E0(int index, u32 *out) {
+    CarData *data = lbl_1_bss_6D838[index].unk_49c;
+    *(Copy12 *)out = *(Copy12 *)&data->value_5c;
+}
+/* fzgx:end fn_1_869E0 */
+
+/* fzgx:begin fn_1_87074 */
+extern u32 lbl_1_bss_6D8F4[31];
+
+void fn_1_87074(void) {
+    u32 zero;
+    u8 i;
+
+    zero = 0;
+    for (i = 0; i < 30; i += 6) {
+        *(u32 *)((u8 *)lbl_1_bss_6D8F4 + ((i & 0xFF) << 2)) = zero;
+        *(u32 *)((u8 *)lbl_1_bss_6D8F4 + ((i & 0xFF) << 2) + 4) = zero;
+        *(u32 *)((u8 *)lbl_1_bss_6D8F4 + ((i & 0xFF) << 2) + 8) = zero;
+        *(u32 *)((u8 *)lbl_1_bss_6D8F4 + ((i & 0xFF) << 2) + 12) = zero;
+        *(u32 *)((u8 *)lbl_1_bss_6D8F4 + ((i & 0xFF) << 2) + 16) = zero;
+        *(u32 *)((u8 *)lbl_1_bss_6D8F4 + ((i & 0xFF) << 2) + 20) = zero;
+    }
+}
+/* fzgx:end fn_1_87074 */
 
 /* fzgx:begin fn_1_875EC */
 void fn_1_875EC(void *arg0, void *arg1, void *arg2) {
@@ -2581,6 +2734,44 @@ u8 fn_1_8C3FC(void) {
 }
 /* fzgx:end fn_1_8C3FC */
 
+/* fzgx:begin fn_1_8C40C */
+extern f32 lbl_1_rodata_3518[6];
+extern u8 lbl_1_bss_6D820;
+
+typedef struct CarTarget CarTarget;
+typedef struct CarEntry CarEntry;
+typedef struct CarTable CarTable;
+
+struct CarTarget {
+    u8 unk_00[0xf8];
+    f32 unk_f8;
+};
+
+struct CarEntry {
+    u8 unk_00[0x49c];
+    CarTarget *unk_49c;
+    u8 unk_4a0[0x180];
+};
+
+struct CarTable {
+    u8 unk_00[0x18];
+    CarEntry *unk_18;
+    u8 unk_1c[0xe];
+    s8 unk_2a;
+    u8 unk_2b[0x231];
+    u8 unk_25c;
+};
+
+f32 fn_1_8C40C(void) {
+    CarTable *table = (CarTable *)&lbl_1_bss_6D820;
+
+    if (table->unk_25c >= table->unk_2a) {
+        return lbl_1_rodata_3518[0];
+    }
+    return table->unk_18[table->unk_25c].unk_49c->unk_f8;
+}
+/* fzgx:end fn_1_8C40C */
+
 /* fzgx:begin fn_1_8C44C */
 typedef struct Fn1844CValue {
     char pad_0[0xf8];
@@ -3025,6 +3216,12 @@ u32 fn_1_8C884(u32 arg0) {
     return ((*(u32 *)((u8 *)v2 + 280) << 2) + __cntlzw(*(u32 *)((u8 *)v2 + 348)));
 }
 /* fzgx:end fn_1_8C884 */
+
+/* fzgx:begin fn_1_8C8C4 */
+f32 fn_1_8C8C4(u32 index) {
+    return lbl_1_bss_6D838[index].unk_1F4;
+}
+/* fzgx:end fn_1_8C8C4 */
 
 /* fzgx:begin fn_1_8C8DC */
 f32 fn_1_8C8DC(u32 index) {

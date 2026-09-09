@@ -466,6 +466,28 @@ void fn_1_A50C8(s32 index) {
 }
 /* fzgx:end fn_1_A50C8 */
 
+/* fzgx:begin fn_1_A514C */
+extern u32 lbl_1_rodata_45D0[82];
+extern u8 lbl_1_bss_6F1D8;
+extern u32 lbl_1_bss_6F1DC;
+
+extern void fn_80067344(s32, s32, u32, s32);
+extern void fn_80067898(u32);
+
+void fn_1_A514C(s32 index) {
+    u32 offset;
+    u32 value;
+
+    if (index <= 0x28) {
+        value = lbl_1_rodata_45D0[index * 2 + 1];
+        fn_80067344(2, 0xf, 0xb0270000, 0x7f);
+        if (lbl_1_bss_6F1D8 == 0 && lbl_1_bss_6F1DC <= 0x2d) {
+            fn_80067898(value);
+        }
+    }
+}
+/* fzgx:end fn_1_A514C */
+
 /* fzgx:begin fn_1_A51C8 */
 void fn_1_A51C8(s16 index) {
     u32 value;

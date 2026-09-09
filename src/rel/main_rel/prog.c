@@ -20,6 +20,22 @@ u32 fn_1_A6F1C(void) {
 }
 /* fzgx:end fn_1_A6F1C */
 
+/* fzgx:begin fn_1_A6F2C */
+s32 fn_1_A6F2C(void) {
+    s32 result = 0;
+    s32 state;
+
+    if (lbl_1_bss_962 == 0x99) {
+        state = lbl_1_data_341B8->unk_4;
+        if ((s8)state == 0 || (s8)state == 5) {
+            result = 1;
+        }
+    }
+
+    return result;
+}
+/* fzgx:end fn_1_A6F2C */
+
 /* fzgx:begin fn_1_A6F6C */
 s32 fn_1_A6F6C(void) {
     s32 result = 0;

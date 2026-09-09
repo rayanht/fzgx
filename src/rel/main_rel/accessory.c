@@ -221,6 +221,48 @@ void fn_1_1166EC(Fn1166ECObject *obj) {
 }
 /* fzgx:end fn_1_1166EC */
 
+/* fzgx:begin fn_1_127FB8 */
+extern void fn_1_10846C(void);
+extern f32 lbl_1_rodata_7B20;
+
+typedef struct {
+    u8 active;
+    u8 _pad01[0x3f];
+    f32 value;
+} Fn127FB8Entry;
+
+typedef struct {
+    u8 _pad00[0x18];
+    u32 count;
+    u8 _pad1c[8];
+    Fn127FB8Entry *entries;
+} Fn127FB8Object;
+
+void fn_1_127FB8(Fn127FB8Object *obj) {
+    f32 value;
+    u32 i;
+    Fn127FB8Entry *entry;
+
+    if (obj != 0) {
+        fn_1_10846C();
+        entry = obj->entries;
+        value = lbl_1_rodata_7B20;
+        i = 0;
+        while (i < obj->count) {
+            if ((entry->active & 1) != 0) {
+                entry->active = 0;
+                entry->value = value;
+            } else {
+                entry->active = 1;
+                entry->value = value;
+            }
+            i++;
+            entry++;
+        }
+    }
+}
+/* fzgx:end fn_1_127FB8 */
+
 /* fzgx:begin fn_1_128B00 */
 s32 fn_1_128B00(s16 value) {
     switch (value) {

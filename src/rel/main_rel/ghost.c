@@ -482,6 +482,23 @@ void ghost_set_record_flag1(s32 arg) {
 }
 /* fzgx:end ghost_set_record_flag1 */
 
+/* fzgx:begin fn_1_F210C */
+extern void fn_1_12EF80(s16 arg, s16 *out_a, s16 *out_b);
+extern Obj_1_bss_7F0C0 lbl_1_bss_7F0C0;
+
+u32 fn_1_F210C(s32 arg) {
+    s16 out_a;
+    s16 out_b;
+    s32 index;
+    u8 *flags;
+
+    fn_1_12EF80((s16)arg, &out_a, &out_b);
+    index = (out_a - 1) * 6 + out_b;
+    flags = (u8 *)&lbl_1_bss_7F0C0;
+    return flags[0x4938 + index] & 2;
+}
+/* fzgx:end fn_1_F210C */
+
 /* fzgx:begin ghost_set_record_flag2 */
 // Set the second flag on the record selected by the argument.
 void ghost_set_record_flag2(s32 arg) {

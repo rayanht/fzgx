@@ -52,6 +52,22 @@ void fn_3_19CCC(void) {
 }
 /* fzgx:end fn_3_19CCC */
 
+/* fzgx:begin fn_3_19CE0 */
+extern u8 lbl_3_bss_A2438[28];
+
+u32 fn_3_19CE0(void) {
+    u32 v0;
+    s32 v1;
+
+    v1 = 0;
+    v0 = *(u32 *)(lbl_3_bss_A2438 + 4);
+    if (v0 == 0x80000000 || v0 == 0x40000000) {
+        v1 = 1;
+    }
+    return (v1 & 0xFF);
+}
+/* fzgx:end fn_3_19CE0 */
+
 /* fzgx:begin fn_3_19D14 */
 typedef struct fn_3_19D14_CustomizeData {
     u8 _pad08[0x08];

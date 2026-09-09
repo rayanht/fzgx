@@ -63,6 +63,22 @@ void fn_1_151BDC(u32 value) {
 }
 /* fzgx:end fn_1_151BDC */
 
+/* fzgx:begin fn_1_151BE8 */
+struct fn_1_151BE8_Copy1200 { u32 a[75][4]; };
+
+extern u8 lbl_1_rodata_D048[1200];
+
+u32 fn_1_151BE8(s16 arg0, s16 arg1) {
+    struct fn_1_151BE8_Copy1200 loc_8;
+    loc_8 = *(struct fn_1_151BE8_Copy1200 *)&lbl_1_rodata_D048;
+    {
+        s16 row = arg0;
+        s16 col = arg1;
+        return loc_8.a[row][col];
+    }
+}
+/* fzgx:end fn_1_151BE8 */
+
 /* fzgx:begin fn_1_151C3C */
 void fn_1_151C3C(u16 value1, u16 value2) {
     lbl_1_bss_8ED8C = value1;

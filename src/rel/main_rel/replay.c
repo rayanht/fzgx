@@ -144,6 +144,57 @@ u32 fn_1_F2F58(void) {
 }
 /* fzgx:end fn_1_F2F58 */
 
+/* fzgx:begin fn_1_F43F0 */
+void fn_1_F43F0(u8 *bits, u32 *position, u32 mask, u32 count, u32 limit) {
+    u32 value;
+    u32 index;
+    u32 bit;
+
+    while (count != 0) {
+        value = *position;
+        index = value >> 3;
+        if (index >= limit) {
+            return;
+        }
+        bit = value & 7;
+        if ((mask & (1 << (count - 1))) != 0) {
+            bits[index] |= 1 << bit;
+        }
+        value = *position;
+        count--;
+        *position = value + 1;
+    }
+}
+/* fzgx:end fn_1_F43F0 */
+
+/* fzgx:begin fn_1_F453C */
+struct fn_1_F453C_Arg0 {
+    u8 unk_0[1];
+};
+struct fn_1_F453C_Arg1 {
+    u32 unk_0;
+};
+
+u32 fn_1_F453C(struct fn_1_F453C_Arg0 *arg0, struct fn_1_F453C_Arg1 *arg1, u32 arg2) {
+    u32 v0;
+    u32 v1;
+    s32 v2;
+    u32 v3;
+
+    v1 = arg2;
+    v2 = 0;
+    while (v1 != 0) {
+        v3 = arg1->unk_0;
+        if (((1 << (v3 & 0x7)) & arg0->unk_0[((u32)v3 >> 3)]) != 0) {
+            v2 = v2 | (1 << (v1 - 1));
+        }
+        v1--;
+        arg1->unk_0++;
+    }
+    return v2;
+}
+/* fzgx:end fn_1_F453C */
+
 /* fzgx:begin fn_1_F4594 */
 u32 fn_1_F4594(void) {
     return lbl_1_bss_7EFD8.unk_4;

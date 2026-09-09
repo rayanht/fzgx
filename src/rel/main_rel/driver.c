@@ -113,6 +113,34 @@ void fn_1_A77DC(FnA77DCObject *object) {
 }
 /* fzgx:end fn_1_A77DC */
 
+/* fzgx:begin fn_1_A7854 */
+typedef struct FnA7854Object {
+    u8 pad_394[0x394];
+    void *item;
+    u8 pad_398[0x22];
+    s16 field_3ba;
+} FnA7854Object;
+
+extern void fn_1_A8270(void *arg0, void *arg1);
+
+void fn_1_A7854(FnA7854Object *object, void *arg1) {
+    FnA7854Object *cursor;
+    s32 index;
+
+    if (object->field_3ba == 0 || object->field_3ba == 1) {
+        index = 0;
+        cursor = object;
+        do {
+            if (cursor->item != 0) {
+                fn_1_A8270(cursor->item, arg1);
+            }
+            index++;
+            cursor = (FnA7854Object *)((u8 *)cursor + 4);
+        } while (index < 3);
+    }
+}
+/* fzgx:end fn_1_A7854 */
+
 /* fzgx:begin fn_1_A7968 */
 void fn_1_A7968(void) {
     s32 **table;
@@ -152,6 +180,22 @@ void fn_1_A7A70(void) {
     }
 }
 /* fzgx:end fn_1_A7A70 */
+
+/* fzgx:begin fn_1_A7B30 noprologue */
+#include "types.h"
+
+typedef struct FnA7B30Vector {
+    s32 x;
+    s32 y;
+    s32 z;
+} FnA7B30Vector;
+
+extern FnA7B30Vector lbl_1_data_35864[];
+
+void fn_1_A7B30(s32 index, FnA7B30Vector *out) {
+    *out = lbl_1_data_35864[index - 25];
+}
+/* fzgx:end fn_1_A7B30 */
 
 /* fzgx:begin fn_1_A8528 */
 typedef struct FnA8528Object {

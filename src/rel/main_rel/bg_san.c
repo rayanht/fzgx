@@ -330,6 +330,31 @@ int fn_1_DC1B8(void) {
 }
 /* fzgx:end fn_1_DC1B8 */
 
+/* fzgx:begin fn_1_DC1C0 */
+typedef struct {
+    u8 pad_0[0x14];
+    u32 unk_14;
+    u8 pad_18[0x1008];
+} BgSanEntry;
+
+int fn_1_DC1C0(int arg0, int arg1) {
+    Obj_1_data_2A7E0_At3C *obj = lbl_1_data_2A7E0.unk_3C;
+    switch (arg0) {
+    case 0:
+        if ((s32)obj->unk_10 < 20) {
+            BgSanEntry *entry = (BgSanEntry *)obj;
+            entry += (s32)obj->unk_10;
+            entry->unk_14 = arg1;
+            obj->unk_10 = (s32)obj->unk_10 + 1;
+        }
+        break;
+    default:
+        break;
+    }
+    return 1;
+}
+/* fzgx:end fn_1_DC1C0 */
+
 /* fzgx:begin fn_1_DC204 */
 // fn_1_DC204: empty in retail (single blr).
 void fn_1_DC204(void) {

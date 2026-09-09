@@ -3013,3 +3013,171 @@ dol/fn_8005466C.c:
 
 dol/fn_8003416C.c:
 	.text       start:0x8003416C end:0x800341EC align:4
+
+dol/fn_80058EE4.c:
+	.text       start:0x80058EE4 end:0x80058EF4 align:4
+
+dol/fn_8003658C.c:
+	.text       start:0x8003658C end:0x800365A0 align:4
+
+dol/AIStartDMA.c:
+	.text       start:0x8001DFCC end:0x8001DFE4 align:4
+
+dol/fn_80020A0C.c:
+	.text       start:0x80020A0C end:0x80020A28 align:4
+
+dol/fn_8006CE1C.c:
+	.text       start:0x8006CE1C end:0x8006CE44 align:4
+
+dol/fn_8000B334.c:
+	.text       start:0x8000B334 end:0x8000B360 align:4
+
+dol/strchr.c:
+	.text       start:0x80083B5C end:0x80083B8C align:4
+
+dol/__DVDFSInit.c:
+	.text       start:0x80016DC0 end:0x80016DF8 align:4
+
+dol/fn_80037BF4.c:
+	.text       start:0x80037BF4 end:0x80037C2C align:4
+
+dol/fn_80032324.c:
+	.text       start:0x80032324 end:0x80032360 align:4
+
+dol/fn_80074D28.c:
+	.text       start:0x80074D28 end:0x80074D68 align:4
+
+dol/fn_800348DC.c:
+	.text       start:0x800348DC end:0x80034918 align:4
+
+dol/fn_8004BF68.c:
+	.text       start:0x8004BF68 end:0x8004BFAC align:4
+
+dol/__OSDoHotReset.c:
+	.text       start:0x8000EF64 end:0x8000EFAC align:4
+
+dol/CARDCreate.c:
+	.text       start:0x8002F0F8 end:0x8002F140 align:4
+
+dol/fn_8002FC14.c:
+	.text       start:0x8002FC14 end:0x8002FC5C align:4
+
+dol/fn_800300F4.c:
+	.text       start:0x800300F4 end:0x8003013C align:4
+
+dol/__DBExceptionDestinationAux.c:
+	.text       start:0x80015A60 end:0x80015AA8 align:4
+
+dol/fn_800347EC.c:
+	.text       start:0x800347EC end:0x80034834 align:4
+
+dol/fn_80063EF4.c:
+	.text       start:0x80063EF4 end:0x80063F38 align:4
+
+dol/fn_800198AC.c:
+	.text       start:0x800198AC end:0x800198FC align:4
+
+dol/fn_8008023C.c:
+	.text       start:0x8008023C end:0x80080288 align:4
+
+dol/fn_80072BD0.c:
+	.text       start:0x80072BD0 end:0x80072C24 align:4
+
+dol/CARDClose.c:
+	.text       start:0x8002ED4C end:0x8002EDA0 align:4
+
+dol/fn_8005B010.c:
+	.text       start:0x8005B010 end:0x8005B068 align:4
+
+dol/fn_80034214.c:
+	.text       start:0x80034214 end:0x80034230 align:4
+
+dol/fn_8000B360.c:
+	.text       start:0x8000B360 end:0x8000B380 align:4
+
+dol/CARDCheck.c:
+	.text       start:0x8002D65C end:0x8002D6B0 align:4
+
+dol/fn_8006CD50.c:
+	.text       start:0x8006CD50 end:0x8006CDA8 align:4
+
+dol/fn_8005A5BC.c:
+	.text       start:0x8005A5BC end:0x8005A614 align:4
+
+dol/fn_8007E914.c:
+	.text       start:0x8007E914 end:0x8007E96C align:4
+
+dol/fn_80073620.c:
+	.text       start:0x80073620 end:0x80073678 align:4
+
+dol/fn_8008A5BC.c:
+	.text       start:0x8008A5BC end:0x8008A614 align:4
+
+dol/fn_80059BAC.c:
+	.text       start:0x80059BAC end:0x80059C0C align:4
+
+dol/fn_8001D488.c:
+	.text       start:0x8001D488 end:0x8001D4E8 align:4
+
+dol/fn_80078BC4.c:
+	.text       start:0x80078BC4 end:0x80078C28 align:4
+
+dol/fn_80059D04.c:
+	.text       start:0x80059D04 end:0x80059D68 align:4
+
+dol/fn_8008A6E4.c:
+	.text       start:0x8008A6E4 end:0x8008A748 align:4
+
+dol/fn_80058680.c:
+	.text       start:0x80058680 end:0x800586E4 align:4
+
+dol/fn_80070A58.c:
+	.text       start:0x80070A58 end:0x80070AC0 align:4
+
+dol/fn_8001E954.c:
+	.text       start:0x8001E954 end:0x8001E9BC align:4
+
+dol/fn_8006413C.c:
+	.text       start:0x8006413C end:0x800641A8 align:4
+
+dol/__OSUnlockAllMutex.c:
+	.text       start:0x8000EA84 end:0x8000EAF4 align:4
+
+dol/fn_80083970.c:
+	.text       start:0x80083970 end:0x800839D8 align:4
+
+dol/gdev_cc_peek.c:
+	.text       start:0x8008E3A0 end:0x8008E410 align:4
+
+dol/OSGetProgressiveMode.c:
+	.text       start:0x8000FE78 end:0x8000FEE8 align:4
+
+dol/fn_8008EC78.c:
+	.text       start:0x8008EC78 end:0x8008ECE0 align:4
+
+dol/fn_8008077C.c:
+	.text       start:0x8008077C end:0x800807F4 align:4
+
+dol/fn_8005174C.c:
+	.text       start:0x8005174C end:0x800517C0 align:4
+
+dol/fn_8008A66C.c:
+	.text       start:0x8008A66C end:0x8008A6E4 align:4
+
+dol/fn_800095A4.c:
+	.text       start:0x800095A4 end:0x8000961C align:4
+
+dol/SIGetStatus.c:
+	.text       start:0x800124D0 end:0x8001254C align:4
+
+dol/fn_800164A4.c:
+	.text       start:0x800164A4 end:0x80016524 align:4
+
+dol/OSGetSoundMode.c:
+	.text       start:0x8000FDF8 end:0x8000FE78 align:4
+
+dol/OSReport.c:
+	.text       start:0x8000C41C end:0x8000C49C align:4
+
+dol/fn_80047464.c:
+	.text       start:0x80047464 end:0x800474E4 align:4
