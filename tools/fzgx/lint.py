@@ -39,8 +39,7 @@ def lint_file(path: Path) -> List[Tuple[str, int, str]]:
     lines = path.read_text(errors="replace").splitlines()
     for i, line in enumerate(lines, 1):
         code = line.split("//", 1)[0]
-        allowed = ALLOW_RE.search(line)
-        allow = set(allowed.group(1).split(",")) if allowed else set()
+        allow = {r for m in ALLOW_RE.finditer(line) for r in m.group(1).split(",")}  # every allow comment on the line
         prev = lines[i - 2] if i >= 2 else ""
         justified = "//" in line or "//" in prev or "/*" in line or "/*" in prev
         for m in HEX_RE.finditer(code):

@@ -654,7 +654,7 @@ def _env_digest(p: Project) -> str:
     h = hashlib.sha256()
     for f in sorted((ROOT / "include").rglob("*.h")):
         h.update(f.read_bytes())
-    for f in ("oracle.py", "poolfix.py", "fixup.py", "stuck.py", "regalloc.py", "project.py"):
+    for f in ("oracle.py", "poolfix.py", "fixup.py", "stuck.py", "regalloc.py", "project.py", "lint.py"):
         h.update((ROOT / "tools" / "fzgx" / f).read_bytes())
     cfg = p.build_dir / "config.json"  # the split: which retail object holds each function
     if cfg.exists():
