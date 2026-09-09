@@ -2588,6 +2588,16 @@
   },
   {
     "module": "main",
+    "source": "dol/OSSetPeriodicAlarm.c",
+    "symbols": [
+      "OSSetPeriodicAlarm"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
     "source": "dol/OSSwitchFPUContext.c",
     "symbols": [
       "OSSwitchFPUContext"

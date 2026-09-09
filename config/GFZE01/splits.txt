@@ -3181,3 +3181,6 @@ dol/OSReport.c:
 
 dol/fn_80047464.c:
 	.text       start:0x80047464 end:0x800474E4 align:4
+
+dol/OSSetPeriodicAlarm.c:
+	.text       start:0x8000AEFC end:0x8000AF78 align:4
