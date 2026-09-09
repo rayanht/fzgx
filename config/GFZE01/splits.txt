@@ -3235,3 +3235,159 @@ dol/fn_8001E9BC.c:
 
 dol/fn_800829EC.c:
 	.text       start:0x800829EC end:0x80082A7C align:4
+
+dol/__CARDExiHandler.c:
+	.text       start:0x80029934 end:0x80029A4C align:4
+
+dol/__CARDTxHandler.c:
+	.text       start:0x80029A4C end:0x80029AF4 align:4
+
+dol/TimeoutHandler.c:
+	.text       start:0x80029DD4 end:0x80029E78 align:4
+
+dol/Retry.c:
+	.text       start:0x80029E78 end:0x8002A0A4 align:4
+
+dol/UnlockedCallback.c:
+	.text       start:0x8002A0A4 end:0x8002A1B4 align:4
+
+dol/__CARDStart.c:
+	.text       start:0x8002A1B4 end:0x8002A368 align:4
+
+dol/__CARDReadSegment.c:
+	.text       start:0x8002A368 end:0x8002A49C align:4
+
+dol/__CARDWritePage.c:
+	.text       start:0x8002A49C end:0x8002A5B8 align:4
+
+dol/__CARDEraseSector.c:
+	.text       start:0x8002A5B8 end:0x8002A698 align:4
+
+dol/__CARDSetDiskID.c:
+	.text       start:0x8002A774 end:0x8002A7AC align:4
+
+dol/__CARDGetControlBlock.c:
+	.text       start:0x8002A83C end:0x8002A8F4 align:4
+
+dol/CARDFreeBlocks.c:
+	.text       start:0x8002A988 end:0x8002AAD8 align:4
+
+dol/__CARDSync.c:
+	.text       start:0x8002AAD8 end:0x8002AB70 align:4
+
+dol/bitrev.c:
+	.text       start:0x8002ABC0 end:0x8002AD2C align:4
+
+dol/InitCallback.c:
+	.text       start:0x8002BA8C end:0x8002BAFC align:4
+
+dol/DoneCallback.c:
+	.text       start:0x8002BAFC end:0x8002BE20 align:4
+
+dol/EraseCallback.c:
+	.text       start:0x8002C194 end:0x8002C25C align:4
+
+dol/__CARDAllocBlock.c:
+	.text       start:0x8002C25C end:0x8002C374 align:4
+
+dol/__CARDFreeBlock.c:
+	.text       start:0x8002C374 end:0x8002C410 align:4
+
+dol/__CARDUpdateFatBlock.c:
+	.text       start:0x8002C410 end:0x8002C4BC align:4
+
+dol/WriteCallback_CARDDir.c:
+	.text       start:0x8002C4C4 end:0x8002C594 align:4
+
+dol/EraseCallback_CARDDir.c:
+	.text       start:0x8002C594 end:0x8002C65C align:4
+
+dol/__CARDUpdateDir.c:
+	.text       start:0x8002C65C end:0x8002C720 align:4
+
+dol/__CARDCheckSum.c:
+	.text       start:0x8002C720 end:0x8002C8D0 align:4
+
+dol/VerifyID.c:
+	.text       start:0x8002C8D0 end:0x8002CB54 align:4
+
+dol/VerifyDir.c:
+	.text       start:0x8002CB54 end:0x8002CD94 align:4
+
+dol/VerifyFAT.c:
+	.text       start:0x8002CD94 end:0x8002D018 align:4
+
+dol/__CARDVerify.c:
+	.text       start:0x8002D018 end:0x8002D0A4 align:4
+
+dol/CARDCheckExAsync.c:
+	.text       start:0x8002D0A4 end:0x8002D634 align:4
+
+dol/CARDProbeEx.c:
+	.text       start:0x8002D77C end:0x8002D8F8 align:4
+
+dol/__CARDMountCallback.c:
+	.text       start:0x8002DD08 end:0x8002DE40 align:4
+
+dol/CARDMountAsync.c:
+	.text       start:0x8002DE40 end:0x8002DFE0 align:4
+
+dol/CARDUnmount.c:
+	.text       start:0x8002E0C4 end:0x8002E170 align:4
+
+dol/FormatCallback.c:
+	.text       start:0x8002E170 end:0x8002E2B4 align:4
+
+dol/__CARDFormatRegionAsync.c:
+	.text       start:0x8002E2B4 end:0x8002E90C align:4
+
+dol/CreateCallbackFat.c:
+	.text       start:0x8002EDA8 end:0x8002EED8 align:4
+
+dol/CARDCreateAsync.c:
+	.text       start:0x8002EED8 end:0x8002F0F8 align:4
+
+dol/__CARDSeek.c:
+	.text       start:0x8002F140 end:0x8002F2F8 align:4
+
+dol/ReadCallback.c:
+	.text       start:0x8002F2F8 end:0x8002F428 align:4
+
+dol/WriteCallback_CARDWrite.c:
+	.text       start:0x8002F5B8 end:0x8002F728 align:4
+
+dol/CARDWriteAsync.c:
+	.text       start:0x8002F7D8 end:0x8002F8EC align:4
+
+dol/CARDFastDeleteAsync.c:
+	.text       start:0x8002F9D8 end:0x8002FB04 align:4
+
+dol/CARDDeleteAsync.c:
+	.text       start:0x8002FB04 end:0x8002FC14 align:4
+
+dol/UpdateIconOffsets.c:
+	.text       start:0x8002FC5C end:0x8002FE54 align:4
+
+dol/CARDSetStatusAsync.c:
+	.text       start:0x8002FF80 end:0x800300F4 align:4
+
+dol/CARDRenameAsync.c:
+	.text       start:0x8003013C end:0x80030338 align:4
+
+dol/CARDGetSerialNo.c:
+	.text       start:0x80030690 end:0x80030754 align:4
+
+dol/__CARDAccess.c:
+	.text       start:0x8002E9BC end:0x8002EA54 align:4
+
+dol/__CARDGetFileNo.c:
+	.text       start:0x8002EA84 end:0x8002EBD4 align:4
+
+dol/CARDOpen.c:
+	.text       start:0x8002EBD4 end:0x8002ED4C align:4
+
+dol/CARDReadAsync.c:
+	.text       start:0x8002F428 end:0x8002F570 align:4
+
+dol/CARDGetStatus.c:
+	.text       start:0x8002FE54 end:0x8002FF80 align:4
