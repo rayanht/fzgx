@@ -144,10 +144,31 @@ def all_rewrites(body: str, name: str, max_per_family: int = 16) -> List[Tuple[s
             continue
     counts: Dict[str, int] = {}
     kept = []
+    by_fam: Dict[str, List[str]] = {}
     for fam, label, text in out:
         counts[fam] = counts.get(fam, 0) + 1
+        by_fam.setdefault(fam, []).append(text)
         if counts[fam] <= max_per_family:
             kept.append((fam, label, text))
+    # every edit of a family applied together (the same fix at every site): the composition of
+    # the per-site texts when their edits do not overlap
+    for fam, texts in by_fam.items():
+        if len(texts) < 2 or fam in ("decl-order", "regalloc", "param-count", "struct-pad"):
+            continue
+        base_lines = body.splitlines(keepends=True)
+        merged = list(base_lines); ok = True; touched: set = set()
+        for t in texts[:24]:
+            sm = difflib.SequenceMatcher(None, base_lines, t.splitlines(keepends=True), autojunk=False)
+            ops = [(tag, i1, i2, j1, j2) for tag, i1, i2, j1, j2 in sm.get_opcodes() if tag != "equal"]
+            if any(set(range(i1, max(i2, i1 + 1))) & touched for _, i1, i2, _, _ in ops):
+                continue
+            tl = t.splitlines(keepends=True)
+            for tag, i1, i2, j1, j2 in reversed(ops):
+                merged[i1:i2] = tl[j1:j2]
+                touched.update(range(i1, max(i2, i1 + 1)))
+        text = "".join(merged)
+        if text != body and text not in texts:
+            kept.append((fam, f"{fam} at every site", text))
     return kept
 
 
@@ -396,7 +417,7 @@ def run_bodies(p: Project, items, workers: int = 3, budget_s: float = 10.0, subm
         for b in bs:
             cands = oracle.version_candidates(p, b.module)
             if len(cands) == 1:
-                b.mw = None; continue
+                b.mw, b.extra = (None, None); continue
             by_mod.setdefault(b.module, []).append(b)
         for module, members in by_mod.items():
             cands = oracle.version_candidates(p, module)
@@ -406,21 +427,21 @@ def run_bodies(p: Project, items, workers: int = 3, budget_s: float = 10.0, subm
             for j, b in enumerate(members):
                 f = d / f"v{j}.c"; f.write_text(b.text); srcs.append(f)
             per = {}
-            for ver in cands:
-                vd = d / ver.replace("/", "_")
+            for c in cands:
+                vd = d / (c[0].replace("/", "_") + ("_stmw" if c[1] else ""))
                 if vd.exists():
                     for old in vd.glob("*.o"):
                         old.unlink()
-                per[ver] = oracle.compile_many(p, module, srcs, vd, ver)
+                per[c] = oracle.compile_many(p, module, srcs, vd, c[0], c[1])
             for b, f in zip(members, srcs):
                 best = None
-                for ver in cands:
-                    o = per[ver].get(f)
+                for c in cands:
+                    o = per[c].get(f)
                     ow = oracle.words(o, b.sym.name) if o else None
                     pct = oracle.word_score(b.tw, ow)[0] if ow else -1.0
                     if best is None or pct > best[0]:
-                        best = (pct, ver)
-                b.mw = best[1] if best else None
+                        best = (pct, c)
+                b.mw, b.extra = best[1] if best else (None, None)
 
     def compile_score(groups: Dict[tuple, List[Tuple[_Body, str, List[str]]]]) -> None:
         """Every body's candidates of a level, in chunks of CHUNK files, each chunk in a fresh

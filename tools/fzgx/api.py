@@ -437,6 +437,8 @@ def submit(p: Project, symbol: str, agent: str = "unknown", message: str = "",
             # a version the oracle chose among the module's candidates is the unit's version
             if not mw_version and res.mw_version and res.mw_version != oracle.module_flags(p, sym.module)[1]:
                 mw_version = res.mw_version
+            if not extra_cflags and getattr(res, "extra_cflags", None):
+                extra_cflags = res.extra_cflags
             if mw_version or extra_cflags:
                 _set_unit_opts(p, unit_src, mw_version, extra_cflags)
         except Exception as e:

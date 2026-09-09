@@ -406,7 +406,7 @@ def try_fix(p: Project, symbol: str, body: str, budget_s: float = 30.0, max_cand
         srcs = []
         for i_, t_ in enumerate(texts):
             f = bdir / f"c{i_}.c"; f.write_text(t_); srcs.append(f)
-        objs = oracle.compile_many(p, sym.module, srcs, bdir / "obj", base.mw_version) if target and tw else {}
+        objs = oracle.compile_many(p, sym.module, srcs, bdir / "obj", base.mw_version, getattr(base, "extra_cflags", None)) if target and tw else {}
         res = []
         for i_, t_ in enumerate(texts):
             o = objs.get(srcs[i_])

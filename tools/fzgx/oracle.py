@@ -54,6 +54,7 @@ class CheckResult:
     pool_rows: int = 0               # differing rows that are only pool relocations
     percent_adjusted: float = 0.0    # match % with the pool rows counted as matching
     mw_version: Optional[str] = None  # the compiler version this verdict came from (candidates: the best)
+    extra_cflags: Optional[str] = None  # the extra flags of that build (e.g. -use_lmw_stmw on)
 
     def to_json(self) -> dict:
         return {k: v for k, v in self.__dict__.items() if not k.startswith("_")}
@@ -142,33 +143,33 @@ def check(project: Project, symbol: str, max_diff_lines: int = 80, source: Optio
         if target is None or not target.exists():
             return CheckResult(False, symbol, "", error="no retail object defines this function (run ninja)")
         base_obj = STATE_DIR / "work" / (project.key(sym).replace(":", "__") + ".o")
-        chosen = mw_version
-        cands = [mw_version] if mw_version else version_candidates(project, sym.module)
+        chosen: Tuple[Optional[str], Optional[str]] = (mw_version, extra_cflags)
+        cands = [(mw_version, extra_cflags)] if (mw_version or extra_cflags) else version_candidates(project, sym.module)
         if len(cands) > 1:
-            # one compile per candidate version, the best by masked words is the one diffed
+            # one compile per candidate build, the best by masked words is the one diffed
             tw = words(target, symbol)
             best = None
-            for ver in cands:
-                o = base_obj.with_name(base_obj.stem + "." + ver.replace("/", "_") + ".o")
-                cp = compile_source(project, sym.module, source, o, ver, extra_cflags)
+            for ver, ex in cands:
+                o = base_obj.with_name(base_obj.stem + "." + ver.replace("/", "_") + ("_stmw" if ex else "") + ".o")
+                cp = compile_source(project, sym.module, source, o, ver, ex)
                 if cp.returncode != 0 or not o.exists():
                     continue
                 ow = words(o, symbol)
                 pct = word_score(tw, ow)[0] if tw and ow else -1.0
                 if best is None or pct > best[0]:
-                    best = (pct, ver, o, cp)
+                    best = (pct, (ver, ex), o, cp)
             if best is None:
-                cp = compile_source(project, sym.module, source, base_obj, cands[0], extra_cflags)
+                cp = compile_source(project, sym.module, source, base_obj, cands[0][0], cands[0][1])
             else:
                 chosen = best[1]
                 shutil.copy(best[2], base_obj); cp = best[3]
         else:
-            cp = compile_source(project, sym.module, source, base_obj, cands[0], extra_cflags)
+            cp = compile_source(project, sym.module, source, base_obj, cands[0][0], cands[0][1])
         if cp.returncode != 0 or not base_obj.exists():
             err = "\n".join(l for l in (cp.stdout + cp.stderr).splitlines() if "Usage Warning" not in l)
             return CheckResult(False, symbol, "", error=err.strip()[-4000:])
         res = _diff(project, sym.module, symbol, "", max_diff_lines, target=target, base=base_obj)
-        res.mw_version = chosen
+        res.mw_version, res.extra_cflags = chosen
         if res.ok and res.matched_pool:
             mapping = {private: pooled for private, pooled, _ in res._pool_pairs}
             r = poolfix.apply(base_obj, mapping)
@@ -176,7 +177,7 @@ def check(project: Project, symbol: str, max_diff_lines: int = 80, source: Optio
                 res2 = _diff(project, sym.module, symbol, "", max_diff_lines, target=target, base=base_obj)
                 if res2.ok and res2.matched:
                     res2.pool_map, res2.pool = mapping, res.pool
-                    res2.mw_version = chosen; res2.uncarved = True
+                    res2.mw_version, res2.extra_cflags = chosen; res2.uncarved = True
                     return res2
         res.uncarved = True
         if res.ok and res.matched_pool:
@@ -323,13 +324,22 @@ def _pool_rows(project: Project, module: str, left: dict, right: dict,
 
 
 _FLAGS_CACHE: Dict[tuple, Tuple[str, str]] = {}
-# the DOL holds SDK code built by 1.2.5n next to game code built by 1.3.2, interleaved by address:
-# an uncarved DOL function is compiled under both and the better one is its version
-VERSION_CANDIDATES = {"main": ["GC/1.2.5n", "GC/1.3.2"]}
+# the DOL holds SDK code built by 1.2.5n next to game code built by 1.3.2, interleaved by address,
+# and some of that game code (and movie_module) was built with `-use_lmw_stmw on` (stmw/lmw
+# prologues): an uncarved function is compiled under every candidate (version, extra flags)
+# pair and the best one is its build
+STMW = "-use_lmw_stmw on"
+VERSION_CANDIDATES = {"main": [("GC/1.2.5n", None), ("GC/1.3.2", None), ("GC/1.3.2", STMW)],
+                      "movie_module": [("GC/1.3.2", None), ("GC/1.3.2", STMW)]}
 
 
-def version_candidates(project: Project, module: str) -> List[str]:
-    return VERSION_CANDIDATES.get(module, [module_flags(project, module)[1]])
+def version_candidates(project: Project, module: str) -> List[Tuple[str, Optional[str]]]:
+    return VERSION_CANDIDATES.get(module, [(module_flags(project, module)[1], None)])
+
+
+def _join_flags(*parts: Optional[str]) -> Optional[str]:
+    joined = " ".join(x for x in parts if x)
+    return joined or None
 
 
 def version_for(project: Project, sym: Symbol, source: Optional[Path] = None) -> Tuple[Optional[str], Optional[str]]:
@@ -350,14 +360,14 @@ def version_for(project: Project, sym: Symbol, source: Optional[Path] = None) ->
     best = None
     d = STATE_DIR / "work" / "ver"
     d.mkdir(parents=True, exist_ok=True)
-    for ver in cands:
-        o = d / f"{project.key(sym).replace(':', '__')}.{ver.replace('/', '_')}.o"
-        cp = compile_source(project, sym.module, source, o, ver)
+    for ver, ex in cands:
+        o = d / f"{project.key(sym).replace(':', '__')}.{ver.replace('/', '_')}{'_stmw' if ex else ''}.o"
+        cp = compile_source(project, sym.module, source, o, ver, ex)
         ow = words(o, sym.name) if cp.returncode == 0 and o.exists() else None
         pct = word_score(tw, ow)[0] if ow else -1.0
         if best is None or pct > best[0]:
-            best = (pct, ver)
-    return (best[1] if best else None), None
+            best = (pct, ver, ex)
+    return (best[1], best[2]) if best else (None, None)
 
 
 def module_flags(project: Project, module: str) -> Tuple[str, str]:
@@ -469,11 +479,11 @@ def check_many(project: Project, items: List[Tuple[str, Path]], max_diff_lines: 
             f = cdir / (project.key(sym).replace(":", "__") + ".c")
             f.write_text(source.read_text())
             srcs.append(f)
-        cands = [mw] if mw else version_candidates(project, module)
-        chosen_ver: Dict[Path, str] = {}
+        cands = [(mw, extra)] if (mw or extra) else version_candidates(project, module)
+        chosen_ver: Dict[Path, Tuple[Optional[str], Optional[str]]] = {}
         if len(cands) > 1 and any(not unit for _, _, _, unit in group):
-            # uncarved functions: every candidate version, the best object per function is kept
-            per_ver = {ver: compile_many(project, module, srcs, cdir / "obj" / ver.replace("/", "_"), ver, extra) for ver in cands}
+            # uncarved functions: every candidate build, the best object per function is kept
+            per_ver = {c: compile_many(project, module, srcs, cdir / "obj" / (c[0].replace("/", "_") + ("_stmw" if c[1] else "")), c[0], c[1]) for c in cands}
             objs = {}
             for (symbol, sym, source, unit), f in zip(group, srcs):
                 if unit:
@@ -482,17 +492,17 @@ def check_many(project: Project, items: List[Tuple[str, Path]], max_diff_lines: 
                     continue
                 tw = words(project.target_object_for(sym), sym.name)
                 best = None
-                for ver in cands:
-                    o = per_ver[ver].get(f)
+                for c in cands:
+                    o = per_ver[c].get(f)
                     if not o: continue
                     ow = words(o, sym.name)
                     pct = word_score(tw, ow)[0] if tw and ow else -1.0
                     if best is None or pct > best[0]:
-                        best = (pct, ver, o)
+                        best = (pct, c, o)
                 if best:
                     objs[f] = best[2]; chosen_ver[f] = best[1]
         else:
-            objs = compile_many(project, module, srcs, cdir / "obj", cands[0], extra)
+            objs = compile_many(project, module, srcs, cdir / "obj", cands[0][0], cands[0][1])
             chosen_ver = {f: cands[0] for f in objs}
 
         def diff_one(arg) -> Tuple[str, CheckResult]:
@@ -513,7 +523,7 @@ def check_many(project: Project, items: List[Tuple[str, Path]], max_diff_lines: 
                         res = res2
             if not unit:
                 res.uncarved = True
-            res.mw_version = chosen_ver.get(f)
+            res.mw_version, res.extra_cflags = chosen_ver.get(f, (None, None))
             return symbol, res
 
         from concurrent.futures import ThreadPoolExecutor

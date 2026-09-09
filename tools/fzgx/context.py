@@ -287,8 +287,8 @@ def build_context(project: Project, ledger: Optional[Ledger], symbol: str,
                 srcs = []
                 for vi, vt in enumerate(variants):
                     f = ddir / f"{project.key(sym).replace(':', '__')}_{vi}.c"; f.write_text(vt); srcs.append(f)
-                for ver in _oracle.version_candidates(project, module):
-                    objs = _oracle.compile_many(project, module, srcs, ddir / "obj" / ver.replace("/", "_"), ver)
+                for ver, ex in _oracle.version_candidates(project, module):
+                    objs = _oracle.compile_many(project, module, srcs, ddir / "obj" / (ver.replace("/", "_") + ("_stmw" if ex else "")), ver, ex)
                     for vt, f in zip(variants, srcs):
                         o = objs.get(f)
                         rows = _oracle.function_rows(project, symbol, tgt, o) if o else None
