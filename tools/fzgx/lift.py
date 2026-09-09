@@ -13,7 +13,7 @@ import json
 import re
 from typing import Dict, List, Optional, Tuple
 
-from .project import Project
+from .project import ROOT, Project
 
 WIDTH = {"lwz": 4, "lhz": 2, "lha": 2, "lbz": 1, "lfs": 4, "lfd": 8, "stw": 4, "sth": 2, "stb": 1, "stfs": 4, "stfd": 8}
 LOAD_T = {"lwz": "u32", "lhz": "u16", "lha": "s16", "lbz": "u8", "lfs": "f32", "lfd": "f64",
@@ -98,6 +98,83 @@ def lift(p: Project, module: str, name: str) -> Optional[str]:
         return None
 
 
+_PROTOS: Dict[str, Dict[str, tuple]] = {}
+
+
+def known_protos(p: Project) -> Dict[str, Tuple[str, List[str]]]:
+    """{callee: (return type, [parameter types])} from every `extern` prototype in the matched
+    sources: declarations that matched are the compiler's truth. The most common spelling wins."""
+    from collections import Counter  # scoped: one tally
+    key = str(p.version)
+    if key in _PROTOS:
+        return _PROTOS[key]
+    BASIC = {"u8", "s8", "u16", "s16", "u32", "s32", "f32", "f64", "void", "int", "char", "short", "long", "float", "double", "unsigned"}
+
+    def clean(params: str) -> Optional[List[str]]:
+        plist = [] if params.strip() in ("", "void") else [x.strip() for x in params.split(",")]
+        out = []
+        for x in plist:
+            if x == "...":
+                out.append(x); continue
+            m_ = re.fullmatch(r"((?:const\s+)?(?:unsigned\s+)?[A-Za-z_]\w*)(\s*\**)\s*(?:[A-Za-z_]\w*)?(\[[^\]]*\])?", x)
+            if not m_ or m_.group(1).replace("const ", "").split()[-1] not in BASIC:
+                return None  # a TU-private type: not usable from another unit
+            t_ = (m_.group(1) + (" " + m_.group(2).strip() if m_.group(2).strip() else "")).strip()
+            if m_.group(3):
+                t_ += " *"
+            out.append(t_)
+        return out
+
+    defs: Dict[str, Tuple[str, List[str]]] = {}
+    tally: Dict[str, Counter] = {}
+    for f in (ROOT / "src").rglob("*.c"):
+        try:
+            text = f.read_text()
+        except OSError:
+            continue
+        # the definition is the truth
+        for m in re.finditer(r"^((?:static\s+)?(?:const\s+)?[A-Za-z_]\w*(?:\s*\*)*)\s+([A-Za-z_]\w*)\s*\(([^)]*)\)\s*\{", text, re.M):
+            ret, nm, params = m.group(1).replace("static ", "").strip(), m.group(2), m.group(3)
+            pl = clean(params)
+            if pl is not None and ret.split()[-1].rstrip("*").strip() in BASIC:
+                defs[nm] = (ret, pl)
+        for m in re.finditer(r"^extern\s+((?:const\s+)?[A-Za-z_]\w*(?:\s*\*)*)\s+([A-Za-z_]\w*)\s*\(([^)]*)\)\s*;", text, re.M):
+            ret, nm, params = m.group(1).strip(), m.group(2), m.group(3)
+            pl = clean(params)
+            if pl is None or ret.split()[-1].rstrip("*").strip() not in BASIC:
+                continue
+            tally.setdefault(nm, Counter())[(ret, tuple(pl))] += 1
+    out = {nm: (max(c.items(), key=lambda kv: kv[1])[0][0], list(max(c.items(), key=lambda kv: kv[1])[0][1]), False) for nm, c in tally.items()}
+    out.update({nm: (r_, pl, True) for nm, (r_, pl) in defs.items()})
+    _PROTOS[key] = out
+    return out
+
+
+def lift_total(p: Project, module: str, name: str, max_ins: int = 1200) -> Optional[str]:
+    """The draft that never gives up: every instruction the lifter cannot explain is a `???`
+    marker and an unknown local. For large functions, where an agent edits rather than writes."""
+    fa = p.function_asm(module).get(name)
+    if fa is None:
+        return None
+    ins: List[Tuple[str, List[str]]] = []
+    labels: Dict[str, int] = {}
+    for ln in fa.asm:
+        t = ln.strip()
+        if t.startswith(".L_") and t.endswith(":"):
+            labels[t[:-1]] = len(ins); continue
+        m = LINE_RE.match(t)
+        if m:
+            ins.append((m.group(1), [a.strip() for a in m.group(2).split(",")] if m.group(2) else []))
+    if not ins or len(ins) > max_ins:
+        return None
+    LABELS[0] = labels
+    ARITY_HINT[0] = {}; ARITY_SEEN[0] = {}; FLOAT_CALLEES[0] = set()
+    try:
+        return _lift(p, module, name, ins, total=True)
+    except Exception:
+        return None
+
+
 def skeleton(p: Project, module: str, name: str) -> Optional[str]:
     """What the lifter recovers before it gives up: declarations, layouts, locals, the leading
     statements, and a marker for what is left. For the agent's context when no full draft exists."""
@@ -154,7 +231,8 @@ def lift_variants(p: Project, module: str, name: str) -> List[str]:
     return out
 
 
-def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site_temps: bool = True, partial: bool = False) -> Optional[str]:
+def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site_temps: bool = True, partial: bool = False,
+          total: bool = False) -> Optional[str]:
     syms = p.symbols(module)
     regs: Dict[str, str] = {}          # register -> C expression
     rtype: Dict[str, str] = {}         # register -> C type of the expression
@@ -617,6 +695,9 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
     i = -1
     gave_at: Optional[int] = None
     gave_why = ""
+    unknown_count = [0]
+    protos = known_protos(p)
+    void_calls: set = set()
     temps_written: List[Tuple[str, int]] = []
     carried: Dict[str, str] = {}     # register -> local name while inside a loop region
     loop_regions: List[Tuple[int, int, int]] = []  # (body_start, test_start, backbranch_index)
@@ -1020,6 +1101,7 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
             stmts.append(f"{tn} = {init};")
             regs[r_] = tn; carried[r_] = tn
     for i, (mn, a) in enumerate(ins):
+        n_open, n_stmts = len(open_ifs), len(stmts)
         try:
             # a value used more than once (before its register is redefined) lives in a local: the
             # compiler would otherwise recompute or reschedule the expression at each use
@@ -1086,6 +1168,8 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                         stmts.append(f"{tn} = {regs[pd]};"); regs[pd] = tn
             while open_ifs and open_ifs[-1][0] == i:
                 text_ = open_ifs.pop()[1]
+                if text_ == "} else {" and open_ifs and open_ifs[-1][0] == i and open_ifs[-1][1] == "} else {":
+                    text_ = "}"  # an inner region whose else is the enclosing region's: a plain if
                 stmts.append(text_)
                 if text_ == "} else {" and i in else_state:
                     snap_r, snap_t = else_state.pop(i)
@@ -1915,8 +1999,17 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                 if temp_low is not None and temp_low - 1 > top:
                     top = temp_low - 1
                 want = ARITY_HINT[0].get(callee) if callee else None
-                if want is not None and 2 + want > top and all(f"r{k}" in regs for k in range(top + 1, 3 + want)):
+                known = protos.get(callee) if callee else None
+                if known is not None and "..." not in known[1] and known[2]:
+                    n_int = sum(1 for t_ in known[1] if not t_.startswith("f"))
+                    if 2 + n_int > top and all(f"r{k}" in regs for k in range(top + 1, 3 + n_int)):
+                        top = 2 + n_int
+                    elif 2 + n_int < top:
+                        top = 2 + n_int  # the extra registers were temporaries, not arguments
+                elif want is not None and 2 + want > top and all(f"r{k}" in regs for k in range(top + 1, 3 + want)):
                     top = 2 + want
+                if known is not None and not known[2] and "..." not in known[1] and sum(1 for t_ in known[1] if not t_.startswith("f")) != top - 2:
+                    known = None  # an extern-derived prototype that disagrees with the site: not trusted
                 if callee:
                     ARITY_SEEN[0].setdefault(callee, []).append(top - 2)
                     if any(f"f{k}" in regs and f"f{k}" in written_since_call for k in range(1, 9)):
@@ -1962,6 +2055,8 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                 written_since_call.clear()
                 if callee.startswith("(("):
                     pass  # a pointer call: the typedef carries the prototype
+                elif known is not None:
+                    externs[callee] = f"extern {known[0]} {callee}({', '.join(known[1]) or 'void'});"
                 elif variadic_next[0]:
                     variadic_next[0] = False
                     proto = f"extern u32 {callee}({ptypes_[0] if ptypes_ else 'void *'}, ...);"
@@ -1975,17 +2070,41 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                 for r in list(regs):
                     if re.fullmatch(r"r([0-9]|1[0-2])|f([0-9]|1[0-3])", r):
                         regs.pop(r, None)
-                regs["r3"] = f"__CALLRET__{len(calls) - 1}"; rtype["r3"] = "u32"
+                if known is not None and known[0] == "void":
+                    void_calls.add(len(calls) - 1)  # no result: a later read of r3 is the lifter's error
+                else:
+                    regs["r3"] = f"__CALLRET__{len(calls) - 1}"; rtype["r3"] = "u32"
+                    if known is not None and known[0].startswith("f"):
+                        regs.pop("r3", None); regs["f1"] = f"__CALLRET__{len(calls) - 1}"; rtype["f1"] = known[0]
                 continue
             raise Give()
 
         except (Give, KeyError, IndexError, ValueError) as e:
+            why = (str(e)[:60] if isinstance(e, Give) else f"{type(e).__name__}: {str(e)[:60]}") if str(e) else ("" if isinstance(e, Give) else type(e).__name__)
+            if total and i >= 0:
+                # never give up: the instruction stays as a marker for the reader (and the agent),
+                # its destination register becomes an unknown local so the rest still compiles
+                del open_ifs[n_open:]
+                stmts[n_stmts:] = [st for st in stmts[n_stmts:] if not st.rstrip().endswith("{")]
+                unknown_count[0] += 1
+                stmts.append(f"/* ??? {mn} {', '.join(a)}" + (f" ({why})" if why else "") + " */")
+                if a and mn not in STORE_T and not mn.startswith(("st", "cmp", "b")) and mn not in ("mtlr", "mtspr", "mtctr") and re.fullmatch(r"[rf]\d+", a[0]):
+                    un = f"unk_{unknown_count[0]}"
+                    temps.append(f"{'f32' if a[0].startswith('f') else 'u32'} {un};")
+                    regs[a[0]] = un; rtype[a[0]] = "f32" if a[0].startswith("f") else "u32"; def_idx[a[0]] = i
+                    written_since_call.add(a[0])
+                continue
             # a KeyError is the lifter losing track of a register: the same give-up, later
             if not partial or (not isinstance(e, Give) and i < 0):
                 raise
             gave_at = i
-            gave_why = (str(e)[:60] if isinstance(e, Give) else f"{type(e).__name__}: {str(e)[:60]}") if str(e) else ("" if isinstance(e, Give) else type(e).__name__)
+            gave_why = why
             break
+    if total:
+        while open_ifs:
+            stmts.append(open_ifs.pop()[1])
+        if unknown_count[0]:
+            stmts.insert(0, f"/* {unknown_count[0]} instruction(s) not lifted: see the ??? markers */")
     if partial and gave_at is not None:
         left = len(ins) - gave_at
         nxt = "; ".join(f"{m_} {', '.join(a_)}" for m_, a_ in ins[gave_at:gave_at + 4])
@@ -2108,7 +2227,7 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
         if ret.startswith(("&", "((u8 *)", "(u8 *)", "(struct ")):
             ret = f"(u32){ret}"  # an address returned as an integer
         body.append(f"return {ret};")
-    if not partial and (any(("__MULHU__" in b or "__I2D__" in b or "__XORIS__" in b or "__FCTIWZ__" in b) for b in body) or (ret and any(x in ret for x in ("__MULHU__", "__I2D__", "__XORIS__", "__FCTIWZ__")))):
+    if not partial and not total and (any(("__MULHU__" in b or "__I2D__" in b or "__XORIS__" in b or "__FCTIWZ__" in b) for b in body) or (ret and any(x in ret for x in ("__MULHU__", "__I2D__", "__XORIS__", "__FCTIWZ__")))):
         raise Give()
     def peephole(b: str) -> str:
         m = re.fullmatch(r"(\S.*?) = \((\S.*?) ([+-]) (\d+)\);", b)
@@ -2173,7 +2292,7 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
             decl_params.append(f"struct {sname} *arg{i}")
         else:
             decl_params.append(f"{ptypes[r]} arg{i}")
-    if calls and not frame and not partial:
+    if calls and not frame and not partial and not total:
         raise Give()
     def struct_text(sname: str, offs: Dict[int, str]) -> str:
         lines = [f"struct {sname} {{"]
@@ -2186,7 +2305,7 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
         lines.append("};")
         return "\n".join(lines)
     empty_globals = [g for g, offs in gfields.items() if not offs]
-    for size in sorted(copy_types):
+    for size in sorted(copy_types | set(copy_dst_locals.values())):
         structs.append(f"struct {name}_Copy{size} {{ u32 a[{size // 4}]; }};")
     for g, offs in gfields.items():
         sname = f"{name}_{g}"
@@ -2208,18 +2327,32 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
     # an integer passed where the prototype says `void *` (another site passed an address)
     for c, proto in list(externs.items()):
         m_p = re.match(r"extern \w[\w ]*? (\w+)\((.*)\);$", proto)
-        if not m_p or "void *" not in m_p.group(2):
+        if not m_p or "*" not in m_p.group(2):
             continue
         ptl = [x.strip() for x in m_p.group(2).split(",")]
-        vpos = [k for k, x in enumerate(ptl) if x == "void *"]
+        vpos = [k for k, x in enumerate(ptl) if x.endswith("*")]
+        ptypes_p = {k: ptl[k] for k in vpos}
         def fix_call(b: str) -> str:
-            def rep(m_c):
-                args = [a.strip() for a in re.split(r",(?![^()]*\))", m_c.group(1))] if m_c.group(1).strip() else []
+            out_b = ""; pos = 0
+            while True:
+                m_c = re.search(rf"\b{re.escape(c)}\(", b[pos:])
+                if not m_c:
+                    return out_b + b[pos:]
+                start = pos + m_c.end(); depth = 1; j = start
+                while j < len(b) and depth:
+                    depth += (b[j] == "(") - (b[j] == ")"); j += 1
+                inner = b[start:j - 1]
+                args = []; cur = ""; dp = 0
+                for ch in inner:
+                    if ch == "," and dp == 0:
+                        args.append(cur.strip()); cur = ""; continue
+                    dp += (ch == "(") - (ch == ")"); cur += ch
+                if cur.strip() or args:
+                    args.append(cur.strip())
                 for k in vpos:
-                    if k < len(args) and not args[k].startswith(("&", "(void *)", "loc_", "(u8 *)", "((u8 *)")):
-                        args[k] = f"(void *){args[k]}"
-                return f"{c}({', '.join(args)})"
-            return re.sub(rf"\b{re.escape(c)}\(((?:[^()]|\([^()]*\))*)\)", rep, b)
+                    if k < len(args) and not args[k].startswith(("&", "(void *)", "loc_", "(u8 *)", "((u8 *)", "(" + ptypes_p[k] + ")")):
+                        args[k] = f"({ptypes_p[k]}){args[k]}"
+                out_b += b[pos:pos + m_c.start()] + f"{c}({', '.join(args)})"; pos = j
         body = [fix_call(b) for b in body]
     ptr_names = [f"arg{i}" for i, r in enumerate(params) if r in fields] + [ln for ln in locals_ if ln.startswith("p_")] + list(pfields)
     decl_line = re.compile(r"^\s*(?!return\b)(struct\s+\w+\s*\*+|[A-Za-z_]\w*\s*\*+|[A-Za-z_]\w*\s+)\s*[A-Za-z_]\w*(\[[^\]]*\])*;$")
@@ -2256,6 +2389,7 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
         for g in list(gfields):
             sname = f"{name}_{g}"
             structs = [padded(t_, g) if t_.startswith(f"struct {sname} {{") else t_ for t_ in structs]
+    externs.pop(name, None)  # never a declaration of the function itself
     text = ['#include "types.h"', ""]
     if structs:
         text += structs + [""]
