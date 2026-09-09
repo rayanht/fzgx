@@ -3202,3 +3202,6 @@ dol/GXInitFifoBase.c:
 
 dol/__get_debug_bba.c:
 	.init       start:0x8000314C end:0x80003154 align:4
+
+dol/__set_debug_bba.c:
+	.init       start:0x80003140 end:0x8000314C align:4
