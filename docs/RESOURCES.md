@@ -22,7 +22,7 @@
 ### CARD source adaptation
 
 The CARD implementations and Dolphin declarations are adapted from the CC0
-[MKDD](https://github.com/doldecomp/mkdd) and
+[MKDD](https://github.com/SwareJonge/mkdd) and
 [TWW](https://github.com/zeldaret/tww) SDK sources. Exact upstream files,
 revisions, function identities and relocation bindings are recorded in
 [`state/sdkimports/card.json`](../state/sdkimports/card.json). The complete
