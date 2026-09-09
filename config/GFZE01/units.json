@@ -2382,6 +2382,28 @@
   },
   {
     "module": "main",
+    "source": "dol/DCFlushRangeNoSync.c",
+    "symbols": [
+      "DCFlushRangeNoSync"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/DCInvalidateRange.c",
+    "symbols": [
+      "DCInvalidateRange"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
     "source": "dol/DCStoreRange.c",
     "symbols": [
       "DCStoreRange"
@@ -3140,6 +3162,17 @@
   },
   {
     "module": "main",
+    "source": "dol/ICInvalidateRange.c",
+    "symbols": [
+      "ICInvalidateRange"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
     "source": "dol/InitCallback.c",
     "symbols": [
       "InitCallback"
@@ -3246,6 +3279,17 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/LCLoadBlocks.c",
+    "symbols": [
+      "LCLoadBlocks"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
   },
   {
     "module": "main",
@@ -3514,6 +3558,17 @@
   },
   {
     "module": "main",
+    "source": "dol/OSGetTime.c",
+    "symbols": [
+      "OSGetTime"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
     "source": "dol/OSGetWirelessID.c",
     "symbols": [
       "OSGetWirelessID"
@@ -3653,6 +3708,17 @@
   },
   {
     "module": "main",
+    "source": "dol/OSRestoreInterrupts.c",
+    "symbols": [
+      "OSRestoreInterrupts"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
+  },
+  {
+    "module": "main",
     "source": "dol/OSSaveContext.c",
     "symbols": [
       "OSSaveContext"
@@ -3702,6 +3768,17 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/OSSetCurrentContext.c",
+    "symbols": [
+      "OSSetCurrentContext"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "asm": true
   },
   {
     "module": "main",

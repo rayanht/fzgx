@@ -3557,3 +3557,24 @@ dol/AlarmHandler_SIBios.c:
 
 dol/SITransfer.c:
 	.text       start:0x80012908 end:0x80012A74 align:4
+
+dol/DCInvalidateRange.c:
+	.text       start:0x8000B628 end:0x8000B654 align:4
+
+dol/DCFlushRangeNoSync.c:
+	.text       start:0x8000B6B4 end:0x8000B6E0 align:4
+
+dol/ICInvalidateRange.c:
+	.text       start:0x8000B6E0 end:0x8000B714 align:4
+
+dol/LCLoadBlocks.c:
+	.text       start:0x8000B864 end:0x8000B888 align:4
+
+dol/OSSetCurrentContext.c:
+	.text       start:0x8000BE00 end:0x8000BE5C align:4
+
+dol/OSRestoreInterrupts.c:
+	.text       start:0x8000D51C end:0x8000D540 align:4
+
+dol/OSGetTime.c:
+	.text       start:0x8001140C end:0x80011424 align:4
