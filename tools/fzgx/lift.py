@@ -40,6 +40,19 @@ def _imm(s: str) -> int:
         raise Give()  # a symbol where a number was expected: not this lifter's shape
 
 
+
+def _hw_blocks():
+    """Hardware register blocks by base address -> the link script's canonical absolute symbol
+    (first name listed per address in config/<v>/ldscript.tpl)."""
+    from . import oracle  # scoped: the template reader lives with the oracle
+    out = {}
+    for name, addr in oracle.abs_symbols().items():
+        out.setdefault(addr, name)
+    return out
+
+
+HW_BLOCKS = _hw_blocks()
+
 def lift(p: Project, module: str, name: str) -> Optional[str]:
     fa = p.function_asm(module).get(name)
     if fa is None:
@@ -1620,6 +1633,16 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                         regs[a[0]] = key  # the pointer variable itself, read through its address
                     elif kind == "global":
                         declare(key, "struct", far_ref=True); gfields.setdefault(key, {})[o + k] = t; regs[a[0]] = f"{key}.unk_{o + k:X}"
+                    elif kind == "abs" and key in HW_BLOCKS and 0 <= o < 0x1000:
+                        # the register block's base materialised (lis/addi) then indexed: retail
+                        # went through a linker-defined absolute symbol (config/<v>/ldscript.tpl)
+                        hw = HW_BLOCKS[key]
+                        externs[hw] = f"extern vu32 {hw}[];"
+                        regs[a[0]] = f"{hw}[{o // 4}]" if t == "u32" and o % 4 == 0 else f"*({t} *)((u8 *){hw} + 0x{o:X})"; rtype[a[0]] = t
+                        if reused_after_store(i, a[0], a[1]):
+                            tn = f"v{len(temps)}"; temps.append(f"{t} {tn};")
+                            stmts.append(f"{tn} = {regs[a[0]]};"); regs[a[0]] = tn
+                        continue
                     elif kind == "abs":
                         hit = symbol_at(key + o)
                         if hit is None:
@@ -1695,6 +1718,10 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                         stmts.append(f"{key} = (struct {name}_{key}_T *){val};")
                     elif kind == "global":
                         declare(key, "struct", far_ref=True); gfields.setdefault(key, {})[o + k] = t; stmts.append(f"{key}.unk_{o + k:X} = {val};")
+                    elif kind == "abs" and key in HW_BLOCKS and 0 <= o < 0x1000:
+                        hw = HW_BLOCKS[key]
+                        externs[hw] = f"extern vu32 {hw}[];"
+                        stmts.append((f"{hw}[{o // 4}]" if t == "u32" and o % 4 == 0 else f"*({t} *)((u8 *){hw} + 0x{o:X})") + f" = {val};"); continue
                     elif kind == "abs":
                         hit = symbol_at(key + o)
                         if hit is None:
@@ -1786,6 +1813,16 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                     raise Give()
                 continue
             if mn == "addi":  # plain addi (not an address)
+                try:
+                    const_ = (int(use(a[1]), 0) + _imm(a[2])) & 0xFFFFFFFF
+                except ValueError:
+                    const_ = None
+                if const_ in HW_BLOCKS:
+                    # lis/addi of a hardware register block's address as a value: the link
+                    # script's absolute symbol (retail's lis/addi carry the resolved literal)
+                    hw = HW_BLOCKS[const_]
+                    externs[hw] = f"extern vu32 {hw}[];"
+                    regs[a[0]] = f"(u32){hw}"; rtype[a[0]] = "u32"; continue
                 if rtype.get(a[1]) == "void *":
                     regs[a[0]] = f"((u8 *){use(a[1])} + {_imm(a[2])})"; rtype[a[0]] = "void *"
                 else:

@@ -282,15 +282,72 @@ def _diff(project: Project, module: str, symbol: str, unit: str, max_diff_lines:
         else:
             pool_rows, res._pool_pairs = _pool_rows(project, module, left, right, lrows, rrows)
             res.pool = [d for _, _, d in res._pool_pairs]
-            res.diff = _render_diff(lrows, rrows, max_diff_lines, pool_rows)
+            abs_rows = _abs_rows(right, lrows, rrows)
+            res.diff = _render_diff(lrows, rrows, max_diff_lines, pool_rows | abs_rows)
             # what is left once the pool rows are taken out: what the agent can still act on
             real = sum(1 for i, (l, r) in enumerate(zip(lrows, rrows))
-                       if (l.get("diff_kind") or "DIFF_NONE") != "DIFF_NONE" and i not in pool_rows)
+                       if (l.get("diff_kind") or "DIFF_NONE") != "DIFF_NONE" and i not in pool_rows and i not in abs_rows)
             n = max(len(lrows), len(rrows), 1)
             res.pool_rows = len(pool_rows)
-            res.percent_adjusted = round(100.0 * (n - real - abs(len(lrows) - len(rrows))) / n, 2) if pool_rows else res.percent
+            res.percent_adjusted = round(100.0 * (n - real - abs(len(lrows) - len(rrows))) / n, 2) if (pool_rows or abs_rows) else res.percent
             res.matched_pool = bool(pool_rows) and real == 0 and len(lrows) == len(rrows)
+            if abs_rows and not pool_rows and real == 0 and len(lrows) == len(rrows):
+                # only linker-defined absolute symbols differ (ours a relocation, retail the
+                # resolved literal): the link produces retail's bytes; verify's hash is the guard
+                res.matched = True
     return res
+
+
+_ABS_SYMS: Optional[Dict[str, int]] = None
+
+
+def abs_symbols() -> Dict[str, int]:
+    """Absolute symbols the link script defines (`NAME = 0xADDR;` in config/<v>/ldscript.tpl):
+    hardware register blocks retail addressed through the linker."""
+    global _ABS_SYMS
+    if _ABS_SYMS is None:
+        out: Dict[str, int] = {}
+        for tpl in (ROOT / "config").glob("*/ldscript.tpl"):
+            for m in re.finditer(r"^\s*(\w+)\s*=\s*(0x[0-9A-Fa-f]+)\s*;", tpl.read_text(), re.M):
+                out[m.group(1)] = int(m.group(2), 16)
+        _ABS_SYMS = out
+    return _ABS_SYMS
+
+
+def _abs_rows(right: dict, lrows: List[dict], rrows: List[dict]) -> set:
+    """Rows where ours relocates against a link-script absolute symbol and retail carries the
+    resolved literal: `lis r3, __DIRegs@ha` / `addi r3, r3, __DIRegs@l` vs `lis r3, 0xcc00` /
+    `addi r3, r3, 0x6000`. The instruction text must be identical once the symbol is resolved."""
+    table = abs_symbols()
+    if not table:
+        return set()
+    rsyms = right.get("symbols", [])
+    rows: set = set()
+    for i, (l, r) in enumerate(zip(lrows, rrows)):
+        if (l.get("diff_kind") or "DIFF_NONE") == "DIFF_NONE":
+            continue
+        li, ri = l.get("instruction", {}), r.get("instruction", {})
+        rrel = ri.get("relocation")
+        if not rrel or li.get("relocation"):
+            continue
+        try:
+            name = rsyms[rrel["target_symbol"]]["name"]
+        except (IndexError, KeyError, TypeError):
+            continue
+        if name not in table:
+            continue
+        addr = table[name] + int(rrel.get("addend") or 0)
+        ha = ((addr + 0x8000) >> 16) & 0xFFFF
+        lo = addr & 0xFFFF
+        lo_s = lo - 0x10000 if lo >= 0x8000 else lo
+        ours = ri.get("formatted", "")
+        forms = set()
+        for hi_txt in (f"0x{ha:x}", f"-0x{(0x10000 - ha) & 0xFFFF:x}" if ha >= 0x8000 else f"0x{ha:x}"):
+            for lo_txt in (f"0x{lo:x}", f"-0x{-lo_s:x}" if lo_s < 0 else f"0x{lo_s:x}"):
+                forms.add(ours.replace(f"{name}@ha", hi_txt).replace(f"{name}@h", hi_txt).replace(f"{name}@l", lo_txt))
+        if li.get("formatted", "") in forms:
+            rows.add(i)
+    return rows
 
 
 def _pool_rows(project: Project, module: str, left: dict, right: dict,

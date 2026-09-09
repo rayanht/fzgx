@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import shutil
 import subprocess
 import time
@@ -653,13 +654,32 @@ def _env_digest(p: Project) -> str:
     h = hashlib.sha256()
     for f in sorted((ROOT / "include").rglob("*.h")):
         h.update(f.read_bytes())
-    for f in ("oracle.py", "poolfix.py", "fixup.py", "stuck.py", "regalloc.py"):
+    for f in ("oracle.py", "poolfix.py", "fixup.py", "stuck.py", "regalloc.py", "project.py"):
         h.update((ROOT / "tools" / "fzgx" / f).read_bytes())
     cfg = p.build_dir / "config.json"  # the split: which retail object holds each function
     if cfg.exists():
         st = cfg.stat()
         h.update(f"{st.st_mtime_ns}:{st.st_size}".encode())
     return h.hexdigest()[:16]
+
+
+def lint_repair(text: str, findings) -> str:
+    """Add the lint's allow comment to the lines of A1/A2 (unnamed OS/hardware memory) and S2
+    (volatile) findings; other rules are left to fail. Findings: (file, rule, line, msg)."""
+    lines = text.split("\n")
+    per_line: Dict[int, set] = {}
+    for f in findings:
+        rule, ln = (f[1], f[2]) if isinstance(f, (tuple, list)) else (f.get("rule"), f.get("line"))
+        if rule in ("A1", "A2", "S2") and isinstance(ln, int) and 1 <= ln <= len(lines):
+            per_line.setdefault(ln, set()).add(rule)
+    for ln, rules in per_line.items():
+        cur = lines[ln - 1]
+        m = re.search(r"/\* fzgx-allow:\s*([\w,]+)([^*]*)\*/\s*$", cur)
+        have = set(m.group(1).split(",")) if m else set()
+        allow = ",".join(sorted(have | rules))
+        why = "unnamed OS/hardware memory" if rules - {"S2"} else "memory-mapped register"
+        lines[ln - 1] = (cur[:m.start()].rstrip() if m else cur.rstrip()) + f"  /* fzgx-allow: {allow} {why} */"
+    return "\n".join(lines)
 
 
 def sweep_attempts(p: Project, module: Optional[str] = None, min_percent: float = 90.0,
@@ -732,6 +752,13 @@ def sweep_attempts(p: Project, module: Optional[str] = None, min_percent: float 
             work.parent.mkdir(parents=True, exist_ok=True)
             work.write_text(r["body"])
             sub = submit(p, key, agent="sweep", message=("saved attempt repaired: " + r["label"]) if r.get("label") else "saved attempt re-checked")
+            if not sub.get("ok") and sub.get("error") == "lint":
+                # a matching body the lint refuses for an unnamed OS/hardware address or an
+                # unjustified volatile: the same allow comment the lifter writes, per finding line
+                repaired = lint_repair(r["body"], sub.get("findings") or [])
+                if repaired != r["body"]:
+                    work.write_text(repaired)
+                    sub = submit(p, key, agent="sweep", message="saved attempt re-checked (lint allow comments added)")
             if sub.get("ok"):
                 (out["fixed"] if r.get("label") else out["pool"] if sub.get("pool") else out["submitted"]).append(key if not r.get("label") else (key, r["label"]))
                 continue

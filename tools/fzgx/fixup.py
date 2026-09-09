@@ -205,6 +205,22 @@ def try_fix(p: Project, symbol: str, body: str, budget_s: float = 30.0, max_cand
         if len(tn) == 1 and len(on) == 1 and tn[0] != on[0] and not on[0].startswith("@"):
             if re.sub(r"\b" + re.escape(on[0]) + r"\b", tn[0], o) == t:
                 subs.setdefault(on[0], tn[0])
+    # a hardware register block under an invented name: retail's `lis rX, 0xcc00` / `addi rX, rX,
+    # 0xNNNN` literal pair against ours `SYM@ha` / `SYM@l` names the address; the link script's
+    # canonical symbol for it (config/<v>/ldscript.tpl) is what the oracle accepts
+    abs_by_addr: Dict[int, str] = {}
+    for name_, addr_ in oracle.abs_symbols().items():
+        abs_by_addr.setdefault(addr_, name_)
+    for (t1, o1), (t2, o2) in zip(diffs, diffs[1:]):
+        m1 = re.match(r"lis r\d+, (0x[0-9a-f]+)$", t1 or ""); n1 = re.match(r"lis r\d+, (\w+)@ha$", o1 or "")
+        m2 = re.match(r"(addi|ori) r\d+, r\d+, (-?0x[0-9a-f]+|-?\d+)$", t2 or ""); n2 = re.match(r"(?:addi|ori) r\d+, r\d+, (\w+)@l$", o2 or "")
+        if not (m1 and n1 and m2 and n2 and n1.group(1) == n2.group(1)):
+            continue
+        hi, lo = int(m1.group(1), 16), int(m2.group(2), 0)
+        addr = ((hi << 16) + lo) & 0xFFFFFFFF if m2.group(1) == "addi" else (hi << 16) | lo
+        canon = abs_by_addr.get(addr)
+        if canon and canon != n1.group(1):
+            subs.setdefault(n1.group(1), canon)
     for ours, retail in subs.items():
         if re.search(rf"\b{re.escape(ours)}\b", body) and not re.search(rf"\b{re.escape(retail)}\b", body):
             candidates.append((f"symbol {ours} -> {retail}", re.sub(rf"\b{re.escape(ours)}\b", retail, body)))
@@ -265,6 +281,20 @@ def try_fix(p: Project, symbol: str, body: str, budget_s: float = 30.0, max_cand
             for m in list(re.finditer(rf"(?<![\w.]){re.escape(form)}(?![\w.])", body))[:6]:
                 rep = f"0x{retail_v:X}" if form.startswith("0x") else str(retail_v)
                 candidates.append((f"imm {form} -> {rep} ({mn})", body[:m.start()] + rep + body[m.end():]))
+        if mn.rstrip(".") in ("lis", "addis", "subis", "oris", "xoris", "andis"):
+            # a high-half immediate: the C literal is a 32-bit constant whose upper half (with the
+            # low half's sign carried for addis/subis) is ours; retail's literal differs by the
+            # delta in the upper half, e.g. `== 0x1FFFF` (subis 1) where retail has 0x3FFFF (subis 3)
+            delta = (retail_v - ours_v) << 16
+            for lm in list(re.finditer(r"(?<![\w.])(0[xX][0-9A-Fa-f]+|\d+)(?![\w.])", body))[:64]:
+                L = int(lm.group(1), 0)
+                if L < 0x10000 or not ((L >> 16) & 0xFFFF == ours_v & 0xFFFF or ((L + 0x8000) >> 16) & 0xFFFF == ours_v & 0xFFFF):
+                    continue
+                nv = L + delta
+                if nv < 0:
+                    continue
+                rep = f"0x{nv:X}" if lm.group(1).lower().startswith("0x") else str(nv)
+                candidates.append((f"imm high half {lm.group(1)} -> {rep} ({mn})", body[:lm.start()] + rep + body[lm.end():]))
         if mn == "mulli" and retail_v > ours_v:
             # a stride: the struct the loop indexes is smaller than retail's; pad its tail
             for sm in re.finditer(r"((?:typedef\s+)?struct\s+\w*\s*\{)([^}]*)(\})", body):

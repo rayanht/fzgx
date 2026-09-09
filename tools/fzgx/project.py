@@ -74,6 +74,18 @@ class Function:
     unit: Optional[str]  # dtk unit name the function currently belongs to
 
 
+
+def load_json_retry(path: Path, tries: int = 20, delay: float = 0.1):
+    """json.loads of a file another process may be rewriting (dtk's split writes config.json and
+    objdiff.json in place): a short retry instead of a JSONDecodeError on the half-written file."""
+    for i in range(tries):
+        try:
+            return json.loads(path.read_text())
+        except (json.JSONDecodeError, FileNotFoundError):
+            if i == tries - 1:
+                raise
+            time.sleep(delay)
+
 class Project:
     def __init__(self, version: str = DEFAULT_VERSION) -> None:
         self.version = version
@@ -338,7 +350,7 @@ class Project:
                     for v in x:
                         walk(v)
             try:
-                walk(json.loads(cfg.read_text()))
+                walk(load_json_retry(cfg))
             except (OSError, ValueError):
                 pass
             objs = sorted(o for o in (ROOT / rel for rel in listed) if o.exists() and "/obj/auto_" in str(o))
@@ -443,7 +455,9 @@ class Project:
 
     def save_units(self, units: List[dict]) -> None:
         units.sort(key=lambda u: (u["module"], u["source"]))
-        self.units_path.write_text(json.dumps(units, indent=2) + "\n")
+        tmp = self.units_path.with_suffix(".json.tmp")
+        tmp.write_text(json.dumps(units, indent=2) + "\n")
+        os.replace(tmp, self.units_path)  # readers in other processes never see a partial file
 
     def objdiff_unit_name(self, module: str, source: str) -> str:
         return f"{module}/{source.rsplit('.', 1)[0]}"
@@ -452,7 +466,7 @@ class Project:
         path = ROOT / "objdiff.json"
         if not path.exists():
             return {}
-        return {u["name"]: u for u in json.loads(path.read_text())["units"]}
+        return {u["name"]: u for u in load_json_retry(path)["units"]}
 
     # ------------------------------------------------------------------ strings
     def string_at(self, module: str, name: str, max_len: int = 200) -> Optional[str]:
@@ -479,6 +493,12 @@ class Project:
         """Retail bytes of a data symbol (None for bss or unknown)."""
         sym = self.symbols(module).get(name)
         if not sym or sym.kind != "object" or sym.section in (".bss", ".sbss", ".sbss2"):
+            return None
+        if module == "main":
+            # the DOL layout is by segment index, not section name: find the segment by address
+            for base, data in self._rel_layout(module).values():
+                if base <= sym.addr and sym.addr + sym.size <= base + len(data):
+                    return data[sym.addr - base:sym.addr - base + sym.size]
             return None
         raw = self._raw_section(module, sym.section)
         if raw is None:

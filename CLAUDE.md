@@ -67,6 +67,15 @@ Rules that hold for everyone:
   builds it, ledger status `asm`. GNU as reads branch hints `+`/`-` relative to the branch
   direction while dtk prints the raw hint bit, so `asmunit.fix_branch_hints` respells hinted
   backward branches on copy. 107 landed on 2026-09-09; the ledger has no `blocked` rows left.
+- Hardware register blocks: retail addresses them through linker-defined absolute symbols
+  (`lis/addi` of `__DIRegs`, `__viReg`, `__SIRegs`... resolved by the link, never a folded
+  literal). `config/GFZE01/ldscript.tpl` (dtk `ldscript_template`) defines them; C declares
+  `extern vu32 __DIRegs[];`. The object oracle cannot see the link, so `oracle._abs_rows`
+  accepts a relocation against a template symbol wherever retail carries the resolved literal
+  (`fzgx verify`'s hash is the guard). The lifter emits this form (`HW_BLOCKS`), the fixup
+  renames invented names (`lbl_CC006000`) to the canonical symbol by address. Pooled literals
+  in the DOL need `Project.bytes_at` to find the segment by address (it was broken for every
+  DOL section until 2026-09-09: no DOL pool match could land).
   `fzgx uncarve --stubs` removes any unit without matched code (verify uncarves what it rejects).
 - Plateaus are data, not agent work. `fzgx stuck` classifies every saved best body at 80%+ by
   failure mode from the object diff (`.fzgx/stuck.json`, rows included). `fzgx sweep` re-checks

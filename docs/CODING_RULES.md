@@ -6,7 +6,9 @@ S1, S2; `fzgx submit` refuses a unit that fails lint.
 ## A. Shiftability (hard rules)
 
 - **A1** No integer literal in `0x80000000..0x817FFFFF`, `0xC0000000..0xC17FFFFF`
-  or `0xCC000000..0xCC00FFFF` anywhere except `include/dolphin/hw_regs.h`.
+  or `0xCC000000..0xCC00FFFF` anywhere except `include/dolphin/hw_regs.h`. Hardware register
+  blocks are the link script's absolute symbols (`extern vu32 __DIRegs[];`, see
+  `config/GFZE01/ldscript.tpl`); a raw literal is allowed only with a `/* fzgx-allow: A1 ... */` comment.
   Every cross-reference is a symbol. If the disassembly shows `lis/addi` to an
   address, find or declare the symbol at that address (`symbols.txt`).
 - **A2** No `(T *)0x8...` casts. Declare `extern T name;` instead.

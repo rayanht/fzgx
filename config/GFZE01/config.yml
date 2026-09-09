@@ -2,6 +2,7 @@
 # Reference: docs/dtk/config.example.yml (from dtk-template) for every option.
 object_base: orig/GFZE01
 object: sys/main.dol
+ldscript_template: config/GFZE01/ldscript.tpl
 hash: 421c88106697d3275a3fc26fb7a01bf6d816b271
 symbols: config/GFZE01/symbols.txt
 splits: config/GFZE01/splits.txt
