@@ -3232,3 +3232,6 @@ dol/cbForStateError.c:
 
 dol/fn_8001E9BC.c:
 	.text       start:0x8001E9BC end:0x8001EA30 align:4
+
+dol/fn_800829EC.c:
+	.text       start:0x800829EC end:0x80082A7C align:4
