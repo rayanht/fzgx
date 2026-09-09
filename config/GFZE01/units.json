@@ -2620,9 +2620,10 @@
     "symbols": [
       "PPCMtmsr"
     ],
-    "status": "nonmatching",
+    "status": "matching",
     "mw_version": null,
-    "extra_cflags": []
+    "extra_cflags": [],
+    "asm": true
   },
   {
     "module": "main",
