@@ -625,12 +625,13 @@ def words(obj: Path, name: str) -> Optional[List[int]]:
         elf = Elf(data)
     except (OSError, ValueError):
         return None
-    text = elf.section(".text")
-    if text is None:
-        return None
-    sym = next((s_ for s_ in elf.symbols() if s_["name"] == name and s_["shndx"] == text["index"]), None)
+    # the symbol's own code section: .text for almost everything, .init for the boot and
+    # cache code (dtk keeps retail's section; our objects carry the declspec'd section)
+    exec_idx = {sec["index"]: sec for sec in elf.sections if sec["flags"] & 4}
+    sym = next((s_ for s_ in elf.symbols() if s_["name"] == name and s_["shndx"] in exec_idx), None)
     if sym is None:
         return None
+    text = exec_idx[sym["shndx"]]
     lo, hi = sym["value"], sym["value"] + sym["size"]
     buf = bytearray(data[text["offset"] + lo:text["offset"] + hi])
     for s_ in elf.sections:
