@@ -88,6 +88,32 @@ def order_labels_after_functions(symbols_path: Path) -> bool:
     return changed
 
 
+def globalize_local_function(project: Project, module: str, name: str, res=None) -> bool:
+    """A `scope:local` function carved into its own unit is defined by our object under its
+    plain name, but dtk exported it from the auto object under `name_ADDR` and every other
+    object (auto objects, and the asm units copied from dtk's output) references that name.
+    Flip it to global in symbols.txt (the next split re-names the auto objects' references)
+    and rename the references in the copied sources ourselves."""
+    sp = project.module_config_dir(module) / "symbols.txt"
+    text = sp.read_text()
+    m = re.search(rf"^{re.escape(name)} = (\.\w+):0x([0-9A-Fa-f]+); // type:function[^\n]*?scope:local", text, re.M)
+    if not m:
+        return False
+    line = m.group(0)
+    text = text.replace(line, line.replace("scope:local", "scope:global"), 1)
+    sp.write_text(text)
+    project._symbols.pop(module, None)
+    suffixed = f"{name}_{int(m.group(2), 16):08X}"
+    n = 0
+    for f in list((ROOT / "src").rglob("*.s")) + list((ROOT / "src").rglob("*.c")):
+        t = f.read_text()
+        if re.search(rf"\b{re.escape(suffixed)}\b", t):
+            f.write_text(re.sub(rf"\b{re.escape(suffixed)}\b", name, t)); n += 1
+    if res is not None:
+        res.notes.append(f"scope local -> global; {n} source(s) renamed {suffixed} -> {name}")
+    return True
+
+
 def carve(project: Project, symbol: str, dry_run: bool = False) -> CarveResult:
     sym = project.resolve(symbol)
     if sym is None or sym.kind != "function":
@@ -153,6 +179,7 @@ def carve(project: Project, symbol: str, dry_run: bool = False) -> CarveResult:
             project._symbols.pop(module, None)
             res.notes.append("force_active: no callers")
 
+    globalize_local_function(project, module, sym.name, res)
     if order_labels_after_functions(project.module_config_dir(module) / "symbols.txt"):
         project._symbols.pop(module, None)
         res.notes.append("symbols.txt: function lines moved before same-address labels (mwld hang)")
