@@ -77,7 +77,10 @@ def lift(p: Project, module: str, name: str) -> Optional[str]:
         return None
     try:
         ARITY_HINT[0] = {}; ARITY_SEEN[0] = {}; FLOAT_CALLEES[0] = set()
-        text = _lift(p, module, name, ins)
+        try:
+            text = _lift(p, module, name, ins)
+        except (KeyError, IndexError, ValueError):
+            return None  # the lifter lost track: no verified draft (the total draft still exists)
         # a callee whose sites disagree on the argument count gets the widest prototype, and
         # every narrower site passes what its argument register held (the source did)
         hint = {c: max(v) for c, v in ARITY_SEEN[0].items() if len(set(v)) > 1}
@@ -86,6 +89,8 @@ def lift(p: Project, module: str, name: str) -> Optional[str]:
             try:
                 ARITY_SEEN[0] = {}
                 text = _lift(p, module, name, ins)
+            except (KeyError, IndexError, ValueError):
+                pass  # the first run's text stands
             finally:
                 ARITY_HINT[0] = {}
             # sites that still disagree (no value to pad with): the callee is declared without
