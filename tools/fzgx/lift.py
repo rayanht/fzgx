@@ -519,7 +519,8 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
     slocals: Dict[int, Dict[str, object]] = {}  # frame offset -> {"w": width or 0 (address only), "t": type}
     # struct copies through the count register: recognised up front so their address setup
     # (dst-4 / src-4) is not mistaken for locals or pointer arithmetic
-    copies: Dict[int, Tuple[int, str, str, int]] = {}  # index of `li rN, K` -> (K, rD, rS, bdnz index)
+    copies: Dict[int, Tuple[int, str, str, int]] = {}  # mtctr index -> (K, rD, rS, bdnz index)
+    copy_addresses = {}  # address setup index -> (destination register, base register, byte offset)
     for j_, (mn_, a_) in enumerate(ins):
         if mn_ == "mtctr" and a_:
             li_ = next((x for x in range(j_ - 1, max(-1, j_ - 6), -1) if ins[x][0] == "li" and ins[x][1][0] == a_[0]), None)
@@ -528,15 +529,29 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                 (l1, l2, s1, s2, _) = body_
                 rS = re.search(r"\((r\d+)\)$", l1[1][1]).group(1); rD = re.search(r"\((r\d+)\)$", s1[1][1]).group(1)
                 if l1[1][1].startswith("0x4(") and l2[1][1].startswith("0x8(") and s1[1][1].startswith("0x4(") and s2[1][1].startswith("0x8("):
-                    copies[li_] = (_imm(ins[li_][1][1]), rD, rS, j_ + 5)
+                    setups = []
+                    for reg in (rD, rS):
+                        setup = next((x for x in range(j_ - 1, max(-1, j_ - 12), -1)
+                                      if ins[x][1] and ins[x][1][0] == reg
+                                      and ins[x][0] not in STORE_T), None)
+                        if setup is None:
+                            break
+                        sm, sa = ins[setup]
+                        if sm not in ('addi', 'subi') or not re.fullmatch(r'-?(?:0x[0-9a-f]+|\d+)', sa[2]):
+                            break
+                        setups.append((setup, (reg, sa[1], _imm(sa[2]) * (-1 if sm == 'subi' else 1) + 4)))
+                    if len(setups) == 2:
+                        copies[j_] = (_imm(ins[li_][1][1]), rD, rS, j_ + 5)
+                        copy_addresses.update(setups)
     struct_syms = {sym_of(a_[2]) for mn_, a_ in ins if mn_ == "addi" and len(a_) == 3 and sym_of(a_[2]) and not a_[1] == "r1"}
     copy_dst_locals: Dict[int, int] = {}  # frame offset of a copied-into local -> size
-    for li_, (K, rD, rS, end_) in copies.items():
-        for x in range(li_, end_):
-            if ins[x][0] == "addi" and ins[x][1][0] == rD and ins[x][1][1] == "r1":
-                copy_dst_locals[_imm(ins[x][1][2]) + 4] = 8 * K
-    taken = sorted({_imm(a_[2]) for mn_, a_ in ins if mn_ == "addi" and len(a_) == 3 and a_[1] == "r1"
-                    and _imm(a_[2]) + 4 not in copy_dst_locals} | set(copy_dst_locals))
+    for ctr, (K, rD, rS, end_) in copies.items():
+        for setup, (reg, base, offset) in copy_addresses.items():
+            if setup < ctr and reg == rD and base == 'r1':
+                copy_dst_locals[offset] = 8 * K
+    taken = sorted({_imm(a_[2]) for j_, (mn_, a_) in enumerate(ins)
+                    if mn_ == "addi" and len(a_) == 3 and a_[1] == "r1"
+                    and a_[0] != 'r11' and j_ not in copy_addresses} | set(copy_dst_locals))
     top_of_locals = min(saved_slots) if saved_slots else frame_size
 
     def owner(off: int):
@@ -546,6 +561,8 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
             if t_ <= off < end:
                 return t_, off - t_
         return None
+
+    local_accesses = {}
 
     def local_at(off: int, w: int, t: str) -> str:
         own = owner(off)
@@ -559,12 +576,20 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
             i_ = taken.index(base_off)
             extent = (taken[i_ + 1] if i_ + 1 < len(taken) else top_of_locals) - base_off
             if extent <= ew:
-                return f"loc_{base_off:X}"  # a scalar whose address is taken
-            if extent >= 16:  # struct-wrapped (see the declarations)
+                expression = f"loc_{base_off:X}"
+            elif extent >= 16:
                 ent["wrapped"] = max(extent // ew, 1)
-                return f"loc_{base_off:X}.a[{inner // ew}]" if inner % ew == 0 else f"*({t} *)((u8 *)&loc_{base_off:X} + {inner})"
-            ent["array"] = max(extent // ew, 1)
-            return f"loc_{base_off:X}[{inner // ew}]" if inner % ew == 0 else f"*({t} *)((u8 *)loc_{base_off:X} + {inner})"
+                expression = f"loc_{base_off:X}.a[{inner // ew}]" if inner % ew == 0 else f"*({t} *)((u8 *)&loc_{base_off:X} + {inner})"
+            else:
+                ent["array"] = max(extent // ew, 1)
+                expression = f"loc_{base_off:X}[{inner // ew}]" if inner % ew == 0 else f"*({t} *)((u8 *)loc_{base_off:X} + {inner})"
+            if w:
+                token = f"__FRAME_{base_off:X}_{inner:X}_{t}__"
+                if t != ent["t"]:
+                    expression = f"*({t} *)((u8 *)&loc_{base_off:X} + {inner})"
+                local_accesses[token] = (base_off, inner, t, expression)
+                return token
+            return expression
         ent = slocals.setdefault(off, {"w": 0, "t": "u8", "addr": False, "elems": {}})
         if w and not ent["w"]:
             ent["w"] = w; ent["t"] = t
@@ -1274,28 +1299,24 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                 for r_, _ in ((a_[0], 0) for mn_, a_ in ins[i:end_] if mn_ == "lwz"):
                     regs.pop(r_, None)
                 continue
+            if i in copy_addresses:
+                reg, base, offset = copy_addresses[i]
+                if base == 'r1':
+                    slocals.setdefault(offset, {"w": 4, "t": "u32", "addr": True, "elems": {}})
+                    regs[reg] = f"&loc_{offset:X}"
+                else:
+                    expression = use(base)
+                    regs[reg] = f"((u8 *){expression} + {offset})" if offset else expression
+                rtype[reg] = "void *"
+                continue
             if i in copies:
                 K, rD, rS, end_ = copies[i]
                 size = 8 * K
-                dst = src = None
-                for x in range(i + 1, end_):
-                    mn_x, a_x = ins[x]
-                    if mn_x == "addi" and a_x[0] == rD and a_x[1] == "r1":
-                        off_ = _imm(a_x[2]) + 4
-                        slocals.setdefault(off_, {"w": 4, "t": "u32", "addr": True, "elems": {}})
-                        dst = f"loc_{off_:X}"
-                    elif mn_x in ("subi", "addi") and a_x[0] == rD:
-                        base_e = use(a_x[1]); k_ = _imm(a_x[2]) * (-1 if mn_x == "subi" else 1) + 4
-                        dst = f"*(struct {name}_Copy{size} *)((u8 *){base_e} + {k_})" if k_ else f"*(struct {name}_Copy{size} *){base_e}"
-                    elif mn_x in ("subi", "addi") and a_x[0] == rS:
-                        base_e = use(a_x[1]); k_ = _imm(a_x[2]) * (-1 if mn_x == "subi" else 1) + 4
-                        src = f"*(struct {name}_Copy{size} *)((u8 *){base_e} + {k_})" if k_ else f"*(struct {name}_Copy{size} *){base_e}"
-                if dst is None or src is None:
-                    raise Give()
+                dest, source = use(rD), use(rS)
+                dst = dest[1:] if re.fullmatch(r'&loc_[0-9A-F]+', dest) else f"*(struct {name}_Copy{size} *){dest}"
+                stmts.append(f"{dst} = *(struct {name}_Copy{size} *){source};")
                 copy_types.add(size)
-                stmts.append(f"{dst} = {src};")
-                for x in range(i, end_ + 1):
-                    skip.add(x)
+                skip.update(range(i + 1, end_ + 1))
                 for r_ in (rD, rS, "r0", "r3"):
                     regs.pop(r_, None)
                 continue
@@ -2196,6 +2217,10 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                         args = [use(reg) for reg, typ in slots]
                     except Give:
                         raise Give(f"cannot supply recovered signature for {callee}")
+                    for (reg, typ), expression in zip(slots, args):
+                        local = re.fullmatch(r'&loc_([0-9A-F]+)', expression)
+                        if local and signature_index.layout(typ):
+                            slocals[int(local[1], 16)].setdefault("type_candidates", set()).add(typ)
                     no_proto = False
                 elif known is not None and "..." not in known[1]:
                     raise Give(f"unsupported ABI in recovered signature for {callee}")
@@ -2321,6 +2346,32 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
             call_decls.append(f"{ctype} t{ci};")
             body = [b.replace(prefix, f"t{ci} = ", 1) if b.startswith(prefix) else b for b in body]
     body = call_decls + body
+    # A typed callee constrains the entire address-taken object, including earlier stores.
+    for off, ent in slocals.items():
+        candidates = ent.get("type_candidates", set())
+        if len(candidates) != 1:
+            continue
+        pointer = next(iter(candidates))
+        fields_, size = signature_index.layout(pointer)
+        extent = (next((o for o in taken if o > off), top_of_locals) - off)
+        if copy_dst_locals.get(off, size) != size or size > extent:
+            continue
+        if any(inner + width > size for inner, (width, _) in ent.get("elems", {}).items()):
+            continue
+        ent["ctype"] = re.sub(r'\b(const|volatile)\s*', '', pointer[:-1]).strip()
+        for k, line in enumerate(body):
+            body[k] = re.sub(rf'^(loc_{off:X} = )\*\(struct {name}_Copy{size} \*\)',
+                             rf'\1*({ent["ctype"]} *)', line)
+    for token, (off, inner, typ, fallback) in local_accesses.items():
+        ctype = slocals[off].get("ctype")
+        member = signature_index.member(ctype + ' *', inner, typ) if ctype else None
+        expression = f'loc_{off:X}.{member[0]}' if member else (
+            f'*({typ} *)((u8 *)&loc_{off:X} + {inner})' if ctype else fallback)
+        if member and signature_index.category(member[1]) == 'pointer':
+            body = [re.sub(rf'^{token} = (.*);$', rf'{token} = ({member[1]})(\1);', b) for b in body]
+        body = [b.replace(token, expression) for b in body]
+        if ret:
+            ret = ret.replace(token, expression)
     if slocals:
         offs = sorted(slocals)
         top = min(saved_slots) if saved_slots else frame_size
@@ -2330,6 +2381,8 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
             nxt = offs[i_ + 1] if i_ + 1 < len(offs) else top
             size = max(nxt - off_, ent["w"] or 1)
             w = ent["w"] or 1
+            if ent.get("ctype"):
+                decls.append((off_, f"{ent['ctype']} loc_{off_:X};", "struct")); continue
             if off_ in copy_dst_locals:
                 decls.append((off_, f"struct {name}_Copy{copy_dst_locals[off_]} loc_{off_:X};", "struct")); continue
             if not ent["w"] and size in (1, 2, 4, 8):  # address only: a scalar of that size

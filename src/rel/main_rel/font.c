@@ -905,6 +905,170 @@ void fn_1_4F724(void) {
 }
 /* fzgx:end fn_1_4F724 */
 
+/* fzgx:begin fn_1_4F734 noprologue */
+#include "types.h"
+#include "font.h"
+
+typedef struct State {
+    FontDrawPacket *current;
+    s32 warned;
+    u8 unk_8[0x2028];
+    s32 override_enabled, override_value;
+    u32 texture[8];
+} State;
+typedef struct Config {
+    u32 capacity;
+    FontDrawPacket *packets;
+    u8 unk_8[0x44];
+    char warning[1];
+} Config;
+typedef struct ImageInfo {
+    u8 unk_0[8];
+    u16 width, height;
+    u32 unk_C;
+} ImageInfo;
+typedef struct Images {
+    u32 unk_0;
+    ImageInfo *info;
+    u32 unk_8;
+    u32 (*textures)[8];
+} Images;
+typedef struct Resource {
+    s32 loaded;
+    u8 unk_4[0x1c];
+    Images *images;
+    u32 unk_24;
+} Resource;
+extern State lbl_1_bss_4C678;
+extern Config lbl_1_data_1C500;
+extern u16 lbl_1_bss_646D2;
+extern u8 *lbl_801A6D00;
+extern Resource lbl_1_data_FCD4[];
+extern void fn_1_A71CC(void), fn_800724C8(void), lbl_8006D758(void), fn_80072558(void),
+    fn_1_A722C(void);
+extern void fn_8007245C(u32), fn_80074788(u32), fn_80074660(u32), fn_80073678(u32),
+    fn_80073898(u32), fn_80073C6C(u32), fn_800720B0(u32), fn_80072864(u32);
+extern void fn_800745A4(u32, u32, u32, u32, u32, u32), fn_80072D64(u32, u32, u32, u32, u32, u32),
+    fn_80072E20(u32, u32, u32, u32, u32, u32);
+extern void fn_800734A8(u32, u32, u32, u32), fn_800728A8(u32, u32, u32, u32);
+extern void fn_80072AB0(u32, u32, u32), fn_80074918(u32, u32, u32);
+extern void fn_80072C24(u32, u32, u32, u32, u32), fn_80072CC4(u32, u32, u32, u32, u32);
+extern f32 fn_1_519AC(u32);
+extern void DCFlushRange(void *, u32);
+extern void fn_80035C50(void *, void *, u16, u16, u32, u32, u32, u8);
+extern void fn_80035EC4(void *, u32, u32, f32, f32, f32, u8, u8, u32);
+extern void fn_80073778(void *, u32);
+extern void fn_1_4EDAC(FontDrawPacket *, f32, f32);
+extern void fn_1_159588(u32);
+extern void OSReport(const char *, ...);
+extern void *fn_80008BA8(void *, const void *, u32);
+extern s32 fn_1_54298(void), fn_1_542A8(void);
+extern f32 fn_1_542B8(void);
+int fn_1_4F734(FontDrawPacket *input) {
+    State *state = &lbl_1_bss_4C678;
+    Config *config = &lbl_1_data_1C500;
+    if (input->image >= 0xffff0000u)
+        return 0;
+    if (input->flags & 0x20000) {
+        FontDrawPacket local = *input;
+        int result;
+        fn_1_A71CC();
+        fn_800724C8();
+        fn_8007245C(0x2200);
+        fn_80074788(0);
+        fn_80074660(1);
+        fn_80073678(1);
+        fn_80073898(0);
+        fn_80073C6C(0);
+        fn_800745A4(0, 1, 4, 0x3c, 0, 0x7d);
+        fn_800734A8(0, 0, 0, 0xff);
+        fn_80072AB0(0, 0, 0);
+        fn_80072C24(0, 0xf, 2, 8, 4);
+        fn_80072D64(0, 0, 0, 0, 1, 0);
+        fn_80072CC4(0, 7, 1, 4, 2);
+        fn_80072E20(0, 0, 0, 0, 1, 0);
+        fn_80074918(1, 7, 0);
+        fn_800728A8(1, 4, 5, 0);
+        fn_800720B0(0);
+        fn_80072864(2);
+        lbl_8006D758();
+        fn_80072558();
+        if (state->override_enabled) {
+            local.flags |= 0x08000000;
+            local.depth = (f32)state->override_value;
+        }
+        lbl_801A6D00[0x197] = 0xff;
+        if (local.flags & 0x800000) {
+            if (local.flags & 0x2000000)
+                result = 0;
+            else {
+
+                DCFlushRange(local.pixels, (u32)((f32)local.height *
+                                                 ((f32)local.width * fn_1_519AC(local.format))));
+                {
+                    u32 width = local.width, height = local.height;
+                    fn_80035C50(state->texture, local.pixels, width, height, local.format, 0, 0, 0);
+                }
+                fn_80035EC4(state->texture, 0, 0, 0.0f, 0.0f, 0.0f, 0, 0, 0);
+                fn_80073778(state->texture, 0);
+                fn_1_4EDAC(&local, (f32)local.width, (f32)local.height);
+                result = 1;
+            }
+        } else {
+            if (local.flags & 0x2000000)
+                result = 0;
+            else {
+                Resource *resource;
+                Resource *table;
+                u32 id, index;
+                fn_1_159588(local.image);
+                table = lbl_1_data_FCD4;
+                id = local.image;
+                index = (id >> 8) & 0xffff;
+                if (!table[index].loaded)
+                    result = 0;
+                else {
+                    ImageInfo *info;
+                    f32 height, width;
+                    resource = table;
+                    resource += index;
+                    info = &resource->images->info[(u8)id];
+                    width = (f32)info->width;
+                    height = (f32)info->height;
+                    fn_80073778(resource->images->textures[(u8)id], 0);
+                    fn_1_4EDAC(&local, width, height);
+                    result = 1;
+                }
+            }
+        }
+        fn_1_A722C();
+        fn_80074918(1, 3, 1);
+        return result;
+    } else {
+        u16 count = lbl_1_bss_646D2;
+        FontDrawPacket *dst;
+        if (count >= config->capacity) {
+            if (!state->warned) {
+                OSReport(config->warning);
+                state->warned = 1;
+            }
+            return 0;
+        }
+        dst = &config->packets[count];
+        fn_80008BA8(dst, input, 0x58);
+        dst->x += (f32)fn_1_54298();
+        dst->y += (f32)fn_1_542A8();
+        dst->alpha *= fn_1_542B8();
+        if (state->override_enabled) {
+            dst->flags |= 0x08000000;
+            dst->depth = (f32)state->override_value;
+        }
+        lbl_1_bss_646D2++;
+        return 1;
+    }
+}
+/* fzgx:end fn_1_4F734 */
+
 /* fzgx:begin fn_1_4FC50 */
 typedef struct {
     u32 unk_0;
@@ -957,6 +1121,51 @@ void fn_1_51564(u16 first, u16 second, u16 third, u16 fourth, u16 fifth, u16 six
     ((u16 *)&lbl_1_bss_4C678)[0xC033] = sixth;
 }
 /* fzgx:end fn_1_51564 */
+
+/* fzgx:begin fn_1_51678 */
+#include "font.h"
+
+extern s16 fn_1_48690(u32), fn_1_486C4(u32);
+void fn_1_51678(FontDrawPacket *p, u32 image, s16 x, s16 y, s16 width, s16 height) {
+    f32 inv_height, inv_width;
+    s32 texture_height, texture_width;
+    p->image = image;
+    texture_height = fn_1_486C4(image);
+    texture_width = fn_1_48690(image);
+    inv_width = 1.0f / texture_width;
+    inv_height = 1.0f / texture_height;
+    {
+        f32 v, u, sy, sx;
+        sx = (f32)width * inv_width;
+        sy = (f32)height * inv_height;
+        u = (f32)x * inv_width;
+        v = (f32)y * inv_height;
+        p->scale_x *= sx;
+        p->scale_y *= sy;
+        p->u0 = u;
+        p->v0 = v;
+    }
+    p->u1 = inv_width * (f32)(x + width);
+    p->v1 = inv_height * (f32)(y + height);
+}
+/* fzgx:end fn_1_51678 */
+
+/* fzgx:begin fn_1_517EC */
+#include "font.h"
+
+void fn_1_517EC(FontDrawPacket *p, s16 x, s16 y, s16 width, s16 height, s16 texture_width,
+                s16 texture_height) {
+    f32 inv_height, inv_width;
+    inv_width = 1.0f / texture_width;
+    inv_height = 1.0f / texture_height;
+    p->scale_x *= (f32)width * inv_width;
+    p->scale_y *= (f32)height * inv_height;
+    p->u0 = (f32)x * inv_width;
+    p->v0 = (f32)y * inv_height;
+    p->u1 = inv_width * (f32)(x + width);
+    p->v1 = inv_height * (f32)(y + height);
+}
+/* fzgx:end fn_1_517EC */
 
 /* fzgx:begin fn_1_51914 */
 typedef struct {

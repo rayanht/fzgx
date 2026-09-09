@@ -77,7 +77,8 @@ class Index:
                 if piece.kind == 'type':
                     for n in piece.names:
                         providers[n].append((rel, piece.text))
-                        self.types.setdefault(n, piece.text)
+                        if n not in self.types or ('{' not in self.types[n] and '{' in piece.text):
+                            self.types[n] = piece.text
         self.providers = providers
         choices = defaultdict(list)
 
@@ -284,43 +285,67 @@ class Index:
                 return None
         return out
 
-    def member(self, pointer, offset, access):
-        """Resolve a byte offset through a recovered flat struct layout; leave unknown layouts alone."""
+    def layout(self, pointer):
+        """Flat MWCC fields, including grouped declarators and callback pointers."""
         base = re.sub(r'\b(const|volatile)\s*', '', pointer).strip()
         if not base.endswith('*'):
             return None
         base = re.sub(r'^struct\s+', '', base[:-1].strip())
         definition = self.types.get(base, '')
-        if '{' not in definition or 'union' in definition:
+        if '{' not in definition or re.search(r'\bunion\b', definition):
             return None
         body = definition[definition.index('{') + 1:definition.rfind('}')]
+        body = re.sub(r'//[^\n]*|/\*.*?\*/', '', body, flags=re.S)
         parts, start, depth = [], 0, 0
         for i, ch in enumerate(body):
             depth += (ch == '{') - (ch == '}')
             if ch == ';' and depth == 0:
                 parts.append(body[start:i].strip()); start = i + 1
-        cursor = 0
+        cursor, alignment, out = 0, 1, []
         widths = {'u8': 1, 's8': 1, 'char': 1, 'u16': 2, 's16': 2, 'short': 2,
-                  'u32': 4, 's32': 4, 'int': 4, 'BOOL': 4, 'f32': 4, 'float': 4, 'u64': 8, 's64': 8, 'f64': 8, 'double': 8}
+                  'u32': 4, 's32': 4, 'int': 4, 'BOOL': 4, 'f32': 4, 'float': 4,
+                  'u64': 8, 's64': 8, 'f64': 8, 'double': 8}
         for part in parts:
-            part = re.sub(r'//[^\n]*|/\*.*?\*/', '', part, flags=re.S).strip()
-            field = re.fullmatch(r'([\w\s*]+?)\s*(\w+)\s*(\[(0x[0-9a-fA-F]+|\d+)\])?', part)
-            if not field:
-                # Anonymous pointed-to structs occupy one pointer slot.
-                anonymous = re.search(r'}\s*\*\s*(\w+)$', part)
-                if not anonymous:
-                    return None
-                typ, name, count, array = 'void *', anonymous[1], 1, False
+            callback = re.fullmatch(r'(.+?)\(\s*\*\s*(\w+)\s*\)\s*(\(.*\))', part, re.S)
+            anonymous = re.search(r'}\s*\*\s*(\w+)$', part)
+            if callback:
+                fields = [(callback[2], callback[1].strip() + ' (*)' + callback[3], 1, False)]
+            elif anonymous:
+                fields = [(anonymous[1], 'void *', 1, False)]
             else:
-                typ, name, array, count = field.groups(); typ = typ.strip(); count = int(count, 0) if count else 1
-            width = 4 if self.category(typ) == 'pointer' else widths.get(typ)
-            if width is None:
-                return None
-            cursor = (cursor + min(width, 8) - 1) // min(width, 8) * min(width, 8)
+                fields, common = [], None
+                for declarator in split_params(part):
+                    if common is None:
+                        first = re.fullmatch(r'([\w\s]+?)(\s+\w+(?:\s*\[[^]]+\])?|\s*\*+\s*\w+(?:\s*\[[^]]+\])?)', declarator)
+                        if not first:
+                            return None
+                        common, declarator = first.groups()
+                    field = re.fullmatch(r'(\**)(\w+)\s*(\[(0x[0-9a-fA-F]+|\d+)\])?', re.sub(r'\s*\*\s*', '*', declarator).strip())
+                    if not field:
+                        return None
+                    stars, name, array, count = field.groups()
+                    fields.append((name, common.strip() + (' ' + stars if stars else ''), int(count, 0) if count else 1, bool(array)))
+            for name, typ, count, array in fields:
+                width = 4 if self.category(typ) == 'pointer' else widths.get(typ)
+                if width is None:
+                    return None
+                align = min(width, 8)
+                alignment = max(alignment, align)
+                cursor = (cursor + align - 1) // align * align
+                out.append((name, typ, cursor, width, count, array))
+                cursor += width * count
+        return out, (cursor + alignment - 1) // alignment * alignment
+
+    def member(self, pointer, offset, access):
+        layout = self.layout(pointer)
+        if layout is None:
+            return None
+        widths = {'u8': 1, 's8': 1, 'u16': 2, 's16': 2, 'u32': 4, 's32': 4, 'f32': 4, 'f64': 8}
+        for name, typ, cursor, width, count, array in layout[0]:
             if cursor <= offset < cursor + width * count and (offset - cursor) % width == 0 and width == widths.get(access):
+                # A word copy of a color array must remain a word access, not one byte.
                 suffix = f'[{(offset - cursor) // width}]' if array else ''
                 return name + suffix, typ
-            cursor += width * count
         return None
 
     def preamble(self, signatures):

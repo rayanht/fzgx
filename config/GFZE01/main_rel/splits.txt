@@ -5036,3 +5036,12 @@ rel/main_rel/accessory/fn_1_108920.c:
 
 rel/main_rel/font/fn_1_4AE0C.c:
 	.text       start:0x0004AE0C end:0x0004AEB4 align:4
+
+rel/main_rel/font/fn_1_4F734.c:
+	.text       start:0x0004F734 end:0x0004FC50 align:4
+
+rel/main_rel/font/fn_1_51678.c:
+	.text       start:0x00051678 end:0x000517EC align:4
+
+rel/main_rel/font/fn_1_517EC.c:
+	.text       start:0x000517EC end:0x00051914 align:4
