@@ -1969,3 +1969,9 @@ dol/fn_80072864.c:
 
 dol/fn_8003D4E0.c:
 	.text       start:0x8003D4E0 end:0x8003D588 align:4
+
+dol/fn_80074438.c:
+	.text       start:0x80074438 end:0x800744F8 align:4
+
+dol/fn_8007423C.c:
+	.text       start:0x8007423C end:0x80074300 align:4
