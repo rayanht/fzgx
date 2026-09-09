@@ -2003,6 +2003,15 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
     wrote_r3 = any(a and a[0] == "r3" and mn not in ("stw", "sth", "stb", "stfs", "stfd", "cmpwi", "cmpw", "cmplwi", "cmplw") for mn, a in ins)
     if partial and gave_at is not None:
         wrote_r3 = False  # the return value is beyond the give-up point
+    # the last write to r3 decides: an address materialisation (`lis r3, sym@ha`) is scratch,
+    # and a value the function consumed afterwards (stored, compared) is not a return value
+    last_w = max((x for x, (mn_, a_) in enumerate(ins) if a_ and a_[0] == "r3" and mn_ not in STORE_T and not mn_.startswith(("st", "cmp", "b")) and mn_ not in ("mtlr", "mtspr", "mtctr")), default=None)
+    if last_w is not None:
+        mn_l, a_l = ins[last_w]
+        if mn_l == "lis" and a_l and a_l[1].endswith("@ha"):
+            wrote_r3 = False
+        elif any(reads(x, "r3") and ins[x][0] not in ("mr",) for x in range(last_w + 1, len(ins)) if ins[x][0] != "blr") and not any(ins[x][0] == "bl" for x in range(last_w + 1, len(ins))):
+            wrote_r3 = False
     if "r3" in regs and wrote_r3 and not regs["r3"].startswith("__CALLRET__"):
         ret = regs["r3"]  # a call's result falls through in r3 either way: `void f(void) { g(); }`
     # a call whose result is returned becomes `return f(...)`; one whose result feeds later code
