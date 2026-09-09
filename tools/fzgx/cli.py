@@ -414,6 +414,16 @@ def cmd_spell(a, p):
     return 0
 
 
+def cmd_asm_unit(a, p):
+    from . import asmunit
+    from .ledger import Ledger
+    syms = list(a.symbols)
+    if a.blocked:
+        syms += [r[0] for r in Ledger().db.execute("select symbol from functions where status='blocked'").fetchall()]
+    r = asmunit.make(p, syms)
+    print(json.dumps(r, indent=1)); return 0 if r.get("ok") else 2
+
+
 def cmd_exemplars(a, p):
     from . import exemplars
     ex = exemplars.mine(p)
@@ -461,6 +471,8 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--min-percent", type=float, default=0.0); s.add_argument("--max-percent", type=float, default=100.0)
     s.add_argument("--limit", type=int, default=5000); s.add_argument("--workers", type=int, default=3); s.add_argument("--no-submit", action="store_true")
     s.add_argument("--attempts", action="store_true", help="search the agents' saved plateau bodies instead of the lifter drafts"); s.add_argument("--module")
+    s = sub.add_parser("asm-unit", help="link assembly-only functions from their own split assembly (units the build assembles); --blocked takes every blocked function"); s.set_defaults(fn=cmd_asm_unit)
+    s.add_argument("symbols", nargs="*"); s.add_argument("--blocked", action="store_true")
     s = sub.add_parser("exemplars", help="mine (plateau -> match) edit pairs from the check history"); s.set_defaults(fn=cmd_exemplars)
     s = sub.add_parser("check", help="compile + objdiff one function"); s.set_defaults(fn=cmd_check)
     s.add_argument("symbol"); s.add_argument("--max-diff-lines", type=int, default=80)
