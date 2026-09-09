@@ -64,6 +64,9 @@ file from what actually unblocked functions; keep each item one or two lines.
   untouched r3..r5 followed by a temporary in r6 means the function's own first three
   parameters are passed straight through: `void f(a, b, c) { g(a, b, c); }`.
 - `crclr cr1eq` (`crclr 6`) right before a `bl` marks a variadic callee.
+- A variadic entry saves r3-r10 and conditionally f1-f8 under `bne cr1`; these are
+  the argument-save area, not sixteen fixed parameters. `fn_1_4AE0C` matches with
+  `(const char *format, ...)`, a 512-byte character buffer and `__builtin_va_info`.
 - Address arguments need pointer-typed prototypes; `(u32)&x` as an argument is hoisted
   into a saved register, `&x` with a `void *` parameter is recomputed per call.
 - An address-taken scalar local stays a scalar (`f(&x)` recomputes `addi rN, r1, off` at

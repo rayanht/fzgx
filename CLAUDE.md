@@ -100,6 +100,11 @@ Rules that hold for everyone:
   wrapper can still have missing passthrough parameters: follow its callees' entry registers
   (the `memset`/`fn_80008BEC` size argument was one such case). Drafts containing `???` remain
   incomplete and cannot be submitted by this pass.
+- The largest measured coherent game-code target is the font/sprite UI interface: `font.c`
+  plus its unmatched callers, especially `sel.c`, `sel_static_disp.c` and `toolkit.c`.
+  Recover the shared font state, 0x58-byte draw packets and call ABI before another broad
+  lift pass. `include/font.h` records the variadic text wrapper and packet submission
+  result; do not infer sixteen fixed parameters from a varargs register-save prologue.
 - Prioritize deterministic SDK C imports (CARD, then OS, EXI, SI) regardless of size.
   Include REL middleware: the reconstructed Sofdec sources in the CC0 MK Deception decomp
   yielded 60,888 bytes from 24 functions (including one complete `mpvabdec.c` TU).

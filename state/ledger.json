@@ -1,5 +1,5 @@
 {
- "generated": 1788994175,
+ "generated": 1788994610,
  "functions": [
   {
    "symbol": "car_colchg:_prolog",
@@ -58630,20 +58630,20 @@
   {
    "symbol": "fn_1_4AE0C",
    "module": "main_rel",
-   "unit": null,
+   "unit": "rel/main_rel/font/fn_1_4AE0C.c",
    "addr": 306700,
    "size": 168,
-   "status": "unmatched",
-   "attempts": 2,
+   "status": "matched",
+   "attempts": 3,
    "best_percent": 90.7619,
    "claimed_by": null,
    "claimed_at": null,
    "claim_ttl": null,
-   "matched_commit": null,
+   "matched_commit": "12beae2",
    "blocked_issue": null,
    "blocked_reason": null,
    "prev_status": null,
-   "link_state": null
+   "link_state": "verified"
   },
   {
    "symbol": "fn_1_4AEB4",
@@ -297527,6 +297527,25 @@
    "cost_usd": 0.0,
    "outcome": "matched",
    "notes": "Recover GX Sofdec player fields and pause routine",
+   "best_body_path": null,
+   "stale_checks": 0,
+   "best_in_attempt": 0.0
+  },
+  {
+   "id": 8737,
+   "symbol": "fn_1_4AE0C",
+   "agent": "decompile-font",
+   "harness": "fzgx",
+   "model": "none",
+   "started": 1788994465,
+   "ended": 1788994465,
+   "checks": 0,
+   "final_percent": null,
+   "tokens_in": 0,
+   "tokens_out": 0,
+   "cost_usd": 0.0,
+   "outcome": "matched",
+   "notes": "Recover variadic font formatting wrapper",
    "best_body_path": null,
    "stale_checks": 0,
    "best_in_attempt": 0.0
