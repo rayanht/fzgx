@@ -2000,16 +2000,18 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                     top = temp_low - 1
                 want = ARITY_HINT[0].get(callee) if callee else None
                 known = protos.get(callee) if callee else None
-                if known is not None and "..." not in known[1] and known[2]:
+                no_proto = False
+                if known is not None and "..." not in known[1]:
                     n_int = sum(1 for t_ in known[1] if not t_.startswith("f"))
-                    if 2 + n_int > top and all(f"r{k}" in regs for k in range(top + 1, 3 + n_int)):
-                        top = 2 + n_int
-                    elif 2 + n_int < top:
+                    if 2 + n_int < top:
                         top = 2 + n_int  # the extra registers were temporaries, not arguments
+                    elif 2 + n_int > top:
+                        if all(f"r{k}" in regs or (f"r{k}" not in def_idx and k <= 10) for k in range(top + 1, 3 + n_int)):
+                            top = 2 + n_int
+                        else:
+                            no_proto = True  # the site cannot supply the arguments: declared without a prototype
                 elif want is not None and 2 + want > top and all(f"r{k}" in regs for k in range(top + 1, 3 + want)):
                     top = 2 + want
-                if known is not None and not known[2] and "..." not in known[1] and sum(1 for t_ in known[1] if not t_.startswith("f")) != top - 2:
-                    known = None  # an extern-derived prototype that disagrees with the site: not trusted
                 if callee:
                     ARITY_SEEN[0].setdefault(callee, []).append(top - 2)
                     if any(f"f{k}" in regs and f"f{k}" in written_since_call for k in range(1, 9)):
@@ -2055,7 +2057,13 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                 written_since_call.clear()
                 if callee.startswith("(("):
                     pass  # a pointer call: the typedef carries the prototype
+                elif known is not None and no_proto:
+                    externs[callee] = f"extern {known[0]} {callee}();"
                 elif known is not None:
+                    n_f = sum(1 for t_ in known[1] if t_.startswith("f"))
+                    if n_f != len(fargs) and all(f"f{k}" in regs or f"f{k}" not in def_idx for k in range(1, n_f + 1)):
+                        fargs = [use(f"f{k}") for k in range(1, n_f + 1)]  # the float arguments the prototype says
+                        args = [use(f"r{k}") for k in range(3, top + 1)] + fargs
                     externs[callee] = f"extern {known[0]} {callee}({', '.join(known[1]) or 'void'});"
                 elif variadic_next[0]:
                     variadic_next[0] = False
@@ -2135,7 +2143,8 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
         ret = regs["r3"]  # a call's result falls through in r3 either way: `void f(void) { g(); }`
     # a call whose result is returned becomes `return f(...)`; one whose result feeds later code
     # becomes a temporary; the rest are statements
-    used_ret = {i for i in range(len(calls)) if any(f"__CALLRET__{i}" in st for st in stmts if not st.startswith(f"__CALL__{i}(")) or (ret is not None and f"__CALLRET__{i}" in ret)}
+    f1_ret = regs.get("f1") if ("f1" in regs and any(a_ and a_[0] == "f1" for mn_, a_ in ins if mn_ != "blr")) else None
+    used_ret = {i for i in range(len(calls)) if any(f"__CALLRET__{i}" in st for st in stmts if not st.startswith(f"__CALL__{i}(")) or (ret is not None and f"__CALLRET__{i}" in ret) or (f1_ret is not None and f"__CALLRET__{i}" in f1_ret)}
     structs: List[str] = []
     body = []
     for st in stmts:
@@ -2150,6 +2159,9 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                 body.append(f"{call};")
         else:
             body.append(st)
+    for vi in void_calls:
+        body = [re.sub(rf"^u32 t{vi} = ", "", b) for b in body]
+        body = [re.sub(rf"__CALLRET__{vi}\b", "0", b) for b in body]  # the lifter misread a void result
     body = [re.sub(r"__INLINECALL__(\d+)\(", lambda m_: f"{calls[int(m_.group(1))]}(", b) for b in body]
     body = [re.sub(r"__CALLRET__(\d+)", r"t\1", b) for b in body]
     if ret is not None:
@@ -2193,6 +2205,8 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
         body = [d[1] for d in ordered] + ["/* frame */"] + body
         # an address-taken array is passed as itself, not &array, and cast like every address
         arrays = {f"loc_{d[0]:X}" for d in decls if d[2] is True}  # struct-wrapped ones keep the &
+        for arr in arrays:
+            body = [re.sub(rf"(?<![\w.>&]){arr}\b(?!\s*\[|\s*=[^=])", f"(u32){arr}", b) if not re.match(rf"^\s*\w[\w ]*\s+{arr}\[", b) else b for b in body]
         def fix_addr(b: str) -> str:
             return re.sub(r"&(loc_[0-9A-F]+)\b", lambda m: m.group(1) if m.group(1) in arrays else f"&{m.group(1)}", b)
         body = [fix_addr(b) if not b.startswith(("u8 loc", "u32 loc", "f32 loc", "s16 loc", "u16 loc", "s8 loc", "f64 loc", "struct {")) else b for b in body]
@@ -2250,7 +2264,7 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
         # r3 at an early return holds the first parameter unless something wrote it before
         body = [b.replace("return __RET__;", f"return {'arg0' if params and params[0] == 'r3' else '0'};") for b in body]
     if "f1" in regs and any(a and a[0] == "f1" for mn, a in ins if mn != "blr") and not any(b.startswith("return ") for b in body):
-        body.append(f"return {regs['f1']};"); rtype_c = rtype.get("f1", "f32")
+        body.append(f"return {re.sub(r'__CALLRET__(\d+)', r't\1', regs['f1'])};"); rtype_c = rtype.get("f1", "f32")
         if rtype_c in ("s8", "s16"): rtype_c = "s32"
     def field_width(t: str) -> int:
         if t.startswith("arr:"):
@@ -2326,11 +2340,15 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
         body = [re.sub(rf"^{re.escape(g)} = (?!\(struct)", f"{g} = (struct {name}_{g}_T *)", b) for b in body]
     # an integer passed where the prototype says `void *` (another site passed an address)
     for c, proto in list(externs.items()):
-        m_p = re.match(r"extern \w[\w ]*? (\w+)\((.*)\);$", proto)
-        if not m_p or "*" not in m_p.group(2):
+        m_p = re.match(r"extern ([\w *]+?) (\w+)\((.*)\);$", proto)
+        if m_p and m_p.group(1).strip().endswith("*"):
+            body = [re.sub(rf"(?<!\w)({re.escape(c)}\()", rf"(u32)\1", b) if not b.startswith("extern") else b for b in body]
+        if not m_p or m_p.group(3).strip() in ("", "void", "..."):
             continue
-        ptl = [x.strip() for x in m_p.group(2).split(",")]
-        vpos = [k for k, x in enumerate(ptl) if x.endswith("*")]
+        ptl = [x.strip() for x in m_p.group(3).split(",")]
+        vpos = [k for k, x in enumerate(ptl) if x.endswith("*") or x in ("u32", "s32", "u16", "s16", "u8", "s8", "int")]
+        if not vpos:
+            continue
         ptypes_p = {k: ptl[k] for k in vpos}
         def fix_call(b: str) -> str:
             out_b = ""; pos = 0
@@ -2350,8 +2368,12 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                 if cur.strip() or args:
                     args.append(cur.strip())
                 for k in vpos:
-                    if k < len(args) and not args[k].startswith(("&", "(void *)", "loc_", "(u8 *)", "((u8 *)", "(" + ptypes_p[k] + ")")):
+                    if k >= len(args) or args[k].startswith("(" + ptypes_p[k] + ")"):
+                        continue
+                    if ptypes_p[k].endswith("*"):
                         args[k] = f"({ptypes_p[k]}){args[k]}"
+                    elif args[k].startswith(("&", "loc_", "(u8 *)", "((u8 *)", "(struct ")):
+                        args[k] = f"(u32){args[k]}"  # an address to an integer parameter
                 out_b += b[pos:pos + m_c.start()] + f"{c}({', '.join(args)})"; pos = j
         body = [fix_call(b) for b in body]
     ptr_names = [f"arg{i}" for i, r in enumerate(params) if r in fields] + [ln for ln in locals_ if ln.startswith("p_")] + list(pfields)
