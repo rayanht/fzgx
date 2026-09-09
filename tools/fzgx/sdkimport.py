@@ -413,6 +413,10 @@ def shared_storage(p: Project, rec: dict, pieces: list, text: str, mapping: dict
                 continue  # A function-local static is outside this aggregate's accessed fields.
             decl = re.sub(r'^(?:static\s+|extern\s+)+', '', piece.text.split('=', 1)[0].strip().rstrip(';'))
             decl = re.sub(r'__attribute__\s*\(\(aligned\(\d+\)\)\)', '', decl).strip()
+            if re.fullmatch(r'(?:const\s+)?(?:(?:signed|unsigned)\s+)?char\s+\w+\s*\[\s*\]', decl):
+                # Initializers supply array bounds in C, but aggregate members
+                # have no initializer. The compiled symbol carries that extent.
+                decl = re.sub(r'\[\s*\]', f"[{s['size']}]", decl)
             if offset < cursor:
                 raise ValueError(f"overlapping data-base fields: {s['name']}")
             if offset > cursor:

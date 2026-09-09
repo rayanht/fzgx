@@ -1412,3 +1412,9 @@ rel/movie_module/SFD_IsSvrWait.c:
 
 rel/movie_module/SFTST_Create.c:
 	.text       start:0x00030A28 end:0x00030BF8 align:4
+
+rel/movie_module/MPV_GoNextDelimSj.c:
+	.text       start:0x0000B100 end:0x0000B254 align:4
+
+rel/movie_module/DCT_FsriInitScanTbl.c:
+	.text       start:0x00004E28 end:0x00004F18 align:4
