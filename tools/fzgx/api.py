@@ -58,6 +58,10 @@ def _reconfigure_and_split(p: Project) -> None:
         cp = oracle.run(["ninja", p.rel(p.build_dir / "config.json")])
         if cp.returncode != 0:
             raise RuntimeError((cp.stdout + cp.stderr)[-2000:])
+        # A pool-backed submit can split an auto object containing the next
+        # candidate. Its old path may still exist but no longer define that symbol.
+        p.__dict__.pop("_obj_index", None)
+        p.__dict__.pop("_obj_suffixed", None)
 
 
 def _unit_source(p: Project, symbol: str) -> Optional[str]:

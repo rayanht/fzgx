@@ -1,0 +1,18 @@
+{
+  "module": "movie_module",
+  "tus": [
+    {
+      "file": "mpvabdec.c",
+      "text": [
+        75440,
+        126848
+      ],
+      "functions": [
+        "MPVABDEC_NintraBlock",
+        "MPVABDEC_IntraBlock",
+        "MPVABDEC_IntraBlockDc11"
+      ],
+      "source": "CRI Sofdec mpvabdec.c"
+    }
+  ]
+}

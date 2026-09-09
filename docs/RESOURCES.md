@@ -32,6 +32,15 @@ and [`si.json`](../state/sdkimports/si.json). The complete
 `CARDOpen.c` uses TWW. `OSAudioSystem.c` is consolidated from MKDD. All build includes belong to this repository under
 `include/dolphin/`; upstream checkouts are only inputs to the import tool.
 
+### Sofdec source adaptation
+
+The Sofdec C and shared types are adapted from the CC0
+[MK Deception decompilation](https://github.com/ShulkMaster/mk-deception), revision
+`7f36c3c64be9e2c40ea7301fe6c150d585b1a97d`. Function identities and relocation bindings
+are recorded in [`state/sdkimports/sofdec.json`](../state/sdkimports/sofdec.json).
+`mpvabdec.c` is a complete translation unit. The build uses owned sources and headers
+under `src/rel/movie_module/` and `include/sofdec/`.
+
 ## Community knowledge (vocabulary only)
 
 - [Manifold Project](https://github.com/RaphaelTetreault/ManifoldProject) by Raphael Tetreault — stage, collision and asset format work for F-Zero GX/AX.

@@ -1,0 +1,280 @@
+{
+  "DCT_FsriInit": {
+    "bindings": {
+      "DCT_FsriInit": "DCT_FsriInit",
+      "DCT_GetVerStr": "fn_12_4E14",
+      "dctfsri_version_dummy": "lbl_12_bss_BA8",
+      "initSparseTbl": "DCT_FsriInitSparseTbl",
+      "scale8": "lbl_12_rodata_610",
+      "sfsd_scale_tbl": "lbl_12_bss_BB0"
+    },
+    "mw": "GC/1.3.2",
+    "original_symbol": "fn_12_5674",
+    "revision": "7f36c3c64be9e2c40ea7301fe6c150d585b1a97d",
+    "sdk": "mk-deception",
+    "sdk_symbol": "DCT_FsriInit",
+    "size": 380,
+    "source": "src/libmwsfdg/crimw/dev/sofdec/src/sfdcore/dct/dct_fsri.c",
+    "symbol": "DCT_FsriInit"
+  },
+  "DCT_FsriInitScaleTbl": {
+    "bindings": {
+      "DCT_FsriInitScaleTbl": "DCT_FsriInitScaleTbl",
+      "sfsd_scale_tbl": "lbl_12_bss_BB0"
+    },
+    "mw": "GC/1.3.2",
+    "original_symbol": "fn_12_5570",
+    "revision": "7f36c3c64be9e2c40ea7301fe6c150d585b1a97d",
+    "sdk": "mk-deception",
+    "sdk_symbol": "DCT_FsriInitScaleTbl",
+    "size": 260,
+    "source": "src/libmwsfdg/crimw/dev/sofdec/src/sfdcore/dct/dct_fsri.c",
+    "symbol": "DCT_FsriInitScaleTbl"
+  },
+  "DCT_FsriInitSparseTbl": {
+    "bindings": {
+      "DCT_AcIdctDouble": "fn_12_4CEC",
+      "DCT_AcInit": "fn_12_4D14",
+      "PreIDCT": "lbl_12_bss_DB0",
+      "initSparseTbl": "DCT_FsriInitSparseTbl",
+      "memset": "memset",
+      "sfsd_scale_tbl": "lbl_12_bss_BB0"
+    },
+    "mw": "GC/1.3.2",
+    "original_symbol": "fn_12_52F8",
+    "revision": "7f36c3c64be9e2c40ea7301fe6c150d585b1a97d",
+    "sdk": "mk-deception",
+    "sdk_symbol": "initSparseTbl",
+    "size": 592,
+    "source": "src/libmwsfdg/crimw/dev/sofdec/src/sfdcore/dct/dct_fsri.c",
+    "symbol": "DCT_FsriInitSparseTbl"
+  },
+  "MPVABDEC_IntraBlock": {
+    "bindings": {},
+    "mw": "GC/1.3.2",
+    "original_symbol": "fn_12_16B48",
+    "revision": "7f36c3c64be9e2c40ea7301fe6c150d585b1a97d",
+    "sdk": "mk-deception",
+    "sdk_symbol": "MPVABDEC_IntraBlock",
+    "size": 16944,
+    "source": "src/libmwsfdg/crimw/dev/sofdec/src/sfdcore/mpv/mpvabdec.c",
+    "symbol": "MPVABDEC_IntraBlock"
+  },
+  "MPVABDEC_IntraBlockDc11": {
+    "bindings": {},
+    "mw": "GC/1.3.2",
+    "original_symbol": "fn_12_1AD78",
+    "revision": "7f36c3c64be9e2c40ea7301fe6c150d585b1a97d",
+    "sdk": "mk-deception",
+    "sdk_symbol": "MPVABDEC_IntraBlockDc11",
+    "size": 16904,
+    "source": "src/libmwsfdg/crimw/dev/sofdec/src/sfdcore/mpv/mpvabdec.c",
+    "symbol": "MPVABDEC_IntraBlockDc11"
+  },
+  "MPVABDEC_NintraBlock": {
+    "bindings": {},
+    "mw": "GC/1.3.2",
+    "original_symbol": "fn_12_126B0",
+    "revision": "7f36c3c64be9e2c40ea7301fe6c150d585b1a97d",
+    "sdk": "mk-deception",
+    "sdk_symbol": "MPVABDEC_NintraBlock",
+    "size": 17560,
+    "source": "src/libmwsfdg/crimw/dev/sofdec/src/sfdcore/mpv/mpvabdec.c",
+    "symbol": "MPVABDEC_NintraBlock"
+  },
+  "MPV_MoveChunk": {
+    "bindings": {
+      "MPV_MoveChunk": "MPV_MoveChunk"
+    },
+    "mw": "GC/1.3.2",
+    "original_symbol": "fn_12_AE04",
+    "revision": "7f36c3c64be9e2c40ea7301fe6c150d585b1a97d",
+    "sdk": "mk-deception",
+    "sdk_symbol": "MPV_MoveChunk",
+    "size": 108,
+    "source": "src/libmwsfdg/crimw/dev/sofdec/src/sfdcore/mpv/mpv_hdec.c",
+    "symbol": "MPV_MoveChunk"
+  },
+  "MWSFSVM_Error": {
+    "bindings": {
+      "MWSFSVM_Error": "MWSFSVM_Error",
+      "SVM_CallErr1": "fn_800595A4",
+      "errstr": "lbl_12_bss_1B8A0",
+      "memset": "memset",
+      "vsprintf": "fn_8008077C"
+    },
+    "mw": "GC/1.3.2",
+    "original_symbol": "fn_12_34B88",
+    "revision": "7f36c3c64be9e2c40ea7301fe6c150d585b1a97d",
+    "sdk": "mk-deception",
+    "sdk_symbol": "MWSFSVM_Error",
+    "size": 188,
+    "source": "src/libmwsfdg/crimw/dev/sofdec/src/mwply/mwsfdsvm.c",
+    "symbol": "MWSFSVM_Error"
+  },
+  "MWSST_GetStat": {
+    "bindings": {
+      "MWSST_GetStat": "MWSST_GetStat",
+      "mwsstmng": "lbl_12_data_E90"
+    },
+    "mw": "GC/1.3.2",
+    "original_symbol": "fn_12_3B4A0",
+    "revision": "7f36c3c64be9e2c40ea7301fe6c150d585b1a97d",
+    "sdk": "mk-deception",
+    "sdk_symbol": "MWSST_GetStat",
+    "size": 160,
+    "source": "src/libmwsfdg/crimw/dev/sofdec/src/mwply/mwsfdsst.c",
+    "symbol": "MWSST_GetStat"
+  },
+  "MWSST_Pause": {
+    "bindings": {
+      "MWSST_Pause": "MWSST_Pause",
+      "mwsstmng": "lbl_12_data_E90"
+    },
+    "mw": "GC/1.3.2",
+    "original_symbol": "fn_12_3B414",
+    "revision": "7f36c3c64be9e2c40ea7301fe6c150d585b1a97d",
+    "sdk": "mk-deception",
+    "sdk_symbol": "MWSST_Pause",
+    "size": 140,
+    "source": "src/libmwsfdg/crimw/dev/sofdec/src/mwply/mwsfdsst.c",
+    "symbol": "MWSST_Pause"
+  },
+  "MWSST_StartSj": {
+    "bindings": {
+      "MWSST_StartSj": "MWSST_StartSj",
+      "mwsstmng": "lbl_12_data_E90"
+    },
+    "mw": "GC/1.3.2",
+    "original_symbol": "fn_12_3B5CC",
+    "revision": "7f36c3c64be9e2c40ea7301fe6c150d585b1a97d",
+    "sdk": "mk-deception",
+    "sdk_symbol": "MWSST_StartSj",
+    "size": 144,
+    "source": "src/libmwsfdg/crimw/dev/sofdec/src/mwply/mwsfdsst.c",
+    "symbol": "MWSST_StartSj"
+  },
+  "SFD_IsSvrWait": {
+    "bindings": {
+      "SFD_IsSvrWait": "SFD_IsSvrWait",
+      "SFLIB_libwork": "lbl_12_bss_7C64"
+    },
+    "mw": "GC/1.3.2",
+    "original_symbol": "fn_12_2CC80",
+    "revision": "7f36c3c64be9e2c40ea7301fe6c150d585b1a97d",
+    "sdk": "mk-deception",
+    "sdk_symbol": "SFD_IsSvrWait",
+    "size": 196,
+    "source": "src/libmwsfdg/crimw/dev/sofdec/src/sfdcore/sfd/sfd_ply.c",
+    "symbol": "SFD_IsSvrWait"
+  },
+  "SFTIM_GetTimeOneFrmVideo": {
+    "bindings": {
+      "SFTIM_GetTimeOneFrmVideo": "SFTIM_GetTimeOneFrmVideo",
+      "SFTIM_prate": "lbl_12_rodata_E10"
+    },
+    "mw": "GC/1.3.2",
+    "original_symbol": "fn_12_2DFB0",
+    "revision": "7f36c3c64be9e2c40ea7301fe6c150d585b1a97d",
+    "sdk": "mk-deception",
+    "sdk_symbol": "SFTIM_GetTimeOneFrmVideo",
+    "size": 64,
+    "source": "src/libmwsfdg/crimw/dev/sofdec/src/sfdcore/sfd/sfd_tim.c",
+    "symbol": "SFTIM_GetTimeOneFrmVideo"
+  },
+  "SFTMR_AddTsum": {
+    "bindings": {
+      "SFTMR_AddTsum": "SFTMR_AddTsum"
+    },
+    "mw": "GC/1.3.2",
+    "original_symbol": "fn_12_2FD9C",
+    "revision": "7f36c3c64be9e2c40ea7301fe6c150d585b1a97d",
+    "sdk": "mk-deception",
+    "sdk_symbol": "SFTMR_AddTsum",
+    "size": 148,
+    "source": "src/libmwsfdg/crimw/dev/sofdec/src/sfdcore/sfd/sfd_tmr.c",
+    "symbol": "SFTMR_AddTsum"
+  },
+  "UTY_MulDiv": {
+    "bindings": {
+      "UTY_MulDiv": "UTY_MulDiv",
+      "__div2i": "__div2i"
+    },
+    "mw": "GC/1.3.2",
+    "original_symbol": "fn_12_334A0",
+    "revision": "7f36c3c64be9e2c40ea7301fe6c150d585b1a97d",
+    "sdk": "mk-deception",
+    "sdk_symbol": "UTY_MulDiv",
+    "size": 92,
+    "source": "src/libmwsfdg/crimw/dev/sofdec/src/sfdcore/uty/muldiv.c",
+    "symbol": "UTY_MulDiv"
+  },
+  "mpvvlc2_InitDcSizC": {
+    "bindings": {
+      "mpvvlc2_InitDcSizC": "mpvvlc2_InitDcSizC",
+      "mpvvlt2_c_dcsiz": "lbl_12_bss_54F0"
+    },
+    "mw": "GC/1.3.2",
+    "original_symbol": "fn_12_E3BC",
+    "revision": "7f36c3c64be9e2c40ea7301fe6c150d585b1a97d",
+    "sdk": "mk-deception",
+    "sdk_symbol": "mpvvlc2_InitDcSizC",
+    "size": 1132,
+    "source": "src/libmwsfdg/crimw/dev/sofdec/src/sfdcore/mpv/mpv_vlc.c",
+    "symbol": "mpvvlc2_InitDcSizC"
+  },
+  "mpvvlc2_InitDcSizY": {
+    "bindings": {
+      "mpvvlc2_InitDcSizY": "mpvvlc2_InitDcSizY",
+      "mpvvlt2_y_dcsiz": "lbl_12_bss_58F0"
+    },
+    "mw": "GC/1.3.2",
+    "original_symbol": "fn_12_E828",
+    "revision": "7f36c3c64be9e2c40ea7301fe6c150d585b1a97d",
+    "sdk": "mk-deception",
+    "sdk_symbol": "mpvvlc2_InitDcSizY",
+    "size": 1288,
+    "source": "src/libmwsfdg/crimw/dev/sofdec/src/sfdcore/mpv/mpv_vlc.c",
+    "symbol": "mpvvlc2_InitDcSizY"
+  },
+  "mpvvlc_InitCbpSub2": {
+    "bindings": {
+      "mpvvlc_InitCbpSub2": "mpvvlc_InitCbpSub2"
+    },
+    "mw": "GC/1.3.2",
+    "original_symbol": "fn_12_F228",
+    "revision": "7f36c3c64be9e2c40ea7301fe6c150d585b1a97d",
+    "sdk": "mk-deception",
+    "sdk_symbol": "mpvvlc_InitCbpSub2",
+    "size": 2100,
+    "source": "src/libmwsfdg/crimw/dev/sofdec/src/sfdcore/mpv/mpv_vlc.c",
+    "symbol": "mpvvlc_InitCbpSub2"
+  },
+  "mpvvlc_InitMbTypeBpic": {
+    "bindings": {
+      "mpvvlc_InitMbTypeBpic": "mpvvlc_InitMbTypeBpic",
+      "mpvvlt_b_mbtype": "lbl_12_bss_6330"
+    },
+    "mw": "GC/1.3.2",
+    "original_symbol": "fn_12_FFE0",
+    "revision": "7f36c3c64be9e2c40ea7301fe6c150d585b1a97d",
+    "sdk": "mk-deception",
+    "sdk_symbol": "mpvvlc_InitMbTypeBpic",
+    "size": 364,
+    "source": "src/libmwsfdg/crimw/dev/sofdec/src/sfdcore/mpv/mpv_vlc.c",
+    "symbol": "mpvvlc_InitMbTypeBpic"
+  },
+  "sfxzmv_MakeOrgZ32TblByDirect": {
+    "bindings": {
+      "sfxzmv_MakeOrgZ32TblByDirect": "sfxzmv_MakeOrgZ32TblByDirect"
+    },
+    "mw": "GC/1.3.2",
+    "original_symbol": "fn_12_44A8",
+    "revision": "7f36c3c64be9e2c40ea7301fe6c150d585b1a97d",
+    "sdk": "mk-deception",
+    "sdk_symbol": "sfxzmv_MakeOrgZ32TblByDirect",
+    "size": 800,
+    "source": "src/libmwsfdg/crimw/dev/sofdec/src/sfx/sfx_zmv.c",
+    "symbol": "sfxzmv_MakeOrgZ32TblByDirect"
+  }
+}

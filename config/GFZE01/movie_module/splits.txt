@@ -1355,3 +1355,54 @@ rel/movie_module/fn_12_2E374.c:
 
 rel/movie_module/fn_12_8A10.c:
 	.text       start:0x00008A10 end:0x00008AEC align:4
+
+rel/movie_module/mpvabdec.c:
+	.text       start:0x000126B0 end:0x0001EF80 align:4
+
+rel/movie_module/mpvvlc_InitCbpSub2.c:
+	.text       start:0x0000F228 end:0x0000FA5C align:4
+
+rel/movie_module/mpvvlc2_InitDcSizY.c:
+	.text       start:0x0000E828 end:0x0000ED30 align:4
+
+rel/movie_module/mpvvlc2_InitDcSizC.c:
+	.text       start:0x0000E3BC end:0x0000E828 align:4
+
+rel/movie_module/sfxzmv_MakeOrgZ32TblByDirect.c:
+	.text       start:0x000044A8 end:0x000047C8 align:4
+
+rel/movie_module/DCT_FsriInit.c:
+	.text       start:0x00005674 end:0x000057F0 align:4
+
+rel/movie_module/mpvvlc_InitMbTypeBpic.c:
+	.text       start:0x0000FFE0 end:0x0001014C align:4
+
+rel/movie_module/DCT_FsriInitScaleTbl.c:
+	.text       start:0x00005570 end:0x00005674 align:4
+
+rel/movie_module/MWSFSVM_Error.c:
+	.text       start:0x00034B88 end:0x00034C44 align:4
+
+rel/movie_module/MWSST_GetStat.c:
+	.text       start:0x0003B4A0 end:0x0003B540 align:4
+
+rel/movie_module/SFTMR_AddTsum.c:
+	.text       start:0x0002FD9C end:0x0002FE30 align:4
+
+rel/movie_module/MWSST_StartSj.c:
+	.text       start:0x0003B5CC end:0x0003B65C align:4
+
+rel/movie_module/MWSST_Pause.c:
+	.text       start:0x0003B414 end:0x0003B4A0 align:4
+
+rel/movie_module/MPV_MoveChunk.c:
+	.text       start:0x0000AE04 end:0x0000AE70 align:4
+
+rel/movie_module/UTY_MulDiv.c:
+	.text       start:0x000334A0 end:0x000334FC align:4
+
+rel/movie_module/SFTIM_GetTimeOneFrmVideo.c:
+	.text       start:0x0002DFB0 end:0x0002DFF0 align:4
+
+rel/movie_module/DCT_FsriInitSparseTbl.c:
+	.text       start:0x000052F8 end:0x00005548 align:4

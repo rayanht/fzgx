@@ -98,7 +98,7 @@ def declarations(text: str) -> list:
             names = set()
             address = None
             if part.startswith('typedef'):
-                fp = re.search(r"\(\s*\*\s*(\w+)\s*\)", part)
+                fp = re.search(r"\(\s*\*\s*(\w+)\s*\)", part.split('{', 1)[0])
                 tail = re.search(r"\b(\w+)\s*(?:\[[^\]]*\]\s*)*;\s*$", part)
                 if fp:
                     names.add(fp[1])
@@ -159,7 +159,7 @@ def source_pragmas(sdk: str, source: str, name: str) -> list:
     if re.search(r'\basm\b', preceding):
         # MWCC disables its peephole pass for source files containing asm definitions.
         active['peephole'] = 'off'
-    for match in re.finditer(r'^\s*#pragma\s+(scheduling|peephole|dont_inline)\s+(on|off|reset)',
+    for match in re.finditer(r'^\s*#pragma\s+(scheduling|peephole|dont_inline|opt_loop_invariants)\s+(on|off|reset)',
                              preceding, re.M):
         if match[2] == 'reset':
             active.pop(match[1], None)
@@ -205,8 +205,14 @@ def candidates(p: Project, library: str) -> list:
     return result
 
 
+def source_object(p: Project, rec: dict) -> Path:
+    if rec.get('object'):
+        return Path(rec['object'])
+    return p.build_dir / 'sdkmatch' / rec['sdk'] / Path(rec['source']).with_suffix('.o')
+
+
 def bindings(p: Project, rec: dict) -> dict:
-    source_obj = p.build_dir / 'sdkmatch' / rec['sdk'] / Path(rec['source']).with_suffix('.o')
+    source_obj = source_object(p, rec)
     sym = p.resolve(rec['symbol'])
     target = p.target_object_for(sym)
     left = relocations(source_obj, rec['sdk_symbol'])
@@ -369,12 +375,13 @@ def shared_storage(p: Project, rec: dict, pieces: list, text: str, mapping: dict
     anchors = [n for n in mapping if n.startswith('.')]
     if not anchors:
         return text
-    obj = p.build_dir / 'sdkmatch' / rec['sdk'] / Path(rec['source']).with_suffix('.o')
+    obj = source_object(p, rec)
     symbols = Elf(obj.read_bytes()).symbols()
-    retail = list(p.symbols('main').values())
+    module = p.resolve(rec['symbol']).module
+    retail = list(p.symbols(module).values())
     for anchor in anchors:
         source = next(s for s in symbols if s['name'] == anchor)
-        dest = p.symbols('main').get(mapping[anchor])
+        dest = p.symbols(module).get(mapping[anchor])
         if dest is None:
             suffix = re.search(r'_([0-9A-Fa-f]{8})$', mapping[anchor])
             dest = next((s for s in retail if suffix and s.addr == int(suffix[1], 16)), None)
@@ -431,12 +438,13 @@ def literal_storage(p: Project, rec: dict, text: str) -> str:
     tokens = [m[0] for m in LEXICAL.finditer(text) if m[0].startswith('"') and '.h"' not in m[0]]
     if not tokens:
         return text
-    obj = p.build_dir / 'sdkmatch' / rec['sdk'] / Path(rec['source']).with_suffix('.o')
+    obj = source_object(p, rec)
     elf = Elf(obj.read_bytes())
     symbols = {s['name']: s for s in elf.symbols()}
     left = relocations(obj, rec['sdk_symbol'])
     right = relocations(p.target_object_for(p.resolve(rec['symbol'])), rec['symbol'])
-    retail = list(p.symbols('main').values())
+    module = p.resolve(rec['symbol']).module
+    retail = list(p.symbols(module).values())
     bases = {}
     direct = {}
     for off, (name, addend, kind) in left.items():
@@ -444,7 +452,7 @@ def literal_storage(p: Project, rec: dict, text: str) -> str:
         if s['shndx'] >= len(elf.sections) or elf.sections[s['shndx']]['name'] != '.data' or off not in right:
             continue
         dest, da, _ = right[off]
-        target = p.symbols('main').get(dest)
+        target = p.symbols(module).get(dest)
         if target is None:
             suffix = re.search(r'_([0-9A-Fa-f]{8})$', dest)
             target = next((s for s in retail if suffix and s.addr == int(suffix[1], 16)), None)
@@ -465,7 +473,7 @@ def literal_storage(p: Project, rec: dict, text: str) -> str:
             if offset < 0:
                 continue
             actual = next((raw[address + offset - base:address + offset - base + len(value)]
-                           for base, raw in p._rel_layout('main').values()
+                           for base, raw in p._rel_layout(module).values()
                            if base <= address + offset and address + offset + len(value) <= base + len(raw)), None)
             if actual != value:
                 continue

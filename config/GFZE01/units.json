@@ -33834,6 +33834,120 @@
   },
   {
     "module": "movie_module",
+    "source": "rel/movie_module/DCT_FsriInit.c",
+    "symbols": [
+      "DCT_FsriInit"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "movie_module",
+    "source": "rel/movie_module/DCT_FsriInitScaleTbl.c",
+    "symbols": [
+      "DCT_FsriInitScaleTbl"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "movie_module",
+    "source": "rel/movie_module/DCT_FsriInitSparseTbl.c",
+    "symbols": [
+      "DCT_FsriInitSparseTbl"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "pool": {
+      "@56": "lbl_12_rodata_660",
+      "@57": "lbl_12_rodata_658"
+    }
+  },
+  {
+    "module": "movie_module",
+    "source": "rel/movie_module/MPV_MoveChunk.c",
+    "symbols": [
+      "MPV_MoveChunk"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "movie_module",
+    "source": "rel/movie_module/MWSFSVM_Error.c",
+    "symbols": [
+      "MWSFSVM_Error"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "movie_module",
+    "source": "rel/movie_module/MWSST_GetStat.c",
+    "symbols": [
+      "MWSST_GetStat"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "movie_module",
+    "source": "rel/movie_module/MWSST_Pause.c",
+    "symbols": [
+      "MWSST_Pause"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "movie_module",
+    "source": "rel/movie_module/MWSST_StartSj.c",
+    "symbols": [
+      "MWSST_StartSj"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "movie_module",
+    "source": "rel/movie_module/SFTIM_GetTimeOneFrmVideo.c",
+    "symbols": [
+      "SFTIM_GetTimeOneFrmVideo"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "movie_module",
+    "source": "rel/movie_module/SFTMR_AddTsum.c",
+    "symbols": [
+      "SFTMR_AddTsum"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "movie_module",
+    "source": "rel/movie_module/UTY_MulDiv.c",
+    "symbols": [
+      "UTY_MulDiv"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "movie_module",
     "source": "rel/movie_module/_epilog.c",
     "symbols": [
       "_epilog"
@@ -38433,6 +38547,77 @@
     ],
     "status": "matching",
     "mw_version": null,
+    "extra_cflags": []
+  },
+  {
+    "module": "movie_module",
+    "source": "rel/movie_module/mpvabdec.c",
+    "symbols": [
+      "MPVABDEC_NintraBlock",
+      "MPVABDEC_IntraBlock",
+      "MPVABDEC_IntraBlockDc11"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "collapsed": true,
+    "pool": {
+      "@3190": "lbl_12_rodata_9F0",
+      "@3192": "lbl_12_rodata_9F8",
+      "@3193": "jumptable_12_data_D0",
+      "@5660": "lbl_12_rodata_A00",
+      "@5662": "jumptable_12_data_4D0",
+      "@8123": "jumptable_12_data_8D0"
+    }
+  },
+  {
+    "module": "movie_module",
+    "source": "rel/movie_module/mpvvlc2_InitDcSizC.c",
+    "symbols": [
+      "mpvvlc2_InitDcSizC"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "movie_module",
+    "source": "rel/movie_module/mpvvlc2_InitDcSizY.c",
+    "symbols": [
+      "mpvvlc2_InitDcSizY"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "movie_module",
+    "source": "rel/movie_module/mpvvlc_InitCbpSub2.c",
+    "symbols": [
+      "mpvvlc_InitCbpSub2"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "movie_module",
+    "source": "rel/movie_module/mpvvlc_InitMbTypeBpic.c",
+    "symbols": [
+      "mpvvlc_InitMbTypeBpic"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "movie_module",
+    "source": "rel/movie_module/sfxzmv_MakeOrgZ32TblByDirect.c",
+    "symbols": [
+      "sfxzmv_MakeOrgZ32TblByDirect"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
     "extra_cflags": []
   },
   {
