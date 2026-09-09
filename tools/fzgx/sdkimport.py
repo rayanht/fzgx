@@ -61,7 +61,7 @@ def integer_expression(text: str) -> int:
 
 def declarations(text: str) -> list:
     """Split compiler-preprocessed C at top-level declarations/function definitions."""
-    text = re.sub(r"^#.*\n?", "", text, flags=re.M)
+    text = re.sub(r"^[ \t]*#(?:[^\n]*\\\n)*[^\n]*(?:\n|$)", "", text, flags=re.M)
     text = LEXICAL.sub(lambda m: ' ' if m[0].startswith('/') else m[0], text)
     text = re.sub(r'__declspec\s*\(weak\)\s*', '', text)
     # MWCC -E joins this typedef and parameter name in the SDK error header.

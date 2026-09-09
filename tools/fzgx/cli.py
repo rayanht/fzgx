@@ -144,6 +144,12 @@ def cmd_reuse(a, p):
     return 0
 
 
+def cmd_lift(a, p):
+    from . import lift
+    _print(lift.apply(p, tu=a.tu, submit=not a.no_submit), a.json)
+    return 0
+
+
 def cmd_compare(a, p):
     """A/B: per-function outcome, checks, tokens and cost for two agent-id prefixes."""
     from .ledger import Ledger
@@ -445,6 +451,9 @@ def build_parser() -> argparse.ArgumentParser:
     s = sub.add_parser("reuse", help="reuse verified C for identical retail instruction shapes"); s.set_defaults(fn=cmd_reuse)
     s.add_argument("--module"); s.add_argument("--max-size", type=int, default=255)
     s.add_argument("--no-submit", action="store_true")
+    s = sub.add_parser('lift', help='lift and check every unmatched function in one TU'); s.set_defaults(fn=cmd_lift)
+    s.add_argument('--tu', required=True, help='TU path relative to src/, e.g. rel/main_rel/accessory.c')
+    s.add_argument('--no-submit', action='store_true')
     return ap
 
 

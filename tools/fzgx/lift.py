@@ -157,55 +157,15 @@ def explain(p: Project, module: str, name: str) -> str:
         return f"{type(e).__name__} at lift.py:{tb.lineno}: {str(e)[:60]}"
 
 
-_PROTOS: Dict[str, Dict[str, tuple]] = {}
-
-
-def known_protos(p: Project) -> Dict[str, Tuple[str, List[str]]]:
-    """{callee: (return type, [parameter types])} from every `extern` prototype in the matched
-    sources: declarations that matched are the compiler's truth. The most common spelling wins."""
-    from collections import Counter  # scoped: one tally
-    key = str(p.version)
-    if key in _PROTOS:
-        return _PROTOS[key]
-    BASIC = {"u8", "s8", "u16", "s16", "u32", "s32", "f32", "f64", "void", "int", "char", "short", "long", "float", "double", "unsigned"}
-
-    def clean(params: str) -> Optional[List[str]]:
-        plist = [] if params.strip() in ("", "void") else [x.strip() for x in params.split(",")]
-        out = []
-        for x in plist:
-            if x == "...":
-                out.append(x); continue
-            m_ = re.fullmatch(r"((?:const\s+)?(?:unsigned\s+)?[A-Za-z_]\w*)(\s*\**)\s*(?:[A-Za-z_]\w*)?(\[[^\]]*\])?", x)
-            if not m_ or m_.group(1).replace("const ", "").split()[-1] not in BASIC:
-                return None  # a TU-private type: not usable from another unit
-            t_ = (m_.group(1) + (" " + m_.group(2).strip() if m_.group(2).strip() else "")).strip()
-            if m_.group(3):
-                t_ += " *"
-            out.append(t_)
-        return out
-
-    defs: Dict[str, Tuple[str, List[str]]] = {}
-    tally: Dict[str, Counter] = {}
-    for f in (ROOT / "src").rglob("*.c"):
-        try:
-            text = f.read_text()
-        except OSError:
-            continue
-        # the definition is the truth
-        for m in re.finditer(r"^((?:static\s+)?(?:const\s+)?[A-Za-z_]\w*(?:\s*\*)*)\s+([A-Za-z_]\w*)\s*\(([^)]*)\)\s*\{", text, re.M):
-            ret, nm, params = m.group(1).replace("static ", "").strip(), m.group(2), m.group(3)
-            pl = clean(params)
-            if pl is not None and ret.split()[-1].rstrip("*").strip() in BASIC:
-                defs[nm] = (ret, pl)
-        for m in re.finditer(r"^extern\s+((?:const\s+)?[A-Za-z_]\w*(?:\s*\*)*)\s+([A-Za-z_]\w*)\s*\(([^)]*)\)\s*;", text, re.M):
-            ret, nm, params = m.group(1).strip(), m.group(2), m.group(3)
-            pl = clean(params)
-            if pl is None or ret.split()[-1].rstrip("*").strip() not in BASIC:
-                continue
-            tally.setdefault(nm, Counter())[(ret, tuple(pl))] += 1
-    out = {nm: (max(c.items(), key=lambda kv: kv[1])[0][0], list(max(c.items(), key=lambda kv: kv[1])[0][1]), False) for nm, c in tally.items()}
-    out.update({nm: (r_, pl, True) for nm, (r_, pl) in defs.items()})
-    _PROTOS[key] = out
+def known_protos(p: Project, module: str = "main_rel") -> Dict[str, tuple]:
+    """Signatures with transportable header/private type dependencies; unspecified lists stay unknown."""
+    from .signatures import recovered
+    index = recovered(p)
+    out = {}
+    for key, sig in index.signatures.items():
+        sym = p.resolve(key)
+        if sym and (sym.module == module or sym.name not in p.ambiguous_names()) and sig.args is not None:
+            out[sym.name] = (sig.result, list(sig.args), sig.defined)
     return out
 
 
@@ -373,7 +333,10 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
         if sd is None:
             raise Give()
         if sd.kind == "function":
-            externs.setdefault(s, f"extern void {s}(void);")
+            signature = signature_index.get(sd.module, sd.name, signature_source)
+            if signature:
+                signatures_used[s] = signature
+            externs.setdefault(s, signature.declaration(s) if signature else f"extern u32 {s}();")
         elif far_ref and module == "main":
             far.add(s)
             externs[s] = f"extern {t} {s}[];"
@@ -735,6 +698,10 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
             if reads(j, r):
                 return True
             if mn_ in ("bl", "bctrl", "blrl"):
+                sig = signature_index.get(module, a_[0], signature_source) if mn_ == 'bl' and a_ else None
+                slots = signature_index.registers(sig) if sig else None
+                if slots is not None and re.fullmatch(r"r([0-9]|1[0-2])|f(\d|1[0-3])", r):
+                    return r in {reg for reg, _ in slots}
                 if re.fullmatch(r"r([3-9]|10)|f([1-8])", r):
                     return True
                 if re.fullmatch(r"r([0-9]|1[0-2])|f(\d|1[0-3])", r):
@@ -771,7 +738,35 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
     gave_at: Optional[int] = None
     gave_why = ""
     unknown_count = [0]
-    protos = known_protos(p)
+    from .signatures import recovered
+    signature_index = recovered(p)
+    signature_source = None
+    from .signatures import propagate
+    tus = p.module_config_dir(module) / "tus.json"
+    if tus.exists():
+        tu = next((tu for tu in json.loads(tus.read_text())["tus"] if name in tu["functions"]), None)
+        if tu:
+            signature_source = p.module_src_prefix(module) + '/' + tu['file']
+            signature_index = propagate(signature_index, module, tu["functions"])
+    signatures_used = {}
+    own_signature = signature_index.get(module, name)
+    own_slots = signature_index.registers(own_signature) if own_signature else None
+    if own_slots:
+        signatures_used[name] = own_signature
+        for reg, typ in own_slots:
+            params.append(reg); ptypes[reg] = typ
+            regs[reg] = f"arg{len(params) - 1}"; rtype[reg] = typ
+    call_types = []
+
+    def typed_access(base, offset, access):
+        typ = rtype.get(base, "")
+        member = signature_index.member(typ, offset, access)
+        if member:
+            field, field_type = member
+            return f"({use(base)})->{field}", field_type
+        if signature_index.category(typ) == "pointer" and typ != "void *":
+            return f"*({access} *)((u8 *){use(base)} + {offset})", access
+        return None
     void_calls: set = set()
     temps_written: List[Tuple[str, int]] = []
     carried: Dict[str, str] = {}     # register -> local name while inside a loop region
@@ -1013,6 +1008,9 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
             E = next(iter(E_cands))
             if E <= then_idx:
                 continue
+            if any(ins[j][0] in LOAD_T and read_later(after - 1, ins[j][1][0])
+                   for j in range(br[0] + 1, br[-1])):
+                continue  # A loaded value reused by the body must stay behind its guard.
             if all(t == E for t in targets) and fall_b is None and n < 2:
                 continue
             # the then block must not be jumped into from inside the run except at its start
@@ -1063,7 +1061,11 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
         if mn_x == "andi.":
             regs[a_x[0]] = f"({use(a_x[1])} & {_imm(a_x[2])})"; rtype[a_x[0]] = "u32"; return (regs[a_x[0]], "0")
         if mn_x in ("subi", "addi"):
-            regs[a_x[0]] = f"({use(a_x[1])} {'-' if mn_x == 'subi' else '+'} {_imm(a_x[2])})"; rtype[a_x[0]] = rtype.get(a_x[1], "u32"); return cur_cond
+            base = use(a_x[1])
+            typ = rtype.get(a_x[1], 'u32')
+            if signature_index.category(typ) == 'pointer':
+                base = f'(u8 *){base}'; typ = 'void *'
+            regs[a_x[0]] = f"({base} {'-' if mn_x == 'subi' else '+'} {_imm(a_x[2])})"; rtype[a_x[0]] = typ; return cur_cond
         if mn_x == "mr":
             regs[a_x[0]] = use(a_x[1]); rtype[a_x[0]] = rtype.get(a_x[1], "u32"); return cur_cond
         if mn_x == "srwi":
@@ -1095,6 +1097,9 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
             s_ = hi[base]; so = sym_off(off)
             declare(s_, "struct", far_ref=True); gfields.setdefault(s_, {})[so] = t; return f"{s_}.unk_{so:X}"
         o = _imm(off); b = use(base)
+        typed = typed_access(base, o, t)
+        if typed:
+            return typed[0]
         fb = field_base(b, base) if o >= 0 else None
         if fb is None:
             return f"*({t} *)((u8 *){b} + {o})"
@@ -1123,15 +1128,8 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
         for rw in written:
             if rw in ("r0", "r1") or rw in carried or not re.fullmatch(r"r([3-9]|1\d|2\d|3[01])|f([1-9]|1\d|2\d|3[01])", rw):
                 continue
-            read_after = any(reads(x, rw) or (ins[x][0] in ("bl", "bctrl", "blrl") and re.fullmatch(r"r([3-9]|10)|f[1-8]", rw)) or (ins[x][0] == "blr" and rw in ("r3", "f1"))
-                             for x in range(region_end, len(ins)))
-            read_inside_first = False
-            for x in range(i0 + 1, region_end):
-                if reads(x, rw):
-                    read_inside_first = True; break
-                if ins[x][1] and ins[x][1][0] == rw and ins[x][0] not in STORE_T and not ins[x][0].startswith(("st", "cmp", "b")):
-                    break
-            if not (read_after or read_inside_first):
+            read_after = read_later(region_end - 1, rw)
+            if not read_after:
                 continue
             init0 = regs.get(rw)
             if init0 is not None and (re.fullmatch(r"&[A-Za-z_]\w*", init0) or init0.startswith("((u8 *)&") or init0.startswith("(struct ")):
@@ -1176,6 +1174,7 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
             temps.append(f"{rtype.get(r_, 'u32')} {tn};")
             stmts.append(f"{tn} = {init};")
             regs[r_] = tn; carried[r_] = tn
+            carried_until[r_] = max(carried_until.get(r_, 0), k_ + 1)
     for i, (mn, a) in enumerate(ins):
         n_open, n_stmts = len(open_ifs), len(stmts)
         try:
@@ -1221,8 +1220,8 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
             # materialised just above)
             for rw_ in [r_ for r_, u_ in carried_until.items() if u_ <= i]:
                 carried_until.pop(rw_, None)
-                if rw_ in carried and not in_loop:
-                    carried.pop(rw_, None)
+                carried.pop(rw_, None)
+            in_loop[:] = [region for region in in_loop if region[2] >= i]
             if a and mn not in STORE_T and not mn.startswith(("st", "cmp", "b")) and mn not in ("mtlr", "mtspr", "mtctr"):
                 temps_written.append((a[0], i)); written_since_call.add(a[0]); def_idx[a[0]] = i
             if mn == "bl":
@@ -1369,6 +1368,10 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                 if cond_expr is None:
                     raise Give("do-while test")
                 op = COND[re.fullmatch(r"b(\w+)", ins[k_][0]).group(1)]
+                for reg, local in carried.items():
+                    if regs.get(reg) is not None and regs[reg] != local:
+                        stmts.append(f'{local} = {regs[reg]};')
+                        regs[reg] = local
                 stmts.append(f"}} while ({cond_expr[0]} {op} {cond_expr[1]});")
                 for x in range(t_, k_ + 1):
                     skip.add(x)
@@ -1405,6 +1408,7 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                     temps.append(f"{rtype.get(r_, 'u32')} {tn};")
                     stmts.append(f"{tn} = {init};")
                     regs[r_] = tn; carried[r_] = tn
+                    carried_until[r_] = max(carried_until.get(r_, 0), k_ + 1)
                 # the test, evaluated on the pre-loop state, gives the condition
                 saved_regs, saved_rtype, saved_len = dict(regs), dict(rtype), len(stmts)
                 cond_expr = None
@@ -1675,6 +1679,15 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                 else:
                     o = _imm(off)
                     b = use(base)
+                    typed = typed_access(base, o, t)
+                    if typed:
+                        regs[a[0]], rtype[a[0]] = typed
+                        if mn.endswith("u"):
+                            regs[base] = f"((u8 *){b} + {o})"
+                        if reused_after_store(i, a[0], a[1]):
+                            tn = f"v{len(temps)}"; temps.append(f"{rtype[a[0]]} {tn};")
+                            stmts.append(f"{tn} = {regs[a[0]]};"); regs[a[0]] = tn
+                        continue
                     fb = field_base(b, base) if o >= 0 else None
                     if fb is None:
                         ax = indexed_field(b, o, t)
@@ -1754,6 +1767,8 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                     tn = f"v{len(temps)}"; temps.append(f"{rtype.get(r_, 'u32')} {tn};")
                     stmts.append(f"{tn} = {e_};"); regs[r_] = tn
                 val = as_int(use(a[0]))
+                if signature_index.category(rtype.get(a[0], 'u32')) == 'pointer':
+                    val = f'({t})({use(a[0])})'
                 if off.endswith("@l") and base in hi:
                     s = hi[base]; so = sym_off(off)
                     if so or s in struct_syms:
@@ -1768,6 +1783,12 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                         declare(s, t); stmts.append(f"{s} = {val};")
                 else:
                     o = _imm(off); b = use(base)
+                    typed = typed_access(base, o, t)
+                    if typed is not None:
+                        if signature_index.category(typed[1]) == 'pointer':
+                            val = f'({typed[1]})({use(a[0])})'
+                        stmts.append(f"{typed[0]} = {val};")
+                        continue
                     fb = field_base(b, base) if o >= 0 else None
                     if fb is None:
                         ax = indexed_field(b, o, t)
@@ -1833,9 +1854,9 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                 elif mn == "add":
                     x, y = use(a[1]), use(a[2])
                     # address + integer: byte arithmetic, or the pointee size scales the sum
-                    if rtype.get(a[1]) == "void *" and rtype.get(a[2]) != "void *":
+                    if signature_index.category(rtype.get(a[1], 'u32')) == "pointer" and signature_index.category(rtype.get(a[2], 'u32')) != "pointer":
                         regs[d] = f"((u8 *){x} + {y})"; rtype[d] = "void *"
-                    elif rtype.get(a[2]) == "void *" and rtype.get(a[1]) != "void *":
+                    elif signature_index.category(rtype.get(a[2], 'u32')) == "pointer" and signature_index.category(rtype.get(a[1], 'u32')) != "pointer":
                         regs[d] = f"((u8 *){y} + {x})"; rtype[d] = "void *"
                     else:
                         regs[d] = f"({x} + {y})"; rtype[d] = "u32"
@@ -1888,7 +1909,7 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                     hw = HW_BLOCKS[const_]
                     externs[hw] = f"extern vu32 {hw}[];"
                     regs[a[0]] = f"(u32){hw}"; rtype[a[0]] = "u32"; continue
-                if rtype.get(a[1]) == "void *":
+                if signature_index.category(rtype.get(a[1], 'u32')) == "pointer":
                     regs[a[0]] = f"((u8 *){use(a[1])} + {_imm(a[2])})"; rtype[a[0]] = "void *"
                 else:
                     regs[a[0]] = f"({use(a[1])} + {_imm(a[2])})"; rtype[a[0]] = "u32"
@@ -2112,10 +2133,14 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                 if temp_low is not None and temp_low - 1 > top:
                     top = temp_low - 1
                 want = ARITY_HINT[0].get(callee) if callee else None
-                known = protos.get(callee) if callee else None
+                signature = signature_index.get(module, callee, signature_source) if callee else None
+                known = (signature.result, list(signature.args), signature.defined) if signature and signature.args is not None else None
+                slots = signature_index.registers(signature) if signature else None
+                if signature:
+                    signatures_used[callee] = signature
                 no_proto = False
                 if known is not None and "..." not in known[1]:
-                    n_int = sum(1 for t_ in known[1] if not t_.startswith("f"))
+                    n_int = sum(1 for t_ in known[1] if signature_index.category(t_) != "float")
                     if 2 + n_int < top:
                         top = 2 + n_int  # the extra registers were temporaries, not arguments
                     elif 2 + n_int > top:
@@ -2140,7 +2165,7 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                     if stack_addr:
                         ptypes_.append("void *")  # `&x` with a pointer parameter is recomputed per call
                     else:
-                        if other_addr and not e.startswith("(u32)"):
+                        if slots is None and other_addr and not e.startswith("(u32)"):
                             regs[f"r{k}"] = f"(u32){e}"
                         ptypes_.append("u32")
                 for k in range(1, ftop + 1):
@@ -2166,15 +2191,24 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                     fn_typedefs.append(f"typedef u32 (*{tname})({', '.join(ptypes_) or 'void'});")
                     callee = f"(({tname}){indirect[0]})"
                     indirect[0] = None
+                if known is not None and slots is not None:
+                    try:
+                        args = [use(reg) for reg, typ in slots]
+                    except Give:
+                        raise Give(f"cannot supply recovered signature for {callee}")
+                    no_proto = False
+                elif known is not None and "..." not in known[1]:
+                    raise Give(f"unsupported ABI in recovered signature for {callee}")
                 calls.append(callee)
+                call_types.append(known[0] if known is not None else "u32")
                 written_since_call.clear()
                 if callee.startswith("(("):
                     pass  # a pointer call: the typedef carries the prototype
                 elif known is not None and no_proto:
                     externs[callee] = f"extern {known[0]} {callee}();"
                 elif known is not None:
-                    n_f = sum(1 for t_ in known[1] if t_.startswith("f"))
-                    if n_f != len(fargs) and all(f"f{k}" in regs or f"f{k}" not in def_idx for k in range(1, n_f + 1)):
+                    n_f = sum(1 for t_ in known[1] if signature_index.category(t_) == "float")
+                    if slots is None and n_f != len(fargs) and all(f"f{k}" in regs or f"f{k}" not in def_idx for k in range(1, n_f + 1)):
                         fargs = [use(f"f{k}") for k in range(1, n_f + 1)]  # the float arguments the prototype says
                         args = [use(f"r{k}") for k in range(3, top + 1)] + fargs
                     externs[callee] = f"extern {known[0]} {callee}({', '.join(known[1]) or 'void'});"
@@ -2194,8 +2228,8 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                 if known is not None and known[0] == "void":
                     void_calls.add(len(calls) - 1)  # no result: a later read of r3 is the lifter's error
                 else:
-                    regs["r3"] = f"__CALLRET__{len(calls) - 1}"; rtype["r3"] = "u32"
-                    if known is not None and known[0].startswith("f"):
+                    regs["r3"] = f"__CALLRET__{len(calls) - 1}"; rtype["r3"] = known[0] if known is not None else "u32"
+                    if known is not None and signature_index.category(known[0]) == "float":
                         regs.pop("r3", None); regs["f1"] = f"__CALLRET__{len(calls) - 1}"; rtype["f1"] = known[0]
                 continue
             raise Give(f"unhandled {mn} {' '.join(a)}")
@@ -2257,7 +2291,7 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
     # a call whose result is returned becomes `return f(...)`; one whose result feeds later code
     # becomes a temporary; the rest are statements
     f1_ret = regs.get("f1") if ("f1" in regs and any(a_ and a_[0] == "f1" for mn_, a_ in ins if mn_ != "blr")) else None
-    used_ret = {i for i in range(len(calls)) if any(f"__CALLRET__{i}" in st for st in stmts if not st.startswith(f"__CALL__{i}(")) or (ret is not None and f"__CALLRET__{i}" in ret) or (f1_ret is not None and f"__CALLRET__{i}" in f1_ret)}
+    used_ret = {i for i in range(len(calls)) if any(re.search(rf"__CALLRET__{i}\b", st) for st in stmts if not st.startswith(f"__CALL__{i}(")) or (ret is not None and re.search(rf"__CALLRET__{i}\b", ret)) or (f1_ret is not None and re.search(rf"__CALLRET__{i}\b", f1_ret))}
     structs: List[str] = []
     body = []
     for st in stmts:
@@ -2267,7 +2301,7 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
             if ret == f"__CALLRET__{i}" and not any(f"__CALLRET__{i}" in x for x in stmts if x != st):
                 body.append(f"return {call};"); ret = None
             elif i in used_ret:
-                body.append(f"u32 t{i} = {call};")
+                body.append(f"{call_types[i]} t{i} = {call};")
             else:
                 body.append(f"{call};")
         else:
@@ -2280,10 +2314,13 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
     if ret is not None:
         ret = re.sub(r"__CALLRET__(\d+)", r"t\1", ret)
     # temporaries must be declared before any statement: hoist them
-    decls = [b for b in body if b.startswith("u32 t")]
-    if decls:
-        names = [re.match(r"u32 (t\d+)", b).group(1) for b in decls]
-        body = [f"u32 {', '.join(names)};"] + [re.sub(r"^u32 (t\d+) = ", r"\1 = ", b) for b in body]
+    call_decls = []
+    for ci, ctype in enumerate(call_types):
+        prefix = f"{ctype} t{ci} = "
+        if any(b.startswith(prefix) for b in body):
+            call_decls.append(f"{ctype} t{ci};")
+            body = [b.replace(prefix, f"t{ci} = ", 1) if b.startswith(prefix) else b for b in body]
+    body = call_decls + body
     if slocals:
         offs = sorted(slocals)
         top = min(saved_slots) if saved_slots else frame_size
@@ -2331,7 +2368,6 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
         ptr_types = {g: f"struct {name}_{g}_T *" for g in pfields}
         fixed_temps = []
         for tdecl in temps:
-            tdecl = tdecl.replace("void * v", "u32 v")  # an address in an integer temporary
             m_ = re.fullmatch(r"(\S+) (v\d+);", tdecl)
             if m_:
                 init_line = next((b for b in body if re.match(rf"{m_.group(2)} = ", b)), None)
@@ -2353,7 +2389,7 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
     for f in fnames:
         body = [re.sub(rf"(= ){re.escape(f)}(?=;)", rf"\1(u32){f}", b) for b in body]
     if ret is not None:
-        if ret.startswith(("&", "((u8 *)", "(u8 *)", "(struct ")):
+        if ret.startswith(("&", "((u8 *)", "(u8 *)", "(struct ")) and not rtype.get("r3", "").endswith("*"):
             ret = f"(u32){ret}"  # an address returned as an integer
         body.append(f"return {ret};")
     if not partial and not total and (any(("__MULHU__" in b or "__I2D__" in b or "__XORIS__" in b or "__FCTIWZ__" in b) for b in body) or (ret and any(x in ret for x in ("__MULHU__", "__I2D__", "__XORIS__", "__FCTIWZ__")))):
@@ -2371,8 +2407,6 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
     rtype_c = "void"
     if any(b.startswith("return ") for b in body):
         rtype_c = rtype.get("r3", "u32")
-        if rtype_c == "void *":
-            rtype_c = "u32"
     if rtype_c == "void":
         body = [b.replace("return __RET__;", "return;") for b in body]
     else:
@@ -2421,7 +2455,9 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
             structs.append("\n".join(lines))
             decl_params.append(f"struct {sname} *arg{i}")
         else:
-            decl_params.append(f"{ptypes[r]} arg{i}")
+            typ = ptypes[r]
+            decl_params.append(re.sub(r'\(\s*\*\s*\)', f'(*arg{i})', typ, count=1)
+                               if re.search(r'\(\s*\*\s*\)', typ) else f"{typ} arg{i}")
     if calls and not frame and not partial and not total:
         raise Give()
     def struct_text(sname: str, offs: Dict[int, str]) -> str:
@@ -2454,11 +2490,24 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
         body = [b.replace(f"struct {sname} *", "u8 *").replace(f"(struct {sname} *)", "(u8 *)") for b in body]
     for g in pfields:
         body = [re.sub(rf"^{re.escape(g)} = (?!\(struct)", f"{g} = (struct {name}_{g}_T *)", b) for b in body]
-    # an integer passed where the prototype says `void *` (another site passed an address)
+    value_types = {f'arg{i}': ptypes[r] for i, r in enumerate(params)}
+    for line in body:
+        decl = re.fullmatch(r'(?!return\b)([\w *]+?)\s+([vt]\d+);', line)
+        if decl:
+            value_types[decl[2]] = decl[1].strip()
+    value_types.update({n: 'void *' for n in ptr_globals | set(locals_)})
+    def expression_type(expr):
+        if expr in value_types:
+            return value_types[expr]
+        cast = re.match(r'^\(([\w *]+)\)', expr)
+        if cast:
+            return cast[1]
+        if expr.startswith('&'):
+            return 'void *'
+        return None
+    # Cast only at C type boundaries; register moves themselves preserve pointer types.
     for c, proto in list(externs.items()):
         m_p = re.match(r"extern ([\w *]+?) (\w+)\((.*)\);$", proto)
-        if m_p and m_p.group(1).strip().endswith("*"):
-            body = [re.sub(rf"(?<!\w)({re.escape(c)}\()", rf"(u32)\1", b) if not b.startswith("extern") else b for b in body]
         if not m_p or m_p.group(3).strip() in ("", "void", "..."):
             continue
         ptl = [x.strip() for x in m_p.group(3).split(",")]
@@ -2488,7 +2537,7 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                         continue
                     if ptypes_p[k].endswith("*"):
                         args[k] = f"({ptypes_p[k]}){args[k]}"
-                    elif args[k].startswith(("&", "loc_", "(u8 *)", "((u8 *)", "(struct ")):
+                    elif signature_index.category(expression_type(args[k]) or '') == 'pointer' or args[k].startswith(("&", "loc_", "(u8 *)", "((u8 *)", "(struct ")):
                         args[k] = f"(u32){args[k]}"  # an address to an integer parameter
                 out_b += b[pos:pos + m_c.start()] + f"{c}({', '.join(args)})"; pos = j
         body = [fix_call(b) for b in body]
@@ -2497,6 +2546,27 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
     for pn in ptr_names:
         body = [re.sub(rf"(?<![\w>.*])({re.escape(pn)})\b(?!\s*->|\s*=\s*\(struct)", r"(u32)\1", b)
                 if not (b.startswith(f"{pn} = ") or decl_line.match(b)) else b for b in body]
+    def assignment_cast(line):
+        assignment = re.fullmatch(r'([vt]\d+) = (.*);', line)
+        if not assignment:
+            return line
+        target, expr = assignment.groups()
+        typ = value_types.get(target, 'u32')
+        source = expression_type(expr)
+        if signature_index.category(typ) == 'pointer':
+            expr = re.sub(r'^\(u32\)', '', expr)
+            if expression_type(expr) != typ:
+                return f'{target} = ({typ})({expr});'
+            return f'{target} = {expr};'
+        elif source and signature_index.category(source) == 'pointer':
+            return f'{target} = ({typ})({expr});'
+        return line
+    body = [assignment_cast(line) for line in body]
+    body = [f'return ({rtype_c})({line[7:-1]});'
+            if line.startswith('return ') and line.endswith(';')
+            and expression_type(line[7:-1])
+            and signature_index.category(expression_type(line[7:-1])) != signature_index.category(rtype_c)
+            and signature_index.category(rtype_c) in ('integer', 'pointer') else line for line in body]
     body = [b + "  /* fzgx-allow: A1,A2 unnamed OS/hardware memory */" if re.search(r"\(\s*[\w\s]+\*\s*\)\s*0[xX][0-9A-Fa-f]{8}", b) else b for b in body]
     if module == "main":
         small = {".sdata", ".sbss", ".sdata2", ".sbss2"}
@@ -2528,7 +2598,7 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
             sname = f"{name}_{g}"
             structs = [padded(t_, g) if t_.startswith(f"struct {sname} {{") else t_ for t_ in structs]
     externs.pop(name, None)  # never a declaration of the function itself
-    text = ['#include "types.h"', ""]
+    text = ['#include "types.h"'] + signature_index.preamble(signatures_used.values()) + [""]
     if structs:
         text += structs + [""]
     text += sorted(externs.values())
@@ -2543,7 +2613,7 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
 
 
 def apply(p: Project, modules: Optional[List[str]] = None, max_size: int = 160, limit: int = 2000,
-          workers: int = 12, submit: bool = True) -> Dict[str, object]:
+          workers: int = 12, submit: bool = True, tu: Optional[str] = None) -> Dict[str, object]:
     """Lift every unmatched function of the given size that the lifter accepts, check each
     against retail, submit the matches (carve-at-submit; `fzgx verify` relinks once)."""
     import sqlite3
@@ -2553,6 +2623,20 @@ def apply(p: Project, modules: Optional[List[str]] = None, max_size: int = 160, 
     db = sqlite3.connect(str(STATE_DIR / "ledger.db"))
     q = "select symbol, module, size from functions where status='unmatched' and size <= ?"
     args: List[object] = [max_size]
+    if tu:
+        selected = []
+        for mod in modules or p.modules:
+            path = p.module_config_dir(mod) / 'tus.json'
+            if not path.exists():
+                continue
+            for entry in json.loads(path.read_text())['tus']:
+                if f'{p.module_src_prefix(mod)}/{entry["file"]}' == tu:
+                    selected.extend(p.key(p.symbols(mod)[n]) for n in entry['functions'])
+        if not selected:
+            raise ValueError(f'unknown TU: {tu}; use a path relative to src/')
+        args[0] = 0xFFFFFFFF
+        q += ' and symbol in (%s)' % ','.join('?' for _ in selected)
+        args += selected
     if modules:
         q += " and module in (%s)" % ",".join("?" * len(modules)); args += list(modules)
     rows = db.execute(q + " order by size limit ?", args + [limit or 2000]).fetchall()
@@ -2563,7 +2647,11 @@ def apply(p: Project, modules: Optional[List[str]] = None, max_size: int = 160, 
             continue  # matched the object and failed the link before: the same body fails again
         name = s.split(":", 1)[1] if ":" in s else s
         try:
-            variants = lift_variants(p, m, name)
+            if tu:
+                draft = lift_total(p, m, name, max_ins=max(1200, size // 4))
+                variants = [draft] if draft else []
+            else:
+                variants = lift_variants(p, m, name)
         except Exception:
             variants = []
         for vi, t in enumerate(variants):
@@ -2602,7 +2690,7 @@ def apply(p: Project, modules: Optional[List[str]] = None, max_size: int = 160, 
             if best is None:
                 results.append((s, size, t, False, -1)); continue
             pct, c, bad_, ow_ = best
-            ok_ = not bad_ and len(ow_) == len(tw_)
+            ok_ = not bad_ and len(ow_) == len(tw_) and '???' not in t
             if ok_:
                 r = oracle.check(p, s, 4, source=src, mw_version=c[0], extra_cflags=c[1])
                 ok_ = r.ok and (r.matched or r.matched_pool) and oracle.unit_fully_matches(r) is None
@@ -2610,7 +2698,7 @@ def apply(p: Project, modules: Optional[List[str]] = None, max_size: int = 160, 
     # near misses get the deterministic fixup (type flips, symbol substitutions, layout edits)
     from . import fixup
     fixed = 0
-    todo_fx = [idx for idx, (s, size, t, ok, pct) in enumerate(results) if not ok and pct >= 60]
+    todo_fx = [idx for idx, (s, size, t, ok, pct) in enumerate(results) if not ok and pct >= 60 and '???' not in t]
 
     def fix_one(idx):
         s, size, t, ok, pct = results[idx]

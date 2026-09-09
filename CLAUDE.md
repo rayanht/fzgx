@@ -93,6 +93,13 @@ Rules that hold for everyone:
   2026-09-08) and then lifts straight-line functions from the disassembly (`tools/fzgx/lift.py`:
   getters, setters, one-call wrappers, short call-free bodies; 102 landed the same day). Run it
   before spending agents on small functions.
+- `fzgx lift --tu rel/main_rel/accessory.c` lifts one whole TU without a size cap, saves drafts
+  under `.fzgx/lift/`, and submits exact matches after the deterministic fixup. `--no-submit`
+  keeps the results local. Signatures come from owned headers and matched C, with register-flow
+  constraints scoped to the TU and its callees; context labels inferred signatures. A matched
+  wrapper can still have missing passthrough parameters: follow its callees' entry registers
+  (the `memset`/`fn_80008BEC` size argument was one such case). Drafts containing `???` remain
+  incomplete and cannot be submitted by this pass.
 - Prioritize deterministic SDK C imports (CARD, then OS, EXI, SI) regardless of size.
   Functions **under 256 bytes** (`--max-size 255`) are a repair corpus, not a prerequisite. `fzgx stuck --max-size 255` classifies the saved attempts; `fzgx sweep --max-size 255`
   searches them. `fzgx reuse --max-size 255` rebinds verified C when retail instruction

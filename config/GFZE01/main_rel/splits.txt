@@ -5030,3 +5030,6 @@ rel/main_rel/screen_effect/fn_1_7B218.c:
 
 rel/main_rel/archive/fn_1_12BF7C.c:
 	.text       start:0x0012BF7C end:0x0012C000 align:4
+
+rel/main_rel/accessory/fn_1_108920.c:
+	.text       start:0x00108920 end:0x00108A90 align:4

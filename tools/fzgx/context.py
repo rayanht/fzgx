@@ -33,9 +33,17 @@ def _sig_hint(fn: Function) -> str:
     return "; ".join(hints)
 
 
-def _decl_for(sym: Symbol) -> str:
-    if sym.kind == "function":
-        return f"extern void {sym.name}(void);  // {sym.section}:0x{sym.addr:08X} size 0x{sym.size:X} (signature unknown)"
+def _decl_for(sym: Symbol, project: Optional[Project] = None, called: bool = False,
+              source: Optional[str] = None, index=None) -> str:
+    if sym.kind == "function" or called:
+        if project is not None:
+            from .signatures import recovered
+            index = index or recovered(project)
+            sig = index.get(sym.module, sym.name, source)
+            if sig:
+                note = ['// Register-flow estimate; confirm against the call sites.'] if 'register-flow' in sig.origin else []
+                return "\n".join(index.preamble([sig]) + note + [sig.declaration(sym.name)])
+        return f"// {sym.name}: signature unknown; recover arguments and return from call sites."
     dt = sym.attrs.get("data", "")
     ctype = {"byte": "u8", "2byte": "u16", "4byte": "u32", "8byte": "u64", "float": "f32",
              "double": "f64", "string": "char"}.get(dt, "u8")
@@ -166,7 +174,11 @@ def build_context(project: Project, ledger: Optional[Ledger], symbol: str,
     parts.extend(fn.asm)
     parts.append("```")
 
-    if fn.refs:
+    direct_calls = list(dict.fromkeys(m[1] for line in fn.asm
+                                     if (m := re.match(r'^[0-9A-Fa-f]+:\s*bl\s+(\w+)$', line))))
+    references = list(dict.fromkeys(fn.refs + direct_calls))
+    if references:
+        signature_index = None
         header = ROOT / "include" / project.module_src_prefix(module) / "globals.h"
         hdr_text = header.read_text() if header.exists() else ""
         tu_stem = None
@@ -175,6 +187,8 @@ def build_context(project: Project, ledger: Optional[Ledger], symbol: str,
             for t in json.loads(tus_path.read_text())["tus"]:
                 if symbol in t["functions"]:
                     tu_stem = t["file"].rsplit(".", 1)[0]
+                    from .signatures import recovered, propagate
+                    signature_index = propagate(recovered(project), module, t["functions"])
                     break
         tu_header = ROOT / "include" / project.module_src_prefix(module) / f"{tu_stem}.h" if tu_stem else None
         tu_hdr_text = tu_header.read_text() if tu_header and tu_header.exists() else ""
@@ -182,7 +196,7 @@ def build_context(project: Project, ledger: Optional[Ledger], symbol: str,
         shown_from_header = []
         parts.append("\n## Referenced symbols (declare what you use; names are provisional)\n```c")
         pooled = []
-        for name in fn.refs:
+        for name in references:
             s = project.find_symbol(name, module) or project.find_symbol(name)
             if not s:
                 continue
@@ -194,7 +208,8 @@ def build_context(project: Project, ledger: Optional[Ledger], symbol: str,
             if hdr_text and re.search(rf"^extern .*\b{re.escape(name)};", hdr_text, re.M):
                 shown_from_header.append(name)
                 continue
-            parts.append(_decl_for(s))
+            source = f'{project.module_src_prefix(module)}/{tu_stem}.c' if tu_stem else None
+            parts.append(_decl_for(s, project, name in direct_calls, source, signature_index))
         parts.append("```")
         if pooled:
             parts.append("Constant pool: the target loads these from the module's shared literal pool. "

@@ -35,6 +35,87 @@ AccessoryEntry *fn_1_108870(void) {
 }
 /* fzgx:end fn_1_108870 */
 
+/* fzgx:begin fn_1_108920 noprologue */
+#include "types.h"
+
+struct Sig_fn_80077B64_fn_80077B64_Arg0 {
+    u8 pad_0[0x4];
+    u32 unk_4;
+};
+
+struct Sig_fn_80077B14_fn_80077B14_Arg0 {
+    u8 pad_0[0x4];
+    u32 unk_4;
+    u8 pad_8[0x18];
+    u32 unk_20;
+};
+
+
+struct fn_1_108920_Copy12 { u32 a[3]; };
+struct fn_1_108920_lbl_801A6410 {
+    u32 unk_0;
+};
+
+extern s32 fn_80077B14(struct Sig_fn_80077B14_fn_80077B14_Arg0 *);
+extern struct fn_1_108920_lbl_801A6410 lbl_801A6410;
+extern u32 lbl_1_data_40530;
+extern void * fn_80077B64(struct Sig_fn_80077B64_fn_80077B64_Arg0 *);
+extern void fn_1_46B4(u32, u32, const char *, int);
+extern void fn_80008BEC(u32, u32, u32);
+
+void fn_1_108920(u32 accessory) {
+    u32 resource;
+    s32 matrix_address;
+    s32 source_offset;
+    s32 entry_index;
+    u32 source_address;
+    u32 positions;
+    u32 entries;
+    u32 indices;
+    u32 extra_data;
+    void * entry_count;
+    s32 matrix_base;
+    if (accessory != 0) {
+        resource = *(u32 *)((u8 *)accessory + 16);
+        if (resource != 0) {
+            entry_count = (void *)(fn_80077B64((struct Sig_fn_80077B64_fn_80077B64_Arg0 *)resource));
+            matrix_base = fn_80077B14((struct Sig_fn_80077B14_fn_80077B14_Arg0 *)resource);
+            matrix_address = matrix_base;
+            entry_index = 0;
+            source_offset = 0;
+            while ((u32)entry_index < *(u32 *)((u8 *)entry_count + 0)) {
+                entry_index++;
+                source_address = (*(u32 *)((u8 *)accessory + 100) + source_offset);
+                *(struct fn_1_108920_Copy12 *)matrix_address = *(struct fn_1_108920_Copy12 *)source_address;
+                source_offset += 12;
+                matrix_address += 64;
+            }
+        }
+    }
+    positions = *(u32 *)((u8 *)accessory + 100);
+    if (positions != 0) {
+        fn_1_46B4(lbl_801A6410.unk_0, positions, (const char *)&lbl_1_data_40530, 1154);
+        *(u32 *)((u8 *)accessory + 100) = 0;
+    }
+    entries = *(u32 *)((u8 *)accessory + 36);
+    if (entries != 0) {
+        fn_1_46B4(lbl_801A6410.unk_0, entries, (const char *)&lbl_1_data_40530, 1157);
+        *(u32 *)((u8 *)accessory + 36) = 0;
+    }
+    indices = *(u32 *)((u8 *)accessory + 40);
+    if (indices != 0) {
+        fn_1_46B4(lbl_801A6410.unk_0, indices, (const char *)&lbl_1_data_40530, 1158);
+        *(u32 *)((u8 *)accessory + 40) = 0;
+    }
+    extra_data = *(u32 *)((u8 *)accessory + 44);
+    if (extra_data != 0) {
+        fn_1_46B4(lbl_801A6410.unk_0, extra_data, (const char *)&lbl_1_data_40530, 1159);
+        *(u32 *)((u8 *)accessory + 44) = 0;
+    }
+    fn_80008BEC(accessory, 0, 104);
+}
+/* fzgx:end fn_1_108920 */
+
 /* fzgx:begin fn_1_109114 */
 #include "rel/main_rel/accessory.h"
 
