@@ -612,6 +612,10 @@ def materialize(result: dict) -> list:
 def storage_variants(text: str) -> list:
     """Express retained field addresses and array bases lost by splitting an SDK TU."""
     variants = []
+    retained = re.sub(r'(struct\s+\w+\s*\*)\s*(sdk_storage_\w+)\s*=', r'\1 const \2 =', text)
+    if retained != text:
+        # Keep the shared base across compiler-generated aggregate copies.
+        variants.append(('const-storage', retained))
     pointers = dict(re.findall(r'struct (\w+)\s*\*\s*(sdk_storage_\w+)\s*=', text))
     tags = {local: tag for tag, local in pointers.items()}
     types = {}

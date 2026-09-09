@@ -33948,6 +33948,16 @@
   },
   {
     "module": "movie_module",
+    "source": "rel/movie_module/SFTST_Create.c",
+    "symbols": [
+      "SFTST_Create"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "movie_module",
     "source": "rel/movie_module/UTY_MulDiv.c",
     "symbols": [
       "UTY_MulDiv"
