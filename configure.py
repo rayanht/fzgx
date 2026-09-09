@@ -395,12 +395,14 @@ def add_pool_rules() -> None:
     n = 0
     for source, mapping in pool.items():
         stem = source.rsplit(".", 1)[0]
-        head = f"build build/{config.version}/src/{stem}.o: mwcc $"
-        if head in text:
+        # the edge is `...o: mwcc $` (inputs on the next line, generated units) or
+        # `...o: mwcc src/... $` (a standalone unit): both become mwcc_pool
+        pat = re.compile(rf"^(build build/{re.escape(config.version)}/src/{re.escape(stem)}\.o: )mwcc( |\$)", re.M)
+        m = pat.search(text)
+        if m:
             poolmap = ",".join(f"{k}={v}" for k, v in sorted(mapping.items()))
-            text = text.replace(head, f"build build/{config.version}/src/{stem}.o: mwcc_pool $", 1)
-            marker = f"build build/{config.version}/src/{stem}.o: mwcc_pool $"
-            i = text.index(marker)
+            text = text[:m.start()] + m.group(1) + "mwcc_pool" + m.group(2) + text[m.end():]
+            i = m.start()
             j = text.index("  mw_version = ", i)
             text = text[:j] + f"  poolmap = {poolmap}\n" + text[j:]
             n += 1
