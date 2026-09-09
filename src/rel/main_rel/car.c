@@ -583,6 +583,88 @@ u8 fn_1_84794(s32 index) {
 }
 /* fzgx:end fn_1_84794 */
 
+/* fzgx:begin fn_1_847A8 */
+s16 fn_1_847A8(s16 value, s16 divisor) {
+    s16 selected = 0;
+
+    switch (value) {
+    case 0:
+    case 15:
+    case 30:
+        selected = 0;
+        break;
+    case 1:
+    case 16:
+    case 31:
+        selected = 1;
+        break;
+    case 2:
+    case 17:
+    case 32:
+        selected = 2;
+        break;
+    case 3:
+    case 18:
+    case 33:
+        selected = 3;
+        break;
+    case 4:
+    case 19:
+    case 34:
+        selected = 4;
+        break;
+    case 5:
+    case 20:
+    case 35:
+        selected = 5;
+        break;
+    case 6:
+    case 21:
+    case 36:
+        selected = 6;
+        break;
+    case 7:
+    case 22:
+    case 37:
+        selected = 7;
+        break;
+    case 8:
+    case 23:
+    case 38:
+        selected = 8;
+        break;
+    case 9:
+    case 24:
+    case 39:
+        selected = 9;
+        break;
+    case 10:
+    case 25:
+    case 40:
+        selected = 10;
+        break;
+    case 11:
+    case 26:
+        selected = 11;
+        break;
+    case 12:
+    case 27:
+        selected = 12;
+        break;
+    case 13:
+    case 28:
+        selected = 13;
+        break;
+    case 14:
+    case 29:
+        selected = 14;
+        break;
+    }
+
+    return (s16)(selected % divisor);
+}
+/* fzgx:end fn_1_847A8 */
+
 /* fzgx:begin fn_1_85878 */
 void fn_1_85878(void) {
     fn_1_85688();

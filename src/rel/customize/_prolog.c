@@ -589,6 +589,98 @@ void fn_3_6540(void) {
 }
 /* fzgx:end fn_3_6540 */
 
+/* fzgx:begin fn_3_65B0 */
+extern u8 jumptable_3_data_18E4[40];
+
+extern void fn_1_F7D6C(void);
+extern void fn_1_F7E24(void);
+extern void fn_1_F7D18(void);
+extern void fn_1_F7DC0(void);
+extern s32 fn_1_F8A38(s32);
+extern void fn_1_F8AD4(s32);
+extern void fn_1_F8A58(s32);
+extern void fn_1_F83F0(s32);
+extern u8 fn_1_F8C50(s32);
+extern void fn_1_F8C74(s32);
+extern void fn_1_F8C00(s32);
+
+void fn_3_65B0(u32 value) {
+    switch ((u16)value) {
+    case 0:
+        fn_1_F7D6C();
+        fn_1_F7E24();
+        break;
+    case 1:
+        fn_1_F7D18();
+        fn_1_F7DC0();
+        break;
+    case 2:
+        if (fn_1_F8A38(0) == 0) {
+            fn_1_F8AD4(0);
+        }
+        fn_1_F8A58(0);
+        if (fn_1_F8A38(1) == 0) {
+            fn_1_F8AD4(1);
+        }
+        fn_1_F8A58(1);
+        if (fn_1_F8A38(2) == 0) {
+            fn_1_F8AD4(2);
+        }
+        fn_1_F8A58(2);
+        if (fn_1_F8A38(3) == 0) {
+            fn_1_F8AD4(3);
+        }
+        fn_1_F8A58(3);
+        if (fn_1_F8A38(4) == 0) {
+            fn_1_F8AD4(4);
+        }
+        fn_1_F8A58(4);
+        if (fn_1_F8A38(5) == 0) {
+            fn_1_F8AD4(5);
+        }
+        fn_1_F8A58(5);
+        break;
+    case 3:
+        fn_1_F83F0(0x11);
+        fn_1_F83F0(0x26);
+        fn_1_F83F0(0x34);
+        break;
+    case 4:
+        fn_1_F83F0(0x16);
+        fn_1_F83F0(0x30);
+        fn_1_F83F0(0x3e);
+        break;
+    case 5:
+        fn_1_F83F0(8);
+        fn_1_F83F0(0x2c);
+        fn_1_F83F0(0x49);
+        break;
+    case 6:
+        fn_1_F83F0(0xb);
+        fn_1_F83F0(0x2e);
+        fn_1_F83F0(0x39);
+        break;
+    case 7:
+        fn_1_F83F0(1);
+        fn_1_F83F0(0x1a);
+        fn_1_F83F0(0x46);
+        break;
+    case 8:
+        if (fn_1_F8C50(1) == 0) {
+            fn_1_F8C74(1);
+        }
+        fn_1_F8C00(1);
+        break;
+    case 9:
+        if (fn_1_F8C50(0) == 0) {
+            fn_1_F8C74(0);
+        }
+        fn_1_F8C00(0);
+        break;
+    }
+}
+/* fzgx:end fn_3_65B0 */
+
 /* fzgx:begin fn_3_7688 */
 extern s32 lbl_3_bss_8;
 extern s32 lbl_3_bss_C[3];

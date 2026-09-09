@@ -283,6 +283,95 @@ void fn_1_49778(s16 value1, s16 value2, s16 value3, s16 value4) {
 }
 /* fzgx:end fn_1_49778 */
 
+/* fzgx:begin fn_1_49794 */
+u32 fn_1_49794(u32 c) {
+    if ((u16)c >= 'A' && (u16)c <= 'Z') {
+        return c + 0x821F;
+    }
+    if ((u16)c >= 'a' && (u16)c <= 'z') {
+        return c + 0x8220;
+    }
+    if ((u16)c >= '0' && (u16)c <= '9') {
+        return c + 0x821F;
+    }
+
+    switch ((u8)c) {
+    case '!':
+        return 0x8149;
+    case '"':
+        return 0x8168;
+    case '#':
+        return 0x8194;
+    case '$':
+        return 0x8190;
+    case '%':
+        return 0x8193;
+    case '&':
+        return 0x8195;
+    case '\'':
+        return 0x8166;
+    case '(':
+        return 0x8169;
+    case ')':
+        return 0x816A;
+    case '*':
+        return 0x8196;
+    case '+':
+        return 0x817B;
+    case ',':
+        return 0x8143;
+    case '-':
+        return 0x817C;
+    case '.':
+        return 0x8144;
+    case '/':
+        return 0x815E;
+    case ':':
+        return 0x8146;
+    case ';':
+        return 0x8147;
+    case '<':
+        return 0x8171;
+    case '=':
+        return 0x8181;
+    case '>':
+        return 0x8172;
+    case '?':
+        return 0x8148;
+    case '@':
+        return 0x8197;
+    case '[':
+        if ((s32)lbl_1_bss_3E058 == 0) {
+            return 0x816D;
+        }
+        break;
+    case '\\':
+        return 0x815F;
+    case ']':
+        if ((s32)lbl_1_bss_3E058 == 0) {
+            return 0x816E;
+        }
+        break;
+    case '^':
+        return 0x814F;
+    case '_':
+        return 0x8151;
+    case '`':
+        return 0x8165;
+    case '{':
+        return 0x816F;
+    case '|':
+        return 0x8162;
+    case '}':
+        return 0x8170;
+    case '~':
+        return 0x8160;
+    }
+
+    return c;
+}
+/* fzgx:end fn_1_49794 */
+
 /* fzgx:begin fn_1_499BC */
 extern u8 jumptable_1_data_1BEFC[220];
 

@@ -419,6 +419,20 @@
   },
   {
     "module": "customize",
+    "source": "rel/customize/_prolog/fn_3_65B0.c",
+    "symbols": [
+      "fn_3_65B0"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/customize/_prolog.c",
+    "pool": {
+      "@32": "jumptable_3_data_18E4"
+    }
+  },
+  {
+    "module": "customize",
     "source": "rel/customize/_prolog/fn_3_7688.c",
     "symbols": [
       "fn_3_7688"
@@ -12678,6 +12692,20 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/car/fn_1_847A8.c",
+    "symbols": [
+      "fn_1_847A8"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/car.c",
+    "pool": {
+      "@47": "jumptable_1_data_207F0"
+    }
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/car/fn_1_85878.c",
     "symbols": [
       "fn_1_85878"
@@ -16768,6 +16796,20 @@
     "mw_version": null,
     "extra_cflags": [],
     "tu": "rel/main_rel/font.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/font/fn_1_49794.c",
+    "symbols": [
+      "fn_1_49794"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/font.c",
+    "pool": {
+      "@51": "jumptable_1_data_1BD84"
+    }
   },
   {
     "module": "main_rel",

@@ -4859,3 +4859,9 @@ rel/main_rel/effect/fn_1_5B30C.c:
 
 rel/main_rel/font/fn_1_499BC.c:
 	.text       start:0x000499BC end:0x00049B70 align:4
+
+rel/main_rel/car/fn_1_847A8.c:
+	.text       start:0x000847A8 end:0x00084860 align:4
+
+rel/main_rel/font/fn_1_49794.c:
+	.text       start:0x00049794 end:0x000499BC align:4
