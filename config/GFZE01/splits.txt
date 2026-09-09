@@ -3007,3 +3007,9 @@ dol/SISetCommand.c:
 
 dol/fn_80038B3C.c:
 	.text       start:0x80038B3C end:0x80038BFC align:4
+
+dol/fn_8005466C.c:
+	.text       start:0x8005466C end:0x800546A0 align:4
+
+dol/fn_8003416C.c:
+	.text       start:0x8003416C end:0x800341EC align:4

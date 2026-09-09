@@ -723,6 +723,20 @@ void fn_1_F8D38(u32 value) {
 }
 /* fzgx:end fn_1_F8D38 */
 
+/* fzgx:begin fn_1_F8D5C */
+struct fn_1_F8D5C_Copy440 { u32 a[110]; };
+
+extern u32 lbl_1_rodata_6E38;
+extern void fn_80008BA8(u32, u32, u32);
+
+void fn_1_F8D5C(u32 arg0, u32 arg1) {
+    struct fn_1_F8D5C_Copy440 loc_8;
+    /* frame */
+    loc_8 = *(struct fn_1_F8D5C_Copy440 *)&lbl_1_rodata_6E38;
+    fn_80008BA8(arg1, (u32)((u8 *)&loc_8 + ((s16)arg0 * 10)), 10);
+}
+/* fzgx:end fn_1_F8D5C */
+
 /* fzgx:begin fn_1_F8DC4 */
 struct Table {
     u32 values[4][6];

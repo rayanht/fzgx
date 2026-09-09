@@ -397,6 +397,17 @@
   },
   {
     "module": "customize",
+    "source": "rel/customize/_prolog/fn_3_60C8.c",
+    "symbols": [
+      "fn_3_60C8"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/customize/_prolog.c"
+  },
+  {
+    "module": "customize",
     "source": "rel/customize/_prolog/fn_3_61B8.c",
     "symbols": [
       "fn_3_61B8"
@@ -6103,6 +6114,16 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_8003416C.c",
+    "symbols": [
+      "fn_8003416C"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
     "source": "dol/fn_800341EC.c",
     "symbols": [
       "fn_800341EC"
@@ -8682,6 +8703,16 @@
     "source": "dol/fn_80054608.c",
     "symbols": [
       "fn_80054608"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_8005466C.c",
+    "symbols": [
+      "fn_8005466C"
     ],
     "status": "matching",
     "mw_version": "GC/1.3.2",
@@ -29069,6 +29100,17 @@
     "source": "rel/main_rel/spline/fn_1_F8D38.c",
     "symbols": [
       "fn_1_F8D38"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/spline.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/spline/fn_1_F8D5C.c",
+    "symbols": [
+      "fn_1_F8D5C"
     ],
     "status": "matching",
     "mw_version": null,
