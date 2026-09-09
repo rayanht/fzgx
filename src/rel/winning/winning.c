@@ -18,6 +18,71 @@ void fn_15_1F4(void) {
 }
 /* fzgx:end fn_15_1F4 */
 
+/* fzgx:begin fn_15_260 */
+extern struct fn_15_260_lbl_15_bss_0 lbl_15_bss_0;
+extern u32 fn_1_435C(u32);
+extern void fn_1_407C(void);
+extern void fn_1_3CC4(void);
+extern s32 fn_1_8DB94(void);
+extern void fn_1_86254(u32);
+extern void fn_1_106EB0(void);
+extern s32 camera_get_flags(void);
+extern void camera_update(void);
+extern u32 fn_1_58C4(void);
+extern void fn_1_5948(s32);
+extern void fn_1_9A770(void);
+extern void fn_1_627C(s32);
+
+struct fn_15_260_lbl_15_bss_0 {
+    u8 pad_0[0xC];
+    u32 unk_C;
+    u32 unk_10;
+    u8 pad_14[0xD];
+    u8 unk_21;
+    u8 pad_22[2];
+    u32 unk_24;
+    u32 unk_28;
+};
+
+void fn_15_260(void) {
+    struct fn_15_260_lbl_15_bss_0 *p_lbl_15_bss_0;
+    u32 count;
+    s32 i;
+    s16 index;
+
+    p_lbl_15_bss_0 = (struct fn_15_260_lbl_15_bss_0 *)&lbl_15_bss_0;
+    if (p_lbl_15_bss_0->unk_21 != 0) {
+        fn_1_435C(p_lbl_15_bss_0->unk_24);
+        fn_1_407C();
+    }
+    fn_1_435C(p_lbl_15_bss_0->unk_C);
+    fn_1_407C();
+    fn_1_3CC4();
+    if (fn_1_8DB94() != 0) {
+        fn_1_86254(0);
+        fn_1_106EB0();
+    }
+    if (camera_get_flags() != 0) {
+        camera_update();
+    }
+    count = fn_1_58C4();
+    i = 0;
+    while ((s16)i < count) {
+        index = (s16)i;
+        fn_1_5948(index);
+        fn_1_9A770();
+        if (p_lbl_15_bss_0->unk_21 != 0) {
+            fn_1_435C(p_lbl_15_bss_0->unk_28);
+            fn_1_407C();
+        }
+        fn_1_435C(p_lbl_15_bss_0->unk_10);
+        fn_1_407C();
+        fn_1_627C(index);
+        i++;
+    }
+}
+/* fzgx:end fn_15_260 */
+
 /* fzgx:begin fn_15_350 */
 typedef void (*fn_15_350_Fn0)(void);
 struct fn_15_350_lbl_15_data_70_0_E16 {

@@ -138,6 +138,35 @@ void fn_1_12B3BC(FnObj *arg0, void *arg1, void *arg2, void *arg3,
 }
 /* fzgx:end fn_1_12B3BC */
 
+/* fzgx:begin fn_1_12BF7C noprologue */
+#include "types.h"
+
+typedef struct {
+    u8 pad[0x94];
+    u32 unk94;
+} GlobalState;
+
+extern GlobalState lbl_1_bss_8B3A0;
+extern void fn_1_8CED0(void *arg, u16 a, u16 b);
+extern void fn_1_8D0A4(void *arg);
+
+void fn_1_12BF7C(void *arg, s16 count, u32 a, u32 b) {
+    u8 *p;
+    s16 i;
+
+    if ((lbl_1_bss_8B3A0.unk94 & 0x80000000) == 0) {
+        p = (u8 *)arg;
+        i = 0;
+        while (i < count) {
+            fn_1_8CED0(p, (u16)a, (u16)b);
+            fn_1_8D0A4(p);
+            p += 100;
+            i++;
+        }
+    }
+}
+/* fzgx:end fn_1_12BF7C */
+
 /* fzgx:begin fn_1_12C000 */
 void fn_1_12C000(void *arg, s16 count) {
     u8 *p;

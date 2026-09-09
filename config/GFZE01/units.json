@@ -3859,6 +3859,16 @@
   },
   {
     "module": "main",
+    "source": "dol/cbForStateError.c",
+    "symbols": [
+      "cbForStateError"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
     "source": "dol/ddh_cc_close.c",
     "symbols": [
       "ddh_cc_close"
@@ -4984,6 +4994,16 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_80018330.c",
+    "symbols": [
+      "fn_80018330"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
     "source": "dol/fn_80018650.c",
     "symbols": [
       "fn_80018650"
@@ -5217,6 +5237,16 @@
     "source": "dol/fn_8001E954.c",
     "symbols": [
       "fn_8001E954"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_8001E9BC.c",
+    "symbols": [
+      "fn_8001E9BC"
     ],
     "status": "matching",
     "mw_version": null,
@@ -13668,6 +13698,17 @@
     "source": "rel/main_rel/archive/fn_1_12B3BC.c",
     "symbols": [
       "fn_1_12B3BC"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/archive.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/archive/fn_1_12BF7C.c",
+    "symbols": [
+      "fn_1_12BF7C"
     ],
     "status": "matching",
     "mw_version": null,
@@ -28062,6 +28103,17 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/screen_effect/fn_1_7B218.c",
+    "symbols": [
+      "fn_1_7B218"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/screen_effect.c"
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/screen_effect/fn_1_7B4C0.c",
     "symbols": [
       "fn_1_7B4C0"
@@ -38820,6 +38872,17 @@
     "source": "rel/winning/winning/fn_15_236C.c",
     "symbols": [
       "fn_15_236C"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/winning/winning.c"
+  },
+  {
+    "module": "winning",
+    "source": "rel/winning/winning/fn_15_260.c",
+    "symbols": [
+      "fn_15_260"
     ],
     "status": "matching",
     "mw_version": null,

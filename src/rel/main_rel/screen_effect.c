@@ -663,6 +663,47 @@ void fn_1_7B184(void *arg) {
 }
 /* fzgx:end fn_1_7B184 */
 
+/* fzgx:begin fn_1_7B218 noprologue */
+#include "types.h"
+#include "rel/main_rel/screen_effect.h"
+
+typedef struct {
+    u8 pad_0[0x7e0];
+    char unk_7e0[0x4c];
+    char unk_82c[0x14];
+    char unk_840[0x20];
+} ScreenEffectData;
+
+extern u16 fn_1_12EF24(s16 value, s16 index);
+extern void fn_8008069C(char *dst, const char *format, const char *text, ...);
+extern void fn_1_465D0(char *text, s32 mode);
+
+void fn_1_7B218(s32 enabled) {
+    char text_a[0x20];
+    char text_b[0x20];
+    s32 i;
+    s16 index;
+    ScreenEffectData *data = (ScreenEffectData *)&lbl_1_data_1DCF0;
+
+    i = 0;
+    do {
+        index = fn_1_12EF24(lbl_1_bss_8B3A0.unk_8C, i);
+        if (index >= 0) {
+            fn_8008069C(text_a, data->unk_82c, data->unk_7e0, index);
+            fn_8008069C(text_b, data->unk_840, data->unk_7e0, index);
+            if (enabled == 0) {
+                fn_1_465D0(text_a, 1);
+                fn_1_465D0(text_b, 1);
+            } else {
+                fn_1_465D0(text_a, 2);
+                fn_1_465D0(text_b, 2);
+            }
+        }
+        i++;
+    } while (i < 6);
+}
+/* fzgx:end fn_1_7B218 */
+
 /* fzgx:begin fn_1_7B4C0 */
 // Releases active screen effects and resets the effect state.
 void fn_1_7B4C0(void) {

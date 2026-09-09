@@ -3223,3 +3223,12 @@ dol/fn_80030338.c:
 
 dol/fn_80058ED4.c:
 	.text       start:0x80058ED4 end:0x80058EE4 align:4
+
+dol/fn_80018330.c:
+	.text       start:0x80018330 end:0x80018414 align:4
+
+dol/cbForStateError.c:
+	.text       start:0x80017958 end:0x80017A04 align:4
+
+dol/fn_8001E9BC.c:
+	.text       start:0x8001E9BC end:0x8001EA30 align:4
