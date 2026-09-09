@@ -1349,3 +1349,9 @@ rel/movie_module/fn_12_33428.c:
 
 rel/movie_module/fn_12_30930.c:
 	.text       start:0x00030930 end:0x000309B0 align:4
+
+rel/movie_module/fn_12_2E374.c:
+	.text       start:0x0002E374 end:0x0002E41C align:4
+
+rel/movie_module/fn_12_8A10.c:
+	.text       start:0x00008A10 end:0x00008AEC align:4
