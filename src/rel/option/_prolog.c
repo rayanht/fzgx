@@ -47,10 +47,12 @@ extern s16 lbl_1_bss_962;
 extern struct fn_4_9B0_lbl_4_data_1260 lbl_4_data_1260;
 extern u32 lbl_1_bss_71688;
 extern u32 lbl_1_bss_7168C;
-
-/* fzgx:begin fn_4_894 */
 extern u32 fn_1_3CC4(u32);
 extern u32 fn_1_407C(u32);
+extern u32 fn_1_426C(u32);
+extern void fn_4_AB90(void);
+
+/* fzgx:begin fn_4_894 */
 extern u32 fn_1_435C(u32);
 
 // Initializes both option subsystems in sequence.
@@ -67,7 +69,14 @@ void fn_4_894(void) {
 }
 /* fzgx:end fn_4_894 */
 
-/* fzgx:begin fn_4_9B0 */
+/* fzgx:begin fn_4_9B0 noprologue */
+#include "types.h"
+
+extern s16 lbl_1_bss_962;
+extern struct fn_4_9B0_lbl_4_data_1260 lbl_4_data_1260;
+extern u32 lbl_1_bss_71688;
+extern u32 lbl_1_bss_7168C;
+
 typedef u32 (*fn_4_9B0_Fn0)(void);
 struct fn_4_9B0_lbl_4_data_1260_0_E44 {
     u8 pad_0[0x20];
@@ -266,7 +275,6 @@ void fn_4_4784(void) {
 /* fzgx:begin fn_4_4B10 */
 extern u16 lbl_4_bss_0;
 extern u32 fn_1_F7308(void);
-extern u32 fn_1_426C(u32);
 extern u32 fn_1_435C(u32);
 
 struct fn_4_4B10_state {
@@ -344,7 +352,6 @@ void fn_4_6678(void) {
 /* fzgx:end fn_4_6678 */
 
 /* fzgx:begin fn_4_78E0 */
-extern u32 fn_1_426C(u32);
 extern u32 fn_1_435C(u32);
 
 /* Clears the pending option state after notifying the option handlers. */
@@ -454,7 +461,6 @@ void fn_4_7CA4(void) {
 /* fzgx:end fn_4_7CA4 */
 
 /* fzgx:begin fn_4_7D94 */
-extern u32 fn_1_426C(u32);
 extern u32 fn_1_435C(u32);
 
 // Reset the option subsystem after releasing its active resource.
@@ -498,7 +504,6 @@ void fn_4_80EC(void) {
 /* fzgx:end fn_4_80EC */
 
 /* fzgx:begin fn_4_8248 */
-extern u32 fn_1_426C(u32);
 extern u32 fn_1_435C(u32);
 
 /* Finalize the pending option state and clear its completion flag. */
@@ -555,7 +560,6 @@ void fn_4_869C(void) {
 /* fzgx:end fn_4_869C */
 
 /* fzgx:begin fn_4_898C */
-extern u32 fn_1_426C(u32);
 extern u32 fn_1_435C(u32);
 
 /* Reset the option state after releasing its active resource. */
@@ -630,9 +634,7 @@ void fn_4_8A54(void) {
 /* fzgx:end fn_4_8A54 */
 
 /* fzgx:begin fn_4_8AE0 */
-extern u32 fn_1_426C(u32);
 extern u32 fn_1_435C(u32);
-extern void fn_4_AB90(void);
 
 // Completes the pending option callback and clears its handle.
 void fn_4_8AE0(void) {
@@ -682,7 +684,6 @@ void fn_4_8DC0(void) {
 /* fzgx:end fn_4_8DC0 */
 
 /* fzgx:begin fn_4_9A78 */
-extern u32 fn_1_426C(u32);
 extern u32 fn_1_435C(u32);
 
 // Finalizes the pending option callback and clears its handle.
