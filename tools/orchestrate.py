@@ -264,6 +264,9 @@ def finish_round(p: Project, a, model: str, module: str) -> Dict:
     # deterministic passes first: the fixup sweep over this module's plateaus, then the lab
     sw = api.sweep_attempts(p, module, 85.0, 1000)
     lb = lab.run(p, 97.0, 400, submit=True)
+    from fzgx import spell  # scoped: only when --finish is used
+    sp = spell.run_attempts(p, 60.0, module=module, submit=True)
+    print(f"spell {module}: {len(sp.get('matched', []))} matched of {sp.get('searched')} plateau bodies ({sp.get('skipped')} memoised), {sp.get('secs')} s", flush=True)
     print(f"sweep {module}: {len(sw.get('submitted', []))} submitted, {len(sw.get('pool', []))} pool, {len(sw.get('fixed', []))} fixed; lab: {len(lb.get('matched', []))} matched", flush=True)
     from fzgx.ledger import Ledger  # scoped: same
     out = {"passes": [], "revise": None}

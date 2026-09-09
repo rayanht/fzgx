@@ -85,3 +85,19 @@ file from what actually unblocked functions; keep each item one or two lines.
   locals initialised before the loop. Registers assigned inside an `if` block and read
   after it are locals too; a flag set to 0 before an if-chain and to 1 inside is a
   local, not a constant.
+
+## What closed the agents' plateaus (spelling search over 1,285 saved bodies, 2026-09-08)
+
+Each line is a family that turned a 60–99% body into a match; the count is how many.
+- Declaration order of locals (5) and moving one local into an inner block (2): the
+  allocator follows declaration order, so a swapped r30/r31 is a swapped declaration.
+- One extra unused trailing parameter (3): a function that ignores an argument still
+  declared it; add `u32 unused` before rewriting anything else.
+- Hoisting a call argument into a local right before the call (4), or inlining a
+  single-use temporary (4): `f(a, p->x)` vs `t = p->x; f(a, t)` moves the load.
+- Signedness of a local (3), a parameter (1), a struct field (2): `s32` vs `u32` changes
+  `cmpw`/`cmplw` and `extsh`/`rlwinm`, nothing else; flip one at a time.
+- `x == 0` -> `!x`, `x != 0` -> `x` (2), and commuted compare operands `2 == x` (2):
+  the branch is the same, the register that holds the constant moves.
+- Two adjacent statements that share nothing, swapped (2): free order, different
+  scheduling.
