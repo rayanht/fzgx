@@ -8,8 +8,8 @@ extern SIPacket Packet_8015CA10[4];
 
 extern OSAlarm lbl_8015CA90[4];
 
-static BOOL __SITransfer(s32 chan, void *output, u32 outputBytes, void *input, u32 inputBytes,
-                         SICallback callback);
+BOOL __SITransfer(s32 chan, void *output, u32 outputBytes, void *input, u32 inputBytes,
+                  SICallback callback);
 
 BOOL __SITransfer(s32 chan, void *output, u32 outputBytes, void *input, u32 inputBytes,
                   SICallback callback);

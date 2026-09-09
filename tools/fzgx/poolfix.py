@@ -17,7 +17,9 @@ same instruction, this rewrites the object:
 
 Minimal big-endian ELF32 surgery: the new name goes into a copy of .strtab
 appended at the end of the file; only that section header, the symbol entry
-and the .rodata size change.
+and the .rodata size change. SDK string pools in .data use the same binding.
+A compiler BSS section base may also bind to its named object; that object
+stays defined and its BSS range remains owned by the C unit.
 """
 
 from __future__ import annotations

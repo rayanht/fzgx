@@ -1898,6 +1898,27 @@
   },
   {
     "module": "main",
+    "source": "dol/AlarmHandler_SIBios.c",
+    "symbols": [
+      "AlarmHandler_SIBios"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
     "source": "dol/CARDCheck.c",
     "symbols": [
       "__CARDCheckSum",
@@ -4418,6 +4439,27 @@
   },
   {
     "module": "main",
+    "source": "dol/SITransfer.c",
+    "symbols": [
+      "SITransfer"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
     "source": "dol/SITransferCommands.c",
     "symbols": [
       "SITransferCommands"
@@ -4803,6 +4845,27 @@
     "pool": {
       "@51": "lbl_80123AB8"
     }
+  },
+  {
+    "module": "main",
+    "source": "dol/UnlockSram.c",
+    "symbols": [
+      "UnlockSram"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
   },
   {
     "module": "main",

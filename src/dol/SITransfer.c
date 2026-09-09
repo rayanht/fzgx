@@ -24,8 +24,8 @@ void OSSetAlarm(OSAlarm *alarm, OSTime tick, OSAlarmHandler handler);
 
 extern SIControl Si_80123B94;
 
-static BOOL __SITransfer(s32 chan, void *output, u32 outputBytes, void *input, u32 inputBytes,
-                         SICallback callback);
+BOOL __SITransfer(s32 chan, void *output, u32 outputBytes, void *input, u32 inputBytes,
+                  SICallback callback);
 
 BOOL __SITransfer(s32 chan, void *output, u32 outputBytes, void *input, u32 inputBytes,
                   SICallback callback);

@@ -310,7 +310,7 @@ MEMORY_NAMES = {
 
 
 def memory_declarations(text: str) -> tuple:
-    """Replace constant SDK pointer expressions with linker-owned address declarations."""
+    """Replace constant SDK pointer expressions with linker-generated address constants."""
     addresses, edits = {}, []
     clean = masked(text)
     for cast in re.finditer(r'\(\s*\w+\s*\*\s*\)\s*', clean):
@@ -544,6 +544,7 @@ def materialize(result: dict) -> list:
     output = []
     for rec in result['prepared']:
         pieces = declarations(Path(rec['path']).read_text())
+        defined = set().union(*(x.names for x in pieces if x.kind == 'function'))
         used = set(IDENT.findall(masked('\n'.join(x.text for x in pieces if x.kind != 'prototype'))))
         body = []
         for piece in pieces:
@@ -552,6 +553,8 @@ def materialize(result: dict) -> list:
             if piece.kind == 'prototype' and (piece.names & shared_prototypes or not piece.names & used):
                 continue
             text = re.sub(r'^asm\s+', '', piece.text)
+            if piece.kind == 'prototype' and not piece.names & defined:
+                text = re.sub(r'^static\s+', '', text)
             if result['library'] == 'si':
                 text = re.sub(r'\b0x80000001\b', '(SI_COMCSR_TCINT | SI_COMCSR_TSTART)', text)
             if piece.address is not None:

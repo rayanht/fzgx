@@ -1,13 +1,14 @@
-#include <dolphin/exi.h>
 #include <dolphin/os.h>
+#include <dolphin/exi.h>
 #include <dolphin/os/OSContext.h>
+#include <dolphin/os/OSInterrupt.h>
 #include <dolphin/os/OSRtc.h>
 
 struct OSRtcBss {
     SramControlBlock Scb;
 };
 
-static void WriteSramCallback(s32 chan, OSContext *context);
+void WriteSramCallback(s32 chan, OSContext *context);
 
 static BOOL WriteSram(void *buffer, u32 offset, u32 size);
 
