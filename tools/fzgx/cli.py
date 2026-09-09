@@ -189,30 +189,26 @@ def cmd_naming_apply(a, p):
     _print(naming.apply(p, json.loads(Path(a.file).read_text()), a.by), a.json); return 0
 
 
-def cmd_structs(a, p):
-    info = structs.analyze(p, a.module, a.symbol)
-    if a.json:
-        _print(info, True)
-    else:
+
+
+def cmd_headers(a, p):
+    if a.symbol:
+        info = structs.analyze(p, a.module, a.symbol)
+        if a.json:
+            _print(info, True); return 0
         print(f"{a.symbol}: kind={info['kind']} users={len(info['users'])} shapes={info['shapes']}")
         print(structs.typedef(info))
         for poff, fl in sorted(info.get("pointees", {}).items()):
             print(f"// pointee at +0x{poff:X}:"); print(structs.typedef(info, f"At{poff:X}", fl))
-    return 0
-
-
-def cmd_oversize(a, p):
-    rows = structs.oversize(p, a.module, a.min_refs)
-    if a.json:
-        _print(rows, True)
-    else:
+        return 0
+    if a.oversize:
+        rows = structs.oversize(p, a.module, a.min_refs)
+        if a.json:
+            _print(rows, True); return 0
         for r in rows:
             print(f"{r['symbol']:22s} {r['section']:8s} size 0x{r['size']:<6X} furthest 0x{r['furthest_access']:<6X} refs={r['refs']:3d} swallows {r['n_swallowed']}: {', '.join(r['swallows'][:6])}")
         print(f"({len(rows)} under-sized globals)")
-    return 0
-
-
-def cmd_headers(a, p):
+        return 0
     if a.write:
         err = structs.write_header(p, a.module, a.tu, a.min_refs)
         if err:
@@ -236,53 +232,11 @@ def cmd_tu_check(a, p):
     return 0 if ok else 1
 
 
-def cmd_tu_hoist(a, p):
-    from . import oracle, tufile  # scoped: keeps the CLI import graph light
-    ok_fn = lambda u: oracle.compile_unit(p, p.objdiff_unit_name(u["module"], u["source"]), u["source"]).returncode == 0
-    r = tufile.hoist(p, a.tu, ok_fn)
-    _print(r, a.json); return 0 if r.get("ok") else 1
 
 
-def cmd_tu_trial(a, p):
-    from . import tutrial  # scoped: trial compile only when asked
-    r = tutrial.trial(p, a.tu)
-    _print(r, a.json); return 0 if r.get("ok") else 1
 
 
-def cmd_tu_tidy(a, p):
-    from . import tutidy  # scoped: librarian pass only when asked
-    r = tutidy.tidy(p, a.tu, dry_run=a.dry_run)
-    _print(r, a.json); return 0
 
-
-def cmd_tu_include(a, p):
-    from . import oracle, tufile  # scoped: keeps the CLI import graph light
-    ok_fn = lambda u: oracle.compile_unit(p, p.objdiff_unit_name(u["module"], u["source"]), u["source"]).returncode == 0
-    r = tufile.add_include(p, a.tu, a.include, ok_fn)
-    _print(r, a.json); return 0
-
-
-def cmd_tu_hoist_decls(a, p):
-    from . import tutidy  # scoped: librarian pass only when asked
-    r = tutidy.hoist_decls(p, a.tu)
-    _print(r, a.json); return 0
-
-
-def cmd_tu_collapse(a, p):
-    from . import collapse  # scoped: collapse pulls the trial compiler; only when asked
-    r = collapse.plan(p, a.tu) if a.plan else collapse.collapse(p, a.tu, keep_on_failure=a.keep)
-    _print(r, a.json); return 0 if r.get("ok") else 1
-
-
-def cmd_tu_reflag(a, p):
-    from . import oracle, tufile  # scoped: keeps the CLI import graph light
-    ok_fn = lambda u: oracle.compile_unit(p, p.objdiff_unit_name(u["module"], u["source"]), u["source"]).returncode == 0
-    tus = [a.tu] if a.tu else sorted({u["tu"] for u in p.load_units() if u.get("tu")})
-    tot_f, tot_u = [], []
-    for tu in tus:
-        r = tufile.reflag(p, tu, ok_fn)
-        tot_f += r["flagged"]; tot_u += r["unflagged"]
-    _print({"tus": len(tus), "flagged": tot_f, "unflagged": tot_u}, a.json); return 0
 
 
 def cmd_tu_finish(a, p):
@@ -309,36 +263,35 @@ def cmd_why_link(a, p):
     _print(oracle.why_link(p, a.symbol), a.json); return 0
 
 
-def cmd_gen(a, p):
-    from . import tufile  # scoped: same
-    print(f"{tufile.regenerate(p)} generated units")
-    return 0
 
-
-def cmd_permute(a, p):
-    from . import permute  # scoped: pulls the permuter glue only when asked
-    if a.plateau is not None:
-        rows = permute.plateau(p, a.module, a.plateau, a.max_size, a.limit)
-        out = []
-        for r in rows:
-            res = permute.run(p, r["symbol"], a.threads, a.seconds, submit=not a.no_submit)
-            print(f"{r['symbol']:24s} base={res.get('base_score')} best={res.get('best_score')} "
-                  f"check={res.get('check')} {'SUBMITTED' if res.get('submit', {}).get('ok') else ''} {res.get('secs')}s", flush=True)
-            out.append(res)
-        n = sum(1 for r in out if r.get("submit", {}).get("ok"))
-        print(f"{n}/{len(out)} matched by permutation")
-        return 0
-    r = permute.run(p, a.symbol, a.threads, a.seconds, submit=not a.no_submit)
-    _print(r, a.json); return 0 if r.get("ok") else 1
 
 
 def cmd_sweep(a, p):
-    r = api.sweep_attempts(p, a.module, a.min_percent, a.limit, a.workers)
-    _print(r, a.json); return 0
-
-
-def cmd_names(a, p):
-    _print(api.names(p), a.json); return 0
+    if a.symbol:
+        body = Path(a.body).read_text() if a.body else api._attempt_text(p, a.symbol)
+        if body is None:
+            print("no body: pass --body or have a saved attempt"); return 2
+        r = api.sweep_one(p, a.symbol, body, a.budget)
+        print(json.dumps({k: v for k, v in r.items() if k not in ("body", "best_body")}, indent=1))
+        if r.get("body") and a.out:
+            Path(a.out).write_text(r["body"]); print(f"wrote {a.out}")
+        return 0 if r.get("matched") else 1
+    out = api.sweep(p, a.module, a.min_percent, a.limit, a.workers, a.drafts, a.max_percent, a.budget, not a.no_submit)
+    if a.json:
+        _print(out, True); return 0
+    print(f"{out['candidates']} bodies: {out['checked']} checked, {out['cached']} memoised; "
+          f"{len(out['submitted'])} matched as saved, {len(out['pool'])} pool, {len(out['fixed'])} fixed, {len(out['spelled'])} spelled")
+    for key, label in out["fixed"]:
+        print(f"  fixup  {key:24s} {label}")
+    for key, pct, path in out["spelled"]:
+        print(f"  spell  {key:24s} {' + '.join(path)[:100]}")
+    sp = out.get("spell") or {}
+    if sp:
+        print(f"spell: {sp.get('searched')} searched, {sp.get('skipped')} memoised, {sp.get('improved')} improved, {sp.get('candidates')} candidates, {sp.get('secs')} s; families {sp.get('families')}")
+    lint = [k for k, v in out["still"] if v == "lint"]
+    if lint:
+        print(f"still refused by the lint: {lint}")
+    return 0
 
 
 def cmd_read_unit(a, p):
@@ -351,67 +304,7 @@ def cmd_write_unit(a, p):
     _print(r, a.json); return 0 if r["ok"] else 2
 
 
-def cmd_lab(a, p):
-    from . import lab
-    out = lab.run(p, a.min_percent, a.limit, submit=not a.no_submit)
-    print(lab.summary(out))
-    return 0
 
-
-def cmd_regalloc(a, p):
-    from . import regalloc
-    if a.corpus is not None:
-        out = regalloc.run(p, a.corpus, a.limit, submit=not a.no_submit)
-        print(f"{out['bodies']} bodies, {len(out['matched'])} matched, {out['improved']} improved, {out['candidates']} candidates, {out['secs']} s")
-        for s_, label in out["matched"]:
-            print(f"  {s_:24s} {label}")
-        return 0
-    body = None
-    if a.body:
-        body = Path(a.body).read_text()
-    else:
-        import sqlite3
-        from .project import STATE_DIR
-        db = sqlite3.connect(str(STATE_DIR / "ledger.db"))
-        row = db.execute("select best_body_path from attempts where symbol=? and best_body_path is not null order by best_in_attempt desc limit 1",
-                         (a.symbol.split(":")[-1],)).fetchone()
-        if row and Path(row[0]).exists():
-            body = Path(row[0]).read_text()
-    if body is None:
-        print("no body: pass --body or have a saved attempt"); return 2
-    r = regalloc.search(p, a.symbol, body, budget_s=a.budget)
-    print(json.dumps({k: v for k, v in r.items() if k != "body"}, indent=1))
-    if r.get("body") and a.out:
-        Path(a.out).write_text(r["body"]); print(f"wrote {a.out}")
-    return 0 if r.get("matched") else 1
-
-
-def cmd_spell(a, p):
-    from . import spell
-    if a.symbol:
-        body = Path(a.body).read_text() if a.body else None
-        if body is None:
-            from .project import STATE_DIR
-            import sqlite3
-            db = sqlite3.connect(str(STATE_DIR / "ledger.db"))
-            row = db.execute("select best_body_path from attempts where symbol=? and best_body_path is not null order by best_in_attempt desc limit 1",
-                             (a.symbol.split(":")[-1],)).fetchone()
-            body = Path(row[0]).read_text() if row and Path(row[0]).exists() else None
-        if body is None:
-            print("no body: pass --body or have a saved attempt"); return 2
-        r = spell.search(p, a.symbol, body, budget_s=a.budget)
-        print(json.dumps({k: v for k, v in r.items() if k != "body"}, indent=1))
-        if r.get("body") and a.out:
-            Path(a.out).write_text(r["body"]); print(f"wrote {a.out}")
-        return 0 if r.get("matched") else 1
-    if a.attempts:
-        out = spell.run_attempts(p, a.min_percent, a.limit, a.workers, a.budget, submit=not a.no_submit, module=a.module)
-    else:
-        out = spell.run_drafts(p, a.min_percent, a.max_percent, a.limit, a.workers, a.budget, submit=not a.no_submit)
-    print(f"{out['drafts']} drafts, {len(out['matched'])} matched, {out['improved']} improved, {out['candidates']} candidates, {out['secs']} s; families: {out['families']}")
-    for s_, pct, path in out["matched"]:
-        print(f"  {s_:20s} {pct:5.1f} {' + '.join(path)[:100]}")
-    return 0
 
 
 def cmd_asm_unit(a, p):
@@ -423,14 +316,6 @@ def cmd_asm_unit(a, p):
     r = asmunit.make(p, syms)
     print(json.dumps(r, indent=1)); return 0 if r.get("ok") else 2
 
-
-def cmd_exemplars(a, p):
-    from . import exemplars
-    ex = exemplars.mine(p)
-    print(f"{len(ex)} exemplars -> .fzgx/exemplars.json")
-    for e in ex[:10]:
-        print(f"  {e['symbol']:24s} {e.get('from') or 0:5.1f}% -> match  mode={e.get('mode')} lines={e['lines']}")
-    return 0
 
 
 def cmd_patch_unit(a, p):
@@ -461,23 +346,12 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("symbol"); s.add_argument("--agent", required=True); s.add_argument("--file", required=True)
     s = sub.add_parser("patch-unit", help="replace one unique span of a claimed unit's work copy, then check"); s.set_defaults(fn=cmd_patch_unit)
     s.add_argument("symbol"); s.add_argument("--agent", required=True); s.add_argument("--old-file", required=True); s.add_argument("--new-file", required=True)
-    s = sub.add_parser("lab", help="perturbation lab: which source rewrite closes a 97%+ body; submits matches"); s.set_defaults(fn=cmd_lab)
-    s.add_argument("--min-percent", type=float, default=97.0); s.add_argument("--limit", type=int, default=400); s.add_argument("--no-submit", action="store_true")
-    s = sub.add_parser("regalloc", help="register-allocation search on a near-match body (declaration order, scope, initializer splits); --corpus runs every 90%+ attempt and submits matches"); s.set_defaults(fn=cmd_regalloc)
-    s.add_argument("symbol", nargs="?"); s.add_argument("--body"); s.add_argument("--out"); s.add_argument("--budget", type=float, default=8.0)
-    s.add_argument("--corpus", type=float, help="minimum best percent of the attempts to search"); s.add_argument("--limit", type=int, default=2000); s.add_argument("--no-submit", action="store_true")
-    s = sub.add_parser("spell", help="spelling search (beam over every rewrite family, masked-word fitness): one body, or every lifter draft in a score band"); s.set_defaults(fn=cmd_spell)
-    s.add_argument("symbol", nargs="?"); s.add_argument("--body"); s.add_argument("--out"); s.add_argument("--budget", type=float, default=10.0)
-    s.add_argument("--min-percent", type=float, default=0.0); s.add_argument("--max-percent", type=float, default=100.0)
-    s.add_argument("--limit", type=int, default=5000); s.add_argument("--workers", type=int, default=3); s.add_argument("--no-submit", action="store_true")
-    s.add_argument("--attempts", action="store_true", help="search the agents' saved plateau bodies instead of the lifter drafts"); s.add_argument("--module")
     s = sub.add_parser("asm-unit", help="link assembly-only functions from their own split assembly (units the build assembles); --blocked takes every blocked function"); s.set_defaults(fn=cmd_asm_unit)
     s.add_argument("symbols", nargs="*"); s.add_argument("--blocked", action="store_true")
-    s = sub.add_parser("exemplars", help="mine (plateau -> match) edit pairs from the check history"); s.set_defaults(fn=cmd_exemplars)
     s = sub.add_parser("check", help="compile + objdiff one function"); s.set_defaults(fn=cmd_check)
     s.add_argument("symbol"); s.add_argument("--max-diff-lines", type=int, default=80)
-    s.add_argument("--versions", help="'all' or comma list, e.g. GC/1.2.5n,GC/1.3.2: compile under each compiler and report %")
-    s = sub.add_parser("submit", help="accept a 100% match: relink, hash, lint, commit"); s.set_defaults(fn=cmd_submit)
+    s.add_argument("--versions", help="'all' or comma list, e.g. GC/1.2.5n,GC/1.3.2: compile under each compiler and report %%")
+    s = sub.add_parser("submit", help="accept a 100%% match: relink, hash, lint, commit"); s.set_defaults(fn=cmd_submit)
     s.add_argument("symbol"); s.add_argument("--agent", default="unknown"); s.add_argument("--names", help="JSON sidecar of name proposals")
     s.add_argument("--message"); s.add_argument("--max-diff-lines", type=int, default=40)
     s.add_argument("--mw-version", help="record a compiler version for this unit (e.g. GC/1.3) before relinking")
@@ -496,7 +370,6 @@ def build_parser() -> argparse.ArgumentParser:
     s = sub.add_parser("snapshot", help="write state/ledger.json"); s.set_defaults(fn=cmd_snapshot)
     s = sub.add_parser("restore", help="load state/ledger.json into the local ledger"); s.set_defaults(fn=cmd_restore)
     s = sub.add_parser("lint", help="shiftability/style lint"); s.set_defaults(fn=cmd_lint); s.add_argument("paths", nargs="*")
-    s = sub.add_parser("names", help="pending name proposals for the librarian"); s.set_defaults(fn=cmd_names)
     s = sub.add_parser("tu-organize", help="move carved units into TU directories from tus.json; relink-verify"); s.set_defaults(fn=cmd_tu_organize)
     s.add_argument("--module", default="main_rel")
     s = sub.add_parser("rename", help="rename a symbol everywhere (symbols.txt, src, units.json, ledger, file); relink-verify"); s.set_defaults(fn=cmd_rename)
@@ -505,31 +378,14 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("tu"); s.add_argument("--module", default="main_rel"); s.add_argument("--all", action="store_true")
     s = sub.add_parser("naming-apply", help="apply a librarian proposal JSON (renames + structs)"); s.set_defaults(fn=cmd_naming_apply)
     s.add_argument("--file", required=True); s.add_argument("--by", default="librarian")
-    s = sub.add_parser("structs", help="recover a global's struct layout from all accesses in the module"); s.set_defaults(fn=cmd_structs)
-    s.add_argument("symbol"); s.add_argument("--module", default="main_rel")
-    s = sub.add_parser("oversize", help="globals whose accesses exceed the symbol size (symbols.txt size corrections)"); s.set_defaults(fn=cmd_oversize)
-    s.add_argument("--module", default="main_rel"); s.add_argument("--min-refs", type=int, default=5)
-    s = sub.add_parser("headers", help="generate include/rel/<module>/globals.h for the most-referenced globals"); s.set_defaults(fn=cmd_headers)
+    s = sub.add_parser("headers", help="generate include/rel/<module>/globals.h for the most-referenced globals (--symbol: one global's recovered layout; --oversize: globals whose accesses exceed the symbol size)"); s.set_defaults(fn=cmd_headers)
     s.add_argument("--module", default="main_rel"); s.add_argument("--min-refs", type=int, default=20); s.add_argument("--write", action="store_true")
     s.add_argument("--tu", help="per-file header for this TU (e.g. camera.c) instead of globals.h")
+    s.add_argument("--symbol", help="print the recovered struct layout of one global"); s.add_argument("--oversize", action="store_true")
     s = sub.add_parser("tu-migrate", help="stitch a module's per-function units into TU files (blocks; objects generated)"); s.set_defaults(fn=cmd_tu_migrate)
     s.add_argument("--module", default="main_rel"); s.add_argument("--no-verify", action="store_true")
     s = sub.add_parser("tu-check", help="compile a whole TU file as one unit (the goal state)"); s.set_defaults(fn=cmd_tu_check)
     s.add_argument("tu", help="e.g. rel/main_rel/camera.c"); s.add_argument("-v", "--verbose", action="store_true")
-    s = sub.add_parser("tu-hoist", help="move block-private includes into the TU prologue if every block still compiles"); s.set_defaults(fn=cmd_tu_hoist)
-    s.add_argument("tu", help="e.g. rel/main_rel/camera.c")
-    s = sub.add_parser("tu-trial", help="compile a TU file as one unit and score every function against retail"); s.set_defaults(fn=cmd_tu_trial)
-    s.add_argument("tu", help="e.g. rel/main_rel/alloc.c")
-    s = sub.add_parser("tu-tidy", help="drop block-private declarations the headers cover (kept only if the block still matches)"); s.set_defaults(fn=cmd_tu_tidy)
-    s.add_argument("tu"); s.add_argument("--dry-run", action="store_true")
-    s = sub.add_parser("tu-include", help="add a header to a TU prologue; blocks that stop compiling are flagged noprologue"); s.set_defaults(fn=cmd_tu_include)
-    s.add_argument("tu"); s.add_argument("include", help='e.g. rel/main_rel/alloc.h')
-    s = sub.add_parser("tu-hoist-decls", help="move block extern declarations into the TU prologue (canonical per symbol); disagreeing blocks flagged"); s.set_defaults(fn=cmd_tu_hoist_decls)
-    s.add_argument("tu")
-    s = sub.add_parser("tu-collapse", help="replace a complete TU's per-function units by one unit (hash-verified; reverts on failure)"); s.set_defaults(fn=cmd_tu_collapse)
-    s.add_argument("tu"); s.add_argument("--plan", action="store_true", help="compute the ranges only"); s.add_argument("--keep", action="store_true", help="keep the collapsed config even if the hash fails")
-    s = sub.add_parser("tu-reflag", help="after a header change: flag blocks that stopped compiling under the prologue, unflag those that compile again"); s.set_defaults(fn=cmd_tu_reflag)
-    s.add_argument("tu", nargs="?")
     s = sub.add_parser("tu-finish", help="one pass over every TU of a module: include, tidy, hoist, reflag, collapse complete TUs; prints the revise queue"); s.set_defaults(fn=cmd_tu_finish)
     s.add_argument("--module", default="main_rel"); s.add_argument("-v", "--verbose", action="store_true")
     s = sub.add_parser("sdkmatch", help="identify SDK/runtime functions in the DOL by masked-byte signatures of a compiled public SDK decomp"); s.set_defaults(fn=cmd_sdkmatch)
@@ -538,15 +394,13 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--roots", nargs="*", help="dir:flagset pairs to compile instead of the SDK layout, e.g. src:smb")
     s = sub.add_parser("why-link", help="link with one rejected match flipped to Matching and name the bytes that differ"); s.set_defaults(fn=cmd_why_link)
     s.add_argument("symbol")
-    s = sub.add_parser("gen", help="regenerate every per-function unit from the TU files"); s.set_defaults(fn=cmd_gen)
-    s = sub.add_parser("permute", help="decomp-permuter on a plateaued attempt; submits on a byte-identical result"); s.set_defaults(fn=cmd_permute)
-    s.add_argument("symbol", nargs="?"); s.add_argument("--threads", type=int, default=8); s.add_argument("--seconds", type=int, default=600)
+    s = sub.add_parser("sweep", help="the search over every saved body: re-check, fixup, spelling search; submits matches. One symbol: the same stages on one body"); s.set_defaults(fn=cmd_sweep)
+    s.add_argument("symbol", nargs="?"); s.add_argument("--body"); s.add_argument("--out")
+    s.add_argument("--module"); s.add_argument("--min-percent", type=float, default=80.0); s.add_argument("--max-percent", type=float, default=100.0)
+    s.add_argument("--limit", type=int, default=2000); s.add_argument("--workers", type=int, default=12); s.add_argument("--budget", type=float, default=10.0)
+    s.add_argument("--drafts", action="store_true", help="the lifter's drafts (fzgx trivial) instead of the agents' saved bodies")
     s.add_argument("--no-submit", action="store_true")
-    s.add_argument("--plateau", type=float, help="batch: every unmatched function with best %% >= this")
-    s.add_argument("--module"); s.add_argument("--max-size", type=int, default=1024); s.add_argument("--limit", type=int, default=20)
-    s = sub.add_parser("sweep", help="re-check saved attempts of plateaued functions; submit matches and pool matches"); s.set_defaults(fn=cmd_sweep)
-    s.add_argument("--module"); s.add_argument("--min-percent", type=float, default=90.0); s.add_argument("--limit", type=int, default=200); s.add_argument("--workers", type=int, default=12)
-    s = sub.add_parser("stuck", help="classify plateaued attempts (>= N%) by failure mode from the object diff"); s.set_defaults(fn=cmd_stuck)
+    s = sub.add_parser("stuck", help="classify plateaued attempts (>= N%%) by failure mode from the object diff"); s.set_defaults(fn=cmd_stuck)
     s.add_argument("--min-percent", type=float, default=80.0); s.add_argument("--module"); s.add_argument("--workers", type=int, default=12)
     s.add_argument("--json", action="store_true")
     s = sub.add_parser("uncarve", help="drop units that have no matched code (rejected, or every stub with --stubs); re-splits"); s.set_defaults(fn=cmd_uncarve)

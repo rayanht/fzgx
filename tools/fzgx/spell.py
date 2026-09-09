@@ -307,58 +307,6 @@ def search(p: Project, symbol: str, body: str, budget_s: float = 10.0, beam: int
     return out
 
 
-def run_drafts(p: Project, min_pct: float = 0.0, max_pct: float = 100.0, limit: int = 5000, workers: int = 3,
-               budget_s: float = 10.0, submit: bool = True, only: Optional[List[str]] = None) -> Dict[str, object]:
-    """The search over the lifter's current drafts (.fzgx/draftscan): every draft that compiles
-    and scores in [min_pct, max_pct). A draft the last round improved starts from that body.
-    Matches are submitted as `spell`."""
-    d = STATE_DIR / "draftscan"
-    scores = json.loads((d / "scores.json").read_text())
-    items = []
-    for s, m, size, pct, k in scores:
-        if pct < 0 or pct >= 100 or pct < min_pct or pct >= max_pct:
-            continue
-        if only and s not in only:
-            continue
-        sym = p.resolve(s)
-        if sym is None or p.unit_of(sym):
-            continue
-        f = d / f"{m}__{s}.c"
-        best = STATE_DIR / "spell" / p.key(sym).replace(":", "__") / "best.c"
-        src = best if best.exists() and best.stat().st_mtime >= f.stat().st_mtime else f
-        if f.exists():
-            items.append((s, m, size, pct, src.read_text()))
-    items.sort(key=lambda x: -x[3])
-    return run_bodies(p, items[:limit], workers, budget_s, submit, agent="spell")
-
-
-def run_attempts(p: Project, min_pct: float = 60.0, limit: int = 5000, workers: int = 3, budget_s: float = 10.0,
-                 submit: bool = True, module: Optional[str] = None) -> Dict[str, object]:
-    """The search over the agents' saved plateau bodies (the ledger's best attempts)."""
-    import sqlite3  # scoped: only this reader touches the ledger directly
-    db = sqlite3.connect(str(STATE_DIR / "ledger.db"))
-    q = ("select f.symbol, f.module, f.size, a.best_body_path, max(a.best_in_attempt) from functions f join attempts a on a.symbol=f.symbol "
-         "where f.status='unmatched' and a.best_body_path is not null and a.best_in_attempt>=?" + (" and f.module=?" if module else "") + " group by f.symbol order by 5 desc")
-    rows = db.execute(q, [min_pct] + ([module] if module else [])).fetchall()
-    items = []
-    from pathlib import Path  # scoped: a single path test
-    for s, m, size, path, pct in rows:
-        if path and Path(path).exists():
-            items.append((s, m, size, pct or 0.0, Path(path).read_text()))
-    return run_bodies(p, items[:limit], workers, budget_s, submit, agent="spell")
-
-
-def _env_digest() -> str:
-    import hashlib  # scoped: one digest
-    from .project import ROOT  # scoped: same
-    h = hashlib.sha256()
-    for f in sorted((ROOT / "include").rglob("*.h")):
-        h.update(f.read_bytes())
-    for f in ("spell.py", "lab.py", "regalloc.py", "oracle.py"):
-        h.update((ROOT / "tools" / "fzgx" / f).read_bytes())
-    return h.hexdigest()[:16]
-
-
 class _Body:
     """One body's search state in the lockstep run."""
     def __init__(self, p: Project, s: str, m: str, size: int, pct: float, text: str):
@@ -402,7 +350,7 @@ def run_bodies(p: Project, items, workers: int = 3, budget_s: float = 10.0, subm
     import hashlib  # scoped: memo keys
     from . import api, stuck  # scoped: api imports the search modules; importing it at load would be a cycle
     t0 = time.time()
-    env = _env_digest()
+    env = api._env_digest(p)
     memo_path = STATE_DIR / "spell" / "memo.json"
     try:
         memo: Dict[str, dict] = json.loads(memo_path.read_text()) if memo_path.exists() else {}

@@ -644,8 +644,28 @@ def lint(p: Project, paths: Optional[List[str]] = None) -> List[Any]:
     return [list(f) for f in lint_paths(ps)]
 
 
-def names(p: Project) -> List[Dict[str, Any]]:
-    return [dict(r) for r in Ledger().pending_names()]
+def _attempt_text(p: Project, key: str) -> Optional[str]:
+    """The best saved body: the live work copy of a claimed function, else the ledger's
+    best-scoring attempt (a stale work copy or .best.c of an unclaimed function is ignored)."""
+    l = Ledger()
+    row = l.get(key)
+    claimed = bool(row and row["status"] == "claimed")
+    work = p.work_path(key)
+    if claimed and work.exists():
+        return work.read_text()
+    best = STATE_DIR / "attempts" / f"{key}.best.c"
+    if claimed and best.exists():
+        return best.read_text()
+    row = l.db.execute(
+        "SELECT best_body_path FROM attempts WHERE symbol=? AND best_body_path IS NOT NULL "
+        "ORDER BY best_in_attempt DESC, final_percent DESC, id DESC LIMIT 1", (key,)).fetchone()
+    if row and row[0]:
+        path = Path(row[0])
+        if not path.exists():  # the repository moved; the store did not
+            path = STATE_DIR / "attempts" / path.name
+        if path.exists():
+            return path.read_text()
+    return None
 
 
 def _env_digest(p: Project) -> str:
@@ -654,7 +674,7 @@ def _env_digest(p: Project) -> str:
     h = hashlib.sha256()
     for f in sorted((ROOT / "include").rglob("*.h")):
         h.update(f.read_bytes())
-    for f in ("oracle.py", "poolfix.py", "fixup.py", "stuck.py", "regalloc.py", "project.py", "lint.py"):
+    for f in ("oracle.py", "poolfix.py", "fixup.py", "stuck.py", "regalloc.py", "project.py", "lint.py", "spell.py", "lab.py"):
         h.update((ROOT / "tools" / "fzgx" / f).read_bytes())
     cfg = p.build_dir / "config.json"  # the split: which retail object holds each function
     if cfg.exists():
@@ -682,90 +702,141 @@ def lint_repair(text: str, findings) -> str:
     return "\n".join(lines)
 
 
-def sweep_attempts(p: Project, module: Optional[str] = None, min_percent: float = 90.0,
-                   limit: int = 200, workers: int = 12) -> Dict[str, Any]:
-    """Re-check the best saved attempt of every plateaued function against today's oracle
-    and headers; submit the ones that now match (outright, as a pool match, or after the
-    deterministic fixup). Checks run `workers` wide and are memoised by body and environment
-    (.fzgx/sweep_cache.json): a body already checked under the same headers is skipped."""
+def sweep(p: Project, module: Optional[str] = None, min_percent: float = 80.0, limit: int = 2000,
+          workers: int = 12, drafts: bool = False, max_percent: float = 100.0, budget_s: float = 10.0,
+          do_submit: bool = True) -> Dict[str, Any]:
+    """The search over every saved body, in three stages, one pass:
+      1. re-check against today's oracle and headers (a header, oracle or pool change lands
+         bodies that were right all along); submit outright and pool matches
+      2. the deterministic fixup: edits the diff rows name (type flips, symbol substitutions,
+         immediates, layout, branch shape) with a short register-allocation search
+      3. the spelling search (spell.run_bodies): a beam over every rewrite family, lockstep
+         across the remaining bodies, from the fixup's improved body where it had one
+    Bodies: the agents' saved best attempts (default) or the lifter's drafts (`drafts`,
+    .fzgx/lift/scores.json from `fzgx trivial`) scoring in [min_percent, max_percent).
+    Stages 1-2 are memoised by body + environment (.fzgx/sweep_cache.json), stage 3 by the
+    spell memo; a body already searched under the same headers and tooling is skipped."""
     import hashlib
     from concurrent.futures import ThreadPoolExecutor
-    from . import fixup
-    from .permute import _attempt_text  # scoped: permute imports api; avoid the cycle at import time
+    from . import fixup, spell
     l = Ledger()
-    q = ("SELECT symbol FROM functions WHERE status='unmatched' AND best_percent>=? "
-         + ("AND module=? " if module else "") + "ORDER BY best_percent DESC LIMIT ?")
-    rows = l.db.execute(q, [min_percent] + ([module] if module else []) + [limit]).fetchall()
+    out: Dict[str, Any] = {"candidates": 0, "checked": 0, "cached": 0, "submitted": [], "pool": [], "fixed": [],
+                           "spelled": [], "still": [], "spell": {}}
+    bodies: List[tuple] = []  # (key, module, size, percent, text)
+    if drafts:
+        scores_path = STATE_DIR / "lift" / "scores.json"
+        scores = json.loads(scores_path.read_text()) if scores_path.exists() else {}
+        for key, rec in scores.items():
+            pct = rec.get("percent") or 0.0
+            if rec.get("matched") or pct < min_percent or pct >= max_percent:
+                continue
+            sym = p.resolve(key)
+            if sym is None or p.unit_of(sym) or (module and sym.module != module):
+                continue
+            best = STATE_DIR / "spell" / p.key(sym).replace(":", "__") / "best.c"
+            text = best.read_text() if best.exists() else rec.get("text") or ""
+            if sym.name in text:
+                bodies.append((p.key(sym), sym.module, sym.size, pct, text))
+        bodies.sort(key=lambda b: -b[3])
+        bodies = bodies[:limit]
+    else:
+        q = ("SELECT symbol, module, size, best_percent FROM functions WHERE status='unmatched' AND best_percent>=? AND best_percent<? "
+             + ("AND module=? " if module else "") + "ORDER BY best_percent DESC LIMIT ?")
+        for key, mod, size, pct in l.db.execute(q, [min_percent, max_percent] + ([module] if module else []) + [limit]).fetchall():
+            sym = p.resolve(key)
+            text = _attempt_text(p, key) if sym else None
+            if not text or sym.name not in text:
+                continue
+            last = l.db.execute("SELECT outcome FROM attempts WHERE symbol=? ORDER BY id DESC LIMIT 1", (key,)).fetchone()
+            if last and last["outcome"] == "link-mismatch":
+                continue  # matched the object and failed the link before: a resubmit fails the same way
+            bodies.append((key, mod, size, pct or 0.0, text))
+    out["candidates"] = len(bodies)
     env = _env_digest(p)
     cache_path = STATE_DIR / "sweep_cache.json"
     try:
         cache: Dict[str, Any] = json.loads(cache_path.read_text()) if cache_path.exists() else {}
     except ValueError:
         cache = {}
-    todo = []
-    out: Dict[str, Any] = {"candidates": len(rows), "checked": 0, "cached": 0, "submitted": [], "pool": [], "fixed": [], "still": []}
-    for (key,) in rows:
-        sym = p.resolve(key)
-        if sym is None:
-            continue
-        text = _attempt_text(p, key)
-        if not text or sym.name not in text:
-            continue
-        last = l.db.execute("SELECT outcome FROM attempts WHERE symbol=? ORDER BY id DESC LIMIT 1", (key,)).fetchone()
-        if last and last["outcome"] == "link-mismatch":
-            continue  # matched the object and failed the link before: a resubmit fails the same way
+    todo, left = [], []  # left: bodies for the spelling search
+    for key, mod, size, pct, text in bodies:
         ck = f"{env}:{hashlib.sha256(text.encode()).hexdigest()[:24]}"
         if ck in cache and not cache[ck].get("match"):
             out["cached"] += 1
-            out["still"].append((key, cache[ck].get("percent")))
+            left.append((key, mod, size, pct, cache[ck].get("body") or text))
             continue
-        todo.append((key, text, ck))
+        todo.append((key, mod, size, pct, text, ck))
     scratch = STATE_DIR / "sweep"
     scratch.mkdir(parents=True, exist_ok=True)
-
-    # one batched compile for every body, then the repairs in threads
     srcs = {}
-    for key, text, ck in todo:
+    for key, mod, size, pct, text, ck in todo:
         src = scratch / (key.replace(":", "__") + ".c")
         src.write_text(text)
         srcs[key] = src
-    first = oracle.check_many(p, [(key, srcs[key]) for key, _, _ in todo], 20)
+    # stage 1: one batched compile for every body; stage 2: the repairs in threads
+    first = oracle.check_many(p, [(key, srcs[key]) for key, *_ in todo], 20) if todo else {}
 
     def one(item):
-        key, text, ck = item
+        key, mod, size, pct, text, ck = item
         res = first.get(key) or oracle.check(p, key, 20, source=srcs[key])
         if res.ok and oracle.unit_fully_matches(res) is None:
-            return key, ck, {"match": True, "body": text, "percent": 100.0}
+            return item, {"match": True, "body": text, "percent": 100.0}
         if res.ok:
             fx = fixup.try_fix(p, key, text, budget_s=8.0, base=res)
             if fx.get("matched") and fx.get("body"):
-                return key, ck, {"match": True, "body": fx["body"], "label": fx.get("label"), "percent": 100.0}
-            return key, ck, {"match": False, "percent": round(max(res.percent, fx.get("best") or 0.0), 1)}
-        return key, ck, {"match": False, "percent": None, "error": res.error[:80]}
+                return item, {"match": True, "body": fx["body"], "label": fx.get("label"), "percent": 100.0}
+            return item, {"match": False, "percent": round(max(res.percent, fx.get("best") or 0.0), 1), "body": fx.get("best_body")}
+        return item, {"match": False, "percent": None, "error": (res.error or "")[:80]}
 
     with ThreadPoolExecutor(max_workers=workers) as ex:
         results = list(ex.map(one, todo))
     out["checked"] = len(results)
-    for key, ck, r in results:
+    for (key, mod, size, pct, text, ck), r in results:
         if r["match"]:
+            if not do_submit:
+                out["submitted"].append(key); continue
             work = p.work_path(key)
             work.parent.mkdir(parents=True, exist_ok=True)
             work.write_text(r["body"])
-            sub = submit(p, key, agent="sweep", message=("saved attempt repaired: " + r["label"]) if r.get("label") else "saved attempt re-checked")
+            sub = submit(p, key, agent="sweep", message=("saved body repaired: " + r["label"]) if r.get("label") else "saved body re-checked")
             if not sub.get("ok") and sub.get("error") == "lint":
                 # a matching body the lint refuses for an unnamed OS/hardware address or an
                 # unjustified volatile: the same allow comment the lifter writes, per finding line
                 repaired = lint_repair(r["body"], sub.get("findings") or [])
                 if repaired != r["body"]:
                     work.write_text(repaired)
-                    sub = submit(p, key, agent="sweep", message="saved attempt re-checked (lint allow comments added)")
+                    sub = submit(p, key, agent="sweep", message="saved body re-checked (lint allow comments added)")
             if sub.get("ok"):
                 (out["fixed"] if r.get("label") else out["pool"] if sub.get("pool") else out["submitted"]).append(key if not r.get("label") else (key, r["label"]))
                 continue
             work.unlink(missing_ok=True)
             out["still"].append((key, sub.get("error", "submit failed")[:80]))
             continue
-        cache[ck] = {"match": False, "percent": r["percent"]}
-        out["still"].append((key, r["percent"] if r["percent"] is not None else r.get("error")))
+        cache[ck] = {"match": False, "percent": r["percent"], "body": r.get("body")}
+        if r["percent"] is None:
+            out["still"].append((key, r.get("error")))
+        else:
+            left.append((key, mod, size, r["percent"], r.get("body") or text))
     cache_path.write_text(json.dumps(cache))
+    # stage 3: the spelling search over what is left, lockstep (its own memo skips old bodies)
+    if left:
+        sp = spell.run_bodies(p, left, workers=3, budget_s=budget_s, submit=do_submit, agent="sweep")
+        out["spelled"] = [(s_, pct_, path_) for s_, pct_, path_ in sp.get("matched", [])]
+        out["spell"] = {k: sp.get(k) for k in ("searched", "skipped", "improved", "candidates", "families", "secs")}
+        spelled = {s_ for s_, _, _ in out["spelled"]}
+        out["still"] += [(key, pct) for key, _, _, pct, _ in left if key not in spelled]
     return out
+
+
+def sweep_one(p: Project, symbol: str, body: str, budget_s: float = 10.0) -> Dict[str, Any]:
+    """The three stages on one body (no submit): check, fixup, spell. Returns the fixup/spell
+    result dict with `body` on a match."""
+    from . import fixup, spell
+    fx = fixup.try_fix(p, symbol, body, budget_s=min(budget_s, 8.0))
+    if fx.get("matched"):
+        fx["stage"] = "fixup"; return fx
+    sp = spell.search(p, symbol, fx.get("best_body") or body, budget_s=budget_s)
+    sp["stage"] = "spell"; sp["fixup_best"] = fx.get("best")
+    return sp
+
+

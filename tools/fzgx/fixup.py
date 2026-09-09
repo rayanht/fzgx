@@ -510,5 +510,7 @@ def try_fix(p: Project, symbol: str, body: str, budget_s: float = 30.0, max_cand
             if nxt.get("matched"):
                 out.update(matched=True, body=nxt["body"], label=f"{out.get('best_label')} + {nxt.get('label')}")
             out["rounds"] = 1 + nxt.get("rounds", 0)
+    if not out["matched"] and best_text is not None and out["best"] > out["base"]:
+        out["best_body"] = best_text  # the improved body: the search's next stage starts from it
     out["secs"] = round(time.time() - t0, 1)
     return out

@@ -46,7 +46,7 @@ Rules that hold for everyone:
   applies it after every compile (`mwcc_pool` rule from `configure.py`), so the function
   matches and links from C. If the private rodata cannot be emptied the function is a
   *pool match*: accepted and spliced, retail object still linked (`link_state=pool`).
-  `fzgx sweep` re-checks saved attempts after oracle/header changes.
+  `fzgx sweep` re-checks every saved body after oracle/header changes (and searches the rest).
 - Matchers edit only their own unit, and only through `write_unit`. Headers,
   names and splits belong to the librarian.
 - No hardcoded addresses (`fzgx lint`), no inline asm in `src/`.
@@ -78,21 +78,29 @@ Rules that hold for everyone:
   DOL section until 2026-09-09: no DOL pool match could land).
   `fzgx uncarve --stubs` removes any unit without matched code (verify uncarves what it rejects).
 - Plateaus are data, not agent work. `fzgx stuck` classifies every saved best body at 80%+ by
-  failure mode from the object diff (`.fzgx/stuck.json`, rows included). `fzgx sweep` re-checks
-  them 12-wide, memoised by body + headers + split, and submits what matches; `release` runs the
-  same deterministic fixup (`tools/fzgx/fixup.py`, type flips for compare/sign-extension diffs,
-  a few seconds) on an agent's best body and submits a match in the agent's name. A unit may carry
-  its own `mw_version`/`extra_cflags` (an `-O` override replaces the module's); `check`/`submit`
-  honour them before the carve. The permuter is not used: over the whole project it closed one function and costs minutes per try.
+  failure mode from the object diff (`.fzgx/stuck.json`, rows included). `fzgx sweep` is the one
+  search pass over every saved body (the agents' best attempts, or the lifter's drafts with
+  `--drafts`), three stages: re-check against today's oracle and headers (submits outright and
+  pool matches), the deterministic fixup (`tools/fzgx/fixup.py`: edits the diff rows name, with a
+  short register-allocation search), then the spelling search (`tools/fzgx/spell.py`: a beam over
+  every rewrite family, lockstep across the remaining bodies, from the fixup's improved body).
+  Stages are memoised by body + headers + tooling; `fzgx sweep SYMBOL` runs the same stages on one
+  body. `release` runs the fixup on an agent's best body and submits a match in the agent's name.
+  A unit may carry its own `mw_version`/`extra_cflags` (an `-O` override replaces the module's);
+  `check`/`submit` honour them before the carve. The decomp-permuter was dropped: over the whole
+  project it closed one function and cost minutes per try.
 - `fzgx trivial` matches single-`blr` and `li r3,N; blr` functions mechanically (419 landed on
   2026-09-08) and then lifts straight-line functions from the disassembly (`tools/fzgx/lift.py`:
   getters, setters, one-call wrappers, short call-free bodies; 102 landed the same day). Run it
   before spending agents on small functions.
-- Readability tooling: `fzgx tu-organize` (TU directories from `tus.json`),
-  `fzgx structs`/`headers` (layouts from disassembly → `include/rel/<module>/globals.h`,
-  offset self-checked under MWCC), `fzgx rename`, `fzgx naming-bundle`/`naming-apply`,
-  `fzgx oversize` (dtk under-sized symbols). Agent ids prefixed `revise-` rewrite a
-  matched unit and keep it only if still 100%; `shadow-` run A/B trials without committing.
+- Readability tooling: `fzgx tu-organize` (TU directories from `tus.json`), `fzgx headers`
+  (layouts from disassembly → `include/rel/<module>/globals.h`, offset self-checked under MWCC;
+  `--symbol` prints one layout, `--oversize` lists dtk under-sized symbols), `fzgx rename`,
+  `fzgx naming-bundle`/`naming-apply`. TU passes: `fzgx tu-migrate` (once per module),
+  `fzgx tu-check` (the whole file as one unit: the goal state) and `fzgx tu-finish` (include,
+  tidy, hoist, reflag, collapse as internal stages; the orchestrator's finish round). Agent ids
+  prefixed `revise-` rewrite a matched unit and keep it only if still 100%; `shadow-` run A/B
+  trials without committing.
 - Naming: `fzgx naming-bundle <tu.c>` (sources, header, retail strings, assert hints) →
   a cheap model answers JSON → `fzgx naming-apply --file p.json`, which renames symbols,
   records typedef names in `config/GFZE01/<module>/typedefs.json`, re-splits, regenerates
@@ -124,7 +132,7 @@ Rules that hold for everyone:
 - Build speed: units compile in groups of 48 per mwcc process (`tools/mwcc_batch.sh`, one depfile
   per group, `mwcc_batch` rule); a full rebuild is ~8 s, of which ~5 s is the two-stage main_rel
   link. `build.ninja` names the interpreter `python3` on purpose: a baked-in path changed with every
-  caller (uv venv vs homebrew) and rebuilt every unit. Candidate loops (lab, fixup, regalloc, lifter)
+  caller (uv venv vs homebrew) and rebuilt every unit. Candidate loops (fixup, spell, lifter)
   score by masked machine words (`oracle.words`/`word_score`), objdiff only on winners; batch passes
   compile through `oracle.compile_many`/`check_many` (parallel chunks), never one process per body.
 - While a batch runs, never call `configure.py`, `ninja` or `dtk` by hand: go through

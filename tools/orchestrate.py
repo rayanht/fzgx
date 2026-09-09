@@ -260,14 +260,11 @@ def fan_out(p: Project, a, model: str, symbols: List[str], batch: str, revise: b
 
 def finish_round(p: Project, a, model: str, module: str) -> Dict:
     """The TU-finish pass, a revise round on its queue, the pass again. No hands."""
-    from fzgx import finish, lab  # scoped: only when --finish is used
-    # deterministic passes first: the fixup sweep over this module's plateaus, then the lab
-    sw = api.sweep_attempts(p, module, 85.0, 1000)
-    lb = lab.run(p, 97.0, 400, submit=True)
-    from fzgx import spell  # scoped: only when --finish is used
-    sp = spell.run_attempts(p, 60.0, module=module, submit=True)
-    print(f"spell {module}: {len(sp.get('matched', []))} matched of {sp.get('searched')} plateau bodies ({sp.get('skipped')} memoised), {sp.get('secs')} s", flush=True)
-    print(f"sweep {module}: {len(sw.get('submitted', []))} submitted, {len(sw.get('pool', []))} pool, {len(sw.get('fixed', []))} fixed; lab: {len(lb.get('matched', []))} matched", flush=True)
+    from fzgx import finish  # scoped: only when --finish is used
+    # the deterministic pass first: re-check, fixup and spelling search over the module's saved bodies
+    sw = api.sweep(p, module, 60.0, 2000)
+    print(f"sweep {module}: {len(sw.get('submitted', []))} matched as saved, {len(sw.get('pool', []))} pool, "
+          f"{len(sw.get('fixed', []))} fixed, {len(sw.get('spelled', []))} spelled of {sw.get('candidates')} bodies", flush=True)
     from fzgx.ledger import Ledger  # scoped: same
     out = {"passes": [], "revise": None}
     r = finish.finish(p, module)
