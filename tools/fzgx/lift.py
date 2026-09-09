@@ -22,6 +22,7 @@ STORE_T = {"stw": "u32", "sth": "u16", "stb": "u8", "stfs": "f32", "stfd": "f64"
 LABELS: List[Dict[str, int]] = [{}]
 ARITY_HINT: List[Dict[str, int]] = [{}]        # callee -> widest integer-argument count (second run)
 ARITY_SEEN: List[Dict[str, List[int]]] = [{}]  # filled by a run: what each site passed
+FLOAT_CALLEES: List[set] = [set()]              # callees that took a float argument at some site
 LINE_RE = re.compile(r"^[0-9A-Fa-f]+:\s*(\S+)\s*(.*)$")
 MEM_RE = re.compile(r"^(-?0x[0-9a-f]+|-?\d+|[\w.]+@l|[\w.]+@sda21)\((r\d+)\)$")
 COND = {"eq": "==", "ne": "!=", "lt": "<", "gt": ">", "le": "<=", "ge": ">="}
@@ -75,7 +76,7 @@ def lift(p: Project, module: str, name: str) -> Optional[str]:
     if len(ins) > 160:
         return None
     try:
-        ARITY_HINT[0] = {}; ARITY_SEEN[0] = {}
+        ARITY_HINT[0] = {}; ARITY_SEEN[0] = {}; FLOAT_CALLEES[0] = set()
         text = _lift(p, module, name, ins)
         # a callee whose sites disagree on the argument count gets the widest prototype, and
         # every narrower site passes what its argument register held (the source did)
@@ -83,9 +84,15 @@ def lift(p: Project, module: str, name: str) -> Optional[str]:
         if hint:
             ARITY_HINT[0] = hint
             try:
+                ARITY_SEEN[0] = {}
                 text = _lift(p, module, name, ins)
             finally:
                 ARITY_HINT[0] = {}
+            # sites that still disagree (no value to pad with): the callee is declared without
+            # a prototype, which takes any count; only when no site passed a float (promotion)
+            for c, v in ARITY_SEEN[0].items():
+                if len(set(v)) > 1 and c not in FLOAT_CALLEES[0]:
+                    text = re.sub(rf"^extern (\w[\w ]*?) {re.escape(c)}\([^)]*\);$", rf"extern \1 {c}();", text, flags=re.M)
         return text
     except Give:
         return None
@@ -438,11 +445,15 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
             if extent <= ew:
                 return f"loc_{base_off:X}"  # a scalar whose address is taken
             if extent >= 16:  # struct-wrapped (see the declarations)
+                ent["wrapped"] = max(extent // ew, 1)
                 return f"loc_{base_off:X}.a[{inner // ew}]" if inner % ew == 0 else f"*({t} *)((u8 *)&loc_{base_off:X} + {inner})"
+            ent["array"] = max(extent // ew, 1)
             return f"loc_{base_off:X}[{inner // ew}]" if inner % ew == 0 else f"*({t} *)((u8 *)loc_{base_off:X} + {inner})"
         ent = slocals.setdefault(off, {"w": 0, "t": "u8", "addr": False, "elems": {}})
         if w and not ent["w"]:
             ent["w"] = w; ent["t"] = t
+        if w and ent["w"] == w and t != ent["t"] and (t.startswith("f") != ent["t"].startswith("f")):
+            return f"(*({t} *)&loc_{off:X})"  # the bits of a float read as an integer, or the reverse
         return f"loc_{off:X}"
     temps: List[str] = []
     written_since_call: set = set()
@@ -778,10 +789,10 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
         bad = False
         for L, rs in leaves.items():
             vals = []
-            for lo, hi in rs:
-                if lo is None or hi is None or hi - lo > 8:
+            for lo_, hi_ in rs:
+                if lo_ is None or hi_ is None or hi_ - lo_ > 8:
                     vals = None; break
-                vals += list(range(lo, hi + 1))
+                vals += list(range(lo_, hi_ + 1))
             if vals is None:
                 if default is not None and default != L:
                     bad = True; break
@@ -1908,6 +1919,8 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                     top = 2 + want
                 if callee:
                     ARITY_SEEN[0].setdefault(callee, []).append(top - 2)
+                    if any(f"f{k}" in regs and f"f{k}" in written_since_call for k in range(1, 9)):
+                        FLOAT_CALLEES[0].add(callee)
                 fset = [k for k in range(1, 9) if f"f{k}" in regs and (f"f{k}" in written_since_call or f"f{k}" in params)]
                 ftop = max(fset) if fset else 0
                 fargs = [use(f"f{k}") for k in range(1, ftop + 1)]
@@ -1924,7 +1937,7 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                         ptypes_.append("u32")
                 for k in range(1, ftop + 1):
                     ptypes_.append(rtype.get(f"f{k}", "f32"))
-                while top >= 3 and f"r{top}" not in regs and f"r{top}" in params:
+                while top >= 3 and ((f"r{top}" not in regs and f"r{top}" in params) or regs.get(f"r{top}") == ""):
                     top -= 1  # a parameter register cleared by an earlier call: stale, not an argument
                 ptypes_ = ptypes_[:max(0, top - 2)] + ptypes_[len(ptypes_) - len(fargs):] if fargs else ptypes_[:max(0, top - 2)]
                 args = [use(f"r{k}") for k in range(3, top + 1)] + fargs  # after the casts
@@ -2033,6 +2046,10 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                 ent["t"] = {1: "u8", 2: "u16", 4: "u32", 8: "f64"}[size]; w = size
             elif not ent["w"] and size % 4 == 0:
                 ent["t"] = "u32"; w = 4  # a u8 buffer would be 16-aligned by MWCC; a u32 array is not
+            if ent.get("wrapped"):
+                decls.append((off_, f"struct {{ {ent['t']} a[{ent['wrapped']}]; }} loc_{off_:X};", "struct")); continue
+            if ent.get("array"):
+                decls.append((off_, f"{ent['t']} loc_{off_:X}[{ent['array']}];", True)); continue
             if size > w and size >= 16:
                 decls.append((off_, f"struct {{ {ent['t']} a[{max(size // w, 1)}]; }} loc_{off_:X};", "struct")); continue
             if size > w:
@@ -2119,6 +2136,14 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
             return f"{et} unk_{o:X}[1];"
         return f"{t} unk_{o:X};"
 
+    # a struct global used as a plain value reads its first field (before the struct texts)
+    for g, offs in list(gfields.items()):
+        if not offs:
+            continue
+        pat = re.compile(rf"(?<![\w.>&]){re.escape(g)}\b(?![\w.\[]|\s*=\s*\(struct)")
+        if any(pat.search(b) for b in stmts):
+            offs.setdefault(0, "u32")
+            stmts[:] = [pat.sub(f"{g}.unk_0", b) for b in stmts]
     structs.extend(elem_struct_texts())
     structs = fn_typedefs + structs
     # parameters and struct parameters
@@ -2169,15 +2194,24 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
     for g in empty_globals:
         sname = f"{name}_{g}"
         body = [b.replace(f"struct {sname} *", "u8 *").replace(f"(struct {sname} *)", "(u8 *)") for b in body]
-    for g, offs in list(gfields.items()):
-        if not offs:
-            continue
-        pat = re.compile(rf"(?<![\w.>&]){re.escape(g)}\b(?![\w.\[]|\s*=\s*\(struct)")
-        if any(pat.search(b) for b in body):
-            offs.setdefault(0, "u32")
-            body = [pat.sub(f"{g}.unk_0", b) for b in body]
     for g in pfields:
         body = [re.sub(rf"^{re.escape(g)} = (?!\(struct)", f"{g} = (struct {name}_{g}_T *)", b) for b in body]
+    # an integer passed where the prototype says `void *` (another site passed an address)
+    for c, proto in list(externs.items()):
+        m_p = re.match(r"extern \w[\w ]*? (\w+)\((.*)\);$", proto)
+        if not m_p or "void *" not in m_p.group(2):
+            continue
+        ptl = [x.strip() for x in m_p.group(2).split(",")]
+        vpos = [k for k, x in enumerate(ptl) if x == "void *"]
+        def fix_call(b: str) -> str:
+            def rep(m_c):
+                args = [a.strip() for a in re.split(r",(?![^()]*\))", m_c.group(1))] if m_c.group(1).strip() else []
+                for k in vpos:
+                    if k < len(args) and not args[k].startswith(("&", "(void *)", "loc_", "(u8 *)", "((u8 *)")):
+                        args[k] = f"(void *){args[k]}"
+                return f"{c}({', '.join(args)})"
+            return re.sub(rf"\b{re.escape(c)}\(((?:[^()]|\([^()]*\))*)\)", rep, b)
+        body = [fix_call(b) for b in body]
     ptr_names = [f"arg{i}" for i, r in enumerate(params) if r in fields] + [ln for ln in locals_ if ln.startswith("p_")] + list(pfields)
     decl_line = re.compile(r"^\s*(?!return\b)(struct\s+\w+\s*\*+|[A-Za-z_]\w*\s*\*+|[A-Za-z_]\w*\s+)\s*[A-Za-z_]\w*(\[[^\]]*\])*;$")
     for pn in ptr_names:
