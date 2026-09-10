@@ -104,11 +104,7 @@ def globalize_local_function(project: Project, module: str, name: str, res=None)
     sp.write_text(text)
     project._symbols.pop(module, None)
     suffixed = f"{name}_{int(m.group(2), 16):08X}"
-    n = 0
-    for f in list((ROOT / "src").rglob("*.s")) + list((ROOT / "src").rglob("*.c")):
-        t = f.read_text()
-        if re.search(rf"\b{re.escape(suffixed)}\b", t):
-            f.write_text(re.sub(rf"\b{re.escape(suffixed)}\b", name, t)); n += 1
+    n = len(project.rewrite_global_references(module, [name]))
     if res is not None:
         res.notes.append(f"scope local -> global; {n} source(s) renamed {suffixed} -> {name}")
     return True

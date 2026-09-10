@@ -413,6 +413,25 @@ class Project:
         return out[:limit]
 
     # -------------------------------------------------------------------- units
+    def rewrite_global_references(self, module: str, names: List[str]) -> List[str]:
+        mapping = {f'{name}_{sym.addr:08X}': name for name in names
+                   if (sym := self.symbols(module).get(name)) and sym.scope == 'global'}
+        if not mapping:
+            return []
+        pattern = re.compile(r'\b(?:' + '|'.join(map(re.escape, mapping)) + r')\b')
+        paths = {ROOT / 'src' / u.get('tu', u['source']) for u in self.load_units()
+                 if module == 'main' or u['module'] == module}
+        changed = []
+        for path in sorted(paths):
+            if not path.exists():
+                continue
+            body = path.read_text()
+            rewritten = pattern.sub(lambda match: mapping[match[0]], body)
+            if rewritten != body:
+                path.write_text(rewritten)
+                changed.append(str(path.relative_to(ROOT)))
+        return changed
+
     def promote_to_global(self, module: str, names: List[str]) -> List[str]:
         """Mark symbols global in symbols.txt (a reference from another unit needs it: retail
         kept them file-local in a TU our per-function units split). Returns those changed."""
@@ -427,6 +446,7 @@ class Project:
         if changed:
             path.write_text(text)
             self._symbols.pop(module, None)
+        self.rewrite_global_references(module, names)
         return changed
 
     # ------------------------------------------------------------ retail objects

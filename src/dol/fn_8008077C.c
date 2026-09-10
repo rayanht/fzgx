@@ -1,6 +1,6 @@
 #include "types.h"
 
-extern s32 __pformatter_80080A38(u32, u32, u32, u32);
+extern s32 __pformatter(u32, u32, u32, u32);
 extern void fn_80080974(void);
 
 s32 fn_8008077C(u32 arg0, u32 arg1, u32 arg2) {
@@ -12,7 +12,7 @@ s32 fn_8008077C(u32 arg0, u32 arg1, u32 arg2) {
     loc_8.a[0] = arg0;
     loc_8.a[1] = -1;
     loc_8.a[2] = 0;
-    result = __pformatter_80080A38((u32)fn_80080974, (u32)&loc_8, arg1, arg2);
+    result = __pformatter((u32)fn_80080974, (u32)&loc_8, arg1, arg2);
     if (arg0 != 0) {
         s32 index;
 

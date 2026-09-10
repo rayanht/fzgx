@@ -588,7 +588,8 @@ def _module_flags(project: Project, module: str) -> Tuple[str, str]:
 
 
 def compile_many(project: Project, module: str, sources: List[Path], out_dir: Path,
-                 mw_version: Optional[str] = None, extra_cflags: Optional[str] = None) -> Dict[Path, Path]:
+                 mw_version: Optional[str] = None, extra_cflags: Optional[str] = None,
+                 include_dirs: Optional[List[Path]] = None) -> Dict[Path, Path]:
     """One mwcc invocation over many standalone sources: the process start dominates a single
     compile (63 ms for one file, 80 ms for ten), so candidate bodies are compiled together.
     Returns {source: object} for the objects that exist afterwards; a source that fails to
@@ -606,7 +607,20 @@ def compile_many(project: Project, module: str, sources: List[Path], out_dir: Pa
     # mwcc names each object after its source in the -o directory; sources must have distinct stems
     base_cmd = [str(ROOT / "build" / "tools" / "wibo"), str(ROOT / "build" / "compilers" / mw / "mwcceppc.exe")]
     # -nofail: a source that fails to compile is skipped and the rest of the batch still compiles
-    base_cmd += shlex.split(flags) + ["-nofail", "-c", "-o", str(out_dir)]
+    arguments = shlex.split(flags)
+    if include_dirs is not None:
+        # Donor SDKs must compile against their own declarations; project headers
+        # are only appropriate after the importer has adapted the source.
+        isolated = []
+        i = 0
+        while i < len(arguments):
+            if arguments[i] == '-i':
+                i += 2
+            else:
+                isolated.append(arguments[i])
+                i += 1
+        arguments = isolated + ['-cwd', 'source'] + [arg for path in include_dirs for arg in ('-i', str(path))]
+    base_cmd += arguments + ["-nofail", "-c", "-o", str(out_dir)]
     for o in (out_dir / (s.stem + ".o") for s in sources):
         o.unlink(missing_ok=True)
 

@@ -24,6 +24,17 @@ from .project import ROOT, STATE_DIR, Project
 from . import api, oracle, sdkimport, sdkmatch
 
 
+def source_license(sdk: str) -> dict:
+    root = ROOT / 'build/tools' / sdk
+    for name in ('LICENSE', 'LICENSE.md', 'LICENSE.MD', 'LICENSE.txt', 'COPYING'):
+        path = root / name
+        if path.is_file():
+            body = path.read_bytes()
+            if b'CC0 1.0 Universal' in body and b'Statement of Purpose' in body:
+                return dict(spdx='CC0-1.0', path=name, sha256=hashlib.sha256(body).hexdigest())
+    raise ValueError(f'{sdk}: no supported source license; excluded from reuse')
+
+
 def instructions(obj: Path, minimum: int = 256) -> dict:
     elf = Elf(obj.read_bytes())
     sections = {s['index']: s for s in elf.sections if s['name'] in ('.text', '.init')}
@@ -44,7 +55,11 @@ def operation(word: int) -> int:
         return word & 0xFC0007FF
     if op in (4, 59, 63):
         # A-form arithmetic uses the upper five XO bits as a third register.
-        return word & (0xFC00003F if word & 0x3E >= 16 else 0xFC0007FF)
+        # X-form moves, compares and paired merges retain their full XO.
+        arithmetic = {18, 20, 21, 22, 23, 24, 25, 26, 28, 29, 30, 31}
+        if op == 4:
+            arithmetic = {10, 11, 12, 13, 14, 15, 18, 20, 21, 23, 24, 25, 26, 28, 29, 30, 31}
+        return word & (0xFC00003F if (word >> 1) & 31 in arithmetic else 0xFC0007FF)
     if op == 16:
         return word & 0xFFE00003
     if op == 18:
@@ -97,7 +112,7 @@ def callee_bindings(p: Project, module: str, left: dict, right: dict, donors: di
     targets = {}
     objects = {}
     for name, _, kind in right.values():
-        sym = sdkimport.retail_symbol(p, module, name)
+        sym = sdkimport.retail_symbol(p, module, name) or p.resolve(name)
         if kind != 10 or sym is None or sym.kind != 'function' or sym.size < 16:
             continue
         obj = p.target_object_for(sym)
@@ -125,6 +140,22 @@ def callee_bindings(p: Project, module: str, left: dict, right: dict, donors: di
         if not competitors or score - max(competitors) >= 0.05:
             result[source] = name
     return result
+
+
+def proven_bindings(p: Project, rec: dict) -> dict:
+    path = STATE_DIR / 'sourcealign/matches.json'
+    if not path.exists():
+        return {}
+    candidates = defaultdict(set)
+    module = p.resolve(rec['symbol']).module
+    for result in json.loads(path.read_text()).values():
+        if result['sdk'] != rec['sdk'] or p.resolve(result['symbol']).module != module:
+            continue
+        candidates[result['sdk_symbol']].add(result['symbol'])
+        if result['source'] == rec['source']:
+            for name, target in result['bindings'].items():
+                candidates[name].add(target)
+    return {name: next(iter(targets)) for name, targets in candidates.items() if len(targets) == 1}
 
 
 def extra_calls(text: str, names: set) -> tuple:
@@ -161,6 +192,10 @@ def catalog(p: Project, minimum: int) -> list:
         if sdk == 'libs':
             continue  # Old cache without compiler provenance.
         root = ROOT / 'build/tools' / ('smb-decomp' if sdk == 'smb-132' else sdk)
+        try:
+            source_license(root.name)
+        except ValueError:
+            continue
         source = Path(*relative.parts[1:]).with_suffix('.c')
         stamp = obj.with_suffix('.command.json')
         if not (root / source).exists():
@@ -197,6 +232,18 @@ def catalog(p: Project, minimum: int) -> list:
                 seen.add(identity)
                 rows.append(dict(sdk=root.name, source=str(sources[obj.stem].relative_to(root)),
                                  object=str(obj), sdk_symbol=name, mw='GC/1.3.2', flags=flags, words=words))
+    manifest = STATE_DIR / 'sourcealign/libraries.json'
+    if manifest.exists():
+        for entry in json.loads(manifest.read_text()):
+            try:
+                source_license(entry['sdk'])
+            except ValueError:
+                continue
+            for name, words in instructions(Path(entry['object']), minimum).items():
+                identity = (name, words)
+                if identity not in seen:
+                    seen.add(identity)
+                    rows.append(entry | dict(sdk_symbol=name, words=words))
     return rows
 
 
@@ -206,6 +253,44 @@ def source_flags(sdk: str, source: str) -> str:
     flags = sdkmatch.SMB_FLAGS if sdk == 'smb-decomp' else sdkmatch.RUNTIME_FLAGS if any(
         name in source for name in ('PowerPC_EABI', 'runtime_libs', 'MetroTRK')) else sdkmatch.DOLPHIN_FLAGS
     return shlex.join(flags)
+
+
+def compile_library(p: Project, sdk: str, roots: list) -> dict:
+    source_license(sdk)
+    root = ROOT / 'build/tools' / sdk
+    sources = sorted({source for relative in roots for source in (root / relative).rglob('*.c')})
+    if not sources:
+        raise ValueError('no SDK C sources in the requested roots')
+    directory = STATE_DIR / 'sourcealign/libraries' / sdk
+    records, failures = [], []
+    for mw in ('GC/1.2.5n', 'GC/1.3.2'):
+        for module in ('main', 'movie_module'):
+            for stmw in (False, True):
+                flags = f'-sdata {8 if module == "main" else 0} -sdata2 {8 if module == "main" else 0}'
+                flags += ' -use_lmw_stmw ' + ('on' if stmw else 'off')
+                tag = mw.replace('/', '_') + '_' + module + ('_stmw' if stmw else '')
+                output = directory / tag
+                groups = []
+                for source in sources:
+                    group = next((g for g in groups if all(s.stem != source.stem for s in g)), None)
+                    if group is None:
+                        group = []
+                        groups.append(group)
+                    group.append(source)
+                objects = {}
+                for i, group in enumerate(groups):
+                    objects.update(oracle.compile_many(p, module, group, output / str(i), mw, flags,
+                                                       include_dirs=sdkimport.include_directories(root)))
+                for source, obj in objects.items():
+                    records.append(dict(sdk=sdk, source=str(source.relative_to(root)), object=str(obj), mw=mw, flags=flags))
+                failures.append(dict(profile=tag, failed=[str(s.relative_to(root)) for s in sources if s not in objects]))
+                print(tag, len(objects), '/', len(sources), 'compiled', flush=True)
+    manifest = STATE_DIR / 'sourcealign/libraries.json'
+    previous = json.loads(manifest.read_text()) if manifest.exists() else []
+    keys = {(r['sdk'], r['source'], r['mw'], r['flags']) for r in records}
+    previous = [r for r in previous if (r['sdk'], r['source'], r['mw'], r['flags']) not in keys]
+    manifest.write_text(json.dumps(previous + records, indent=2) + '\n')
+    return dict(sources=len(sources), objects=len(records), profiles=failures)
 
 
 def discover(p: Project, minimum: int = 256) -> dict:
@@ -279,6 +364,8 @@ def source_body(pieces: list, name: str, external: set) -> str:
             externs = [piece.text if item == declaration else item for item in externs]
     types = [t for t in types if not any(x.names & sdkimport.BASE_TYPES and x.text == t for x in pieces)]
     text = '#include "types.h"\n\n' + '\n\n'.join(types + externs + [re.sub(r'^static\s+', '', function.text)]) + '\n'
+    text = re.sub(r'(?m)^(.*\bDSPSendMailToDSP\(0x80F30000\s*\|[^;]+;)',
+                  r'\1 // fzgx-allow: A1 DSP mailbox command, not an address', text)
     if re.search(r'\basm\b', sdkimport.masked(text)):
         raise ValueError('source depends on inline assembly')
     return text
@@ -549,10 +636,20 @@ def import_candidate(p: Project, rec: dict, pieces: list, directory: Path, donor
         if len(destinations) == 1:
             anchors[item['name']].update(destinations)
     mapping = {name: next(iter(destinations)) for name, destinations in anchors.items() if len(destinations) == 1}
+    proven = proven_bindings(p, rec)
+    mapping.update({name: target for name, target in proven.items() if name.startswith('.') and name in external})
     if mapping:
         text = sdkimport.shared_storage(p, rec, pieces, text, mapping)
         text = sdkimport.replace_c_symbols(text, mapping)
     known = {name: next(iter(destinations)) for name, destinations in calls.items() if len(destinations) == 1}
+    for item in elf.symbols():
+        if item['name'] not in external or item['info'] & 15 != 1 or item['shndx'] == 0:
+            continue
+        section = elf.sections[item['shndx']]['name']
+        destinations = {dest for dest, addend, kind in right.values() if kind != 10 and addend == 0
+                        and (s := sdkimport.retail_symbol(p, sym.module, dest)) and s.section == section}
+        if len(destinations) == 1:
+            known[item['name']] = next(iter(destinations))
     callees = callee_bindings(p, sym.module, left, right, donors)
     known = {name: dest for name, dest in known.items() if dest not in callees.values() or callees.get(name) == dest}
     known.update(callees)
@@ -561,6 +658,7 @@ def import_candidate(p: Project, rec: dict, pieces: list, directory: Path, donor
         if existing:
             known[name] = existing.name if existing.scope != 'local' else name
     known.update(call_bindings(left, right, known))
+    known.update(proven)
     absent = {name for off, (name, _, kind) in left.items() if kind == 10 and name not in known
               and off // 4 not in operation_pairs}
     bound_calls = [known[name] for _, (name, _, kind) in sorted(left.items()) if kind == 10 and name in known]
@@ -570,7 +668,26 @@ def import_candidate(p: Project, rec: dict, pieces: list, directory: Path, donor
     text, omitted = extra_calls(text, absent)
     pragmas = sdkimport.source_pragmas(rec['sdk'], rec['source'], rec['sdk_symbol'])
     text = '\n'.join(pragmas) + '\n' + text
-    text, obj, score, changes = layout(p, rec, text, directory)
+    original_text = text
+    independent_error = None
+    try:
+        text, obj, score, changes = layout(p, rec, text, directory)
+    except ValueError as error:
+        if not str(error).startswith(('inconsistent layout', 'layout constraints require')):
+            raise
+        from .layoutviews import independent
+        text = independent(p, rec, text, directory / 'independent')
+        text, obj, score, changes = layout(p, rec, text, directory / 'independent/recovered')
+        original_text = None
+    if score < 100 and original_text is not None:
+        from .layoutviews import independent
+        try:
+            expanded = independent(p, rec, original_text, directory / 'independent')
+            other = layout(p, rec, expanded, directory / 'independent/recovered')
+            if other[2] > score:
+                text, obj, score, changes = other
+        except ValueError as error:
+            independent_error = str(error)
     text, obj, corrections = constants(p, rec, text, obj, directory / 'constants')
     source = instructions(obj, 0)[rec['sdk_symbol']]
     sym = p.resolve(rec['symbol'])
@@ -589,13 +706,15 @@ def import_candidate(p: Project, rec: dict, pieces: list, directory: Path, donor
     if addresses:
         raise ValueError('candidate requires absolute symbols; use the SDK address importer')
     text = sdkimport.finish_source(sdkimport.format_c(text))
+    text = re.sub(r'(?m)^([^\n]*&=?\s*0x800[fF]{5}[uUlL]*[^\n]*)$',
+                  r'\1 // fzgx-allow: A1 IEEE-754 sign and mantissa mask', text)
     path = directory / 'bound.c'
     path.write_text(text)
     result = oracle.check(p, rec['symbol'], 6, source=path, mw_version=rec['mw'], extra_cflags=rec.get('flags') or None)
     return dict(symbol=rec['symbol'], sdk=rec['sdk'], source=rec['source'], sdk_symbol=rec['sdk_symbol'],
                 size=rec['size'], mw=rec['mw'], flags=rec.get('flags') or None, path=str(path), changes=changes,
                 bindings=mapping, corrections=corrections, omitted_calls=omitted, instruction_percent=score, percent=result.percent,
-                matched=not oracle.unit_fully_matches(result), error=result.error, diff=result.diff)
+                matched=not oracle.unit_fully_matches(result), error=result.error, diff=result.diff, independent_error=independent_error)
 
 
 def save_match(result: dict) -> None:
@@ -608,6 +727,7 @@ def save_match(result: dict) -> None:
     sdk = ROOT / 'build/tools' / result['sdk']
     revision = subprocess.run(['git', '-C', str(sdk), 'rev-parse', 'HEAD'], text=True, capture_output=True, check=True).stdout.strip()
     result['revision'] = revision
+    result['license'] = source_license(result['sdk'])
     result['source_sha256'] = hashlib.sha256((sdk / result['source']).read_bytes()).hexdigest()
     result['generated_sha256'] = hashlib.sha256(body.encode()).hexdigest()
     matches[result['symbol']] = result
@@ -624,6 +744,7 @@ def submit_saved(p: Project, symbols=()) -> dict:
     for symbol, result in matches.items():
         if symbols and symbol not in symbols or ledger.get(symbol)['status'] != 'unmatched':
             continue
+        result['license'] = source_license(result['sdk'])
         body = Path(result['path']).read_text()
         if hashlib.sha256(body.encode()).hexdigest() != result['generated_sha256']:
             raise ValueError(f'saved verified source changed: {symbol}')
@@ -633,11 +754,23 @@ def submit_saved(p: Project, symbols=()) -> dict:
         submitted = api.submit(p, symbol, agent='sourcealign', message='Recover SDK layouts from compiler offset constraints',
                                harness='fzgx', model='none', mw_version=result['mw'], extra_cflags=result['flags'])
         if submitted.get('ok'):
+            license_path = ROOT / 'state/sdkimports/licenses' / (result['sdk'] + '.txt')
+            license_path.parent.mkdir(parents=True, exist_ok=True)
+            license_path.write_bytes((ROOT / 'build/tools' / result['sdk'] / result['license']['path']).read_bytes())
             accepted.append(symbol)
             manifest[symbol] = {k: v for k, v in result.items() if k not in ('path', 'diff', 'error', 'matched', 'percent')}
             manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + '\n')
         else:
             failed.append(dict(symbol=symbol, error=submitted))
+    for result in manifest.values():
+        result['license'] = source_license(result['sdk'])
+        root = ROOT / 'build/tools' / result['sdk']
+        result['repository'] = subprocess.run(['git', '-C', str(root), 'remote', 'get-url', 'origin'],
+                                               text=True, capture_output=True, check=True).stdout.strip()
+        license_path = ROOT / 'state/sdkimports/licenses' / (result['sdk'] + '.txt')
+        license_path.parent.mkdir(parents=True, exist_ok=True)
+        license_path.write_bytes((root / result['license']['path']).read_bytes())
+    manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + '\n')
     return dict(accepted=accepted, failed=failed)
 
 
@@ -662,10 +795,12 @@ def run(p: Project, minimum=256, symbols=(), saved=False, do_submit=True, discov
             rec.setdefault('flags', source_flags(rec['sdk'], rec['source']))
             key = rec['sdk'], rec['source'], rec['mw']
             try:
+                source_license(rec['sdk'])
                 if key not in cache:
                     cache[key] = sdkimport.declarations(sdkimport.preprocess(ROOT / 'build/tools' / rec['sdk'], rec['source'], rec['mw']))
                 tag = rec['sdk'] + '_' + rec['sdk_symbol'] + '_' + rec['mw'].replace('/', '_')
                 tag += '_stmw' if '-use_lmw_stmw on' in rec.get('flags', '') else ''
+                tag += '_' + hashlib.sha256(rec['flags'].encode()).hexdigest()[:8]
                 path = directory / row['symbol'].replace(':', '__') / tag
                 result = import_candidate(p, rec, cache[key], path, donors[rec['sdk']])
             except (ValueError, RuntimeError, StopIteration) as exc:

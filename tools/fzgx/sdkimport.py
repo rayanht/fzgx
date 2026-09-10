@@ -169,19 +169,23 @@ def declarations(text: str) -> list:
     return out
 
 
-def preprocess(sdk: Path, source: str, mw: str) -> str:
-    scratch = STATE_DIR / 'sdkimport' / sdk.name
-    scratch.mkdir(parents=True, exist_ok=True)
-    output = scratch / (Path(source).stem + '.i')
+def include_directories(sdk: Path) -> list:
     includes = ['include', 'src', 'src/dolphin', 'libs/dolphin']
     includes += [str(d.relative_to(sdk)) for d in sdk.rglob('*')
                  if d.is_dir() and d.name.lower() in ('include', 'inc') and '.git' not in d.parts
                  and len(d.relative_to(sdk).parts) <= 6]
+    includes += [str(path.parent.relative_to(sdk)) for path in sorted(sdk.rglob('stddef.h'))]
+    return [sdk / inc for inc in dict.fromkeys(includes) if (sdk / inc).is_dir()]
+
+
+def preprocess(sdk: Path, source: str, mw: str) -> str:
+    scratch = STATE_DIR / 'sdkimport' / sdk.name
+    scratch.mkdir(parents=True, exist_ok=True)
+    output = scratch / (Path(source).stem + '.i')
     cmd = [str(ROOT / 'build/tools/wibo'), str(ROOT / 'build/compilers' / mw / 'mwcceppc.exe')]
-    cmd += sdkmatch.DOLPHIN_FLAGS
-    for inc in dict.fromkeys(includes):
-        if (sdk / inc).is_dir():
-            cmd += ['-i', inc]
+    cmd += sdkmatch.DOLPHIN_FLAGS + ['-cwd', 'source']
+    for inc in include_directories(sdk):
+        cmd += ['-i', str(inc)]
     cp = subprocess.run(cmd + ['-E', source], cwd=sdk, text=True, capture_output=True, timeout=120)
     if cp.returncode:
         raise RuntimeError((cp.stdout + cp.stderr)[-3000:])
