@@ -245,6 +245,8 @@ Rules that hold for everyone:
   otherwise share the claimed work copy and corrupt each other's checks. Enforce
   the assigned symbol and identity on every CLI tool call, serialize calls for that
   function, and pass the release caller's identity through to the ledger guard.
+  Disable `goals` for matcher processes too: its unrelated `get_goal` call adds a
+  model round trip before claiming the function.
   Provider/catalog reference: [DeepSeek's Codex integration](https://api-docs.deepseek.com/quick_start/agent_integrations/codex/).
   Example: `uv run tools/orchestrate.py --harness codex --provider deepseek
   --api-key-file ~/.config/fzgx/deepseek.key --seeds PATH --parallel 1 --no-trivial`.
