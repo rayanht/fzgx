@@ -8,9 +8,9 @@ struct FSTEntry {
     unsigned int nextEntryOrLength;
 };
 
-extern FSTEntry *FstStart_801A68A4;
+extern FSTEntry *FstStart;
 
-extern char *FstStringStart_801A68A8;
+extern char *FstStringStart;
 
 static inline u32 myStrncpy(char *dest, char *src, u32 maxlen) {
     u32 i = maxlen;
@@ -27,8 +27,8 @@ u32 entryToPath(u32 entry, char *path, u32 maxlen) {
     if (entry == 0) {
         return 0;
     }
-    name = FstStringStart_801A68A8 + (FstStart_801A68A4[entry].isDirAndStringOff & ~0xff000000);
-    loc = entryToPath((FstStart_801A68A4[entry].parentOrPosition), path, maxlen);
+    name = FstStringStart + (FstStart[entry].isDirAndStringOff & ~0xff000000);
+    loc = entryToPath((FstStart[entry].parentOrPosition), path, maxlen);
     if (loc == maxlen) {
         return loc;
     }

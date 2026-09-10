@@ -26,7 +26,7 @@ s32 fn_80016DF8(const char *pathPtr);
 
 BOOL DVDGetCurrentDir(char *path, u32 maxlen);
 
-extern FSTEntry *FstStart_801A68A4;
+extern FSTEntry *FstStart;
 
 BOOL DVDOpen(const char *fileName, DVDFileInfo *fileInfo) {
     s32 entry;
@@ -37,11 +37,11 @@ BOOL DVDOpen(const char *fileName, DVDFileInfo *fileInfo) {
         OSReport("Warning: DVDOpen(): file '%s' was not found under %s.\n", fileName, currentDir);
         return 0;
     }
-    if ((((FstStart_801A68A4[entry].isDirAndStringOff & 0xff000000) == 0) ? 0 : 1)) {
+    if ((((FstStart[entry].isDirAndStringOff & 0xff000000) == 0) ? 0 : 1)) {
         return 0;
     }
-    fileInfo->startAddr = (FstStart_801A68A4[entry].parentOrPosition);
-    fileInfo->length = (FstStart_801A68A4[entry].nextEntryOrLength);
+    fileInfo->startAddr = (FstStart[entry].parentOrPosition);
+    fileInfo->length = (FstStart[entry].nextEntryOrLength);
     fileInfo->callback = (DVDCallback)0;
     fileInfo->cb.state = 0;
     return 1;

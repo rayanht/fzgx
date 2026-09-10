@@ -8,7 +8,7 @@ struct FSTEntry {
     unsigned int nextEntryOrLength;
 };
 
-extern FSTEntry *FstStart_801A68A4;
+extern FSTEntry *FstStart;
 
 extern u32 lbl_801A68B0;
 
@@ -21,7 +21,7 @@ static inline BOOL DVDConvertEntrynumToPath(s32 entrynum, char *path, u32 maxlen
         path[maxlen - 1] = '\0';
         return 0;
     }
-    if ((((FstStart_801A68A4[entrynum].isDirAndStringOff & 0xff000000) == 0) ? 0 : 1)) {
+    if ((((FstStart[entrynum].isDirAndStringOff & 0xff000000) == 0) ? 0 : 1)) {
         if (loc == maxlen - 1) {
             path[loc] = '\0';
             return 0;

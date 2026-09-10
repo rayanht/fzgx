@@ -20,17 +20,17 @@ struct FSTEntry {
     unsigned int nextEntryOrLength;
 };
 
-extern FSTEntry *FstStart_801A68A4;
+extern FSTEntry *FstStart;
 
 extern u32 MaxEntryNum_801A68AC;
 
 BOOL DVDFastOpen(s32 entrynum, DVDFileInfo *fileInfo) {
     if ((entrynum < 0) || (entrynum >= MaxEntryNum_801A68AC) ||
-        (((FstStart_801A68A4[entrynum].isDirAndStringOff & 0xff000000) == 0) ? 0 : 1)) {
+        (((FstStart[entrynum].isDirAndStringOff & 0xff000000) == 0) ? 0 : 1)) {
         return 0;
     }
-    fileInfo->startAddr = (FstStart_801A68A4[entrynum].parentOrPosition);
-    fileInfo->length = (FstStart_801A68A4[entrynum].nextEntryOrLength);
+    fileInfo->startAddr = (FstStart[entrynum].parentOrPosition);
+    fileInfo->length = (FstStart[entrynum].nextEntryOrLength);
     fileInfo->callback = (DVDCallback)0;
     fileInfo->cb.state = 0;
     return 1;
