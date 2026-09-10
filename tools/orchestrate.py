@@ -5,9 +5,9 @@
     uv run tools/orchestrate.py --harness codex  --parallel 16 --symbols fn_1_A fn_1_B ...
 
 Each worker spawns `claude -p --agent matcher` (or `codex exec`) with only the
-project MCP server, no skills, no other MCPs, and the matcher's tool list. The
-RESULT line is parsed from the harness output, real token usage and cost are
-written to the ledger, crashed or timed-out workers have their claim released,
+project MCP server, no skills, no other MCPs, and the matcher's tool list. Tool
+outcomes, token usage and reported or estimated cost are written to the ledger;
+crashed or timed-out workers have their claim released,
 and a batch report lands in .fzgx/reports/ (local, not committed). The orchestrating model calls this
 once per batch and acts on the summary.
 """

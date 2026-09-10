@@ -36,7 +36,7 @@ def parameter(text, types):
             return None
         text = text[:last.start()] + text[last.end():]
     text = re.sub(r'\s*\*\s*', ' *', text).strip()
-    if not set(re.findall(r'\b[A-Za-z_]\w*\b', text)) <= BASIC | set(types):
+    if any(word not in BASIC and word not in types for word in re.findall(r'\b[A-Za-z_]\w*\b', text)):
         return None
     return text
 
