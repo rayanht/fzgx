@@ -219,7 +219,19 @@ class Project:
     # ---------------------------------------------------------------- asm index
     def _asm_files(self, module: str) -> List[Path]:
         d = self.module_build_dir(module) / "asm"
-        return sorted(d.rglob("*.s")) if d.exists() else []
+        config = self.build_dir / 'config.json'
+        if not config.exists():
+            return sorted(d.rglob('*.s')) if d.exists() else []
+        data = load_json_retry(config)
+        record = next((m for m in [data] + data.get('modules', []) if m['name'] == module), None)
+        paths = []
+        for unit in record.get('units', []) if record else []:
+            obj = ROOT / unit['object']
+            relative = obj.relative_to(self.module_build_dir(module) / 'obj')
+            path = (d / relative).with_suffix('.s')
+            if path.exists():
+                paths.append(path)
+        return sorted(paths)
 
     def callable_asm(self, sym: Symbol) -> Optional[Function]:
         """Read an assembly entry labelled by dtk without changing its ownership or kind."""
@@ -319,7 +331,7 @@ class Project:
         stamp = max((f.stat().st_mtime for f in files), default=0)
         if cache.exists():
             data = json.loads(cache.read_text())
-            if data.get("stamp") == stamp and data.get("v") == 2:
+            if data.get("stamp") == stamp and data.get("v") == 3:
                 self._asm_index[module] = {
                     k: Function(self.symbols(module)[k], v["asm"], v["refs"], v["unit"])
                     for k, v in data["functions"].items() if k in self.symbols(module)
@@ -365,7 +377,7 @@ class Project:
                     lines.append(raw.strip())  # local label
         cache.parent.mkdir(parents=True, exist_ok=True)
         cache.write_text(json.dumps({
-            "stamp": stamp, "v": 2,
+            "stamp": stamp, "v": 3,
             "functions": {k: {"asm": v.asm, "refs": v.refs, "unit": v.unit} for k, v in result.items()},
         }))
         self._asm_index[module] = result

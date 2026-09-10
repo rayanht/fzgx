@@ -131,6 +131,9 @@ Rules that hold for everyone:
   as backend no-ops; only recognized FPR frame saves may be elided.
   Declaration normalization must parse lines without nested repetition over arbitrary C;
   the old regex stalled real drafts such as `fn_80005738` beyond repair time budgets.
+  Read disassembly only from the active `build/GFZE01/config.json` split units. Orphaned
+  named `.s` files can retain obsolete local names after promotion and shadow current auto
+  units, yielding an object match that fails the link (`SelectThread_800105D0` was one).
 - The font/sprite UI interface has many large callers, but that dependency count is not
   evidence of a collapsible matching bucket: the corrected 318-function UI lift closed zero.
   `include/font.h` records the variadic text wrapper and 0x58-byte packet submission result;

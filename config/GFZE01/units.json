@@ -8430,6 +8430,16 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_80011298.c",
+    "symbols": [
+      "fn_80011298"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
     "source": "dol/fn_80011358.c",
     "symbols": [
       "fn_80011358"

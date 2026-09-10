@@ -483,9 +483,17 @@ def propagate(index, module, names):
         parsed[key] = (fn, ins, edges)
         # The CR1-guarded f1-f8 save and contiguous r3-r10 area identify the
         # CodeWarrior varargs prologue. These stores are not fixed parameters.
-        save_sites = {i for i, (mn, a) in enumerate(ins[:100]) if mn in ('stw', 'stfd')
-                      and len(a) == 2 and re.fullmatch(r'(?:0x[0-9a-f]+|\d+)\(r1\)', a[1])
-                      and a[0] in argument_regs}
+        save_groups = defaultdict(dict)
+        for i, (mn, a) in enumerate(ins[:100]):
+            if mn not in ('stw', 'stfd') or len(a) != 2 or a[0] not in argument_regs:
+                continue
+            match = re.fullmatch(r'(0x[0-9a-f]+|\d+)\(r1\)', a[1])
+            if not match or (mn == 'stw') != a[0].startswith('r'):
+                continue
+            step, first = (4, 3) if mn == 'stw' else (8, 1)
+            base = int(match[1], 0) - (int(a[0][1:]) - first) * step
+            save_groups[(mn, base)][a[0]] = i
+        save_sites = {site for group in save_groups.values() if len(group) == 8 for site in group.values()}
         saved = {ins[i][1][0] for i in save_sites}
         if argument_regs <= saved and any(mn == 'bne' and a[0] == 'cr1' for mn, a in ins[:100] if a):
             variadic.add(key)
