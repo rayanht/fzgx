@@ -1,0 +1,534 @@
+{
+  "batch": "deepseek-largest50-max-20260910",
+  "started": "2026-09-10T18:13:19.775964+00:00",
+  "pid": 89114,
+  "tooling_commit": "6a396b3",
+  "command": [
+    "uv",
+    "run",
+    "tools/orchestrate.py",
+    "--harness",
+    "codex",
+    "--provider",
+    "deepseek",
+    "--model",
+    "deepseek-flash",
+    "--api-key-file",
+    "/Users/rayan/.config/fzgx/deepseek.key",
+    "--effort",
+    "max",
+    "--parallel",
+    "50",
+    "--tool-parallel",
+    "16",
+    "--max-checks",
+    "256",
+    "--max-stale",
+    "64",
+    "--max-attempts",
+    "100",
+    "--timeout",
+    "43200",
+    "--verify-interval",
+    "60",
+    "--seeds",
+    "/Users/rayan/fzgx/.fzgx/seeds/largest50-20260910/manifest.json",
+    "--no-trivial",
+    "--batch",
+    "deepseek-largest50-max-20260910"
+  ],
+  "selection": {
+    "functions": 50,
+    "bytes": 284944,
+    "smallest": 4208,
+    "largest": 13196,
+    "modules": {
+      "main_rel": 26,
+      "title": 1,
+      "main": 7,
+      "customize": 5,
+      "pilotpoint": 3,
+      "story": 1,
+      "option": 2,
+      "sel": 3,
+      "profile": 1,
+      "movie_module": 1
+    },
+    "partial": 48,
+    "manifest": "/Users/rayan/fzgx/.fzgx/seeds/largest50-20260910/manifest.json"
+  },
+  "limits": {
+    "checks": 256,
+    "stale_checks": 64,
+    "attempts": 100,
+    "timeout_s": 43200,
+    "parallel": 50,
+    "tool_parallel": 16,
+    "verify_interval_s": 60
+  },
+  "effort": "max",
+  "provider": "deepseek",
+  "model": "deepseek-flash",
+  "log": "/Users/rayan/fzgx/.fzgx/runs/deepseek-largest50-max-20260910.log",
+  "manifest_sha256": "6913d7ebc8f31120b4f95874a52665fb798725af3bc392be59f99487119b6893",
+  "seeds": {
+    "fn_1_729F8": {
+      "path": "/Users/rayan/fzgx/.fzgx/seeds/largest50-20260910/fn_1_729F8.c",
+      "sha256": "bfeb01d498cf494b6cbdf758ff3d83ce31f9ecfdd7c52937661db30d48e7692f",
+      "kind": "lift_total",
+      "size": 13196,
+      "module": "main_rel",
+      "unresolved": 44,
+      "max_ins": 3299
+    },
+    "fn_8_2660": {
+      "path": "/Users/rayan/fzgx/.fzgx/seeds/largest50-20260910/fn_8_2660.c",
+      "sha256": "f4598f57309df26fca8d989a0ddc50d9a822bef45d1af96c62a4a07f0b1670ef",
+      "kind": "lift_total",
+      "size": 10284,
+      "module": "title",
+      "unresolved": 48,
+      "max_ins": 2571
+    },
+    "fn_1_BC310": {
+      "path": "/Users/rayan/fzgx/.fzgx/seeds/largest50-20260910/fn_1_BC310.c",
+      "sha256": "f8a7ea01461a341a4233ec9a8e0e152a4caac4e317922aafda8e70884909bb80",
+      "kind": "lift_total",
+      "size": 9832,
+      "module": "main_rel",
+      "unresolved": 27,
+      "max_ins": 2458
+    },
+    "fn_1_C4ABC": {
+      "path": "/Users/rayan/fzgx/.fzgx/seeds/largest50-20260910/fn_1_C4ABC.c",
+      "sha256": "d1f81f4b3d3cefcabf17a33653b96e46a98e2af1be7385b59a563d0d85539c03",
+      "kind": "lift_total",
+      "size": 9240,
+      "module": "main_rel",
+      "unresolved": 65,
+      "max_ins": 2310
+    },
+    "fn_8005DCEC": {
+      "path": "/Users/rayan/fzgx/.fzgx/seeds/largest50-20260910/fn_8005DCEC.c",
+      "sha256": "5c710dee6c415bb533ff0cebdfff3d38daf3228e48e2f1f11188527903cd5c38",
+      "kind": "lift_total",
+      "size": 7920,
+      "module": "main",
+      "unresolved": 30,
+      "max_ins": 1980
+    },
+    "fn_3_15A0": {
+      "path": "/Users/rayan/fzgx/.fzgx/seeds/largest50-20260910/fn_3_15A0.c",
+      "sha256": "f43ac5ea9c171ac30ab2727a6a7e2e14952e22b353bb578bc420878441fd360e",
+      "kind": "lift_total",
+      "size": 7680,
+      "module": "customize",
+      "unresolved": 36,
+      "max_ins": 1920
+    },
+    "fn_1_10E3B4": {
+      "path": "/Users/rayan/fzgx/.fzgx/seeds/largest50-20260910/fn_1_10E3B4.c",
+      "sha256": "3f024d0ec98bb9520fe1ce880f73dd8eab89330b8cd9d9355437db62db5e5982",
+      "kind": "lift_total",
+      "size": 7252,
+      "module": "main_rel",
+      "unresolved": 183,
+      "max_ins": 1813
+    },
+    "fn_1_120804": {
+      "path": "/Users/rayan/fzgx/.fzgx/seeds/largest50-20260910/fn_1_120804.c",
+      "sha256": "57d4f7b9ab32b8f433ba9d46a7b528f4d9e8a91860a4c4ec3b8853074ee62798",
+      "kind": "lift_total",
+      "size": 6980,
+      "module": "main_rel",
+      "unresolved": 139,
+      "max_ins": 1745
+    },
+    "fn_1_AD264": {
+      "path": "/Users/rayan/fzgx/.fzgx/seeds/largest50-20260910/fn_1_AD264.c",
+      "sha256": "f118a6464e84315186395e1030bf9b66946fad7a3fe931f7ebd14d3d54d7aefd",
+      "kind": "lift_total",
+      "size": 6608,
+      "module": "main_rel",
+      "unresolved": 24,
+      "max_ins": 1652
+    },
+    "fn_3_1D338": {
+      "path": "/Users/rayan/fzgx/.fzgx/seeds/largest50-20260910/fn_3_1D338.c",
+      "sha256": "2d4f0420881b92bd9c08ba32477952e56eda556aa2b6f586a1d86edf611c0518",
+      "kind": "lift_total",
+      "size": 6388,
+      "module": "customize",
+      "unresolved": 31,
+      "max_ins": 1597
+    },
+    "fn_1_BA144": {
+      "path": "/Users/rayan/fzgx/.fzgx/seeds/largest50-20260910/fn_1_BA144.c",
+      "sha256": "2cc0f5d3dd3e5186b3c95c5584640abaac2c89f5eec374f41c620c9c56c8d483",
+      "kind": "lift_total",
+      "size": 6192,
+      "module": "main_rel",
+      "unresolved": 19,
+      "max_ins": 1548
+    },
+    "fn_1_90E0": {
+      "path": "/Users/rayan/fzgx/.fzgx/seeds/largest50-20260910/fn_1_90E0.c",
+      "sha256": "2407920f871280d2956d5f3082b7fcc8a08ba6da019767b40a0b91645eb261e9",
+      "kind": "lift_total",
+      "size": 6056,
+      "module": "main_rel",
+      "unresolved": 58,
+      "max_ins": 1514
+    },
+    "fn_14_8A54": {
+      "path": "/Users/rayan/fzgx/.fzgx/seeds/largest50-20260910/fn_14_8A54.c",
+      "sha256": "7a7c43f9c19be566243a68c5f8d63231cc00dd683cdf724ee952a30325a100ba",
+      "kind": "lift_total",
+      "size": 6048,
+      "module": "pilotpoint",
+      "unresolved": 8,
+      "max_ins": 1512
+    },
+    "fn_8007CF18": {
+      "path": "/Users/rayan/fzgx/.fzgx/seeds/largest50-20260910/fn_8007CF18.c",
+      "sha256": "a35516daa336e202ca479c6cbdb2727333bc2733bd91b034fa84cfac5ce420a4",
+      "kind": "lift_total",
+      "size": 6020,
+      "module": "main",
+      "unresolved": 118,
+      "max_ins": 1505
+    },
+    "fn_1_12F4A8": {
+      "path": "/Users/rayan/fzgx/.fzgx/seeds/largest50-20260910/fn_1_12F4A8.c",
+      "sha256": "14e3fb1da571fd956eb08b62880fa05baa448ad7c8bc176d5f85956115c6ef8b",
+      "kind": "lift_total",
+      "size": 5860,
+      "module": "main_rel",
+      "unresolved": 46,
+      "max_ins": 1465
+    },
+    "fn_1_AECCC": {
+      "path": "/Users/rayan/fzgx/.fzgx/seeds/largest50-20260910/fn_1_AECCC.c",
+      "sha256": "ce7454202d163f2b186c069114c616fcbed759b216bdde5b1214504474f74d8e",
+      "kind": "lift_total",
+      "size": 5852,
+      "module": "main_rel",
+      "unresolved": 32,
+      "max_ins": 1463
+    },
+    "fn_1_8A1B4": {
+      "path": "/Users/rayan/fzgx/.fzgx/seeds/largest50-20260910/fn_1_8A1B4.c",
+      "sha256": "1d28a7b55ed86b969e954458335b05174b9b04e225127471075a6cb8bad8ab11",
+      "kind": "lift_total",
+      "size": 5836,
+      "module": "main_rel",
+      "unresolved": 38,
+      "max_ins": 1459
+    },
+    "fn_1_15C6C0": {
+      "path": "/Users/rayan/fzgx/.fzgx/seeds/largest50-20260910/fn_1_15C6C0.c",
+      "sha256": "615ca6c4a5059ca786b776cf9af86fb4a9a3db9b2484c36d9754e4dae28d0a9f",
+      "kind": "lift_total",
+      "size": 5820,
+      "module": "main_rel",
+      "unresolved": 4,
+      "max_ins": 1455
+    },
+    "fn_1_E5CC4": {
+      "path": "/Users/rayan/fzgx/.fzgx/seeds/largest50-20260910/fn_1_E5CC4.c",
+      "sha256": "076eb51a6e3d10ca09eef40a8656393de1a26ea26992f2c34e9bd612e9d5035c",
+      "kind": "lift_total",
+      "size": 5752,
+      "module": "main_rel",
+      "unresolved": 108,
+      "max_ins": 1438
+    },
+    "fn_80060C54": {
+      "path": "/Users/rayan/fzgx/.fzgx/seeds/largest50-20260910/fn_80060C54.c",
+      "sha256": "77718b9be80fa9f24fb787ed5ada7a692aa2dd03398a31e5b2355c9bc3034551",
+      "kind": "lift_total",
+      "size": 5724,
+      "module": "main",
+      "unresolved": 12,
+      "max_ins": 1431
+    },
+    "fn_7_4FD0": {
+      "path": "/Users/rayan/fzgx/.fzgx/seeds/largest50-20260910/fn_7_4FD0.c",
+      "sha256": "c0de17d217c6ab77058811eef584d85fdcd89ddafb649622da403230bd2d690c",
+      "kind": "lift_total",
+      "size": 5652,
+      "module": "story",
+      "unresolved": 76,
+      "max_ins": 1413
+    },
+    "fn_4_4DF8": {
+      "path": "/Users/rayan/fzgx/.fzgx/seeds/largest50-20260910/fn_4_4DF8.c",
+      "sha256": "e40e5c3f1fb9456f62d0cd684f88076024dce5ef1cca19aad7f52a3e0a0dfc3e",
+      "kind": "lift_total",
+      "size": 5596,
+      "module": "option",
+      "unresolved": 42,
+      "max_ins": 1399
+    },
+    "fn_1_111980": {
+      "path": "/Users/rayan/fzgx/.fzgx/seeds/largest50-20260910/fn_1_111980.c",
+      "sha256": "d64d2208ecc76ebc2d435713c545a56bef9c19f4c38f63375cf9aa8c040ab4ec",
+      "kind": "lift_total",
+      "size": 5568,
+      "module": "main_rel",
+      "unresolved": 79,
+      "max_ins": 1392
+    },
+    "fn_14_1090": {
+      "path": "/Users/rayan/fzgx/.fzgx/seeds/largest50-20260910/fn_14_1090.c",
+      "sha256": "230fe4fc55a4074c8f791fa2e8e0cfdd434535b7c4a39aabe3888b00702dfc54",
+      "kind": "lift_total",
+      "size": 5372,
+      "module": "pilotpoint",
+      "unresolved": 14,
+      "max_ins": 1343
+    },
+    "fn_1_123050": {
+      "path": "/Users/rayan/fzgx/.fzgx/seeds/largest50-20260910/fn_1_123050.c",
+      "sha256": "da9cf74308c4d32afb8e657e6ad3d684e09b602538d36a05a9680c0bb0ccf022",
+      "kind": "lift_total",
+      "size": 5280,
+      "module": "main_rel",
+      "unresolved": 112,
+      "max_ins": 1320
+    },
+    "fn_10_1615C": {
+      "path": "/Users/rayan/fzgx/.fzgx/seeds/largest50-20260910/fn_10_1615C.c",
+      "sha256": "e1cbfd69eb26617427a81e8ce059978650f4660101ecb9678d63d94b937c6abf",
+      "kind": "lift_total",
+      "size": 5268,
+      "module": "sel",
+      "unresolved": 21,
+      "max_ins": 1317
+    },
+    "fn_80048340": {
+      "path": "/Users/rayan/fzgx/.fzgx/seeds/largest50-20260910/fn_80048340.c",
+      "sha256": "ebecf9cbb828c3a85dc0012e0398c424cfae5dc59e5efb2bc172458260a3e3e5",
+      "kind": "lift_total",
+      "size": 5096,
+      "module": "main",
+      "unresolved": 0,
+      "max_ins": 1274
+    },
+    "fn_1_B03CC": {
+      "path": "/Users/rayan/fzgx/.fzgx/seeds/largest50-20260910/fn_1_B03CC.c",
+      "sha256": "6e79d5c18bbfbfd186e4f93ec6f291ba27bc8a2aa4d582a9039b7137aa6bd958",
+      "kind": "lift_total",
+      "size": 4932,
+      "module": "main_rel",
+      "unresolved": 28,
+      "max_ins": 1233
+    },
+    "fn_3_21300": {
+      "path": "/Users/rayan/fzgx/.fzgx/seeds/largest50-20260910/fn_3_21300.c",
+      "sha256": "a7fa639c4d9ea82ce9109b2500a5d5c0c889c27fd1ea259457946266cb0dc803",
+      "kind": "lift_total",
+      "size": 4856,
+      "module": "customize",
+      "unresolved": 13,
+      "max_ins": 1214
+    },
+    "fn_3_255DC": {
+      "path": "/Users/rayan/fzgx/.fzgx/seeds/largest50-20260910/fn_3_255DC.c",
+      "sha256": "61a95887f3f799e30149a0beb2289588a31db97fe1cf4e0ad83cd9c640f97919",
+      "kind": "lift_total",
+      "size": 4852,
+      "module": "customize",
+      "unresolved": 4,
+      "max_ins": 1213
+    },
+    "fn_3_18960": {
+      "path": "/Users/rayan/fzgx/.fzgx/seeds/largest50-20260910/fn_3_18960.c",
+      "sha256": "2461577d6b7bdb316c10775b67e6c86831aa555d499dc5a2a833b852259ba2bc",
+      "kind": "lift_total",
+      "size": 4848,
+      "module": "customize",
+      "unresolved": 7,
+      "max_ins": 1212
+    },
+    "fn_1_9012C": {
+      "path": "/Users/rayan/fzgx/.fzgx/seeds/largest50-20260910/fn_1_9012C.c",
+      "sha256": "65ae2bd227b25af53b58641348688cf43feeca079ac1840cda6924ce420c8a9b",
+      "kind": "lift_total",
+      "size": 4816,
+      "module": "main_rel",
+      "unresolved": 19,
+      "max_ins": 1204
+    },
+    "fn_14_46D4": {
+      "path": "/Users/rayan/fzgx/.fzgx/seeds/largest50-20260910/fn_14_46D4.c",
+      "sha256": "9f70ca231c1407443a0315146edff8a8913189e2d97a9e359607be944772cee7",
+      "kind": "lift_total",
+      "size": 4592,
+      "module": "pilotpoint",
+      "unresolved": 0,
+      "max_ins": 1200
+    },
+    "fn_1_19AE0": {
+      "path": "/Users/rayan/fzgx/.fzgx/seeds/largest50-20260910/fn_1_19AE0.c",
+      "sha256": "ce7c15e59c5bdfd3482fa6ab7f9b50d68d42d27356b26720cf9342ce94debfd5",
+      "kind": "lift_total",
+      "size": 4576,
+      "module": "main_rel",
+      "unresolved": 62,
+      "max_ins": 1200
+    },
+    "fn_4_6720": {
+      "path": "/Users/rayan/fzgx/.fzgx/seeds/largest50-20260910/fn_4_6720.c",
+      "sha256": "7e508fbeab53b3d2251bed13dfe9d840dcd9f12eef0a13299c68cb0028915f29",
+      "kind": "lift_total",
+      "size": 4544,
+      "module": "option",
+      "unresolved": 68,
+      "max_ins": 1200
+    },
+    "fn_1_98F28": {
+      "path": "/Users/rayan/fzgx/.fzgx/seeds/largest50-20260910/fn_1_98F28.c",
+      "sha256": "425b27575c59a4f291f1be50a721894397d41d8f79cead3ee880387bfd93f5a5",
+      "kind": "lift_total",
+      "size": 4476,
+      "module": "main_rel",
+      "unresolved": 53,
+      "max_ins": 1200
+    },
+    "fn_1_B277C": {
+      "path": "/Users/rayan/fzgx/.fzgx/seeds/largest50-20260910/fn_1_B277C.c",
+      "sha256": "d4fe2721d42b4816ce6916cae1046e218bb9b89f544ccfcfe226b20b15ca4108",
+      "kind": "lift_total",
+      "size": 4472,
+      "module": "main_rel",
+      "unresolved": 21,
+      "max_ins": 1200
+    },
+    "fn_1_159AE0": {
+      "path": "/Users/rayan/fzgx/.fzgx/seeds/largest50-20260910/fn_1_159AE0.c",
+      "sha256": "1b86f4363ee46e654a9db1b961233d99610d98548de1f16d3738ba17aeaffb09",
+      "kind": "lift_total",
+      "size": 4384,
+      "module": "main_rel",
+      "unresolved": 251,
+      "max_ins": 1200
+    },
+    "fn_8003FF88": {
+      "path": "/Users/rayan/fzgx/.fzgx/seeds/largest50-20260910/fn_8003FF88.c",
+      "sha256": "4613dd196d20330f3df6c0417c6ae6573b8c842226632bc273881ff25e4da1c5",
+      "kind": "lift_total",
+      "size": 4380,
+      "module": "main",
+      "unresolved": 37,
+      "max_ins": 1200
+    },
+    "fn_1_13B98": {
+      "path": "/Users/rayan/fzgx/.fzgx/seeds/largest50-20260910/fn_1_13B98.c",
+      "sha256": "172c1fce5636ac784235344a0c4707d40bcce875ce18577b5819315da70a863f",
+      "kind": "lift_total",
+      "size": 4380,
+      "module": "main_rel",
+      "unresolved": 18,
+      "max_ins": 1200
+    },
+    "fn_1_B6B28": {
+      "path": "/Users/rayan/fzgx/.fzgx/seeds/largest50-20260910/fn_1_B6B28.c",
+      "sha256": "4646536ededfdd74828a351a1261fc74342cb5f3060e9dc8efe52ae399a1b8ec",
+      "kind": "lift_total",
+      "size": 4312,
+      "module": "main_rel",
+      "unresolved": 3,
+      "max_ins": 1200
+    },
+    "fn_1_913FC": {
+      "path": "/Users/rayan/fzgx/.fzgx/seeds/largest50-20260910/fn_1_913FC.c",
+      "sha256": "cd34cc14304c0bb4c015881cb614dae03c2babc086a550da5c1239b0679f4f28",
+      "kind": "lift_total",
+      "size": 4304,
+      "module": "main_rel",
+      "unresolved": 5,
+      "max_ins": 1200
+    },
+    "fn_1_3B7D4": {
+      "path": "/Users/rayan/fzgx/.fzgx/seeds/largest50-20260910/fn_1_3B7D4.c",
+      "sha256": "bbb647bb65a7a2b3e1bfeff87100fc486a109076af3ea0426734c7da73401640",
+      "kind": "lift_total",
+      "size": 4268,
+      "module": "main_rel",
+      "unresolved": 8,
+      "max_ins": 1200
+    },
+    "fn_1_110478": {
+      "path": "/Users/rayan/fzgx/.fzgx/seeds/largest50-20260910/fn_1_110478.c",
+      "sha256": "91ae4cad13139725ae8ab08b9bfd4b2b0bf906022bfd3dc13b6319b47fe4f978",
+      "kind": "lift_total",
+      "size": 4248,
+      "module": "main_rel",
+      "unresolved": 43,
+      "max_ins": 1200
+    },
+    "fn_16_4E90": {
+      "path": "/Users/rayan/fzgx/.fzgx/seeds/largest50-20260910/fn_16_4E90.c",
+      "sha256": "1317864db6033536331a569d8e4db76162a591664330f38abd620d8c1a085788",
+      "kind": "lift_total",
+      "size": 4232,
+      "module": "profile",
+      "unresolved": 9,
+      "max_ins": 1200
+    },
+    "fn_10_1D314": {
+      "path": "/Users/rayan/fzgx/.fzgx/seeds/largest50-20260910/fn_10_1D314.c",
+      "sha256": "082a7f037d0fb8c051cd2b8b289d40d0e989b4eec237ec8a1037416af65bf3e3",
+      "kind": "lift_total",
+      "size": 4228,
+      "module": "sel",
+      "unresolved": 24,
+      "max_ins": 1200
+    },
+    "fn_8007B338": {
+      "path": "/Users/rayan/fzgx/.fzgx/seeds/largest50-20260910/fn_8007B338.c",
+      "sha256": "06d7131c0341b6ea1eef9ce7826ddc70865590c692f5f7b4b52379526b92c603",
+      "kind": "lift_total",
+      "size": 4224,
+      "module": "main",
+      "unresolved": 21,
+      "max_ins": 1200,
+      "prior_attempt": {
+        "sha256": "2563a191fe314deb904abba6fdb85e09ad5daec07f82db879b67ec7ef4a8cc4f",
+        "mw": "GC/1.3.2",
+        "flags": "-sdata 8 -sdata2 8 -use_lmw_stmw off",
+        "percent": 99.62,
+        "attempt_id": 10851,
+        "instruction": "Reuse this previously recovered code where it is more complete than the new lifter draft."
+      }
+    },
+    "fn_80026FE0": {
+      "path": "/Users/rayan/fzgx/.fzgx/seeds/largest50-20260910/fn_80026FE0.c",
+      "sha256": "04fa4788f0bf7632f333836d2c73529828e82ce41a8bc6d620d34673f9672abc",
+      "kind": "lift_total",
+      "size": 4220,
+      "module": "main",
+      "unresolved": 2,
+      "max_ins": 1200
+    },
+    "fn_10_21EC": {
+      "path": "/Users/rayan/fzgx/.fzgx/seeds/largest50-20260910/fn_10_21EC.c",
+      "sha256": "81e3990cde4e2426ad107a534e5a5b03c83b9b1f8aaa20c32dc0b1c3d4e9b014",
+      "kind": "lift_total",
+      "size": 4220,
+      "module": "sel",
+      "unresolved": 10,
+      "max_ins": 1200
+    },
+    "fn_12_364CC": {
+      "path": "/Users/rayan/fzgx/.fzgx/seeds/largest50-20260910/fn_12_364CC.c",
+      "sha256": "027da2e66a38273237a0ff89f7ad1da508649da27fb7f2cd2cccf638202ec6a9",
+      "kind": "lift_total",
+      "size": 4208,
+      "module": "movie_module",
+      "unresolved": 7,
+      "max_ins": 1200
+    }
+  }
+}
