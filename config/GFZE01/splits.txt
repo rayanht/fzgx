@@ -4295,3 +4295,15 @@ dol/fn_80088128.c:
 
 dol/fn_8008809C.c:
 	.text       start:0x8008809C end:0x80088128 align:4
+
+dol/fn_8007C55C.c:
+	.text       start:0x8007C55C end:0x8007C910 align:4
+
+dol/fn_8007C3B8.c:
+	.text       start:0x8007C3B8 end:0x8007C55C align:4
+
+dol/fn_8007A2E8.c:
+	.text       start:0x8007A2E8 end:0x8007A440 align:4
+
+dol/fn_80080030.c:
+	.text       start:0x80080030 end:0x80080150 align:4

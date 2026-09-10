@@ -332,6 +332,8 @@ def dependency_closure(pieces: list, function: Piece, mapping: dict) -> tuple:
         elif piece.kind == 'object':
             decl = piece.text.split('=', 1)[0].strip().rstrip(';')
             externs.append('extern ' + re.sub(r'^(?:static\s+|extern\s+)+', '', decl) + ';')
+        elif piece.kind == 'prototype' and piece.names & mapping.keys():
+            externs.append(re.sub(r'^(?:static\s+|inline\s+)+', '', piece.text))
         else:
             externs.append(piece.text)
     return list(dict.fromkeys(types)), list(dict.fromkeys(externs))
