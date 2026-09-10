@@ -491,3 +491,9 @@ rel/sel/data/lbl_10_rodata_1B80.c:
 
 rel/sel/data/lbl_10_rodata_1C38.c:
 	.rodata     start:0x00001C38 end:0x00001CA4 align:8
+
+rel/sel/sel/fn_10_8538.c:
+	.text       start:0x00008538 end:0x00008600 align:4
+
+rel/sel/sel/fn_10_10D2C.c:
+	.text       start:0x00010D2C end:0x00010DB0 align:4

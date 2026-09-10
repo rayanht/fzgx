@@ -339,6 +339,45 @@ void fn_10_84DC(void) {
 }
 /* fzgx:end fn_10_84DC */
 
+/* fzgx:begin fn_10_8538 */
+typedef struct {
+    u8 pad[0xa4];
+    u8 *ptr;
+} BssObject;
+
+extern u8 lbl_10_bss_0[];
+extern char lbl_10_data_76C[25];
+extern void fn_10_1B684(void);
+extern BssObject lbl_1_bss_8B3A0;
+extern void *lbl_1_bss_6EAD0;
+
+extern void fn_1_435C(u32 value);
+extern void *fn_1_3F8C(void *arg0, void *arg1, u32 arg2, u32 arg3);
+extern void fn_1_4A00(u32 arg0, u32 arg1, u32 arg2);
+extern void *fn_1_12F1E8(u32 size);
+extern void fn_1_A176C(void *arg0, u32 arg1);
+
+#pragma opt_propagation off
+void fn_10_8538(void) {
+    u8 *work = lbl_10_bss_0 + 0x50000;
+    u8 *base = lbl_10_bss_0;
+    u32 value;
+
+    fn_1_435C(((u32 *)work)[(-0x6c78) / 4]);
+    value = (u32)fn_1_3F8C(lbl_10_data_76C, fn_10_1B684, 0, 8);
+    ((u32 *)work)[0x1740 / 4] = value;
+    fn_1_4A00(1, (u8)((s16 *)work)[(-0x6c74) / 2], ((u32 *)work)[(-0x6c78) / 4]);
+    ((u32 *)work)[0x1744 / 4] = 0;
+    fn_1_12F1E8(0x384);
+    lbl_1_bss_8B3A0.ptr[0x19] = 0;
+    ((u32 *)base)[0x14 / 4] = (u32)-1;
+    fn_1_A176C(*(void **)lbl_1_bss_6EAD0, 0x1f);
+    work[0x5600] = 0xb4;
+    work[0x5601] = 0;
+}
+#pragma opt_propagation reset
+/* fzgx:end fn_10_8538 */
+
 /* fzgx:begin fn_10_8780 */
 extern u8 lbl_10_bss_55601[7];
 extern u8 lbl_10_bss_55600;
@@ -1347,6 +1386,44 @@ void fn_10_FF08(void) {
     }
 }
 /* fzgx:end fn_10_FF08 */
+
+/* fzgx:begin fn_10_10D2C */
+typedef struct {
+    u32 unk_00;
+    f32 unk_04;
+    f32 unk_08;
+    f32 unk_0C;
+    u8 pad_10[0x20];
+    u32 unk_30;
+    u8 pad_34[0x24];
+} SelFontPacket;
+
+typedef struct {
+    u8 pad_000[0x174];
+    f32 unk_174;
+    u8 pad_178[0x180];
+    f32 unk_2F8;
+    f32 unk_2FC;
+} SelFloatPool;
+
+extern SelFontPacket lbl_1_rodata_26F8;
+extern SelFloatPool lbl_10_rodata_158;
+extern int fn_1_4F734(SelFontPacket *);
+
+#pragma opt_propagation off
+void fn_10_10D2C(void) {
+    SelFloatPool *pool = &lbl_10_rodata_158;
+    SelFontPacket local = lbl_1_rodata_26F8;
+
+    local.unk_00 = 0x9A11;
+    local.unk_04 = pool->unk_2F8;
+    local.unk_08 = pool->unk_2FC;
+    local.unk_0C = pool->unk_174;
+    local.unk_30 = 0xA;
+    fn_1_4F734(&local);
+}
+#pragma opt_propagation reset
+/* fzgx:end fn_10_10D2C */
 
 /* fzgx:begin fn_10_13D64 */
 extern struct fn_10_13D64_lbl_10_rodata_158 lbl_10_rodata_158;
