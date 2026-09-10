@@ -238,6 +238,104 @@ void fn_1_CA690(void *self, s32 arg1, s32 arg2) {
 }
 /* fzgx:end fn_1_CA690 */
 
+/* fzgx:begin fn_1_CADC4 noprologue */
+#include "types.h"
+
+struct fn_1_CADC4_Copy88 { u32 a[22]; };
+struct fn_1_CADC4_lbl_1_data_3D544 {
+    u32 unk_0[1];
+};
+extern f32 lbl_1_rodata_5CD4;
+extern f32 lbl_1_rodata_5D1C;
+extern f32 lbl_1_rodata_5D90;
+extern f32 lbl_1_rodata_5DDC;
+extern f32 lbl_1_rodata_5DE0;
+extern f32 lbl_1_rodata_5DE4;
+extern struct fn_1_CADC4_lbl_1_data_3D544 lbl_1_data_3D544;
+extern u32 lbl_1_data_3D57C;
+extern u32 lbl_1_rodata_26F8;
+extern f32 fn_1_8652C(int);
+extern u32 fn_1_5910(void);
+extern void fn_1_49410(void);
+extern void fn_1_494DC(s16);
+extern void fn_1_496FC(f32, f32);
+extern void fn_1_4966C(f32, f32);
+extern void fn_1_49728(u8);
+extern void fn_1_4AE0C(const char *, ...);
+extern void fn_1_51E60(u32);
+
+struct FzgxCopy_88 { u32 words[22]; };
+void fn_1_CADC4(s32 arg0) {
+    struct FzgxCopy_88 loc_8;
+    s32 sp4;
+    s32 temp_r31;
+
+    temp_r31 = (s32) fn_1_8652C((s32)(arg0));
+    if (((*(u32 *)&((&lbl_1_data_3D544)[fn_1_5910()])) >> 0x1BU) & 1) {
+        fn_1_49410();
+        fn_1_494DC((s16)(0xF));
+        fn_1_496FC((f32)(*(f32 *)((u8 *)(&lbl_1_rodata_5D1C) + 0)), (f32)(*(f32 *)((u8 *)(&lbl_1_rodata_5DDC) + 0)));
+        fn_1_4966C((f32)(*(f32 *)((u8 *)(&lbl_1_rodata_5CD4) + 0)), (f32)(*(f32 *)((u8 *)(&lbl_1_rodata_5D90) + 0)));
+        fn_1_49728((u8)(1U));
+        fn_1_4AE0C((const char *)((s8 *) &lbl_1_data_3D57C), temp_r31);
+        loc_8 = *(const struct FzgxCopy_88 *)((((s32)(((u8 *)(&lbl_1_rodata_26F8) + -4))) + 4));
+        loc_8.words[0] = 0x9401;
+        (*(f32 *)((u8 *)(&loc_8) + 4)) = *(f32 *)((u8 *)(&lbl_1_rodata_5DE0) + 0);
+        (*(f32 *)((u8 *)(&loc_8) + 8)) = *(f32 *)((u8 *)(&lbl_1_rodata_5DE4) + 0);
+        fn_1_51E60((u32)((u32)(&loc_8)));
+    }
+}
+/* fzgx:end fn_1_CADC4 */
+
+/* fzgx:begin fn_1_CAEBC noprologue */
+#include "types.h"
+#include "font.h"
+
+struct fn_1_CAEBC_Copy88 { u32 a[22]; };
+struct fn_1_CAEBC_lbl_1_data_3D544 {
+    u32 unk_0[1];
+};
+extern f32 lbl_1_rodata_5CFC;
+extern f32 lbl_1_rodata_5D90;
+extern f32 lbl_1_rodata_5DE8;
+extern f32 lbl_1_rodata_5DEC;
+extern f64 lbl_1_rodata_5C00;
+extern struct fn_1_CAEBC_lbl_1_data_3D544 lbl_1_data_3D544;
+extern u32 lbl_1_data_3D57C;
+extern u32 lbl_1_rodata_26F8;
+extern f32 fn_1_8652C(int);
+extern u32 fn_1_5910(void);
+extern void fn_1_49410(void);
+extern void fn_1_494DC(s16);
+extern void fn_1_496FC(f32, f32);
+extern void fn_1_4955C(f32, f32);
+extern void fn_1_4966C(f32, f32);
+extern void fn_1_4AE0C(const char *, ...);
+extern int fn_1_4F734(FontDrawPacket *);
+
+struct FzgxCopy_88 { u32 words[22]; };
+void fn_1_CAEBC(s32 arg0, s32 arg1, s32 arg2) {
+    FontDrawPacket loc_8;
+    s32 sp4;
+    s32 temp_r31;
+
+    temp_r31 = (s32) fn_1_8652C((s32)(arg0));
+    if (((*(u32 *)&((&lbl_1_data_3D544)[fn_1_5910()])) >> 0x1BU) & 1) {
+        fn_1_49410();
+        fn_1_494DC((s16)(0xF));
+        fn_1_496FC((f32)((f32) arg1), (f32)((f32) arg2));
+        fn_1_4955C((f32)(*(f32 *)((u8 *)(&lbl_1_rodata_5DE8) + 0)), (f32)(*(f32 *)((u8 *)(&lbl_1_rodata_5DEC) + 0)));
+        fn_1_4966C((f32)(*(f32 *)((u8 *)(&lbl_1_rodata_5CFC) + 0)), (f32)(*(f32 *)((u8 *)(&lbl_1_rodata_5D90) + 0)));
+        fn_1_4AE0C((const char *)((s8 *) &lbl_1_data_3D57C), temp_r31);
+        loc_8 = *(const FontDrawPacket *)((((s32)(((u8 *)(&lbl_1_rodata_26F8) + -4))) + 4));
+        loc_8.image = 0x9401;
+        loc_8.x = (f32) (arg1 + 0x45);
+        loc_8.y = (f32) (arg2 + 0xA);
+        fn_1_4F734((FontDrawPacket *)(&loc_8));
+    }
+}
+/* fzgx:end fn_1_CAEBC */
+
 /* fzgx:begin fn_1_CB404 */
 // Set the state flag for the selected enemy-control entry.
 void fn_1_CB404(u8 value) {

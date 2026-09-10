@@ -53,6 +53,57 @@ extern void *memcpy(void *, const void *, u32);
 extern const f32 lbl_1_rodata_29A4;
 extern f64 lbl_1_rodata_2988;
 
+/* fzgx:begin fn_1_58C6C noprologue */
+#include "types.h"
+
+struct fn_1_58C6C_lbl_1_bss_6C848_T {
+    u8 unk_0;
+    u8 pad_1[0x7];
+    u32 unk_8;
+    s16 unk_C;
+    u8 pad_E[0xC];
+    u16 unk_1A;
+};
+struct fn_1_58C6C_lbl_1_bss_6C84C_T {
+    u8 unk_0;
+    u8 pad_1[0x7];
+    u32 unk_8;
+    s16 unk_C;
+    u8 pad_E[0xC];
+    u16 unk_1A;
+};
+extern struct fn_1_58C6C_lbl_1_bss_6C848_T *lbl_1_bss_6C848;
+extern struct fn_1_58C6C_lbl_1_bss_6C84C_T *lbl_1_bss_6C84C;
+extern u32 fn_1_620C8(void *);
+
+
+void fn_1_58C6C(void) {
+    struct fn_1_58C6C_lbl_1_bss_6C848_T *var_r31;
+    s32 var_r30;
+    s32 var_r30_2;
+    struct fn_1_58C6C_lbl_1_bss_6C84C_T *var_r31_2;
+
+    var_r30 = 0xBE;
+    var_r31 = (struct fn_1_58C6C_lbl_1_bss_6C848_T *)(*(struct fn_1_58C6C_lbl_1_bss_6C848_T **)((u8 *)(&lbl_1_bss_6C848) + 0));
+    do {
+        if (((s16) var_r31->unk_C == 0x19) && ((s8) var_r31->unk_0 != 0) && ((s32) var_r31->unk_1A != 0) && !(var_r31->unk_8 & 0x80000000)) {
+            fn_1_620C8((void *)(var_r31));
+        }
+        var_r30 -= 1;
+        var_r31 = (struct fn_1_58C6C_lbl_1_bss_6C848_T *)((u8 *)(var_r31) + 0xE8);
+    } while (var_r30 > 0);
+    var_r30_2 = 0xC8;
+    var_r31_2 = (struct fn_1_58C6C_lbl_1_bss_6C84C_T *)(*(struct fn_1_58C6C_lbl_1_bss_6C84C_T **)((u8 *)(&lbl_1_bss_6C84C) + 0));
+    do {
+        if (((s16) var_r31_2->unk_C == 0x19) && ((s8) var_r31_2->unk_0 != 0) && ((s32) var_r31_2->unk_1A != 0) && !(var_r31_2->unk_8 & 0x80000000)) {
+            fn_1_620C8((void *)(var_r31_2));
+        }
+        var_r30_2 -= 1;
+        var_r31_2 = (struct fn_1_58C6C_lbl_1_bss_6C84C_T *)((u8 *)(var_r31_2) + 0xE8);
+    } while (var_r30_2 > 0);
+}
+/* fzgx:end fn_1_58C6C */
+
 /* fzgx:begin fn_1_58D38 */
 typedef struct fn_1_58D38_EffectEntry {
     s8 unk_00;

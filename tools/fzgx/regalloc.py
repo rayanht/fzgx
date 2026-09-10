@@ -265,15 +265,20 @@ def scope_moves(body: str, name: str) -> List[Tuple[str, str]]:
     return out
 
 
-MULTI_RE = re.compile(r"^([ \t]+)((?:struct\s+\w+|[A-Za-z_]\w*)\s*)((?:\*?\s*[A-Za-z_]\w*(?:\[[^\]]*\])*\s*,\s*)+\*?\s*[A-Za-z_]\w*(?:\[[^\]]*\])*)\s*;[ \t]*$", re.M)
-
-
 def normalise(body: str) -> str:
     """One declarator per line (`u32 a, b;` -> `u32 a;\n u32 b;`), so every family sees every local."""
-    def one(m):
-        ind, typ, decls = m.group(1), m.group(2).strip(), m.group(3)
-        return "\n".join(f"{ind}{typ} {d.strip()};" for d in decls.split(","))
-    return MULTI_RE.sub(one, body)
+    lines = []
+    for line in body.splitlines(keepends=True):
+        # Match only a declaration prefix before splitting declarators. A repeated
+        # declaration regex backtracks exponentially on long generated call lines.
+        match = re.fullmatch(r'([ \t]+)(struct[ \t]+\w+|[A-Za-z_]\w*)[ \t]+([^;]+);[ \t]*(\n?)', line)
+        if match and ',' in match[3]:
+            decls = match[3].split(',')
+            if all(re.fullmatch(r'\*?\s*[A-Za-z_]\w*(?:\[[^\]]*\])*\s*', decl) for decl in decls):
+                lines.append('\n'.join(f'{match[1]}{match[2]} {decl.strip()};' for decl in decls) + match[4])
+                continue
+        lines.append(line)
+    return ''.join(lines)
 
 
 def search(p: Project, symbol: str, body: str, budget_s: float = 8.0, max_orders: int = 720,

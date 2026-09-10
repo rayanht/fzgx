@@ -494,6 +494,64 @@ GameCameraEntry *game_camera_get(void) {
 }
 /* fzgx:end game_camera_get */
 
+/* fzgx:begin fn_1_AA54 noprologue */
+#include "types.h"
+
+struct fn_1_AA54_Arg0 {
+    u8 pad_0[0x2];
+    s16 unk_2;
+};
+struct fn_1_AA54_lbl_1_rodata_388 {
+    f64 unk_0;
+};
+extern f64 lbl_1_rodata_360;
+extern s16 lbl_1_bss_960;
+extern struct fn_1_AA54_lbl_1_rodata_388 lbl_1_rodata_388;
+extern u8 fn_1_86678(int);
+extern s8 fn_1_86634(int);
+extern s16 camera_get_entry_field_0xa8(u32);
+extern u32 fn_1_864E8(int);
+extern void camera_set_entry_field_0xa8(u8, s16);
+extern u16 fn_1_8664C(int);
+
+
+void fn_1_AA54(void *arg0) {
+    s16 temp_r28;
+    u8 temp_r31;
+    u8 temp_r3;
+
+    temp_r31 = fn_1_86678((s32) (*(s16 *)((u8 *)(arg0) + 2)));
+    temp_r3 = fn_1_86634((s32) (*(s16 *)((u8 *)(arg0) + 2)));
+    temp_r28 = camera_get_entry_field_0xa8((u32) temp_r3);
+    if (((s16) (*(s16 *)((u8 *)(&lbl_1_bss_960) + 0)) != 9) && (fn_1_864E8((s32) (*(s16 *)((u8 *)(arg0) + 2))) & 0x10000)) {
+        camera_set_entry_field_0xa8(temp_r3, 2);
+        return;
+    }
+    if (!(fn_1_864E8((s32) (*(s16 *)((u8 *)(arg0) + 2))) & 1)) {
+        if (fn_1_864E8((s32) (*(s16 *)((u8 *)(arg0) + 2))) & 0x800) {
+            camera_set_entry_field_0xa8(temp_r3, 5);
+            return;
+        }
+        if (!(fn_1_864E8((s32) (*(s16 *)((u8 *)(arg0) + 2))) & 0x80)) {
+            goto block_7; /* Preserves the retail branch. */
+        }
+    } else {
+block_7:
+        if ((f64) (*(f64 *)((u8 *)(&lbl_1_rodata_360) + 0)) == (f64) (f64) fn_1_8664C((s32) (*(s16 *)((u8 *)(arg0) + 2)))) {
+            camera_set_entry_field_0xa8(temp_r3, 3);
+            return;
+        }
+        if (fn_1_8664C((s32) (*(s16 *)((u8 *)(arg0) + 2))) == 0x14) {
+            camera_set_entry_field_0xa8(temp_r3, 0);
+            return;
+        }
+        if ((s8) temp_r31 >= 0) {
+            camera_set_entry_field_0xa8(temp_r3, temp_r28);
+        }
+    }
+}
+/* fzgx:end fn_1_AA54 */
+
 /* fzgx:begin camera_get_position_delta */
 typedef struct Vec3 {
     f32 x;

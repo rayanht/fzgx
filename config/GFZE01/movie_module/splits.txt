@@ -1427,3 +1427,15 @@ rel/movie_module/fn_12_2FB84.c:
 
 rel/movie_module/fn_12_3379C.c:
 	.text       start:0x0003379C end:0x00033874 align:4
+
+rel/movie_module/fn_12_3670.c:
+	.text       start:0x00003670 end:0x00003710 align:4
+
+rel/movie_module/fn_12_2BAE0.c:
+	.text       start:0x0002BAE0 end:0x0002BCF4 align:4
+
+rel/movie_module/fn_12_147C.c:
+	.text       start:0x0000147C end:0x00001578 align:4
+
+rel/movie_module/fn_12_11A8.c:
+	.text       start:0x000011A8 end:0x0000132C align:4

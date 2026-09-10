@@ -246,11 +246,14 @@ class Project:
                         instructions[(section, int(match['addr'], 16))] = match['insn'].strip()
             modules[sym.module] = instructions
         instructions = modules[sym.module]
-        todo, seen, labels = [sym.addr], set(), {}
+        todo, seen, labels, states = [(sym.addr, {})], set(), {}, {}
         while todo:
-            addr = todo.pop()
-            if addr in seen:
+            addr, flags = todo.pop()
+            old = states.get(addr)
+            flags = flags if old is None else {bit: value for bit, value in old.items() if flags.get(bit) == value}
+            if old is not None and old == flags:
                 continue
+            states[addr] = dict(flags)
             insn = instructions.get((sym.section, addr))
             if insn is None:
                 cache[key] = None
@@ -259,18 +262,46 @@ class Project:
             mnemonic = insn.split()[0].rstrip('+-')
             if mnemonic in ('blr', 'bctr'):
                 continue
+            set_bit = re.fullmatch(r'cr(set|clr)\s+(?:cr([0-7]))?(lt|gt|eq|so|\d+)', insn)
+            if set_bit:
+                bit = (int(set_bit[2] or 0) * 4 + ('lt', 'gt', 'eq', 'so').index(set_bit[3])
+                       if not set_bit[3].isdigit() else int(set_bit[3]))
+                flags[bit] = set_bit[1] == 'set'
+            elif mnemonic.startswith(('cmp', 'fcmp')) or mnemonic.endswith('.'):
+                field = re.search(r'\bcr([0-7])\b', insn)
+                field = int(field[1]) if field else 0
+                flags = {bit: value for bit, value in flags.items() if bit // 4 != field}
+            elif mnemonic == 'mtcrf':
+                mask = int(insn.split()[1].rstrip(','), 0)
+                flags = {bit: value for bit, value in flags.items() if not mask & (128 >> (bit // 4))}
+            elif mnemonic.startswith('cr'):
+                operand = insn.split(None, 1)[1].split(',')[0].strip()
+                match = re.fullmatch(r'(?:cr([0-7]))?(lt|gt|eq|so)', operand)
+                if match:
+                    flags.pop(int(match[1] or 0) * 4 + ('lt', 'gt', 'eq', 'so').index(match[2]), None)
+                elif operand.isdigit():
+                    flags.pop(int(operand), None)
+            elif mnemonic in ('bl', 'bctrl', 'blrl'):
+                flags = {bit: value for bit, value in flags.items() if bit // 4 in (2, 3, 4)}
             branch = re.search(r'\b(\.L_([0-9A-Fa-f]+))$', insn)
             if mnemonic.startswith('b') and mnemonic not in ('bl', 'bctrl', 'blrl'):
-                if branch:
+                condition = re.fullmatch(r'b(eq|ne|lt|ge|gt|le)(?:lr|ctr)?', mnemonic)
+                taken = None
+                if condition:
+                    field = re.search(r'\bcr([0-7])\b', insn)
+                    bit = int(field[1] if field else 0) * 4 + {'eq': 2, 'ne': 2, 'lt': 0, 'ge': 0, 'gt': 1, 'le': 1}[condition[1]]
+                    if bit in flags:
+                        taken = flags[bit] == (condition[1] in ('eq', 'lt', 'gt'))
+                if branch and taken is not False:
                     dest = int(branch[2], 16)
                     if dest < sym.addr:
                         cache[key] = None
                         return None
                     labels[dest] = branch[1]
-                    todo.append(dest)
-                if mnemonic == 'b':
+                    todo.append((dest, dict(flags)))
+                if mnemonic == 'b' or taken is True:
                     continue
-            todo.append(addr + 4)
+            todo.append((addr + 4, dict(flags)))
         lines = []
         for addr in sorted(seen):
             if addr in labels:

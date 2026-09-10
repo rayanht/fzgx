@@ -735,6 +735,42 @@ void fn_1_2A678(Fn_1_2A678_Source *self, Fn_1_2A678_Dest *dest) {
 }
 /* fzgx:end fn_1_2A678 */
 
+/* fzgx:begin fn_1_2B478 noprologue */
+#include "types.h"
+
+struct fn_1_2B478_Arg0 {
+    u8 pad_0[0x1C8];
+    f32 unk_1C8;
+    u8 pad_1CC[0x2D0];
+    u32 unk_49C;
+};
+struct fn_1_2B478_lbl_801A6D00 {
+    u32 unk_0;
+};
+struct fn_1_2B478_lbl_801A66CC {
+    u32 unk_0;
+};
+extern f32 lbl_1_rodata_84C;
+extern f32 lbl_1_rodata_854;
+extern struct fn_1_2B478_lbl_801A66CC lbl_801A66CC;
+extern struct fn_1_2B478_lbl_801A6D00 lbl_801A6D00;
+extern f32 lbl_8006D6FC(void *, void *);
+
+
+f32 fn_1_2B478(void *arg0) {
+    void *temp_r5;
+
+    temp_r5 = (void *)(*(void **)((u8 *)(arg0) + 1180));
+    if (!((*(s32 *)((u8 *)(temp_r5) + 124)) & 0x01800000) || ((*(f32 *)((u8 *)(arg0) + 456)) <= (*(f32 *)((u8 *)(&lbl_1_rodata_84C) + 0)))) {
+        return *(f32 *)((u8 *)(&lbl_1_rodata_854) + 0);
+    }
+    (*(f32 *)((u8 *)(lbl_801A66CC.unk_0) + 212)) = (f32) -(*(f32 *)((u8 *)(lbl_801A6D00.unk_0) + 8));
+    (*(f32 *)((u8 *)(lbl_801A66CC.unk_0) + 216)) = (f32) -(*(f32 *)((u8 *)(lbl_801A6D00.unk_0) + 24));
+    (*(f32 *)((u8 *)(lbl_801A66CC.unk_0) + 220)) = (f32) -(*(f32 *)((u8 *)(lbl_801A6D00.unk_0) + 40));
+    return lbl_8006D6FC((void *)(lbl_801A66CC.unk_0 + 0xD4), (void *)((u8 *)(temp_r5) + 0x50));
+}
+/* fzgx:end fn_1_2B478 */
+
 /* fzgx:begin fn_1_2C688 noprologue */
 #include "types.h"
 

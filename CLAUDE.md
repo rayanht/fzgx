@@ -118,6 +118,19 @@ Rules that hold for everyone:
   never model them as ordinary calls. Self-xor/subtract zeroing idioms have no input.
   Fixup variants of the same symbol run serially because their scratch files are shared;
   different symbols may run in parallel. Keep the best saved draft when trying another backend.
+  Backend generation uses isolated worker processes because its IR adapters mutate class methods.
+  `fzgx lift --all --engine m2c --resume` reuses saved candidates and retries generation and
+  compilation failures; omit `--resume` when changing lowering for already compilable functions.
+  Compiler diagnostics and generation/scoring checkpoints stay under `.fzgx/lift/m2c/`.
+  Signature flow also covers unmapped DOL functions and switch destinations. A matched `void`
+  wrapper can omit a live return register; use caller consumption and callee register flow to
+  recover it. Varargs save areas are not fixed arguments, and CR1 controls floating varargs.
+  `machine.py` transports retail jump tables, shared stack-copy extents, packed byte/word
+  locals, and 64-bit call arguments. `ppc_lowering.py` carries XER_CA through arithmetic and
+  recovers consumed condition-register bits. Paired-single data stores must never disappear
+  as backend no-ops; only recognized FPR frame saves may be elided.
+  Declaration normalization must parse lines without nested repetition over arbitrary C;
+  the old regex stalled real drafts such as `fn_80005738` beyond repair time budgets.
 - The font/sprite UI interface has many large callers, but that dependency count is not
   evidence of a collapsible matching bucket: the corrected 318-function UI lift closed zero.
   `include/font.h` records the variadic text wrapper and 0x58-byte packet submission result;

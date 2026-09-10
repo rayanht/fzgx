@@ -37,6 +37,38 @@ void fn_3_11974(void) {
 }
 /* fzgx:end fn_3_11974 */
 
+/* fzgx:begin fn_3_11994 */
+struct Sig_fn_8004E278_fn_8004E278_Arg0 {
+    u32 unk_0;
+};
+
+extern void fn_80008BA8(struct Sig_fn_8004E278_fn_8004E278_Arg0 *, u32, u32);
+extern void fn_80008BEC(struct Sig_fn_8004E278_fn_8004E278_Arg0 *, int, u32);
+
+
+void fn_3_11994(s16 arg0, s16 arg1, s32 arg2, s32 arg3, s32 arg_sp0) {
+    s32 temp_r5;
+    u8 var_r30;
+    void *temp_r4;
+
+    var_r30 = 0;
+    while (var_r30 < 4U) {
+        if (arg0 != (s32) var_r30) {
+            temp_r5 = var_r30 * 0x2060;
+            temp_r4 = (void *)(arg2 + temp_r5);
+            if (arg1 == (s16) (*(s16 *)((u8 *)(temp_r4) + 0))) {
+                if ((*(s32 *)((u8 *)(temp_r4) + 4)) & 0x80000000) {
+                    fn_80008BA8((struct Sig_fn_8004E278_fn_8004E278_Arg0 *)(arg3 + temp_r5), (u32)(temp_r4), 0x2060U);
+                }
+            } else {
+                fn_80008BEC((struct Sig_fn_8004E278_fn_8004E278_Arg0 *)(arg3 + temp_r5), 0, 0x2060U);
+            }
+        }
+        var_r30 += 1;
+            }
+}
+/* fzgx:end fn_3_11994 */
+
 /* fzgx:begin fn_3_11F60 */
 struct Fn3State {
     u32 value0;

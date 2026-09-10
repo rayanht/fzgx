@@ -736,6 +736,41 @@ void fn_1_4DE44(void) {
 }
 /* fzgx:end fn_1_4DE44 */
 
+/* fzgx:begin fn_1_4DEC0 noprologue */
+#include "types.h"
+#include "font.h"
+
+typedef u32 (*fn_1_4DEC0_Fn0)(u32);
+struct fn_1_4DEC0_Copy88 { u32 a[22]; };
+extern u32 lbl_1_bss_4C688;
+extern int fn_1_4F734(FontDrawPacket *);
+
+struct FzgxCopy_88 { u32 words[22]; };
+void fn_1_4DEC0(void) {
+    struct FzgxCopy_88 loc_8;
+    s32 sp4;
+    s32 (*temp_r12)(u32 *);
+    s32 var_r31;
+    u32 *var_r30;
+
+    var_r31 = 0;
+    var_r30 = (u32 *)(&lbl_1_bss_4C688);
+    do {
+        if ((s32) (*(u32 *)((u8 *)(var_r30) + 0)) != 0) {
+            temp_r12 = (s32 (*)(u32 *))(*(s32 (**)(u32 *))((u8 *)(var_r30) + 124));
+            if (temp_r12 == NULL) {
+                loc_8 = *(const struct FzgxCopy_88 *)((((s32)(((u8 *)(var_r30) + 4))) + 4));
+                fn_1_4F734((FontDrawPacket *)((FontDrawPacket *) &loc_8));
+            } else {
+                temp_r12((u32 *)(var_r30));
+            }
+        }
+        var_r31 += 1;
+        var_r30 = (u32 *)((u8 *)(var_r30) + 0x80);
+    } while (var_r31 < 0x40);
+}
+/* fzgx:end fn_1_4DEC0 */
+
 /* fzgx:begin fn_1_4E0A4 */
 typedef struct FontMetric {
     f32 value;

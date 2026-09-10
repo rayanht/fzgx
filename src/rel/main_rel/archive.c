@@ -138,6 +138,51 @@ void fn_1_12B3BC(FnObj *arg0, void *arg1, void *arg2, void *arg3,
 }
 /* fzgx:end fn_1_12B3BC */
 
+/* fzgx:begin fn_1_12B3F8 noprologue */
+#include "types.h"
+
+struct fn_1_12B3F8_Arg5 {
+    u32 unk_0;
+};
+struct fn_1_12B3F8_lbl_1_bss_8B3A0 {
+    u8 pad_0[0x94];
+    u32 unk_94;
+};
+extern struct fn_1_12B3F8_lbl_1_bss_8B3A0 lbl_1_bss_8B3A0;
+extern void * fn_1_435C(void *);
+extern void fn_1_426C(u32);
+extern u32 fn_1_12DAEC(u32, u32, u32, void *, u32, u32, u32);
+extern u32 fn_1_12C524(u32);
+extern void fn_1_12C000(void *, s16);
+
+
+void fn_1_12B3F8(void *arg0, void *arg1, void *arg2, u32 arg3, u32 arg4, s32 *arg5, s32 arg_sp0) {
+    s16 var_r30;
+
+    if ((s32) (*(s32 *)((u8 *)(arg5) + 0)) != -1) {
+        fn_1_435C((void *)(arg2));
+        fn_1_426C((u32) (*(s32 *)((u8 *)(arg5) + 0)));
+        (*(s32 *)((u8 *)(arg5) + 0)) = -1;
+    }
+    if (!(lbl_1_bss_8B3A0.unk_94 & 0x80000000)) {
+        var_r30 = 4;
+        fn_1_12DAEC(*(u32 *)((u8 *)(arg0) + 4), *(u32 *)((u8 *)(arg0) + 8), *(u32 *)((u8 *)(arg0) + 24), (void *)(arg1), arg3, arg4, *(u32 *)((u8 *)(arg0) + 52));
+        fn_1_12C524(*(u32 *)((u8 *)(arg0) + 12));
+        if (lbl_1_bss_8B3A0.unk_94 & 0x20000000) {
+            var_r30 = 1;
+        } else if (lbl_1_bss_8B3A0.unk_94 & 0x40000) {
+            var_r30 = 2;
+        }
+        if (lbl_1_bss_8B3A0.unk_94 & 0x40000000) {
+            fn_1_12C000((void *)(*(void **)((u8 *)(arg0) + 36)), 4);
+        } else {
+            fn_1_12C000((void *)(*(void **)((u8 *)(arg0) + 36)), var_r30);
+        }
+        fn_1_12C000((void *)(*(void **)((u8 *)(arg0) + 32)), var_r30);
+    }
+}
+/* fzgx:end fn_1_12B3F8 */
+
 /* fzgx:begin fn_1_12BF7C noprologue */
 #include "types.h"
 

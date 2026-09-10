@@ -31,6 +31,70 @@ extern void lbl_8006DCA4(void *data);
 extern void fn_1_DB53C(void);
 extern void fn_1_103264(void *, void *);
 
+/* fzgx:begin fn_1_DA6A8 noprologue */
+#include "types.h"
+
+struct Sig_fn_80077B64_fn_80077B64_Arg0 {
+    u8 pad_0[0x4];
+    u32 unk_4;
+};
+
+struct Sig_fn_80077B14_fn_80077B14_Arg0 {
+    u8 pad_0[0x4];
+    u32 unk_4;
+    u8 pad_8[0x18];
+    u32 unk_20;
+};
+
+struct fn_1_DA6A8_Copy12 { u32 a[3]; };
+struct fn_1_DA6A8_lbl_801A6410 {
+    u32 unk_0;
+};
+extern struct fn_1_DA6A8_lbl_801A6410 lbl_801A6410;
+extern u32 lbl_1_data_3DC50;
+extern void * fn_80077B64(struct Sig_fn_80077B64_fn_80077B64_Arg0 *);
+extern s32 fn_80077B14(struct Sig_fn_80077B14_fn_80077B14_Arg0 *);
+extern void fn_1_46B4(u32, u32, const char *, int);
+
+struct FzgxCopy_12 { u32 words[3]; };
+void fn_1_DA6A8(void *arg0, struct Sig_fn_80077B64_fn_80077B64_Arg0 *arg1) {
+    s32 temp_r5;
+    s32 var_r3;
+    s32 var_r6;
+    u32 *temp_r30;
+    u32 temp_r4;
+    u32 temp_r4_2;
+    u32 temp_r4_3;
+    u32 var_r7;
+
+    if (arg0 != NULL) {
+        temp_r30 = (u32 *)(fn_80077B64((struct Sig_fn_80077B64_fn_80077B64_Arg0 *)(arg1)));
+        var_r3 = fn_80077B14((struct Sig_fn_80077B14_fn_80077B14_Arg0 *)((struct Sig_fn_80077B14_fn_80077B14_Arg0 *) arg1));
+        var_r7 = 0U;
+        var_r6 = 0;
+        while (var_r7 < (u32) (*(u32 *)((u8 *)(temp_r30) + 0))) {
+            var_r7 += 1;
+            temp_r5 = (*(u32 *)((u8 *)(arg0) + 28)) + var_r6;
+            var_r6 += 0xC;
+            *(struct FzgxCopy_12 *)(var_r3) = *(const struct FzgxCopy_12 *)(temp_r5);
+            var_r3 += 0x40;
+                    }
+        temp_r4 = *(u32 *)((u8 *)(arg0) + 20);
+        if (temp_r4 != 0) {
+            fn_1_46B4(lbl_801A6410.unk_0, temp_r4, (const char *)((s8 *) &lbl_1_data_3DC50), 0x6B6);
+        }
+        temp_r4_2 = *(u32 *)((u8 *)(arg0) + 24);
+        if (temp_r4_2 != 0) {
+            fn_1_46B4(lbl_801A6410.unk_0, temp_r4_2, (const char *)((s8 *) &lbl_1_data_3DC50), 0x6B9);
+        }
+        temp_r4_3 = *(u32 *)((u8 *)(arg0) + 28);
+        if (temp_r4_3 != 0) {
+            fn_1_46B4(lbl_801A6410.unk_0, temp_r4_3, (const char *)((s8 *) &lbl_1_data_3DC50), 0x6BC);
+        }
+    }
+}
+/* fzgx:end fn_1_DA6A8 */
+
 /* fzgx:begin fn_1_DA7B8 */
 #include "rel/main_rel/bg_san.h"
 

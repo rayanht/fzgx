@@ -4049,3 +4049,30 @@ dol/fn_8003458C.c:
 
 dol/fn_800218EC.c:
 	.text       start:0x800218EC end:0x80021910 align:4
+
+dol/fn_80071678.c:
+	.text       start:0x80071678 end:0x80071718 align:4
+
+dol/fn_80005A08.c:
+	.text       start:0x80005A08 end:0x80005AD0 align:4
+
+dol/fn_80070620.c:
+	.text       start:0x80070620 end:0x80070704 align:4
+
+dol/fn_80070538.c:
+	.text       start:0x80070538 end:0x80070620 align:4
+
+dol/fn_80070F44.c:
+	.text       start:0x80070F44 end:0x80071044 align:4
+
+dol/fn_80077E7C.c:
+	.text       start:0x80077E7C end:0x80077F8C align:4
+
+dol/fn_80077F8C.c:
+	.text       start:0x80077F8C end:0x800780A4 align:4
+
+dol/fn_800780A4.c:
+	.text       start:0x800780A4 end:0x800781B8 align:4
+
+dol/fn_80047608.c:
+	.text       start:0x80047608 end:0x8004768C align:4

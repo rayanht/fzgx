@@ -5072,3 +5072,39 @@ rel/main_rel/memcard/fn_1_AC79C.c:
 
 rel/main_rel/rob/fn_1_95EF0.c:
 	.text       start:0x00095EF0 end:0x00096130 align:4
+
+rel/main_rel/sel_static_disp/fn_1_13F8C4.c:
+	.text       start:0x0013F8C4 end:0x0013F948 align:4
+
+rel/main_rel/font/fn_1_4DEC0.c:
+	.text       start:0x0004DEC0 end:0x0004DF60 align:4
+
+rel/main_rel/memcard/fn_1_AD0A0.c:
+	.text       start:0x000AD0A0 end:0x000AD140 align:4
+
+rel/main_rel/stcoli/fn_1_2B478.c:
+	.text       start:0x0002B478 end:0x0002B524 align:4
+
+rel/main_rel/effect/fn_1_58C6C.c:
+	.text       start:0x00058C6C end:0x00058D38 align:4
+
+rel/main_rel/archive/fn_1_12B3F8.c:
+	.text       start:0x0012B3F8 end:0x0012B4EC align:4
+
+rel/main_rel/bg_san/fn_1_DA6A8.c:
+	.text       start:0x000DA6A8 end:0x000DA7B8 align:4
+
+rel/main_rel/_prolog/fn_1_407C.c:
+	.text       start:0x0000407C end:0x000041A8 align:4
+
+rel/main_rel/camera/fn_1_AA54.c:
+	.text       start:0x0000AA54 end:0x0000ABAC align:4
+
+rel/main_rel/driver/fn_1_A7F84.c:
+	.text       start:0x000A7F84 end:0x000A8270 align:4
+
+rel/main_rel/enemy_ctrl/fn_1_CAEBC.c:
+	.text       start:0x000CAEBC end:0x000CB028 align:4
+
+rel/main_rel/enemy_ctrl/fn_1_CADC4.c:
+	.text       start:0x000CADC4 end:0x000CAEBC align:4

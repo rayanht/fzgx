@@ -486,6 +486,36 @@ u32 fn_1_13F8B0(u32 key) {
 }
 /* fzgx:end fn_1_13F8B0 */
 
+/* fzgx:begin fn_1_13F8C4 noprologue */
+#include "types.h"
+
+struct fn_1_13F8C4_lbl_801A6410 {
+    u32 unk_0;
+};
+extern struct fn_1_13F8C4_lbl_801A6410 lbl_801A6410;
+extern u8 lbl_1_bss_8E3E4[];
+extern u8 lbl_1_data_419E0[];
+extern void fn_1_46B4(u32, void *, const char *, int);
+
+
+void fn_1_13F8C4(s32 arg_sp0) {
+    s32 temp_r27;
+    u8 var_r26;
+    void *temp_r4;
+
+    var_r26 = 0;
+    while (var_r26 < 8U) {
+        temp_r27 = (var_r26 * 4) & 0x3FC;
+        temp_r4 = (void *)(*(void **)((u8 *)(&lbl_1_bss_8E3E4[temp_r27]) + 0));
+        if (temp_r4 != NULL) {
+            fn_1_46B4(lbl_801A6410.unk_0, (void *)(temp_r4), (const char *)((s8 *) lbl_1_data_419E0), 0x150B);
+        }
+        (*(s32 *)((u8 *)(&lbl_1_bss_8E3E4[temp_r27]) + 0)) = 0;
+        var_r26 += 1;
+            }
+}
+/* fzgx:end fn_1_13F8C4 */
+
 /* fzgx:begin fn_1_13F948 */
 // Clear the cached static-display handles before rebuilding the resource set.
 void fn_1_13F948(void) {

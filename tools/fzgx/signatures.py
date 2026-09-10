@@ -208,8 +208,12 @@ class Index:
         if not constraints and key not in entries:
             return sig
         args = sig.args if sig else None
+        machine_variadic = key in getattr(self, 'variadic', set())
+        weak = sig is None or not sig.defined and not sig.origin.startswith('include/')
+        if key in entries and (weak or machine_variadic and not (args and '...' in args)):
+            args = None
         slots = self.registers(sig) if sig else None
-        if slots is not None:
+        if slots is not None and args is not None:
             # Some old matched wrappers omitted arguments passed through untouched.
             # A downstream call's entry liveness supplies those missing ABI slots.
             missing = required - {r for r, _ in slots}
@@ -219,7 +223,16 @@ class Index:
             regs = [f'r{k}' for k in range(3, max([int(r[1:]) for r in required if r.startswith('r')], default=2) + 1)]
             regs += [f'f{k}' for k in range(1, max([int(r[1:]) for r in required if r.startswith('f')], default=0) + 1)]
             args = tuple(constraints.get(('arg', r), ('f32' if r.startswith('f') else 'u32', None))[0] for r in regs)
+            if machine_variadic:
+                args += ('...',)
         result = sig.result if sig else 'u32'
+        header = sig is not None and sig.origin.startswith('include/')
+        if not header and key in getattr(self, 'float_returns', ()) and ('return', 'f1') in constraints:
+            inferred = constraints[('return', 'f1')][0]
+            if self.category(inferred) == 'float':
+                result = inferred
+        elif not header and result == 'void' and key in getattr(self, 'integer_returns', ()):
+            result = 'u32'
         rr = 'f1' if self.category(result) == 'float' else 'r3'
         if ('return', rr) in constraints and self.category(result) in ('integer', 'pointer'):
             inferred = constraints[('return', rr)][0]
@@ -229,7 +242,10 @@ class Index:
         slots = self.registers(Signature(result, args))
         if slots is not None:
             args = list(args)
-            for i, (reg, typ) in enumerate(slots):
+            cursor = 0
+            for i, typ in enumerate(args):
+                reg = slots[cursor][0]
+                cursor += 2 if self.category(typ) == 'wide' else 1
                 found = constraints.get(('arg', reg))
                 if found and self.category(typ) in ('integer', 'pointer') and self.category(found[0]) == 'pointer':
                     args[i] = found[0]
@@ -282,6 +298,12 @@ class Index:
                 if gpr > 10:
                     return None
                 out.append((f'r{gpr}', typ)); gpr += 1
+            elif category == 'wide':
+                gpr += (gpr % 2 == 0)
+                if gpr + 1 > 10:
+                    return None
+                out.extend(((f'r{gpr}', 'u32'), (f'r{gpr + 1}', 'u32')))
+                gpr += 2
             else:
                 return None
         return out
@@ -423,20 +445,31 @@ def propagate(index, module, names):
         seeds[node].add(typ)
         if sig:
             support[typ] = sig
-    parsed, required, variadic = {}, {}, set()
+    parsed, required, variadic, vararg_saves = {}, {}, set(), {}
+    index.float_returns = set()
+    index.integer_returns = set()
     volatile = {f'r{k}' for k in range(13)} | {f'f{k}' for k in range(14)}
     argument_regs = {f'r{k}' for k in range(3, 11)} | {f'f{k}' for k in range(1, 9)}
     for key, fn in functions.items():
-        ins, labels = [], {}
+        ins, labels, addresses = [], {}, {}
         for line in fn.asm:
             if line.strip().startswith('.L_') and line.strip().endswith(':'):
                 labels[line.strip()[:-1]] = len(ins)
             m = re.match(r'^[0-9A-Fa-f]+:\s*(\S+)\s*(.*)', line.strip())
             if m:
+                addresses[int(line.split(':')[0], 16)] = len(ins)
                 ins.append((m[1].rstrip('+-'), [x.strip() for x in m[2].split(',')] if m[2] else []))
+        switch_targets = []
+        if any(mn == 'bctr' for mn, _ in ins):
+            from .machine import assembly
+            switch_targets = sorted({addresses[int(address, 16)] for address in
+                                     re.findall(r'(?m)^\.4byte \.L_([0-9A-Fa-f]+)$', assembly(p, fn))
+                                     if int(address, 16) in addresses})
         def successors(i):
             mn, a = ins[i]
-            if mn in ('blr', 'bctr'):
+            if mn == 'bctr':
+                return switch_targets
+            if mn == 'blr':
                 return []
             nxt = [i + 1] if i + 1 < len(ins) else []
             if mn.startswith('b') and mn not in ('bl', 'bctrl', 'blrl'):
@@ -448,19 +481,31 @@ def propagate(index, module, names):
             return nxt
         edges = [successors(i) for i in range(len(ins))]
         parsed[key] = (fn, ins, edges)
+        # The CR1-guarded f1-f8 save and contiguous r3-r10 area identify the
+        # CodeWarrior varargs prologue. These stores are not fixed parameters.
+        save_sites = {i for i, (mn, a) in enumerate(ins[:100]) if mn in ('stw', 'stfd')
+                      and len(a) == 2 and re.fullmatch(r'(?:0x[0-9a-f]+|\d+)\(r1\)', a[1])
+                      and a[0] in argument_regs}
+        saved = {ins[i][1][0] for i in save_sites}
+        if argument_regs <= saved and any(mn == 'bne' and a[0] == 'cr1' for mn, a in ins[:100] if a):
+            variadic.add(key)
+            vararg_saves[key] = save_sites
         sig = index.get(fn.symbol.module, fn.symbol.name)
         if sig and sig.args and '...' in sig.args:
             variadic.add(key)
             sig = Signature(sig.result, sig.args[:sig.args.index('...')], sig.defined, sig.headers, sig.types, sig.origin)
         slots = index.registers(sig) if sig else None
-        required[key] = {r for r, _ in slots} if slots is not None else set()
-        if slots is not None:
+        strong = sig and (sig.defined or sig.origin.startswith('include/'))
+        required[key] = {r for r, _ in slots} if slots is not None and strong and key not in vararg_saves else set()
+        if slots is not None and strong:
             for r, typ in slots:
                 seed((key, 'arg', r), typ, sig)
-        if sig and index.category(sig.result) != 'void':
+        if strong and index.category(sig.result) not in ('void', 'wide'):
             seed((key, 'return', 'f1' if index.category(sig.result) == 'float' else 'r3'), sig.result, sig)
     def rw(key, i):
         fn, ins, _ = parsed[key]; mn, a = ins[i]
+        if i in vararg_saves.get(key, ()):
+            return {'r1'}, set()
         regs = set(re.findall(r'\b[rf]\d+\b', ','.join(a)))
         if mn in ('bl', 'bctrl', 'blrl'):
             if mn == 'bl' and a and re.fullmatch(r'_(save|rest)(gpr|fpr)_\d+', a[0]):
@@ -494,11 +539,12 @@ def propagate(index, module, names):
                     if value != live[i]:
                         live[i] = value; again = True
             entry = live[0] & argument_regs if live else set()
-            if key not in variadic and not entry <= required[key]:
+            if not entry <= required[key]:
                 required[key] |= entry; changed = True
         if not changed:
             break
     index.required = {**getattr(index, 'required', {}), **required}
+    index.variadic = variadic
     for key, (fn, ins, edges) in parsed.items():
         if not ins:
             continue
@@ -513,6 +559,14 @@ def propagate(index, module, names):
                 # treating them as C calls erases parameters before the first statement.
                 return out
             if record:
+                for reg in reads:
+                    if state.get(reg) and state[reg][1:] == ('return', 'r3'):
+                        index.integer_returns.add(state[reg][0])
+                for reg in reads:
+                    if reg.startswith('f') and state.get(reg) and i not in vararg_saves.get(key, ()):
+                        seed(state[reg], 'f32')
+                        if state[reg][1:] == ('return', 'f1'):
+                            index.float_returns.add(state[reg][0])
                 for operand in a[1:] if mn.startswith(('l', 'st')) else []:
                     mem = re.search(r'\((r\d+)\)', operand)
                     if mem and mem[1] != 'r1' and state.get(mem[1]):
@@ -529,17 +583,27 @@ def propagate(index, module, names):
                 if callee:
                     out['r3'] = (callee, 'return', 'r3')
                     out['f1'] = (callee, 'return', 'f1')
-            elif mn in ('mr', 'mr.', 'fmr') and len(a) == 2:
+            elif mn in ('mr', 'mr.', 'fmr', 'fneg', 'fabs', 'fnabs') and len(a) == 2:
                 out[a[0]] = state.get(a[1])
             else:
                 for r in writes:
                     out.pop(r, None)
-            if record and mn == 'blr':
+                if a and a[0].startswith('f') and (mn.startswith(('lfs', 'lfd'))
+                        or mn.startswith('f') and mn not in ('fctiw', 'fctiwz')):
+                    node = (key, 'value', str(i))
+                    out[a[0]] = node
+                    if record:
+                        seed(node, 'f32' if mn.startswith('lfs') or mn.rstrip('.').endswith('s') or mn == 'frsp' else 'f64')
+            if record and (mn == 'blr' or mn.endswith('lr') and mn.startswith('b')):
                 sig = index.get(fn.symbol.module, fn.symbol.name)
                 if sig and index.category(sig.result) != 'void':
                     r = 'f1' if index.category(sig.result) == 'float' else 'r3'
                     if state.get(r):
                         join(state[r], (key, 'return', r))
+                if (not sig or not sig.origin.startswith('include/')) and state.get('f1'):
+                    origin = state['f1']
+                    if origin != (key, 'arg', 'f1'):
+                        join(origin, (key, 'return', 'f1'))
             return {r: origin for r, origin in out.items() if origin is not None}
         while queue:
             i = queue.popleft(); out = transfer(i, states[i])
@@ -556,6 +620,8 @@ def propagate(index, module, names):
     for node in parent.keys() | seeds.keys():
         types = set(groups[root(node)])
         pointers = {t for t in types if index.category(t) == 'pointer'}
+        if types and all(index.category(t) == 'float' for t in types):
+            types = {'f64' if types & {'f64', 'double'} else 'f32'}
         if pointers:
             # Register-sized integer definitions cannot distinguish a pointer from its bit pattern.
             types = pointers - {'void *'} or pointers

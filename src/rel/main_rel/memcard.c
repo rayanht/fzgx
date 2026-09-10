@@ -1556,6 +1556,35 @@ void fn_1_AD09C(void) {
 }
 /* fzgx:end fn_1_AD09C */
 
+/* fzgx:begin fn_1_AD0A0 noprologue */
+#include "types.h"
+#include "dolphin/card.h"
+#include "dolphin/card/CARDPriv.h"
+
+struct fn_1_AD0A0_Arg0 {
+    u8 pad_0[0x2C];
+    u8 unk_2C;
+};
+extern f32 lbl_1_rodata_4CD0;
+extern f64 lbl_1_rodata_4CB8;
+extern s32 CARDGetStatus(s32, s32, CARDStat *);
+
+
+void fn_1_AD0A0(void *arg0) {
+    u8 temp_r4;
+
+    temp_r4 = *(u8 *)((u8 *)(arg0) + 44);
+    if (temp_r4 < 0x7FU) {
+        (*(s32 *)((u8 *)((*(void **)((u8 *)(arg0) + 36))) + 4)) = CARDGetStatus((s32) (*(u8 *)((u8 *)(arg0) + 0)), (s32) temp_r4, (CARDStat *)((u8 *)((*(void **)((u8 *)(arg0) + 36))) + 0x20));
+    }
+    (*(f32 *)((u8 *)(arg0) + 56)) = (f32) ((f32) (*(u8 *)((u8 *)(arg0) + 44)) / (*(f32 *)((u8 *)(&lbl_1_rodata_4CD0) + 0)));
+    if ((u8) (*(u8 *)((u8 *)(arg0) + 44)) == 0x7E) {
+        (*(u8 *)((u8 *)(arg0) + 42)) = (u8) ((*(u8 *)((u8 *)(arg0) + 42)) & 0xFFFFFFFD);
+        (*(s16 *)((u8 *)((*(void **)((u8 *)(arg0) + 36))) + 2)) = 0;
+    }
+}
+/* fzgx:end fn_1_AD0A0 */
+
 /* fzgx:begin fn_1_AD140 */
 #include "rel/main_rel/globals.h"
 

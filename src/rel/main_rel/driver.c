@@ -197,6 +197,103 @@ void fn_1_A7B30(s32 index, FnA7B30Vector *out) {
 }
 /* fzgx:end fn_1_A7B30 */
 
+/* fzgx:begin fn_1_A7F84 noprologue */
+#include "types.h"
+
+struct fn_1_A7F84_lbl_1_rodata_4A28 {
+    f32 unk_0;
+};
+struct fn_1_A7F84_lbl_801A6D00 {
+    u32 unk_0;
+};
+extern struct fn_1_A7F84_lbl_1_rodata_4A28 lbl_1_rodata_4A28;
+extern struct fn_1_A7F84_lbl_801A6D00 lbl_801A6D00;
+extern u32 jumptable_1_data_3439C;
+extern u32 lbl_8006D91C(u32);
+extern u32 mathutil_mtxA_rotate_y(u32);
+extern void mathutil_mtxA_rotate_x(u32);
+extern u32 lbl_8006D998(u32);
+
+
+void fn_1_A7F84(void *arg0, u32 arg1) {
+    switch (arg1) {
+    case 0:
+        lbl_8006D91C(0U);
+        mathutil_mtxA_rotate_y(0U);
+        mathutil_mtxA_rotate_x((u32) (*(s16 *)((u8 *)(arg0) + 0)));
+        return;
+    case 1:
+        lbl_8006D91C(0x4000U);
+        mathutil_mtxA_rotate_y((u32) (*(s16 *)((u8 *)(arg0) + 2)));
+        mathutil_mtxA_rotate_x(0x4000U);
+        return;
+    case 2:
+        lbl_8006D998(0x4000U);
+        mathutil_mtxA_rotate_y((u32) (*(s16 *)((u8 *)(arg0) + 4)));
+        mathutil_mtxA_rotate_x(0U);
+        (*(f32 *)((u8 *)(lbl_801A6D00.unk_0) + 12)) = (f32) lbl_1_rodata_4A28.unk_0;
+        (*(f32 *)((u8 *)(lbl_801A6D00.unk_0) + 28)) = (f32) (*(f32 *)((u8 *)(arg0) + 28));
+        (*(f32 *)((u8 *)(lbl_801A6D00.unk_0) + 44)) = (f32) (*(f32 *)((u8 *)(arg0) + 32));
+        return;
+    case 3:
+        lbl_8006D998((u32) (*(s16 *)((u8 *)(arg0) + 10)));
+        mathutil_mtxA_rotate_y((u32) (*(s16 *)((u8 *)(arg0) + 8)));
+        mathutil_mtxA_rotate_x((u32) (*(s16 *)((u8 *)(arg0) + 6)));
+        (*(f32 *)((u8 *)(lbl_801A6D00.unk_0) + 12)) = (f32) (*(f32 *)((u8 *)(arg0) + 36));
+        (*(f32 *)((u8 *)(lbl_801A6D00.unk_0) + 28)) = (f32) (*(f32 *)((u8 *)(arg0) + 40));
+        (*(f32 *)((u8 *)(lbl_801A6D00.unk_0) + 44)) = (f32) (*(f32 *)((u8 *)(arg0) + 44));
+        return;
+    case 4:
+        lbl_8006D998((u32) (*(s16 *)((u8 *)(arg0) + 16)));
+        mathutil_mtxA_rotate_y((u32) (*(s16 *)((u8 *)(arg0) + 14)));
+        mathutil_mtxA_rotate_x((u32) (*(s16 *)((u8 *)(arg0) + 12)));
+        (*(f32 *)((u8 *)(lbl_801A6D00.unk_0) + 12)) = (f32) (*(f32 *)((u8 *)(arg0) + 48));
+        (*(f32 *)((u8 *)(lbl_801A6D00.unk_0) + 28)) = (f32) (*(f32 *)((u8 *)(arg0) + 52));
+        (*(f32 *)((u8 *)(lbl_801A6D00.unk_0) + 44)) = (f32) (*(f32 *)((u8 *)(arg0) + 56));
+        return;
+    case 5:
+        lbl_8006D998((u32) (s16) (-0x4000 - ((*(s16 *)((u8 *)(arg0) + 10)) + 0x4000)));
+        mathutil_mtxA_rotate_y((u32) (*(s16 *)((u8 *)(arg0) + 8)));
+        mathutil_mtxA_rotate_x((u32) (s16) (-0x4000 - ((*(s16 *)((u8 *)(arg0) + 6)) + 0x4000)));
+        (*(f32 *)((u8 *)(lbl_801A6D00.unk_0) + 12)) = (f32) -(*(f32 *)((u8 *)(arg0) + 36));
+        (*(f32 *)((u8 *)(lbl_801A6D00.unk_0) + 28)) = (f32) (*(f32 *)((u8 *)(arg0) + 40));
+        (*(f32 *)((u8 *)(lbl_801A6D00.unk_0) + 44)) = (f32) (*(f32 *)((u8 *)(arg0) + 44));
+        return;
+    case 6:
+        lbl_8006D998((u32) (s16) (0x4000 - ((*(s16 *)((u8 *)(arg0) + 16)) - 0x4000)));
+        mathutil_mtxA_rotate_y((u32) (*(s16 *)((u8 *)(arg0) + 14)));
+        mathutil_mtxA_rotate_x((u32) (s16) (0x4000 - ((*(s16 *)((u8 *)(arg0) + 12)) - 0x4000)));
+        (*(f32 *)((u8 *)(lbl_801A6D00.unk_0) + 12)) = (f32) -(*(f32 *)((u8 *)(arg0) + 48));
+        (*(f32 *)((u8 *)(lbl_801A6D00.unk_0) + 28)) = (f32) (*(f32 *)((u8 *)(arg0) + 52));
+        (*(f32 *)((u8 *)(lbl_801A6D00.unk_0) + 44)) = (f32) (*(f32 *)((u8 *)(arg0) + 56));
+        return;
+    case 7:
+        lbl_8006D91C(-0x4000U);
+        mathutil_mtxA_rotate_y((u32) (*(s16 *)((u8 *)(arg0) + 18)));
+        mathutil_mtxA_rotate_x(-0x4000U);
+        return;
+    case 8:
+        lbl_8006D998((u32) (s16) (0x4000 - ((*(s16 *)((u8 *)(arg0) + 24)) - 0x4000)));
+        mathutil_mtxA_rotate_y((u32) (*(s16 *)((u8 *)(arg0) + 22)));
+        mathutil_mtxA_rotate_x((u32) (s16) (0x4000 - ((*(s16 *)((u8 *)(arg0) + 20)) - 0x4000)));
+        (*(f32 *)((u8 *)(lbl_801A6D00.unk_0) + 12)) = (f32) -(*(f32 *)((u8 *)(arg0) + 60));
+        (*(f32 *)((u8 *)(lbl_801A6D00.unk_0) + 28)) = (f32) (*(f32 *)((u8 *)(arg0) + 64));
+        (*(f32 *)((u8 *)(lbl_801A6D00.unk_0) + 44)) = (f32) (*(f32 *)((u8 *)(arg0) + 68));
+        return;
+    case 9:
+        lbl_8006D998((u32) (*(s16 *)((u8 *)(arg0) + 24)));
+        mathutil_mtxA_rotate_y((u32) (*(s16 *)((u8 *)(arg0) + 22)));
+        mathutil_mtxA_rotate_x((u32) (*(s16 *)((u8 *)(arg0) + 20)));
+        (*(f32 *)((u8 *)(lbl_801A6D00.unk_0) + 12)) = (f32) (*(f32 *)((u8 *)(arg0) + 60));
+        (*(f32 *)((u8 *)(lbl_801A6D00.unk_0) + 28)) = (f32) (*(f32 *)((u8 *)(arg0) + 64));
+        (*(f32 *)((u8 *)(lbl_801A6D00.unk_0) + 44)) = (f32) (*(f32 *)((u8 *)(arg0) + 68));
+        /* fallthrough */
+    default:
+        return;
+    }
+}
+/* fzgx:end fn_1_A7F84 */
+
 /* fzgx:begin fn_1_A8528 */
 typedef struct FnA8528Object {
     u8 pad_ea[0xea];

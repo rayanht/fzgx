@@ -611,7 +611,9 @@ def compile_many(project: Project, module: str, sources: List[Path], out_dir: Pa
         o.unlink(missing_ok=True)
 
     def one_chunk(chunk: List[Path]) -> None:
-        subprocess.run(base_cmd + [str(s) for s in chunk], cwd=ROOT, text=True, capture_output=True, timeout=900)
+        result = subprocess.run(base_cmd + [str(s) for s in chunk], cwd=ROOT, text=True, capture_output=True, timeout=900)
+        # Retain actual compiler diagnostics for deterministic repair passes.
+        (out_dir / (chunk[0].stem + '.log')).write_text(result.stdout + result.stderr)
 
     # parallel: chunks of up to COMPILE_CHUNK sources, COMPILE_WORKERS mwcc processes at once
     # (a process start is ~80 ms, a source in a batch ~2-8 ms)

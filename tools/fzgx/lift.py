@@ -2726,7 +2726,7 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
 
 def apply(p: Project, modules: Optional[List[str]] = None, max_size: int = 160, limit: int = 2000,
           workers: int = 12, submit: bool = True, tu: Optional[str] = None,
-          callees: Optional[List[str]] = None, engine: str = 'lift') -> Dict[str, object]:
+          callees: Optional[List[str]] = None, engine: str = 'lift', resume: bool = False) -> Dict[str, object]:
     """Lift every unmatched function of the given size that the lifter accepts, check each
     against retail, submit the matches (carve-at-submit; `fzgx verify` relinks once)."""
     import sqlite3
@@ -2780,7 +2780,59 @@ def apply(p: Project, modules: Optional[List[str]] = None, max_size: int = 160, 
     linkfail = {s for (s,) in db.execute("select symbol from attempts a where id = (select max(id) from attempts b where b.symbol = a.symbol) and outcome = 'link-mismatch'")}
     lifted = []
     errors = {}
-    for row_index, (s, m, size) in enumerate(rows):
+    serial_rows = rows
+    out_dir = STATE_DIR / "lift" / engine if engine != 'lift' else STATE_DIR / "lift"
+    if resume:
+        if engine != 'm2c':
+            raise ValueError('--resume requires --engine m2c')
+        previous_errors = json.loads((out_dir / 'errors.json').read_text())
+        failed_compile = set()
+        previous_results = out_dir / 'results.json'
+        if previous_results.exists():
+            best_scores = {}
+            for s, _, _, _, percent in json.loads(previous_results.read_text()):
+                best_scores[s] = max(best_scores.get(s, -1), percent)
+            failed_compile = {s for s, percent in best_scores.items() if percent < 0}
+        retry = []
+        for s, m, size in rows:
+            sources = [out_dir / (s.replace(':', '__') + suffix + '.c') for suffix in ('', '__v1')]
+            if s in previous_errors or s in failed_compile or not sources[0].exists():
+                retry.append((s, m, size))
+            else:
+                for vi, source in enumerate(sources):
+                    if source.exists():
+                        lifted.append((s if vi == 0 else f'{s}#{vi}', size, source.read_text()))
+        serial_rows = retry
+    if engine == 'm2c' and workers > 1:
+        from concurrent.futures import ProcessPoolExecutor, as_completed
+        from .machine import generate_batch
+        import sys
+        groups = {}
+        owners = {}
+        for module in modules or p.modules:
+            path = p.module_config_dir(module) / 'tus.json'
+            if path.exists():
+                for entry in json.loads(path.read_text())['tus']:
+                    owners.update({(module, name): entry['file'] for name in entry['functions']})
+        for row in serial_rows:
+            s, m, _ = row
+            if s not in linkfail:
+                groups.setdefault((m, owners.get((m, s.split(':')[-1]))), []).append(row)
+        batches = [group[i:i + 32] for group in groups.values() for i in range(0, len(group), 32)]
+        done = 0
+        with ProcessPoolExecutor(max_workers=workers) as executor:
+            futures = [executor.submit(generate_batch, batch) for batch in batches]
+            for future in as_completed(futures):
+                for s, size, variants, error in future.result():
+                    if error:
+                        errors[s] = error
+                    for vi, text in enumerate(variants):
+                        lifted.append((s if vi == 0 else f'{s}#{vi}', size, text))
+                    done += 1
+                print(f'm2c: {done}/{len(rows)} functions, {len(lifted)} candidates', file=sys.stderr, flush=True)
+        lifted.sort(key=lambda row: (row[1], row[0]))
+        serial_rows = []
+    for row_index, (s, m, size) in enumerate(serial_rows):
         if s in linkfail:
             continue  # matched the object and failed the link before: the same body fails again
         name = s.split(":", 1)[1] if ":" in s else s
@@ -2812,6 +2864,7 @@ def apply(p: Project, modules: Optional[List[str]] = None, max_size: int = 160, 
     out_dir = STATE_DIR / "lift" / engine if engine != 'lift' else STATE_DIR / "lift"
     out_dir.mkdir(parents=True, exist_ok=True)
     (out_dir / 'errors.json').write_text(json.dumps(errors, indent=2))
+    (out_dir / 'generation.json').write_text(json.dumps(lifted))
 
     # one mwcc run per module over every lifted body, one cheap score each, the full check only
     # for the ones that score 100 (pool rows, data sections)
@@ -2851,6 +2904,7 @@ def apply(p: Project, modules: Optional[List[str]] = None, max_size: int = 160, 
                 r = oracle.check(p, s, 4, source=src, mw_version=c[0], extra_cflags=c[1])
                 ok_ = r.ok and (r.matched or r.matched_pool) and oracle.unit_fully_matches(r) is None
             results.append((s, size, t, ok_, pct))
+    (out_dir / 'results.json').write_text(json.dumps(results))
     # near misses get the deterministic fixup (type flips, symbol substitutions, layout edits)
     from . import fixup
     fixed = 0

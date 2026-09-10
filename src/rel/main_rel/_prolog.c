@@ -450,6 +450,71 @@ u32 fn_1_4060(void) {
 }
 /* fzgx:end fn_1_4060 */
 
+/* fzgx:begin fn_1_407C noprologue */
+#include "types.h"
+
+typedef u32 (*fn_1_407C_Fn0)(u32);
+struct fn_1_407C_lbl_1_bss_DAC {
+    s32 unk_0;
+};
+struct fn_1_407C_lbl_1_bss_DA8 {
+    u32 unk_0;
+};
+extern struct fn_1_407C_lbl_1_bss_DA8 lbl_1_bss_DA8;
+extern struct fn_1_407C_lbl_1_bss_DAC lbl_1_bss_DAC;
+extern void fn_1_3BDC(u32);
+extern u32 fn_1_3C18(s32);
+extern void fn_1_43A4(void);
+
+
+void fn_1_407C(s32 arg_sp0) {
+    u32 var_r31;
+    u32 temp_r30;
+    s32 temp_r29;
+    u8 temp_r28;
+    s32 var_r27;
+    void *var_r24;
+    s32 (*temp_r23)(s32);
+
+    var_r27 = 0;
+    temp_r30 = lbl_1_bss_DAC.unk_0;
+    var_r31 = temp_r30;
+    temp_r29 = *(s32 *)((u8 *)(temp_r30) + 16);
+    temp_r28 = (u8) (*(s32 *)((u8 *)(temp_r30) + 20));
+    do {
+        if (!(temp_r29 & (1 << var_r27))) {
+            var_r24 = (void *)(*(void **)((u8 *)((*(void **)((u8 *)(var_r31) + 24))) + 8));
+            while (var_r24 != NULL) {
+                temp_r23 = (s32 (*)(s32))(*(s32 (**)(s32))((u8 *)(var_r24) + 0));
+                (*(void **)((u8 *)(temp_r30) + 8)) = (void *)(var_r24);
+                lbl_1_bss_DAC.unk_0 = temp_r30;
+                lbl_1_bss_DA8.unk_0 = temp_r30;
+                if (((temp_r28 == 0) || ((u8) (temp_r28 & (*(s32 *)((u8 *)(var_r24) + 20))) != 0)) && (temp_r23 != NULL)) {
+                    fn_1_3BDC(5U);
+                    temp_r23(*(s32 *)((u8 *)(var_r24) + 4));
+                    (*(s32 *)((u8 *)(var_r24) + 28)) = (s32) ((*(s32 *)((u8 *)(var_r24) + 28)) + fn_1_3C18(5));
+                }
+                lbl_1_bss_DAC.unk_0 = temp_r30;
+                lbl_1_bss_DA8.unk_0 = temp_r30;
+                if ((void *) (*(void **)((u8 *)(temp_r30) + 8)) == var_r24) {
+                    var_r24 = (void *)(*(void **)((u8 *)(var_r24) + 8));
+                    if (temp_r23 == NULL) {
+                        fn_1_43A4();
+                    }
+                } else {
+                    var_r24 = (void *)(NULL);
+                }
+                            }
+        }
+        var_r27 += 1;
+        var_r31 += 4;
+    } while (var_r27 < 0x20);
+    (*(void **)((u8 *)(temp_r30) + 8)) = (void *)(NULL);
+    lbl_1_bss_DAC.unk_0 = temp_r30;
+    lbl_1_bss_DA8.unk_0 = 0;
+}
+/* fzgx:end fn_1_407C */
+
 /* fzgx:begin fn_1_41A8 */
 typedef struct Node Node;
 struct Node {

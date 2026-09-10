@@ -12,6 +12,34 @@ from .sdkimport import declarations, masked
 from .signatures import recovered, propagate, split_params
 
 
+_worker_project = None
+
+
+def generate_batch(rows):
+    """Keep the backend's mutable IR adapters isolated in worker processes."""
+    from .project import Project
+    from . import lift
+    global _worker_project
+    if _worker_project is None:
+        _worker_project = Project()
+    p, result = _worker_project, []
+    for symbol, module, size in rows:
+        name = symbol.split(':')[-1]
+        variants, error = [], ''
+        try:
+            draft = lift.lift_total(p, module, name, max_ins=max(1200, size // 4))
+            for descending in (False, True):
+                text, error = generate(p, module, name, draft=draft, descending=descending)
+                if text and text not in variants:
+                    variants.append(text)
+                elif error:
+                    break
+        except Exception as exc:
+            error = str(exc)
+        result.append((symbol, size, variants, error))
+    return result
+
+
 def _expand(text, name, emit):
     """Expand balanced generated expressions, including nested field accesses."""
     while match := re.search(r'\b' + name + r'\(', text):
@@ -62,13 +90,83 @@ def structure_loops(text):
 
 
 @contextmanager
-def _mwcc_formatting(signatures, stack):
+def _mwcc_formatting(signatures, stack, copy_sites, copy_sizes, float_calls, absolute_refs):
     """Retain machine-width accesses when inference cannot name a compatible C field."""
     from m2c import translate as ir
     from m2c import evaluate
-    saved = {cls: cls.format for cls in (ir.StructAccess, ir.Cast, ir.FuncCall, ir.BinaryOp, ir.ArrayAccess)}
+    from m2c.arch_ppc import PpcArch
+    from .oracle import abs_symbols
+    absolute_names = {address: name for name, address in abs_symbols().items()}
+    saved = {cls: cls.format for cls in (ir.StructAccess, ir.Cast, ir.FuncCall, ir.BinaryOp, ir.ArrayAccess, ir.AddressOf)}
     assignment = ir.format_assignment
     original_deref = evaluate.deref
+    original_call = ir.NodeState.make_function_call
+    original_abi = PpcArch.function_abi
+    original_switch = ir.SwitchControl.from_expr
+    original_return = PpcArch.function_return
+
+    def function_return(expr):
+        result = original_return(expr)
+        if expr.type.is_int() and expr.type.get_size_bytes() == 8:
+            result[ir.Register('r3')] = ir.as_u32(ir.BinaryOp.u64(ir.as_u64(expr), '>>', ir.Literal(32)))
+        return result
+
+    def switch(expr, num_cases):
+        result = original_switch(expr, num_cases)
+        value = ir.early_unwrap(expr)
+        while isinstance(value, ir.Cast):
+            value = ir.early_unwrap(value.expr)
+        if result.jump_table is None and isinstance(value, ir.ArrayAccess):
+            pointer = ir.early_unwrap(value.ptr)
+            table = ir.early_unwrap(pointer.expr) if isinstance(pointer, ir.AddressOf) else pointer
+            if isinstance(table, ir.GlobalSymbol) and table.asm_data_entry and table.asm_data_entry.is_jtbl:
+                return ir.SwitchControl(value.index, num_cases, table, 0)
+        return result
+
+    def make_call(self, target, outputs):
+        line = self.regs.current_instr_ref().instruction.meta.lineno
+        def pair(hi, lo):
+            return ir.BinaryOp.u64(ir.BinaryOp.u64(ir.as_u64(ir.as_u32(hi)), '<<', ir.Literal(32)),
+                                   '|', ir.as_u64(ir.as_u32(lo)))
+
+        def abi(signature, likely, *, for_call):
+            if for_call and signature.is_variadic and float_calls.get(line) is False:
+                likely = {r: used for r, used in likely.items() if not r.register_name.startswith('f')}
+            if for_call and signature.params_known and any(p.type.is_int() and p.type.get_size_bytes() == 8 for p in signature.params):
+                slots, gpr, fpr, offset = [], 3, 1, 0
+                for i, param in enumerate(signature.params):
+                    typ, reg, stack_offset = param.type.decay(), None, None
+                    wide = typ.is_int() and typ.get_size_bytes() == 8
+                    if typ.is_float() and fpr <= 8:
+                        reg = ir.Register(f'f{fpr}'); fpr += 1
+                    elif not typ.is_float():
+                        if wide:
+                            gpr += (gpr % 2 == 0)
+                        if gpr + int(wide) <= 10:
+                            reg = ir.Register(f'r{gpr}')
+                            if wide:
+                                reg, stack_offset = None, -(i + 1) * 8
+                                self.subroutine_args[stack_offset] = pair(self.regs[ir.Register(f'r{gpr}')],
+                                                                         self.regs[ir.Register(f'r{gpr + 1}')])
+                            gpr += 2 if wide else 1
+                    if reg is None and stack_offset is None:
+                        size = typ.get_size_bytes() or 4
+                        offset = (offset + min(size, 8) - 1) // min(size, 8) * min(size, 8)
+                        stack_offset, offset = offset, offset + size
+                        if wide and stack_offset in self.subroutine_args and stack_offset + 4 in self.subroutine_args:
+                            self.subroutine_args[stack_offset] = pair(self.subroutine_args[stack_offset],
+                                                                     self.subroutine_args.pop(stack_offset + 4))
+                    slots.append(ir.AbiArgSlot(ir.ArgLoc(stack_offset, i, reg), typ, name=param.name))
+                possible = original_abi(signature, likely, for_call=for_call).possible_slots
+                possible = [slot for slot in possible if int(slot.loc.reg.register_name[1:]) >=
+                            (fpr if slot.loc.reg.register_name.startswith('f') else gpr)]
+                return ir.Abi(slots, possible)
+            return original_abi(signature, likely, for_call=for_call)
+        PpcArch.function_abi = staticmethod(abi)
+        try:
+            return original_call(self, target, outputs)
+        finally:
+            PpcArch.function_abi = staticmethod(original_abi)
 
     def deref(arg, regs, info, *, size, store=False):
         if isinstance(arg, ir.AddressMode) and info.is_stack_reg(arg.base):
@@ -96,14 +194,24 @@ def _mwcc_formatting(signatures, stack):
 
     def access(self, fmt):
         path = self.late_field_path()
-        if path is None or path == [0]:
+        _, field_type, _ = self.struct_var.type.get_deref_field(self.offset, target_size=self.target_size)
+        incompatible = (field_type.is_pointer_or_array() != self.type.is_pointer_or_array()
+                        or field_type.is_float() != self.type.is_float()
+                        or field_type.get_size_bytes() != self.type.get_size_bytes())
+        if path is None or path == [0] or incompatible:
             return f'(*({ir.Type.ptr(self.type).format(fmt)})((u8 *)({self.struct_var.format(fmt)}) + {self.offset}))'
         return saved[ir.StructAccess](self, fmt)
 
     def cast(self, fmt):
         source = self.expr.type
+        expr = ir.late_unwrap(self.expr)
+        if self.type.is_pointer() and isinstance(expr, ir.Literal) and expr.value in absolute_names:
+            name = absolute_names[expr.value]
+            absolute_refs.add(name)
+            return f'({self.type.format(fmt)})({name})'
+        if source.is_struct() and not self.type.is_struct() and isinstance(expr, (ir.StructAccess, ir.ArrayAccess, ir.LocalVar, ir.GlobalSymbol)):
+            return f'(*({self.type.format(fmt)} *)&({expr.format(fmt)}))'
         if self.reinterpret and source.is_float() != self.type.is_float():
-            expr = ir.late_unwrap(self.expr)
             if isinstance(expr, (ir.GlobalSymbol, ir.StructAccess, ir.ArrayAccess, ir.LocalVar)):
                 return f'(*({self.type.format(fmt)} *)&({expr.format(fmt)}))'
         if source.is_pointer_or_array() != self.type.is_pointer_or_array() and not source.is_float() and not self.type.is_float():
@@ -120,9 +228,16 @@ def _mwcc_formatting(signatures, stack):
         known = known or signatures.get(target.format(fmt))
         if target.format(fmt) == 'M2C_STRUCT_COPY' and len(self.args) == 3:
             offset, size = stack_offset(self.args[0]), ir.late_unwrap(self.args[2])
+            if isinstance(size, ir.Literal) and size.value > 0 and size.value % 4 == 0:
+                copy_sizes.add(size.value)
+                if offset is not None:
+                    copy_sites[offset] = max(copy_sites.get(offset, 0), size.value)
             if offset in stack and isinstance(size, ir.Literal) and size.value == stack[offset][1]:
                 typ, _, name = stack[offset]
                 return f'{name} = *(const {typ} *)({self.args[1].format(fmt)})'
+            if isinstance(size, ir.Literal) and size.value in copy_sizes:
+                typ = f'struct FzgxCopy_{size.value}'
+                return f'*({typ} *)({self.args[0].format(fmt)}) = *(const {typ} *)({self.args[1].format(fmt)})'
         if sig and sig.params is not None:
             args = []
             for i, arg in enumerate(self.args):
@@ -131,6 +246,8 @@ def _mwcc_formatting(signatures, stack):
                 if typ and '*' in typ:
                     text = f'({typ})({text})'
                 elif i < len(sig.params) and sig.params[i].type.is_pointer():
+                    text = f'({sig.params[i].type.format(fmt)})({text})'
+                elif i < len(sig.params) and not sig.params[i].type.is_struct():
                     text = f'({sig.params[i].type.format(fmt)})({text})'
                 args.append(text)
             return f'{target.format(fmt)}({", ".join(args)})'
@@ -156,7 +273,12 @@ def _mwcc_formatting(signatures, stack):
             size = target.get_size_bytes()
             if size:
                 return f'(*({ir.Type.ptr(self.type).format(fmt)})((u8 *)({self.ptr.format(fmt)}) + ({self.index.format(fmt)}) * {size}))'
-        return saved[ir.ArrayAccess](self, fmt)
+        return f'({self.ptr.format(fmt)})[{ir.format_expr(self.index, fmt)}]'
+
+    def address(self, fmt):
+        if isinstance(self.expr, ir.StructAccess):
+            return f'(({self.type.format(fmt)})((u8 *)({self.expr.struct_var.format(fmt)}) + {self.expr.offset}))'
+        return saved[ir.AddressOf](self, fmt)
 
     def assign(lhs, rhs, fmt):
         if lhs.type.is_pointer() or (rhs.type.is_pointer_or_array() and not lhs.type.is_pointer_or_array()):
@@ -165,8 +287,12 @@ def _mwcc_formatting(signatures, stack):
 
     ir.StructAccess.format, ir.Cast.format, ir.FuncCall.format = access, cast, call
     ir.BinaryOp.format, ir.ArrayAccess.format = binary, array
+    ir.AddressOf.format = address
     ir.format_assignment = assign
     evaluate.deref = deref
+    ir.NodeState.make_function_call = make_call
+    ir.SwitchControl.from_expr = staticmethod(switch)
+    PpcArch.function_return = staticmethod(function_return)
     try:
         yield
     finally:
@@ -174,6 +300,9 @@ def _mwcc_formatting(signatures, stack):
             cls.format = method
         ir.format_assignment = assignment
         evaluate.deref = original_deref
+        ir.NodeState.make_function_call = original_call
+        ir.SwitchControl.from_expr = staticmethod(original_switch)
+        PpcArch.function_return = staticmethod(original_return)
 
 
 def stack_context(p, fn, draft):
@@ -204,23 +333,78 @@ def stack_context(p, fn, draft):
     return f'struct _m2c_stack_{fn.symbol.name} {{ ' + ' '.join(fields) + ' };\n', stack
 
 
+def copy_context(fn, stack, copies):
+    """Give copied stack ranges real object extents before m2c creates their local variables."""
+    frame = re.search(r'\bstwu r1, -(0x[0-9a-f]+|\d+)\(r1\)', '\n'.join(fn.asm))
+    size = int(frame[1], 0) if frame else 0
+    regions = [(offset, offset + length) for offset, length in copies.items()
+               if 0 <= offset and offset + length <= size]
+    regions += [(offset, offset + value[1]) for offset, value in stack.items()]
+    merged = []
+    for lo, hi in sorted(regions):
+        if merged and lo < merged[-1][1]:
+            merged[-1] = (merged[-1][0], max(hi, merged[-1][1]))
+        else:
+            merged.append((lo, hi))
+    result, declarations, fields, cursor = {}, [], [], 0
+    for lo, hi in merged:
+        if lo in stack and stack[lo][1] == hi - lo:
+            typ, length, name = stack[lo]
+        else:
+            length, name = hi - lo, f'loc_{lo:X}'
+            typ = f'struct FzgxCopy_{length}'
+            fields_type = f'u32 words[{length // 4}];' if length % 4 == 0 else f'u8 bytes[{length}];'
+            declarations.append(f'{typ} {{ {fields_type} }};')
+        result[lo] = (typ, length, name)
+        if lo > cursor:
+            fields.append(f'char unk_{cursor:X}[{lo - cursor}];')
+        fields.append(f'{typ} {name};')
+        cursor = hi
+    if cursor < size:
+        fields.append(f'char unk_{cursor:X}[{size - cursor}];')
+    declaration = f'struct _m2c_stack_{fn.symbol.name} {{ ' + ' '.join(fields) + ' };\n'
+    return declaration, result, list(dict.fromkeys(declarations))
+
+
+def packed_stack(fn):
+    """Word locals whose bytes are accessed separately need one shared storage object."""
+    accesses, escapes = [], set()
+    for line in fn.asm:
+        match = re.search(r'\b(lbz|lha|lhz|lwz|stb|sth|stw) r\d+, (0x[0-9a-f]+|\d+)\(r1\)', line)
+        if match:
+            size = 1 if match[1] in ('lbz', 'stb') else 2 if match[1] in ('lha', 'lhz', 'sth') else 4
+            accesses.append((int(match[2], 0), size))
+        match = re.search(r'\baddi r(?:[3-9]|10), r1, (0x[0-9a-f]+|\d+)', line)
+        if match:
+            escapes.add(int(match[1], 0))
+    words = {offset for offset, size in accesses if size == 4} | escapes
+    return {base: 4 for base in words if base >= 8 and base % 4 == 0
+            and any(base <= offset and offset + size <= base + 4 and size < 4 for offset, size in accesses)}
+
+
 def context(p, module, name, draft):
     index = recovered(p)
     source = None
+    scope = list(p.function_asm(module))
     tus = p.module_config_dir(module) / 'tus.json'
     if tus.exists():
         tu = next((t for t in json.loads(tus.read_text())['tus'] if name in t['functions']), None)
         if tu:
             source = p.module_src_prefix(module) + '/' + tu['file']
-            index = propagate(index, module, tu['functions'])
+            scope = tu['functions']
+        else:
+            mapped = {n for t in json.loads(tus.read_text())['tus'] for n in t['functions']}
+            scope = [n for n in scope if n not in mapped]
+    index = propagate(index, module, scope)
     fn = p.function_asm(module)[name]
     called = [m[1] for line in fn.asm if (m := re.search(r'\bbl (\w+)', line))
               and not re.match(r'_(save|rest)', m[1])]
     signatures = {n: sig for n in dict.fromkeys([name] + called)
                   if (sig := index.get(module, n, source))
-                  and (n != name or not sig.origin.startswith('register-flow'))}
+                  and (n != name or sig.defined or sig.origin.startswith('include/'))}
     parts = ['#include "types.h"'] + index.preamble(signatures.values())
     present = {re.sub(r'\s+', '', text) for text in parts}
+    present.update(re.sub(r'\s+', '', piece.text) for piece in declarations('\n'.join(parts)))
     # The existing layout recovery supplies globals, not its guessed call arities.
     for piece in declarations(draft or ''):
         if piece.kind == 'type' or (piece.kind == 'object' and piece.text.lstrip().startswith('extern ')):
@@ -232,9 +416,82 @@ def context(p, module, name, draft):
     return '\n'.join(parts) + '\n', signatures
 
 
+def assembly(p, fn):
+    """Supply switch destinations from retail data, retaining their function-relative labels."""
+    instructions = '\n'.join(fn.asm)
+    tables, labels = [], {}
+    if re.search(r'\bbctr\b', instructions):
+        cache = p.__dict__.setdefault('_machine_data', {})
+        module = fn.symbol.module
+        if module not in cache:
+            objects = {}
+            for path in sorted(p._asm_files(module), key=lambda path: path.stat().st_mtime_ns):
+                for match in re.finditer(r'(?ms)^\.obj\s+(\S+),[^\n]*\n(.*?)^\.endobj', path.read_text()):
+                    objects[match[1]] = match[2]
+            cache[module] = objects
+        for name in fn.refs:
+            data = cache[module].get(name, '')
+            values = re.findall(r'^\s*\.4byte\s+([^\n]+)', data, re.M)
+            if not values:
+                continue
+            targets = []
+            for value in values:
+                match = re.fullmatch(r'([\w.$]+)(?:\+(0x[0-9a-fA-F]+|\d+))?', value.strip())
+                sym = (p.symbols(module).get(match[1]) or p.find_symbol(match[1])) if match else None
+                if not sym or sym.module != module or sym.section != fn.symbol.section:
+                    break
+                address = sym.addr + (int(match[2], 0) if match[2] else 0)
+                if not fn.symbol.addr <= address < fn.symbol.end or address % 4:
+                    break
+                targets.append(address)
+            else:
+                for address in targets:
+                    labels[address] = f'.L_{address:08X}'
+                tables.append(name + ':\n' + '\n'.join(f'.4byte {labels[a]}' for a in targets))
+    lines = ['.section .text', '.global ' + fn.symbol.name, fn.symbol.name + ':']
+    emitted = {line[:-1] for line in fn.asm if line.endswith(':')}
+    for index, line in enumerate(fn.asm):
+        match = re.match(r'^([0-9A-Fa-f]+): (.*)', line)
+        if match:
+            address, line = int(match[1], 16), match[2]
+            if address in labels and labels[address] not in emitted:
+                lines.append(labels[address] + ':')
+            if line.startswith(('cror ', 'crand ', 'crxor ', 'crnor ', 'crandc ', 'crorc ')):
+                line = re.sub(r'\b(lt|gt|eq|so)\b', lambda m: str(('lt', 'gt', 'eq', 'so').index(m[1])), line)
+            if line.startswith('mfcr '):
+                register, mask, complete = line.split()[1], 0, False
+                for later in fn.asm[index + 1:]:
+                    instruction = re.match(r'^[0-9A-Fa-f]+: (\S+)(?: (.*))?', later)
+                    if not instruction:
+                        break
+                    op = instruction[1].rstrip('.')
+                    operands = (instruction[2] or '').split(', ')
+                    if op.startswith('b'):
+                        complete = op in ('bl', 'bctrl') and int(register[1:]) <= 12
+                        break
+                    if any(re.search(r'\b' + register + r'\b', operand) for operand in operands[1:]):
+                        if op == 'srwi' and operands[1] == register:
+                            mask |= (0xFFFFFFFF << int(operands[2], 0)) & 0xFFFFFFFF
+                        elif op == 'extrwi' and operands[1] == register:
+                            length, start = int(operands[2], 0), int(operands[3], 0)
+                            mask |= ((1 << length) - 1) << (32 - start - length)
+                        else:
+                            break
+                    if operands[0] == register:
+                        complete = not op.startswith(('st', 'cmp', 'mt', 'rlwimi'))
+                        break
+                if complete and mask:
+                    line = f'mfcr.bits {register}, 0x{mask:08X}'
+        lines.append(line)
+    if tables:
+        lines += ['.section .rodata', *tables]
+    return '\n'.join(lines) + '\n'
+
+
 def generate(p, module, name, draft=None, descending=False):
     from m2c.main import parse_flags, run
     from . import lift
+    from .ppc_lowering import lowering
 
     fn = p.function_asm(module).get(name)
     if fn is None:
@@ -243,32 +500,73 @@ def generate(p, module, name, draft=None, descending=False):
         draft = lift.lift_total(p, module, name, max_ins=max(1200, fn.symbol.size // 4))
     root = STATE_DIR / 'machine' / module / name
     root.mkdir(parents=True, exist_ok=True)
-    asm = '.section .text\n.global ' + name + '\n' + name + ':\n'
-    asm += '\n'.join(re.sub(r'^[0-9A-Fa-f]+: ', '', line) for line in fn.asm) + '\n'
+    asm = assembly(p, fn)
+    frame_saves = set()
+    for before, after in zip(fn.asm[:100], fn.asm[1:101]):
+        save = re.search(r'\bstfd (f(?:1[4-9]|2\d|3[01])), (0x[0-9a-f]+|\d+)\(r1\)', before)
+        paired = re.search(r'\bpsq_st (f\d+), (0x[0-9a-f]+|\d+)\(r1\), 0, qr0', after)
+        if save and paired and save[1] == paired[1] and int(save[2], 0) + 8 == int(paired[2], 0):
+            frame_saves.add(('$' + save[1], '$r1', int(paired[2], 0)))
+    float_calls, enabled = {}, None
+    for i, line in enumerate(asm.splitlines(), 1):
+        if re.fullmatch(r'cr(?:set|clr) (?:6|cr1eq)', line):
+            enabled = line.startswith('crset')
+        elif re.match(r'bl\s', line):
+            if enabled is not None:
+                float_calls[i] = enabled
+            enabled = None
+        elif line.endswith(':') or re.match(r'b\w*\s', line):
+            enabled = None
     (root / 'input.s').write_text(asm)
     preamble, signatures = context(p, module, name, draft)
     stack_declaration, stack = stack_context(p, fn, draft)
-    (root / 'context.c').write_text(preamble + stack_declaration)
-    cpp = subprocess.run(['cc', '-E', '-P', '-I', str(ROOT / 'include'), str(root / 'context.c')],
-                         capture_output=True, text=True, timeout=30)
-    if cpp.returncode:
-        return None, cpp.stderr[-2000:]
-    (root / 'context.i').write_text(cpp.stdout)
+    packed = packed_stack(fn)
+    copy_types = []
+    if packed:
+        stack_declaration, stack, copy_types = copy_context(fn, stack, packed)
     flags = ['-t', 'ppc-mwcc-c', '--valid-syntax', '--context', str(root / 'context.i'), str(root / 'input.s')]
     if descending:
         flags.append('--descending-regs')
-    output, errors = io.StringIO(), io.StringIO()
-    with redirect_stdout(output), redirect_stderr(errors), _mwcc_formatting(signatures, stack):
-        code = run(parse_flags(flags))
-    text = output.getvalue()
+    copy_sites, copy_sizes, absolute_refs = {}, set(), set()
+    for attempt in range(2):
+        (root / 'context.c').write_text(preamble + '\n'.join(copy_types) + '\n' + stack_declaration)
+        cpp = subprocess.run(['cc', '-E', '-P', '-I', str(ROOT / 'include'), str(root / 'context.c')],
+                             capture_output=True, text=True, timeout=30)
+        if cpp.returncode:
+            return None, cpp.stderr[-2000:]
+        (root / 'context.i').write_text(cpp.stdout)
+        output, errors = io.StringIO(), io.StringIO()
+        with redirect_stdout(output), redirect_stderr(errors), lowering(frame_saves), _mwcc_formatting(signatures, stack, copy_sites, copy_sizes, float_calls, absolute_refs):
+            code = run(parse_flags(flags))
+        text = output.getvalue()
+        missing = {off: size for off, size in copy_sites.items()
+                   if not any(base <= off and off + size <= base + value[1] for base, value in stack.items())}
+        if not missing or attempt:
+            break
+        stack_declaration, stack, new_types = copy_context(fn, stack, copy_sites)
+        copy_types = list(dict.fromkeys(copy_types + new_types))
+    copy_types += [f'struct FzgxCopy_{size} {{ u32 words[{size // 4}]; }};' for size in sorted(copy_sizes)
+                   if not any(f'struct FzgxCopy_{size} ' in decl for decl in copy_types)]
     (root / ('descending.raw.c' if descending else 'raw.c')).write_text(text)
     if code or 'Error while' in text:
         return None, text[-2000:] + errors.getvalue()[-1000:]
     text = _expand(text, 'M2C_FIELD', lambda a: f'(*({a[1]})((u8 *)({a[0]}) + ({a[2]})))')
     text = re.sub(r'\bM2C_UNK(8|16|32|64)?\b', lambda m: 's' + (m[1] or '32'), text)
     text = re.sub(r'\bCLZ\(', '__cntlzw(', text)
+    # An incoming saved register on an otherwise uninitialized phi arm is the
+    # original C local's indeterminate value, not an external data symbol.
+    text = re.sub(r'(?m)^\s*var_([rf]\d+) = saved_reg_\1;\n', '\n', text)
     text = _expand(text, 'MULTU_HI', lambda a: f'((u32)(((u64)(u32)({a[0]}) * (u64)(u32)({a[1]})) >> 32))')
     text = _expand(text, 'MULT_HI', lambda a: f'((s32)(((s64)(s32)({a[0]}) * (s64)(s32)({a[1]})) >> 32))')
+    from .oracle import abs_symbols
+    absolute_names = {address: name for name, address in abs_symbols().items()}
+    def bind_absolute(match):
+        name = absolute_names.get(int(match[2], 16))
+        if name is None:
+            return match[0]
+        absolute_refs.add(name)
+        return match[1] + f'({name})'
+    text = re.sub(r'(\([\w\s]+\*\s*\))\s*(0x[0-9A-Fa-f]+)\b', bind_absolute, text)
     # The upstream compatibility header makes unhandled instructions no-ops and
     # bitwise casts numeric conversions. Such output is a draft, never a candidate.
     unresolved = sorted(set(re.findall(r'\b(?:M2C_\w+|GLUE_F64|MULTU?_HI|DMULTU?_HI)\b', text)))
@@ -279,7 +577,8 @@ def generate(p, module, name, draft=None, descending=False):
     if fn.symbol.section == '.init':
         text = re.sub(r'(?m)^(\w[\w *]*\b' + re.escape(name) + r'\([^;]+\)\s*\{)',
                       r'__declspec(section ".init") \1', text)
-    result = preamble + '\n' + text
+    absolute_declarations = [f'extern u8 {name}[];' for name in sorted(absolute_refs)]
+    result = preamble + '\n' + '\n'.join(copy_types + absolute_declarations) + '\n' + text
     candidate = root / ('descending.c' if descending else 'candidate.c')
     candidate.write_text(result)
     from .lint import lint_file
