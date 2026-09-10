@@ -54,7 +54,7 @@
       "upgrade": null,
       "priority": 1,
       "experimental_supported_tools": [],
-      "supports_search_tool": true,
+      "supports_search_tool": false,
       "default_service_tier": null,
       "supports_reasoning_summaries": true,
       "base_instructions": "You are a coding assistant. Follow the task instructions.",

@@ -189,6 +189,9 @@ def claim(p: Project, symbol: str, agent: str, ttl: int = DEFAULT_TTL,
     name = p.resolve(symbol).name
     if seed_body is not None:
         work.write_text(seed_body)
+        best = STATE_DIR / "attempts" / f"{key}.best.c"
+        best.parent.mkdir(parents=True, exist_ok=True)
+        best.write_text(seed_body)
     elif _is_revise(agent) and unit:
         work.write_text(_canonical_text(p, unit) or STUB.format(symbol=name, note="nothing to revise"))
     else:
@@ -444,7 +447,7 @@ def submit(p: Project, symbol: str, agent: str = "unknown", message: str = "",
     findings = lint_paths([src or oracle.unit_source_path(p, unit_src)])
     if findings:
         return {"ok": False, "error": "lint", "findings": findings}
-    if unit_src and (mw_version or extra_cflags):
+    if unit_src and (mw_version or extra_cflags) and not _is_shadow(agent):
         _set_unit_opts(p, unit_src, mw_version, extra_cflags)
         _reconfigure_and_split(p)
     res = oracle.check(p, symbol, max_diff_lines, source=src, mw_version=mw_version, extra_cflags=extra_cflags)
@@ -494,14 +497,20 @@ def submit(p: Project, symbol: str, agent: str = "unknown", message: str = "",
                  tokens_in=tokens_in, tokens_out=tokens_out, cost_usd=cost_usd, shadow=True)
         return {"ok": True, "symbol": symbol, "unit": unit_src, "revise": True, "link": link}
     if _is_shadow(agent):
-        _discard_work(p, key)
         if reason:
+            _discard_work(p, key)
             l.finish(key, "released", "unmatched", notes=f"shadow submit rejected: {reason}", model=model,
                      harness=harness, tokens_in=tokens_in, tokens_out=tokens_out, cost_usd=cost_usd, shadow=True)
             return {"ok": False, "error": reason, "percent": res.percent, "shadow": True}
-        l.finish(key, "matched", "matched", notes=message or "", model=model, harness=harness,
+        dest = STATE_DIR / "attempts" / f"{key}.shadow.{time.time_ns()}.c"
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy(src or oracle.unit_source_path(p, unit_src), dest)
+        dest.with_suffix(".json").write_text(json.dumps({"mw": res.mw_version,
+                                                       "flags": res.extra_cflags}) + "\n")
+        _discard_work(p, key)
+        l.finish(key, "matched", "matched", notes=message or "", body_path=str(dest), model=model, harness=harness,
                  tokens_in=tokens_in, tokens_out=tokens_out, cost_usd=cost_usd, shadow=True)
-        return {"ok": True, "symbol": symbol, "commit": None, "unit": unit_src, "shadow": True,
+        return {"ok": True, "symbol": symbol, "commit": None, "unit": unit_src, "shadow": True, "saved": str(dest),
                 "note": "shadow trial: match recorded, nothing installed, relinked or committed"}
     if reason:
         return {"ok": False, "error": reason, "percent": res.percent, "diff": res.diff}
@@ -620,8 +629,8 @@ def abort_attempt(p: Project, symbol: str, reason: str) -> Dict[str, Any]:
     with l.db:
         l.db.execute("UPDATE attempts SET ended=?, outcome='crash', notes=? WHERE symbol=? AND ended IS NULL",
                      (int(time.time()), reason[:200], key))
-        l.db.execute("UPDATE functions SET status='unmatched', claimed_by=NULL, claimed_at=NULL, "
-                     "attempts=MAX(attempts-1, 0) WHERE symbol=?", (key,))
+        l.db.execute("UPDATE functions SET status=COALESCE(prev_status, 'unmatched'), claimed_by=NULL, "
+                     "claimed_at=NULL, claim_ttl=NULL, prev_status=NULL WHERE symbol=?", (key,))
     return {"ok": True, "symbol": symbol}
 
 

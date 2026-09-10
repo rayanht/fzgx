@@ -228,6 +228,10 @@ Rules that hold for everyone:
   deletes the shared ChatGPT login when enforcing it. `env_key` authenticates the
   custom provider without changing the OpenAI login. DeepSeek cost estimates use
   peak rates as an upper bound; supported effort levels are `low`, `high`, and `max`.
+  Load the six matcher tools directly (`supports_search_tool=false`): DeepSeek rejects
+  duplicate MCP namespaces returned by parallel Codex tool searches. Shadow trials
+  retain matched C and compiler options under `.fzgx/attempts/` for later integration;
+  finishing or aborting them preserves the function's original matching status.
   Provider/catalog reference: [DeepSeek's Codex integration](https://api-docs.deepseek.com/quick_start/agent_integrations/codex/).
   Example: `uv run tools/orchestrate.py --harness codex --provider deepseek
   --api-key-file ~/.config/fzgx/deepseek.key --seeds PATH --parallel 1 --no-trivial`.

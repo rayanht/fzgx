@@ -109,7 +109,8 @@ class Ledger:
         now = int(time.time())
         with self.db:
             cur = self.db.execute(
-                "UPDATE functions SET status='unmatched', claimed_by=NULL, claimed_at=NULL, claim_ttl=NULL "
+                "UPDATE functions SET status=COALESCE(prev_status, 'unmatched'), prev_status=NULL, "
+                "claimed_by=NULL, claimed_at=NULL, claim_ttl=NULL "
                 "WHERE status='claimed' AND claimed_at + claim_ttl < ?", (now,))
         return cur.rowcount
 
