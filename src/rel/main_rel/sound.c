@@ -265,6 +265,39 @@ void fn_1_A0C68(void) {
 }
 /* fzgx:end fn_1_A0C68 */
 
+/* fzgx:begin fn_1_A116C noprologue */
+#include "types.h"
+
+extern s16 lbl_1_bss_960;
+extern s16 lbl_1_bss_962;
+extern void fn_80065D70(int);
+
+void fn_1_A116C(void) {
+    switch (lbl_1_bss_960) {
+    case 2:
+    case 8:
+    case 9:
+    case 12:
+        fn_80065D70(1);
+        break;
+    case 1:
+    case 5:
+    case 13:
+        fn_80065D70(2);
+        break;
+    case 4:
+        if (lbl_1_bss_962 != 0x3D) {
+            fn_80065D70(3);
+        }
+        break;
+    case 14:
+    case 16:
+        fn_80065D70(3);
+        break;
+    }
+}
+/* fzgx:end fn_1_A116C */
+
 /* fzgx:begin fn_1_A1340 */
 void fn_1_A1340(void) {
     fn_1_A0680();

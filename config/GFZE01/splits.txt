@@ -4856,3 +4856,9 @@ dol/__check_pad3.c:
 
 dol/fn_80072CC4.c:
 	.text       start:0x80072CC4 end:0x80072D64 align:4
+
+dol/fn_8008DB5C.c:
+	.text       start:0x8008DB5C end:0x8008DC10 align:4
+
+dol/fn_8008DCCC.c:
+	.text       start:0x8008DCCC end:0x8008DD88 align:4

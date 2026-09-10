@@ -21724,6 +21724,26 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_8008DB5C.c",
+    "symbols": [
+      "fn_8008DB5C"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_8008DCCC.c",
+    "symbols": [
+      "fn_8008DCCC"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
     "source": "dol/fn_8008E114.c",
     "symbols": [
       "fn_8008E114"
@@ -41469,6 +41489,20 @@
     "mw_version": null,
     "extra_cflags": [],
     "tu": "rel/main_rel/sound.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/sound/fn_1_A116C.c",
+    "symbols": [
+      "fn_1_A116C"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/sound.c",
+    "pool": {
+      "@18": "jumptable_1_data_33F68"
+    }
   },
   {
     "module": "main_rel",
