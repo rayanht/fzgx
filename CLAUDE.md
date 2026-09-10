@@ -41,6 +41,11 @@ Rules that hold for everyone:
   The importer currently accepts CC0 sources, copies their license and provenance into
   `state/sdkimports/`, and emits owned C without external-project includes. Compile donors
   against their own nested standard-library headers and source-relative includes.
+  For game-code reuse, `--rel-only --root PATH` restricts discovery to REL targets
+  and selected donor roots. `--compile-sdk NAME --functions --root FILE` compiles
+  independent declaration closures when a full donor TU needs unavailable assets;
+  unresolved dependencies are excluded. F-Zero X's N64 build defines are supplied
+  by the importer, without inheriting F-Zero GX's project defines.
 - Never delete `build/` or `.fzgx/`. `.claude/settings.json` denies `rm -r`,
   `git clean/checkout/restore/reset/stash/rebase/push` and `ninja -t clean`
   for every agent in this repo. If the build looks broken, run

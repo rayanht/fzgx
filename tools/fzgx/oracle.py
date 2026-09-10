@@ -595,6 +595,8 @@ def compile_many(project: Project, module: str, sources: List[Path], out_dir: Pa
     Returns {source: object} for the objects that exist afterwards; a source that fails to
     compile is simply absent (mwcc goes on with the next file)."""
     flags, mw = module_flags(project, module)
+    if include_dirs is not None:
+        flags = shlex.join(flag for flag in shlex.split(flags) if not flag.startswith('-D'))
     mw = mw_version or mw
     if extra_cflags:
         extra = shlex.split(extra_cflags)

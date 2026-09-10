@@ -190,7 +190,9 @@ def declarations(text: str) -> list:
 
 
 def include_directories(sdk: Path) -> list:
-    includes = ['include', 'src', 'src/dolphin', 'libs/dolphin']
+    includes = ['include', '.', 'src', 'src/dolphin', 'libs/dolphin']
+    if sdk.name == 'fzerox':
+        includes += ['include/PR', 'include/leo']
     includes += [str(d.relative_to(sdk)) for d in sdk.rglob('*')
                  if d.is_dir() and d.name.lower() in ('include', 'inc') and '.git' not in d.parts
                  and len(d.relative_to(sdk).parts) <= 6]
@@ -198,15 +200,36 @@ def include_directories(sdk: Path) -> list:
     return [sdk / inc for inc in dict.fromkeys(includes) if (sdk / inc).is_dir()]
 
 
+def preprocessor_flags(sdk: Path) -> list:
+    if sdk.name == 'fzerox':
+        # The N64 build normally supplies these through IDO and its Makefile.
+        return ['-D_LANGUAGE_C', '-D_MIPS_SZLONG=32', '-D_MIPS_SZINT=32', '-D_MIPS_SZPTR=32',
+                '-DF3DEX_GBI_2', '-DVERSION_US=1', '-DBUILD_REVISION=REVISION_B',
+                '-DLANGUAGE=LANGUAGE_ENG', '-DOS_TV_TYPE=OS_TV_TYPE_NTSC',
+                '-DBUILD_VERSION=VERSION_I', '-DASSET_VERSION=us', '-DASSET_REVISION=rev0']
+    return []
+
+
 def preprocess(sdk: Path, source: str, mw: str) -> str:
     scratch = STATE_DIR / 'sdkimport' / sdk.name
     scratch.mkdir(parents=True, exist_ok=True)
     output = scratch / (Path(source).stem + '.i')
     cmd = [str(ROOT / 'build/tools/wibo'), str(ROOT / 'build/compilers' / mw / 'mwcceppc.exe')]
-    cmd += sdkmatch.DOLPHIN_FLAGS + ['-cwd', 'source']
+    cmd += sdkmatch.DOLPHIN_FLAGS + ['-cwd', 'source'] + preprocessor_flags(sdk)
     for inc in include_directories(sdk):
         cmd += ['-i', str(inc)]
-    cp = subprocess.run(cmd + ['-E', source], cwd=sdk, text=True, capture_output=True, timeout=120)
+    input_source = source
+    if sdk.name == 'fzerox':
+        # Asset declarations require an N64 ROM extraction. Their identifiers stay
+        # unresolved, so only functions whose declaration closure is complete can
+        # enter the donor catalog; no asset types or values are invented.
+        body = (sdk / source).read_text()
+        body = re.sub(r'^\s*#include\s+ASSET_HEADER\([^\n]+\)\s*$', '', body, flags=re.M)
+        wrapper = scratch / (Path(source).stem + '.input.c')
+        wrapper.write_text('#line 1 ' + json.dumps(source) + '\n' + body)
+        input_source = str(wrapper)
+        cmd += ['-i', str((sdk / source).parent)]
+    cp = subprocess.run(cmd + ['-E', input_source], cwd=sdk, text=True, capture_output=True, timeout=120)
     if cp.returncode:
         raise RuntimeError((cp.stdout + cp.stderr)[-3000:])
     output.write_text(cp.stdout)

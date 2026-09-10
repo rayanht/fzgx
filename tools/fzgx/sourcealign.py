@@ -255,23 +255,54 @@ def source_flags(sdk: str, source: str) -> str:
     return shlex.join(flags)
 
 
-def compile_library(p: Project, sdk: str, roots: list) -> dict:
+def compile_library(p: Project, sdk: str, roots: list, functions=False) -> dict:
     source_license(sdk)
     root = ROOT / 'build/tools' / sdk
-    sources = sorted({source for relative in roots for source in (root / relative).rglob('*.c')})
+    sources = sorted({source for relative in roots for source in
+                      ([(root / relative)] if (root / relative).is_file() else (root / relative).rglob('*.c'))})
     if not sources:
         raise ValueError('no SDK C sources in the requested roots')
     directory = STATE_DIR / 'sourcealign/libraries' / sdk
     records, failures = [], []
     for mw in ('GC/1.2.5n', 'GC/1.3.2'):
+        origins = {source: source for source in sources}
+        prepared = sources
+        if functions:
+            prepared, origins = [], {}
+            for source in sources:
+                relative = str(source.relative_to(root))
+                try:
+                    pieces = sdkimport.declarations(sdkimport.preprocess(root, relative, mw))
+                except (ValueError, RuntimeError, SyntaxError) as error:
+                    failures.append(dict(source=relative, error=str(error)))
+                    continue
+                names = set().union(*(piece.names for piece in pieces if piece.kind == 'function'))
+                output = directory / 'functions' / mw.replace('/', '_') / source.relative_to(root).with_suffix('')
+                output.mkdir(parents=True, exist_ok=True)
+                for name in sorted(names):
+                    try:
+                        body = source_body(pieces, name, names - {name})
+                    except (ValueError, StopIteration):
+                        continue
+                    path = output / (name + '.c')
+                    path.write_text(body)
+                    prepared.append(path)
+                    origins[path] = source
+        compiler_failed = False
         for module in ('main', 'movie_module'):
+            if compiler_failed:
+                break
             for stmw in (False, True):
                 flags = f'-sdata {8 if module == "main" else 0} -sdata2 {8 if module == "main" else 0}'
                 flags += ' -use_lmw_stmw ' + ('on' if stmw else 'off')
+                if not functions:
+                    flags += ' ' + shlex.join(sdkimport.preprocessor_flags(root))
                 tag = mw.replace('/', '_') + '_' + module + ('_stmw' if stmw else '')
                 output = directory / tag
+                if functions:
+                    output /= 'functions'
                 groups = []
-                for source in sources:
+                for source in prepared:
                     group = next((g for g in groups if all(s.stem != source.stem for s in g)), None)
                     if group is None:
                         group = []
@@ -280,21 +311,27 @@ def compile_library(p: Project, sdk: str, roots: list) -> dict:
                 objects = {}
                 for i, group in enumerate(groups):
                     objects.update(oracle.compile_many(p, module, group, output / str(i), mw, flags,
-                                                       include_dirs=sdkimport.include_directories(root)))
+                                                       include_dirs=None if functions else sdkimport.include_directories(root)))
                 for source, obj in objects.items():
-                    records.append(dict(sdk=sdk, source=str(source.relative_to(root)), object=str(obj), mw=mw, flags=flags))
-                failures.append(dict(profile=tag, failed=[str(s.relative_to(root)) for s in sources if s not in objects]))
-                print(tag, len(objects), '/', len(sources), 'compiled', flush=True)
+                    records.append(dict(sdk=sdk, source=str(origins[source].relative_to(root)), object=str(obj), mw=mw, flags=flags,
+                                        mode='functions' if functions else 'files'))
+                failures.append(dict(profile=tag, failed=[str(s) for s in prepared if s not in objects]))
+                print(tag, len(objects), '/', len(prepared), 'compiled', flush=True)
+                if not objects:
+                    compiler_failed = True
+                    break
     manifest = STATE_DIR / 'sourcealign/libraries.json'
     previous = json.loads(manifest.read_text()) if manifest.exists() else []
-    keys = {(r['sdk'], r['source'], r['mw'], r['flags']) for r in records}
-    previous = [r for r in previous if (r['sdk'], r['source'], r['mw'], r['flags']) not in keys]
+    keys = {(r['sdk'], r['source'], r['mw'], r['flags'], r.get('mode', 'files')) for r in records}
+    previous = [r for r in previous if (r['sdk'], r['source'], r['mw'], r['flags'], r.get('mode', 'files')) not in keys]
     manifest.write_text(json.dumps(previous + records, indent=2) + '\n')
     return dict(sources=len(sources), objects=len(records), profiles=failures)
 
 
-def discover(p: Project, minimum: int = 256) -> dict:
+def discover(p: Project, minimum: int = 256, roots=(), rel_only=False) -> dict:
     donors = catalog(p, minimum)
+    if roots:
+        donors = [row for row in donors if any(Path(row['source']).is_relative_to(root) for root in roots)]
     index = defaultdict(list)
     for i, row in enumerate(donors):
         for gram, count in grams(row['words']).items():
@@ -304,6 +341,8 @@ def discover(p: Project, minimum: int = 256) -> dict:
     targets = defaultdict(dict)
     ledger = Ledger()
     for module in p.modules:
+        if rel_only and module == 'main':
+            continue
         for sym in p.functions(module):
             row = ledger.get(p.key(sym))
             if sym.size >= minimum and row and row['status'] == 'unmatched':
@@ -344,7 +383,8 @@ def discover(p: Project, minimum: int = 256) -> dict:
                 sym = names[name]
                 results.append(dict(symbol=p.key(sym), module=sym.module, size=sym.size, candidates=candidates))
     results.sort(key=lambda r: -r['size'])
-    out = dict(donors=len(donors), targets=count, functions=len(results), bytes=sum(r['size'] for r in results), results=results)
+    out = dict(donors=len(donors), targets=count, functions=len(results), bytes=sum(r['size'] for r in results),
+               roots=list(roots), rel_only=rel_only, results=results)
     directory = STATE_DIR / 'sourcealign'
     directory.mkdir(exist_ok=True)
     (directory / 'discovery.json').write_text(json.dumps(out, indent=2) + '\n')
@@ -861,9 +901,9 @@ def apply_names(p: Project) -> dict:
     return dict(ok=renamed['ok'], applied=renamed['applied'], names=applied, skipped=skipped)
 
 
-def run(p: Project, minimum=256, symbols=(), saved=False, do_submit=True, discover_only=False) -> dict:
+def run(p: Project, minimum=256, symbols=(), saved=False, do_submit=True, discover_only=False, roots=(), rel_only=False) -> dict:
     directory = STATE_DIR / 'sourcealign'
-    discovery = json.loads((directory / 'discovery.json').read_text()) if saved else discover(p, minimum)
+    discovery = json.loads((directory / 'discovery.json').read_text()) if saved else discover(p, minimum, roots, rel_only)
     if discover_only:
         return {k: v for k, v in discovery.items() if k != 'results'}
     cache, results = {}, []

@@ -295,10 +295,10 @@ def cmd_sourcealign(a, p):
         _print(result, a.json)
         return 0 if result['ok'] else 1
     if a.compile_sdk:
-        _print(sourcealign.compile_library(p, a.compile_sdk, a.root), a.json)
+        _print(sourcealign.compile_library(p, a.compile_sdk, a.root, a.functions), a.json)
         return 0
     result = sourcealign.submit_saved(p, a.symbol) if a.submit_saved else sourcealign.run(
-        p, a.min_size, a.symbol, a.saved, not a.no_submit, a.discover)
+        p, a.min_size, a.symbol, a.saved, not a.no_submit, a.discover, roots=a.root, rel_only=a.rel_only)
     _print(result, a.json)
     return 0
 
@@ -446,8 +446,10 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--no-submit", action="store_true")
     s.add_argument("--submit-saved", action="store_true", help="recheck and submit saved exact candidates without repeating probes")
     s.add_argument("--compile-sdk", help="compile another local SDK donor tree under build/tools")
+    s.add_argument("--functions", action="store_true", help="compile donor functions independently, excluding unresolved dependencies")
     s.add_argument("--apply-names", action="store_true", help="apply unambiguous function names from verified licensed imports")
-    s.add_argument("--root", action="append", default=[], help="source root relative to the SDK, repeatable")
+    s.add_argument("--root", action="append", default=[], help="source root relative to the SDK; filters compilation or discovery, repeatable")
+    s.add_argument("--rel-only", action="store_true", help="discover matches in REL modules only")
     s = sub.add_parser("sdkmatch", help="identify SDK/runtime functions in the DOL by masked-byte signatures of a compiled public SDK decomp"); s.set_defaults(fn=cmd_sdkmatch)
     s.add_argument("--sdk", default="build/tools/mkdd"); s.add_argument("--mw", default="GC/1.2.5n"); s.add_argument("--min-size", type=int, default=16)
     s.add_argument("--apply", action="store_true", help="name the identified unnamed DOL functions from the saved runs (link-verified)")
