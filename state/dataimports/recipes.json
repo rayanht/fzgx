@@ -1,0 +1,17 @@
+{
+  "lbl_16_data_0": {
+    "type": "ProfileTextData",
+    "regions": [
+      {"field": "biographies", "shape": [41, 6, 2048]},
+      {"field": "machines", "shape": [41, 2, 6, 64]}
+    ],
+    "evidence": "profile:_prolog advances biography records by 0x3000; fn_16_1038 multiplies pilot indices by 0x3000 and slot indices by 0x800. Retail contains 41 such records, then 41 pairs of six 0x40-byte machine-text slots at 0x7B000. Every slot is NUL-terminated and otherwise zero padded. Slot 0 contains English text, slot 5 Shift-JIS, slots 1-4 are empty. Machine-text pairs contain engine and maker strings."
+  },
+  "lbl_16_bss_B0B8": {
+    "type": "ProfileBiographyBuffer",
+    "regions": [
+      {"field": "biographies", "shape": [41, 6, 2048]}
+    ],
+    "evidence": "profile:fn_16_1038 at 0x1154-0x1168 indexes lbl_16_bss_B0B8 by pilot * 0x3000 + language * 0x800 before copying the formatted biography. The 0x7B000-byte symbol holds exactly 41 records."
+  }
+}

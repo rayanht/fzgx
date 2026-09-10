@@ -58,7 +58,13 @@ Rules that hold for everyone:
   `git clean/checkout/restore/reset/stash/rebase/push` and `ninja -t clean`
   for every agent in this repo. If the build looks broken, run
   `python3 configure.py && ninja build/GFZE01/ok` and report; do not "clean".
-- `fzgx submit` is the only path that flips a unit to `matching`; the batch verifier drains
+- `fzgx submit` accepts matching functions; `fzgx data-import --apply` accepts independent
+  data after compiling its definitions, checking layout/relocations, and verifying all 16 hashes.
+  `fzgx data-import --inventory --module MODULE` lists unowned data and existing declarations.
+  `--recipes state/dataimports/recipes.json` supplies measured text layouts;
+  `--regenerate --recipes state/dataimports/recipes.json --apply` reproduces the saved imports.
+  See `docs/DATA_IMPORT.md`. Data units are marked `data: true` and have no function claims.
+  The batch verifier drains
   completed matches every 60 seconds (`--verify-interval`) and checks every hash before
   committing. Its normal path runs one incremental Ninja build; baseline restoration and
   bisection run only after a failure. Literal-pool constants: retail pooled

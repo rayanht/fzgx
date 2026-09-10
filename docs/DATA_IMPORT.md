@@ -1,0 +1,68 @@
+# Shared data imports
+
+`uv run tools/fzgx.py data-import --inventory --module profile` lists unowned
+objects, existing declarations and function references. Import explicit symbols
+with `data-import SYMBOL ... --apply`. Without `--apply`, the same generator and
+MWCC object checks run in `.fzgx/dataimport/` without transferring ownership.
+
+Definitions live in `src/<module>/data/`; recovered aggregate types live in
+`include/<module>/data/`. Contiguous symbols compile together. Existing generated
+units can grow to include adjacent members without waiting for any function.
+`state/dataimports/GFZE01.json` records declarations, references, retail payload
+hashes, symbolic relocations, source ownership and any measured layout recipe.
+
+Reproduce every saved definition and verify the result:
+
+```sh
+uv run tools/fzgx.py data-import --regenerate \
+  --recipes state/dataimports/recipes.json --apply
+```
+
+The importer checks each compiled symbol's size and offset, section size and
+alignment, exact initialized bytes, and every relocation's module, section,
+target address and addend. BSS must be NOBITS. Extra allocated sections are
+rejected. Applying runs configure, Ninja, and the explicit 16-target hash check,
+then checks the actual Ninja objects too. Failed integration restores the files
+it changed and rebuilds the previous tree. Commit the tooling, source, headers,
+splits, units and provenance together; never push.
+
+## Layout rules recovered from real imports
+
+- Existing BSS header declarations retain their structs and pointer fields.
+  Unrecovered BSS uses an explicitly opaque byte array of the retail extent.
+- Finite floats use decimal constants checked against their exact retail bits.
+  Float-tagged pools with non-finite words use a union of raw bits and float
+  values; the annotation alone does not establish that every word is a float.
+- Strings retain terminators and interior padding. Fixed-width octal escapes
+  preserve Shift-JIS bytes without depending on source-file encoding.
+- Relocated table fields use function pointers and byte pointers with symbolic
+  offsets. Code-interior pointers and jump tables are excluded from independent
+  data import. Unsupported layouts are reported, not dumped as arbitrary assets.
+- MWCC initialized sections have a minimum 8-byte alignment. Group contiguous
+  members to preserve symbols at 4-byte offsets. Owned trailing zero padding
+  extends splits to DTK's word boundary; the linker supplies those padding bytes.
+  A separate C padding array would introduce another alignment gap.
+- DTK can omit an isolated zero-only auto range, including its named symbol.
+  Include adjacent zero objects and all members of an affected generated unit.
+  `#pragma explicit_zero_data on` keeps initialized scalar zeros out of BSS.
+- REL offsets overlap across sections. Padding and relocation checks must use
+  the named section, not the first raw section containing that numeric offset.
+
+## Profile text layout
+
+`lbl_16_data_0` is 535,296 bytes, entirely fixed-capacity text:
+
+| Offset | Layout | Bytes |
+| --- | --- | ---: |
+| `0x00000` | 41 pilots × 6 language slots × 2,048-byte biographies | 503,808 |
+| `0x7B000` | 41 machines × 2 text fields × 6 language slots × 64 bytes | 31,488 |
+
+The two machine fields contain engine and maker strings. Language slot 0 is
+English, slot 5 contains Shift-JIS text, and slots 1–4 are empty in GFZE01.
+Every cell has a terminator followed entirely by zero padding. The generator
+checks all 738 cells rather than inferring padding from a sample.
+
+`profile:_prolog` builds biography addresses at `0x3000` strides.
+`fn_16_1038` uses a `0x3000` pilot stride and `0x800` language stride for
+`lbl_16_bss_B0B8`, the corresponding 503,808-byte working buffer. The recovered
+headers expose both layouts; recipes retain the evidence used to select them.

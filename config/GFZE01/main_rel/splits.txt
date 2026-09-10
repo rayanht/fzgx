@@ -5525,3 +5525,12 @@ rel/main_rel/font/fn_1_4AC20.c:
 
 rel/main_rel/sel_static_disp/fn_1_139AEC.c:
 	.text       start:0x00139AEC end:0x00139D60 align:4
+
+rel/main_rel/data/lbl_1_bss_5480.c:
+	.bss        start:0x00005480 end:0x00025B80 align:32
+
+rel/main_rel/data/lbl_1_bss_25BA0.c:
+	.bss        start:0x00025BA0 end:0x00025C48 align:32
+
+rel/main_rel/data/lbl_1_bss_6EAD0.c:
+	.bss        start:0x0006EAD0 end:0x0006F1D8 align:16

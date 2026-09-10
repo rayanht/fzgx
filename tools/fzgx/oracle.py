@@ -872,7 +872,8 @@ def function_rows(project: Project, symbol_name: str, target: Path, obj: Path):
 
 
 def compile_source(project: Project, module: str, source: Path, obj: Path,
-                   mw_version: Optional[str] = None, extra_cflags: Optional[str] = None) -> subprocess.CompletedProcess:
+                   mw_version: Optional[str] = None, extra_cflags: Optional[str] = None,
+                   *, include_dirs: Optional[List[Path]] = None) -> subprocess.CompletedProcess:
     """Compile a standalone source with the module's flags into `obj` (no unit involved);
     a unit-specific compiler version or extra flags (last flag wins in mwcc) override them."""
     flags, mw = module_flags(project, module)
@@ -885,6 +886,8 @@ def compile_source(project: Project, module: str, source: Path, obj: Path,
         flags = " ".join([flags] + [shlex.quote(f) for f in extra if not f.startswith("-O")])
     obj.parent.mkdir(parents=True, exist_ok=True)
     cmd = [str(ROOT / "build" / "tools" / "wibo"), str(ROOT / "build" / "compilers" / mw / "mwcceppc.exe")]
+    # Regenerated headers must take precedence over their currently owned copy.
+    cmd += [arg for path in include_dirs or [] for arg in ('-i', str(path))]
     cmd += shlex.split(flags) + ["-c", str(source), "-o", str(obj)]
     return subprocess.run(cmd, cwd=ROOT, text=True, capture_output=True, timeout=120)
 

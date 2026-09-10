@@ -40,6 +40,13 @@ default and drain again on exit; completed matches do not wait for outlier model
 Rules enforced by tooling:
 no hardcoded addresses, no inline asm, no writes outside the assigned work copy.
 
+Shared data is integrated independently with `fzgx data-import --apply`, never
+through a matcher claim. Preserve recovered header types. The importer proves
+MWCC layout, initialized bytes and relocation bindings before transferring splits,
+then checks all 16 hashes. `--regenerate --apply` recreates saved imports;
+`--recipes state/dataimports/recipes.json` applies measured text layouts.
+Jump tables and code-interior pointers remain with their reconstructed functions.
+
 ## Librarian (serial; stronger model)
 
 Applies name proposals (`fzgx names`), promotes shared structs into

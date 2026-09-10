@@ -26,6 +26,25 @@ def cmd_sync(a, p):
     _print(api.sync(p), a.json); return 0
 
 
+def cmd_data_import(a, p):
+    from . import dataimport
+    if a.inventory:
+        _print(dataimport.inventory(p, a.module), a.json)
+        return 0
+    recipes = json.loads(Path(a.recipes).read_text()) if a.recipes else {}
+    names = a.symbols or list(recipes)
+    if a.regenerate:
+        from .project import ROOT
+        saved = json.loads((ROOT / 'state/dataimports' / f'{p.version}.json').read_text())
+        names = list(saved)
+        recipes = {key: recipes.get(r['symbol'], r.get('recipe')) for key, r in saved.items()}
+    if not names:
+        raise ValueError('provide data symbols, --recipes, or --inventory')
+    result = dataimport.import_data(p, names, a.apply, recipes, a.regenerate)
+    _print(result if a.json else {k: v for k, v in result.items() if k != 'records'}, a.json)
+    return 1 if result['skipped'] else 0
+
+
 def cmd_inventory(a, p):
     rows = api.inventory(p, a.module, a.status, a.limit, a.max_size)
     if a.json:
@@ -401,6 +420,15 @@ def build_parser() -> argparse.ArgumentParser:
     ap.add_argument("--version", default="GFZE01")
     ap.add_argument("--json", action="store_true", help="machine-readable output")
     sub = ap.add_subparsers(dest="cmd", required=True)
+
+    s = sub.add_parser('data-import', help='generate and object-verify shared data; --apply transfers splits and checks all hashes')
+    s.set_defaults(fn=cmd_data_import)
+    s.add_argument('symbols', nargs='*')
+    s.add_argument('--apply', action='store_true')
+    s.add_argument('--inventory', action='store_true')
+    s.add_argument('--module')
+    s.add_argument('--recipes', help='JSON string-grid layouts keyed by symbol')
+    s.add_argument('--regenerate', action='store_true', help='recreate saved imports and preserve their split ownership')
 
     s = sub.add_parser("sync", help="load functions from dtk config into the ledger"); s.set_defaults(fn=cmd_sync)
     s = sub.add_parser("inventory", help="list functions"); s.set_defaults(fn=cmd_inventory)

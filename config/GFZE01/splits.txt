@@ -4844,3 +4844,6 @@ dol/fn_8002A698.c:
 
 dol/fn_8007B338.c:
 	.text       start:0x8007B338 end:0x8007C3B8 align:4
+
+dol/data/__files.c:
+	.data       start:0x8015AE58 end:0x8015AF98 align:8
