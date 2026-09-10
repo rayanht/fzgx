@@ -11473,6 +11473,16 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_800035C0.c",
+    "symbols": [
+      "fn_800035C0"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
     "source": "dol/fn_80005518.c",
     "symbols": [
       "fn_80005518"
