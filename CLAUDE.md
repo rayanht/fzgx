@@ -238,7 +238,8 @@ Rules that hold for everyone:
   Bind each headless worker to its assigned symbol and agent id. A successful
   submit/release ends that worker's attempt; reclaiming cannot reset its counters.
   Direct checks and compiler-version probes must honor the same stop as source edits.
-  Disable both `multi_agent` and `multi_agent_v2` in matcher CLIs: nested agents
+  Set catalog `multi_agent_version=null` as well as disabling `multi_agent` and
+  `multi_agent_v2`: catalog v2 can enable delegation despite those feature flags. Nested agents
   otherwise share the claimed work copy and corrupt each other's checks. Enforce
   the assigned symbol and identity on every CLI tool call, serialize calls for that
   function, and pass the release caller's identity through to the ledger guard.
