@@ -904,51 +904,30 @@ def compile_unit(project: Project, unit: str, unit_src: str,
 CANDIDATE_VERSIONS = ["GC/1.2.5", "GC/1.2.5n", "GC/1.3", "GC/1.3.2", "GC/2.0", "GC/2.5", "GC/2.7"]
 
 
-def check_versions(project: Project, symbol: str, versions: List[str]) -> Dict[str, float]:
-    """Compile the unit under several compiler versions; return symbol match % per version.
-
-    Uses the unit's flags from objdiff.json, wibo + build/compilers/<ver>/mwcceppc.exe,
-    and objdiff-cli in two-object mode. Never touches the ninja build.
-    """
+def check_versions(project: Project, symbol: str, versions: List[str],
+                   extra_cflags: Optional[str] = None) -> Dict[str, float]:
+    """Probe the current candidate, including uncarved functions, in scratch objects."""
     sym = project.resolve(symbol)
-    unit_src = project.unit_of(sym) if sym else None
-    if not sym or not unit_src:
+    if sym is None:
         return {}
-    symbol = sym.name
-    unit = project.objdiff_unit_name(sym.module, unit_src)
-    meta = project.objdiff_units().get(unit, {})
-    # objdiff's scratch flags omit the include dirs the ninja rule adds per unit
-    flags = meta.get("scratch", {}).get("c_flags", "").replace(" -lang=c", "")
-    flags += f" -i include -i build/{project.version}/include"
-    target = ROOT / meta.get("target_path", "")
-    src = unit_source_path(project, unit_src)
-    wibo = ROOT / "build" / "tools" / "wibo"
+    unit_src = project.unit_of(sym)
+    work = project.work_path(project.key(sym))
+    source = work if work.exists() else (unit_source_path(project, unit_src) if unit_src else None)
+    if source is None:
+        return {}
     out: Dict[str, float] = {}
-    tmp = STATE_DIR / "versions" / symbol
+    tmp = STATE_DIR / "versions" / project.key(sym).replace(":", "__")
     tmp.mkdir(parents=True, exist_ok=True)
     for ver in versions:
-        mwcc = ROOT / "build" / "compilers" / ver / "mwcceppc.exe"
-        if not mwcc.exists():
+        if not (ROOT / "build" / "compilers" / ver / "mwcceppc.exe").exists():
             out[ver] = -1.0
             continue
-        obj = tmp / (ver.replace("/", "_") + ".o")
-        # flags carry quoted pragmas: -pragma "cats off"
-        cmd = [str(wibo), str(mwcc)] + shlex.split(flags) + ["-c", str(src), "-o", str(obj)]
-        cp = subprocess.run(cmd, cwd=ROOT, text=True, capture_output=True)
-        if cp.returncode != 0 or not obj.exists():
-            (tmp / (ver.replace("/", "_") + ".err")).write_text(cp.stdout + cp.stderr)
+        res = check(project, symbol, 0, source=source, mw_version=ver, extra_cflags=extra_cflags)
+        if not res.ok:
+            (tmp / (ver.replace("/", "_") + ".err")).write_text(res.error or "check failed")
             out[ver] = -2.0
-            continue
-        cp = run([str(OBJDIFF), "diff", "-1", str(target), "-2", str(obj), "-o", "-", "--format", "json"])
-        if cp.returncode != 0:
-            out[ver] = -3.0
-            continue
-        data = json.loads(cp.stdout)
-        pct = 0.0
-        for s in data.get("left", {}).get("symbols", []):
-            if s.get("name") == symbol and "match_percent" in s:
-                pct = float(s["match_percent"])
-        out[ver] = pct
+        else:
+            out[ver] = res.percent_adjusted if res.pool_rows else res.percent
     return out
 
 

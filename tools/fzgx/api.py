@@ -301,7 +301,7 @@ def _budget_stop(att) -> Optional[str]:
         return None
     if (att["checks"] or 0) >= MAX_CHECKS:
         return f"budget exhausted: {MAX_CHECKS} checks used"
-    if (att["stale_checks"] or 0) >= MAX_STALE and (att["best_in_attempt"] or 0) < 100.0:
+    if (att["stale_checks"] or 0) >= MAX_STALE:
         return f"plateau: {MAX_STALE} consecutive checks without improvement (best {att['best_in_attempt']:.1f}%)"
     return None
 
@@ -318,9 +318,17 @@ def check(p: Project, symbol: str, max_diff_lines: int = 80, versions: Optional[
             return {"ok": False, "error": stop + "; call release(symbol, agent, reason) now"}
     if versions:
         vers = oracle.CANDIDATE_VERSIONS if versions == "all" else versions.split(",")
-        out = oracle.check_versions(p, symbol, vers)
+        out = {}
+        for ver in vers:
+            if row and row["status"] == "claimed" and _budget_stop(l.current_attempt(key)):
+                break
+            result = oracle.check_versions(p, symbol, [ver], extra_cflags=_seed_record(key).get('flags'))
+            out.update(result)
+            if row and row["status"] == "claimed" and result:
+                l.bump_checks(key, max(0.0, max(result.values())))
         return {"ok": True, "symbol": symbol, "versions": out,
-                "note": "-1 compiler missing, -2 compile error, -3 diff error"}
+                "stop": _budget_stop(l.current_attempt(key)),
+                "note": "-1 compiler missing, -2 check failed; each compiler probe counts toward the attempt"}
     unit = _unit_source(p, symbol)
     src = _work_source(p, key, unit)
     seed = _seed_record(key)
@@ -343,11 +351,11 @@ def check(p: Project, symbol: str, max_diff_lines: int = 80, versions: Optional[
                                     "mw": res.mw_version, "flags": res.extra_cflags}) + "\n")
         except OSError:
             pass
-    if res.ok and src is not None:
-        conflict = _prologue_conflict(p, key, unit) if unit else None
+    if src is not None:
+        conflict = _prologue_conflict(p, key, unit) if res.ok and unit else None
         if conflict:
             out["prologue_conflict"] = conflict
-        stats = Ledger().bump_checks(key, res.percent_adjusted if res.pool_rows else res.percent)
+        stats = Ledger().bump_checks(key, (res.percent_adjusted if res.pool_rows else res.percent) if res.ok else 0.0)
         out["budget"] = stats
         if stats.get("improved"):
             best = STATE_DIR / "attempts" / f"{key}.best.c"
@@ -362,9 +370,10 @@ def check(p: Project, symbol: str, max_diff_lines: int = 80, versions: Optional[
 
 def format_check(res: Dict[str, Any]) -> str:
     if "versions" in res:
-        return "\n".join(f"{v:10s} {'n/a' if pct < 0 else f'{pct:.1f}%'}" for v, pct in res["versions"].items())
+        text = "\n".join(f"{v:10s} {'n/a' if pct < 0 else f'{pct:.1f}%'}" for v, pct in res["versions"].items())
+        return text + (f"\nSTOP: {res['stop']}; call release(symbol, agent, reason)." if res.get("stop") else "")
     if not res["ok"]:
-        return f"CHECK FAILED: {res['error']}"
+        return f"CHECK FAILED: {res['error']}" + (f"\nSTOP: {res['stop']}; call release(symbol, agent, reason)." if res.get("stop") else "")
     verdict = "MATCH" if res["matched"] else ("MATCH (pool)" if res.get("matched_pool") else "no match")
     lines = [f"{res['symbol']}: {res['percent']:.1f}%  unit={res['unit']}  {verdict}"]
     if res["matched"] and res.get("pool_map"):
