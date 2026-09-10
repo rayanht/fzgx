@@ -457,6 +457,72 @@ u16 fn_1_499BC(const u8 *value) {
 }
 /* fzgx:end fn_1_499BC */
 
+/* fzgx:begin fn_1_4AC20 */
+extern f32 fn_1_519FC(f32 value);
+extern f32 fn_1_51AC0(f32 value);
+extern f32 fn_1_51B84(f32 value);
+extern f32 fn_1_51BFC(f32 value);
+extern const f64 lbl_1_rodata_10F8;
+extern void fn_1_4F734(void *value);
+extern void fn_1_4E500(void);
+extern void fn_1_48D80(void *value);
+extern void fn_1_4E6F4(void);
+extern void fn_1_4E724(void *value);
+
+typedef struct {
+    u32 unk_0;
+    f32 x;
+    f32 y;
+    u8 pad_C[4];
+    f32 z;
+    f32 w;
+    u8 pad_20[0x18];
+    u32 flag;
+    u8 tail[0x24];
+} FontData;
+
+void fn_1_4AC20(FontData *value) {
+    FontData local = *value;
+    int x_max;
+    int x_ok;
+    int y_max;
+    int y_ok;
+
+    if (lbl_1_bss_4B9CC.unk_45 != 0) {
+        local.x = fn_1_519FC(local.x);
+        local.y = fn_1_51AC0(local.y);
+        local.z = fn_1_51B84(local.z);
+        local.w = fn_1_51BFC(local.w);
+    }
+
+    if (lbl_1_bss_4B9CC.unk_47 != 0) {
+        x_ok = (local.x > (f32)(lbl_1_bss_4B9CC.unk_48 + lbl_1_bss_4B9CC.unk_4C))
+                   ? 0
+                   : ((local.x < (f32)lbl_1_bss_4B9CC.unk_48) ? 0 : 1);
+        if (x_ok == 0 ||
+            (y_ok = (local.y > (f32)(lbl_1_bss_4B9CC.unk_4A + lbl_1_bss_4B9CC.unk_4E))
+                        ? 0
+                        : ((local.y < (f32)lbl_1_bss_4B9CC.unk_4A) ? 0 : 1)) == 0) {
+            return;
+        }
+    }
+
+    if (lbl_1_bss_4B9CC.unk_44 != 0) {
+        fn_1_4F734(&local);
+    } else if ((local.flag & 0x400000) != 0) {
+        if (lbl_1_bss_4B9CC.unk_46 == 0) {
+            fn_1_4E500();
+        }
+        fn_1_48D80(&local);
+        if (lbl_1_bss_4B9CC.unk_46 == 0) {
+            fn_1_4E6F4();
+        }
+    } else {
+        fn_1_4E724(&local);
+    }
+}
+/* fzgx:end fn_1_4AC20 */
+
 /* fzgx:begin fn_1_4AE0C */
 #include "runtime/va_list.h"
 #include "font.h"
