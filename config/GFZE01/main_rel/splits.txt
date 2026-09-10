@@ -5459,3 +5459,6 @@ rel/main_rel/camera/fn_1_7000.c:
 
 rel/main_rel/bg_aur/fn_1_1528D0.c:
 	.text       start:0x001528D0 end:0x00152970 align:4
+
+rel/main_rel/sound/fn_1_A4BC8.c:
+	.text       start:0x000A4BC8 end:0x000A4C9C align:4

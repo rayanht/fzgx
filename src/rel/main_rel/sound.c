@@ -311,6 +311,41 @@ void fn_1_A2E24(u32 arg0, u32 arg1, s32 arg2) {
 }
 /* fzgx:end fn_1_A2E24 */
 
+/* fzgx:begin fn_1_A4BC8 noprologue */
+#include "types.h"
+
+extern u32 fn_1_864E8(int);
+extern void *fn_1_86254(int);
+extern u32 fn_80067898(u32);
+extern u8 lbl_1_bss_6F1D8;
+extern u32 lbl_1_bss_6F1DC;
+
+typedef struct {
+    u8 pad[0x10C];
+    s32 field_10C;
+    s32 field_110;
+} FnA4BC8State;
+
+void fn_1_A4BC8(void *arg0, void *arg1, FnA4BC8State *state) {
+    u32 flags;
+
+    flags = fn_1_864E8((int)arg0);
+    fn_1_86254((int)arg0);
+
+    if (!(flags & 0x00010880)) {
+        if (state->field_10C && state->field_110 &&
+            !lbl_1_bss_6F1D8 && lbl_1_bss_6F1DC <= 0x2D) {
+            fn_80067898(0xA9061800);
+        }
+
+        if ((flags & 0x00040000) &&
+            !lbl_1_bss_6F1D8 && lbl_1_bss_6F1DC <= 0x2D) {
+            fn_80067898(0xA9092000);
+        }
+    }
+}
+/* fzgx:end fn_1_A4BC8 */
+
 /* fzgx:begin fn_1_A4C9C */
 void fn_1_A4C9C(s32 index, u8 value) {
     s16 mode;
