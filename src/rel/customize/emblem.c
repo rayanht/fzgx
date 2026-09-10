@@ -30,6 +30,59 @@ void fn_3_1349C(void) {
 }
 /* fzgx:end fn_3_1349C */
 
+/* fzgx:begin fn_3_13EA4 noprologue */
+#include "types.h"
+
+extern u8 lbl_3_data_3574[60];
+extern void *lbl_801A6410;
+extern s32 fn_1_45730(void *, void *);
+extern u32 fn_1_45B2C(void *);
+extern s32 fn_1_F7BE4(u32);
+extern void *fn_1_45D0(void *, u32, void *, u32);
+extern void fn_80008BEC(void *, u32, u32);
+extern void fn_1_458A0(void *, void *, u32, u32);
+extern void fn_80008BA8(void *, void *, u32);
+extern void fn_1_45850(void *);
+
+u32 fn_3_13EA4(void *arg, u32 *output) {
+    u8 header[0x60];
+    u8 buffer[0x2000] __attribute__((aligned(32)));
+    u32 *out;
+    u8 i;
+    u32 count;
+    u32 limit;
+    u32 size;
+
+    out = output;
+    count = 0;
+    if (fn_1_45730(arg, header) != 0) {
+        size = fn_1_45B2C(header);
+        limit = size >> 13;
+        if (limit >= 0x2c) {
+            limit = 0x2c;
+        }
+        if (size != 0) {
+            for (i = 0; i < limit; i++) {
+                if ((i == limit - 3 && fn_1_F7BE4(0x15) != 0) ||
+                    (i == limit - 2 && fn_1_F7BE4(0x21) != 0) ||
+                    (i == limit - 1 && fn_1_F7BE4(0x21) != 0) ||
+                    (fn_1_F7BE4(i) != 0)) {
+                    out[(u8)count] = (u32)fn_1_45D0(lbl_801A6410, 0x2000,
+                                                   lbl_3_data_3574, 0x27b);
+                    fn_80008BEC((void *)out[(u8)count], 0, 0x2000);
+                    fn_1_458A0(header, buffer, 0x2000,
+                               ((i << 13) + 0x1f) & ~0x1f);
+                    fn_80008BA8((void *)out[(u8)count], buffer, 0x2000);
+                    count++;
+                }
+            }
+        }
+        fn_1_45850(header);
+    }
+    return (u8)count;
+}
+/* fzgx:end fn_3_13EA4 */
+
 /* fzgx:begin fn_3_14008 */
 void fn_3_14008(void) {
     u32 *value = (u32 *)lbl_3_bss_A17A0;
@@ -63,6 +116,60 @@ u8 *fn_3_14074(void) {
     return lbl_3_bss_A17A0;
 }
 /* fzgx:end fn_3_14074 */
+
+/* fzgx:begin fn_3_14080 */
+extern u8 lbl_3_data_3574[60];
+extern u32 lbl_801A6410;
+
+typedef struct EmblemEntry {
+    u8 unk00[6];
+    u8 unk06;
+    u8 unk07;
+    void *unk08;
+    u32 unk0c;
+    u32 unk10;
+    void *unk14;
+} EmblemEntry;
+
+typedef struct EmblemState {
+    u8 unk00[8];
+    void **allocs;
+    void **sizes;
+    u8 unk14[0x5c];
+    EmblemEntry entries[0x80];
+} EmblemState;
+
+extern EmblemState lbl_3_bss_A1768;
+extern void *fn_1_45D0(u32, u32, void *, u32);
+extern void fn_80008BEC(void *, u32, u32);
+extern void *fn_3_17820(void);
+
+#pragma opt_propagation off
+void fn_3_14080(void) {
+    u8 i;
+    EmblemState *state;
+    EmblemEntry *entry;
+
+    state = &lbl_3_bss_A1768;
+    i = 0;
+    state->allocs = fn_1_45D0(lbl_801A6410, 0x200, lbl_3_data_3574, 0x2d1);
+    state->sizes = fn_1_45D0(lbl_801A6410, 0x200, lbl_3_data_3574, 0x2d2);
+    for (; i < 0x80; i++) {
+        state->allocs[i] = fn_1_45D0(lbl_801A6410, 0x2000, lbl_3_data_3574, 0x2d6);
+        state->sizes[i] = 0;
+        fn_80008BEC(state->allocs[i], 0, 0x2000);
+        entry = state->entries;
+        entry += i;
+        fn_80008BEC(entry, 0, 0x18);
+        entry->unk14 = state->allocs[i];
+        entry->unk06 = 0x1f;
+        entry->unk07 = 0x1f;
+        entry->unk08 = fn_3_17820();
+        entry->unk10 = 0;
+    }
+}
+#pragma opt_propagation reset
+/* fzgx:end fn_3_14080 */
 
 /* fzgx:begin fn_3_141A8 noprologue */
 #include "types.h"
@@ -244,3 +351,25 @@ s32 fn_3_14600(void) {
 void fn_3_146BC(void) {
 }
 /* fzgx:end fn_3_146BC */
+
+/* fzgx:begin fn_3_15240 */
+extern void fn_3_14E18(void *, s16, void *, s16, void *);
+
+void fn_3_15240(void *arg0, s16 arg1, void *arg2, u16 arg3, s16 arg4, void *arg5) {
+    s32 i;
+    s32 j;
+    s32 n;
+    s16 k;
+
+    i = arg4;
+    j = arg1;
+    n = arg3;
+    k = 0;
+    while (k < n) {
+        fn_3_14E18(arg0, j, arg2, i, arg5);
+        i++;
+        j++;
+        k++;
+    }
+}
+/* fzgx:end fn_3_15240 */

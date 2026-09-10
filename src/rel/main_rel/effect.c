@@ -896,6 +896,52 @@ void fn_1_60170(fn_1_60170_FZeroObject *object) {
 }
 /* fzgx:end fn_1_60170 */
 
+/* fzgx:begin fn_1_601B4 noprologue */
+#include "types.h"
+#include "rel/main_rel/effect.h"
+
+typedef struct {
+    u8 unk_0[0x10];
+    s32 unk_10;
+    s32 unk_14;
+    u8 unk_18[0x24];
+    f32 unk_3c;
+    f32 unk_40;
+    f32 unk_44;
+    f32 unk_48;
+    f32 unk_4c;
+    f32 unk_50;
+    u8 unk_54[0x60];
+    f32 unk_b4;
+} EffectState;
+
+extern const f32 lbl_1_rodata_29C0;
+extern const f32 lbl_1_rodata_29F0;
+extern const f64 lbl_1_rodata_2988;
+extern u32 lbl_1_bss_6C86C;
+
+void fn_1_601B4(EffectState *effect) {
+    f32 factor;
+
+    effect->unk_14--;
+    if (effect->unk_14 > 0) {
+        factor = lbl_1_rodata_29C0;
+        effect->unk_48 *= factor;
+        effect->unk_4c *= factor;
+        effect->unk_50 *= factor;
+        effect->unk_3c += effect->unk_48;
+        effect->unk_40 += effect->unk_4c;
+        effect->unk_44 += effect->unk_50;
+        effect->unk_b4 = lbl_1_rodata_29F0;
+    } else {
+        s32 numerator = effect->unk_10;
+        s32 denominator = lbl_1_bss_6C86C;
+
+        effect->unk_b4 = (f32)numerator / (f32)denominator;
+    }
+}
+/* fzgx:end fn_1_601B4 */
+
 /* fzgx:begin fn_1_60C70 */
 // fn_1_60C70: empty in retail (single blr).
 void fn_1_60C70(void) {

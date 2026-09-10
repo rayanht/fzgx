@@ -347,6 +347,33 @@ u32 fn_1_46C60(void) {
 }
 /* fzgx:end fn_1_46C60 */
 
+/* fzgx:begin fn_1_46C70 noprologue */
+#include "rel/main_rel/load.h"
+
+extern s32 fn_8000700C(void);
+
+s32 fn_1_46C70(void) {
+    s32 value;
+    s32 i;
+    Obj_1_bss_384D8 *entry;
+
+    value = fn_8000700C();
+    if (value == -1) {
+        return -1;
+    }
+
+    entry = &lbl_1_bss_384D8;
+    for (i = 0; i < 0x400; ) {
+        if (entry->unk_0 != 0 && (s32)entry->unk_4 == value) {
+            return entry->unk_8;
+        }
+        i++;
+        entry = (Obj_1_bss_384D8 *)((u8 *)entry + 0x10);
+    }
+    return -1;
+}
+/* fzgx:end fn_1_46C70 */
+
 /* fzgx:begin fn_1_46EA8 */
 void fn_1_46EA8(u32 value) {
     lbl_1_bss_3DD28[0] = value;
@@ -378,6 +405,27 @@ u32 fn_1_47184(void) {
     return lbl_1_bss_3DFF4.unk_0 - lbl_1_bss_3DCDC;
 }
 /* fzgx:end fn_1_47184 */
+
+/* fzgx:begin fn_1_471A0 noprologue */
+#include "types.h"
+
+extern u32 lbl_1_bss_384D8[5632];
+
+u32 fn_1_471A0(void) {
+    u32 *p;
+    u32 i;
+    u32 total;
+
+    total = 0;
+    p = lbl_1_bss_384D8;
+    for (i = 0; i < 0x400; i++, p += 4) {
+        if ((p[0] & 0x64000000) != 0) {
+            total += p[3];
+        }
+    }
+    return total;
+}
+/* fzgx:end fn_1_471A0 */
 
 /* fzgx:begin fn_1_479B0 */
 // Reset the loading state and clear the associated resource markers.

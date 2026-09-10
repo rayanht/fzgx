@@ -143,6 +143,46 @@ u32 fn_1_101C0(void) {
 }
 /* fzgx:end fn_1_101C0 */
 
+/* fzgx:begin fn_1_101D0 */
+typedef struct {
+    u8 pad_0[0x6];
+    u16 unk_6;
+    u8 pad_8[0x8];
+    u16 unk_10;
+    u16 unk_12;
+    u16 unk_14;
+    u8 pad_16[0x2];
+    u32 unk_18;
+    u8 pad_1C[0x48];
+    u16 unk_64;
+} Fn_1_101D0_State;
+
+extern u32 fn_80008E30(u32);
+
+void fn_1_101D0(Fn_1_101D0_State *self) {
+    Obj_1_bss_17C4_At0 *base;
+    u32 count;
+    u32 off;
+
+    count = lbl_1_data_44F4.unk_0;
+    base = lbl_1_bss_17C4.unk_0;
+
+    if (self->unk_64 == 0) {
+        self->unk_10++;
+        off = self->unk_10 * 0x54;
+        if (self->unk_10 < count) {
+            self->unk_64 = fn_80008E30(*(u32 *)((u8 *)base + off));
+            self->unk_12 = 5;
+            self->unk_14 = self->unk_10;
+            self->unk_6 = 0;
+            self->unk_18 = 1;
+        }
+        return;
+    }
+    self->unk_18 = 0;
+}
+/* fzgx:end fn_1_101D0 */
+
 /* fzgx:begin fn_1_12850 */
 u8 fn_1_12850(void) {
     return lbl_1_bss_17B4[0];

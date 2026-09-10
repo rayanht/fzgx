@@ -178,6 +178,66 @@ void colchg_selcar_init(void) {
 }
 /* fzgx:end colchg_selcar_init */
 
+/* fzgx:begin fn_9_5D8 noprologue */
+#include "types.h"
+#include "rel/car_colchg/globals.h"
+
+extern struct Struct_lbl_1_bss_D58 lbl_1_bss_D58;
+extern s16 lbl_1_bss_96A;
+extern s16 *lbl_1_data_1FB6C[];
+s32 fn_1_4C10(void);
+
+struct ColchgState {
+    u8 unk_0[8];
+    u16 flags_8;
+    u8 unk_A[6];
+    u16 flags_10;
+    u16 flags_12;
+};
+
+struct ColchgVolFlags {
+    u8 unk_0[8];
+    u16 flags_8;
+    u8 unk_A[6];
+    volatile u16 flags_10;  /* retail re-reads it for the second test: keep the loads distinct */
+    volatile u16 flags_12;  /* retail re-reads it for the second test: keep the loads distinct */
+};
+
+void fn_9_5D8(void) {
+    s8 delta;
+    struct ColchgState *state;
+    s16 *selection;
+    s16 *entry;
+    s32 value;
+
+    if (fn_1_4C10() == 0) {
+        state = (struct ColchgState *)&lbl_1_bss_D58;
+        if ((state->flags_8 >> 9) & 1) {
+            lbl_1_bss_96A = 0x72;
+        }
+        delta = 0;
+        if ((((struct ColchgVolFlags *)&lbl_1_bss_D58)->flags_10 & 1) ||
+            (((struct ColchgVolFlags *)&lbl_1_bss_D58)->flags_12 & 1)) {
+            delta = -1;
+        }
+        if ((((struct ColchgVolFlags *)&lbl_1_bss_D58)->flags_10 >> 1 & 1) ||
+            (((struct ColchgVolFlags *)&lbl_1_bss_D58)->flags_12 >> 1 & 1)) {
+            delta++;
+        }
+        if (delta != 0) {
+            selection = &lbl_9_bss_8->unk_0;
+            value = *selection + delta;
+            *selection = value > 40 ? 0 : value < 0 ? 40 : value;
+        }
+        selection = &lbl_9_bss_8->unk_0;
+        entry = lbl_1_data_1FB6C[*selection];
+        if (((state->flags_8 >> 8) & 1) && *entry != -1) {
+            lbl_1_bss_96A = 0x76;
+        }
+    }
+}
+/* fzgx:end fn_9_5D8 */
+
 /* fzgx:begin fn_9_6F0 */
 // Apply the current car color-change configuration.
 void fn_9_6F0(void) {

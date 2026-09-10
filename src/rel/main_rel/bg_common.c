@@ -143,6 +143,50 @@ void fn_1_1067A8(void *arg0, f32 arg1, f32 arg2) {
 }
 /* fzgx:end fn_1_1067A8 */
 
+/* fzgx:begin fn_1_106B68 */
+extern u32 lbl_801A6410;
+extern u32 lbl_1_data_3F284[2];
+extern u8 lbl_1_data_3F34C[12];
+extern s32 OSIsThreadTerminated(void *arg0);
+extern void OSCancelThread(void *arg0);
+extern void fn_1_46B4(s32 arg0, s32 arg1, u8 *arg2, s32 arg3);
+extern void fn_1_469BC(void);
+extern void fn_1_466B0(s32 arg0, s32 arg1);
+
+void fn_1_106B68(void) {
+    u32 *data;
+    Obj_1_bss_85280 *base;
+    s32 i;
+
+    base = &lbl_1_bss_85280;
+    *(s32 *)((u8 *)base + 0x248) = 2;
+    if (OSIsThreadTerminated((u8 *)base + 0x918) == 0) {
+        OSCancelThread((u8 *)base + 0x918);
+    }
+
+    data = lbl_1_data_3F284;
+    fn_1_46B4(lbl_801A6410, data[1], lbl_1_data_3F34C, 0x8a5);
+    fn_1_46B4(lbl_801A6410, data[0], lbl_1_data_3F34C, 0x8a6);
+
+    data[1] = 0;
+    data[0] = 0;
+    fn_1_46B4(lbl_801A6410, base->unk_0, lbl_1_data_3F34C, 0x8a9);
+
+    base->unk_0 = 0;
+    fn_1_46B4(lbl_801A6410, base->unk_4, lbl_1_data_3F34C, 0x8ab);
+    base->unk_4 = 0;
+    fn_1_469BC();
+
+    i = 0;
+    data = (u32 *)((u8 *)base + 0x5b4);
+    for (; i < 0xd2; i++) {
+        fn_1_466B0(*data, 1);
+        data++;
+    }
+    fn_1_466B0(*(s32 *)((u8 *)base + 0x8fc), 1);
+}
+/* fzgx:end fn_1_106B68 */
+
 /* fzgx:begin fn_1_106EA4 */
 void fn_1_106EA4(f32 arg0) {
     lbl_1_bss_85290 = arg0;

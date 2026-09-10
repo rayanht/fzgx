@@ -588,6 +588,87 @@ void fn_10_BEF4(void) {
 }
 /* fzgx:end fn_10_BEF4 */
 
+/* fzgx:begin fn_10_BEF8 */
+#define SEL_MAX(x, y) ((x) > (y) ? (x) : (y))
+
+typedef struct {
+    s16 unk0;
+    u8 pad2[2];
+    s16 field4;
+    s16 field6;
+    s16 field8;
+    u8 padA[0x8A];
+    u32 flags;
+} SelState;
+
+typedef struct {
+    u8 pad0[0x94];
+    u32 flags;
+} SelGlobal;
+
+extern u8 lbl_10_bss_4938E;
+extern SelGlobal lbl_1_bss_8B3A0;
+
+void fn_10_BEF8(SelState *state) {
+    s32 value;
+
+    switch (state->unk0) {
+    case 0:
+        state->field4 = 1;
+        value = 30;
+        if (state->flags & 0x2) {
+            value = *(s8 *)&lbl_10_bss_4938E;
+        }
+        state->field6 = value;
+        break;
+    case 1:
+        if (lbl_1_bss_8B3A0.flags & 0x200) {
+            state->field6 = SEL_MAX(1, SEL_MAX(state->field6, SEL_MAX(state->field4, 1)));
+        } else {
+            state->field6 = state->field4;
+        }
+        break;
+    case 2:
+        state->field4 = 1;
+        state->field6 = 1;
+        break;
+    case 3:
+        state->field4 = 1;
+        state->field6 = 1;
+        break;
+    case 4:
+        state->field6 = 30;
+        state->field4 = 1;
+        state->field8 = 1;
+        break;
+    case 5:
+        state->field4 = 1;
+        state->field6 = 1;
+        state->field8 = 1;
+        break;
+    case 6:
+    case 7:
+    case 8:
+    case 9:
+    case 10:
+    case 11:
+    default:
+        break;
+    }
+
+    if (state->field4 <= 1) {
+        state->flags |= 0x20000000;
+        return;
+    }
+    state->flags &= 0xDFFFFFFF;
+    if (state->field4 == 2) {
+        state->flags |= 0x00040000;
+        return;
+    }
+    state->flags &= ~0x00040000;
+}
+/* fzgx:end fn_10_BEF8 */
+
 /* fzgx:begin fn_10_C210 */
 typedef struct SelOwner {
     unsigned char pad_00A4[0xA4];
@@ -1413,6 +1494,77 @@ void fn_10_1E67C(u32 arg0) {
     fn_1_4AE0C(arg0);
 }
 /* fzgx:end fn_10_1E67C */
+
+/* fzgx:begin fn_10_1FEF4 */
+extern f32 lbl_10_rodata_158[19];
+extern u8 jumptable_10_data_67E0[28];
+extern u8 lbl_10_data_5C1C[456];
+extern u8 lbl_10_data_1038[4];
+extern s32 lbl_801A66B4;
+
+extern void fn_1_49410(void);
+extern void fn_1_495B0(s32 value);
+extern void fn_1_496FC(f32 arg0, f32 arg1);
+extern void fn_1_4954C(f32 value);
+extern void fn_1_4955C(f32 arg0, f32 arg1);
+extern void fn_1_495C8(s32 value);
+extern void fn_1_49590(f32 value);
+extern void fn_1_4CE48(u8 *arg0, f32 value);
+extern f32 fn_1_4B090(u8 *arg0);
+extern void fn_1_53B14(s32 arg0, f32 arg1, f32 arg2, f32 arg3, f32 arg4, f32 arg5);
+
+void fn_10_1FEF4(s32 arg0) {
+    f32 *constants = lbl_10_rodata_158;
+    u8 *value;
+    s32 index;
+    s32 inRange;
+
+    if (arg0 - 12 < 0) {
+        index = 0;
+    } else {
+        index = arg0 - 12 > 6 ? 6 : arg0 - 12;
+    }
+
+    switch (index) {
+    case 0:
+        value = ((u8 **)(lbl_10_data_5C1C + 0x138))[lbl_801A66B4];
+        break;
+    case 1:
+        value = ((u8 **)(lbl_10_data_5C1C + 0x150))[lbl_801A66B4];
+        break;
+    case 2:
+        value = lbl_10_data_1038;
+        break;
+    case 3:
+        value = ((u8 **)(lbl_10_data_5C1C + 0x168))[lbl_801A66B4];
+        break;
+    case 4:
+        value = ((u8 **)(lbl_10_data_5C1C + 0x180))[lbl_801A66B4];
+        break;
+    case 5:
+        value = ((u8 **)(lbl_10_data_5C1C + 0x198))[lbl_801A66B4];
+        break;
+    case 6:
+        value = ((u8 **)(lbl_10_data_5C1C + 0x1b0))[lbl_801A66B4];
+        break;
+    }
+
+    inRange = arg0 - 12 > 6 ? 0 : !(arg0 - 12 < 0);
+    if (inRange) {
+        fn_1_49410();
+        fn_1_495B0(-2147483648);
+        fn_1_496FC(constants[22], constants[1160]);
+        fn_1_4954C((f32)((f64)constants[1161] - *(f64 *)(constants + 1162)));
+        fn_1_4955C(constants[112], constants[112]);
+        fn_1_495C8(9);
+        fn_1_49590(constants[18]);
+        fn_1_4CE48(value, constants[1164]);
+        fn_1_53B14(0, constants[22], constants[1160],
+            constants[1134], constants[1165] + fn_1_4B090(value),
+            constants[1161]);
+    }
+}
+/* fzgx:end fn_10_1FEF4 */
 
 /* fzgx:begin fn_10_21C20 */
 extern u8 lbl_10_data_1E80[816];

@@ -572,6 +572,41 @@ void fn_3_5CBC(void) {
 }
 /* fzgx:end fn_3_5CBC */
 
+/* fzgx:begin fn_3_5CE4 */
+extern u32 lbl_3_rodata_248[6];
+extern u32 lbl_3_bss_6DD78[42];
+extern void fn_80008BA8(void *, const void *, int);
+extern void fn_1_A6FE8(void);
+extern void fn_1_DCE60(void *);
+
+struct InitBlock {
+    u32 first;
+    u32 second;
+    u32 values[3];
+};
+
+void fn_3_5CE4(u32 arg0, u32 arg1) {
+    struct InitBlock block;
+
+    block.first = arg0;
+    block.second = arg1;
+    block.values[0] = lbl_3_rodata_248[0];
+    block.values[1] = lbl_3_rodata_248[1];
+    block.values[2] = lbl_3_rodata_248[2];
+
+    fn_80008BA8(lbl_3_bss_6DD78, &block.first, 0xc);
+    fn_80008BA8(lbl_3_bss_6DD78 + 6, &block.first + 1, 0xc);
+
+    {
+        struct Triple { u32 a; u32 b; u32 c; };
+        *(struct Triple *)&lbl_3_bss_6DD78[9] = *(struct Triple *)block.values;
+    }
+
+    fn_1_A6FE8();
+    fn_1_DCE60(lbl_3_bss_6DD78);
+}
+/* fzgx:end fn_3_5CE4 */
+
 /* fzgx:begin fn_3_60C8 */
 struct fn_3_60C8_lbl_3_data_11D4 {
     u32 unk_0;

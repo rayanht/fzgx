@@ -206,6 +206,26 @@ s16 fn_14_32DC(s16 *out) {
 }
 /* fzgx:end fn_14_32DC */
 
+/* fzgx:begin fn_14_3334 */
+extern u32 lbl_14_bss_110[20];
+
+s16 fn_14_3334(s16 *out) {
+    s16 i;
+    s16 count;
+    count = 0;
+    i = 0;
+
+    while ((u32)i < 8) {
+        if (((u32 *)&lbl_14_bss_110[i * 2])[3] & 0x8) {
+            out[count++] = ((s16 *)&lbl_14_bss_110[i * 2])[4];
+        }
+        i++;
+    }
+
+    return count;
+}
+/* fzgx:end fn_14_3334 */
+
 /* fzgx:begin fn_14_3384 */
 extern u32 lbl_14_bss_110[20];
 

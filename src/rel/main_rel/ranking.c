@@ -599,6 +599,62 @@ f32 fn_1_1577D0(u32 arg0, u32 arg1, f32 arg2) {
 }
 /* fzgx:end fn_1_1577D0 */
 
+/* fzgx:begin fn_1_157820 noprologue */
+#include "types.h"
+
+typedef struct {
+    u8 pad_0[0x4];
+    f32 unk_4;
+    f32 unk_8;
+    u8 pad_C[0x4];
+    s32 unk_10;
+    s32 unk_14;
+    s32 unk_18;
+} Obj_1_bss_8F568;
+
+typedef struct {
+    u8 pad_0[0x9e];
+    u8 unk_9e;
+} Obj_1_bss_8B3A0;
+
+typedef struct {
+    u8 pad_0[0x8];
+    u16 unk_8;
+    u8 pad_A[0xa];
+} Obj_1_bss_9F8;
+
+extern Obj_1_bss_8F568 lbl_1_bss_8F568;
+extern Obj_1_bss_8B3A0 lbl_1_bss_8B3A0;
+extern Obj_1_bss_9F8 lbl_1_bss_9F8[];
+extern s32 fn_1_157920(void);
+extern void fn_1_4060(void);
+
+void fn_1_157820(void) {
+    Obj_1_bss_8F568 *p;
+    u8 index;
+
+    p = &lbl_1_bss_8F568;
+
+    if (p->unk_14 == 0) {
+        p->unk_4 += p->unk_8;
+    } else {
+        if (p->unk_18 > 0) {
+            p->unk_18 -= 1;
+        }
+
+        index = lbl_1_bss_8B3A0.unk_9e;
+        if (((lbl_1_bss_9F8[index].unk_8 >> 8) & 1) ||
+            p->unk_18 == 0) {
+            p->unk_10 = 0;
+        }
+    }
+
+    if (fn_1_157920() == 0) {
+        fn_1_4060();
+    }
+}
+/* fzgx:end fn_1_157820 */
+
 /* fzgx:begin fn_1_1578C4 noprologue */
 #include "types.h"
 

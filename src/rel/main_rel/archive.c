@@ -366,6 +366,45 @@ s16 fn_1_12C7B8(s16 arg) {
 }
 /* fzgx:end fn_1_12C7B8 */
 
+/* fzgx:begin fn_1_12D254 noprologue */
+#include "types.h"
+
+extern u8 lbl_1_data_20D1C[180];
+extern char lbl_1_data_40798[9];
+extern u8 lbl_1_bss_8B4EC[128];
+
+extern void fn_80083DB0(void *arg0, char *arg1);
+extern void strcat(void *arg0, void *arg1);
+
+#pragma opt_propagation off
+u8 *fn_1_12D254(s32 arg0, s32 arg1) {
+    char *base;
+    void *value;
+
+    base = lbl_1_data_40798;
+    value = ((void **)lbl_1_data_20D1C)[arg0];
+    fn_80083DB0(lbl_1_bss_8B4EC, base + 0x324);
+    strcat(lbl_1_bss_8B4EC, value);
+    strcat(lbl_1_bss_8B4EC, base + 0x330);
+
+    switch (arg1) {
+    case 0x40000000:
+        strcat(lbl_1_bss_8B4EC, base + 0x338);
+        break;
+    case 0x20000000:
+        strcat(lbl_1_bss_8B4EC, base + 0x340);
+        break;
+    case 0x10000000:
+        strcat(lbl_1_bss_8B4EC, base + 0x348);
+        break;
+    }
+
+    strcat(lbl_1_bss_8B4EC, base + 0x350);
+    return lbl_1_bss_8B4EC;
+}
+#pragma opt_propagation reset
+/* fzgx:end fn_1_12D254 */
+
 /* fzgx:begin fn_1_12D354 */
 // Registers an object in the first available archive slot and reports overflow.
 void fn_1_12D354(void *arg0, void *arg1, void *arg2) {

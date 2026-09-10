@@ -115,6 +115,89 @@ void fn_15_B8C(void) {
 }
 /* fzgx:end fn_15_B8C */
 
+/* fzgx:begin fn_15_DD8 */
+struct fn_15_DD8_Copy160 { u32 a[40]; };
+
+struct fn_15_DD8_lbl_15_bss_0 {
+    u8 pad_0[0xC];
+    u32 unk_C;
+    u32 unk_10;
+    u32 unk_14;
+    s32 unk_18;
+    s32 unk_1C;
+    u8 pad_20[0x2];
+    u8 unk_22;
+    u8 unk_23;
+    u8 pad_24[0x8];
+    u32 unk_2C;
+    u8 pad_30[0x4];
+    u8 unk_34;
+    u8 unk_35;
+    u8 unk_36;
+    u8 pad_37[0x7];
+    u8 unk_3E;
+    u8 pad_3F[0x1];
+    u16 unk_40;
+};
+
+extern int fn_1_4C10(void);
+extern s32 fn_1_C24A4(void);
+extern struct fn_15_DD8_lbl_15_bss_0 lbl_15_bss_0;
+extern u32 lbl_1_bss_6EAB4;
+extern u8 lbl_1_bss_5138[];
+extern u32 fn_1_4A00(u32, u32, void *);
+extern u32 fn_1_A2A70(u32, s16);
+extern u8 fn_1_B7C00(void);
+extern void fn_1_3FDA8(void *, void *);
+
+void fn_15_DD8(void) {
+    s32 v4;
+    struct fn_15_DD8_lbl_15_bss_0 *p;
+    u32 v1;
+    u32 v2;
+    struct fn_15_DD8_Copy160 loc;
+
+    p = &lbl_15_bss_0;
+    if (fn_1_4C10() != 0) {
+        return;
+    }
+    v1 = p->unk_14;
+    v2 = v1 & 0x10000000;
+    if (v2 == 0 && ((v1 & 1) == 0 || p->unk_18 >= 60)) {
+        if ((p->unk_34 != 0 || p->unk_35 != 0) && p->unk_36 != 0 && p->unk_40 >= 1) {
+            return;
+        }
+        loc = *(struct fn_15_DD8_Copy160 *)((u8 *)p->unk_2C + 0xF0);
+        v4 = (p->unk_23 != 0) ? 480 : 30;
+        if ((((u8 *)&loc)[8] == 0 && p->unk_3E == 0) || p->unk_40 < 1 || (v1 & 0x80) != 0) {
+            if (v2 == 0) {
+                p->unk_1C = (s16)v4;
+                p->unk_14 |= 0x10000000;
+            }
+            lbl_1_bss_6EAB4 |= 0xAC;
+            fn_1_A2A70(12, (s16)v4);
+            fn_1_4A00(0, v4 & 0xFF, (void *)p->unk_10);
+        } else {
+            if (p->unk_22 == 0) {
+                fn_1_3FDA8((void *)p->unk_C, (void *)p->unk_10);
+            }
+            p->unk_22 = 1;
+            if ((s32)lbl_1_bss_5138[0xE2] == 0 && fn_1_C24A4() == 0 && (fn_1_B7C00() & 0xFF) == 0) {
+                if ((p->unk_14 & 0x10000000) == 0) {
+                    p->unk_1C = (s16)v4;
+                    p->unk_14 |= 0x10000000;
+                }
+                p->unk_14 |= 0x10000000;
+                lbl_1_bss_6EAB4 |= 0xAC;
+                fn_1_A2A70(12, (s16)v4);
+                fn_1_4A00(0, v4 & 0xFF, (void *)p->unk_10);
+                p->unk_22 = 0;
+            }
+        }
+    }
+}
+/* fzgx:end fn_15_DD8 */
+
 /* fzgx:begin fn_15_1D7C */
 extern struct fn_15_1D7C_lbl_15_bss_0 lbl_15_bss_0;
 extern u32 fn_15_1F28(u32, u32);
@@ -353,6 +436,106 @@ void fn_15_236C(u32 arg0, u32 arg1, u32 arg2, u32 arg3) {
 }
 /* fzgx:end fn_15_236C */
 
+/* fzgx:begin fn_15_2620 */
+struct fn_15_2620_Arg0 {
+    u8 pad_0[0x18];
+    u32 unk_18;
+    u8 pad_1C[0x6C];
+    u32 unk_88;
+    u32 unk_8C;
+    u8 pad_90[0x8];
+    u8 unk_98;
+    u8 pad_99[0x42B];
+    u8 unk_4C4;
+};
+struct fn_15_2620_Entry {
+    u8 pad_0[6];
+    u8 unk_6;
+    u8 pad_7;
+};
+struct fn_15_2620_lbl_15_bss_0 {
+    u8 pad_0[0x14];
+    u32 unk_14;
+    u8 pad_18[0x14];
+    struct fn_15_2620_Entry *unk_2C;
+    u8 pad_30[0x20];
+    u32 unk_50;
+    u32 unk_54;
+    u32 unk_58;
+};
+
+extern struct fn_15_2620_lbl_15_bss_0 lbl_15_bss_0;
+extern u32 fn_1_8E728(void *, u32);
+
+void fn_15_2620(struct fn_15_2620_Arg0 *arg0) {
+    struct fn_15_2620_lbl_15_bss_0 *p_lbl_15_bss_0;
+    u32 v0;
+    u32 v1;
+    u32 v2;
+    u32 v3;
+    p_lbl_15_bss_0 = &lbl_15_bss_0;
+    v0 = arg0->unk_88;
+    switch ((s32)v0) {
+    case 33:
+    case 42:
+    case 43:
+        if ((s32)p_lbl_15_bss_0->unk_54 != 0 && (s32)arg0->unk_4C4 == (s32)p_lbl_15_bss_0->unk_50) {
+            arg0->unk_8C = 2;
+        } else {
+            arg0->unk_8C = 3;
+        }
+        break;
+    case 21:
+    case 41:
+        if ((s32)p_lbl_15_bss_0->unk_54 != 0 && (s32)arg0->unk_4C4 == (s32)p_lbl_15_bss_0->unk_50) {
+            arg0->unk_8C = 2;
+        } else {
+            arg0->unk_8C = 3;
+        }
+        break;
+    default:
+        v1 = p_lbl_15_bss_0->unk_14;
+        if ((v1 & 0x4000000) != 0 && (v1 & 0x80) == 0) {
+            if ((s32)p_lbl_15_bss_0->unk_54 != 0 && (s32)arg0->unk_4C4 == (s32)p_lbl_15_bss_0->unk_50) {
+                arg0->unk_8C = 1;
+            } else {
+                arg0->unk_8C = 2;
+            }
+        } else {
+            arg0->unk_8C = 1;
+        }
+        break;
+    }
+    if ((s32)p_lbl_15_bss_0->unk_58 != 0) {
+        arg0->unk_18 = (arg0->unk_18 & 0xDFFFFFFF);
+    } else {
+        arg0->unk_18 = (arg0->unk_18 | 0x20000000);
+    }
+    v2 = ((31 - __cntlzw(p_lbl_15_bss_0->unk_2C[arg0->unk_4C4].unk_6)) & 0x3);
+    v3 = (u32)(p_lbl_15_bss_0->unk_2C + arg0->unk_4C4);
+    switch ((s32)v2) {
+    case 0:
+        v3 = 0;
+        break;
+    case 1:
+        v3 = 1;
+        break;
+    case 2:
+        v3 = 2;
+        break;
+    case 3:
+        v3 = 3;
+        break;
+    default:
+        v3 = 0;
+        break;
+    }
+    if (arg0->unk_98 != (u32)v3) {
+        fn_1_8E728((void *)(u32)arg0, (v3 & 0xFF));
+    }
+}
+/* fzgx:end fn_15_2620 */
+
 /* fzgx:begin fn_15_2CEC */
 // fn_15_2CEC: empty in retail (single blr).
 void fn_15_2CEC(void) {
@@ -403,6 +586,49 @@ void fn_15_30E8(void) {
     }
 }
 /* fzgx:end fn_15_30E8 */
+
+/* fzgx:begin fn_15_398C */
+struct fn_15_398C_entry {
+    u8 pad_0[0x18];
+    u32 flags;
+};
+
+struct fn_15_398C_state {
+    u8 pad_0[0x14];
+    u32 flags;
+    u8 pad_18[0x84];
+    struct fn_15_398C_entry *entries_9c[0xd4 / 4 - 0x9c / 4];
+    struct fn_15_398C_entry *entries_d4[0x1d];
+};
+
+extern struct fn_15_398C_state lbl_15_bss_0;
+
+void fn_15_398C(void) {
+    struct fn_15_398C_state *s;
+    struct fn_15_398C_entry **p;
+    struct fn_15_398C_entry *entry;
+    s16 i;
+
+    s = &lbl_15_bss_0;
+    s->flags |= 0x04000000;
+    p = &s->entries_9c[0];
+    for (i = 0; i < 0xc; i++) {
+        entry = *p;
+        if (entry != 0) {
+            entry->flags &= 0x3FFFFFFF;
+        }
+        p++;
+    }
+    p = &s->entries_d4[0];
+    for (i = 0; i < 0x1d; i++) {
+        entry = *p;
+        if (entry != 0) {
+            entry->flags &= 0x3FFFFFFF;
+        }
+        p++;
+    }
+}
+/* fzgx:end fn_15_398C */
 
 /* fzgx:begin fn_15_3A14 */
 extern struct fn_15_3A14_lbl_15_bss_74 lbl_15_bss_74;

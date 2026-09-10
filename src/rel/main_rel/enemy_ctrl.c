@@ -389,6 +389,106 @@ void fn_1_CC27C(void) {
 }
 /* fzgx:end fn_1_CC27C */
 
+/* fzgx:begin fn_1_CD51C */
+extern u32 fn_1_5910(void *object);
+extern void *fn_1_8627C(void *object);
+extern void *fn_1_4DF60(void);
+extern const f32 lbl_1_rodata_5C3C;
+extern const f32 lbl_1_rodata_5C40;
+extern const f32 lbl_1_rodata_5F18;
+extern u32 fn_1_58C4(void);
+extern const f32 lbl_1_rodata_5CFC;
+extern const f32 lbl_1_rodata_5E0C;
+extern u32 lbl_1_rodata_5F14;
+extern const f64 lbl_1_rodata_5C00;
+extern void fn_1_CD6C0(void);
+extern f32 fn_1_519FC(f32 value);
+extern f32 fn_1_51AC0(f32 value);
+
+extern Obj_1_data_3D544 lbl_1_data_3D544;
+
+typedef struct {
+    u8 pad_0[0x6];
+    u16 unk_6;
+    u32 unk_8;
+    f32 unk_c;
+    f32 unk_10;
+    f32 unk_14;
+    f32 unk_18;
+    f32 unk_1c;
+    u8 pad_20[0x18];
+    u32 unk_38;
+    f32 unk_3c;
+    u32 unk_40;
+    u8 pad_44[0x1c];
+    void *unk_60;
+    u8 pad_64[0x14];
+    void (*unk_78)(void);
+} Fn1Cd51cObject;
+
+void fn_1_CD51C(void *object) {
+    u32 index;
+    void *actor;
+    Fn1Cd51cObject *state;
+    f32 factor;
+
+    index = fn_1_5910(object);
+    if (((((u32 *)&lbl_1_data_3D544)[index] >> 19) & 1) == 0) {
+        return;
+    }
+
+    actor = fn_1_8627C(object);
+    if (actor == 0) {
+        return;
+    }
+    if (*(s32 *)((u8 *)actor + 0x10c) == 0) {
+        return;
+    }
+    if (*(s32 *)((u8 *)actor + 0x110) == 0) {
+        return;
+    }
+
+    state = fn_1_4DF60();
+    if (state == 0) {
+        return;
+    }
+
+    state->unk_8 = 0x9435;
+    state->unk_c = lbl_1_rodata_5C3C;
+    state->unk_10 = lbl_1_rodata_5C40;
+    state->unk_14 = lbl_1_rodata_5F18;
+
+    if (fn_1_58C4() == 1) {
+        factor = lbl_1_rodata_5CFC;
+    } else {
+        factor = lbl_1_rodata_5E0C;
+    }
+    state->unk_18 *= factor;
+
+    if (fn_1_58C4() == 1) {
+        factor = lbl_1_rodata_5CFC;
+    } else {
+        factor = lbl_1_rodata_5E0C;
+    }
+    state->unk_1c *= factor;
+
+    state->unk_38 = 10;
+    state->unk_40 = lbl_1_rodata_5F14;
+
+    if (fn_1_58C4() == 1 && (s32)lbl_1_bss_4E6A8 != 0) {
+        u32 value = state->unk_38 | 0x8000000;
+        state->unk_38 = value;
+        state->unk_3c = (f32)(s32)lbl_1_bss_4E6AC;
+    }
+
+    state->unk_6 = 0;
+    state->unk_78 = fn_1_CD6C0;
+    state->unk_60 = object;
+    state->unk_c = fn_1_519FC(state->unk_c);
+    state->unk_10 = fn_1_51AC0(state->unk_10);
+}
+/* fzgx:end fn_1_CD51C */
+
 /* fzgx:begin fn_1_CD6C0 */
 extern const f32 lbl_1_rodata_5CFC;
 extern const f32 lbl_1_rodata_5D90;

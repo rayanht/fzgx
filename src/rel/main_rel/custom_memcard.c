@@ -79,6 +79,49 @@ u32 fn_1_1317B4(void) {
 }
 /* fzgx:end fn_1_1317B4 */
 
+/* fzgx:begin fn_1_1317C4 */
+extern u32 lbl_801A6410;
+extern u8 lbl_1_data_40EA4[84];
+extern u32 fn_1_4630(u32 arg0, u32 arg1, u8 *arg2, u32 arg3);
+extern void fn_80008BEC(void *arg0, u32 arg1, u32 arg2);
+extern s32 fn_1_B7E98(s32 arg0);
+extern void fn_1_AA6D8(s32 arg0, s32 arg1, void *arg2);
+
+typedef struct {
+    u8 unk_0;
+    u8 pad_1[3];
+    u32 unk_4;
+    u32 unk_8;
+    u32 unk_C;
+    u8 pad_10[0x14];
+} MemcardRequest;
+
+void fn_1_1317C4(void) {
+    MemcardRequest request;
+
+    lbl_1_bss_8E384.unk_0 = fn_1_4630(
+        lbl_801A6410, 0x20700, lbl_1_data_40EA4, 0x1f3);
+
+    fn_80008BEC(&request, 0, 0x24);
+    request.unk_4 = 4;
+    request.unk_4 |= 0x4000;
+    request.unk_4 |= 0x2000;
+    request.unk_0 = 3;
+    request.unk_C = lbl_1_bss_8E384.unk_0;
+    request.unk_8 = 0;
+
+    if (fn_1_B7E98(0) != 0) {
+        fn_1_AA6D8(2, 0, &request);
+    } else if (fn_1_B7E98(1) != 0) {
+        fn_1_AA6D8(2, 1, &request);
+    } else {
+        fn_1_AA6D8(2, 0, &request);
+    }
+
+    lbl_1_bss_8E380 = 1;
+}
+/* fzgx:end fn_1_1317C4 */
+
 /* fzgx:begin fn_1_1318B8 */
 u8 fn_1_1318B8(void) {
     return lbl_1_bss_8E380 != 0;

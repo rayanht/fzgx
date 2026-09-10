@@ -53,3 +53,34 @@ int fn_1_9F914(const void *src0, const void *src1) {
     return 1;
 }
 /* fzgx:end fn_1_9F914 */
+
+/* fzgx:begin fn_1_9F9A4 */
+struct fn_1_9F9A4_Blk {
+    u32 w0;
+    u32 w1;
+    u32 w2;
+    u32 w3;
+    u32 w4;
+    u32 w5;
+};
+
+extern u32 lbl_1_bss_6EA90;
+extern u16 lbl_1_bss_6EA96;
+
+s32 fn_1_9F9A4(u32 arg0) {
+    u16 v0;
+    u32 v1;
+    u32 v2;
+
+    v0 = lbl_1_bss_6EA96;
+    v1 = arg0;
+    if (v0 == 256) {
+        v1 = 0;
+        return v1;
+    }
+    v2 = (lbl_1_bss_6EA90 + (v0 * 24));
+    *(struct fn_1_9F9A4_Blk *)v2 = *(struct fn_1_9F9A4_Blk *)v1;
+    lbl_1_bss_6EA96++;
+    return 1;
+}
+/* fzgx:end fn_1_9F9A4 */

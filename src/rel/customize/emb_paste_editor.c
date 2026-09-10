@@ -3,6 +3,43 @@ extern u8 lbl_3_bss_8F200[];
 extern void fn_1_FC414(void *, int);
 extern u8 lbl_3_bss_A1778[12];
 
+/* fzgx:begin fn_3_1180C */
+struct Fn3State {
+    u8 pad0[4];
+    u32 value;
+    u8 pad8[2];
+    s16 field_a;
+    u8 pad_c[0x18];
+    s16 mode;
+};
+
+extern struct Fn3State lbl_3_bss_7EDD8;
+extern s16 lbl_3_data_1A40[2];
+extern s16 lbl_1_bss_96A;
+
+extern void fn_1_4A00(int, int, u32);
+extern void fn_1_FDFF4(void);
+extern void fn_1_435C(u32);
+extern void fn_1_426C(s16);
+
+void fn_3_1180C(void) {
+    if (lbl_3_bss_7EDD8.mode == 0xf) {
+        fn_1_4A00(0, 0xf, lbl_3_bss_7EDD8.value);
+    } else if (lbl_3_bss_7EDD8.mode == 0) {
+        fn_1_FDFF4();
+        if (lbl_3_data_1A40[0] != -1) {
+            fn_1_435C(lbl_3_bss_7EDD8.value);
+            fn_1_426C(lbl_3_bss_7EDD8.field_a);
+            lbl_3_bss_7EDD8.field_a = -1;
+            lbl_1_bss_96A = lbl_3_data_1A40[0];
+            lbl_3_data_1A40[0] = -1;
+        } else {
+            lbl_3_data_1A40[0] = 0x5f;
+        }
+    }
+}
+/* fzgx:end fn_3_1180C */
+
 /* fzgx:begin fn_3_11930 */
 extern u16 lbl_3_bss_7EDD8[52];
 

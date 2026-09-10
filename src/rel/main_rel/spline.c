@@ -1220,6 +1220,51 @@ u8 fn_1_FA69C(s32 index) {
 }
 /* fzgx:end fn_1_FA69C */
 
+/* fzgx:begin fn_1_FA6C0 noprologue */
+#include "types.h"
+
+struct fn_1_FA6C0_lbl_1_rodata_7480 {
+    u32 unk_0;
+    u32 unk_4;
+    u32 unk_8;
+    u32 unk_C;
+};
+struct fn_1_FA6C0_lbl_1_data_2A7E0 {
+    u8 pad_0[0x3C];
+    u32 unk_3C;
+};
+
+extern struct fn_1_FA6C0_lbl_1_data_2A7E0 lbl_1_data_2A7E0;
+extern struct fn_1_FA6C0_lbl_1_rodata_7480 lbl_1_rodata_7480;
+extern u32 fn_1_76504(s32, void *, s32);
+extern u32 lbl_801A63D0;
+extern void fn_1_7269C(u32, u32, void *);
+extern void fn_1_72768(u32, u32);
+extern void fn_1_FAB40(void);
+
+void fn_1_FA6C0(void) {
+    u32 v0;
+    u32 v1;
+    u32 v2;
+    u32 v3;
+    struct { u32 a[4]; } loc_8;
+    /* frame */
+    u32 t0;
+    v0 = lbl_1_rodata_7480.unk_0;
+    v1 = lbl_1_rodata_7480.unk_4;
+    v2 = lbl_1_rodata_7480.unk_8;
+    loc_8.a[0] = v0;
+    loc_8.a[1] = v1;
+    loc_8.a[2] = v2;
+    v3 = lbl_1_data_2A7E0.unk_3C;
+    loc_8.a[3] = lbl_1_rodata_7480.unk_C;
+    t0 = fn_1_76504(35, (void *)&loc_8, 0);
+    *(u32 *)((u8 *)v3 + 364) = (t0 & 0xFF);
+    fn_1_7269C((*(u32 *)((u8 *)v3 + 364) & 0xFF), 0, (void *)lbl_801A63D0);
+    fn_1_72768((*(u32 *)((u8 *)v3 + 364) & 0xFF), (u32)fn_1_FAB40);
+}
+/* fzgx:end fn_1_FA6C0 */
+
 /* fzgx:begin fn_1_FA75C */
 extern s32 fn_1_58C4(void);
 extern void fn_80008BEC(void *dst, s32 value, u32 size);

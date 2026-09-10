@@ -146,3 +146,6 @@ rel/story/story_mode/fn_7_1C30.c:
 
 rel/story/story_mode/fn_7_21C8.c:
 	.text       start:0x000021C8 end:0x00002324 align:4
+
+rel/story/story_mode/fn_7_D20.c:
+	.text       start:0x00000D20 end:0x00000E50 align:4

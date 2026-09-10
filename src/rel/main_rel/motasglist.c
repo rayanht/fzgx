@@ -12,6 +12,117 @@ extern void fn_1_449A8(void *vector);
 extern void lbl_8006DB74(void *value);
 extern u32 lbl_1_bss_384CC;
 
+/* fzgx:begin fn_1_41850 */
+struct fn_1_41850_Arg0 {
+    u8 pad_0[0x2];
+    u16 unk_2;
+};
+struct fn_1_41850_lbl_801A6410 {
+    u32 unk_0;
+};
+struct fn_1_41850_Node {
+    u8 pad_0[0x28];
+    void *unk_28;
+    u8 pad_2c[0x4];
+    void *next;
+};
+extern struct fn_1_41850_lbl_801A6410 lbl_801A6410;
+extern u8 lbl_1_data_6720[];
+extern void fn_1_46B4(u32, void *, const char *, int);
+
+
+void fn_1_41850(void *arg0, s32 arg_sp0) {
+    void *temp_r4;
+    void *temp_r4_2;
+    void *temp_r4_3;
+    void *temp_r4_4;
+    void *temp_r4_5;
+    void *temp_r4_6;
+    void *temp_r4_7;
+    void *temp_r4_8;
+    void *temp_r4_9;
+    void *temp_r4_10;
+    void *temp_r4_11;
+    u16 temp_r3;
+    s32 var_r28;
+    void *temp_r28;
+    s32 var_r27;
+    void *var_r27_2;
+
+    temp_r3 = *(u16 *)((u8 *)(arg0) + 2);
+    if (temp_r3 & 1) {
+        if (!(temp_r3 & 4)) {
+            var_r27 = 0;
+            var_r28 = 0;
+            while (var_r27 < (s32) (*(u16 *)((u8 *)(arg0) + 16))) {
+                temp_r4 = (void *)(((struct fn_1_41850_Node *)(*(void **)((u8 *)(arg0) + 12)))[var_r27].unk_28);
+                if (temp_r4 != NULL) {
+                    fn_1_46B4((u32)(lbl_801A6410.unk_0), (void *)(temp_r4), (const char *)((s8 *) lbl_1_data_6720), (s32)(0x123));
+                }
+                var_r28 += 0x34;
+                var_r27 += 1;
+                            }
+            temp_r4_2 = (void *)(*(void **)((u8 *)(arg0) + 20));
+            if (temp_r4_2 != NULL) {
+                fn_1_46B4((u32)(lbl_801A6410.unk_0), (void *)(temp_r4_2), (const char *)((s8 *) lbl_1_data_6720), (s32)(0x125));
+            }
+            temp_r4_3 = (void *)(*(void **)((u8 *)(arg0) + 32));
+            if (temp_r4_3 != NULL) {
+                fn_1_46B4((u32)(lbl_801A6410.unk_0), (void *)(temp_r4_3), (const char *)((s8 *) lbl_1_data_6720), (s32)(0x126));
+            }
+        }
+        fn_1_46B4((u32)(lbl_801A6410.unk_0), (void *)(*(void **)((u8 *)(arg0) + 12)), (const char *)((s8 *) lbl_1_data_6720), (s32)(0x128));
+    } else {
+        var_r27_2 = (void *)(*(void **)((u8 *)(arg0) + 12));
+        while (var_r27_2 != NULL) {
+            temp_r4_4 = (void *)(*(void **)((u8 *)(var_r27_2) + 40));
+            temp_r28 = (void *)(*(void **)((u8 *)(var_r27_2) + 48));
+            if (temp_r4_4 != NULL) {
+                fn_1_46B4((u32)(lbl_801A6410.unk_0), (void *)(temp_r4_4), (const char *)((s8 *) lbl_1_data_6720), (s32)(0x12E));
+            }
+            fn_1_46B4((u32)(lbl_801A6410.unk_0), (void *)(var_r27_2), (const char *)((s8 *) lbl_1_data_6720), (s32)(0x12F));
+            var_r27_2 = (void *)(temp_r28);
+                    }
+        temp_r4_5 = (void *)(*(void **)((u8 *)(arg0) + 32));
+        if (temp_r4_5 != NULL) {
+            fn_1_46B4((u32)(lbl_801A6410.unk_0), (void *)(temp_r4_5), (const char *)((s8 *) lbl_1_data_6720), (s32)(0x131));
+        }
+    }
+    temp_r4_6 = (void *)(*(void **)((u8 *)(arg0) + 40));
+    if (temp_r4_6 != NULL) {
+        fn_1_46B4((u32)(lbl_801A6410.unk_0), (void *)(temp_r4_6), (const char *)((s8 *) lbl_1_data_6720), (s32)(0x133));
+    }
+    temp_r4_7 = (void *)(*(void **)((u8 *)(arg0) + 52));
+    if (temp_r4_7 != NULL) {
+        fn_1_46B4((u32)(lbl_801A6410.unk_0), (void *)(temp_r4_7), (const char *)((s8 *) lbl_1_data_6720), (s32)(0x10B));
+    }
+    temp_r4_8 = (void *)(*(void **)((u8 *)(arg0) + 56));
+    if (temp_r4_8 != NULL) {
+        fn_1_46B4((u32)(lbl_801A6410.unk_0), (void *)(temp_r4_8), (const char *)((s8 *) lbl_1_data_6720), (s32)(0x10C));
+    }
+    temp_r4_9 = (void *)(*(void **)((u8 *)(arg0) + 44));
+    if (temp_r4_9 != NULL) {
+        fn_1_46B4((u32)(lbl_801A6410.unk_0), (void *)(temp_r4_9), (const char *)((s8 *) lbl_1_data_6720), (s32)(0x10D));
+    }
+    temp_r4_10 = (void *)(*(void **)((u8 *)(arg0) + 48));
+    if (temp_r4_10 != NULL) {
+        fn_1_46B4((u32)(lbl_801A6410.unk_0), (void *)(temp_r4_10), (const char *)((s8 *) lbl_1_data_6720), (s32)(0x10E));
+    }
+    (*(void **)((u8 *)(arg0) + 52)) = (void *)(NULL);
+    (*(s8 *)((u8 *)(arg0) + 39)) = 0;
+    (*(void **)((u8 *)(arg0) + 56)) = (void *)(NULL);
+    (*(s32 *)((u8 *)(arg0) + 60)) = 0;
+    (*(s32 *)((u8 *)(arg0) + 64)) = 0;
+    (*(s16 *)((u8 *)(arg0) + 72)) = 0;
+    (*(s8 *)((u8 *)(arg0) + 76)) = 0;
+    temp_r4_11 = (void *)(*(void **)((u8 *)(arg0) + 8));
+    if ((temp_r4_11 != NULL) && !((*(u16 *)((u8 *)(arg0) + 2)) & 2)) {
+        fn_1_46B4((u32)(lbl_801A6410.unk_0), (void *)(temp_r4_11), (const char *)((s8 *) lbl_1_data_6720), (s32)(0x137));
+    }
+    fn_1_46B4((u32)(lbl_801A6410.unk_0), (void *)(arg0), (const char *)((s8 *) lbl_1_data_6720), (s32)(0x138));
+}
+/* fzgx:end fn_1_41850 */
+
 /* fzgx:begin fn_1_41B18 */
 typedef struct Node Node;
 struct Node {

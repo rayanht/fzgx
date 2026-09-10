@@ -159,6 +159,63 @@ void fn_7_51C(void) {
 }
 /* fzgx:end fn_7_51C */
 
+/* fzgx:begin fn_7_D20 */
+struct fn_7_D20_lbl_7_bss_10 {
+    u32 unk_0;
+};
+struct fn_7_D20_lbl_7_bss_14 {
+    u32 unk_0;
+};
+
+extern int sprintf(char *, const char *, ...);
+extern s32 fn_1_465D0(char *, s32);
+extern struct fn_7_D20_lbl_7_bss_10 lbl_7_bss_10;
+extern struct fn_7_D20_lbl_7_bss_14 lbl_7_bss_14;
+extern u32 lbl_7_data_13A14[10];
+extern u32 fn_1_47E54(u32);
+extern u32 fn_1_A0AA4(void);
+extern char lbl_7_data_13DE0[23];
+extern char lbl_7_data_13DF8[23];
+extern f32 lbl_7_rodata_0[330];
+extern void fn_1_412A0(u32);
+extern void fn_1_48140(int);
+extern void fn_7_4050(void);
+
+void fn_7_D20(void) {
+    u32 ptr;
+    u32 index;
+    s32 offset;
+    struct { u32 a0, a1, a2, a3, a4, a5, a6, a7, a8, a9; } loc_8;
+
+    fn_1_412A0(6);
+    fn_1_412A0(1);
+    fn_1_48140(100);
+    fn_1_48140(155);
+    fn_1_48140(154);
+    fn_1_48140(186);
+
+    ptr = lbl_7_bss_10.unk_0;
+    lbl_7_bss_14.unk_0 = (u32)((u8 *)lbl_7_rodata_0 + (s8)*(u8 *)ptr * 132);
+    fn_7_4050();
+    sprintf((char *)&loc_8, lbl_7_data_13DE0, *(s8 *)((u8 *)lbl_7_bss_14.unk_0 + 1));
+    fn_1_465D0((char *)&loc_8, 1);
+    sprintf((char *)&loc_8, lbl_7_data_13DF8, *(s8 *)((u8 *)lbl_7_bss_14.unk_0 + 1));
+    fn_1_465D0((char *)&loc_8, 1);
+
+    offset = *(s8 *)((u8 *)lbl_7_bss_14.unk_0 + 1) - 0x24;
+    if (offset < 0) {
+        index = 0;
+    } else {
+        index = 9;
+        if (offset <= 9) {
+            index = offset;
+        }
+    }
+    fn_1_47E54(lbl_7_data_13A14[index]);
+    fn_1_A0AA4();
+}
+/* fzgx:end fn_7_D20 */
+
 /* fzgx:begin fn_7_E50 */
 extern struct fn_7_E50_lbl_7_bss_1C lbl_7_bss_1C;
 extern u32 fn_1_4A00(u32, u32, u32);

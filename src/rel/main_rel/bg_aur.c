@@ -93,6 +93,65 @@ void fn_1_151C78(void) {
 }
 /* fzgx:end fn_1_151C78 */
 
+/* fzgx:begin fn_1_151C9C noprologue */
+#include "types.h"
+
+struct fn_1_151C9C_lbl_1_bss_8ED88 {
+    u32 unk_0;
+    s16 unk_4;
+    s16 unk_6;
+};
+struct fn_1_151C9C_lbl_1_rodata_D500 {
+    f64 unk_0;
+};
+struct fn_1_151C9C_lbl_1_rodata_D4F8 {
+    f32 unk_0;
+};
+extern struct fn_1_151C9C_lbl_1_bss_8ED88 lbl_1_bss_8ED88;
+extern struct fn_1_151C9C_lbl_1_rodata_D4F8 lbl_1_rodata_D4F8;
+extern struct fn_1_151C9C_lbl_1_rodata_D500 lbl_1_rodata_D500;
+extern u32 fn_1_151BE8(s16, s16);
+extern void fn_80008BA8(void *, void *, u32);
+
+struct FzgxCopy_4 { u32 words[1]; };
+#pragma opt_propagation off
+void fn_1_151C9C(void *arg0, s32 arg_sp0) {
+    struct FzgxCopy_4 loc_8;
+    void *temp_r7;
+    u32 var_r3;
+    s32 temp_r3;
+    void *var_r30;
+    u32 temp_r29;
+    s16 var_r28;
+
+    var_r28 = 0;
+    temp_r29 = lbl_1_bss_8ED88.unk_0;
+    var_r30 = (void *)(temp_r29 + (lbl_1_bss_8ED88.unk_4 * 8));
+    while (var_r28 < 1) {
+        if ((temp_r29 == 0) || (temp_r3 = *(s32 *)((u8 *)(temp_r29) + 0), (((temp_r3 & 0x80000000) == 0) != 0)) || !(temp_r3 & 0x40000000)) {
+            var_r3 = fn_1_151BE8((s16)(lbl_1_bss_8ED88.unk_6), var_r28);
+        } else {
+            var_r3 = *(u32 *)((u8 *)(var_r30) + 33192);
+        }
+        temp_r7 = (void *)(*(void **)((u8 *)(arg0) + 4));
+        if ((u8) (*(u8 *)((u8 *)(temp_r7) + 21)) == (u8) var_r3) {
+            (*(s8 *)((u8 *)(&loc_8) + 0)) = (s8) (var_r3 >> 0x18U);
+            (*(u8 *)((u8 *)(&loc_8) + 1)) = (u8) (var_r3 >> 0x10U);
+            (*(u8 *)((u8 *)(&loc_8) + 2)) = (u8) (var_r3 >> 8U);
+            (*(u8 *)((u8 *)(&loc_8) + 3)) = 0xFF;
+            fn_80008BA8((void *)((u8 *)(temp_r7) + 8), (void *)(&loc_8), (u32)(4U));
+            (*(s8 *)((u8 *)(&loc_8) + 0)) = (s8) ((f32) (*(u8 *)((u8 *)(&loc_8) + 0)) * lbl_1_rodata_D4F8.unk_0);
+            (*(s8 *)((u8 *)(&loc_8) + 1)) = (s8) ((f32) (*(u8 *)((u8 *)(&loc_8) + 1)) * lbl_1_rodata_D4F8.unk_0);
+            (*(s8 *)((u8 *)(&loc_8) + 2)) = (s8) ((f32) (*(u8 *)((u8 *)(&loc_8) + 2)) * lbl_1_rodata_D4F8.unk_0);
+            fn_80008BA8((void *)((u8 *)((*(void **)((u8 *)(arg0) + 4))) + 4), (void *)(&loc_8), (u32)(4U));
+        }
+        var_r30 = (void *)((u8 *)(var_r30) + 4);
+        var_r28 += 1;
+            }
+}
+#pragma opt_propagation reset
+/* fzgx:end fn_1_151C9C */
+
 /* fzgx:begin fn_1_151E20 */
 u32 fn_1_151E20(u32 value, s16 index) {
     u32 result = (u32)-1;

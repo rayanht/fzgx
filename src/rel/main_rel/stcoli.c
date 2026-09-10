@@ -131,6 +131,70 @@ int fn_1_17C6C(int current, int next, int limit) {
 }
 /* fzgx:end fn_1_17C6C */
 
+/* fzgx:begin fn_1_17FCC */
+typedef struct {
+    u8 pad_0[0x8];
+    u32 unk_8;
+} StcoliEntry;
+
+extern void fn_1_17D5C(u32, u32 *);
+
+int fn_1_17FCC(int a, int b, int c) {
+    int count;
+    int i;
+    int end;
+    StcoliEntry *last;
+    StcoliEntry *entry;
+    u32 fa;
+    u32 fb;
+    int result;
+
+    if (a == b) {
+        return 1;
+    }
+    if (a > b) {
+        int temp = a;
+        a = b;
+        b = temp;
+    }
+    count = b - a;
+    i = c - count;
+    if (i < count) {
+        a = b;
+        count = i;
+    }
+    b = a + 1;
+    end = c;
+    end = end - 1;
+    last = (StcoliEntry *)lbl_1_bss_3BE0->unk_C + a;
+    i = 0;
+    while (i < count) {
+        if (b > end) {
+            b = 0;
+        }
+        entry = (StcoliEntry *)lbl_1_bss_3BE0->unk_C + b;
+        fb = 0;
+        fa = 0;
+        fn_1_17D5C(last->unk_8, &fa);
+        fn_1_17D5C(entry->unk_8, &fb);
+        if ((fa & 0x01000000) != 0 && (fb & 0x00800000) != 0) {
+            break;
+        }
+        if ((fb & 0x01000000) != 0 && (fa & 0x00800000) != 0) {
+            break;
+        }
+        last = entry;
+        i++;
+        b++;
+    }
+    result = 0;
+    if (count == 0 || i >= count) {
+        result = 1;
+    }
+    return result;
+}
+/* fzgx:end fn_1_17FCC */
+
 /* fzgx:begin fn_1_181CC */
 // fn_1_181CC: main_rel .text:0x000181CC size 0x24
 // Wrapper function that passes first three arguments through and sets fourth to 1
@@ -145,6 +209,54 @@ void fn_1_181F0(int a, int b, int c) {
     fn_1_180F4(a, b, c, 0);
 }
 /* fzgx:end fn_1_181F0 */
+
+/* fzgx:begin fn_1_18F28 noprologue */
+#include "types.h"
+
+typedef struct {
+    unsigned char pad0[0x0c];
+    int count;
+    void *entries;
+} Fn118F28Object;
+
+typedef struct {
+    unsigned int flags;
+} Fn118F28Entry;
+
+typedef struct {
+    int x;
+    int y;
+    int z;
+} Fn118F28Vector;
+
+extern void lbl_8006DAEC(void);
+extern void lbl_8006DB30(void);
+extern void lbl_8006DBE4(int, int);
+extern void fn_1_1902C(Fn118F28Entry *, int *, int, float);
+
+void fn_1_18F28(Fn118F28Object *obj, int *args, int arg2, float value) {
+    Fn118F28Vector vector;
+    int i;
+    Fn118F28Entry *entry;
+
+    if (obj->count > 0) {
+        lbl_8006DAEC();
+        entry = (Fn118F28Entry *)obj->entries;
+        i = 0;
+        while (i < obj->count) {
+            if ((entry->flags & 0x1e0002) == 0) {
+                vector = *(Fn118F28Vector *)args;
+                lbl_8006DBE4(vector.y, vector.x);
+                fn_1_1902C(entry, args, arg2, value);
+                *(Fn118F28Vector *)args = vector;
+            }
+            i++;
+            entry = (Fn118F28Entry *)((char *)entry + 0x50);
+        }
+        lbl_8006DB30();
+    }
+}
+/* fzgx:end fn_1_18F28 */
 
 /* fzgx:begin fn_1_18FFC */
 void fn_1_18FFC(int a, int b, int c, int d, int e, int f, int g) {

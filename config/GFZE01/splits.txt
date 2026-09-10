@@ -4688,3 +4688,120 @@ dol/fn_8006FDEC.c:
 
 dol/fn_8002420C.c:
 	.text       start:0x8002420C end:0x80024308 align:4
+
+dol/parse_format.c:
+	.text       start:0x80082298 end:0x8008279C align:4
+
+dol/fn_800087F4.c:
+	.text       start:0x800087F4 end:0x80008A4C align:4
+
+dol/fn_80054354.c:
+	.text       start:0x80054354 end:0x800545B0 align:4
+
+dol/fn_80028164.c:
+	.text       start:0x80028164 end:0x80028424 align:4
+
+dol/fn_80006E10.c:
+	.text       start:0x80006E10 end:0x80006FE0 align:4
+
+dol/fn_80044C74.c:
+	.text       start:0x80044C74 end:0x80044E7C align:4
+
+dol/fn_8003EAE4.c:
+	.text       start:0x8003EAE4 end:0x8003EC44 align:4
+
+dol/fn_8003E13C.c:
+	.text       start:0x8003E13C end:0x8003E284 align:4
+
+dol/fn_800894FC.c:
+	.text       start:0x800894FC end:0x80089638 align:4
+
+dol/fn_8007FC34.c:
+	.text       start:0x8007FC34 end:0x8007FE70 align:4
+
+dol/fn_800551D0.c:
+	.text       start:0x800551D0 end:0x80055304 align:4
+
+dol/fn_80056950.c:
+	.text       start:0x80056950 end:0x80056A50 align:4
+
+dol/fn_80018028.c:
+	.text       start:0x80018028 end:0x80018108 align:4
+
+dol/fn_800134DC.c:
+	.text       start:0x800134DC end:0x800135CC align:4
+
+dol/cbForStateMotorStopped.c:
+	.text       start:0x800186E8 end:0x800187CC align:4
+
+dol/fn_80067898.c:
+	.text       start:0x80067898 end:0x80067974 align:4
+
+dol/fn_80072D64.c:
+	.text       start:0x80072D64 end:0x80072E20 align:4
+
+dol/fn_800711A8.c:
+	.text       start:0x800711A8 end:0x80071268 align:4
+
+dol/fn_800726C0.c:
+	.text       start:0x800726C0 end:0x80072778 align:4
+
+dol/fn_80046C28.c:
+	.text       start:0x80046C28 end:0x80046D18 align:4
+
+dol/fn_8006B6F8.c:
+	.text       start:0x8006B6F8 end:0x8006B7B4 align:4
+
+dol/fn_80074BC4.c:
+	.text       start:0x80074BC4 end:0x80074C74 align:4
+
+dol/fn_8004F74C.c:
+	.text       start:0x8004F74C end:0x8004F7F8 align:4
+
+dol/fn_8006EE70.c:
+	.text       start:0x8006EE70 end:0x8006EF10 align:4
+
+dol/fn_8007FE70.c:
+	.text       start:0x8007FE70 end:0x8007FF18 align:4
+
+dol/fn_8006E8DC.c:
+	.text       start:0x8006E8DC end:0x8006E978 align:4
+
+dol/fn_8006C6E8.c:
+	.text       start:0x8006C6E8 end:0x8006C788 align:4
+
+dol/fn_80077A20.c:
+	.text       start:0x80077A20 end:0x80077AD0 align:4
+
+dol/fn_80071100.c:
+	.text       start:0x80071100 end:0x800711A8 align:4
+
+dol/fn_8007264C.c:
+	.text       start:0x8007264C end:0x800726C0 align:4
+
+dol/memcpy.c:
+	.init       start:0x80003540 end:0x80003590 align:4
+
+dol/OSRegisterVersion.c:
+	.text       start:0x8000ABBC end:0x8000ABE8 align:4
+
+dol/fn_80007730.c:
+	.text       start:0x80007730 end:0x800077E0 align:4
+
+dol/fn_8006F78C.c:
+	.text       start:0x8006F78C end:0x8006F828 align:4
+
+dol/fn_80024308.c:
+	.text       start:0x80024308 end:0x80024378 align:4
+
+dol/__GXInitGX.c:
+	.text       start:0x8003128C end:0x80031B50 align:4
+
+dol/fn_8001375C.c:
+	.text       start:0x8001375C end:0x800137C4 align:4
+
+dol/fn_80020A28.c:
+	.text       start:0x80020A28 end:0x80020ABC align:4
+
+dol/fn_80021930.c:
+	.text       start:0x80021930 end:0x80021AB8 align:4

@@ -595,6 +595,36 @@ void fn_1_DC5E8(Obj_1_data_2A7E0_At3C *container, s32 arg) {
 }
 /* fzgx:end fn_1_DC5E8 */
 
+/* fzgx:begin fn_1_DC648 noprologue */
+#include "types.h"
+
+extern u32 fn_1_5910(void *);
+extern void fn_1_681C(u8, u8 *);
+extern s32 fn_1_1FB80(u8 *, s32);
+
+void fn_1_DC648(void *object) {
+    u32 index;
+    u32 direction;
+    u32 offset;
+    u8 local;
+    s32 value;
+
+    index = fn_1_5910(object);
+    fn_1_681C((u8)index, &local);
+    direction = fn_1_1FB80(&local, 1);
+    offset = (index << 1) + 0x2264;
+    if ((direction & 1) != 0) {
+        value = *(s16 *)((u8 *)object + offset);
+        value += 1;
+        *(s16 *)((u8 *)object + offset) = (value < 0) ? 0 : ((value > 30) ? 30 : value);
+    } else {
+        value = *(s16 *)((u8 *)object + offset);
+        value -= 1;
+        *(s16 *)((u8 *)object + offset) = (value < 0) ? 0 : ((value > 30) ? 30 : value);
+    }
+}
+/* fzgx:end fn_1_DC648 */
+
 /* fzgx:begin fn_1_DC6FC */
 typedef struct Handler {
     u8 unk_00[4];

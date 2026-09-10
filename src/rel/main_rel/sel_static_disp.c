@@ -390,6 +390,63 @@ void fn_1_13A994(void* arg0, void* arg1, void* arg2, void* arg3, void* arg4, voi
 }
 /* fzgx:end fn_1_13A994 */
 
+/* fzgx:begin fn_1_13A9B8 noprologue */
+#include "types.h"
+#include "rel/main_rel/sel_static_disp.h"
+
+extern void fn_1_49410(void);
+extern const f32 lbl_1_rodata_8C10;
+extern void fn_1_49514(u32*);
+extern void fn_1_5233C(void);
+extern void fn_1_49738(void (*func)(void));
+extern const f32 lbl_1_rodata_861C;
+extern void fn_1_49748(f32);
+extern const f32 lbl_1_rodata_87DC;
+extern void fn_1_4954C(f32);
+extern void fn_1_495C8(int);
+extern void fn_1_4955C(f32, f32);
+extern const f32 lbl_1_rodata_85F0;
+extern void fn_1_49590(f32);
+extern const f64 lbl_1_rodata_8600;
+extern void fn_1_496FC(f32, f32);
+extern u8 lbl_1_data_41B24[24];
+extern void fn_1_4CF3C(void*, ...);
+extern s16 fn_1_12C930(void*);
+extern u8 lbl_1_data_21078[180];
+extern void fn_1_4AE0C(void*, ...);
+
+void fn_1_13A9B8(f32 arg7, f32 arg8, s16 arg0, s16 arg1, int arg2, void* arg3,
+                 s16 arg4, int arg5, int arg6) {
+    u32 local;
+
+    if (arg4 == 0) return;
+    fn_1_49410();
+    local = *(u32*)&lbl_1_rodata_8C10;
+    fn_1_49514(&local);
+    fn_1_49738(fn_1_5233C);
+    fn_1_49748(lbl_1_rodata_861C);
+    fn_1_4954C(lbl_1_rodata_87DC);
+    fn_1_495C8(arg2);
+    fn_1_4955C(arg7, arg8);
+    fn_1_49590(lbl_1_rodata_85F0);
+    fn_1_496FC((f32)arg0, (f32)arg1);
+
+    if (arg6 != -1) {
+        if (arg5 != 0) {
+            fn_1_4CF3C(lbl_1_data_41B24, (f32)arg6);
+        } else {
+            fn_1_4CF3C(&lbl_1_data_41A30,
+                       ((u32*)lbl_1_data_21078)[fn_1_12C930(arg3)], (f32)arg6);
+        }
+    } else if (arg5 != 0) {
+        fn_1_4AE0C(lbl_1_data_41B24);
+    } else {
+        s16 index = fn_1_12C930(arg3);
+        fn_1_4AE0C(&lbl_1_data_41A30, ((u32*)lbl_1_data_21078)[index]);
+    }
+}
+/* fzgx:end fn_1_13A9B8 */
+
 /* fzgx:begin fn_1_13C134 */
 void fn_1_13C134(void) {
     fn_1_5621C(lbl_1_rodata_861C, lbl_1_rodata_861C,
@@ -1296,6 +1353,38 @@ u32 fn_1_14D6D8(s16 index) {
 }
 /* fzgx:end fn_1_14D6D8 */
 
+/* fzgx:begin fn_1_14D8DC */
+extern void *fn_1_12AB38(void *arg0);
+extern void *fn_1_D3884(void *arg0);
+extern void fn_1_14D728(void *arg0, void *arg1);
+
+void fn_1_14D8DC(u8 *arg0, u8 *arg1, s16 arg2) {
+    u8 *data;
+    u8 *p1;
+    u8 *p0;
+    s16 i;
+
+    data = lbl_1_data_43E78;
+    if (lbl_1_bss_6D82C.unk_0 == 0) {
+        fn_1_12AB38(data + 0x136c);
+        lbl_1_bss_6D82C.unk_0 = (u32)fn_1_D3884(data + 0x1378);
+        fn_1_12AB38(data + 0x1388);
+    }
+
+    fn_1_12AB38(data + 0x138c);
+
+    p1 = arg1;
+    p0 = arg0;
+    for (i = 0; i < arg2; i++) {
+        fn_1_14D728(p0, p1);
+        p1 += 0xa20;
+        p0 += 0x10;
+    }
+
+    fn_1_12AB38(data + 0x1388);
+}
+/* fzgx:end fn_1_14D8DC */
+
 /* fzgx:begin fn_1_14DBCC */
 typedef struct {
     u8 pad[0x340];
@@ -1569,6 +1658,42 @@ int fn_1_14E944(const Fn1_14E944Entry *arg0, const Fn1_14E944Entry *arg1) {
 }
 /* fzgx:end fn_1_14E944 */
 
+/* fzgx:begin fn_1_14ED00 */
+typedef struct {
+    u32 values[5];
+    u32 unk0;
+} Fn1_14ED00Row;
+
+typedef struct {
+    Fn1_14ED00Row rows[75];
+} Fn1_14ED00Blob;
+
+extern const u8 lbl_1_rodata_AF9C[2040];
+extern s32 fn_1_14FE48(s32 value, const u16 *table);
+extern s32 fn_1_14FDAC(s32 value, const u16 *table, s32 mode, void *buffer);
+extern int sprintf(char *stream, const char *format, ...);
+extern u8 lbl_1_data_462A4[20];
+
+s32 fn_1_14ED00(s32 arg0, void *arg1, s32 arg2) {
+    u8 buffer[64];
+    Fn1_14ED00Blob blob = *(const Fn1_14ED00Blob *)lbl_1_rodata_AF9C;
+    s16 type;
+
+    type = (s16)fn_1_14FE48(blob.rows[(s16)arg0].values[(s16)arg2],
+                            &lbl_1_data_462A0);
+    if (type < 2) {
+        sprintf(arg1, (const char *)lbl_1_data_462A4,
+                    fn_1_14FDAC(blob.rows[(s16)arg0].values[(s16)arg2],
+                                &lbl_1_data_462A0, 0, buffer));
+    } else {
+        sprintf(arg1, (const char *)lbl_1_data_462A4,
+                    fn_1_14FDAC(blob.rows[(s16)arg0].values[(s16)arg2],
+                                &lbl_1_data_462A0, 2, buffer));
+    }
+    return (s32)arg1;
+}
+/* fzgx:end fn_1_14ED00 */
+
 /* fzgx:begin fn_1_14EEC4 */
 typedef struct {
     u32 values[3][6];
@@ -1784,6 +1909,34 @@ void fn_1_14FD7C(u32 *arg0, u32 arg1) {
     qsort(arg0, selector, 4, callback);
 }
 /* fzgx:end fn_1_14FD7C */
+
+/* fzgx:begin fn_1_14FDAC noprologue */
+#include "types.h"
+
+extern void fn_80083DB0(void *arg0, void *arg1);
+extern void *fn_800839D8(void *arg0, void *arg1);
+
+void *fn_1_14FDAC(void *arg0, void *arg1, s16 arg2, void *arg3) {
+    u8 local[0x40];
+    void *value;
+    s16 index;
+    void *entry;
+
+    fn_80083DB0(local, arg0);
+    value = local;
+    index = 0;
+    while ((entry = fn_800839D8(value, arg1)) != NULL) {
+        if (index == arg2) {
+            fn_80083DB0(arg3, entry);
+            return arg3;
+        }
+        value = 0;
+        index++;
+    }
+    fn_80083DB0(arg3, arg0);
+    return arg3;
+}
+/* fzgx:end fn_1_14FDAC */
 
 /* fzgx:begin fn_1_14FE48 noprologue */
 #include "types.h"
@@ -2052,6 +2205,78 @@ void fn_1_150F74(void *self) {
     }
 }
 /* fzgx:end fn_1_150F74 */
+
+/* fzgx:begin fn_1_151668 noprologue */
+#include "types.h"
+
+extern f32 lbl_1_rodata_CF70[54];
+
+typedef struct DispNode {
+    u8 pad[4];
+    f32 value;
+} DispNode;
+
+typedef struct DispChildList {
+    DispNode *child[3];
+} DispChildList;
+
+typedef struct DispObject {
+    u32 flags;
+    u8 pad0[12];
+    f32 value;
+    u8 pad1[32];
+    DispChildList *children;
+} DispObject;
+
+typedef struct StaticDispEntry {
+    f32 first;
+    u8 pad0[0x18];
+    f32 values[3];
+    DispObject *object;
+    u8 active;
+    u8 scale_first;
+    u8 scale_second;
+    u8 clear_flag;
+    u8 pad2[0x0c];
+} StaticDispEntry;
+
+typedef struct StaticDisp {
+    u8 pad0[0x1830];
+    StaticDispEntry entries[63];
+    u8 pad1[0x30];
+    s32 entry_count;
+    s32 value_2728;
+    s32 value_272c;
+} StaticDisp;
+
+void fn_1_151668(StaticDisp *self) {
+    s32 i;
+    s32 j;
+
+    self->value_2728 = 0;
+    self->value_272c = -1;
+    for (i = 0; i < self->entry_count; i++) {
+        StaticDispEntry *entry = &self->entries[i];
+        DispObject *object = entry->object;
+
+        if (entry->active != 0) {
+            object->value = entry->first;
+            object->flags |= (u32)1 << 31;
+        }
+        if (entry->scale_first != 0 || entry->scale_second != 0) {
+            f32 scale = lbl_1_rodata_CF70[0];
+            for (j = 0; j < 3; j++) {
+                if (object->children != 0 && object->children->child[j] != 0) {
+                    object->children->child[j]->value = scale * entry->values[j];
+                }
+            }
+        }
+        if (entry->clear_flag != 0) {
+            object->flags &= ~((u32)1 << 31);
+        }
+    }
+}
+/* fzgx:end fn_1_151668 */
 
 /* fzgx:begin fn_1_151764 */
 // fn_1_151764: returns a constant.

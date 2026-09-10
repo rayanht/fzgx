@@ -35,6 +35,27 @@ AccessoryEntry *fn_1_108870(void) {
 }
 /* fzgx:end fn_1_108870 */
 
+/* fzgx:begin fn_1_1088B8 */
+extern void fn_1_108920(void *arg);
+
+typedef struct {
+    u8 pad_0[0xc];
+    u32 unk_c;
+    u8 pad_10[0x58];
+} AccessoryEntry;
+
+void fn_1_1088B8(void *arg) {
+    u32 i;
+
+    for (i = 0; i < 0x46; i++) {
+        AccessoryEntry *entry = ((AccessoryEntry *)&lbl_1_bss_86ED0) + i;
+        if (entry->unk_c == (u32)arg) {
+            fn_1_108920(entry);
+        }
+    }
+}
+/* fzgx:end fn_1_1088B8 */
+
 /* fzgx:begin fn_1_108920 noprologue */
 #include "types.h"
 
@@ -302,6 +323,86 @@ void fn_1_1166EC(Fn1166ECObject *obj) {
 }
 /* fzgx:end fn_1_1166EC */
 
+/* fzgx:begin fn_1_125CE8 noprologue */
+#include "types.h"
+
+extern f32 lbl_1_rodata_7AB8[];
+extern void fn_1_10846C(void *);
+
+typedef struct {
+    u8 active;
+    u8 pad_1[0x0f];
+    f32 value;
+    u8 pad_14[0x2c];
+    f32 result;
+} AccessoryEntry;
+
+typedef struct {
+    u8 pad_0[0x18];
+    u32 count;
+    u8 pad_1c[0x08];
+    AccessoryEntry *entries;
+} AccessoryData;
+
+void fn_1_125CE8(AccessoryData *data) {
+    f32 *constants;
+    u32 i;
+    AccessoryEntry *entry;
+    f32 min_value;
+    f32 max_value;
+    f32 range;
+    f32 value_off;
+    f32 value_on;
+
+    constants = lbl_1_rodata_7AB8;
+    if (data != 0) {
+        fn_1_10846C(data);
+
+        i = 0;
+        entry = data->entries;
+        value_on = constants[25];
+        value_off = constants[26];
+        while (i < data->count) {
+            if ((entry->active & 1) != 0) {
+                entry->result = value_on;
+                entry->active = 0;
+            } else {
+                entry->result = value_off;
+                entry->active = 1;
+            }
+            i++;
+            entry++;
+        }
+
+        entry = data->entries;
+        min_value = constants[329];
+        max_value = constants[330];
+        i = 0;
+        while (i < data->count) {
+            if (entry->value < min_value) {
+                min_value = entry->value;
+            }
+            if (entry->value > max_value) {
+                max_value = entry->value;
+            }
+            i++;
+            entry++;
+        }
+
+        range = max_value - min_value;
+        value_on = constants[25];
+        entry = data->entries;
+        i = 0;
+        while (i < data->count) {
+            entry->result = value_on +
+                (entry->value - min_value) / range;
+            i++;
+            entry++;
+        }
+    }
+}
+/* fzgx:end fn_1_125CE8 */
+
 /* fzgx:begin fn_1_127FB8 */
 extern void fn_1_10846C(void);
 extern f32 lbl_1_rodata_7B20;
@@ -409,6 +510,39 @@ u8 fn_1_128DD8(u8 value) {
     return index;
 }
 /* fzgx:end fn_1_128DD8 */
+
+/* fzgx:begin fn_1_128E10 */
+extern u8 lbl_1_rodata_8058[16];
+
+#pragma pack(push, 1)
+typedef struct {
+    u32 word_0;
+    u32 word_4;
+    u32 word_8;
+    u16 half_c;
+    u8 byte_e;
+} LookupTable;
+#pragma pack(pop)
+
+u8 fn_1_128E10(u8 value) {
+    LookupTable table = *(LookupTable *)lbl_1_rodata_8058;
+    u8 i;
+    u8 entry;
+
+    i = 1;
+    while (i < 15) {
+        entry = ((u8 *)&table)[i];
+        if ((s32)entry == (s32)(value & 0xFF)) {
+            break;
+        }
+        i++;
+    }
+    if (i == 15) {
+        i = 0;
+    }
+    return i;
+}
+/* fzgx:end fn_1_128E10 */
 
 /* fzgx:begin fn_1_128E8C */
 typedef struct {

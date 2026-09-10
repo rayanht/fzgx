@@ -225,6 +225,86 @@ void fn_17_4E50(void) {
 }
 /* fzgx:end fn_17_4E50 */
 
+/* fzgx:begin fn_17_4E54 */
+typedef struct InterviewState {
+    u8 pad_000[0x8]; void *field_008; u8 pad_00c[0x20]; f32 angle_02c;
+    u8 pad_030[0x2d8]; void *object_308;
+} InterviewState;
+typedef struct InterviewObject {
+    u8 pad_000[0x328]; s8 kind_328; u8 pad_329[0x67]; u32 flags_390;
+    u8 pad_394[0xc]; void *field_3a0; u8 pad_3a4[0x16]; s16 index_3ba;
+} InterviewObject;
+typedef struct InterviewValue { void *value_0; } InterviewValue;
+typedef struct InterviewEntry { u8 pad_000[0x334]; InterviewValue *value_334; } InterviewEntry;
+extern u8 lbl_17_bss_0;
+extern f32 lbl_17_rodata_0[6];
+extern u8 lbl_17_data_63E50[592];
+extern u8 lbl_17_data_64150[76];
+extern void lbl_8006DCA4(void);
+extern void lbl_8006E0B4(f32, f32, f32);
+extern void mathutil_mtxA_rotate_y(s32);
+extern void lbl_8006E14C(f32);
+extern void fn_1_55FC4(f32);
+extern void fn_80072558(void);
+extern void lbl_8006DB74(void *);
+extern void fn_1_56000(s32, s32, s32);
+extern void fn_1_55FF0(f32);
+extern void fn_1_14E5E4(void *, f32, s16);
+extern void OSPanic(void *, s32, void *, ...);
+extern void fn_1_556B8(void *);
+extern void lbl_8006DAEC(void);
+extern void fn_1_87610(void *, void *);
+extern void fn_1_875B4(void *, f32, void *, s8);
+extern void lbl_8006DC20(void);
+extern void lbl_8006DBAC(void *);
+extern void fn_1_FCFA4(void *);
+
+#pragma opt_propagation off
+void fn_17_4E54(void) {
+    f32 *constants = lbl_17_rodata_0;
+    InterviewState *state = (InterviewState *)&lbl_17_bss_0;
+    InterviewObject *object;
+    InterviewEntry *entry;
+    f32 angle = state->angle_02c;
+    u8 matrix[0x30];
+    s16 index;
+
+    lbl_8006DCA4();
+    lbl_8006E0B4(constants[8], constants[131], constants[132]);
+    if (state->angle_02c > constants[39]) mathutil_mtxA_rotate_y(0x3000);
+    else mathutil_mtxA_rotate_y(0x2000);
+    lbl_8006E14C(angle);
+    fn_1_55FC4(angle);
+    fn_80072558();
+    lbl_8006DB74(matrix);
+    fn_1_56000(1, 3, 1);
+    fn_1_55FF0(constants[6]);
+    object = (InterviewObject *)state->object_308;
+    if (object != 0) {
+        index = object->index_3ba;
+        if ((object->flags_390 & 0x04000000) != 0) {
+            if (object->field_3a0 == 0) return;
+            fn_1_14E5E4(object->field_3a0, constants[6], index);
+        } else {
+            if (object->kind_328 >= 0x29)
+                OSPanic(lbl_17_data_63E50, 0xc20, lbl_17_data_64150);
+            entry = (InterviewEntry *)((u8 *)state->object_308 + index * 0xc);
+            fn_1_556B8(entry->value_334->value_0);
+            lbl_8006DAEC();
+            fn_1_87610(state->object_308, state->object_308);
+            fn_1_875B4(state->object_308, constants[6],
+                       state->object_308,
+                       (s8)((InterviewObject *)state->object_308)->index_3ba);
+            lbl_8006DC20();
+        }
+        lbl_8006DBAC(matrix);
+        fn_1_FCFA4(state->field_008);
+    }
+    fn_1_56000(1, 3, 1);
+}
+#pragma opt_propagation reset
+/* fzgx:end fn_17_4E54 */
+
 /* fzgx:begin fn_17_4FE0 */
 struct fn_17_4FE0_lbl_17_bss_0 {
     u8 pad_0[0x8];
@@ -488,6 +568,89 @@ void fn_17_67C4(void *arg) {
 }
 #pragma opt_propagation reset
 /* fzgx:end fn_17_67C4 */
+
+/* fzgx:begin fn_17_6848 */
+typedef struct InterviewObject InterviewObject;
+
+struct InterviewObject {
+    u8 pad0[0x88];
+    void *field88;
+    u8 pad8C[0x1c];
+    f32 values[3];
+    u8 padB4[0x94];
+    u8 field148[1];
+};
+
+typedef struct InterviewGlobals {
+    InterviewObject *object0;
+    u8 pad4[4];
+    InterviewObject *object8;
+    InterviewObject *objectC;
+} InterviewGlobals;
+
+extern InterviewGlobals lbl_17_bss_D8;
+extern u8 lbl_17_bss_1;
+extern const f32 lbl_17_rodata_20;
+
+extern u32 fn_1_12C710(void *arg0);
+extern s16 fn_1_12CB04(u32 arg0);
+extern void fn_1_935E4(InterviewObject *arg0, void *arg1, void *arg2, f32 arg3);
+
+void fn_17_6848(void *arg0, u8 arg1, f32 arg2) {
+    f32 value = arg2;
+    InterviewObject *object = lbl_17_bss_D8.object0;
+    s16 mode;
+    u32 state;
+
+    state = fn_1_12C710(object->field88);
+    lbl_17_bss_1 = arg1;
+    mode = fn_1_12CB04(state);
+
+    switch (mode) {
+    case 2:
+        fn_1_935E4(object, object->field148, arg0, value);
+        fn_1_935E4(lbl_17_bss_D8.object8, (u8 *)lbl_17_bss_D8.object8 + 0x148, arg0, value);
+        fn_1_935E4(lbl_17_bss_D8.objectC, (u8 *)lbl_17_bss_D8.objectC + 0x148, arg0, value);
+        object->values[0] = lbl_17_rodata_20;
+        object->values[1] = lbl_17_rodata_20;
+        object->values[2] = lbl_17_rodata_20;
+        {
+            InterviewObject *o8 = lbl_17_bss_D8.object8;
+            o8->values[0] = lbl_17_rodata_20;
+            o8->values[1] = lbl_17_rodata_20;
+            o8->values[2] = lbl_17_rodata_20;
+        }
+        {
+            InterviewObject *oC = lbl_17_bss_D8.objectC;
+            oC->values[0] = lbl_17_rodata_20;
+            oC->values[1] = lbl_17_rodata_20;
+            oC->values[2] = lbl_17_rodata_20;
+        }
+        break;
+    case 1:
+        fn_1_935E4(object, object->field148, arg0, value);
+        fn_1_935E4(lbl_17_bss_D8.object8, (u8 *)lbl_17_bss_D8.object8 + 0x148, arg0, value);
+        object->values[0] = lbl_17_rodata_20;
+        object->values[1] = lbl_17_rodata_20;
+        object->values[2] = lbl_17_rodata_20;
+        {
+            InterviewObject *o8b = lbl_17_bss_D8.object8;
+            o8b->values[0] = lbl_17_rodata_20;
+            o8b->values[1] = lbl_17_rodata_20;
+            o8b->values[2] = lbl_17_rodata_20;
+        }
+        break;
+    case 0:
+        fn_1_935E4(object, object->field148, arg0, value);
+        object->values[0] = lbl_17_rodata_20;
+        object->values[1] = lbl_17_rodata_20;
+        object->values[2] = lbl_17_rodata_20;
+        break;
+    default:
+        break;
+    }
+}
+/* fzgx:end fn_17_6848 */
 
 /* fzgx:begin fn_17_7020 */
 typedef struct InterviewObject {

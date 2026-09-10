@@ -152,6 +152,34 @@ void fn_1_6D4(struct fn_1_6D4_Data *data) {
 }
 /* fzgx:end fn_1_6D4 */
 
+/* fzgx:begin fn_1_798 noprologue */
+#include "types.h"
+#include "rel/main_rel/globals.h"
+
+struct fn_1_798_slot {
+    u8 unk_0[8];
+    s32 value_8;
+    u8 unk_C[0x3C];
+};
+
+extern u8 lbl_1_bss_8E6B0[308];
+extern void fn_1_14FCE4(void *data, s32 value);
+extern struct fn_1_798_slot lbl_1_bss_8E7E4[];
+extern void fn_80008BEC(void *data, u32 value, u32 size);
+
+void fn_1_798(void) {
+    s32 value;
+    s16 index;
+
+    fn_1_14FCE4(lbl_1_bss_8E6B0, 0x4d);
+    fn_80008BEC(lbl_1_bss_8E7E4, 0, 0x5a4);
+    value = -1;
+    for (index = 0; index < 0x14; index++) {
+        lbl_1_bss_8E7E4[index].value_8 = value;
+    }
+}
+/* fzgx:end fn_1_798 */
+
 /* fzgx:begin fn_1_8D4 */
 void fn_1_8D4(void) {
     lbl_801A66B4 = lbl_801A66BC;
@@ -267,6 +295,88 @@ void fn_1_12FC(void) {
 void fn_1_1300(void) {
 }
 /* fzgx:end fn_1_1300 */
+
+/* fzgx:begin fn_1_1C00 */
+void fn_1_1C00(const u8 *values, u32 flags, u16 *result) {
+    u8 value0;
+    u8 value1;
+    s32 value2;
+    s32 value3;
+    u32 mask;
+    s32 limit;
+
+    *result = 0;
+    mask = flags & 0xffff;
+
+    value0 = values[2];
+    value1 = values[3];
+    limit = (flags & 1) ? -15 : -20;
+    if ((s8)value0 < limit) {
+        *result |= 1;
+    }
+
+    limit = ((mask >> 1) & 1) ? 15 : 20;
+    if ((s8)value0 > limit) {
+        *result |= 2;
+    }
+
+    limit = ((mask >> 2) & 1) ? -15 : -20;
+    if ((s8)value1 < limit) {
+        *result |= 4;
+    }
+
+    limit = ((mask >> 3) & 1) ? 15 : 20;
+    if ((s8)value1 > limit) {
+        *result |= 8;
+    }
+
+    value0 = values[4];
+    value1 = values[5];
+    limit = ((mask >> 4) & 1) ? -15 : -20;
+    if ((s8)value0 < limit) {
+        *result |= 16;
+    }
+
+    limit = ((mask >> 5) & 1) ? 15 : 20;
+    if ((s8)value0 > limit) {
+        *result |= 32;
+    }
+
+    limit = ((mask >> 6) & 1) ? -15 : -20;
+    if ((s8)value1 < limit) {
+        *result |= 64;
+    }
+
+    limit = ((mask >> 7) & 1) ? 15 : 20;
+    if ((s8)value1 > limit) {
+        *result |= 128;
+    }
+
+    value2 = values[6];
+    value3 = values[7];
+    limit = ((mask >> 8) & 1) ? 40 : 80;
+    if (value2 > limit) {
+        *result |= 256;
+    }
+
+    limit = ((mask >> 9) & 1) ? 40 : 80;
+    if (value3 > limit) {
+        *result |= 512;
+    }
+
+    value2 = values[8];
+    value3 = values[9];
+    limit = ((mask >> 10) & 1) ? 70 : 90;
+    if (value2 > limit) {
+        *result |= 1024;
+    }
+
+    limit = ((mask >> 11) & 1) ? 70 : 90;
+    if (value3 > limit) {
+        *result |= 2048;
+    }
+}
+/* fzgx:end fn_1_1C00 */
 
 /* fzgx:begin fn_1_3238 */
 void fn_1_3238(void) {

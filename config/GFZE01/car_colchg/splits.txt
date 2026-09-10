@@ -86,3 +86,6 @@ rel/car_colchg/car_colchg/fn_9_1AFC.c:
 
 rel/car_colchg/car_colchg/fn_9_E4C.c:
 	.text       start:0x00000E4C end:0x00000F38 align:4
+
+rel/car_colchg/car_colchg/fn_9_5D8.c:
+	.text       start:0x000005D8 end:0x000006F0 align:4

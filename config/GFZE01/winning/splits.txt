@@ -62,3 +62,12 @@ rel/winning/winning/fn_15_2274.c:
 
 rel/winning/winning/fn_15_260.c:
 	.text       start:0x00000260 end:0x00000350 align:4
+
+rel/winning/winning/fn_15_2620.c:
+	.text       start:0x00002620 end:0x000027D4 align:4
+
+rel/winning/winning/fn_15_DD8.c:
+	.text       start:0x00000DD8 end:0x00000FCC align:4
+
+rel/winning/winning/fn_15_398C.c:
+	.text       start:0x0000398C end:0x00003A14 align:4

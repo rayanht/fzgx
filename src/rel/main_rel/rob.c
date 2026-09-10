@@ -165,6 +165,68 @@ void fn_1_96664(void *arg0, void *arg1, void *arg2) {
 }
 /* fzgx:end fn_1_96664 */
 
+/* fzgx:begin fn_1_966A0 */
+typedef struct Fn1966A0Object Fn1966A0Object;
+struct Fn1966A0Object {
+    u32 entries[0x39];
+    u32 resource_e4;
+    u8 unk_E8[0x10];
+    u32 resource_f8;
+};
+
+extern void fn_1_12A2D0(s32 arg0);
+extern void fn_80071718(u32 arg0);
+extern void fn_800711A8(u32 arg0);
+
+void fn_1_966A0(Fn1966A0Object *object) {
+    u8 *slot;
+    u8 *group;
+    u8 *outer;
+    int i;
+    int j;
+    s32 value;
+    u8 *walk;
+
+    group = (u8 *)object;
+    outer = (u8 *)object;
+    for (i = 0; i < 5; i++) {
+        slot = group;
+        for (j = 0; j < 4; j++) {
+            if (((Fn1966A0Object *)slot)->resource_f8 != 0) {
+                if (*(s32 *)(outer + 4) != -1) {
+                    fn_1_12A2D0(*(s32 *)(outer + 4));
+                }
+                fn_80071718(((Fn1966A0Object *)slot)->resource_f8);
+                ((Fn1966A0Object *)slot)->resource_f8 = 0;
+            }
+            slot += 4;
+        }
+        if (((Fn1966A0Object *)outer)->resource_e4 != 0) {
+            if (*(s32 *)(outer + 4) != -1) {
+                fn_1_12A2D0(*(s32 *)(outer + 4));
+            }
+            fn_800711A8(((Fn1966A0Object *)outer)->resource_e4);
+            ((Fn1966A0Object *)outer)->resource_e4 = 0;
+        }
+        group += 0x10;
+        outer += 4;
+    }
+
+    value = -1;
+    walk = (u8 *)object;
+    for (i = 0; i < 5; i++) {
+        if (*(s32 *)(walk + 4) != -1) {
+            value = object->entries[i + 1];
+            break;
+        }
+        walk += 4;
+    }
+    if (value != -1) {
+        fn_1_12A2D0(value);
+    }
+}
+/* fzgx:end fn_1_966A0 */
+
 /* fzgx:begin fn_1_968FC */
 typedef struct Fn1968FCChild Fn1968FCChild;
 typedef struct Fn1968FCObject Fn1968FCObject;
@@ -265,6 +327,77 @@ s16 fn_1_97F1C(Fn197F1CObject *object, s16 index) {
     return (s16)object->unk_4A4;
 }
 /* fzgx:end fn_1_97F1C */
+
+/* fzgx:begin fn_1_97F80 noprologue */
+#include "types.h"
+
+typedef struct Fn197F80Object Fn197F80Object;
+struct Fn197F80Object {
+    u8 unk_000[0x488];
+    u8 unk_488;
+    u8 unk_489;
+    u8 unk_48A[0x1A];
+    void *unk_4A4;
+    void *unk_4A8;
+    void *unk_4AC;
+    void *unk_4B0;
+    void *unk_4B4;
+};
+
+extern u32 lbl_1_data_209C0;
+extern u32 lbl_801A6410;
+
+extern void *fn_80083970(const char *, const char *);
+extern void sprintf(char *, const char *, ...);
+extern int fn_80083BCC(const char *, const char *);
+extern void fn_1_12A2D0(void *);
+extern void fn_1_12A2B8(int);
+extern void fn_1_12AB38(const char *);
+extern int fn_1_12A8A4(const char *, void **);
+extern void *fn_1_4630(u32, u32, const char *, u32);
+extern void fn_80083DB0(void *, const char *);
+extern u32 strlen(const char *);
+
+u32 fn_1_97F80(Fn197F80Object *rob, const char *name) {
+    void *resource = 0;
+    char path[0x40];
+    u8 *data = (u8 *)&lbl_1_data_209C0;
+    u32 length;
+
+    if (name == 0 || fn_80083970(name, (const char *)(data + 0x6390)) == 0) {
+        return 0;
+    }
+
+    sprintf(path, (const char *)(data + 0x73e0), name);
+    if (fn_80083BCC(path, (const char *)(data + 0x73e8)) == 0 ||
+        fn_80083BCC(path, (const char *)(data + 0x73f4)) == 0 ||
+        fn_80083BCC(path, (const char *)(data + 0x7400)) == 0 ||
+        fn_80083BCC(path, (const char *)(data + 0x740c)) == 0) {
+        return 1;
+    }
+
+    fn_1_12A2D0(rob->unk_4A4);
+    fn_1_12A2B8(1);
+    fn_1_12AB38((const char *)(data + 0x7418));
+    if (fn_1_12A8A4(path, &resource) == 0) {
+        return 0;
+    }
+
+    fn_1_12AB38((const char *)(data + 0x6eec));
+    fn_1_12A2B8(0);
+    length = strlen(name);
+    rob->unk_488 = 1;
+    rob->unk_489 = 1;
+    rob->unk_4A8 = resource;
+    rob->unk_4AC = *(void **)resource;
+    rob->unk_4B0 = (u8 *)resource + 4;
+    rob->unk_4B4 = fn_1_4630(*(u32 *)&lbl_801A6410,
+                            (length + 0x20) & ~0x1f,
+                            (const char *)(data + 0x7240), 0xfa9);
+    fn_80083DB0(rob->unk_4B4, name);
+    return 1;
+}
+/* fzgx:end fn_1_97F80 */
 
 /* fzgx:begin fn_1_98104 noprologue */
 #include "types.h"

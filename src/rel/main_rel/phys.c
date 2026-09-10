@@ -742,6 +742,41 @@ s16 fn_1_F22E4(s32 arg) {
 }
 /* fzgx:end fn_1_F22E4 */
 
+/* fzgx:begin fn_1_F2338 noprologue */
+#include "types.h"
+
+extern void fn_1_12EF80(s16 value, s16 *arg1, s16 *arg2);
+extern u32 lbl_1_data_3E5B4[30];
+
+u32 fn_1_F2338(s32 value, u32 target) {
+    s16 group;
+    s16 entry;
+    u32 packed;
+    u32 hour;
+    u32 minute;
+    u32 low;
+
+    value = (s16)value;
+    fn_1_12EF80(value, &group, &entry);
+    packed = lbl_1_data_3E5B4[(group - 1) * 6 + entry];
+    minute = (packed >> 12) & 0xff;
+    hour = (packed >> 20) & 0xff;
+    minute += 0xa;
+    low = packed & 0xfff;
+
+    if (minute > 0x3c) {
+        minute -= 0x3c;
+        hour += 1;
+    }
+
+    packed = (hour << 20) | (minute << 12) | low;
+    if (packed > target) {
+        return 1;
+    }
+    return 0;
+}
+/* fzgx:end fn_1_F2338 */
+
 /* fzgx:begin fn_1_F2740 */
 u32 fn_1_F2740(u32 a, u32 b) {
     if (a >= 6) {
