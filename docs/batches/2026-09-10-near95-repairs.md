@@ -4,7 +4,7 @@ Batch `near95-under500-20260910-001452` matched 63 functions and released 224.
 The saved-candidate corpus contains 223 still-unmatched bodies, 50,288 bytes,
 frozen with their checked compiler versions and flags.
 
-Six additional object matches (648 bytes) came from:
+Six additional matches (648 bytes), all link-verified in `56a2f8f`, came from:
 
 | Repair | Functions | Bytes |
 | --- | ---: | ---: |
@@ -29,3 +29,6 @@ Local reproduction inputs and results are in `.fzgx/repair-near95/`:
 `manifest.json`, `analysis.json`, `regalloc-before.json`, `return-results.json`,
 `string-results.json`, `wider-results.json`, and `winners.json`. The frozen
 manifest can be classified with `fzgx stuck --seeds PATH`.
+
+Validation: all 16 target hashes passed; `fzgx lint` reported zero findings;
+`ninja all_source progress build/GFZE01/report.json` completed successfully.
