@@ -268,19 +268,24 @@ def run_one(p: Project, harness: str, model: str, symbol: str, idx: int, timeout
             return x.decode(errors="replace") if isinstance(x, bytes) else (x or "")
         out, rc = _s(so) + "\n" + _s(se), -9
     info = parse_claude(out) if harness == "claude" else parse_codex(out, fast, provider)
-    m = RESULT_RE.search(info["text"] or "") or RESULT_RE.search(out)
-    outcome = m.group(1) if m else ("timeout" if rc == -9 else "crash")
-    if not m:  # no RESULT line: the agent never finished its loop; do not charge an attempt
+    key = api._key(p, symbol)
+    l = Ledger()
+    att = l.db.execute("SELECT * FROM attempts WHERE symbol=? AND agent=? ORDER BY id DESC LIMIT 1",
+                       (key, agent_id)).fetchone()
+    terminal = att and att["outcome"] in ("matched", "released", "shadow-matched", "shadow-released")
+    # Tool outcomes and counters are authoritative; models sometimes misformat or miscount RESULT.
+    outcome = att["outcome"].removeprefix("shadow-") if terminal else (
+        "timeout" if rc == -9 else "incomplete" if rc == 0 else "crash")
+    row = l.get(key)
+    if not terminal and row and row["status"] == "claimed" and row["claimed_by"] == agent_id:
         try:
-            api.abort_attempt(p, symbol, f"{outcome}: agent exited without a result (rc={rc})")
+            api.abort_attempt(p, symbol, f"{outcome}: agent exited without submitting or releasing (rc={rc})")
         except Exception:
             pass
     if info["model"] and not info["model"].startswith(EXPECTED_MODEL[harness]):
         outcome = f"WRONG-MODEL({info['model']})"
-    pct = float(m.group(3)) if m else None
-    checks = int(m.group(4)) if m and m.group(4) else None
-    key = api._key(p, symbol)
-    l = Ledger()
+    pct = 100.0 if outcome == "matched" else (att["best_in_attempt"] if att else None)
+    checks = att["checks"] if att else None
     # cost accounting onto the attempt this agent opened
     l.db.execute("UPDATE attempts SET tokens_in=?, tokens_out=?, cost_usd=?, harness=?, model=COALESCE(NULLIF(?, ''), model) "
                  "WHERE id=(SELECT id FROM attempts WHERE symbol=? AND agent=? ORDER BY id DESC LIMIT 1)",
