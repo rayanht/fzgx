@@ -163,7 +163,7 @@ def codex_session_info(thread_id: str) -> tuple[str, Dict, List]:
         return "", {}, []
     root = Path.home() / ".codex" / "sessions"
     for f in sorted(root.rglob(f"*{thread_id}*"), key=lambda f: f.stat().st_mtime, reverse=True):
-        model, usage, samples = "", {}, []
+        model, usage, samples, records = "", {}, [], {}
         for line in f.read_text(errors="replace").splitlines():
             try:
                 event = json.loads(line)
@@ -172,6 +172,8 @@ def codex_session_info(thread_id: str) -> tuple[str, Dict, List]:
             payload = event.get("payload", {})
             if event.get("type") == "turn_context":
                 model = payload.get("model") or model
+            if event.get("type") == "token_usage_record" and payload.get("thread_id") == thread_id:
+                records[payload["response_id"]] = (event.get("timestamp"), payload["usage"])
             if payload.get("type") == "token_count":
                 total = (payload.get("info") or {}).get("total_token_usage") or usage
                 delta = {k: max(0, total.get(k, 0) - usage.get(k, 0)) for k in
@@ -180,6 +182,10 @@ def codex_session_info(thread_id: str) -> tuple[str, Dict, List]:
                     samples.append((event.get("timestamp"), delta))
                 usage = total
         if model or usage:
+            if records:
+                samples = list(records.values())
+                usage = {key: sum(u.get(key, 0) for _, u in samples) for key in
+                         ("input_tokens", "cached_input_tokens", "cache_write_input_tokens", "output_tokens")}
             return model, usage, samples
     return "", {}, []
 
@@ -217,7 +223,7 @@ def parse_codex(out: str, fast: bool = False, provider: str = "openai") -> Dict:
         model = ev.get("model", model) or model
     session_model, usage, samples = codex_session_info(thread)
     model = model or session_model
-    if usage.get("input_tokens", 0) > tin:
+    if usage:
         tin = usage.get("input_tokens", 0)
         cached = usage.get("cached_input_tokens", 0)
         cache_w = usage.get("cache_write_input_tokens", 0)
