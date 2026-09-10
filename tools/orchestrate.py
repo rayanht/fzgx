@@ -93,6 +93,8 @@ def codex_server_cmd(model: str, provider: str, effort: Optional[str], fast: boo
         'sandbox_mode': 'read-only', 'skills.include_instructions': False,
         'project_doc_max_bytes': 0, 'web_search': 'disabled',
         'tools.web_search': False, 'model_reasoning_summary': 'none',
+        'tools.experimental_request_user_input.enabled': False,
+        'features.apply_patch_freeform': False,
         'orchestrator.skills.enabled': False,
         'include_environment_context': False, 'include_apps_instructions': False,
         'include_collaboration_mode_instructions': False, 'thread_unload_delay_secs': 0,
@@ -182,13 +184,12 @@ def run_one(p: Project, harness: str, model: str, symbol: str, idx: int, timeout
 
     out, rc, proc, setup_secs = '', 0, None, 0.0
     try:
-        assignment = worker_cli('claim', symbol, '--agent', agent_id, timeout_s=timeout)
+        assignment = worker_cli('claim', symbol, '--agent', agent_id,
+                                *([] if revise else ['--check']), timeout_s=timeout)
         if not assignment.get('ok'):
             raise RuntimeError('assignment failed: ' + json.dumps(assignment))
         seed = assignment.get('seed') or {}
-        if seed and not revise and not (seed.get('kind') == 'lift_total' and '???' in seed['source']):
-            initial = worker_cli('check', symbol)
-            assignment['initial_check'] = api.format_check(initial)
+        if assignment.get('initial_check'):
             seed['instruction'] = 'Your work copy contains this C. Continue from initial_check with patch_unit.'
         elif revise:
             assignment['source'] = p.work_path(api._key(p, symbol)).read_text()
@@ -526,6 +527,8 @@ def main(argv: Optional[List[str]] = None) -> int:
                "parallel": a.parallel, "tool_parallel": a.tool_parallel, "cost_basis": "; ".join(sorted({r["cost_basis"] for r in results})),
                "verify_interval": a.verify_interval, "live_verifications": len(live),
                "live_verify_errors": sum(not r.get('ok') for r in live),
+               "stream_retries": sum(r.get('stream_retries', 0) for r in results),
+               "retried_sessions": sum(bool(r.get('stream_retries')) for r in results),
                "link_rejected": len(ver.get("rejected", [])),
                "released": len(released), "failed": len(other), "cost_usd": round(spent, 3),
                "wall_s": round(time.time() - t0, 1), "finish": finish_result, "results": results}

@@ -1,0 +1,47 @@
+[
+  {
+    "symbol": "fn_15_2D74",
+    "source": "src/rel/winning/winning.c",
+    "sha256": "01c9fcb8160036e6125c1f39523ea8a5e408120e860ad640535b38c692f6b8bd",
+    "origin_batch": "deepseek-released-appserver-457-low-20260910",
+    "origin_attempt": 11072,
+    "origin_sha256": "1c36152ad29fc803d556120db9272e09f914fd994ea80e92453e7c0b36c6bf98",
+    "baseline_percent": 99.07143,
+    "mw": "GC/1.3.2",
+    "flags": null,
+    "repair": "regalloc order: order obj,list,i,tbl,q,vec,mtx,v,p,sub,t",
+    "pipeline": "tools/diagnose_batch.py --repair; claim --check; fzgx verify",
+    "bytes": 280,
+    "sha256_scope": "generated standalone candidate before TU integration"
+  },
+  {
+    "symbol": "fn_15_537C",
+    "source": "src/rel/winning/winning.c",
+    "sha256": "64ca0e3561402bc9a7458502714b980692a2cdd739ffbb9ea847b6f3ff57ac07",
+    "origin_batch": "deepseek-released-appserver-457-low-20260910",
+    "origin_attempt": 11119,
+    "origin_sha256": "70ee2497d0eccb0cb6cdb82fac7149dc9fd242d897be45464b28c43a96c3e9e5",
+    "baseline_percent": 99.82143,
+    "mw": "GC/1.3.2",
+    "flags": null,
+    "repair": "all references to retail float 0.0f",
+    "pipeline": "tools/diagnose_batch.py --repair; claim --check; fzgx verify",
+    "bytes": 224,
+    "sha256_scope": "generated standalone candidate before TU integration"
+  },
+  {
+    "symbol": "fn_8002A698",
+    "source": "src/dol/fn_8002A698.c",
+    "sha256": "a0a65998be6828fcbaf7c8a14419d05ca8e30c04e62fce5c20d8794d7fc13185",
+    "origin_batch": "deepseek-released-appserver-457-low-20260910",
+    "origin_attempt": 11184,
+    "origin_sha256": "47c8337e7c3d751c97daefc1d03bee4eb5299ae72be262dccd031019d314eb53",
+    "baseline_percent": 96.16279,
+    "mw": "GC/1.2.5n",
+    "flags": null,
+    "repair": "opt_dead_assignments off",
+    "pipeline": "tools/diagnose_batch.py --repair; claim --check; fzgx verify",
+    "bytes": 172,
+    "sha256_scope": "generated standalone candidate before TU integration"
+  }
+]

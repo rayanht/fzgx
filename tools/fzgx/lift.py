@@ -1782,10 +1782,13 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                         regs[a[0]] = key  # the pointer variable itself, read through its address
                     elif kind == "global":
                         declare(key, "struct", far_ref=True); gfields.setdefault(key, {})[o + k] = t; regs[a[0]] = f"{key}.unk_{o + k:X}"
-                    elif kind == "abs" and key in HW_BLOCKS and 0 <= o < 0x1000:
+                    elif kind == "abs" and (key + o in HW_BLOCKS or (key in HW_BLOCKS and 0 <= o < 0x1000)):
                         # the register block's base materialised (lis/addi) then indexed: retail
                         # went through a linker-defined absolute symbol (config/<v>/ldscript.tpl)
-                        hw = HW_BLOCKS[key]
+                        # lis + load/store offset may form the block address
+                        # directly, without an intervening addi.
+                        hw = HW_BLOCKS[key + o] if key + o in HW_BLOCKS else HW_BLOCKS[key]
+                        o = 0 if key + o in HW_BLOCKS else o
                         externs[hw] = f"extern vu32 {hw}[];"
                         regs[a[0]] = f"{hw}[{o // 4}]" if t == "u32" and o % 4 == 0 else f"*({t} *)((u8 *){hw} + 0x{o:X})"; rtype[a[0]] = t
                         if reused_after_store(i, a[0], a[1]):
@@ -1875,8 +1878,9 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                         stmts.append(f"{key} = (struct {name}_{key}_T *){val};")
                     elif kind == "global":
                         declare(key, "struct", far_ref=True); gfields.setdefault(key, {})[o + k] = t; stmts.append(f"{key}.unk_{o + k:X} = {val};")
-                    elif kind == "abs" and key in HW_BLOCKS and 0 <= o < 0x1000:
-                        hw = HW_BLOCKS[key]
+                    elif kind == "abs" and (key + o in HW_BLOCKS or (key in HW_BLOCKS and 0 <= o < 0x1000)):
+                        hw = HW_BLOCKS[key + o] if key + o in HW_BLOCKS else HW_BLOCKS[key]
+                        o = 0 if key + o in HW_BLOCKS else o
                         externs[hw] = f"extern vu32 {hw}[];"
                         stmts.append((f"{hw}[{o // 4}]" if t == "u32" and o % 4 == 0 else f"*({t} *)((u8 *){hw} + 0x{o:X})") + f" = {val};"); continue
                     elif kind == "abs":
@@ -2710,7 +2714,8 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
             sname = f"{name}_{g}"
             structs = [padded(t_, g) if t_.startswith(f"struct {sname} {{") else t_ for t_ in structs]
     externs.pop(name, None)  # never a declaration of the function itself
-    text = ['#include "types.h"'] + signature_index.preamble(signatures_used.values()) + [""]
+    types_header = 'dolphin/types.h' if any(hw in externs for hw in HW_BLOCKS.values()) else 'types.h'
+    text = [f'#include "{types_header}"'] + signature_index.preamble(signatures_used.values()) + [""]
     if structs:
         text += structs + [""]
     text += sorted(externs.values())

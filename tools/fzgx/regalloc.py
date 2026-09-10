@@ -24,7 +24,12 @@ from typing import Dict, List, Optional, Tuple
 from . import oracle
 from .project import STATE_DIR, Project
 
-DECL_RE = re.compile(r"^\s*(?:register\s+)?(?:const\s+)?((?:struct\s+\w+\s*\*?|[A-Za-z_]\w*(?:\s*\*)?))(?:(?<=\*)\s*|\s+)([A-Za-z_]\w*)((?:\[[^\]]*\])*)\s*(?:=\s*([^;]+))?;\s*(?:/\*.*?\*/\s*)?$")
+TYPE = (r'(?:(?:register|const|volatile)\s+){0,3}'
+        r'(?:(?:unsigned|signed)\s+)?'
+        r'(?:(?:long\s+long|long|short)(?:\s+int)?|(?:struct|union|enum)\s+\w+|[A-Za-z_]\w*)'
+        r'(?:\s*\*+)?')
+DECL_RE = re.compile(r'^\s*(' + TYPE + r')(?:(?<=\*)\s*|\s+)([A-Za-z_]\w*)'
+                     r'((?:\[[^\]]*\])*)\s*(?:=\s*([^;]+))?;\s*(?:(?:/\*.*?\*/|//[^\n]*)\s*)?$')
 WORKERS = 12
 
 

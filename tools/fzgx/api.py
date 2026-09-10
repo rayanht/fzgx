@@ -304,6 +304,9 @@ def patch_unit(p: Project, symbol: str, agent: str, old: str, new: str) -> Dict[
     then the same compile-and-diff as write_unit. An agent that changes one declaration or one
     statement sends a few lines instead of the whole unit."""
     key = _key(p, symbol)
+    row = Ledger().get(key)
+    if row is None or row['status'] != 'claimed' or row['claimed_by'] != agent:
+        return dict(ok=False, error=f'{symbol} is not claimed by {agent}')
     unit = _unit_source(p, symbol)
     src = _work_source(p, key, unit)
     if src is None:
@@ -311,7 +314,8 @@ def patch_unit(p: Project, symbol: str, agent: str, old: str, new: str) -> Dict[
     text = Path(src).read_text()
     n = text.count(old)
     if n != 1:
-        return {"ok": False, "error": f"`old` occurs {n} times in the unit; it must occur exactly once (include more context)"}
+        return {"ok": False, "error": f"`old` occurs {n} times; retry using one unique span of the current source below",
+                'source': text}
     return write_unit(p, symbol, agent, text.replace(old, new, 1))
 
 

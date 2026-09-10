@@ -16,7 +16,9 @@ from __future__ import annotations
 
 import ast
 import json
+import math
 import re
+import struct
 import time
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
@@ -168,12 +170,80 @@ def optimizer_pragmas(body: str, name: str) -> List[Tuple[str, str]]:
         return []
     start = body.rfind('\n', 0, span[0]) + 1
     out = []
-    for option in ('peephole', 'opt_propagation', 'opt_common_subs', 'opt_lifetimes'):
+    for option in ('peephole', 'opt_propagation', 'opt_common_subs', 'opt_lifetimes', 'opt_dead_assignments'):
         if re.search(rf'^\s*#pragma\s+{option}\s+off\b', body[:span[1]], re.M):
             continue
         text = (body[:start] + f'#pragma {option} off\n' + body[start:span[1]] +
                 f'\n#pragma {option} reset\n' + body[span[1]:])
         out.append((f'{option} off', text))
+    return out
+
+
+def float_literals(p: Project, symbol: str, body: str, base: oracle.CheckResult) -> List[Tuple[str, str]]:
+    """Recover incorrect floating literals from the retail relocation's bytes.
+
+    Match the emitted literal's exact bits before replacing C tokens. Try each
+    occurrence and all equal occurrences together: changing only one can split
+    a shared constant load and obscure an otherwise exact repair.
+    """
+    from .poolfix import Elf
+    sym = p.resolve(symbol)
+    span = _function_span(body, sym.name)
+    if span is None or getattr(base, '_object', None) is None:
+        return []
+    elf = Elf(base._object.read_bytes())
+    own = {s['name']: s for s in elf.symbols()}
+    symbols = p.symbols(sym.module)
+    targets = dict(symbols)
+    targets.update({f'{s.name}_{s.addr:08X}': s for s in symbols.values()})
+    reloc = re.compile(r'([A-Za-z_.$@][\w.$@]*?)([+-]0x[0-9a-f]+)?@(?:ha|h|l|sda21)\b')
+    floats = set()
+    for left, right in zip(*base._rows):
+        if (left.get('diff_kind') or 'DIFF_NONE') == 'DIFF_NONE':
+            continue
+        lt, rt = reloc.search(stuck._fmt(left)), reloc.search(stuck._fmt(right))
+        if not lt or not rt:
+            continue
+        target = targets.get(lt[1])
+        offset = int(lt[2], 0) if lt[2] else 0
+        old_offset = int(rt[2], 0) if rt[2] else 0
+        private = own.get(rt[1])
+        width = {'lfs': 4, 'lfd': 8}.get(stuck._mn(left))
+        if not target or not private or not width or not private['name'].startswith('@'):
+            continue
+        raw = p.bytes_at(sym.module, target.name)
+        if raw is None or offset < 0 or offset + width > len(raw):
+            continue
+        if (not 0 < private['shndx'] < len(elf.sections) or old_offset < 0
+                or private['size'] < old_offset + width):
+            continue
+        pos = elf.sections[private['shndx']]['offset'] + private['value'] + old_offset
+        current = bytes(elf.data[pos:pos + width])
+        expected = raw[offset:offset + width]
+        if current != expected:
+            floats.add((width, current, expected))
+    out = []
+    for width, current, expected in sorted(floats):
+        fmt = '>f' if width == 4 else '>d'
+        value = struct.unpack(fmt, expected)[0]
+        if not math.isfinite(value):
+            continue
+        replacement = repr(value) + ('f' if width == 4 else '')
+        edits = []
+        for token in re.finditer(r'(?<![\w.])-?\d+\.\d*(?:[eE][+-]?\d+)?[fF]?(?![\w.])', body[span[0]:span[1]]):
+            try:
+                actual = struct.pack(fmt, float(token[0].rstrip('fF')))
+            except (OverflowError, ValueError):
+                continue
+            if actual == current:
+                start, end = span[0] + token.start(), span[0] + token.end()
+                edits.append((start, end))
+                out.append((f'retail float {token[0]} -> {replacement}', body[:start] + replacement + body[end:]))
+        if len(edits) > 1:
+            combined = body
+            for start, end in reversed(edits):
+                combined = combined[:start] + replacement + combined[end:]
+            out.append((f'all references to retail float {replacement}', combined))
     return out
 
 
@@ -315,6 +385,7 @@ def try_fix(p: Project, symbol: str, body: str, budget_s: float = 30.0, max_cand
                     candidates.append((f"{n}: {mine[n]} -> {alt}", body.replace(mine[n], alt, 1)))
     fam_marks.append((len(candidates), "sym"))
     candidates += string_literals(p, sym.module, body, base)
+    candidates += float_literals(p, symbol, body, base)
     # wrong callee / wrong data symbol: the same instruction with a different relocation target.
     # The retail name is known; the body names ours verbatim, so the substitution is exact.
     subs: Dict[str, str] = {}
@@ -645,14 +716,28 @@ def try_fix(p: Project, symbol: str, body: str, budget_s: float = 30.0, max_cand
     left = budget_s - (time.time() - t0)
     if not out["matched"] and base.percent >= 85.0 and _depth == 0 and left > 0:
         from . import regalloc
-        ra = regalloc.search(p, symbol, best_text or body, budget_s=min(left, 8.0),
-                             mw_version=base.mw_version, extra_cflags=base.extra_cflags)
-        out["regalloc"] = {"tried": ra.get("tried"), "best": ra.get("best"), "secs": ra.get("secs")}
-        out["tried"] += ra.get("tried", 0)
-        if ra.get("matched") and ra.get("body"):
-            out.update(matched=True, body=ra["body"], best=100.0,
-                       label=f"regalloc {ra.get('stage')}: {ra.get('label')}", secs=round(time.time() - t0, 2))
-            return out
+        # A greedy optimizer rewrite can improve the word score while making the
+        # exact declaration order unreachable. Retain the original seed too,
+        # dividing the existing time budget rather than discarding that branch.
+        seeds = list(dict.fromkeys([best_text or body, body]))
+        out["regalloc"] = dict(tried=0, best=0, secs=0, searches=[])
+        for i, seed in enumerate(seeds):
+            left = budget_s - (time.time() - t0)
+            if left <= 0:
+                break
+            ra = regalloc.search(p, symbol, seed, budget_s=min(left, 8.0) / (len(seeds) - i),
+                                 mw_version=base.mw_version, extra_cflags=base.extra_cflags)
+            stats = out["regalloc"]
+            stats["tried"] += ra.get("tried", 0)
+            stats["best"] = max(stats["best"], ra.get("best", 0))
+            stats["secs"] += ra.get("secs", 0)
+            stats["searches"].append(dict(seed="original" if seed == body else "repaired",
+                                         tried=ra.get("tried"), best=ra.get("best"), secs=ra.get("secs")))
+            out["tried"] += ra.get("tried", 0)
+            if ra.get("matched") and ra.get("body"):
+                out.update(matched=True, body=ra["body"], best=100.0,
+                           label=f"regalloc {ra.get('stage')}: {ra.get('label')}", secs=round(time.time() - t0, 2))
+                return out
     # a plateau usually has more than one cause: when repairs improved the body without matching,
     # search again from the improved body (bounded by the budget)
     if not out["matched"] and best_text is not None and out["best"] > out["base"] + 0.05 and _depth < 2:

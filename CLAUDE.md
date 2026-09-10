@@ -94,7 +94,7 @@ Rules that hold for everyone:
   backward branches on copy. 107 landed on 2026-09-09; the ledger has no `blocked` rows left.
 - Hardware register blocks: retail addresses them through linker-defined absolute symbols
   (`lis/addi` of `__DIRegs`, `__VIRegs`, `__SIRegs`... resolved by the link, never a folded
-  literal). `config/GFZE01/ldscript.tpl` (dtk `ldscript_template`) defines them; C declares
+  literal). `config/GFZE01/ldscript.tpl` (dtk `ldscript_template`) defines them; C includes `dolphin/types.h` for `vu32` and declares
   `extern vu32 __DIRegs[];`. The object oracle cannot see the link, so `oracle._abs_rows`
   accepts a relocation against a template symbol wherever retail carries the resolved literal
   (`fzgx verify`'s hash is the guard). The lifter emits this form (`HW_BLOCKS`), the fixup
@@ -119,6 +119,12 @@ Rules that hold for everyone:
   Fixup also probes function-scoped optimizer pragmas before source rewrites. A masked-word
   score of 100% is only a shortlist: keep trying candidates until relocation bindings and
   data pass the full oracle. The first code-only match must not stop the search.
+  Include `opt_dead_assignments off/reset`: it reproduces the per-function effect
+  of `-opt nodeadstore` without leaking optimizer state to a later TU merge.
+  Recover floating literals from retail relocation bytes, trying repeated equal
+  occurrences together as well as individually. Keep the original C as a register
+  search seed alongside a locally improved rewrite, within the same repair budget;
+  a better intermediate word score can remove the exact declaration-order solution.
 - `fzgx trivial` matches single-`blr` and `li r3,N; blr` functions mechanically (419 landed on
   2026-09-08) and then lifts straight-line functions from the disassembly (`tools/fzgx/lift.py`:
   getters, setters, one-call wrappers, short call-free bodies; 102 landed the same day). Run it
@@ -245,6 +251,12 @@ Rules that hold for everyone:
   thread-local config; the global orchestrator MCP switch does not suppress
   their initialization. Disable worker hooks through runner overrides too.
   Completed items retain reasoning/text; do not persist every token delta at scale.
+  Record compact stream progress every 30 seconds of activity and count retriable
+  errors separately from final outcomes. Claim and initial check share one tool
+  slot (`claim --check`), so a full-width startup does not enqueue all claims ahead
+  of all preflights. Patch-anchor errors return current C under the ownership guard.
+  The DeepSeek catalog must also set `apply_patch_tool_type=null`; disable the
+  request-user-input tool in runner-local settings to leave exactly four tools.
   Compiler probes must persist their selected version for subsequent edits,
   submit, release repairs, and the next batch's saved-body selection. Context
   must display the actual seed compiler/flags. Similarity scores near 100% can

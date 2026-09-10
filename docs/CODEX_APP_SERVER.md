@@ -23,12 +23,17 @@ The runner claims the function, verifies and installs the saved C, and performs
 the initial compile before starting a model turn. An exact seed completes without
 a model request. Seeded context excludes duplicate old attempts and fresh lifter
 drafts; it reports the seed's actual compiler and flags.
+Assignment and preflight use one `claim --check` CLI call in one tool slot.
+A full-width claim queue therefore cannot put every initial check behind all
+the remaining claims before any model starts.
 
 The model has four dynamic tools: `write_unit`, `patch_unit`, `check`, and
 `release`. Their schemas omit symbol, agent identity, paths, harness, and model.
 The host supplies these from the thread's assignment, rejects extra arguments,
 and serializes calls within each function. The bound CLI independently checks
 ownership. There is no shell, file-reading, claim, or submit tool for the model.
+An invalid patch anchor returns the current C without changing it or consuming a
+compiler check, so the next patch can use an exact span of the installed source.
 
 The API submits a full object match automatically and saves/releases attempts
 when check or stale limits are reached. The CLI writes its terminal record only
@@ -111,13 +116,32 @@ disables each in thread-local configuration. Unexpected MCP initialization fails
 the transport before a matcher can use it. Worker hooks, shell snapshots, plugins,
 and unrelated tools are disabled in the runner. Shell snapshots were launching
 login shells despite matchers having no shell tools.
+Disable the request-user-input tool through its worker-local setting and clear
+`apply_patch_tool_type` in the DeepSeek catalog as well as the freeform-patch
+feature. A local HTTP capture of Codex 0.153.4 confirmed exactly the four dynamic
+matcher tools and `reasoning.effort=low`; disabling shell alone left a built-in
+patch tool available.
 
 Assignments, prompts, completed reasoning/messages, tool calls/results, usage,
 terminal records, and result rows live under `.fzgx/runs/BATCH/`. Token deltas are
 discarded because completed items contain the full text. Usage events drive cost
-estimates even on interrupted turns; DeepSeek estimates use the usage event's UTC
+estimates even on interrupted turns. Token deltas also update cumulative character
+and event counters, logged at most once every 30 seconds while streaming, so a
+long reasoning response is distinguishable from a connection with no new output.
+Result rows record retriable stream errors and reasoning tokens; batch summaries
+count retries and affected sessions independently of final match/release status.
+DeepSeek estimates use the usage event's UTC
 timestamp for peak/off-peak pricing. The app-server token-usage schema does not
 expose a dollar cost. No claim of provider-reported billing is made.
+
+For completed batches, `uv run tools/diagnose_batch.py --batch BATCH --transcripts
+--output DIRECTORY` counts release reasons, patch/compiler failures, transport
+retries and reasoning tokens without model calls or compilation. Compile the
+saved releases with `--batch BATCH --seeds ORIGINAL_MANIFEST --min-percent 0
+--output NEW_DIRECTORY`, then use `--repair --output NEW_DIRECTORY` to run the
+current release fixup and export exact candidates. Repair holds the build lock;
+run it between batches. Saved release metadata takes precedence over older seed
+settings, with the source hash checked before replay.
 
 ## Measured validation — 2026-09-10
 

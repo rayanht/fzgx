@@ -39,6 +39,11 @@ def cmd_inventory(a, p):
 
 def cmd_claim(a, p):
     r = api.claim(p, a.symbol, a.agent, a.ttl, a.max_attempts, a.no_carve)
+    seed = r.get('seed') or {}
+    if r['ok'] and a.check and seed and not (seed.get('kind') == 'lift_total' and '???' in seed['source']):
+        # One tool slot covers preparation: a wide claim queue must not hold
+        # every first model response behind a second queue of initial checks.
+        r['initial_check'] = api.format_check(api.check(p, a.symbol))
     _print(r, a.json); return 0 if r["ok"] else 2
 
 
@@ -393,10 +398,11 @@ def build_parser() -> argparse.ArgumentParser:
     s = sub.add_parser("inventory", help="list functions"); s.set_defaults(fn=cmd_inventory)
     s.add_argument("--module"); s.add_argument("--status"); s.add_argument("--limit", type=int)
     s.add_argument("--max-size", type=int, help="only functions up to N bytes")
-    s = sub.add_parser("claim", help="claim a function and carve its unit"); s.set_defaults(fn=cmd_claim)
+    s = sub.add_parser("claim", help="claim a function and install its saved work copy"); s.set_defaults(fn=cmd_claim)
     s.add_argument("symbol"); s.add_argument("--agent", required=True)
     s.add_argument("--ttl", type=int, default=api.DEFAULT_TTL); s.add_argument("--max-attempts", type=int, default=api.MAX_ATTEMPTS)
     s.add_argument("--no-carve", action="store_true")
+    s.add_argument('--check', action='store_true', help='compile a complete seed before returning the assignment')
     s = sub.add_parser("carve", help="carve functions into units without claiming"); s.set_defaults(fn=cmd_carve)
     s.add_argument("symbols", nargs="+"); s.add_argument("--dry-run", action="store_true")
     s = sub.add_parser("context", help="print the context bundle"); s.set_defaults(fn=cmd_context)

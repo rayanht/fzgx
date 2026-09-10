@@ -127,9 +127,12 @@ class AppServer:
             while line := await self.process.stdout.readline():
                 message = json.loads(line)
                 method, params = message.get('method', ''), message.get('params') or {}
+                session = self.sessions.get(params.get('threadId'))
                 # Completed items carry the full text. Persisting every token
                 # delta multiplies log I/O at high model concurrency.
                 if method.endswith(('/delta', '/textDelta', '/outputDelta')):
+                    if session:
+                        session.stream_activity(params)
                     continue
                 if method == 'mcpServer/startupStatus/updated' and params.get('status') == 'starting':
                     raise RuntimeError('Unexpected inherited MCP startup: ' + params['name'])
@@ -141,7 +144,6 @@ class AppServer:
                         else:
                             future.set_result(message.get('result'))
                     continue
-                session = self.sessions.get(params.get('threadId'))
                 if session:
                     session.event(message)
                 elif not method.startswith('codex/event/'):
@@ -199,6 +201,20 @@ class Matcher:
         self.total, self.samples = {}, []
         self.model_started = False
         self.tool_calls, self.tool_secs, self.queue_secs = 0, 0.0, 0.0
+        self.retries, self.retry_errors = 0, {}
+        self.stream_chars, self.stream_events, self.stream_reported = 0, 0, 0.0
+
+    def stream_activity(self, params):
+        # Keep a small heartbeat, not every token: missing item/completed events
+        # alone cannot distinguish ongoing reasoning from a stalled connection.
+        delta = params.get('delta') or params.get('text') or ''
+        self.stream_chars += len(delta) if isinstance(delta, str) else 0
+        self.stream_events += 1
+        now = time.monotonic()
+        if now - self.stream_reported >= 30:
+            self.stream_reported = now
+            self.log.write(json.dumps(dict(timestamp=utcnow(), method='fzgx/stream/progress',
+                                           params=dict(chars=self.stream_chars, events=self.stream_events))) + '\n')
 
     def event(self, message):
         self.log.write(json.dumps(dict(timestamp=utcnow(), **message)) + '\n')
@@ -220,8 +236,14 @@ class Matcher:
             if turn.get('error'):
                 self.error = json.dumps(turn['error'])
             self.done.set()
-        elif method == 'error' and not params.get('willRetry', False):
-            self.error = json.dumps(params.get('error', params))
+        elif method == 'error':
+            error = params.get('error', params)
+            if params.get('willRetry', False):
+                self.retries += 1
+                detail = error.get('additionalDetails', error.get('message', 'unknown'))
+                self.retry_errors[detail] = self.retry_errors.get(detail, 0) + 1
+            else:
+                self.error = json.dumps(error)
 
     async def cli(self, *args):
         queued = time.monotonic()
@@ -299,12 +321,12 @@ class Matcher:
         setup_secs, outcome = 0.0, 'incomplete'
         try:
             async with asyncio.timeout(options.timeout):
-                assignment = await self.cli('claim', self.symbol, '--agent', self.agent)
+                assignment = await self.cli('claim', self.symbol, '--agent', self.agent,
+                                            *([] if revise else ['--check']))
                 if not assignment.get('ok'):
                     raise RuntimeError('assignment failed: ' + json.dumps(assignment))
                 seed = assignment.get('seed') or {}
-                if seed and not revise and not (seed.get('kind') == 'lift_total' and '???' in seed['source']):
-                    assignment['initial_check'] = api.format_check(await self.cli('check', self.symbol))
+                if assignment.get('initial_check'):
                     seed['instruction'] = 'Continue this installed work copy from the initial diff using patch_unit.'
                 (self.directory / f'{self.symbol}.assignment.json').write_text(json.dumps(assignment, indent=2) + '\n')
                 setup_secs = round(time.monotonic() - started, 3)
@@ -364,6 +386,8 @@ class Matcher:
         return dict(symbol=self.symbol, outcome=outcome, percent=100.0 if outcome == 'matched' else attempt.get('best_in_attempt'),
                     checks=attempt.get('checks'), secs=round(time.monotonic() - started, 1), setup_secs=setup_secs,
                     tool_secs=round(self.tool_secs, 3), tool_queue_secs=round(self.queue_secs, 3), tool_calls=self.tool_calls,
+                    stream_retries=self.retries, retry_errors=self.retry_errors,
+                    streamed_chars=self.stream_chars, reasoning_tokens=self.total.get('reasoningOutputTokens', 0),
                     model_started=self.model_started, model=self.model if self.model_started else '',
                     thread_id=self.thread, error=self.error, turns=1 if self.model_started else 0,
                     rc=0 if not self.error else 1, attempt_id=attempt.get('id'), usage_samples=self.samples)

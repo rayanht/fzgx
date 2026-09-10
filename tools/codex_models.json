@@ -5,7 +5,7 @@
       "prefer_websockets": false,
       "support_verbosity": true,
       "default_verbosity": "low",
-      "apply_patch_tool_type": "freeform",
+      "apply_patch_tool_type": null,
       "web_search_tool_type": "text",
       "input_modalities": [
         "text",
