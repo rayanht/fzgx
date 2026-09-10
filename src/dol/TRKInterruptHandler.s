@@ -40,8 +40,8 @@
 /* 8008B1A4 000881A4  88 42 00 00 */	lbz r2, 0x0(r2)
 /* 8008B1A8 000881A8  2C 02 00 00 */	cmpwi r2, 0x0
 /* 8008B1AC 000881AC  41 82 00 2C */	beq .L_8008B1D8
-/* 8008B1B0 000881B0  3C 40 80 15 */	lis r2, gTRKExceptionStatus_8015B874@h
-/* 8008B1B4 000881B4  60 42 B8 74 */	ori r2, r2, gTRKExceptionStatus_8015B874@l
+/* 8008B1B0 000881B0  3C 40 80 15 */	lis r2, gTRKExceptionStatus@h
+/* 8008B1B4 000881B4  60 42 B8 74 */	ori r2, r2, gTRKExceptionStatus@l
 /* 8008B1B8 000881B8  88 42 00 0C */	lbz r2, 0xc(r2)
 /* 8008B1BC 000881BC  2C 02 00 01 */	cmpwi r2, 0x1
 /* 8008B1C0 000881C0  41 82 00 18 */	beq .L_8008B1D8
@@ -62,8 +62,8 @@
 /* 8008B1F4 000881F4  3C 40 80 1A */	lis r2, TRK_saved_exceptionID_801A50B8@h
 /* 8008B1F8 000881F8  60 42 50 B8 */	ori r2, r2, TRK_saved_exceptionID_801A50B8@l
 /* 8008B1FC 000881FC  A0 62 00 00 */	lhz r3, 0x0(r2)
-/* 8008B200 00088200  3C 40 80 15 */	lis r2, gTRKExceptionStatus_8015B874@h
-/* 8008B204 00088204  60 42 B8 74 */	ori r2, r2, gTRKExceptionStatus_8015B874@l
+/* 8008B200 00088200  3C 40 80 15 */	lis r2, gTRKExceptionStatus@h
+/* 8008B204 00088204  60 42 B8 74 */	ori r2, r2, gTRKExceptionStatus@l
 /* 8008B208 00088208  88 42 00 0C */	lbz r2, 0xc(r2)
 /* 8008B20C 0008820C  2C 02 00 00 */	cmpwi r2, 0x0
 /* 8008B210 00088210  40 82 00 B0 */	bne TRKExceptionHandler
@@ -85,8 +85,8 @@
 /* 8008B250 00088250  7F E1 02 A6 */	mfxer r31
 /* 8008B254 00088254  BF 62 00 80 */	stmw r27, 0x80(r2)
 /* 8008B258 00088258  48 00 18 E9 */	bl TRKSaveExtended1Block
-/* 8008B25C 0008825C  3C 40 80 15 */	lis r2, gTRKExceptionStatus_8015B874@h
-/* 8008B260 00088260  60 42 B8 74 */	ori r2, r2, gTRKExceptionStatus_8015B874@l
+/* 8008B25C 0008825C  3C 40 80 15 */	lis r2, gTRKExceptionStatus@h
+/* 8008B260 00088260  60 42 B8 74 */	ori r2, r2, gTRKExceptionStatus@l
 /* 8008B264 00088264  38 60 00 01 */	li r3, 0x1
 /* 8008B268 00088268  98 62 00 0C */	stb r3, 0xc(r2)
 /* 8008B26C 0008826C  3C 40 80 1A */	lis r2, gTRKState@h

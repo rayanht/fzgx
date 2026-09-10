@@ -77,6 +77,8 @@ class Piece:
 
 
 def integer_expression(text: str) -> int:
+    text = re.sub(r'\(\s*(?:void|u32|s32|unsigned\s+(?:int|long)|signed\s+(?:int|long))\s*\*?\s*\)', '', text)
+    text = re.sub(r'\b(0[xX][\da-fA-F]+|\d+)[uUlL]+\b', r'\1', text)
     ops = {ast.LShift: operator.lshift, ast.RShift: operator.rshift,
            ast.BitOr: operator.or_, ast.BitAnd: operator.and_, ast.Add: operator.add,
            ast.Sub: operator.sub, ast.Mult: operator.mul}
@@ -85,6 +87,8 @@ def integer_expression(text: str) -> int:
             return node.value
         if isinstance(node, ast.BinOp) and type(node.op) in ops:
             return ops[type(node.op)](value(node.left), value(node.right))
+        if isinstance(node, ast.UnaryOp) and isinstance(node.op, (ast.USub, ast.UAdd, ast.Invert)):
+            return {ast.USub: operator.neg, ast.UAdd: operator.pos, ast.Invert: operator.invert}[type(node.op)](value(node.operand))
         raise ValueError(f'unsupported SDK address expression: {text}')
     return value(ast.parse(text, mode='eval').body)
 
@@ -93,7 +97,7 @@ def declarations(text: str) -> list:
     """Split compiler-preprocessed C at top-level declarations/function definitions."""
     text = re.sub(r"^[ \t]*#(?:[^\n]*\\\n)*[^\n]*(?:\n|$)", "", text, flags=re.M)
     text = LEXICAL.sub(lambda m: ' ' if m[0].startswith('/') else m[0], text)
-    text = re.sub(r'__declspec\s*\(weak\)\s*', '', text)
+    text = re.sub(r'__declspec\s*\((?:weak|section\s+"[^"]*")\)\s*', '', text)
     # MWCC -E joins this typedef and parameter name in the SDK error header.
     text = re.sub(r'\bOSError(error|code)\b', r'OSError \1', text)
     clean = masked(text)
@@ -125,6 +129,22 @@ def declarations(text: str) -> list:
             start = i + 1
             if not part:
                 continue
+            # SDK math files group constants under one type declaration. Split
+            # only declarator commas, keeping array initializers and calls intact.
+            if not part.startswith(('typedef', 'struct', 'union', 'enum')):
+                nesting = 0
+                commas = []
+                for pos, char in enumerate(masked(part)):
+                    nesting += (char in '([{') - (char in ')]}')
+                    if char == ',' and nesting == 0:
+                        commas.append(pos)
+                if commas:
+                    first = re.fullmatch(r'((?:\w+\s+)+)(\**\s*\w+.*)', part[:commas[0]], re.S)
+                    if first:
+                        chunks = [first[2]] + [part[a + 1:b] for a, b in zip(commas, commas[1:] + [len(part) - 1])]
+                        for chunk in chunks:
+                            out.extend(declarations(first[1] + chunk.strip() + ';'))
+                        continue
             names = set()
             address = None
             if part.startswith('typedef'):
@@ -264,6 +284,9 @@ def bindings(p: Project, rec: dict, offsets: dict | None = None) -> dict:
     for off, (name, addend, kind) in left.items():
         if name.startswith('@') or re.fullmatch(r'_(?:save|rest)[gf]pr_\d+', name):
             continue
+        if name in oracle.abs_symbols():
+            mapping[name] = name
+            continue  # The object oracle compares these against the resolved retail instruction.
         if name in known:
             continue  # Earlier aligned source references; the oracle checks every use.
         target_off = offsets.get(off) if offsets is not None else off

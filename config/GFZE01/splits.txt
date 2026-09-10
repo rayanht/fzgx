@@ -4307,3 +4307,69 @@ dol/fn_8007A2E8.c:
 
 dol/fn_80080030.c:
 	.text       start:0x80080030 end:0x80080150 align:4
+
+dol/TRKGetNextEvent.c:
+	.text       start:0x8008885C end:0x80088910 align:4
+
+dol/TRKInitializeMessageBuffers.c:
+	.text       start:0x8008930C end:0x80089380 align:4
+
+dol/TRKNubMainLoop.c:
+	.text       start:0x80088648 end:0x80088740 align:4
+
+dol/fn_8000CAC8.c:
+	.text       start:0x8000CAC8 end:0x8000CC64 align:4
+
+dol/fn_8000CC64.c:
+	.text       start:0x8000CC64 end:0x8000CDD8 align:4
+
+dol/fn_800307CC.c:
+	.text       start:0x800307CC end:0x80030848 align:4
+
+dol/fn_80032140.c:
+	.text       start:0x80032140 end:0x800321D8 align:4
+
+dol/fn_8003493C.c:
+	.text       start:0x8003493C end:0x80034A5C align:4
+
+dol/fn_800355B0.c:
+	.text       start:0x800355B0 end:0x80035680 align:4
+
+dol/fn_80035C50.c:
+	.text       start:0x80035C50 end:0x80035EC4 align:4
+
+dol/fn_8008877C.c:
+	.text       start:0x8008877C end:0x8008885C align:4
+
+dol/fn_80088B44.c:
+	.text       start:0x80088B44 end:0x80088C34 align:4
+
+dol/fn_80088C34.c:
+	.text       start:0x80088C34 end:0x80088CCC align:4
+
+dol/fn_80088CCC.c:
+	.text       start:0x80088CCC end:0x80088DB4 align:4
+
+dol/fn_80088DB4.c:
+	.text       start:0x80088DB4 end:0x80088EB0 align:4
+
+dol/fn_80088EB0.c:
+	.text       start:0x80088EB0 end:0x80088F18 align:4
+
+dol/fn_80088F18.c:
+	.text       start:0x80088F18 end:0x80089014 align:4
+
+dol/fn_80089014.c:
+	.text       start:0x80089014 end:0x800890A0 align:4
+
+dol/fn_800890A0.c:
+	.text       start:0x800890A0 end:0x80089144 align:4
+
+dol/fn_8008B028.c:
+	.text       start:0x8008B028 end:0x8008B0E0 align:4
+
+dol/fn_8008C5F0.c:
+	.text       start:0x8008C5F0 end:0x8008C6E4 align:4
+
+dol/ClearArena.c:
+	.text       start:0x8000A24C end:0x8000A374 align:4

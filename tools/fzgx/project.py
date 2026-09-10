@@ -419,8 +419,10 @@ class Project:
         if not mapping:
             return []
         pattern = re.compile(r'\b(?:' + '|'.join(map(re.escape, mapping)) + r')\b')
-        paths = {ROOT / 'src' / u.get('tu', u['source']) for u in self.load_units()
+        paths = {(ROOT / 'src' / (u.get('tu') or u['source'])).with_suffix('.s' if u.get('asm') else '.c') for u in self.load_units()
                  if module == 'main' or u['module'] == module}
+        headers = ROOT / 'include' if module == 'main' else ROOT / 'include/rel' / module
+        paths.update(headers.rglob('*.h'))
         changed = []
         for path in sorted(paths):
             if not path.exists():

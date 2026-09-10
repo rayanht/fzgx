@@ -2519,6 +2519,57 @@
   },
   {
     "module": "main",
+    "source": "dol/ClearArena.c",
+    "symbols": [
+      "ClearArena"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-pragma",
+      "'cats",
+      "off'",
+      "-pragma",
+      "'warn_notinlined",
+      "off'",
+      "-use_lmw_stmw",
+      "on",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-multibyte",
+      "-DMATCHING=1",
+      "-inline",
+      "auto",
+      "-lang=c",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-str",
+      "reuse",
+      "-common",
+      "off",
+      "-O4,p"
+    ]
+  },
+  {
+    "module": "main",
     "source": "dol/CompleteTransfer.c",
     "symbols": [
       "CompleteTransfer"
@@ -5406,6 +5457,23 @@
   },
   {
     "module": "main",
+    "source": "dol/TRKGetNextEvent.c",
+    "symbols": [
+      "TRKGetNextEvent"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
     "source": "dol/TRKInitializeDispatcher.c",
     "symbols": [
       "TRKInitializeDispatcher"
@@ -5433,6 +5501,23 @@
     "status": "matching",
     "mw_version": "GC/1.3.2",
     "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/TRKInitializeMessageBuffers.c",
+    "symbols": [
+      "TRKInitializeMessageBuffers"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ]
   },
   {
     "module": "main",
@@ -5476,6 +5561,23 @@
     "mw_version": null,
     "extra_cflags": [],
     "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/TRKNubMainLoop.c",
+    "symbols": [
+      "TRKNubMainLoop"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "0",
+      "-sdata2",
+      "0",
+      "-use_lmw_stmw",
+      "off"
+    ]
   },
   {
     "module": "main",
@@ -8221,6 +8323,40 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_8000CAC8.c",
+    "symbols": [
+      "fn_8000CAC8"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_8000CC64.c",
+    "symbols": [
+      "fn_8000CC64"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ]
   },
   {
     "module": "main",
@@ -11256,6 +11392,23 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_800307CC.c",
+    "symbols": [
+      "fn_800307CC"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
     "source": "dol/fn_80031B50.c",
     "symbols": [
       "fn_80031B50"
@@ -11334,6 +11487,23 @@
       "-char",
       "signed",
       "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_80032140.c",
+    "symbols": [
+      "fn_80032140"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
       "off"
     ]
   },
@@ -12048,6 +12218,23 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_8003493C.c",
+    "symbols": [
+      "fn_8003493C"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
     "source": "dol/fn_80034A5C.c",
     "symbols": [
       "fn_80034A5C"
@@ -12187,6 +12374,28 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_800355B0.c",
+    "symbols": [
+      "fn_800355B0"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ],
+    "pool": {
+      "@15": "lbl_801A7088",
+      "@16": "lbl_801A70A0",
+      "@17": "lbl_801A70B4"
+    }
+  },
+  {
+    "module": "main",
     "source": "dol/fn_80035680.c",
     "symbols": [
       "fn_80035680"
@@ -12224,6 +12433,28 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_80035C50.c",
+    "symbols": [
+      "fn_80035C50"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "on"
+    ],
+    "pool": {
+      "@63": "lbl_801A70C0",
+      "@61": "lbl_801A70B8",
+      "@65": "jumptable_8012B328"
+    }
   },
   {
     "module": "main",
@@ -19042,6 +19273,23 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_8008877C.c",
+    "symbols": [
+      "fn_8008877C"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
     "source": "dol/fn_80088B00.c",
     "symbols": [
       "fn_80088B00"
@@ -19049,6 +19297,142 @@
     "status": "matching",
     "mw_version": "GC/1.3.2",
     "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_80088B44.c",
+    "symbols": [
+      "fn_80088B44"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "0",
+      "-sdata2",
+      "0",
+      "-use_lmw_stmw",
+      "on"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_80088C34.c",
+    "symbols": [
+      "fn_80088C34"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "on"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_80088CCC.c",
+    "symbols": [
+      "fn_80088CCC"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "0",
+      "-sdata2",
+      "0",
+      "-use_lmw_stmw",
+      "on"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_80088DB4.c",
+    "symbols": [
+      "fn_80088DB4"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "0",
+      "-sdata2",
+      "0",
+      "-use_lmw_stmw",
+      "on"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_80088EB0.c",
+    "symbols": [
+      "fn_80088EB0"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_80088F18.c",
+    "symbols": [
+      "fn_80088F18"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "0",
+      "-sdata2",
+      "0",
+      "-use_lmw_stmw",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_80089014.c",
+    "symbols": [
+      "fn_80089014"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_800890A0.c",
+    "symbols": [
+      "fn_800890A0"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ]
   },
   {
     "module": "main",
@@ -19245,6 +19629,23 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_8008B028.c",
+    "symbols": [
+      "fn_8008B028"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
     "source": "dol/fn_8008B0E0.c",
     "symbols": [
       "fn_8008B0E0"
@@ -19315,6 +19716,23 @@
     "status": "matching",
     "mw_version": "GC/1.3.2",
     "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_8008C5F0.c",
+    "symbols": [
+      "fn_8008C5F0"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ]
   },
   {
     "module": "main",

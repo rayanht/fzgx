@@ -7,8 +7,8 @@
 
 # .text:0x0 | 0x8008B2C0 | size: 0x9C
 .fn TRKExceptionHandler, global
-/* 8008B2C0 000882C0  3C 40 80 15 */	lis r2, gTRKExceptionStatus_8015B874@h
-/* 8008B2C4 000882C4  60 42 B8 74 */	ori r2, r2, gTRKExceptionStatus_8015B874@l
+/* 8008B2C0 000882C0  3C 40 80 15 */	lis r2, gTRKExceptionStatus@h
+/* 8008B2C4 000882C4  60 42 B8 74 */	ori r2, r2, gTRKExceptionStatus@l
 /* 8008B2C8 000882C8  B0 62 00 08 */	sth r3, 0x8(r2)
 /* 8008B2CC 000882CC  7C 7A 02 A6 */	mfsrr0 r3
 /* 8008B2D0 000882D0  90 62 00 00 */	stw r3, 0x0(r2)
@@ -39,8 +39,8 @@
 /* 8008B330 00088330  38 63 00 04 */	addi r3, r3, 0x4
 /* 8008B334 00088334  7C 7A 03 A6 */	mtsrr0 r3
 .L_8008B338:
-/* 8008B338 00088338  3C 40 80 15 */	lis r2, gTRKExceptionStatus_8015B874@h
-/* 8008B33C 0008833C  60 42 B8 74 */	ori r2, r2, gTRKExceptionStatus_8015B874@l
+/* 8008B338 00088338  3C 40 80 15 */	lis r2, gTRKExceptionStatus@h
+/* 8008B33C 0008833C  60 42 B8 74 */	ori r2, r2, gTRKExceptionStatus@l
 /* 8008B340 00088340  38 60 00 01 */	li r3, 0x1
 /* 8008B344 00088344  98 62 00 0D */	stb r3, 0xd(r2)
 /* 8008B348 00088348  7C 73 42 A6 */	mfsprg r3, 3

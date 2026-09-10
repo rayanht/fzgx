@@ -113,7 +113,7 @@ def rename(p: Project, old: str, new: str, verify: bool = True) -> Dict[str, obj
             changed.append(str(spath.relative_to(ROOT)))
         # sources
         pat = re.compile(IDENT_RE % re.escape(old))
-        for f in (ROOT / "src").rglob("*.c"):
+        for f in [*(ROOT / "src").rglob("*.c"), *(ROOT / "src").rglob("*.s")]:
             t = f.read_text()
             if pat.search(t):
                 f.write_text(pat.sub(new, t))
@@ -133,6 +133,12 @@ def rename(p: Project, old: str, new: str, verify: bool = True) -> Dict[str, obj
                     old_unit, new_unit = u["source"], str(Path(u["source"]).with_name(f"{new}.c"))
                     u["source"] = new_unit
         p.save_units(units)
+        for template in (ROOT / 'config' / p.version).rglob('ldscript.tpl'):
+            text = template.read_text()
+            rewritten = pat.sub(new, text)
+            if rewritten != text:
+                template.write_text(rewritten)
+                changed.append(str(template.relative_to(ROOT)))
         if old_unit:
             rec = next((u for u in units if u["source"] == new_unit), None)
             if not (rec and rec.get("tu")):  # block units have no file of their own

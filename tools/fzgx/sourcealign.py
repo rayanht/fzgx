@@ -363,7 +363,8 @@ def source_body(pieces: list, name: str, external: set) -> str:
             declaration = 'extern ' + re.sub(r'^(?:static\s+|extern\s+)+', '', piece.text.split('=', 1)[0].strip()) + ';'
             externs = [piece.text if item == declaration else item for item in externs]
     types = [t for t in types if not any(x.names & sdkimport.BASE_TYPES and x.text == t for x in pieces)]
-    text = '#include "types.h"\n\n' + '\n\n'.join(types + externs + [re.sub(r'^static\s+', '', function.text)]) + '\n'
+    signature = re.sub(r'^(?:static\s+|inline\s+)+', '', function.signature) + ';'
+    text = '#include "types.h"\n\n' + '\n\n'.join(types + [signature] + externs + [re.sub(r'^static\s+', '', function.text)]) + '\n'
     text = re.sub(r'(?m)^(.*\bDSPSendMailToDSP\(0x80F30000\s*\|[^;]+;)',
                   r'\1 // fzgx-allow: A1 DSP mailbox command, not an address', text)
     if re.search(r'\basm\b', sdkimport.masked(text)):
@@ -613,15 +614,21 @@ def import_candidate(p: Project, rec: dict, pieces: list, directory: Path, donor
     pairs = aligned_words(donor, target)
     operations = difflib.SequenceMatcher(None, tuple(map(operation, donor)), tuple(map(operation, target)), autojunk=False)
     operation_pairs = {a + i: b + i for a, b, count in operations.get_matching_blocks() for i in range(count)}
-    anchors = defaultdict(set)
+    anchors = defaultdict(Counter)
     calls = defaultdict(set)
     left = sdkimport.relocations(Path(rec['object']), rec['sdk_symbol'])
     for off, (name, addend, kind) in left.items():
         to = pairs.get(off // 4, operation_pairs.get(off // 4))
         if name.startswith('.') and to is not None and to * 4 in right:
             dest, da, dk = right[to * 4]
-            if (addend, kind) == (da, dk):
-                anchors[name].add(dest)
+            if kind == dk:
+                target_symbol = sdkimport.retail_symbol(p, sym.module, dest)
+                if target_symbol:
+                    base = target_symbol.addr + da - addend
+                    bases = [s for s in p.symbols(sym.module).values()
+                             if s.section == target_symbol.section and s.addr == base and s.name.isidentifier()]
+                    if bases:
+                        anchors[name][bases[0].name] += 1
         if kind == 10 and to is not None and to * 4 in right:
             dest, da, dk = right[to * 4]
             if (addend, kind) == (da, dk):
@@ -635,12 +642,13 @@ def import_candidate(p: Project, rec: dict, pieces: list, directory: Path, donor
                         and (s := sdkimport.retail_symbol(p, sym.module, dest)) and s.section == section}
         if len(destinations) == 1:
             anchors[item['name']].update(destinations)
-    mapping = {name: next(iter(destinations)) for name, destinations in anchors.items() if len(destinations) == 1}
+    mapping = {name: ranked[0][0] for name, destinations in anchors.items()
+               if (ranked := destinations.most_common()) and (len(ranked) == 1 or ranked[0][1] > ranked[1][1])}
     proven = proven_bindings(p, rec)
     mapping.update({name: target for name, target in proven.items() if name.startswith('.') and name in external})
     if mapping:
         text = sdkimport.shared_storage(p, rec, pieces, text, mapping)
-        text = sdkimport.replace_c_symbols(text, mapping)
+        text = sdkimport.replace_c_symbols(sdkimport.isolate_parameters(text, mapping), mapping)
     known = {name: next(iter(destinations)) for name, destinations in calls.items() if len(destinations) == 1}
     for item in elf.symbols():
         if item['name'] not in external or item['info'] & 15 != 1 or item['shndx'] == 0:
@@ -659,6 +667,14 @@ def import_candidate(p: Project, rec: dict, pieces: list, directory: Path, donor
             known[name] = existing.name if existing.scope != 'local' else name
     known.update(call_bindings(left, right, known))
     known.update(proven)
+    absolutes = oracle.abs_symbols()
+    for piece in pieces:
+        if isinstance(piece.address, int):
+            for name in piece.names:
+                dest = name if absolutes.get(name) == piece.address else next(
+                    (symbol for symbol, address in absolutes.items() if address == piece.address), None)
+                if dest:
+                    known[name] = dest
     absent = {name for off, (name, _, kind) in left.items() if kind == 10 and name not in known
               and off // 4 not in operation_pairs}
     bound_calls = [known[name] for _, (name, _, kind) in sorted(left.items()) if kind == 10 and name in known]
@@ -701,9 +717,9 @@ def import_candidate(p: Project, rec: dict, pieces: list, directory: Path, donor
     compiled['known_bindings'] = known
     mapping = sdkimport.bindings(p, compiled, offsets)
     text = sdkimport.externalize_statics(text, mapping)
-    text = sdkimport.replace_c_symbols(text, mapping)
+    text = sdkimport.replace_c_symbols(sdkimport.isolate_parameters(text, mapping), mapping)
     text, addresses = sdkimport.absolute_declarations(pieces, text)
-    if addresses:
+    if any(absolutes.get(name) != address for name, address in addresses.items()):
         raise ValueError('candidate requires absolute symbols; use the SDK address importer')
     text = sdkimport.finish_source(sdkimport.format_c(text))
     text = re.sub(r'(?m)^([^\n]*&=?\s*0x800[fF]{5}[uUlL]*[^\n]*)$',
@@ -772,6 +788,77 @@ def submit_saved(p: Project, symbols=()) -> dict:
         license_path.write_bytes((root / result['license']['path']).read_bytes())
     manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + '\n')
     return dict(accepted=accepted, failed=failed)
+
+
+def apply_names(p: Project) -> dict:
+    from . import tu, verify
+    ledger = Ledger()
+    if verify.pending(ledger):
+        raise ValueError('verify pending imports before applying donor names')
+    manifests = {path: json.loads(path.read_text()) for path in (ROOT / 'state/sdkimports').glob('*.json')}
+    proposals = defaultdict(set)
+    targets = defaultdict(set)
+    for records in manifests.values():
+        for symbol, result in records.items():
+            row = ledger.get(symbol)
+            if not row or row['status'] != 'matched' or row['link_state'] != 'verified':
+                continue
+            source_license(result['sdk'])
+            name = result['sdk_symbol']
+            if re.fullmatch(r'[A-Za-z_]\w*', name):
+                proposals[symbol].add(name)
+                targets[name].add(symbol)
+    taken = {name for module in p.modules for name in p.symbols(module)}
+    mapping, skipped = {}, {}
+    for symbol, names in sorted(proposals.items()):
+        if not p.resolve(symbol).name.startswith('fn_'):
+            continue
+        if len(names) != 1:
+            skipped[symbol] = 'conflicting donor names'
+            continue
+        name = next(iter(names))
+        if len(targets[name]) != 1 or name in taken:
+            skipped[symbol] = f'ambiguous or occupied donor name: {name}'
+            continue
+        mapping[symbol] = name
+        taken.add(name)
+    renamed = tu.rename_many(p, mapping, verify=True) if mapping else dict(ok=True, applied=0, results=[])
+    applied = {row['old']: row['new'] for row in renamed['results'] if row.get('ok')}
+    if applied:
+        def update_record(result):
+            old = result['symbol']
+            if old in applied:
+                result.setdefault('original_symbol', old)
+                result['symbol'] = applied[old]
+            result['bindings'] = {name: sdkimport.replace_c_symbols(target, applied)
+                                  for name, target in result.get('bindings', {}).items()}
+        for path, records in manifests.items():
+            for result in records.values():
+                update_record(result)
+            records = {applied.get(name, name): result for name, result in records.items()}
+            path.write_text(json.dumps(records, indent=2, sort_keys=True) + '\n')
+        path = STATE_DIR / 'sourcealign/matches.json'
+        matches = json.loads(path.read_text()) if path.exists() else {}
+        for result in matches.values():
+            update_record(result)
+            source = Path(result['path'])
+            body = sdkimport.replace_c_symbols(source.read_text(), applied)
+            source.write_text(body)
+            result['generated_sha256'] = hashlib.sha256(body.encode()).hexdigest()
+        matches = {applied.get(name, name): result for name, result in matches.items()}
+        path.write_text(json.dumps(matches, indent=2, sort_keys=True) + '\n')
+        manifest_path = ROOT / 'state/sdkimports/sourcealign.json'
+        manifest = json.loads(manifest_path.read_text())
+        for symbol in manifest.keys() & matches.keys():
+            manifest[symbol]['generated_sha256'] = matches[symbol]['generated_sha256']
+        manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + '\n')
+        path = STATE_DIR / 'sourcealign/discovery.json'
+        if path.exists():
+            discovery = json.loads(path.read_text())
+            for row in discovery['results']:
+                row['symbol'] = applied.get(row['symbol'], row['symbol'])
+            path.write_text(json.dumps(discovery, indent=2) + '\n')
+    return dict(ok=renamed['ok'], applied=renamed['applied'], names=applied, skipped=skipped)
 
 
 def run(p: Project, minimum=256, symbols=(), saved=False, do_submit=True, discover_only=False) -> dict:

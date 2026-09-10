@@ -35,6 +35,8 @@ Rules that hold for everyone:
 - Never push. Commits are local; the user pushes.
 - Adjacent SDK reuse goes through `fzgx sourcealign --compile-sdk NAME --root PATH`
   (repeat `--root`), then `--discover --min-size 64`, `--saved`, and `fzgx verify`.
+  `fzgx sourcealign --apply-names` imports unambiguous donor function names after
+  verification; it updates references and provenance and checks all target hashes.
   Check all library roots: MK Deception's ADX and MSL sources are separate from Sofdec.
   The importer currently accepts CC0 sources, copies their license and provenance into
   `state/sdkimports/`, and emits owned C without external-project includes. Compile donors

@@ -39,8 +39,8 @@
 /* 8008B3D0 000883D0  98 62 00 9C */	stb r3, 0x9c(r2)
 /* 8008B3D4 000883D4  48 00 00 4C */	b TRKInterruptHandlerEnableInterrupts
 .L_8008B3D8:
-/* 8008B3D8 000883D8  3C 40 80 15 */	lis r2, gTRKExceptionStatus_8015B874@h
-/* 8008B3DC 000883DC  60 42 B8 74 */	ori r2, r2, gTRKExceptionStatus_8015B874@l
+/* 8008B3D8 000883D8  3C 40 80 15 */	lis r2, gTRKExceptionStatus@h
+/* 8008B3DC 000883DC  60 42 B8 74 */	ori r2, r2, gTRKExceptionStatus@l
 /* 8008B3E0 000883E0  38 60 00 00 */	li r3, 0x0
 /* 8008B3E4 000883E4  98 62 00 0C */	stb r3, 0xc(r2)
 /* 8008B3E8 000883E8  48 00 19 11 */	bl TRKRestoreExtended1Block
