@@ -137,7 +137,7 @@ async def submit(symbol: str, agent: str, message: str, harness: str = "", model
 @mcp.tool()
 async def release(symbol: str, agent: str, reason: str, harness: str = "", model: str = "") -> dict:
     """Give up on SYMBOL. The best attempt is saved for the next agent; say precisely what still differs."""
-    args = ["release", symbol, "--reason", reason]
+    args = ["release", symbol, "--agent", agent, "--reason", reason]
     if harness:
         args += ["--harness", harness]
     if model:

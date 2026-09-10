@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import argparse
 import json
+import hashlib
+import os
 from pathlib import Path
 from typing import List, Optional
 
@@ -82,7 +84,7 @@ def cmd_submit(a, p):
 
 
 def cmd_release(a, p):
-    r = api.release(p, a.symbol, a.reason, a.harness, a.model, a.tokens_in, a.tokens_out, a.cost_usd)
+    r = api.release(p, a.symbol, a.reason, a.harness, a.model, a.tokens_in, a.tokens_out, a.cost_usd, agent=a.agent)
     _print(r, a.json); return 0 if r["ok"] else 2
 
 
@@ -409,7 +411,7 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--mw-version", help="record a compiler version for this unit (e.g. GC/1.3) before relinking")
     s.add_argument("--extra-cflags", help="extra compiler flags for this unit, space separated")
     s = sub.add_parser("release", help="give up on a claim, keeping the best attempt"); s.set_defaults(fn=cmd_release)
-    s.add_argument("symbol"); s.add_argument("--reason", required=True)
+    s.add_argument("symbol"); s.add_argument("--reason", required=True); s.add_argument("--agent")
     for name in ("submit", "release"):
         sp = sub.choices[name]
         sp.add_argument("--model"); sp.add_argument("--harness")
@@ -503,4 +505,15 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main(argv: Optional[List[str]] = None) -> int:
     a = build_parser().parse_args(argv)
+    assigned = os.environ.get("FZGX_SYMBOL")
+    if assigned:
+        if (a.cmd not in {"claim", "context", "read-unit", "write-unit", "patch-unit", "check", "submit", "release"}
+                or getattr(a, "symbol", None) != assigned
+                or getattr(a, "agent", os.environ["FZGX_AGENT_ID"]) != os.environ["FZGX_AGENT_ID"]):
+            _print({"ok": False, "error": "tool call is outside this worker's assigned function and identity"}, a.json)
+            return 2
+        from . import oracle
+        lock = "worker-" + hashlib.sha256(assigned.encode()).hexdigest() + ".lock"
+        with oracle.build_lock(lock):
+            return a.fn(a, Project(a.version))
     return a.fn(a, Project(a.version))

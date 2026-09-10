@@ -238,6 +238,10 @@ Rules that hold for everyone:
   Bind each headless worker to its assigned symbol and agent id. A successful
   submit/release ends that worker's attempt; reclaiming cannot reset its counters.
   Direct checks and compiler-version probes must honor the same stop as source edits.
+  Disable both `multi_agent` and `multi_agent_v2` in matcher CLIs: nested agents
+  otherwise share the claimed work copy and corrupt each other's checks. Enforce
+  the assigned symbol and identity on every CLI tool call, serialize calls for that
+  function, and pass the release caller's identity through to the ledger guard.
   Provider/catalog reference: [DeepSeek's Codex integration](https://api-docs.deepseek.com/quick_start/agent_integrations/codex/).
   Example: `uv run tools/orchestrate.py --harness codex --provider deepseek
   --api-key-file ~/.config/fzgx/deepseek.key --seeds PATH --parallel 1 --no-trivial`.

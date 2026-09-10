@@ -48,7 +48,8 @@ FAST_MULTIPLIER = 2.0  # "Fast mode" (formerly priority processing) is 2x standa
 CODEX_INSTRUCTIONS = ROOT / "tools" / "codex_matcher.md"  # replaces Codex's 17.7k-char default persona prompt
 CODEX_REVISE_INSTRUCTIONS = ROOT / "tools" / "codex_revise.md"
 CODEX_DISABLE = ["plugins", "recommended_plugins", "plugin_sharing", "remote_plugin", "apps", "browser_use",
-                 "browser_use_external", "in_app_browser", "computer_use", "skill_search", "skill_mcp_dependency_install"]
+                 "browser_use_external", "in_app_browser", "computer_use", "skill_search", "skill_mcp_dependency_install",
+                 "multi_agent", "multi_agent_v2"]
 
 
 def select(p: Project, spec: str) -> List[str]:
