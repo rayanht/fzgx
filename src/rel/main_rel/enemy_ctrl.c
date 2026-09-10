@@ -425,6 +425,41 @@ void fn_1_CFA4C(u32 arg0, u32 arg1) {
 }
 /* fzgx:end fn_1_CFA4C */
 
+/* fzgx:begin fn_1_D0728 */
+#pragma opt_propagation off
+void fn_1_D0728(u32 arg0, u32 arg1) {
+    u32 *data;
+    u32 *state;
+    u32 value;
+
+    value = 0xfffb8004;
+    data = (u32 *)&lbl_1_data_3D544;
+    state = (u32 *)&lbl_1_bss_7ACA0;
+
+    data[0] = value;
+    state[0] = 0;
+    state[1] = 0;
+    ((u8 *)state)[0x8] = 0;
+    ((u8 *)state)[0x9] = 0;
+    data[1] = value;
+    state[3] = 0;
+    state[4] = 0;
+    ((u8 *)state)[0x14] = 0;
+    ((u8 *)state)[0x15] = 0;
+    data[2] = value;
+    state[6] = 0;
+    state[7] = 0;
+    ((u8 *)state)[0x20] = 0;
+    ((u8 *)state)[0x21] = 0;
+    data[3] = value;
+    state[9] = 0;
+    state[10] = 0;
+    ((u8 *)state)[0x2c] = 0;
+    ((u8 *)state)[0x2d] = 0;
+}
+#pragma opt_propagation reset
+/* fzgx:end fn_1_D0728 */
+
 /* fzgx:begin fn_1_D0790 */
 void fn_1_D0790(void) {
     u32 *p = (u32 *)&lbl_1_data_3D544;

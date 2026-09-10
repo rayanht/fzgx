@@ -481,6 +481,47 @@ void fn_1_9CCE8(s32 arg0) {
 }
 /* fzgx:end fn_1_9CCE8 */
 
+/* fzgx:begin fn_1_9CD6C */
+typedef struct {
+    f32 x;
+    f32 y;
+    f32 z;
+} Vec3;
+
+typedef struct {
+    u8 pad[0x60];
+} GlobalState;
+
+extern f32 lbl_1_rodata_4260[16];
+extern GlobalState *lbl_801A6D00;
+
+extern void lbl_8006E1B0(void *, Vec3 *);
+extern f32 lbl_8006D0B4(f32);
+extern void lbl_8006DB74(void *);
+extern void lbl_8006D848(f32);
+extern void lbl_8006DFC4(void *);
+
+#pragma opt_common_subs off
+void fn_1_9CD6C(void *arg0, f32 arg1) {
+    Vec3 value;
+    f32 squared;
+    f32 length;
+
+    lbl_8006E1B0(arg0, &value);
+    squared = value.x * value.x;
+    squared = value.y * value.y + squared;
+    squared = value.z * value.z + squared;
+    length = lbl_8006D0B4(squared);
+
+    if (length > lbl_1_rodata_4260[0] + arg1) {
+        lbl_8006DB74((u8 *)lbl_801A6D00 + 0x60);
+        lbl_8006D848((length - arg1) / length);
+        lbl_8006DFC4((u8 *)lbl_801A6D00 + 0x60);
+    }
+}
+#pragma opt_common_subs reset
+/* fzgx:end fn_1_9CD6C */
+
 /* fzgx:begin fn_1_9CE1C */
 typedef struct {
     u32 unk_00;

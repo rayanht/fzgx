@@ -812,12 +812,13 @@ def sweep(p: Project, module: Optional[str] = None, min_percent: float = 80.0, l
     def one(item):
         key, mod, size, pct, text, ck = item
         res = first.get(key) or oracle.check(p, key, 20, source=srcs[key])
+        options = {"mw_version": res.mw_version, "extra_cflags": res.extra_cflags}
         if res.ok and oracle.unit_fully_matches(res) is None:
-            return item, {"match": True, "body": text, "percent": 100.0}
+            return item, {"match": True, "body": text, "percent": 100.0, **options}
         if res.ok:
             fx = fixup.try_fix(p, key, text, budget_s=8.0, base=res)
             if fx.get("matched") and fx.get("body"):
-                return item, {"match": True, "body": fx["body"], "label": fx.get("label"), "percent": 100.0}
+                return item, {"match": True, "body": fx["body"], "label": fx.get("label"), "percent": 100.0, **options}
             return item, {"match": False, "percent": round(max(res.percent, fx.get("best") or 0.0), 1), "body": fx.get("best_body")}
         return item, {"match": False, "percent": None, "error": (res.error or "")[:80]}
 
@@ -831,14 +832,16 @@ def sweep(p: Project, module: Optional[str] = None, min_percent: float = 80.0, l
             work = p.work_path(key)
             work.parent.mkdir(parents=True, exist_ok=True)
             work.write_text(r["body"])
-            sub = submit(p, key, agent="sweep", message=("saved body repaired: " + r["label"]) if r.get("label") else "saved body re-checked")
+            options = {name: r.get(name) for name in ("mw_version", "extra_cflags")}
+            sub = submit(p, key, agent="sweep", message=("saved body repaired: " + r["label"]) if r.get("label") else "saved body re-checked",
+                         **options)
             if not sub.get("ok") and sub.get("error") == "lint":
                 # a matching body the lint refuses for an unnamed OS/hardware address or an
                 # unjustified volatile: the same allow comment the lifter writes, per finding line
                 repaired = lint_repair(r["body"], sub.get("findings") or [])
                 if repaired != r["body"]:
                     work.write_text(repaired)
-                    sub = submit(p, key, agent="sweep", message="saved body re-checked (lint allow comments added)")
+                    sub = submit(p, key, agent="sweep", message="saved body re-checked (lint allow comments added)", **options)
             if sub.get("ok"):
                 (out["fixed"] if r.get("label") else out["pool"] if sub.get("pool") else out["submitted"]).append(key if not r.get("label") else (key, r["label"]))
                 continue

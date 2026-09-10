@@ -130,6 +130,45 @@ void fn_1_FC4E0(void *arg0, int arg1) {
 }
 /* fzgx:end fn_1_FC4E0 */
 
+/* fzgx:begin fn_1_FC51C */
+extern void fn_1_FC60C(void);
+extern void fn_80008BA8(void *, void *, u32);
+extern void DCFlushRange(void *, u32);
+extern void GXInitTexObj(void *, void *, u32, u32, u32, u32, u32, u32);
+extern void GXInitTexObjLOD(void *, f32, f32, f32, u32, u32, u32, u32, u32);
+
+extern u8 lbl_1_bss_851E0[36];
+extern u8 lbl_1_bss_85204[32];
+extern const f64 lbl_1_rodata_760C;
+
+#pragma opt_common_subs off
+void fn_1_FC51C(void) {
+    fn_1_FC60C();
+
+    lbl_1_bss_851E0[0] = 0xff;
+    lbl_1_bss_851E0[1] = 0xff;
+    lbl_1_bss_851E0[2] = 0;
+    lbl_1_bss_851E0[3] = 0;
+    lbl_1_bss_851E0[4] = 0;
+    lbl_1_bss_851E0[5] = 0;
+    lbl_1_bss_851E0[6] = 0;
+    lbl_1_bss_851E0[7] = 0;
+
+    fn_80008BA8(lbl_1_bss_851E0 + 8, lbl_1_bss_851E0, 8);
+    fn_80008BA8(lbl_1_bss_851E0 + 0x10, lbl_1_bss_851E0, 8);
+    fn_80008BA8(lbl_1_bss_851E0 + 0x18, lbl_1_bss_851E0, 8);
+    DCFlushRange(lbl_1_bss_851E0, 0x20);
+
+    GXInitTexObj(lbl_1_bss_85204, lbl_1_bss_851E0, 8, 4, 1, 0, 0, 0);
+    GXInitTexObjLOD(lbl_1_bss_85204,
+                *(const f32 *)&lbl_1_rodata_760C,
+                *(const f32 *)&lbl_1_rodata_760C,
+                *(const f32 *)&lbl_1_rodata_760C,
+                1, 1, 0, 0, 0);
+}
+#pragma opt_common_subs reset
+/* fzgx:end fn_1_FC51C */
+
 /* fzgx:begin fn_1_FCF50 */
 int fn_1_FCF50(void) {
     fn_1_FCA10();

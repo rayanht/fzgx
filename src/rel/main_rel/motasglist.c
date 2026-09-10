@@ -12,6 +12,43 @@ extern void fn_1_449A8(void *vector);
 extern void lbl_8006DB74(void *value);
 extern u32 lbl_1_bss_384CC;
 
+/* fzgx:begin fn_1_41B18 */
+typedef struct Node Node;
+struct Node {
+    u8 pad[0x30];
+    Node *next;
+};
+
+typedef struct Object {
+    u8 pad[2];
+    u16 flags;
+    Node *data;
+} Object;
+
+extern Object *fn_1_41BDC(Object *obj);
+
+#pragma opt_propagation off
+void *fn_1_41B18(Object *obj, s32 unused, s32 index) {
+    Object *result;
+    Node *node;
+    s32 i;
+
+    result = fn_1_41BDC(obj);
+    if ((obj->flags & 1) != 0) {
+        return (char *)result->data + index * 0x34;
+    }
+
+    node = result->data;
+    i = 0;
+    while (i < index) {
+        node = node->next;
+        i++;
+    }
+    return node;
+}
+#pragma opt_propagation reset
+/* fzgx:end fn_1_41B18 */
+
 /* fzgx:begin fn_1_41BDC */
 typedef struct MotasglistData {
     u8 pad_00[0x26];

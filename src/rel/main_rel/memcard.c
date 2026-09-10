@@ -2051,6 +2051,41 @@ void fn_1_B7F24(void) {
 }
 /* fzgx:end fn_1_B7F24 */
 
+/* fzgx:begin fn_1_B7F58 */
+typedef struct {
+    u32 unk_0;
+    u32 unk_4;
+} Result;
+
+#pragma opt_propagation off
+int fn_1_B7F58(Result *result) {
+    s8 index;
+    Obj_1_bss_716C8 *entry;
+    u32 value_4;
+    u32 value_0;
+    index = lbl_1_bss_7730A;
+    if (index == -1) {
+        result->unk_4 = 0;
+        result->unk_0 = 0;
+        return 0;
+    }
+
+    entry = (Obj_1_bss_716C8 *)((u8 *)&lbl_1_bss_716C8 + index * 0xa0);
+    if ((s32)entry->unk_50 == 0) {
+        result->unk_4 = 0;
+        result->unk_0 = 0;
+        return 0;
+    }
+
+    value_4 = entry->unk_48;
+    value_0 = entry->unk_4C;
+    result->unk_4 = value_0;
+    result->unk_0 = value_4;
+    return 1;
+}
+#pragma opt_propagation reset
+/* fzgx:end fn_1_B7F58 */
+
 /* fzgx:begin fn_1_B7FC8 */
 #include "rel/main_rel/memcard.h"
 

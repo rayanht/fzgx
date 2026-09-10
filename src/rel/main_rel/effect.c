@@ -1192,6 +1192,86 @@ void fn_1_65268(Object *object) {
 }
 /* fzgx:end fn_1_65268 */
 
+/* fzgx:begin fn_1_652F4 noprologue */
+#include "types.h"
+#include "rel/main_rel/effect.h"
+
+extern void fn_1_867CC(s16 value, void *out);
+extern void *fn_1_868C0(s8 value);
+extern void *fn_1_86254(s16 value);
+extern void lbl_8006D9D8(void *out);
+extern void lbl_8006D95C(s16 value);
+extern void mathutil_mtxA_rotate_x(s16 value);
+extern void lbl_8006DB74(void *out);
+extern void fn_1_9F914(void *data, void *owner);
+extern f32 lbl_1_rodata_2AA0[21];
+extern f32 lbl_1_rodata_29AC[5];
+
+typedef struct {
+    u8 pad_00[0x8];
+    void *unk_08;
+} Effect;
+typedef struct {
+    u8 pad_00[0x18];
+    s16 unk_18;
+    u8 pad_1a[2];
+    f32 unk_1c;
+    f32 unk_20;
+    f32 unk_24;
+    f32 unk_28;
+    u8 pad_2c[0x28];
+    s16 unk_54;
+    s16 unk_56;
+} EffectData;
+typedef struct {
+    u8 pad_00[0x120];
+    void *unk_120;
+} EffectRoot;
+typedef struct {
+    f32 value;
+    f32 value2;
+    u8 pad_08[0x34];
+    u8 color[4];
+} ParticleData;
+
+#pragma opt_common_subs off
+void fn_1_652F4(Effect *effect) {
+    u8 temp[0xc];
+    ParticleData data;
+    EffectData *object;
+    void *owner;
+    register f32 color_scale;
+    register f32 scale;
+    void *manager;
+    s16 level;
+
+    object = effect->unk_08;
+    fn_1_867CC(object->unk_18, temp);
+    level = *(s16 *)((u8 *)fn_1_868C0((s8)object->unk_18) + 0x3ba);
+    owner = fn_1_86254(object->unk_18);
+    if (level >= 3 && *(s8 *)((u8 *)owner + 0x475) == -1) {
+        return;
+    }
+    manager = ((EffectRoot *)lbl_1_bss_38458->unk_8)->unk_120;
+    lbl_8006D9D8(temp);
+    lbl_8006D95C(object->unk_56);
+    mathutil_mtxA_rotate_x(object->unk_54);
+    memset(&data, 0, 0x40);
+    lbl_8006DB74((u8 *)&data + 8);
+
+        scale = lbl_1_rodata_2AA0[0];
+        data.value = scale * object->unk_28;
+    color_scale = lbl_1_rodata_29AC[0];
+    data.color[0] = (u8)(s32)(color_scale * object->unk_1c);
+    data.color[1] = (u8)(s32)(color_scale * object->unk_20);
+    data.color[2] = (u8)(s32)(color_scale * object->unk_24);
+    data.color[3] = 0xff;
+    data.value2 = data.value;
+    fn_1_9F914(&data, manager);
+}
+#pragma opt_common_subs reset
+/* fzgx:end fn_1_652F4 */
+
 /* fzgx:begin fn_1_65420 */
 // fn_1_65420: empty in retail (single blr).
 void fn_1_65420(void) {

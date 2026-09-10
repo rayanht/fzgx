@@ -75,6 +75,9 @@ file from what actually unblocked functions; keep each item one or two lines.
 - An address-taken scalar local stays a scalar (`f(&x)` recomputes `addi rN, r1, off` at
   each use); an array decays once into a saved register. A `u8` buffer is 16-byte
   aligned in the frame, a `u32` array or a struct is not.
+- When fields match but a struct-copy loop starts four bytes early, check for a
+  fake leading field plus an array-minus-four pointer. `fn_1_133BD8` needs an
+  aggregate local with the prefix removed, preserving the union's copy extent.
 - Signedness of a compare comes from the operand types: `cmpwi` needs a signed
   operand, `cmplwi` an unsigned one, whatever the width.
 - Unsigned division by a constant: `mulhwu` with a magic multiplier, then

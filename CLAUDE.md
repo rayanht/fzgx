@@ -115,6 +115,9 @@ Rules that hold for everyone:
   project it closed one function and cost minutes per try.
   Saved-candidate repairs must retain the recorded compiler version and flags through every
   rewrite. `fzgx stuck --seeds PATH` accepts a manifest of saved bodies with those settings.
+  Fixup also probes function-scoped optimizer pragmas before source rewrites. A masked-word
+  score of 100% is only a shortlist: keep trying candidates until relocation bindings and
+  data pass the full oracle. The first code-only match must not stop the search.
 - `fzgx trivial` matches single-`blr` and `li r3,N; blr` functions mechanically (419 landed on
   2026-09-08) and then lifts straight-line functions from the disassembly (`tools/fzgx/lift.py`:
   getters, setters, one-call wrappers, short call-free bodies; 102 landed the same day). Run it

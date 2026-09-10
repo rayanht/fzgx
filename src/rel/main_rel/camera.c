@@ -360,6 +360,124 @@ void fn_1_8298(void) {
 }
 /* fzgx:end fn_1_8298 */
 
+/* fzgx:begin fn_1_847C noprologue */
+#include "types.h"
+
+typedef struct {
+    u8 pad_0[0x48];
+    u8 unk_48;
+} CameraObject;
+
+typedef struct {
+    u8 pad_0[0x6];
+    s16 unk_6;
+    u8 pad_8[0x4];
+    u32 unk_C;
+    u8 pad_10[0x8];
+    s32 unk_18;
+} CameraTable;
+
+typedef struct {
+    u8 pad_0[0x2];
+    s16 unk_2;
+} CameraEntry;
+
+typedef struct {
+    CameraObject *unk_0;
+    CameraEntry *unk_4;
+    CameraTable *unk_8;
+    u8 pad_C[0x8];
+    s8 unk_14;
+} CameraState;
+
+extern CameraState lbl_1_bss_F68;
+extern s8 fn_1_86624(s8 mode);
+extern s8 fn_1_86634(s32 index);
+
+#pragma opt_propagation off
+void fn_1_847C(s8 mode) {
+    CameraState *state;
+    s32 i;
+
+    state = &lbl_1_bss_F68;
+    state->unk_14 = fn_1_86624(mode);
+    state->unk_8->unk_6 = -1;
+    i = 0;
+    while (i < state->unk_14) {
+        if (fn_1_86634(i) == 0) {
+            state->unk_8->unk_6 = (s16)i;
+            break;
+        }
+        i++;
+    }
+    if (state->unk_8->unk_18 != 0) {
+        state->unk_8->unk_C |= 0x100000;
+    }
+    if (mode == 1) {
+        state->unk_0->unk_48 = 9;
+    } else if (mode == 2) {
+        state->unk_0->unk_48 = 10;
+        state->unk_4->unk_2 = state->unk_8->unk_6;
+    } else if (mode == 4) {
+        state->unk_0->unk_48 = 9;
+    }
+}
+#pragma opt_propagation reset
+/* fzgx:end fn_1_847C */
+
+/* fzgx:begin fn_1_857C noprologue */
+#include "types.h"
+
+typedef struct {
+    u32 unk_0;
+    u16 entries[15];
+    s16 unk_22;
+    u16 unk_24;
+    u8 pad_26[0x1E];
+    s16 unk_44;
+    u16 unk_46;
+    u8 unk_48;
+    u8 unk_49;
+    u8 unk_4A;
+    u8 unk_4B;
+    u8 unk_4C;
+    u8 unk_4D;
+    u8 pad_4E[2];
+    u32 unk_50;
+} CameraState;
+
+extern u32 lbl_1_bss_7ADE8[40];
+extern void *lbl_1_data_3310;
+extern CameraState *lbl_1_bss_F68;
+extern char lbl_1_data_35FC[14];
+
+extern void fn_1_A6FE8(void);
+extern void fn_1_DCE60(void *);
+extern void fn_1_435C(u32);
+extern s16 fn_1_3F8C(char *, void *, void *, int);
+extern void fn_1_DCED0(void);
+
+#pragma opt_propagation off
+void fn_1_857C(void) {
+    s16 index;
+    s16 result;
+
+    lbl_1_bss_F68->unk_48 = 0xb;
+    lbl_1_data_3310 = lbl_1_bss_7ADE8;
+    fn_1_A6FE8();
+    fn_1_DCE60(lbl_1_data_3310);
+    fn_1_435C(lbl_1_bss_F68->unk_50);
+    result = fn_1_3F8C(lbl_1_data_35FC, fn_1_DCED0, lbl_1_data_3310, 0x14);
+    {
+        CameraState *camera = lbl_1_bss_F68;
+        index = camera->unk_22;
+        camera->unk_22 = index + 1;
+        camera->entries[index] = result;
+    }
+}
+#pragma opt_propagation reset
+/* fzgx:end fn_1_857C */
+
 /* fzgx:begin camera_get_entry_field_0x2 */
 // Returns the selected camera entry value for an 8-bit camera index.
 s16 camera_get_entry_field_0x2(u32 index) {

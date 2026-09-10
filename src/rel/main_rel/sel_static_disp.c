@@ -113,6 +113,65 @@ extern u32 fn_1_141360(u32, u32, u32, u32, f32, f32);
 extern struct fn_1_149C64_lbl_1_bss_8E43C lbl_1_bss_8E43C;
 extern struct fn_1_149C64_lbl_1_bss_8E440 lbl_1_bss_8E440;
 
+/* fzgx:begin fn_1_133BD8 */
+extern f32 lbl_1_rodata_26F8[22];
+extern s32 fn_1_486C4(s32 arg0);
+extern void fn_1_51678(void* arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s16 arg5);
+extern const f32 lbl_1_rodata_8770;
+extern const f32 lbl_1_rodata_8774;
+extern const f32 lbl_1_rodata_86FC;
+extern void fn_1_4F734(void* arg0);
+extern const f32 lbl_1_rodata_8658;
+extern const f32 lbl_1_rodata_8778;
+
+typedef union {
+    u32 raw[22];
+    struct {
+        s32 value;
+        f32 x;
+        f32 y;
+        f32 z;
+        u8 pad[32];
+        s32 count;
+    } obj;
+} Local;
+
+void fn_1_133BD8(void) {
+    Local local;
+    s16 result;
+
+    local = *(Local *)lbl_1_rodata_26F8;
+    local.obj.value = 0x9d00;
+    result = (s16)fn_1_486C4(0x9d00);
+    fn_1_51678(&local.obj.value, local.obj.value, 0, 0, 0x14, result);
+    local.obj.x = lbl_1_rodata_8770;
+    local.obj.y = lbl_1_rodata_8774;
+    local.obj.z = lbl_1_rodata_86FC;
+    local.obj.count = 10;
+    fn_1_4F734(&local.obj.value);
+
+    local = *(Local *)lbl_1_rodata_26F8;
+    local.obj.value = 0x9d00;
+    result = (s16)fn_1_486C4(0x9d00);
+    fn_1_51678(&local.obj.value, local.obj.value, 0x14, 0, 0x1c, result);
+    local.obj.x = lbl_1_rodata_8658;
+    local.obj.y = lbl_1_rodata_8774;
+    local.obj.z = lbl_1_rodata_86FC;
+    local.obj.count = 10;
+    fn_1_4F734(&local.obj.value);
+
+    local = *(Local *)lbl_1_rodata_26F8;
+    local.obj.value = 0x9d00;
+    result = (s16)fn_1_486C4(0x9d00);
+    fn_1_51678(&local.obj.value, local.obj.value, 0x32, 0, 0x12, result);
+    local.obj.x = lbl_1_rodata_8778;
+    local.obj.y = lbl_1_rodata_8774;
+    local.obj.z = lbl_1_rodata_86FC;
+    local.obj.count = 10;
+    fn_1_4F734(&local.obj.value);
+}
+/* fzgx:end fn_1_133BD8 */
+
 /* fzgx:begin fn_1_133DBC */
 void fn_1_133DBC(void* arg0) {
     fn_1_133E04(arg0, 0);

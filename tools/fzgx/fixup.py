@@ -157,6 +157,76 @@ def string_literals(p: Project, module: str, body: str, base: oracle.CheckResult
     return out
 
 
+def optimizer_pragmas(body: str, name: str) -> List[Tuple[str, str]]:
+    """Recover optimizer state lost when a function is extracted from its TU.
+
+    These passes can change otherwise correct register allocation and scheduling.
+    Keep the state local to the function so a later TU merge does not inherit it.
+    """
+    span = _function_span(body, name)
+    if span is None:
+        return []
+    start = body.rfind('\n', 0, span[0]) + 1
+    out = []
+    for option in ('peephole', 'opt_propagation', 'opt_common_subs', 'opt_lifetimes'):
+        if re.search(rf'^\s*#pragma\s+{option}\s+off\b', body[:span[1]], re.M):
+            continue
+        text = (body[:start] + f'#pragma {option} off\n' + body[start:span[1]] +
+                f'\n#pragma {option} reset\n' + body[span[1]:])
+        out.append((f'{option} off', text))
+    return out
+
+
+def stack_aggregates(body: str, diffs: List[Tuple[str, str]]) -> List[Tuple[str, str]]:
+    """Remove a draft's fake aggregate prefix when only the stack copy is biased.
+
+    A pointer before a local array can make field accesses agree while moving the
+    aggregate copy into the frame header. Recover the field origin and copy origin
+    together; retain the union's array member so its size does not shrink.
+    """
+    deltas = set()
+    for target, ours in diffs:
+        pattern = r'addi r\d+, r1, (-?0x[0-9a-f]+|-?\d+)$'
+        t, o = re.fullmatch(pattern, target), re.fullmatch(pattern, ours)
+        if t and o:
+            deltas.add(int(t[1], 0) - int(o[1], 0))
+    if len(deltas) != 1 or next(iter(deltas)) <= 0:
+        return []
+    delta = next(iter(deltas))
+    out = []
+    union = r'typedef\s+union\s*\{[^{}]*struct\s*\{(?P<fields>[^{}]*)\}\s+\w+;[^{}]*\}\s*(?P<type>\w+)\s*;'
+    for declaration in re.finditer(union, body):
+        fields = declaration['fields']
+        first = re.match(r'\s*(u8|s8|u16|s16|u32|s32)\s+(\w+)(?:\[(0[xX][0-9a-fA-F]+|\d+)\])?\s*;', fields)
+        if not first:
+            continue
+        size = int(first[1][1:]) // 8 * (int(first[3], 0) if first[3] else 1)
+        if size != delta or re.search(rf'(?:\.|->){re.escape(first[2])}\b', body[declaration.end():]):
+            continue
+        assignment = (rf'\b(\w+)\s*=\s*\({re.escape(declaration["type"])}\s*\*\)\s*'
+                      r'\(\(u8\s*\*\)\s*(\w+)\s*-\s*(0[xX][0-9a-fA-F]+|\d+)\s*\)')
+        for source in re.finditer(assignment, body[declaration.end():]):
+            if int(source[3], 0) != delta:
+                continue
+            start, end = declaration.end() + source.start(), declaration.end() + source.end()
+            text = body[:start] + f'{source[1]} = ({declaration["type"]} *){source[2]}' + body[end:]
+            at = declaration.start('fields')
+            text = text[:at] + fields[first.end():] + text[declaration.end('fields'):]
+            pointer, array, typ = source[1], source[2], declaration['type']
+            # A real aggregate local rematerializes its address at each call.
+            # Keeping the draft's pointer would make MWCC save it across calls.
+            split = declaration.end() - first.end()
+            prefix, text = text[:split], text[split:]
+            text, arrays = re.subn(rf'(?m)^[ \t]*(?:u8|u16|u32)\s+{re.escape(array)}\[[^\]\n]+\];\n', '', text)
+            text, pointers = re.subn(rf'\b{re.escape(typ)}\s*\*\s*{re.escape(pointer)}\s*;', f'{typ} {pointer};', text)
+            text = re.sub(rf'(?m)^[ \t]*{re.escape(pointer)} = \({re.escape(typ)} \*\){re.escape(array)};\n', '', text)
+            text = re.sub(rf'\b{re.escape(pointer)}->', f'{pointer}.', text)
+            text = re.sub(rf'\*{re.escape(pointer)}\b', pointer, text)
+            if arrays == pointers == 1:
+                out.append((f'recover aggregate local with {delta}-byte false prefix', prefix + text))
+    return out
+
+
 def try_fix(p: Project, symbol: str, body: str, budget_s: float = 30.0, max_candidates: int = 80, _depth: int = 0,
             base: Optional[oracle.CheckResult] = None) -> Dict[str, object]:
     """Search the cheap repairs; returns {"matched": bool, "body": text or None, "tried": n, "best": %, "secs": s}.
@@ -190,6 +260,8 @@ def try_fix(p: Project, symbol: str, body: str, budget_s: float = 30.0, max_cand
     span = _function_span(body, sym.name)
     candidates: List[Tuple[str, str]] = []
     fam_marks: List[Tuple[int, str]] = []
+    fam_marks.append((len(candidates), "compiler"))
+    candidates += optimizer_pragmas(body, sym.name)
     fam_marks.append((len(candidates), "type"))
     if span and _wants_type_flip(counts, diffs):
         sites = _decl_sites(body, span)
@@ -309,6 +381,7 @@ def try_fix(p: Project, symbol: str, body: str, budget_s: float = 30.0, max_cand
                 newp = pads if cur in ("", "void") else cur + ", " + pads
                 candidates.append((f"+{extra} unused parameter(s)", body[:m.start(1)] + newp + body[m.end(1):]))
     fam_marks.append((len(candidates), "struct"))
+    candidates += stack_aggregates(body, diffs)
     # target-driven immediates: a row where only an immediate differs names ours and retail's
     # value; the C literal that produced ours (as decimal, hex, or a struct stride) is replaced
     imm_pairs = []
@@ -503,6 +576,18 @@ def try_fix(p: Project, symbol: str, body: str, budget_s: float = 30.0, max_cand
         return res
 
     best_text, best_pct = None, out["best"]
+    confirmed = {}
+
+    def accept(label, text):
+        if text not in confirmed:
+            confirmed[text] = check(text)
+        result = confirmed[text]
+        if result.ok and (result.matched or result.matched_pool):
+            out.update(matched=True, body=text, label=label, best=100.0,
+                       secs=round(time.time() - t0, 2))
+            return True
+        return False
+
     cand = candidates[:max_candidates]
     if cand and target and time.time() - t0 < budget_s:
         scored = evaluate([body] + [t_ for _, t_ in cand])
@@ -515,7 +600,10 @@ def try_fix(p: Project, symbol: str, body: str, budget_s: float = 30.0, max_cand
                 continue
             pct, fixed, broken, extra = r_
             if pct >= 100.0:
-                best_text, best_pct = text, pct; out["label"] = label; break
+                # Masked words omit relocation targets. An exact code shape with
+                # a wrong symbol/string must not hide a later fully exact repair.
+                if accept(label, text):
+                    return out
             if pct > best_pct:
                 best_pct, best_text = pct, text; out["best_label"] = label
             own = fixed & targets(family_of(i_))
@@ -543,9 +631,10 @@ def try_fix(p: Project, symbol: str, body: str, budget_s: float = 30.0, max_cand
                     if r_ and r_[0] > best_pct:
                         best_pct, best_text = r_[0], text; out["best_label"] = label
                     if r_ and r_[0] >= 100.0:
-                        out["label"] = label; break
+                        if accept(label, text):
+                            return out
         if best_text is not None:
-            r = check(best_text)  # the full verdict on the winner: pool rows, adjusted percent
+            r = confirmed.get(best_text) or check(best_text)
             if r.ok:
                 pct2 = r.percent_adjusted or r.percent
                 out["best"] = max(out["best"], pct2)

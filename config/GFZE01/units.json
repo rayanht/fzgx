@@ -5621,6 +5621,16 @@
   },
   {
     "module": "main",
+    "source": "dol/InitializeProgramEndTrap.c",
+    "symbols": [
+      "InitializeProgramEndTrap"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
     "source": "dol/InquiryCallback.c",
     "symbols": [
       "InquiryCallback"
@@ -13112,12 +13122,32 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_80025440.c",
+    "symbols": [
+      "fn_80025440"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
     "source": "dol/fn_80025C28.c",
     "symbols": [
       "fn_80025C28"
     ],
     "status": "matching",
     "mw_version": null,
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_80025C70.c",
+    "symbols": [
+      "fn_80025C70"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
     "extra_cflags": []
   },
   {
@@ -13711,6 +13741,16 @@
     ],
     "status": "matching",
     "mw_version": null,
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_80030848.c",
+    "symbols": [
+      "fn_80030848"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
     "extra_cflags": []
   },
   {
@@ -17951,6 +17991,16 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_8006B55C.c",
+    "symbols": [
+      "fn_8006B55C"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
     "source": "dol/fn_8006B870.c",
     "symbols": [
       "fn_8006B870"
@@ -18080,6 +18130,16 @@
     ],
     "status": "matching",
     "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_8006CDFC.c",
+    "symbols": [
+      "fn_8006CDFC"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
     "extra_cflags": []
   },
   {
@@ -23184,6 +23244,17 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/bg_cas/fn_1_FC51C.c",
+    "symbols": [
+      "fn_1_FC51C"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/bg_cas.c"
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/bg_cas/fn_1_FCF50.c",
     "symbols": [
       "fn_1_FCF50"
@@ -24856,6 +24927,17 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/burner/fn_1_9CD6C.c",
+    "symbols": [
+      "fn_1_9CD6C"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/burner.c"
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/burner/fn_1_9CE1C.c",
     "symbols": [
       "fn_1_9CE1C"
@@ -25387,6 +25469,28 @@
     "source": "rel/main_rel/camera/fn_1_8298.c",
     "symbols": [
       "fn_1_8298"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/camera.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/camera/fn_1_847C.c",
+    "symbols": [
+      "fn_1_847C"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/camera.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/camera/fn_1_857C.c",
+    "symbols": [
+      "fn_1_857C"
     ],
     "status": "matching",
     "mw_version": null,
@@ -29131,6 +29235,17 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/effect/fn_1_652F4.c",
+    "symbols": [
+      "fn_1_652F4"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/effect.c"
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/effect/fn_1_65420.c",
     "symbols": [
       "fn_1_65420"
@@ -29500,6 +29615,17 @@
     "pool": {
       "@6": "lbl_1_rodata_5C00"
     }
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/enemy_ctrl/fn_1_D0728.c",
+    "symbols": [
+      "fn_1_D0728"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/enemy_ctrl.c"
   },
   {
     "module": "main_rel",
@@ -34484,6 +34610,17 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/memcard/fn_1_B7F58.c",
+    "symbols": [
+      "fn_1_B7F58"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/memcard.c"
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/memcard/fn_1_B7FC8.c",
     "symbols": [
       "fn_1_B7FC8"
@@ -34693,6 +34830,17 @@
     "mw_version": null,
     "extra_cflags": [],
     "tu": "rel/main_rel/memcard.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/motasglist/fn_1_41B18.c",
+    "symbols": [
+      "fn_1_41B18"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/motasglist.c"
   },
   {
     "module": "main_rel",
@@ -37230,6 +37378,17 @@
     "mw_version": null,
     "extra_cflags": [],
     "tu": "rel/main_rel/screen_effect.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/sel_static_disp/fn_1_133BD8.c",
+    "symbols": [
+      "fn_1_133BD8"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/sel_static_disp.c"
   },
   {
     "module": "main_rel",
@@ -44723,6 +44882,16 @@
     ],
     "status": "matching",
     "mw_version": null,
+    "extra_cflags": []
+  },
+  {
+    "module": "movie_module",
+    "source": "rel/movie_module/fn_12_3ACD0.c",
+    "symbols": [
+      "fn_12_3ACD0"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
     "extra_cflags": []
   },
   {

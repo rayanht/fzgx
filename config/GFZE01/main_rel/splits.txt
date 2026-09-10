@@ -5204,3 +5204,30 @@ rel/main_rel/font/fn_1_51AC0.c:
 
 rel/main_rel/sel_static_disp/fn_1_14EF40.c:
 	.text       start:0x0014EF40 end:0x0014F014 align:4
+
+rel/main_rel/camera/fn_1_847C.c:
+	.text       start:0x0000847C end:0x0000857C align:4
+
+rel/main_rel/motasglist/fn_1_41B18.c:
+	.text       start:0x00041B18 end:0x00041BDC align:4
+
+rel/main_rel/burner/fn_1_9CD6C.c:
+	.text       start:0x0009CD6C end:0x0009CE1C align:4
+
+rel/main_rel/enemy_ctrl/fn_1_D0728.c:
+	.text       start:0x000D0728 end:0x000D0790 align:4
+
+rel/main_rel/bg_cas/fn_1_FC51C.c:
+	.text       start:0x000FC51C end:0x000FC60C align:4
+
+rel/main_rel/memcard/fn_1_B7F58.c:
+	.text       start:0x000B7F58 end:0x000B7FC8 align:4
+
+rel/main_rel/effect/fn_1_652F4.c:
+	.text       start:0x000652F4 end:0x00065420 align:4
+
+rel/main_rel/camera/fn_1_857C.c:
+	.text       start:0x0000857C end:0x00008628 align:4
+
+rel/main_rel/sel_static_disp/fn_1_133BD8.c:
+	.text       start:0x00133BD8 end:0x00133DBC align:4
