@@ -5474,3 +5474,9 @@ rel/main_rel/sel_static_disp/fn_1_14DB48.c:
 
 rel/main_rel/replay/fn_1_F37F4.c:
 	.text       start:0x000F37F4 end:0x000F38C0 align:4
+
+rel/main_rel/car_test/fn_1_7C13C.c:
+	.text       start:0x0007C13C end:0x0007C1E8 align:4
+
+rel/main_rel/driver/fn_1_A93C4.c:
+	.text       start:0x000A93C4 end:0x000A9420 align:4

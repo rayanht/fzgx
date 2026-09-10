@@ -15,6 +15,46 @@ extern void fn_1_1502BC(void *, void *, void *);
 extern void fn_80083DB0(void* arg0, u32 arg1);
 extern void fn_1_801F8(s16 arg0, void* arg1);
 
+/* fzgx:begin fn_1_7C13C noprologue */
+#include "types.h"
+
+extern const f32 lbl_1_rodata_33AC;
+extern u8 lbl_1_data_1EF5C[128];
+extern u8 *lbl_801A6410;
+
+extern void *fn_1_4630(void *arg0, u32 arg1, void *arg2, u32 arg3);
+
+typedef struct {
+    u8 pad_32c[0x32c];
+    void *field_32c;
+    u8 pad_330[0x110];
+} Fn17C13CEntry;
+
+typedef struct {
+    u8 pad_4[4];
+    u16 field_4;
+    u16 field_6;
+    u8 pad_8[0x17c];
+    f32 field_184;
+} Fn17C13CObject;
+
+void fn_1_7C13C(Fn17C13CEntry *arg0) {
+    f32 value;
+    Fn17C13CEntry *p;
+    int i;
+
+    value = 100.0f;
+    p = arg0;
+    for (i = 0; i < 0x29; i++) {
+        p->field_32c = fn_1_4630(lbl_801A6410, 0x620, lbl_1_data_1EF5C, 0x58);
+        ((Fn17C13CObject *)p->field_32c)->field_6 = (u16)i;
+        ((Fn17C13CObject *)p->field_32c)->field_4 = (u16)i;
+        ((Fn17C13CObject *)p->field_32c)->field_184 = value;
+        p++;
+    }
+}
+/* fzgx:end fn_1_7C13C */
+
 /* fzgx:begin fn_1_7D694 */
 typedef struct {
     u8 _pad4[4];

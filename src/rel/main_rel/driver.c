@@ -417,6 +417,26 @@ void fn_1_A8F78(void) {
 }
 /* fzgx:end fn_1_A8F78 */
 
+/* fzgx:begin fn_1_A93C4 */
+extern void fn_1_49514(u32 *);
+
+void fn_1_A93C4(u32 arg0) {
+    u32 v0;
+    u32 v1;
+    u32 v2;
+    s8 loc_8[8];
+    v0 = ((arg0 & 0xC0) | 63);
+    v1 = (((arg0 << 2) & 0xC0) | 63);
+    v2 = (((arg0 << 4) & 0xC0) | 63);
+    loc_8[4] = v0;
+    loc_8[5] = v1;
+    loc_8[6] = v2;
+    loc_8[7] = (((arg0 & 0x3) << 6) | 63);
+    *(u32 *)&loc_8[0] = *(u32 *)&loc_8[4];
+    fn_1_49514((u32 *)loc_8);
+}
+/* fzgx:end fn_1_A93C4 */
+
 /* fzgx:begin fn_1_A9420 */
 // Stores the current value in the driver's status byte.
 void fn_1_A9420(u8 value) {
