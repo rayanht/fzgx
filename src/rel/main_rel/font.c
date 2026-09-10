@@ -1704,6 +1704,56 @@ u32 fn_1_54320(void) {
 }
 /* fzgx:end fn_1_54320 */
 
+/* fzgx:begin fn_1_54384 noprologue */
+#include "types.h"
+#include "rel/main_rel/globals.h"
+
+typedef struct FontState {
+    u8 pad_00[0x30];
+    u8 *glyphs;
+    s32 glyph_count;
+    f32 start;
+    f32 end;
+    u8 pad_40[4];
+    u8 *lower;
+    u8 *upper;
+    f32 step;
+} FontState;
+
+extern FontState *lbl_801A66CC;
+extern const f32 lbl_1_rodata_2870;
+extern const f64 lbl_1_rodata_2878;
+
+u8 *fn_1_54384(f32 value) {
+    FontState *state = lbl_801A66CC;
+    f32 pos = -value + state->start;
+    f32 adjusted = pos - state->end;
+    s32 index;
+    s32 count;
+    u8 *entry;
+
+    if (adjusted < lbl_1_rodata_2870) {
+        index = 0;
+    } else {
+        count = state->glyph_count;
+        index = (s32)((f32)(s32)count * adjusted /
+                      (adjusted + state->step));
+        if (index >= count) {
+            index = count - 1;
+        }
+    }
+
+    entry = state->glyphs + index * 8;
+    if (state->lower > entry) {
+        state->lower = entry;
+    }
+    if (lbl_801A66CC->upper < entry) {
+        lbl_801A66CC->upper = entry;
+    }
+    return entry;
+}
+/* fzgx:end fn_1_54384 */
+
 /* fzgx:begin fn_1_54448 noprologue */
 #include "types.h"
 
