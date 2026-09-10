@@ -1,5 +1,5 @@
 {
- "generated": 1789046016,
+ "generated": 1789046136,
  "functions": [
   {
    "symbol": "car_colchg:_prolog",
@@ -320862,6 +320862,44 @@
    "best_body_path": "/Users/rayan/fzgx/.fzgx/attempts/fn_1_42E74.shadow.1789045650992331000.c",
    "stale_checks": 4,
    "best_in_attempt": 100.0
+  },
+  {
+   "id": 9965,
+   "symbol": "fn_8008EB4C",
+   "agent": "shadow-deepseek-near95-final-20260910-091420-codex-1",
+   "harness": "codex",
+   "model": "deepseek-flash",
+   "started": 1789046062,
+   "ended": 1789046119,
+   "checks": 5,
+   "final_percent": 78.625,
+   "tokens_in": 191785,
+   "tokens_out": 13398,
+   "cost_usd": 0.010201,
+   "outcome": "shadow-released",
+   "notes": "shadow submit rejected: functions below 100%: fn_8008EB4C=78.6%",
+   "best_body_path": null,
+   "stale_checks": 4,
+   "best_in_attempt": 92.375
+  },
+  {
+   "id": 9966,
+   "symbol": "fn_8002A698",
+   "agent": "shadow-deepseek-near95-final-20260910-091420-codex-2",
+   "harness": "codex",
+   "model": "deepseek-flash",
+   "started": 1789046063,
+   "ended": 1789046126,
+   "checks": 5,
+   "final_percent": 85.16279,
+   "tokens_in": 100249,
+   "tokens_out": 11038,
+   "cost_usd": 0.008658,
+   "outcome": "shadow-released",
+   "notes": "Body is byte-identical at 96.0%; only the prologue/epilogue differ: the address is materialised into r3 (`addi r3,r3,lbl_80177960@l`) then copied to r30 with the first `lwz r0,0x10c(...)` reading r3, whereas retail does `addi r30,r3,lbl_80177960@l` once and reads r30, which also makes our frame 0x20 (saves at 0xc/0x10/0x14) instead of retail's 0x18 (saves at 0xc/0x10/0x14); the oracle's plateau lock (`4 consecutive checks without improvement`) refused the initializer-form patch_unit that targeted exactly this.",
+   "best_body_path": "/Users/rayan/fzgx/.fzgx/attempts/fn_8002A698.shadow.1789046126.c",
+   "stale_checks": 4,
+   "best_in_attempt": 95.95349
   }
  ],
  "names": [
