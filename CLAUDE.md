@@ -226,7 +226,10 @@ Rules that hold for everyone:
   `tools/codex_models.json` are selected with run-local overrides; normal Codex config
   is untouched. Never set `forced_login_method="api"` for these runs: Codex 0.153.4
   deletes the shared ChatGPT login when enforcing it. `env_key` authenticates the
-  custom provider without changing the OpenAI login. DeepSeek returns token usage,
+  custom provider without changing the OpenAI login. Keep all worker feature
+  overrides inside `tools/orchestrate.py`; do not apply them through standalone
+  Codex commands or write the user's personal Codex config/auth files.
+  DeepSeek returns token usage,
   not dollar cost (confirmed with the live Responses API). Estimate each response
   at weekday UTC 01:00-04:00 / 06:00-10:00 peak rates, half otherwise; retain usage
   from failed turns too. Label estimates explicitly; use provider-reported dollar
