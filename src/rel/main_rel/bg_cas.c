@@ -459,6 +459,22 @@ int fn_1_101348(int index, u32 *value) {
 }
 /* fzgx:end fn_1_101348 */
 
+/* fzgx:begin fn_1_1013A0 */
+struct fn_1_1013A0_Arg1 {
+    u32 unk_0;
+};
+
+s32 fn_1_1013A0(s32 arg0, struct fn_1_1013A0_Arg1 *arg1) {
+    switch (arg0) {
+    case 0:
+        arg1->unk_0 |= 0x1000000;
+        break;
+    }
+
+    return 1;
+}
+/* fzgx:end fn_1_1013A0 */
+
 /* fzgx:begin fn_1_1013C0 */
 // fn_1_1013C0: empty in retail (single blr).
 void fn_1_1013C0(void) {

@@ -24764,6 +24764,17 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/bg_cas/fn_1_1013A0.c",
+    "symbols": [
+      "fn_1_1013A0"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/bg_cas.c"
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/bg_cas/fn_1_1013C0.c",
     "symbols": [
       "fn_1_1013C0"
