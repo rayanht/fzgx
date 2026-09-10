@@ -5462,3 +5462,6 @@ rel/main_rel/bg_aur/fn_1_1528D0.c:
 
 rel/main_rel/sound/fn_1_A4BC8.c:
 	.text       start:0x000A4BC8 end:0x000A4C9C align:4
+
+rel/main_rel/sel_static_disp/fn_1_141614.c:
+	.text       start:0x00141614 end:0x00141754 align:4

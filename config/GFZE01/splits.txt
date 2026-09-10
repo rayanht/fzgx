@@ -4808,3 +4808,6 @@ dol/fn_80021930.c:
 
 dol/__OSThreadInit.c:
 	.text       start:0x80010144 end:0x8001029C align:4
+
+dol/fn_8003DBA0.c:
+	.text       start:0x8003DBA0 end:0x8003DC50 align:4

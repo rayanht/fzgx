@@ -699,6 +699,56 @@ void fn_1_141338(u32 arg0, u32 arg1, u32 arg2, u32 arg3, f32 arg4) {
 }
 /* fzgx:end fn_1_141338 */
 
+/* fzgx:begin fn_1_141614 noprologue */
+#include "types.h"
+#include "rel/main_rel/sel_static_disp.h"
+
+extern void fn_1_49410(void);
+extern void fn_1_494DC(int arg0);
+extern void fn_1_5233C(void);
+extern void fn_1_49738(void* arg0);
+extern const f32 lbl_1_rodata_861C;
+extern void fn_1_49748(f32 arg0);
+extern void fn_1_495B0(u32 arg0);
+extern void fn_1_495C8(int arg0);
+extern const f32 lbl_1_rodata_9208;
+extern void fn_1_4955C(f32 arg0, f32 arg1);
+extern const f32 lbl_1_rodata_8638;
+extern void fn_1_4966C(f32 arg0, f32 arg1);
+extern const f32 lbl_1_rodata_8658;
+extern const f32 lbl_1_rodata_920C;
+extern void fn_1_496FC(f32 arg0, f32 arg1);
+extern void fn_1_4A0D8(void* arg0);
+extern const f32 lbl_1_rodata_85EC;
+extern const f32 lbl_1_rodata_9210;
+extern u32 lbl_801A66B4;
+
+void fn_1_141614(s16 arg0) {
+    fn_1_49410();
+    fn_1_494DC(8);
+    fn_1_49738(fn_1_5233C);
+    fn_1_49748(lbl_1_rodata_861C);
+    fn_1_495B0(1u << 31);
+    fn_1_495C8(1);
+    fn_1_4955C(lbl_1_rodata_9208, lbl_1_rodata_9208);
+    fn_1_4966C(lbl_1_rodata_8638, lbl_1_rodata_861C);
+    fn_1_496FC(lbl_1_rodata_8658, lbl_1_rodata_920C);
+    fn_1_4A0D8(
+        *(void**)(lbl_1_data_2AA24 +
+            4 * ((u8*)&lbl_1_data_2B0D4)[(s16)arg0]));
+
+    fn_1_49410();
+    fn_1_49738(fn_1_5233C);
+    fn_1_49748(lbl_1_rodata_861C);
+    fn_1_495B0(1u << 31);
+    fn_1_495C8(1);
+    fn_1_4966C(lbl_1_rodata_8638, lbl_1_rodata_861C);
+    fn_1_4955C(lbl_1_rodata_85EC, lbl_1_rodata_85EC);
+    fn_1_496FC(lbl_1_rodata_8658, lbl_1_rodata_9210);
+    fn_1_4A0D8(((void**)(lbl_1_data_2BD54 + (s16)arg0 * 24))[lbl_801A66B4]);
+}
+/* fzgx:end fn_1_141614 */
+
 /* fzgx:begin fn_1_141F94 noprologue */
 #include "types.h"
 
