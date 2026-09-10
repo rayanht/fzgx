@@ -11989,6 +11989,27 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_80016DF8.c",
+    "symbols": [
+      "fn_80016DF8"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "on"
+    ],
+    "pool": {
+      "@110": "lbl_80123E28",
+      "@109": "lbl_801A6470"
+    }
+  },
+  {
+    "module": "main",
     "source": "dol/fn_800174D0.c",
     "symbols": [
       "fn_800174D0"
