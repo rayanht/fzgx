@@ -1,6 +1,9 @@
-# Prepared recovered-candidate DeepSeek batch
+# Recovered-candidate DeepSeek batch
 
-Batch `deepseek-recovered-above90-128-low-20260910` is prepared, not started.
+Batch `deepseek-recovered-above90-128-low-20260910` launched at 14:45 UTC on
+2026-09-10 with runner PID 9298. Active-run metadata is in
+`.fzgx/runs/deepseek-recovered-above90-active.json`; the runner log is
+`.fzgx/runs/deepseek-recovered-above90-128-low-20260910.log`.
 It contains 578 unfinished functions / 189,808 bytes with historical C match
 scores strictly above 90%. There is no size cap or SDK exclusion. Sizes range
 from 28 to 4,224 bytes; 74 functions / 63,516 bytes are at least 512 bytes.
@@ -33,7 +36,7 @@ Local artifacts are under `.fzgx/seeds/deepseek-recovered-above90-128-low/`:
 uv run tools/seeds/recovered.py --above 90 --output NEW_OUTPUT_DIRECTORY
 ```
 
-The prepared launch command is:
+The launch command is:
 
 ```sh
 uv run tools/orchestrate.py --harness codex --provider deepseek \
