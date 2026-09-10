@@ -353,6 +353,57 @@ void colchg_ezsel_init(void) {
 }
 /* fzgx:end colchg_ezsel_init */
 
+/* fzgx:begin fn_9_E4C noprologue */
+#include "types.h"
+#include "rel/car_colchg/globals.h"
+
+struct ColchgState {
+    u8 pad[8];
+    u16 flags;
+    u8 pad_a[6];
+    volatile u16 input_a; // Input state may be updated between reads.
+    volatile u16 input_b; // Input state may be updated between reads.
+};
+
+extern struct ColchgState lbl_1_bss_D58;
+extern u16 lbl_1_bss_96A;
+s32 fn_1_4C10(void);
+
+void fn_9_E4C(void) {
+    struct ColchgState *state;
+    s8 change;
+
+    if (fn_1_4C10() == 0) {
+        state = &lbl_1_bss_D58;
+        if ((state->flags >> 9) & 1) {
+            lbl_1_bss_96A = 0x72;
+        }
+        change = 0;
+        if ((lbl_1_bss_D58.input_a & 1) || (lbl_1_bss_D58.input_b & 1)) {
+            change = -1;
+        }
+        if (((lbl_1_bss_D58.input_a >> 1) & 1) ||
+            ((lbl_1_bss_D58.input_b >> 1) & 1)) {
+            change++;
+        }
+        if (change != 0) {
+            s32 result;
+            s32 value;
+            value = *(s16 *)lbl_9_bss_8 + change;
+            if (value > 40) {
+                value = 0;
+            } else {
+                value = value < 0 ? 40 : value;
+            }
+            *(s16 *)lbl_9_bss_8 = value;
+        }
+        if ((state->flags >> 8) & 1) {
+            lbl_1_bss_96A = 0x76;
+        }
+    }
+}
+/* fzgx:end fn_9_E4C */
+
 /* fzgx:begin fn_9_F38 */
 // Initialize the color-change subsystem and apply its current configuration.
 void fn_9_F38(void) {
@@ -485,6 +536,57 @@ void fn_9_1AC4(void) {
     fn_1_A8DD4(lbl_9_data_1A4);
 }
 /* fzgx:end fn_9_1AC4 */
+
+/* fzgx:begin fn_9_1AFC */
+extern const f32 lbl_9_rodata_0;
+
+extern void lbl_8006DCA4(void);
+extern void lbl_8006E1D8(void *, f32, f32, f32);
+extern void fn_1_7BCCC(void *);
+extern void fn_80035680(void *, f32, f32, f32);
+extern void fn_80035690(void *, f32, f32, f32);
+extern void fn_80035420(void *, f32, s32);
+extern void fn_800356AC(void *, void *);
+extern void GXInitLightDistAttn(void *, s32, f32, f32);
+extern void fn_1_7BB80(void *, s32);
+extern void fn_1_7BD6C(s32);
+extern void fn_80074CF4(f32, f32, f32);
+
+struct Fn_9_1AFCVec3 {
+    f32 x;
+    f32 y;
+    f32 z;
+};
+
+struct Fn_9_1AFCBigVec3 {
+    f32 x;
+    f32 y;
+    f32 z;
+    u8 pad[0x34];
+};
+
+void fn_9_1AFC(void) {
+    u32 value;
+    struct Fn_9_1AFCBigVec3 b;
+    struct Fn_9_1AFCVec3 a;
+    const u8 *pool;
+    u8 pad[0x30];
+
+    pool = (const u8 *)&lbl_9_rodata_0;
+    lbl_8006DCA4();
+    lbl_8006E1D8(&a, *(const f32 *)(pool + 0x54), *(const f32 *)(pool + 0x54), *(const f32 *)(pool + 0x54));
+    fn_1_7BCCC(&a);
+    fn_80035680(&b, a.x, a.y, a.z);
+    fn_80035690(&b, a.x, a.y, a.z);
+    fn_80035420(&b, *(const f32 *)pool, 0);
+    value = *(const u32 *)(pool + 0x50);
+    fn_800356AC(&b, &value);
+    GXInitLightDistAttn(&b, 0, *(const f32 *)pool, *(const f32 *)pool);
+    fn_1_7BB80(&b, 1);
+    fn_1_7BD6C(1);
+    fn_80074CF4(*(const f32 *)(pool + 0x58), *(const f32 *)(pool + 0x58), *(const f32 *)(pool + 0x58));
+}
+/* fzgx:end fn_9_1AFC */
 
 /* fzgx:begin fn_9_1BCC */
 struct CarColchgEntry {

@@ -259,6 +259,42 @@ void fn_1_153D48(void *background) {
 }
 /* fzgx:end fn_1_153D48 */
 
+/* fzgx:begin fn_1_1540B0 noprologue */
+#include "types.h"
+
+extern s32 fn_1_5910(void);
+extern void fn_1_154164(u32 value, u32 *arg1, u32 *arg2, u32 arg3);
+extern u32 lbl_1_rodata_D57C[7];
+
+void fn_1_1540B0(u32 value) {
+    u32 *table;
+    s32 i;
+    u32 *base;
+    u32 *entry;
+    u32 args[3];
+
+    base = (u32 *)((u8 *)value + 0x1108);
+    {
+        s32 slot;
+        slot = fn_1_5910();
+        fn_1_154164(value, (u32 *)((u8 *)base + slot * 0xc + 0x8c),
+                    (u32 *)((u8 *)base + slot * 0x30 + 0x23c), 0);
+    }
+
+    entry = lbl_1_rodata_D57C;
+    table = base;
+    i = 0;
+    while (i < (s32)base[1]) {
+        args[0] = entry[0];
+        args[1] = entry[1];
+        args[2] = entry[2];
+        fn_1_154164(value, args, (u32 *)((u8 *)table + 0x2fc), 1);
+        table = (u32 *)((u8 *)table + 0x30);
+        i++;
+    }
+}
+/* fzgx:end fn_1_1540B0 */
+
 /* fzgx:begin fn_1_1543E8 */
 u32 fn_1_1543E8(s32 value, u32 *source) {
     Obj_1_data_2A7E0_At3C *obj = lbl_1_data_2A7E0.unk_3C;

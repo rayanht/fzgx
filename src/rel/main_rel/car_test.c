@@ -51,6 +51,42 @@ void fn_1_7EAE8(void) {
 }
 /* fzgx:end fn_1_7EAE8 */
 
+/* fzgx:begin fn_1_7EB0C */
+extern void fn_80071ED4(s32 arg0, f32 arg1, f32 arg2);
+extern void fn_80072014(void *arg0);
+extern void fn_800720B0(s32 arg0);
+
+typedef struct {
+    s8 unk_0;
+} SignedByteView;
+
+typedef struct {
+    u8 unk_0;
+    u8 unk_1;
+    u8 unk_2;
+    u8 unk_3;
+} LocalBytes;
+
+void fn_1_7EB0C(void) {
+    LocalBytes local0;
+    LocalBytes local1;
+
+    local0.unk_0 = lbl_1_bss_6D7F4.unk_C;
+    local0.unk_1 = lbl_1_bss_6D7F4.unk_D;
+    local0.unk_2 = lbl_1_bss_6D7F4.unk_E;
+    if ((s8)lbl_1_bss_6D7F4.unk_F != 0) {
+        fn_80071ED4(((SignedByteView *)&lbl_1_bss_6D7F4)->unk_0 + 0,
+                    lbl_1_bss_6D7F4.unk_4,
+                    lbl_1_bss_6D7F4.unk_8);
+        local1 = local0;
+        fn_80072014(&local1);
+        fn_800720B0(1);
+    } else {
+        fn_800720B0(0);
+    }
+}
+/* fzgx:end fn_1_7EB0C */
+
 /* fzgx:begin fn_1_7F1E8 */
 void fn_1_7F1E8(u32 arg0, u32 arg1) {
     fn_1_7ECB8(arg0, arg1, 0x80000000); // fzgx-allow: A1 retail sentinel

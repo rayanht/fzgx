@@ -778,6 +778,77 @@ done:
 }
 /* fzgx:end fn_1_3FDA8 */
 
+/* fzgx:begin fn_1_3FF90 noprologue */
+#include "rel/main_rel/game.h"
+
+extern int ghost_test_record_flag0(u8);
+extern int fn_1_F9D44(u32);
+extern u8 fn_1_F8C50(u8);
+extern u32 fn_1_435C(u32);
+extern void fn_1_2DB50(void);
+extern void fn_1_3F8C(void *, void *, Obj_1_bss_5138 *, int);
+extern void fn_1_2D888(void);
+extern void fn_1_2D524(void);
+
+void fn_1_3FF90(void) {
+    u32 bss_25b88;
+    u32 bss_25ca4;
+    int flag;
+
+    bss_25ca4 = lbl_1_bss_25CA4.unk_0;
+    bss_25b88 = lbl_1_bss_25B88.unk_0;
+    if (lbl_1_bss_5138.unk_0 != 0) {
+        lbl_1_bss_5138.unk_E1 = 0;
+    } else {
+        if (lbl_1_bss_5138.unk_E3 == 0xff) {
+            flag = 0;
+        } else if (ghost_test_record_flag0(lbl_1_bss_3C30.unk_6) != 0) {
+            flag = 0;
+        } else {
+            flag = 1;
+        }
+        if (flag != 0) {
+            lbl_1_bss_5138.unk_E1 = 1;
+        } else {
+            if (lbl_1_bss_5138.unk_E5 == 0xff) {
+                flag = 0;
+            } else if (fn_1_F9D44(lbl_1_bss_5138.unk_E5 & 0xf) != 0) {
+                flag = 0;
+            } else {
+                flag = 1;
+            }
+            if (flag != 0) {
+                lbl_1_bss_5138.unk_E1 = 2;
+            } else {
+                if (lbl_1_bss_5138.unk_EB == 0xff) {
+                    flag = 0;
+                } else if (fn_1_F8C50(lbl_1_bss_5138.unk_EB)) {
+                    flag = 0;
+                } else {
+                    flag = 1;
+                }
+                if (flag != 0) {
+                    lbl_1_bss_5138.unk_E1 = 3;
+                } else if ((lbl_1_bss_5138.unk_3 + lbl_1_bss_5138.unk_2 +
+                            lbl_1_bss_5138.unk_E4) == 0) {
+                    return;
+                } else {
+                    lbl_1_bss_5138.unk_E1 = 4;
+                }
+            }
+        }
+    }
+
+    bss_25b88 = fn_1_435C(bss_25b88);
+    fn_1_3F8C(lbl_1_data_6608, fn_1_2DB50, &lbl_1_bss_5138, 30);
+    fn_1_435C(bss_25ca4);
+    fn_1_3F8C(lbl_1_data_6618, fn_1_2D888, &lbl_1_bss_5138, 30);
+    bss_25b88 = fn_1_435C(bss_25b88);
+    lbl_1_bss_5138.unk_E2 = 1;
+    fn_1_2D524();
+}
+/* fzgx:end fn_1_3FF90 */
+
 /* fzgx:begin fn_1_40224 */
 int fn_1_40224(void) {
     int result;
@@ -795,6 +866,115 @@ int fn_1_40224(void) {
     return result != 0;
 }
 /* fzgx:end fn_1_40224 */
+
+/* fzgx:begin fn_1_40710 */
+typedef struct {
+    u8 state;
+    u8 enabled;
+    u8 applied;
+    u8 flags;
+    u8 pad[0x24];
+    u32 value_28;
+    u32 value_2c;
+} Fn40710Object;
+
+typedef struct {
+    u8 pad[0x2f8];
+    u32 value_2f8;
+    u32 value_2fc;
+    u32 value_300;
+    u32 value_304;
+    u32 value_308;
+    u32 value_30c;
+    u32 value_310;
+    u32 value_314;
+    u32 value_318;
+    u32 value_31c;
+} Fn40710Config;
+
+extern Fn40710Config lbl_1_rodata_BD8;
+extern u8 lbl_1_A9011300;
+extern u8 lbl_1_A9011100;
+extern u8 lbl_1_A9011000;
+extern void fn_1_A2DC4(u32);
+
+void fn_1_40710(Fn40710Object *obj) {
+    Fn40710Object *self = obj;
+    Fn40710Config *config = &lbl_1_rodata_BD8;
+    int state = self->state;
+    u8 *values;
+    u32 limits[8];
+    u32 flags;
+
+    switch (state) {
+    case 2:
+        self->enabled &= 1;
+        if (self->enabled != 0) {
+            self->value_2c = config->value_2f8;
+            values = (u8 *)&self->value_28;
+        } else {
+            self->value_28 = config->value_2fc;
+            values = (u8 *)&self->value_2c;
+        }
+        limits[0] = config->value_300;
+        if (values[0] < ((u8 *)&limits[0])[0] - 0x14) {
+            values[0] += 0x14;
+        } else {
+            limits[1] = config->value_304;
+            values[0] = ((u8 *)&limits[1])[0];
+        }
+        limits[2] = config->value_308;
+        if (values[1] < ((u8 *)&limits[2])[1] - 0x14) {
+            values[1] += 0x14;
+        } else {
+            limits[3] = config->value_30c;
+            values[1] = ((u8 *)&limits[3])[1];
+        }
+        limits[4] = config->value_310;
+        if (values[2] < ((u8 *)&limits[4])[2] - 0x14) {
+            values[2] += 0x14;
+        } else {
+            limits[5] = config->value_314;
+            values[2] = ((u8 *)&limits[5])[2];
+        }
+        limits[6] = config->value_318;
+        if (values[3] > ((u8 *)&limits[6])[3] + 0x14) {
+            values[3] -= 0x14;
+        } else {
+            limits[7] = config->value_31c;
+            values[3] = ((u8 *)&limits[7])[3];
+        }
+        // The case-2 path joins the shared state update below.
+        goto update_state;
+    case 0:
+        // The case-0 path joins the shared state update below.
+        goto update_state;
+    case 1:
+        // The case-1 path joins the shared state update below.
+        goto update_state;
+    default:
+        break;
+    }
+    return;
+
+update_state:
+    if (self->enabled != self->applied) {
+        /* fzgx-allow: A1 absolute game data address */
+        fn_1_A2DC4((u32)0xA9011300);
+        self->applied = self->enabled;
+    }
+    if ((self->flags & 2) != 0) {
+        /* fzgx-allow: A1 absolute game data address */
+        fn_1_A2DC4((u32)0xA9011100);
+        flags = __rlwinm(self->flags, 0, 24, 29);
+        self->flags = flags;
+    } else if ((self->flags & 4) != 0) {
+        /* fzgx-allow: A1 absolute game data address */
+        fn_1_A2DC4((u32)0xA9011000);
+        self->flags = self->flags & -6;
+    }
+}
+/* fzgx:end fn_1_40710 */
 
 /* fzgx:begin fn_1_40B14 */
 u8 *fn_1_40B14(void) {

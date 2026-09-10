@@ -382,6 +382,68 @@ void fn_1_156754(s32 index) {
 }
 /* fzgx:end fn_1_156754 */
 
+/* fzgx:begin fn_1_1567A8 noprologue */
+#include "types.h"
+
+typedef struct {
+    u8 pad_0[0x4];
+    u32 unk_4;
+    u8 pad_8[0x2c];
+    f32 unk_34;
+    u8 pad_38[0x14];
+    u8 unk_4c;
+} Entry;
+
+extern Entry lbl_1_bss_8F428;
+extern f32 lbl_1_rodata_D8C8[18];
+extern void fn_1_1569E8(Entry *);
+extern void fn_1_1568C4(Entry *);
+extern void fn_1_156B18(Entry *);
+extern void fn_1_1569A0(Entry *);
+extern void fn_1_156C08(Entry *);
+extern void fn_1_156D9C(Entry *);
+extern void fn_1_157070(Entry *);
+extern void fn_1_156F54(Entry *);
+extern void fn_1_157200(Entry *);
+extern void fn_1_157358(Entry *);
+extern void fn_1_1576B4(Entry *);
+extern void fn_1_157598(Entry *);
+
+void fn_1_1567A8(s32 index) {
+    Entry *entry;
+    u32 value;
+    f32 field_value;
+
+    entry = &lbl_1_bss_8F428 + index;
+    value = entry->unk_4;
+    if (entry->unk_4 + 0x10000 != 0xffff) {
+        field_value = entry->unk_34;
+        if (lbl_1_rodata_D8C8[0] == field_value) {
+            if (entry->unk_4 + 0x10000 == 0xffff) {
+                return;
+            } else {
+                fn_1_1569E8(entry);
+                fn_1_1568C4(entry);
+                return;
+            }
+        } else if (entry->unk_4c & 0x80) {
+            fn_1_156B18(entry);
+            fn_1_1568C4(entry);
+        } else {
+            fn_1_1569A0(entry);
+            fn_1_156C08(entry);
+            fn_1_156D9C(entry);
+            fn_1_157070(entry);
+            fn_1_156F54(entry);
+            fn_1_157200(entry);
+            fn_1_157358(entry);
+        }
+        fn_1_1576B4(entry);
+        fn_1_157598(entry);
+    }
+}
+/* fzgx:end fn_1_1567A8 */
+
 /* fzgx:begin fn_1_156884 */
 // Refreshes an entry when its ranking value is not the invalid sentinel.
 void fn_1_156884(s32 index) {

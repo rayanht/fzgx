@@ -96,6 +96,26 @@ f32 fn_1_A71BC(void) {
 }
 /* fzgx:end fn_1_A71BC */
 
+/* fzgx:begin fn_1_A71CC */
+extern void fn_80072344(void);
+
+typedef struct {
+    u32 unk_0;
+    u32 unk_4;
+    u32 unk_8;
+    u32 unk_C;
+    u32 unk_10;
+    u32 unk_14;
+} Copy_1_A71CC;
+
+void fn_1_A71CC(void) {
+    fn_80072344();
+
+    *(Copy_1_A71CC *)&lbl_1_bss_6F620 =
+        *(Copy_1_A71CC *)&lbl_1_bss_6F608;
+}
+/* fzgx:end fn_1_A71CC */
+
 /* fzgx:begin fn_1_A728C */
 // fn_1_A728C: returns a constant.
 int fn_1_A728C(void) {

@@ -33,3 +33,23 @@ void fn_1_9F8FC(void) {
     lbl_1_bss_6EA96 = 0;
 }
 /* fzgx:end fn_1_9F8FC */
+
+/* fzgx:begin fn_1_9F914 */
+extern void fn_80008BA8(void *, const void *, u32);
+
+int fn_1_9F914(const void *src0, const void *src1) {
+    Obj_1_bss_6EA88 *obj = &lbl_1_bss_6EA88;
+
+    if (*(u16 *)((u8 *)obj + 0xc) == 0x100) {
+        return 0;
+    }
+    fn_80008BA8((u8 *)obj->unk_0 +
+                    ((*(u16 *)((u8 *)obj + 0xc) & 0xffff) << 6),
+                src0, 0x40);
+    fn_80008BA8((u8 *)obj->unk_4 +
+                    (*(u16 *)((u8 *)obj + 0xc) << 6),
+                src1, 0x40);
+    *(u16 *)((u8 *)obj + 0xc) = *(u16 *)((u8 *)obj + 0xc) + 1;
+    return 1;
+}
+/* fzgx:end fn_1_9F914 */

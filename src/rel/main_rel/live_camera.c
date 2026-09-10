@@ -21,6 +21,88 @@ void fn_1_DA34(void) {
 }
 /* fzgx:end fn_1_DA34 */
 
+/* fzgx:begin fn_1_DE14 noprologue */
+#include "types.h"
+#include "rel/main_rel/live_camera.h"
+
+extern s32 fn_1_4C10(void);
+extern s32 fn_1_40BB4(void);
+extern s32 fn_1_F2F34(void);
+extern u32 fn_1_F45A4(void);
+extern u32 fn_1_F4594(void);
+extern f32 lbl_1_rodata_4E0[5];
+extern f32 lbl_1_bss_1160[403];
+extern void fn_1_5370(s32, s16);
+extern void fn_1_6DD0(u32);
+
+typedef struct {
+    u8 unk_0;
+    u8 unk_1;
+    u8 pad_2[4];
+    s16 unk_6;
+    u8 pad_8[4];
+    u32 unk_C;
+    u8 pad_10[0x54];
+    u16 unk_64;
+} Fn1DE14State;
+
+void fn_1_DE14(Fn1DE14State *state) {
+    u8 enabled;
+
+    if (lbl_1_bss_115C == 0) {
+        return;
+    }
+    if (fn_1_4C10() != 0) {
+        return;
+    }
+    if (fn_1_40BB4() != 0) {
+        return;
+    }
+    if (fn_1_F2F34() == 0) {
+        return;
+    }
+    if (fn_1_F4594() >= fn_1_F45A4() - 0x1e) {
+        return;
+    }
+
+    enabled = 0;
+    if ((lbl_1_bss_9F8.unk_8 >> 8) & 1) {
+        enabled = 1;
+    }
+    if (enabled == 0) {
+        return;
+    }
+
+    lbl_1_bss_1160[0] = lbl_1_rodata_4E0[0];
+    if (state->unk_1 == 0) {
+        state->unk_0++;
+    } else {
+        state->unk_1++;
+    }
+    if (state->unk_0 >= 4) {
+        state->unk_0 = 0;
+        state->unk_1 = 1;
+    }
+
+    switch (state->unk_1) {
+    case 1:
+        fn_1_5370(0, state->unk_6);
+        break;
+    case 2:
+        fn_1_5370(1, state->unk_6);
+        state->unk_1 = 0;
+    default:
+        fn_1_5370(1, state->unk_6);
+    case 0:
+        break;
+    }
+
+    state->unk_64 = 0;
+    state->unk_C &= ~0x00200000;
+    fn_1_6DD0(0);
+}
+/* fzgx:end fn_1_DE14 */
+
 /* fzgx:begin fn_1_EE04 */
 typedef struct {
     u8 pad[2];

@@ -268,6 +268,61 @@ void fn_1_46A60(void) {
 }
 /* fzgx:end fn_1_46A60 */
 
+/* fzgx:begin fn_1_46A8C noprologue */
+#include "types.h"
+
+typedef struct {
+    u32 type;
+    u32 value;
+    u32 unk_8;
+} Entry;
+
+typedef struct {
+    u32 unk_0;
+    u32 unk_4;
+    u8 unk_8[0x4010];
+    Entry entries[0x200];
+} State;
+
+extern u32 lbl_1_bss_384C0;
+extern u32 fn_1_46EC8(void);
+extern u32 fn_1_46ED8(void);
+
+u32 fn_1_46A8C(u32 value) {
+    State *base;
+    s32 next;
+    s32 current;
+    u32 initial;
+    u32 arg;
+    Entry *entry;
+
+    base = (State *)&lbl_1_bss_384C0;
+    arg = value;
+    initial = base->unk_0;
+    next = initial + 1;
+    current = initial;
+    if (next >= 0x200) {
+        next = 0;
+    }
+
+    if ((s32)base->unk_4 == next) {
+        return -1;
+    }
+
+    if (arg < fn_1_46EC8() || arg > fn_1_46ED8()) {
+        arg = fn_1_46EC8();
+    }
+
+    entry = base->entries;
+    entry += base->unk_0;
+    base->unk_0 = next;
+    entry->type = 0xb;
+    entry->value = arg;
+
+    return current;
+}
+/* fzgx:end fn_1_46A8C */
+
 /* fzgx:begin fn_1_46C60 */
 u32 fn_1_46C60(void) {
     return lbl_1_bss_3DCD8;

@@ -5114,3 +5114,87 @@ rel/main_rel/memcard/fn_1_BF520.c:
 
 rel/main_rel/enemy_ctrl/fn_1_D0E74.c:
 	.text       start:0x000D0E74 end:0x000D0F60 align:4
+
+rel/main_rel/archive/fn_1_12C7B8.c:
+	.text       start:0x0012C7B8 end:0x0012C930 align:4
+
+rel/main_rel/car/fn_1_7F49C.c:
+	.text       start:0x0007F49C end:0x0007F518 align:4
+
+rel/main_rel/game/fn_1_3FF90.c:
+	.text       start:0x0003FF90 end:0x0004017C align:4
+
+rel/main_rel/game/fn_1_40710.c:
+	.text       start:0x00040710 end:0x000408E8 align:4
+
+rel/main_rel/bg_aur/fn_1_1540B0.c:
+	.text       start:0x001540B0 end:0x00154164 align:4
+
+rel/main_rel/memcard/fn_1_B9CCC.c:
+	.text       start:0x000B9CCC end:0x000B9DE8 align:4
+
+rel/main_rel/ranking/fn_1_1567A8.c:
+	.text       start:0x001567A8 end:0x00156884 align:4
+
+rel/main_rel/car_test/fn_1_7EB0C.c:
+	.text       start:0x0007EB0C end:0x0007EB8C align:4
+
+rel/main_rel/memcard/fn_1_B7C6C.c:
+	.text       start:0x000B7C6C end:0x000B7CD4 align:4
+
+rel/main_rel/ptclput/fn_1_9F914.c:
+	.text       start:0x0009F914 end:0x0009F9A4 align:4
+
+rel/main_rel/sel_static_disp/fn_1_14E1E0.c:
+	.text       start:0x0014E1E0 end:0x0014E2DC align:4
+
+rel/main_rel/effect/fn_1_6755C.c:
+	.text       start:0x0006755C end:0x0006766C align:4
+
+rel/main_rel/memcard/fn_1_AB64C.c:
+	.text       start:0x000AB64C end:0x000AB75C align:4
+
+rel/main_rel/load/fn_1_46A8C.c:
+	.text       start:0x00046A8C end:0x00046B44 align:4
+
+rel/main_rel/mdlload/fn_1_D3A4C.c:
+	.text       start:0x000D3A4C end:0x000D3B6C align:4
+
+rel/main_rel/sel_static_disp/fn_1_14E09C.c:
+	.text       start:0x0014E09C end:0x0014E198 align:4
+
+rel/main_rel/live_camera/fn_1_DE14.c:
+	.text       start:0x0000DE14 end:0x0000DF74 align:4
+
+rel/main_rel/sel_static_disp/fn_1_14BED0.c:
+	.text       start:0x0014BED0 end:0x0014BFB8 align:4
+
+rel/main_rel/car/fn_1_8F494.c:
+	.text       start:0x0008F494 end:0x0008F5A4 align:4
+
+rel/main_rel/spline/fn_1_FA0BC.c:
+	.text       start:0x000FA0BC end:0x000FA154 align:4
+
+rel/main_rel/relocation/fn_1_A5C98.c:
+	.text       start:0x000A5C98 end:0x000A5D88 align:4
+
+rel/main_rel/spline/fn_1_F7338.c:
+	.text       start:0x000F7338 end:0x000F73A8 align:4
+
+rel/main_rel/effect/fn_1_58E3C.c:
+	.text       start:0x00058E3C end:0x00058F50 align:4
+
+rel/main_rel/prog/fn_1_A71CC.c:
+	.text       start:0x000A71CC end:0x000A722C align:4
+
+rel/main_rel/car/fn_1_8D0A4.c:
+	.text       start:0x0008D0A4 end:0x0008D168 align:4
+
+rel/main_rel/enemy_ctrl/fn_1_C7224.c:
+	.text       start:0x000C7224 end:0x000C72D4 align:4
+
+rel/main_rel/font/fn_1_4D0A0.c:
+	.text       start:0x0004D0A0 end:0x0004D0D4 align:4
+
+rel/main_rel/burner/fn_1_140EE8.c:
+	.text       start:0x00140EE8 end:0x0014108C align:4

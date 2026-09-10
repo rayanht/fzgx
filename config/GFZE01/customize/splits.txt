@@ -365,3 +365,6 @@ rel/customize/_prolog/fn_3_837C.c:
 
 rel/customize/emb_paste_editor/fn_3_11994.c:
 	.text       start:0x00011994 end:0x00011A38 align:4
+
+rel/customize/_prolog/fn_3_5A50.c:
+	.text       start:0x00005A50 end:0x00005B9C align:4

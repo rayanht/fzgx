@@ -507,6 +507,42 @@ void fn_3_4BEC(u32 arg0) {
 }
 /* fzgx:end fn_3_4BEC */
 
+/* fzgx:begin fn_3_5A50 */
+extern void fn_3_5E88(s16);
+extern void fn_1_48140(s32);
+extern void fn_1_7F3AC(void *);
+
+struct InitData { u32 words[41]; };
+struct Entry { u8 pad_390[0x390]; u32 flags; u8 pad_394[0x10]; u32 ready; u8 pad_3a8[0x98]; };
+struct Meta { u32 value; u8 pad[0x81bc]; };
+extern struct InitData lbl_3_rodata_1A4;
+extern s32 lbl_3_bss_2C70C[45];
+extern struct Entry lbl_3_bss_20860[4];
+extern struct Meta lbl_3_bss_140[4];
+
+void fn_3_5A50(void) {
+    s16 i;
+    struct InitData init;
+    for (i = 0; i < 4; i++) fn_3_5E88(i);
+    init = lbl_3_rodata_1A4;
+    for (i = 0; i < 0x29U; i++) {
+        if (lbl_3_bss_2C70C[i] != 0) fn_1_48140(init.words[i]);
+    }
+    for (i = 0; i < 4; i++) {
+        struct Entry *entry = &lbl_3_bss_20860[i];
+        u32 shift = 1;
+        if (entry->ready != 0) {
+            if (__rlwnm(lbl_3_bss_140[i].value, shift, 31, 31)) {
+                entry->flags |= 0x04000000;
+                fn_1_7F3AC(entry);
+                entry->flags &= ~0x04000000;
+            } else fn_1_7F3AC(entry);
+            entry->ready = 0;
+        }
+    }
+}
+/* fzgx:end fn_3_5A50 */
+
 /* fzgx:begin fn_3_5C4C */
 extern u8 lbl_1_bss_970[];
 extern u32 lbl_3_bss_20850;

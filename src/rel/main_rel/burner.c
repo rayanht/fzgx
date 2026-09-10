@@ -680,3 +680,58 @@ void fn_1_13EE60(s16 arg0, s16 arg1, void *arg2) {
     }
 }
 /* fzgx:end fn_1_13EE60 */
+
+/* fzgx:begin fn_1_140EE8 */
+extern f32 lbl_1_rodata_26F8[22];
+extern u32 lbl_1_rodata_9194[10];
+extern u8 lbl_1_data_2B144[24];
+extern u8 lbl_1_rodata_85AC[60];
+extern const f32 lbl_1_rodata_8658;
+extern const f32 lbl_1_rodata_8BA8;
+extern const f32 lbl_1_rodata_8A4C;
+extern s8 fn_1_A5DC4(void);
+extern const f32 lbl_1_rodata_91BC;
+extern void fn_1_4E724(void *);
+
+typedef struct {
+    u32 words[22];
+} LocalObj;
+
+void fn_1_140EE8(u8 arg0, int arg1, int arg2) {
+    u32 choices[10];
+    LocalObj obj = *(LocalObj *)lbl_1_rodata_26F8;
+    int index;
+    if (arg2 != 0) {
+        choices[0] = lbl_1_rodata_9194[0];
+        choices[1] = lbl_1_rodata_9194[1];
+        choices[2] = lbl_1_rodata_9194[2];
+        choices[3] = lbl_1_rodata_9194[3];
+        choices[4] = lbl_1_rodata_9194[4];
+        choices[5] = lbl_1_rodata_9194[5];
+        choices[6] = lbl_1_rodata_9194[6];
+        choices[7] = lbl_1_rodata_9194[7];
+        choices[8] = lbl_1_rodata_9194[8];
+        choices[9] = lbl_1_rodata_9194[9];
+        index = arg0 - 0x24;
+        obj.words[0] = choices[index < 0 ? 0 : index > 9 ? 9 : index];
+    } else {
+        obj.words[0] = ((u32 *)lbl_1_rodata_85AC)[
+            lbl_1_data_2B144[((u8 *)&lbl_1_data_2B0D4)[arg0]]
+        ];
+    }
+    *(f32 *)&obj.words[1] = lbl_1_rodata_8658;
+    *(f32 *)&obj.words[2] = lbl_1_rodata_8BA8;
+    if (arg1 == 0) {
+        ((u8 *)&obj)[0x3A] = 0xB4;
+        ((u8 *)&obj)[0x39] = 0xB4;
+        ((u8 *)&obj)[0x38] = 0xB4;
+    }
+    *(f32 *)&obj.words[11] = lbl_1_rodata_8A4C;
+    obj.words[12] = 10;
+    if ((s8)fn_1_A5DC4() || arg1 != 0) {
+        *(f32 *)&obj.words[4] *= lbl_1_rodata_91BC;
+        *(f32 *)&obj.words[5] *= lbl_1_rodata_91BC;
+    }
+    fn_1_4E724(&obj);
+}
+/* fzgx:end fn_1_140EE8 */

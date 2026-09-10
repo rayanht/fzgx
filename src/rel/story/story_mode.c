@@ -139,6 +139,48 @@ void fn_7_FB0(void) {
 }
 /* fzgx:end fn_7_FB0 */
 
+/* fzgx:begin fn_7_12FC */
+extern u32 lbl_7_bss_0;
+extern void fn_7_4050(void);
+extern void fn_1_12F30C(u32, void *);
+extern void fn_1_412A0(u32);
+extern void fn_1_48140(u32);
+extern u32 lbl_7_data_13A14[10];
+
+struct fn_7_12FC_state {
+    u8 pad_0[0x14];
+    s8 *unk_14;
+    u8 pad_18[0x4];
+    u32 unk_1c;
+    u8 pad_20[0x24];
+    u8 unk_44[1];
+};
+
+void fn_7_12FC(void) {
+    struct fn_7_12FC_state *state;
+    u32 index;
+    s32 offset;
+
+    state = (struct fn_7_12FC_state *)&lbl_7_bss_0;
+    fn_7_4050();
+    fn_1_12F30C(state->unk_1c, &state->unk_44);
+    fn_1_412A0(1);
+    offset = state->unk_14[1] - 0x24;
+    if (offset < 0) {
+        index = 0;
+    } else {
+        index = 9;
+        if (offset <= 9) {
+            index = offset;
+        }
+    }
+    fn_1_48140(lbl_7_data_13A14[index]);
+    fn_1_48140(0x9b);
+    fn_1_48140(0x9a);
+    fn_1_48140(0xba);
+}
+/* fzgx:end fn_7_12FC */
+
 /* fzgx:begin fn_7_1398 */
 extern u32 fn_1_12F10C(u32);
 extern u32 fn_7_4050(void);

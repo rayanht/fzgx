@@ -979,6 +979,40 @@ u32 fn_1_14BE30(void) {
 }
 /* fzgx:end fn_1_14BE30 */
 
+/* fzgx:begin fn_1_14BED0 noprologue */
+#include "types.h"
+#include "rel/main_rel/sel_static_disp.h"
+
+extern void fn_1_14BFD8(void *, void *, int);
+extern void fn_1_14A9D0(int, int, int, int, int, int);
+extern void fn_1_A2D84(u32);
+extern void fn_1_14CA4C(void);
+extern u32 lbl_801A66A4;
+
+void fn_1_14BED0(void) {
+    Obj_1_bss_9F8 *obj_9f8;
+
+    fn_1_14BFD8(0, 0, 1);
+    fn_1_14A9D0(10, 1, 30, 180, 1, 0);
+
+    if ((s32)lbl_1_bss_25BA0.unk_0 == 0) {
+        obj_9f8 = &lbl_1_bss_9F8;
+        if (((obj_9f8->unk_8 >> 8) & 1) != 0
+            && ((lbl_1_bss_D58.unk_8 >> 12) & 1) == 0) {
+            if (lbl_801A66A4 - lbl_1_bss_8E528 >= 0xc3) {
+                lbl_1_bss_8E51D = 8;
+                fn_1_A2D84(0xa9010400);
+            } else {
+                fn_1_14CA4C();
+            }
+        } else if (((obj_9f8->unk_8 >> 9) & 1) != 0) {
+            lbl_1_bss_8E51D = 0;
+            fn_1_A2D84(0xa9010400);
+        }
+    }
+}
+/* fzgx:end fn_1_14BED0 */
+
 /* fzgx:begin fn_1_14BFB8 */
 void fn_1_14BFB8(void) {
     if (lbl_1_bss_8E51D != 0) {
@@ -1214,6 +1248,71 @@ void fn_1_14E078(void *arg0, void *arg1, void *arg2) {
 }
 /* fzgx:end fn_1_14E078 */
 
+/* fzgx:begin fn_1_14E09C noprologue */
+#include "types.h"
+#include "rel/main_rel/globals.h"
+
+extern const f32 lbl_1_rodata_9C30;
+extern void fn_1_55FF0(void);
+extern s16 fn_1_14F344(s16);
+extern void lbl_8006E0A4(void *);
+extern void fn_80072558(void);
+extern void fn_1_151C3C(int, s16);
+extern void fn_1_556B8(void *);
+extern void fn_1_55210(void *);
+extern void fn_1_151C78(void);
+
+typedef struct Fn14E09CValue {
+    void *value;
+} Fn14E09CValue;
+
+typedef struct Fn14E09CRef {
+    u8 pad8[8];
+    Fn14E09CValue *value;
+} Fn14E09CRef;
+
+typedef struct Fn14E09CObj {
+    u8 pad344[0x344];
+    Fn14E09CRef *ref;
+} Fn14E09CObj;
+
+void fn_1_14E09C(Fn14E09CObj *arg0, void *arg1, s16 arg2, int arg3, f32 arg4) {
+    s16 *entry;
+    Fn14E09CObj *obj;
+    s16 i;
+    int same;
+    void *value;
+
+    same = lbl_1_rodata_9C30 == arg4;
+    if (arg1 != 0) {
+        if (!same) {
+            fn_1_55FF0();
+        }
+
+        entry = (s16 *)arg0;
+        obj = (Fn14E09CObj *)((u8 *)arg0 + ((s32)arg2 << 2));
+        for (i = 0; (u32)(s32)i < 3; i++) {
+            if (fn_1_14F344(*entry) == 1) {
+                value = obj->ref->value->value;
+                if (value != 0) {
+                    lbl_8006E0A4(arg1);
+                    fn_80072558();
+                    fn_1_151C3C(1, *entry);
+                    if (same || arg3 != 0) {
+                        fn_1_556B8(value);
+                    } else {
+                        fn_1_55210(value);
+                    }
+                    fn_1_151C78();
+                }
+            }
+            entry = (s16 *)((u8 *)entry + 0x360);
+            obj = (Fn14E09CObj *)((u8 *)obj + 0x360);
+        }
+    }
+}
+/* fzgx:end fn_1_14E09C */
+
 /* fzgx:begin fn_1_14E198 */
 void fn_1_14E198(void *arg0, void *arg1, void *arg2) {
     fn_1_14E1E0(arg0, arg1, arg2, 0);
@@ -1225,6 +1324,68 @@ void fn_1_14E1BC(void *arg0, void *arg1, void *arg2) {
     fn_1_14E1E0(arg0, arg1, arg2, 1);
 }
 /* fzgx:end fn_1_14E1BC */
+
+/* fzgx:begin fn_1_14E1E0 noprologue */
+#include "types.h"
+
+typedef struct {
+    unsigned char pad[8];
+    void **value;
+} Inner;
+
+typedef struct {
+    unsigned char pad[0x344];
+    Inner *inner;
+} Record;
+
+extern const f32 lbl_1_rodata_9C30;
+extern void fn_1_55FF0(void);
+extern s16 fn_1_14F344(s16);
+extern void lbl_8006E0A4(void *);
+extern void fn_80072558(void);
+extern void fn_1_151C3C(int, s16);
+extern void fn_1_556B8(void *);
+extern void fn_1_55210(void *);
+extern void fn_1_151C78(void);
+
+void fn_1_14E1E0(void *arg0, void *arg1, s16 arg2, int arg3, f32 arg4) {
+    unsigned char *p;
+    Record *q;
+    s16 i;
+    int same;
+    void *value;
+
+    same = (lbl_1_rodata_9C30 == arg4);
+    if (arg1 != 0) {
+        if (same == 0) {
+            fn_1_55FF0();
+        }
+
+        p = (unsigned char *)arg0;
+        q = (Record *)(p + arg2 * 4);
+        i = 0;
+        while ((u32)(s32)i < 3) {
+            if (fn_1_14F344(*(s16 *)p) == 2) {
+                value = *q->inner->value;
+                if (value != 0) {
+                    lbl_8006E0A4(arg1);
+                    fn_80072558();
+                    fn_1_151C3C(2, *(s16 *)p);
+                    if (same != 0 || arg3 != 0) {
+                        fn_1_556B8(value);
+                    } else {
+                        fn_1_55210(value);
+                    }
+                    fn_1_151C78();
+                }
+            }
+            p += 0x360;
+            q = (Record *)((unsigned char *)q + 0x360);
+            i++;
+        }
+    }
+}
+/* fzgx:end fn_1_14E1E0 */
 
 /* fzgx:begin fn_1_14E8A4 */
 typedef struct {

@@ -170,6 +170,64 @@ void fn_1_58D38(void) {
 }
 /* fzgx:end fn_1_58D38 */
 
+/* fzgx:begin fn_1_58E3C noprologue */
+#include "types.h"
+#include "rel/main_rel/effect.h"
+
+extern s32 fn_1_3FC58(void);
+extern void *memcpy(void *dest, const void *src, u32 size);
+
+typedef struct {
+    s8 unk_0;
+    u8 pad_1;
+    s16 unk_2;
+    s16 unk_4;
+    u8 pad_6[6];
+    s16 unk_C;
+    u8 pad_E[0xDA];
+} EffectEntry;
+
+s16 fn_1_58E3C(void *source) {
+    s32 i;
+
+    if (fn_1_3FC58() != 0) {
+        return -1;
+    }
+
+    {
+        EffectEntry *scan;
+        scan = *(EffectEntry **)&lbl_1_bss_6C848;
+        i = 0;
+        for (; i < 0xbe; i++, scan++) {
+            if (!scan->unk_0) {
+                scan->unk_0 = 1;
+                /* The shared exit preserves the counted search result. */
+                goto slot_found;
+            }
+        }
+        i = -1;
+    }
+slot_found:
+    if (i < 0) {
+        return -1;
+    }
+    {
+        EffectEntry *entry;
+        entry = *(EffectEntry **)&lbl_1_bss_6C848 + i;
+    memcpy(entry, source, 0xe8);
+    entry->unk_0 = 1;
+    entry->unk_2 = i;
+    ((void (**)(void *))lbl_1_data_1D1D8)[entry->unk_C](entry);
+    entry->unk_4 = lbl_1_bss_6C850.unk_0;
+    lbl_1_bss_6C850.unk_0++;
+    if (lbl_1_bss_6C850.unk_0 < 0) {
+        lbl_1_bss_6C850.unk_0 = 0;
+    }
+        return entry->unk_4;
+    }
+}
+/* fzgx:end fn_1_58E3C */
+
 /* fzgx:begin fn_1_58F50 */
 extern u8 lbl_1_data_1D1D8[276];
 
@@ -919,6 +977,7 @@ void fn_1_61CE8(void) {
 
 /* fzgx:begin fn_1_61E60 noprologue */
 #include "types.h"
+#include "rel/main_rel/globals.h"
 
 extern u8 lbl_1_data_1D62C[0x94];
 extern void *lbl_801A6410;
@@ -1233,6 +1292,80 @@ void fn_1_67414(struct fn_1_67414_Arg0 *arg0) {
 void fn_1_6742C(void) {
 }
 /* fzgx:end fn_1_6742C */
+
+/* fzgx:begin fn_1_6755C noprologue */
+#include "types.h"
+#include "rel/main_rel/effect.h"
+
+extern void fn_1_8636C(s16, void *, u32);
+extern void lbl_8006D9D8(void *);
+extern void lbl_8006DFC4(void *);
+extern void lbl_8006D95C(s32);
+extern void mathutil_mtxA_rotate_x(s32);
+extern void lbl_8006DB74(void *);
+extern void fn_1_9F914(void *, u32);
+extern void *memset(void *, int, u32);
+extern f32 lbl_1_rodata_2AA0[21];
+extern f32 lbl_1_rodata_29AC[5];
+
+typedef struct {
+    u8 pad_0[0x18];
+    s16 unk_18;
+    u8 pad_1a[2];
+    f32 unk_1c;
+    f32 unk_20;
+    f32 unk_24;
+    f32 unk_28;
+    u8 pad_2c[0x88];
+    f32 unk_b4;
+} FnObj_6755C;
+
+typedef struct {
+    u8 pad_0[0x120];
+    u32 unk_120;
+} Root_6755C;
+
+void fn_1_6755C(FnObj_6755C *obj) {
+    u8 temp[0x30];
+    u8 data[0x40];
+    f32 f1;
+    f32 f0;
+    f32 f3;
+    f32 f2;
+    Root_6755C *root;
+    u32 manager;
+
+    root = (Root_6755C *)(u32)lbl_1_bss_38458->unk_8;
+    manager = root->unk_120;
+    fn_1_8636C(obj->unk_18, temp, (u32)root);
+    lbl_8006D9D8((u8 *)obj + 0x3c);
+    lbl_8006DFC4(temp);
+    lbl_8006D95C(0);
+    mathutil_mtxA_rotate_x(0x4000);
+    memset(data, 0, 0x40);
+    lbl_8006DB74(data + 8);
+
+    f3 = lbl_1_rodata_2AA0[0] * obj->unk_28;
+    *(f32 *)(data + 0) = f3;
+    f2 = lbl_1_rodata_29AC[0];
+    f1 = obj->unk_b4;
+    f0 = obj->unk_1c;
+    f0 = f2 * f0;
+    f0 = f0 * f1;
+    data[0x3c] = (u8)f0;
+    f0 = obj->unk_20;
+    f0 = f2 * f0;
+    f0 = f0 * f1;
+    data[0x3d] = (u8)f0;
+    f0 = obj->unk_24;
+    f0 = f2 * f0;
+    data[0x3f] = 0xff;
+    *(f32 *)(data + 4) = f3;
+    f0 = f0 * f1;
+    data[0x3e] = (u8)f0;
+    fn_1_9F914(data, manager);
+}
+/* fzgx:end fn_1_6755C */
 
 /* fzgx:begin fn_1_6766C */
 typedef struct {

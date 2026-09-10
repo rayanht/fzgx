@@ -113,6 +113,53 @@ void fn_14_315C(u32 arg0) {
 }
 /* fzgx:end fn_14_315C */
 
+/* fzgx:begin fn_14_32DC */
+struct PilotPointEntry {
+    u32 raw[2];
+};
+
+extern struct PilotPointEntry lbl_14_bss_110[10];
+
+s16 fn_14_32DC(s16 *out) {
+    s16 i;
+    s16 count;
+
+    count = 0;
+    i = 0;
+    while ((u32)(s16)i < 8) {
+        if ((((u32 *)&lbl_14_bss_110[i])[3] & 0x8) &&
+            (((u32 *)&lbl_14_bss_110[i])[3] & 0x40)) {
+            out[(s16)count] = ((s16 *)&lbl_14_bss_110[i])[4];
+            count++;
+        }
+        i++;
+    }
+    return count;
+}
+/* fzgx:end fn_14_32DC */
+
+/* fzgx:begin fn_14_3384 */
+extern u32 lbl_14_bss_110[20];
+
+s16 fn_14_3384(s16 *out) {
+    s16 i;
+    s16 count;
+    u32 flags;
+    count = 0;
+    i = 0;
+
+    while ((u32)i < 8) {
+        flags = ((u32 *)&lbl_14_bss_110[i * 2])[3];
+        if ((flags & 0x10) && (flags & 0x40)) {
+            out[count++] = ((s16 *)&lbl_14_bss_110[i * 2])[4];
+        }
+        i++;
+    }
+
+    return count;
+}
+/* fzgx:end fn_14_3384 */
+
 /* fzgx:begin fn_14_600C */
 extern struct fn_14_600C_lbl_14_bss_92E8 lbl_14_bss_92E8;
 extern u32 fn_80074188(u32, u32, u32, u32);

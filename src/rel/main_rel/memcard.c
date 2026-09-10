@@ -182,6 +182,63 @@ void fn_1_AB61C(fn_1_AB61C_MemcardArg *arg) {
 }
 /* fzgx:end fn_1_AB61C */
 
+/* fzgx:begin fn_1_AB64C */
+extern void fn_1_A2DC4(u32);
+
+typedef struct {
+    u8 pad_0[0x24];
+    void *unk_24;
+    u8 pad_28[0x2];
+    u8 unk_2A;
+} MemcardArg;
+
+typedef struct {
+    u8 pad_0[0x1];
+    u8 unk_1;
+    u8 pad_2[0x2];
+    s32 unk_4;
+} MemcardState;
+
+/* fzgx-allow: A1 absolute retail data address */
+#define DATA_A9011300 0xA9011300
+/* fzgx-allow: A1 absolute retail data address */
+#define DATA_A9011100 0xA9011100
+
+void fn_1_AB64C(MemcardArg *arg) {
+    MemcardState *state;
+    s32 value;
+
+    if ((arg->unk_2A & 1) == 0) {
+        state = (MemcardState *)arg->unk_24;
+        if (((lbl_1_bss_9F8.unk_10 & 1) != 0 ||
+             (lbl_1_bss_9F8.unk_12 & 1) != 0) &&
+            state->unk_1 == 1) {
+            fn_1_A2DC4(DATA_A9011300);
+            state->unk_1 = 0;
+        /* Volatile prevents the compiler from reusing the first status read. */
+        } else if ((((*((volatile u16 *)&lbl_1_bss_9F8.unk_10) >> 1) & 1) != 0 ||
+                    ((lbl_1_bss_9F8.unk_12 >> 1) & 1) != 0) &&
+                   state->unk_1 == 0) {
+            fn_1_A2DC4(DATA_A9011300);
+            state->unk_1 = 1;
+        }
+
+        if (((lbl_1_bss_9F8.unk_8 >> 8) & 1) != 0) {
+            fn_1_A2DC4(DATA_A9011100);
+            value = 1;
+        } else {
+            value = 0;
+        }
+        state = (MemcardState *)arg->unk_24;
+        state->unk_4 = value;
+        state = (MemcardState *)arg->unk_24;
+        if (state->unk_4 == 2) {
+            state->unk_1 = 1;
+        }
+    }
+}
+/* fzgx:end fn_1_AB64C */
+
 /* fzgx:begin fn_1_AB75C */
 typedef struct {
     u8 pad[0x2];
@@ -1871,6 +1928,29 @@ u32 fn_1_B7C5C(void) {
 }
 /* fzgx:end fn_1_B7C5C */
 
+/* fzgx:begin fn_1_B7C6C noprologue */
+#include "types.h"
+
+extern s8 lbl_1_bss_716C8[320];
+extern u8 lbl_1_bss_718B1;
+
+s32 fn_1_B7C6C(u32 arg0) {
+    u32 index = arg0 & 0xff;
+    switch (index) {
+    case 0:
+    case 1:
+        return lbl_1_bss_716C8[index * 0xa0 + 1];
+    default:
+        break;
+    }
+
+    if (lbl_1_bss_718B1 == 5) {
+        return 0;
+    }
+    return lbl_1_bss_716C8[lbl_1_bss_718B1 * 0xa0 + 1];
+}
+/* fzgx:end fn_1_B7C6C */
+
 /* fzgx:begin fn_1_B7CD4 */
 u8 fn_1_B7CD4(void) {
     return lbl_1_bss_718B8;
@@ -2081,6 +2161,78 @@ void fn_1_B9C38(s32 index) {
     }
 }
 /* fzgx:end fn_1_B9C38 */
+
+/* fzgx:begin fn_1_B9CCC noprologue */
+#include "types.h"
+#include "rel/main_rel/memcard.h"
+
+extern void fn_80008BEC(void *dst, s32 value, u32 size);
+extern void fn_1_AA6D8(s32 arg0, u8 slot, void *data);
+
+typedef struct {
+    u8 pad_0[0x1];
+    s8 unk_1;
+    u8 pad_2[0x9E];
+} MemcardEntry;
+
+typedef struct {
+    u8 unk_0;
+    u8 pad_1[0x0B];
+    Obj_1_bss_77380 *unk_0C;
+    u8 pad_10[0x10];
+    u32 unk_20;
+} MemcardRequest;
+
+void fn_1_B9CCC(s32 index, u32 flags) {
+    u8 *table;
+    MemcardRequest request;
+    s32 valid;
+    s32 bit_27;
+    s32 bit_29;
+    s32 bit_26;
+    s32 count;
+    u32 offset;
+    MemcardEntry *entry;
+
+    valid = 0;
+    offset = index * 0xA0;
+    entry = (MemcardEntry *)&lbl_1_bss_716C8;
+    entry = (MemcardEntry *)((u8 *)entry + offset);
+    if (entry->unk_1 != -1 && entry->unk_1 != -3) {
+        valid = 1;
+    }
+    if (valid) {
+        count = 0;
+        bit_27 = flags & 0x10;
+        if (bit_27) {
+            count = 1;
+        }
+        bit_26 = flags & 0x20;
+        if (bit_26) {
+            count += 1;
+        }
+        bit_29 = flags & 0x04;
+        if (bit_29) {
+            count += 1;
+        }
+        fn_80008BEC(&request, 0, 0x24);
+        table = (u8 *)&lbl_1_bss_77380 + index * 0x1800;
+        fn_80008BEC(table, 0, 0x30);
+        request.unk_0C = (Obj_1_bss_77380 *)table;
+        request.unk_20 = flags;
+        if (count == 1) {
+            if (bit_27) {
+                request.unk_0 = 4;
+            } else if (bit_29) {
+                request.unk_0 = 2;
+            } else if (bit_26) {
+                request.unk_0 = 5;
+            }
+        }
+        fn_1_AA6D8(4, (u8)index, &request);
+    }
+}
+/* fzgx:end fn_1_B9CCC */
 
 /* fzgx:begin fn_1_BC29C */
 #include "rel/main_rel/memcard.h"

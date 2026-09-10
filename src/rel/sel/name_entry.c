@@ -95,3 +95,54 @@ void fn_10_26424(void) {
     lbl_10_bss_55CE2 = 1;
 }
 /* fzgx:end fn_10_26424 */
+
+/* fzgx:begin fn_10_26434 noprologue */
+#include "types.h"
+
+typedef struct SelState {
+    u8 pad0[8];
+    u16 flags8;
+    u8 padA[6];
+    u16 flags10;
+    u16 flags12;
+} SelState;
+
+extern SelState lbl_1_bss_9F8;
+extern u8 lbl_10_bss_55CE2;
+extern void fn_1_A2D84(int arg);
+
+int fn_10_26434(void) {
+    if ((lbl_1_bss_9F8.flags10 & 1) ||
+        (lbl_1_bss_9F8.flags12 & 1)) {
+        if (lbl_10_bss_55CE2 == 1) {
+            lbl_10_bss_55CE2 = 0;
+            fn_1_A2D84(0xA9011300);
+        }
+    }
+
+    if ((((lbl_1_bss_9F8.flags10 >> 1) & 1)) ||
+        (((lbl_1_bss_9F8.flags12 >> 1) & 1))) {
+        if (lbl_10_bss_55CE2 == 0) {
+            lbl_10_bss_55CE2 = 1;
+            fn_1_A2D84(0xA9011300);
+        }
+    }
+
+    if (((lbl_1_bss_9F8.flags8 >> 8) & 1)) {
+        fn_1_A2D84(0xA9011100);
+        if (lbl_10_bss_55CE2 == 0) {
+            return 1;
+        }
+        if (lbl_10_bss_55CE2 == 1) {
+            return 2;
+        }
+    }
+
+    if (((lbl_1_bss_9F8.flags8 >> 9) & 1)) {
+        fn_1_A2D84(0xA9011000);
+        return 2;
+    }
+
+    return 0;
+}
+/* fzgx:end fn_10_26434 */

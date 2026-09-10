@@ -314,6 +314,27 @@ void fn_1_F7308(void) {
 }
 /* fzgx:end fn_1_F7308 */
 
+/* fzgx:begin fn_1_F7338 */
+extern int fn_1_866B4(s8);
+extern int fn_1_864FC(s8);
+extern void fn_1_F73A8(int, void *, void *);
+
+void fn_1_F7338(int arg0, void *arg1, void *arg2) {
+    s8 value;
+
+    value = (s8)fn_1_866B4((s8)arg0);
+    if (value >= 0) {
+        switch (fn_1_864FC(value) & 0x10) {
+        case 0:
+            fn_1_F73A8(arg0, arg1, arg2);
+            break;
+        default:
+            break;
+        }
+    }
+}
+/* fzgx:end fn_1_F7338 */
+
 /* fzgx:begin fn_1_F755C */
 void fn_1_F755C(u8 value) {
     lbl_1_data_3E8F0 = value;
@@ -1019,6 +1040,41 @@ u32 fn_1_FA0A0(void) {
     return v0;
 }
 /* fzgx:end fn_1_FA0A0 */
+
+/* fzgx:begin fn_1_FA0BC noprologue */
+#include "types.h"
+
+typedef struct {
+    u8 pad_0[0x4900];
+    u32 flags;
+} SplineGlobalState;
+
+extern SplineGlobalState lbl_1_bss_7F0C0;
+
+u32 fn_1_FA0BC(s32 mode) {
+    if (mode == 1) {
+        u32 flags = lbl_1_bss_7F0C0.flags;
+        s16 i;
+
+        for (i = 1; i < 6; i++) {
+            if (__rlwnm(flags, ((((u8)i) + 1) & 0x1f), 31, 31) == 0) {
+                return 0;
+            }
+        }
+        return 1;
+    } else {
+        u32 flags = lbl_1_bss_7F0C0.flags;
+        s16 i;
+
+        for (i = 0; i < 6; i++) {
+            if (__rlwnm(flags, ((((u8)i) + 1) & 0x1f), 31, 31) != 0) {
+                return 1;
+            }
+        }
+        return 0;
+    }
+}
+/* fzgx:end fn_1_FA0BC */
 
 /* fzgx:begin fn_1_FA154 */
 void fn_1_FA154(u32 byte_index, u32 bit_index) {

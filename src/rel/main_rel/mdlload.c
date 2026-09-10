@@ -134,6 +134,57 @@ void fn_1_D38A4(void) {
 }
 /* fzgx:end fn_1_D38A4 */
 
+/* fzgx:begin fn_1_D3A4C noprologue */
+#include "types.h"
+
+extern int fn_1_45730(void *arg, void *buffer);
+extern u8 lbl_1_bss_3BC0[32];
+extern int fn_1_458A0(void *buffer, void *work, int size, int flags);
+extern char lbl_1_data_3DBD8[10];
+extern void *lbl_801A6410;
+extern void *fn_1_45D0(void *arg0, u32 size, void *data, int count);
+extern int fn_1_45850(void *buffer);
+extern void fn_1_12F78(void *arg, void *buffer);
+extern void DCFlushRange(void *buffer, u32 size);
+extern void *fn_80071678(void *buffer, u32 size);
+
+int fn_1_D3A4C(void *arg) {
+    u8 buffer[96];
+    u32 result;
+    u32 size;
+    u32 ptr;
+    u32 value0;
+    u32 value1;
+
+    if (fn_1_45730(arg, buffer) == 0) {
+        return 0;
+    }
+    if (fn_1_458A0(buffer, lbl_1_bss_3BC0, 32, 0) < 0) {
+        return 0;
+    }
+
+    value0 = __lwbrx((void *)lbl_1_bss_3BC0, 0);
+    value1 = __lwbrx((void *)lbl_1_bss_3BC0, 4);
+    size = (value1 + 31) & ~31;
+    ptr = (u32)fn_1_45D0(lbl_801A6410,
+                         (((size + 31) & ~31) + 32),
+                         lbl_1_data_3DBD8, 470);
+    result = (ptr + 63) & ~31;
+    if (result == 0) {
+        return 0;
+    }
+    if (fn_1_45850(buffer) == 0) {
+        return 0;
+    }
+
+    fn_1_12F78(arg, (void *)result);
+    DCFlushRange((void *)result, size);
+    ptr = (u32)fn_80071678((void *)result, ptr);
+    *(u32 *)((u8 *)ptr + 12) = 0;
+    return (int)ptr;
+}
+/* fzgx:end fn_1_D3A4C */
+
 /* fzgx:begin fn_1_D3B6C noprologue */
 #include "types.h"
 

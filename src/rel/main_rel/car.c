@@ -127,6 +127,24 @@ u32 fn_1_7F428(u32 arg0) {
 }
 /* fzgx:end fn_1_7F428 */
 
+/* fzgx:begin fn_1_7F49C */
+extern u8 lbl_1_rodata_3590[984];
+extern void fn_80083DB0(void *arg0, u32 arg1);
+
+typedef struct {
+    u32 data[40][6];
+    u8 tail[24];
+} CarData;
+
+void *fn_1_7F49C(s16 arg0, s16 arg1, void *arg2) {
+    CarData local;
+
+    local = *(CarData *)lbl_1_rodata_3590;
+    fn_80083DB0(arg2, local.data[arg0][arg1]);
+    return arg2;
+}
+/* fzgx:end fn_1_7F49C */
+
 /* fzgx:begin fn_1_7F934 */
 // Forwards the caller's context to the common car initialization routine.
 void fn_1_7F934(void *arg0) {
@@ -3345,6 +3363,48 @@ u32 fn_1_8CA5C(void) {
 }
 /* fzgx:end fn_1_8CA5C */
 
+/* fzgx:begin fn_1_8D0A4 noprologue */
+#include "types.h"
+
+extern u8 lbl_1_data_1FFF0[12];
+extern void *lbl_801A6410;
+
+extern u32 GXGetTexBufferSize(u16 width, u16 height, u32 arg2, u32 arg3, u32 arg4);
+extern u32 fn_1_4630(void *arg0, u32 arg1, u8 *arg2, u32 arg3);
+
+typedef struct {
+    u8 pad_00[0x2c];
+    u16 width;
+    u16 height;
+    u8 pad_30[4];
+    u32 arg34;
+    u8 pad_38[0x28];
+    u32 result;
+} Fn1_8D0A4State;
+
+static inline u32 abs_value(u32 value) {
+    u32 sign = value >> 31;
+    u32 low = value & 1;
+    return (low ^ sign) - sign;
+}
+
+void fn_1_8D0A4(Fn1_8D0A4State *state) {
+    if (state->width == 0 && state->height == 0) {
+        state->result = 0;
+    } else {
+        if (abs_value(state->width) != 0 || abs_value(state->height) != 0) {
+            state->width = 0x280;
+            state->height = 0x1e0;
+        }
+        state->result = fn_1_4630(
+            lbl_801A6410,
+            GXGetTexBufferSize(state->width, state->height, state->arg34, 0, 0),
+            lbl_1_data_1FFF0,
+            0x1bfc);
+    }
+}
+/* fzgx:end fn_1_8D0A4 */
+
 /* fzgx:begin fn_1_8D168 */
 typedef struct Fn1_8D168State {
     u8 pad[0x60];
@@ -3528,6 +3588,69 @@ void fn_1_8F45C(Fn1_8F45C_Object *obj) {
     fn_1_8E7D0(obj);
 }
 /* fzgx:end fn_1_8F45C */
+
+/* fzgx:begin fn_1_8F494 noprologue */
+#include "types.h"
+
+typedef struct {
+    s32 active;
+    s32 entries[5];
+} Fn1_8F494_Object;
+
+extern void fn_1_12A2B8(s32 value);
+extern void fn_1_12A2D0(s32 value);
+extern void fn_1_9724C(Fn1_8F494_Object *obj);
+extern void fn_1_107C4C(Fn1_8F494_Object *obj);
+extern void fn_1_966A0(Fn1_8F494_Object *obj);
+extern void fn_1_95EF0(Fn1_8F494_Object *obj);
+extern void fn_1_8F5A4(Fn1_8F494_Object *obj);
+extern void GXInvalidateTexAll(void);
+extern void fn_1_12A734(s32 value);
+
+void fn_1_8F494(Fn1_8F494_Object *obj) {
+    s32 i;
+    s32 *entry;
+    s32 value;
+    s32 *entry2;
+    s32 k;
+
+    if (obj->active != 0) {
+        value = -1;
+        entry = &obj->active;
+        for (i = 0; i < 5; i++) {
+            if (entry[1] != -1) {
+                value = obj->entries[i];
+                break;
+            }
+            entry++;
+        }
+        if (value != -1) {
+            fn_1_12A2B8(1);
+            fn_1_12A2D0(value);
+        } else {
+            fn_1_12A2B8(0);
+        }
+        fn_1_9724C(obj);
+        fn_1_107C4C(obj);
+        fn_1_966A0(obj);
+        fn_1_95EF0(obj);
+        fn_1_8F5A4(obj);
+        GXInvalidateTexAll();
+        entry2 = (s32 *)obj;
+        for (k = 0; k < 5; k++) {
+            if (entry2[1] != -1) {
+                fn_1_12A734(entry2[1]);
+                entry2[1] = -1;
+            }
+            entry2++;
+        }
+        if (value != -1) {
+            fn_1_12A2B8(0);
+        }
+        obj->active = 0;
+    }
+}
+/* fzgx:end fn_1_8F494 */
 
 /* fzgx:begin fn_1_8F5A4 */
 typedef struct {

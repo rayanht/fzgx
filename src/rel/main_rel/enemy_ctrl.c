@@ -117,6 +117,46 @@ void fn_1_C6F80(u8 value) {
 }
 /* fzgx:end fn_1_C6F80 */
 
+/* fzgx:begin fn_1_C7224 noprologue */
+#include "types.h"
+
+extern s16 lbl_1_bss_960;
+extern s16 fn_1_3F0C8(void);
+extern int fn_1_485A8(int);
+extern void fn_1_C771C(void);
+extern u32 fn_1_58C4(void);
+extern void fn_1_C72D4(void);
+extern void fn_1_C742C(void);
+
+typedef struct {
+    u8 padding[0x94];
+    u32 flags;
+} Fn1C7224State;
+
+extern Fn1C7224State lbl_1_bss_8B3A0;
+
+void fn_1_C7224(void) {
+    if (lbl_1_bss_960 == 2 &&
+        (fn_1_3F0C8() == 0x25 || fn_1_3F0C8() == 0x26)) {
+        return;
+    }
+
+    if (fn_1_485A8(0x94) != 0) {
+        if (lbl_1_bss_8B3A0.flags & 0x40000000) {
+            fn_1_C771C();
+        } else if (fn_1_58C4() == 1) {
+            if (!(lbl_1_bss_8B3A0.flags & 0x40000000)) {
+                fn_1_C72D4();
+            } else {
+                fn_1_C771C();
+            }
+        } else {
+            fn_1_C742C();
+        }
+    }
+}
+/* fzgx:end fn_1_C7224 */
+
 /* fzgx:begin fn_1_CA218 */
 typedef struct EnemyCtrl_CA218 {
     u32 value;

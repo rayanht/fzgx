@@ -584,6 +584,21 @@ void fn_1_4CE48(Obj_1_bss_4B9CC *obj, f32 limit) {
 }
 /* fzgx:end fn_1_4CE48 */
 
+/* fzgx:begin fn_1_4D0A0 */
+extern u8 lbl_1_rodata_FD0[];
+
+void fn_1_4D0A0(void) {
+    Obj_1_bss_4BA30 *bss = &lbl_1_bss_4BA30;
+    f32 *rodata = (f32 *)lbl_1_rodata_FD0;
+
+    bss->unk_0 = 1;
+    bss->unk_4 = rodata[0x16ac / 4];
+    bss->unk_8 = rodata[0xf0 / 4];
+    bss->unk_C = rodata[0x16b0 / 4];
+    bss->unk_10 = rodata[0xf0 / 4];
+}
+/* fzgx:end fn_1_4D0A0 */
+
 /* fzgx:begin fn_1_4D0D4 */
 void fn_1_4D0D4(u32 *object, f32 value) {
     u32 data = *object;
