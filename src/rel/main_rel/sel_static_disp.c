@@ -312,6 +312,116 @@ void fn_1_13923C(u32 arg0, u32 arg1) {
 }
 /* fzgx:end fn_1_13923C */
 
+/* fzgx:begin fn_1_139AEC noprologue */
+#include "types.h"
+#include "rel/main_rel/sel_static_disp.h"
+
+typedef struct {
+    u8 pad0[0x4];
+    f32 unk_4;
+    f32 unk_8;
+    f32 unk_C;
+    f32 unk_10;
+    f32 unk_14;
+    u8 pad18[0x18];
+    s32 unk_30;
+    u8 pad34[0x24];
+} Sp8;
+
+typedef struct {
+    u8 pad0[0x20];
+    void *unk_20;
+    u8 pad24[0x14];
+    f32 unk_38;
+    f32 unk_3C;
+    f32 unk_40;
+    f32 unk_44;
+    f32 unk_48;
+    f32 unk_4C;
+    u8 pad50[0x14];
+    s16 unk_64;
+} Arg0Struct;
+
+extern Sp8 lbl_1_rodata_26F8;
+extern const f32 lbl_1_rodata_85F0;
+extern const f32 lbl_1_rodata_8B9C;
+extern const f32 lbl_1_rodata_8BA0;
+extern const f32 lbl_1_rodata_861C;
+extern const f32 lbl_1_rodata_8BA4;
+extern const f32 lbl_1_rodata_8BA8;
+extern const f32 lbl_1_rodata_86FC;
+extern const f32 lbl_1_rodata_8638;
+extern const f32 lbl_1_rodata_8664;
+extern const f32 lbl_1_rodata_8BAC;
+extern const f32 lbl_1_rodata_8BB0;
+extern const f32 lbl_1_rodata_8BB4;
+extern const f32 lbl_1_rodata_87D0;
+
+extern u8 fn_1_D6740(u8);
+extern u8 fn_1_D66B0(void);
+extern void fn_1_8CED0(void *, s32, s32);
+extern void fn_1_131C08(void);
+extern void fn_1_8D3F8(void *, Sp8 *, void (*)(void), void *);
+
+#pragma opt_common_subs off
+void fn_1_139AEC(Arg0Struct *arg0) {
+    Sp8 sp8 = lbl_1_rodata_26F8;
+    s32 var_r31;
+    s16 i;
+    s16 var_r29;
+
+    arg0->unk_38 = lbl_1_rodata_85F0;
+    arg0->unk_3C = lbl_1_rodata_8B9C;
+    arg0->unk_40 = lbl_1_rodata_8BA0;
+    arg0->unk_44 = lbl_1_rodata_85F0;
+    arg0->unk_48 = lbl_1_rodata_861C;
+    arg0->unk_4C = lbl_1_rodata_861C;
+
+    sp8 = lbl_1_rodata_26F8;
+
+    sp8.unk_4 = lbl_1_rodata_8BA4;
+    sp8.unk_8 = lbl_1_rodata_8BA8;
+    sp8.unk_C = lbl_1_rodata_86FC;
+    sp8.unk_30 = 10;
+
+    if (lbl_1_bss_8CA28.unk_0 != 0) {
+        sp8.unk_10 *= lbl_1_rodata_8638;
+        sp8.unk_14 *= lbl_1_rodata_8638;
+    }
+
+    if (!(lbl_1_bss_8B3A0.unk_94 & 0x40000000)) {
+        return;
+    }
+
+    sp8.unk_10 *= lbl_1_rodata_8664;
+    sp8.unk_14 *= lbl_1_rodata_8BAC;
+    sp8.unk_10 *= lbl_1_rodata_8BB0;
+    sp8.unk_14 *= lbl_1_rodata_8BB0;
+    sp8.unk_8 = lbl_1_rodata_8BB4;
+
+    i = 0;
+    var_r29 = 1;
+    var_r31 = 0x64;
+    for (; i < 4; i++) {
+        if (!fn_1_D6740(i)) {
+            continue;
+        }
+        if (i == fn_1_D66B0()) {
+            continue;
+        }
+
+        sp8.unk_4 = (var_r29 - 1) * 87 + 66;
+        fn_1_8CED0((u8 *)arg0->unk_20 + var_r31, 140, 100);
+        *(f32 *)((u8 *)arg0->unk_20 + var_r31 + 0x44) = lbl_1_rodata_87D0;
+        arg0->unk_64 = i;
+        fn_1_8D3F8((u8 *)arg0->unk_20 + var_r31, &sp8, fn_1_131C08, arg0);
+        var_r31 += 100;
+        var_r29++;
+    }
+}
+#pragma opt_common_subs reset
+/* fzgx:end fn_1_139AEC */
+
 /* fzgx:begin fn_1_139F18 */
 typedef struct {
     u8 pad_0[0x44];

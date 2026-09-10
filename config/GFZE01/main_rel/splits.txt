@@ -5522,3 +5522,6 @@ rel/main_rel/sel_static_disp/fn_1_14C9A0.c:
 
 rel/main_rel/font/fn_1_4AC20.c:
 	.text       start:0x0004AC20 end:0x0004AE0C align:4
+
+rel/main_rel/sel_static_disp/fn_1_139AEC.c:
+	.text       start:0x00139AEC end:0x00139D60 align:4
