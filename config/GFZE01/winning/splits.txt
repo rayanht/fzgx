@@ -74,3 +74,9 @@ rel/winning/winning/fn_15_398C.c:
 
 rel/winning/winning/fn_15_2CF0.c:
 	.text       start:0x00002CF0 end:0x00002D74 align:4
+
+rel/winning/winning/fn_15_2D74.c:
+	.text       start:0x00002D74 end:0x00002E8C align:4
+
+rel/winning/winning/fn_15_537C.c:
+	.text       start:0x0000537C end:0x0000545C align:4

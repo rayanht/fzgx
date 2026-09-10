@@ -14132,6 +14132,16 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_8002A698.c",
+    "symbols": [
+      "fn_8002A698"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
     "source": "dol/fn_8002A744.c",
     "symbols": [
       "fn_8002A744"
@@ -51958,6 +51968,17 @@
   },
   {
     "module": "winning",
+    "source": "rel/winning/winning/fn_15_2D74.c",
+    "symbols": [
+      "fn_15_2D74"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "tu": "rel/winning/winning.c"
+  },
+  {
+    "module": "winning",
     "source": "rel/winning/winning/fn_15_30E8.c",
     "symbols": [
       "fn_15_30E8"
@@ -52043,6 +52064,20 @@
     "mw_version": null,
     "extra_cflags": [],
     "tu": "rel/winning/winning.c"
+  },
+  {
+    "module": "winning",
+    "source": "rel/winning/winning/fn_15_537C.c",
+    "symbols": [
+      "fn_15_537C"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "tu": "rel/winning/winning.c",
+    "pool": {
+      "@7": "lbl_15_rodata_0"
+    }
   },
   {
     "module": "winning",
