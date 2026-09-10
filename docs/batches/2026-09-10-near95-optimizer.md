@@ -19,8 +19,9 @@ Two further exact candidates:
 - `InitializeProgramEndTrap` (88 bytes): use the existing rename tool to give
   `EndofProgramInstruction$162` a C identifier, then let fixup bind the extern.
 
-Together: 16 candidates, 2,984 bytes; nine from the Luna batch and seven from
-the wider saved corpus. No reconstructed C was edited by hand.
+Together: 16 matches, 2,984 bytes; nine from the Luna batch and seven from
+the wider saved corpus. All 16 were link-verified in `36a0b1c`, with no rejected
+candidates. No reconstructed C was edited by hand.
 
 The search also had a stopping bug: masked instruction equality could select a
 candidate whose relocations were still wrong, hiding a later exact repair.
@@ -34,3 +35,6 @@ variants across 52 functions closed nothing; neither generator was retained.
 Other optimizer axes also found no additional candidates. Local inputs and
 results are under `.fzgx/repair-near95/optimizer/`, with the accepted source
 manifest in `.fzgx/repair-near95/winners2.json`.
+
+Validation: all 16 target hashes passed; `fzgx lint` reported zero findings;
+`ninja all_source progress build/GFZE01/report.json` completed successfully.
