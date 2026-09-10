@@ -1310,6 +1310,34 @@ void fn_1_14C968(void) {
 }
 /* fzgx:end fn_1_14C968 */
 
+/* fzgx:begin fn_1_14C9A0 */
+extern u8 lbl_1_bss_5138[260];
+extern int fn_1_C24A4(void);
+extern u8 fn_1_B7C00(void);
+extern void fn_1_320A4(void);
+
+void fn_1_14C9A0(void) {
+    int state = lbl_1_bss_5138[0xe2];
+
+    if (state != 0) {
+        s32 bit = (lbl_1_bss_9F8.unk_8 >> 8) & 1;
+        if (lbl_1_bss_5138[0xe2] != 0 && bit != 0) {
+            if (lbl_1_bss_5138[0xe0] >= 0xf &&
+                lbl_1_bss_5138[0xe0] <= 0x78) {
+                lbl_1_bss_5138[0xe0] = 0x78;
+            }
+        }
+    }
+
+    if (state == 0 &&
+        fn_1_C24A4() == 0 &&
+        fn_1_B7C00() == 0) {
+        fn_1_320A4();
+        lbl_1_bss_8E51D = 0xa;
+    }
+}
+/* fzgx:end fn_1_14C9A0 */
+
 /* fzgx:begin fn_1_14CA3C */
 // fn_1_14CA3C: empty in retail (single blr).
 void fn_1_14CA3C(void) {
