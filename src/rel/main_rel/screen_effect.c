@@ -474,6 +474,18 @@ void fn_1_772E0(void) {
 }
 /* fzgx:end fn_1_772E0 */
 
+/* fzgx:begin fn_1_7879C */
+extern const f32 lbl_1_rodata_323C;
+extern const f64 lbl_1_rodata_31D8;
+
+u8 fn_1_7879C(u32 arg0) {
+    s32 v0;
+
+    v0 = (s32)(lbl_1_rodata_323C * (f32)(s32)((arg0 - 0x1000000) + 2048));
+    return (u8)(v0 < 0 ? 0 : (v0 <= 255 ? v0 : 0xff));
+}
+/* fzgx:end fn_1_7879C */
+
 /* fzgx:begin fn_1_78950 */
 // Reset the screen effect state and refresh its processing stages twice.
 void fn_1_78950(void) {
@@ -531,6 +543,70 @@ void fn_1_79100(void) {
     lbl_1_data_1DFA4.unk_8 = -1;
 }
 /* fzgx:end fn_1_79100 */
+
+/* fzgx:begin fn_1_79810 */
+typedef struct {
+    f32 unk_0;
+    f32 unk_4;
+    f32 unk_8;
+    s16 unk_C;
+    s16 unk_E;
+    s16 unk_10;
+    u8 pad_12[0x6];
+    f32 unk_18;
+    f32 unk_1C;
+    f32 unk_20;
+    u8 pad_24[0xd0];
+    void *unk_F4;
+    u8 pad_F8[0xc];
+    u32 unk_104;
+} ScreenEffectSource;
+
+extern void fn_80008BEC(void *arg0, s32 arg1, u32 arg2);
+extern void lbl_8006D758(void);
+extern void lbl_8006DB74(void *arg);
+extern void lbl_8006E0C8(void *arg);
+
+void fn_1_79810(void) {
+    u32 source_flags;
+    Obj_1_bss_3BE4 *dst;
+    ScreenEffectSource *src;
+    s32 i;
+
+    i = 0;
+    dst = *(Obj_1_bss_3BE4 **)&lbl_1_bss_3BE4;
+    src = (ScreenEffectSource *)lbl_1_bss_3BE0->unk_1C;
+    while (i < (s32)lbl_1_bss_3BE0->unk_18) {
+        source_flags = dst->unk_9C;
+        fn_80008BEC(dst, 0, 0xa0);
+        dst->unk_9C = source_flags;
+        dst->unk_8 = src->unk_0;
+        dst->unk_C = src->unk_4;
+        dst->unk_10 = src->unk_8;
+        dst->unk_14 = src->unk_0 - src->unk_18;
+        dst->unk_18 = src->unk_4 - src->unk_1C;
+        dst->unk_1C = src->unk_8 - src->unk_20;
+        dst->unk_20 = src->unk_C;
+        dst->unk_22 = src->unk_E;
+        dst->unk_24 = src->unk_10;
+        dst->unk_26 = src->unk_C;
+        dst->unk_28 = src->unk_E;
+        dst->unk_2A = src->unk_10;
+        lbl_8006D758();
+        lbl_8006DB74((u8 *)dst + 0x2c);
+        lbl_8006E0C8((u8 *)src + 0x18);
+        lbl_8006DB74((u8 *)dst + 0x5c);
+        if (src->unk_F4 != 0) {
+            dst->unk_98 = *(f32 *)((u8 *)src->unk_F4 + 0xc);
+        }
+        source_flags = src->unk_104;
+        dst->unk_0 |= source_flags;
+        i++;
+        src = (ScreenEffectSource *)((u8 *)src + 0x4b0);
+        dst = (Obj_1_bss_3BE4 *)((u8 *)dst + 0xa0);
+    }
+}
+/* fzgx:end fn_1_79810 */
 
 /* fzgx:begin fn_1_7A648 */
 void fn_1_7A648(void *arg0) {

@@ -40,6 +40,91 @@ u32 fn_1_584AC(void) {
 }
 /* fzgx:end fn_1_584AC */
 
+/* fzgx:begin fn_1_58694 noprologue */
+#include "types.h"
+
+typedef struct AvlineVec3 {
+    u32 unk_00;
+    u32 unk_04;
+    u32 unk_08;
+} AvlineVec3;
+
+typedef struct AvlineEntry {
+    s8 unk_00;
+    u8 _pad01[0x0b];
+    s16 unk_0c;
+    u8 _pad0e[0x02];
+    s32 unk_10;
+    u8 _pad14[0x28];
+    AvlineVec3 unk_3c;
+    u8 _pad48[0x18];
+    AvlineVec3 unk_60;
+    u8 _pad6c[0x7c];
+} AvlineEntry;
+
+typedef struct AvlineState {
+    AvlineEntry *unk_00;
+    AvlineEntry *unk_04;
+    u8 _pad08[0x0c];
+    s32 unk_14;
+    s32 unk_18;
+    s32 unk_1c;
+    s32 unk_20;
+} AvlineState;
+
+typedef void (*AvlineHandler)(AvlineEntry *);
+
+extern AvlineState lbl_1_bss_6C848;
+extern AvlineHandler lbl_1_data_1D514[];
+extern AvlineHandler lbl_1_data_1D2EC[];
+extern s16 fn_1_3F0C8(void);
+extern void fn_1_3BDC(s32);
+extern void fn_1_3C18(s32);
+
+void fn_1_58694(void) {
+    AvlineState *state = &lbl_1_bss_6C848;
+    s32 count;
+    AvlineEntry *entry;
+
+    if (fn_1_3F0C8() != 0x28) {
+        entry = state->unk_00;
+        state->unk_14 = 0;
+        state->unk_18 = 0;
+        state->unk_1c = 0;
+        state->unk_20 = 0;
+        fn_1_3BDC(9);
+        for (count = 0xbe; count > 0; count--) {
+            if (entry->unk_00 != 0) {
+                entry->unk_10 -= 1;
+                if (entry->unk_10 == 0 || entry->unk_00 == 3) {
+                    lbl_1_data_1D514[entry->unk_0c](entry);
+                    entry->unk_00 = 0;
+                } else {
+                    entry->unk_60 = entry->unk_3c;
+                    lbl_1_data_1D2EC[entry->unk_0c](entry);
+                }
+            }
+            entry++;
+        }
+        entry = state->unk_04;
+        for (count = 0xc8; count > 0; count--) {
+            if (entry->unk_00 != 0) {
+                entry->unk_10 -= 1;
+                if (entry->unk_10 == 0 || entry->unk_00 == 3) {
+                    lbl_1_data_1D514[entry->unk_0c](entry);
+                    entry->unk_00 = 0;
+                } else {
+                    entry->unk_60 = entry->unk_3c;
+                    lbl_1_data_1D2EC[entry->unk_0c](entry);
+                }
+            }
+            entry++;
+        }
+        fn_1_3C18(9);
+    }
+}
+/* fzgx:end fn_1_58694 */
+
 /* fzgx:begin fn_1_58854 */
 typedef struct {
     s8 unk_0;

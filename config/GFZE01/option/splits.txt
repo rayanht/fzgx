@@ -110,3 +110,6 @@ rel/option/_prolog/fn_4_AB30.c:
 
 rel/option/name_entry.c:
 	.text       start:0x0000D760 end:0x0000D888 align:4
+
+rel/option/_prolog/fn_4_8158.c:
+	.text       start:0x00008158 end:0x00008248 align:4

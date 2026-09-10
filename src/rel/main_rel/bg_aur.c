@@ -252,6 +252,58 @@ void fn_1_153AF8(u32 *entries) {
 }
 /* fzgx:end fn_1_153AF8 */
 
+/* fzgx:begin fn_1_153C60 noprologue */
+#include "types.h"
+
+extern u32 lbl_1_data_2A7E0[];
+extern void lbl_8006DFE8(void *);
+extern void lbl_8006E13C(void *);
+extern void lbl_8006E0A4(void *);
+extern void fn_80072558(void);
+extern void lbl_8006D784(void *);
+extern void fn_1_560F0(s32, void *);
+extern void fn_1_55210(void *);
+
+void fn_1_153C60(u8 *base) {
+    u8 *entry;
+    u8 *slot;
+    s32 i;
+    u8 *obj;
+    u8 work0[0x30];
+    u8 work1[0x30];
+
+    entry = base;
+    slot = base;
+    i = 0;
+
+    while (i < *(s32 *)base) {
+        obj = *(u8 **)(entry + 4);
+        {
+            u32 value = *(u32 *)(obj + 4);
+
+            if ((value + 0x10000) == 0xffff || (value & lbl_1_data_2A7E0[20]) != 0) {
+                lbl_8006DFE8(slot + 0x504);
+                lbl_8006E13C(obj + 0x20);
+                lbl_8006E0A4((u8 *)*(void **)(base + 0x1104) + 8);
+                fn_80072558();
+                lbl_8006D784(work0);
+                *(f32 *)(work0 + 0xC) = *(f32 *)(entry + 0x204);
+                *(f32 *)(work0 + 0x1C) = *(f32 *)(entry + 0x304);
+                fn_1_560F0(0, work0);
+                lbl_8006D784(work1);
+                *(f32 *)(work1 + 0x1C) = *(f32 *)(entry + 0x404);
+                fn_1_560F0(1, work1);
+                fn_1_55210(*(void **)(base + 0x1104));
+            }
+        }
+
+        entry += 4;
+        slot += 0x30;
+        i++;
+    }
+}
+/* fzgx:end fn_1_153C60 */
+
 /* fzgx:begin fn_1_153D48 */
 // Clears the Aurora background data region.
 void fn_1_153D48(void *background) {

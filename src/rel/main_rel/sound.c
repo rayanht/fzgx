@@ -564,6 +564,44 @@ void fn_1_A5470(s32 value) {
 }
 /* fzgx:end fn_1_A5470 */
 
+/* fzgx:begin fn_1_A54FC noprologue */
+#include "types.h"
+
+typedef struct SoundData {
+    u8 pad_000[0x740];
+    u8 unk_740;
+    u8 pad_741[3];
+    u32 unk_744;
+    u8 pad_748[0x5c];
+    u32 unk_7a4;
+    u8 pad_7a8[0xd8];
+    s16 unk_880;
+} SoundData;
+
+extern SoundData lbl_1_bss_6EA98;
+extern void fn_80067898(u32 value);
+
+void fn_1_A54FC(void) {
+    u32 flags;
+
+    if ((lbl_1_bss_6EA98.unk_7a4 & 1) == 0 ||
+        lbl_1_bss_6EA98.unk_740 != 0) {
+        return;
+    }
+
+    lbl_1_bss_6EA98.unk_880++;
+    if (lbl_1_bss_6EA98.unk_880 == 0x78) {
+        if (lbl_1_bss_6EA98.unk_740 == 0 &&
+            lbl_1_bss_6EA98.unk_744 <= 0x2d) {
+            fn_80067898(0xA9065100);
+        }
+        flags = lbl_1_bss_6EA98.unk_7a4;
+        lbl_1_bss_6EA98.unk_880 = 0;
+        lbl_1_bss_6EA98.unk_7a4 = flags & ~1;
+    }
+}
+/* fzgx:end fn_1_A54FC */
+
 /* fzgx:begin fn_1_A5590 */
 // fn_1_A5590: empty in retail (single blr).
 void fn_1_A5590(void) {

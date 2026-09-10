@@ -389,6 +389,71 @@ void fn_1_CC27C(void) {
 }
 /* fzgx:end fn_1_CC27C */
 
+/* fzgx:begin fn_1_CD6C0 */
+extern const f32 lbl_1_rodata_5CFC;
+extern const f32 lbl_1_rodata_5D90;
+extern u16 fn_1_8664C(void *object);
+extern void *fn_1_8627C(void *object);
+extern u32 fn_1_864E8(void *object);
+
+typedef struct fn_1_CD6C0_object {
+    s32 flags;
+    u16 pad4;
+    s16 state;
+    u8 pad8[0x2c];
+    f32 value;
+    u8 pad38[0x28];
+    void *controller;
+} fn_1_CD6C0_object;
+
+typedef struct fn_1_CD6C0_target {
+    u8 pad0[0x10c];
+    s32 flags;
+} fn_1_CD6C0_target;
+
+#pragma opt_propagation off
+void fn_1_CD6C0(fn_1_CD6C0_object *object) {
+    s32 state;
+    s32 out;
+    void *controller;
+    fn_1_CD6C0_target *target;
+
+    state = object->state;
+    if (state + 1 > 0x3b) {
+        out = 0;
+    } else {
+        state++;
+        out = 0x3b;
+        if (state >= 0) {
+            out = state;
+        }
+    }
+    object->state = out;
+    if (object->state < 0x1e) {
+        object->value = lbl_1_rodata_5CFC;
+    } else {
+        object->value = lbl_1_rodata_5D90;
+    }
+    if (fn_1_8664C(object->controller) != 0) {
+        object->value = lbl_1_rodata_5D90;
+        object->flags = 0;
+    }
+    if (object->state == 0x1e) {
+        controller = object->controller;
+        target = fn_1_8627C(controller);
+        if (target != 0) {
+            if (target->flags == 0) {
+                object->flags = 0;
+            }
+            if ((fn_1_864E8(controller) & 0x10010880) != 0) {
+                object->flags = 0;
+            }
+        }
+    }
+}
+#pragma opt_propagation reset
+/* fzgx:end fn_1_CD6C0 */
+
 /* fzgx:begin fn_1_CFA4C noprologue */
 #include "types.h"
 #include "font.h"

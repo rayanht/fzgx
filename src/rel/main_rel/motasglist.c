@@ -170,6 +170,87 @@ void fn_1_426E4(Fn1426E4Object *object, void *value) {
 }
 /* fzgx:end fn_1_426E4 */
 
+/* fzgx:begin fn_1_42E74 */
+typedef struct Fn142E74Pair {
+    u32 a;
+    u32 b;
+} Fn142E74Pair;
+
+typedef struct Fn142E74Entry {
+    u8 pad0[0xB8];
+    Fn142E74Pair sourceB8;
+    u32 sourceC0;
+    Fn142E74Pair sourceC4;
+    u32 sourceCC;
+    u8 padD0[0xA4];
+    Fn142E74Pair value174;
+    u32 value17C;
+    Fn142E74Pair value180;
+    u32 value188;
+} Fn142E74Entry;
+
+typedef struct Fn142E74Object {
+    u16 count;
+    u16 flags;
+    u8 pad4[4];
+    Fn142E74Entry *entries;
+    u8 padC[0x0C];
+    f32 value0;
+    f32 value1;
+    f32 value2;
+    u8 pad24[0x1C];
+    u16 flags40;
+} Fn142E74Object;
+
+extern void lbl_8006DAEC(void);
+extern void lbl_8006DBAC(void *);
+extern void fn_8006E5FC(void *);
+extern void lbl_8006DB30(void);
+extern void fn_1_438AC(Fn142E74Object *object, Fn142E74Entry *entry, s32 arg2);
+extern void fn_1_433E0(Fn142E74Object *object);
+extern void fn_1_4300C(Fn142E74Object *object);
+
+void fn_1_42E74(Fn142E74Object *object) {
+    s32 i;
+    Fn142E74Entry *entry;
+
+    lbl_8006DAEC();
+    if (object->flags & 1) {
+        for (i = 0; i < object->count; i++) {
+            fn_1_438AC(object, (Fn142E74Entry *)((u8 *)object->entries + i * 0x18c), 1);
+        }
+
+        for (i = 0; i < object->count; i++) {
+            entry = (Fn142E74Entry *)((u8 *)object->entries + i * 0x18c);
+            lbl_8006DBAC((u8 *)entry + 0x88);
+            fn_8006E5FC((u8 *)entry + 0x164);
+            entry->value174 = entry->sourceB8;
+            entry->value17C = entry->sourceC0;
+            entry->value180 = entry->sourceC4;
+            entry->value188 = entry->sourceCC;
+        }
+    }
+
+    for (i = 0; i < object->count; i++) {
+        fn_1_438AC(object, (Fn142E74Entry *)((u8 *)object->entries + i * 0x18c), 0);
+    }
+    object->value0 = *(f32 *)((u8 *)object->entries + 0x94);
+    object->value1 = *(f32 *)((u8 *)object->entries + 0xa4);
+    object->value2 = *(f32 *)((u8 *)object->entries + 0xb4);
+    fn_1_433E0(object);
+    lbl_8006DB30();
+    if (!(object->flags & 0x10)) {
+        fn_1_4300C(object);
+    }
+    if (object->flags40 & 2) {
+        object->flags |= 4;
+    } else {
+        object->flags &= ~4;
+    }
+    object->flags &= ~0x100;
+}
+/* fzgx:end fn_1_42E74 */
+
 /* fzgx:begin fn_1_4300C */
 typedef struct Fn14300CObject {
     u8 pad0[2];

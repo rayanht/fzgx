@@ -56,6 +56,81 @@ u8 *fn_1_14F04(void) {
 }
 /* fzgx:end fn_1_14F04 */
 
+/* fzgx:begin fn_1_17C6C noprologue */
+#include "types.h"
+
+typedef struct Entry {
+    char pad[0x4d];
+    s8 active;
+} Entry;
+
+typedef struct Slot {
+    int pad;
+    Entry *entry;
+    int tail;
+} Slot;
+
+typedef struct Root {
+    char pad[0xc];
+    Slot *slots;
+} Root;
+
+extern u32 lbl_1_bss_3BE0;
+extern s16 fn_1_7B054(int);
+
+int fn_1_17C6C(int current, int next, int limit) {
+    int end;
+    int count;
+    int span;
+    int result;
+
+    if (current == next) {
+        return 1;
+    }
+
+    if (current > next) {
+        int temp = current;
+        current = next;
+        next = temp;
+    }
+
+    span = next - current;
+    {
+        int diff = limit - span;
+        if (diff < span) {
+            current = next;
+            span = diff;
+        }
+    }
+
+    next = current + 1;
+    count = 0;
+    end = limit - 1;
+
+    while (count < span) {
+        if (next > end) {
+            next = 0;
+        }
+
+        if (!(*(Root **)&lbl_1_bss_3BE0)->slots[current].entry->active) {
+            break;
+        }
+        if (current == 0x8b && fn_1_7B054(current) == 3) {
+            break;
+        }
+        current = next;
+        count++;
+        next++;
+    }
+
+    result = 0;
+    if (span == 0 || count >= span) {
+        result = 1;
+    }
+    return result;
+}
+/* fzgx:end fn_1_17C6C */
+
 /* fzgx:begin fn_1_181CC */
 // fn_1_181CC: main_rel .text:0x000181CC size 0x24
 // Wrapper function that passes first three arguments through and sets fourth to 1

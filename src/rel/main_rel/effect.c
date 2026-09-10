@@ -1032,6 +1032,79 @@ void fn_1_63130(struct fn_1_63130_obj *obj) {
 }
 /* fzgx:end fn_1_63130 */
 
+/* fzgx:begin fn_1_632D4 noprologue */
+#include "types.h"
+#include "rel/main_rel/globals.h"
+#include "rel/main_rel/effect.h"
+
+extern f32 lbl_1_rodata_2AA0[21];
+extern f32 lbl_1_rodata_29AC[5];
+extern void lbl_8006DCA4(void *obj);
+extern void lbl_8006E1B0(void *src, void *dst);
+extern void lbl_8006D7DC(void *obj);
+extern void mathutil_mtxA_rotate_z(s16 value);
+extern void lbl_8006DB74(void *obj);
+extern void fn_1_9F914(void *data, int value);
+
+struct fn_1_632D4_obj {
+    u8 unk_00[0x1C];
+    f32 unk_1C;
+    f32 unk_20;
+    f32 unk_24;
+    f32 unk_28;
+    u8 unk_2C[0x8];
+    int unk_34;
+    u8 unk_38[0x4];
+    void *unk_3C;
+    u8 unk_40[0x6E];
+    s16 unk_AE;
+};
+
+struct fn_1_632D4_data {
+    f32 unk_00;
+    f32 unk_04;
+    u8 unk_08[0x34];
+    u8 red;
+    u8 green;
+    u8 blue;
+    u8 alpha;
+};
+
+void fn_1_632D4(struct fn_1_632D4_obj *obj) {
+    struct fn_1_632D4_value { s32 a, b, c; } value;
+    struct fn_1_632D4_data data;
+    int id;
+    s32 red;
+    s32 green;
+    s32 blue;
+    f32 color_scale;
+    f32 size;
+
+    id = obj->unk_34;
+    lbl_8006DCA4(obj);
+    lbl_8006E1B0(&obj->unk_3C, &value);
+    lbl_8006D7DC(&value);
+    mathutil_mtxA_rotate_z(obj->unk_AE);
+    memset(&data, 0, 0x40);
+    lbl_8006DB74(&data.unk_08);
+
+    size = lbl_1_rodata_2AA0[0];
+    size = size * obj->unk_28;
+    data.unk_00 = size;
+    color_scale = lbl_1_rodata_29AC[0];
+    red = color_scale * obj->unk_1C;
+    data.red = red;
+    green = color_scale * obj->unk_20;
+    data.green = green;
+    blue = color_scale * obj->unk_24;
+    data.alpha = 0xff;
+    data.unk_04 = size;
+    data.blue = blue;
+
+    fn_1_9F914(&data, id);
+}
+/* fzgx:end fn_1_632D4 */
+
 /* fzgx:begin fn_1_633BC */
 // fn_1_633BC: empty in retail (single blr).
 void fn_1_633BC(void) {

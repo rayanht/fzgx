@@ -1490,3 +1490,12 @@ rel/movie_module/fn_12_26C2C.c:
 
 rel/movie_module/fn_12_3ACD0.c:
 	.text       start:0x0003ACD0 end:0x0003ADC4 align:4
+
+rel/movie_module/fn_12_202FC.c:
+	.text       start:0x000202FC end:0x00020448 align:4
+
+rel/movie_module/fn_12_C60.c:
+	.text       start:0x00000C60 end:0x00000D38 align:4
+
+rel/movie_module/fn_12_3B2EC.c:
+	.text       start:0x0003B2EC end:0x0003B414 align:4

@@ -50,3 +50,6 @@ rel/replay/_prolog/fn_13_B08.c:
 
 rel/replay/replay_mode/fn_13_BCC.c:
 	.text       start:0x00000BCC end:0x00000CDC align:4
+
+rel/replay/replay_mode/fn_13_CDC.c:
+	.text       start:0x00000CDC end:0x00000E8C align:4

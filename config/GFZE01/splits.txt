@@ -4517,3 +4517,51 @@ dol/fn_80025440.c:
 
 dol/InitializeProgramEndTrap.c:
 	.text       start:0x8008D2B0 end:0x8008D308 align:4
+
+dol/fn_80056B50.c:
+	.text       start:0x80056B50 end:0x80056BE0 align:4
+
+dol/fn_8006A3DC.c:
+	.text       start:0x8006A3DC end:0x8006A480 align:4
+
+dol/fn_80035110.c:
+	.text       start:0x80035110 end:0x8003526C align:4
+
+dol/fn_80028E88.c:
+	.text       start:0x80028E88 end:0x80028F50 align:4
+
+dol/fn_800715A0.c:
+	.text       start:0x800715A0 end:0x80071678 align:4
+
+dol/fn_8005795C.c:
+	.text       start:0x8005795C end:0x800579F0 align:4
+
+dol/fn_800737E4.c:
+	.text       start:0x800737E4 end:0x80073898 align:4
+
+dol/fn_80046768.c:
+	.text       start:0x80046768 end:0x80046804 align:4
+
+dol/fn_8008AA04.c:
+	.text       start:0x8008AA04 end:0x8008AB20 align:4
+
+dol/fn_8006ED0C.c:
+	.text       start:0x8006ED0C end:0x8006EDBC align:4
+
+dol/fn_8006EDBC.c:
+	.text       start:0x8006EDBC end:0x8006EE70 align:4
+
+dol/fn_80060BDC.c:
+	.text       start:0x80060BDC end:0x80060C54 align:4
+
+dol/fn_800235D4.c:
+	.text       start:0x800235D4 end:0x8002361C align:4
+
+dol/fn_800839D8.c:
+	.text       start:0x800839D8 end:0x80083B14 align:4
+
+dol/fn_800735C8.c:
+	.text       start:0x800735C8 end:0x80073620 align:4
+
+dol/fn_80021200.c:
+	.text       start:0x80021200 end:0x8002123C align:4

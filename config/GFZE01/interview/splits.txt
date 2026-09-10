@@ -71,3 +71,12 @@ rel/interview/interview/fn_17_4FE0.c:
 
 rel/interview/interview/fn_17_8D28.c:
 	.text       start:0x00008D28 end:0x00008E68 align:4
+
+rel/interview/interview/fn_17_67C4.c:
+	.text       start:0x000067C4 end:0x00006848 align:4
+
+rel/interview/interview/fn_17_71DC.c:
+	.text       start:0x000071DC end:0x000072BC align:4
+
+rel/interview/interview/fn_17_48D0.c:
+	.text       start:0x000048D0 end:0x000049B8 align:4

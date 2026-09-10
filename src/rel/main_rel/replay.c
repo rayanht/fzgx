@@ -213,6 +213,66 @@ u32 fn_1_F45B4(void) {
 }
 /* fzgx:end fn_1_F45B4 */
 
+/* fzgx:begin fn_1_F45CC */
+typedef struct { u8 raw[0x80]; } ReplayEntry;
+typedef struct { u8 raw[0x84]; } ReplayOutput;
+typedef struct { u32 w[3]; } CopyChunk;
+
+s32 fn_1_F45CC(u32 key, ReplayOutput *out) {
+    s32 out_count;
+    Obj_1_bss_7EFD8 *global;
+    ReplayOutput *dst;
+    s32 i;
+    ReplayEntry *entry;
+
+    key &= 0xffff;
+    if (key > 0x7fff) {
+        return 0;
+    }
+    out_count = 0;
+    global = &lbl_1_bss_7EFD8;
+    i = 0;
+    entry = (ReplayEntry *)((u8 *)global->unk_40 + 0xff4c);
+    while (i < (s32)*(u16 *)((u8 *)global->unk_40 + 0xfef0)) {
+        u16 first;
+        u16 last;
+
+        first = (*(u16 *)(entry->raw + 0) >> 1) & 0x7fff;
+        if (key >= first) {
+            last = (*(u16 *)(entry->raw + 4) >> 1) & 0x7fff;
+            if (key <= last) {
+                if (out_count < 0x1e) {
+                } else {
+                    out_count = 0x1d;
+                }
+                dst = (ReplayOutput *)((u8 *)out + out_count * 0x84);
+                out_count++;
+                *(u16 *)(dst->raw + 0) = first;
+                *(u16 *)(dst->raw + 2) = (*(u16 *)(entry->raw + 4) >> 1) & 0x7fff;
+                dst->raw[4] = (*(u32 *)(entry->raw + 0) >> 14) & 7;
+                dst->raw[5] = (entry->raw[2] >> 1) & 0x1f;
+                dst->raw[6] = (*(u32 *)(entry->raw + 4) >> 12) & 0x1f;
+                dst->raw[7] = (*(u16 *)(entry->raw + 6) >> 7) & 0x1f;
+                dst->raw[8] = (entry->raw[7] >> 2) & 0x1f;
+                *(CopyChunk *)(dst->raw + 0x0c) = *(CopyChunk *)(entry->raw + 0x08);
+                *(CopyChunk *)(dst->raw + 0x3c) = *(CopyChunk *)(entry->raw + 0x38);
+                *(CopyChunk *)(dst->raw + 0x18) = *(CopyChunk *)(entry->raw + 0x14);
+                *(CopyChunk *)(dst->raw + 0x48) = *(CopyChunk *)(entry->raw + 0x44);
+                *(CopyChunk *)(dst->raw + 0x24) = *(CopyChunk *)(entry->raw + 0x20);
+                *(CopyChunk *)(dst->raw + 0x54) = *(CopyChunk *)(entry->raw + 0x50);
+                *(CopyChunk *)(dst->raw + 0x30) = *(CopyChunk *)(entry->raw + 0x2c);
+                *(CopyChunk *)(dst->raw + 0x60) = *(CopyChunk *)(entry->raw + 0x5c);
+                *(CopyChunk *)(dst->raw + 0x6c) = *(CopyChunk *)(entry->raw + 0x68);
+                *(CopyChunk *)(dst->raw + 0x78) = *(CopyChunk *)(entry->raw + 0x74);
+            }
+        }
+        i++;
+        entry++;
+    }
+    return out_count;
+}
+/* fzgx:end fn_1_F45CC */
+
 /* fzgx:begin fn_1_F4794 */
 void fn_1_F4794(u16 value) {
     lbl_1_bss_7F01C = value;

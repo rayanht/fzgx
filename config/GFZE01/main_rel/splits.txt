@@ -5231,3 +5231,75 @@ rel/main_rel/camera/fn_1_857C.c:
 
 rel/main_rel/sel_static_disp/fn_1_133BD8.c:
 	.text       start:0x00133BD8 end:0x00133DBC align:4
+
+rel/main_rel/motasglist/fn_1_42E74.c:
+	.text       start:0x00042E74 end:0x0004300C align:4
+
+rel/main_rel/bg_aur/fn_1_153C60.c:
+	.text       start:0x00153C60 end:0x00153D48 align:4
+
+rel/main_rel/game/fn_1_3A2C4.c:
+	.text       start:0x0003A2C4 end:0x0003A330 align:4
+
+rel/main_rel/camera/fn_1_C178.c:
+	.text       start:0x0000C178 end:0x0000C228 align:4
+
+rel/main_rel/custom_memcard/fn_1_131B90.c:
+	.text       start:0x00131B90 end:0x00131C08 align:4
+
+rel/main_rel/screen_effect/fn_1_7879C.c:
+	.text       start:0x0007879C end:0x0007880C align:4
+
+rel/main_rel/phys/fn_1_E38D4.c:
+	.text       start:0x000E38D4 end:0x000E39F0 align:4
+
+rel/main_rel/sel_static_disp/fn_1_149CA4.c:
+	.text       start:0x00149CA4 end:0x00149DA4 align:4
+
+rel/main_rel/camera/fn_1_B81C.c:
+	.text       start:0x0000B81C end:0x0000B85C align:4
+
+rel/main_rel/prog/fn_1_A722C.c:
+	.text       start:0x000A722C end:0x000A728C align:4
+
+rel/main_rel/car/fn_1_933D8.c:
+	.text       start:0x000933D8 end:0x000934CC align:4
+
+rel/main_rel/camera/fn_1_6EC0.c:
+	.text       start:0x00006EC0 end:0x00006F3C align:4
+
+rel/main_rel/car/fn_1_879B0.c:
+	.text       start:0x000879B0 end:0x00087AD8 align:4
+
+rel/main_rel/sound/fn_1_A54FC.c:
+	.text       start:0x000A54FC end:0x000A5590 align:4
+
+rel/main_rel/replay/fn_1_F45CC.c:
+	.text       start:0x000F45CC end:0x000F4794 align:4
+
+rel/main_rel/car/fn_1_8CB78.c:
+	.text       start:0x0008CB78 end:0x0008CC04 align:4
+
+rel/main_rel/stcoli/fn_1_17C6C.c:
+	.text       start:0x00017C6C end:0x00017D5C align:4
+
+rel/main_rel/enemy_ctrl/fn_1_CD6C0.c:
+	.text       start:0x000CD6C0 end:0x000CD7BC align:4
+
+rel/main_rel/_prolog/fn_1_43A4.c:
+	.text       start:0x000043A4 end:0x000043E8 align:4
+
+rel/main_rel/sel_static_disp/fn_1_149B24.c:
+	.text       start:0x00149B24 end:0x00149B64 align:4
+
+rel/main_rel/effect/fn_1_632D4.c:
+	.text       start:0x000632D4 end:0x000633BC align:4
+
+rel/main_rel/screen_effect/fn_1_79810.c:
+	.text       start:0x00079810 end:0x00079948 align:4
+
+rel/main_rel/avline/fn_1_58694.c:
+	.text       start:0x00058694 end:0x00058854 align:4
+
+rel/main_rel/load/fn_1_45CD8.c:
+	.text       start:0x00045CD8 end:0x00045D78 align:4

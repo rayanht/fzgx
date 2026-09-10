@@ -114,6 +114,54 @@ s32 fn_1_1318D4(void) {
 }
 /* fzgx:end fn_1_1318D4 */
 
+/* fzgx:begin fn_1_131B90 */
+typedef struct Obj Obj;
+
+struct Obj {
+    s16 index;
+    u8 pad_2[2];
+    u32 field_4;
+    u32 field_8;
+    u8 pad_c[0x2c];
+    u32 field_38;
+    u32 field_3c;
+    u32 field_40;
+    u32 field_44;
+    u32 field_48;
+    u32 field_4c;
+    u32 field_50[1];
+};
+
+extern void fn_1_13198C(s16, u32*, u32*, u32, u32, u32);
+
+#pragma opt_propagation off
+s32 fn_1_131B90(Obj* obj) {
+    u32 local_a[3];
+    u32 local_b[3];
+    u32 a0;
+    u32 a1;
+    u32 b0;
+    u32 b1;
+    s16 index;
+
+    a1 = obj->field_44;
+    a0 = obj->field_48;
+    local_b[0] = a1;
+    local_b[1] = a0;
+    local_b[2] = obj->field_4c;
+    b1 = obj->field_38;
+    b0 = obj->field_3c;
+    local_a[0] = b1;
+    local_a[1] = b0;
+    local_a[2] = obj->field_40;
+    index = obj->index;
+    fn_1_13198C(index, local_a, local_b, obj->field_4, obj->field_8,
+                obj->field_50[index]);
+    return 0;
+}
+#pragma opt_propagation reset
+/* fzgx:end fn_1_131B90 */
+
 /* fzgx:begin fn_1_132488 */
 void fn_1_132488(void *arg0) {
     if ((lbl_1_bss_8B3A0.unk_94 & 0x40000000) != 0) {

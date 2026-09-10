@@ -368,3 +368,12 @@ rel/customize/emb_paste_editor/fn_3_11994.c:
 
 rel/customize/_prolog/fn_3_5A50.c:
 	.text       start:0x00005A50 end:0x00005B9C align:4
+
+rel/customize/emblem/fn_3_141A8.c:
+	.text       start:0x000141A8 end:0x000142C4 align:4
+
+rel/customize/_prolog/fn_3_7594.c:
+	.text       start:0x00007594 end:0x00007688 align:4
+
+rel/customize/emblem/fn_3_1349C.c:
+	.text       start:0x0001349C end:0x00013508 align:4

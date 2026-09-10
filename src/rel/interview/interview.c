@@ -175,6 +175,36 @@ void fn_17_4858(void) {
 }
 /* fzgx:end fn_17_4858 */
 
+/* fzgx:begin fn_17_48D0 */
+extern u32 lbl_17_bss_14C;
+extern u8 lbl_17_data_0[420];
+extern u32 lbl_17_bss_150[4];
+
+extern void fn_1_435C(u32);
+extern void fn_1_3F8C(void *, void (*)(void), int, int);
+extern void fn_1_789E8(void);
+extern void fn_1_9A5CC(void);
+extern void fn_1_7E9C4(void);
+extern void fn_1_7EAE8(void);
+extern void fn_1_78EBC(void);
+extern void fn_1_9A7BC(void);
+extern void fn_1_7ACDC(int);
+
+void fn_17_48D0(void) {
+    u8 *base = lbl_17_data_0 + 0x60000;
+
+    fn_1_435C(lbl_17_bss_14C);
+    fn_1_3F8C(base + 0x40ac, fn_1_789E8, 0, 0x15);
+    fn_1_3F8C(base + 0x40b8, fn_1_9A5CC, 0, 0x17);
+    fn_1_435C(lbl_17_bss_150[0]);
+    fn_1_3F8C(base + 0x40c8, fn_1_7E9C4, 0, 4);
+    fn_1_3F8C(base + 0x40d0, fn_1_7EAE8, 0, 0x1d);
+    fn_1_3F8C(base + 0x40d8, fn_1_78EBC, 0, 7);
+    fn_1_3F8C(base + 0x40e4, fn_1_9A7BC, 0, 10);
+    fn_1_7ACDC(0x31);
+}
+/* fzgx:end fn_17_48D0 */
+
 /* fzgx:begin fn_17_49B8 */
 // fn_17_49B8: empty in retail (single blr).
 void fn_17_49B8(void) {
@@ -406,6 +436,59 @@ void fn_17_60B4(void) {
 }
 /* fzgx:end fn_17_60B4 */
 
+/* fzgx:begin fn_17_67C4 */
+extern u8 lbl_17_bss_0;
+extern const f32 lbl_17_rodata_1C;
+
+typedef struct InterviewObject InterviewObject;
+
+typedef struct InterviewRef {
+    u8 padding[4];
+    InterviewObject *object;
+} InterviewRef;
+
+typedef struct InterviewState {
+    u8 flags0[2];
+    u8 flag2;
+    u8 flag3;
+    u8 padding[0xd4];
+    InterviewRef ref;
+} InterviewState;
+
+struct InterviewObject {
+    u8 padding[0x150];
+    void *data;
+};
+
+typedef struct InterviewData {
+    u8 padding[0x4c];
+    f32 value_a;
+    f32 value_b;
+} InterviewData;
+
+extern void fn_1_935E4(void *, void *, void *, f32);
+
+#pragma opt_propagation off
+void fn_17_67C4(void *arg) {
+    InterviewState *state = (InterviewState *)&lbl_17_bss_0;
+    InterviewObject *object;
+    InterviewData *data;
+    u32 ref;
+
+    ref = (u32)state + 0xd8;
+    object = *(InterviewObject **)(ref + 4);
+    data = (InterviewData *)object->data;
+    if (data->value_a == data->value_b) {
+        fn_1_935E4(object, (u8 *)object + 0x148, arg, lbl_17_rodata_1C);
+        if (state->flag2 != 0)
+            state->flag2 = 0;
+        if (state->flag3 != 0)
+            state->flag3 = 0;
+    }
+}
+#pragma opt_propagation reset
+/* fzgx:end fn_17_67C4 */
+
 /* fzgx:begin fn_17_7020 */
 typedef struct InterviewObject {
     u8 pad0[0x14];
@@ -454,6 +537,36 @@ void fn_17_71C0(InterviewState *self) {
     self->flags &= 1;
 }
 /* fzgx:end fn_17_71C0 */
+
+/* fzgx:begin fn_17_71DC */
+extern f32 lbl_17_bss_160[4];
+extern u8 lbl_17_bss_314[64];
+extern const f32 lbl_17_rodata_20;
+extern u32 lbl_17_rodata_25C[50];
+
+extern void fn_1_7BCCC(f32 *value);
+extern void fn_80035680(u8 *value, f32 a, f32 b, f32 c);
+extern void fn_80035690(u8 *value, f32 a, f32 b, f32 c);
+extern void fn_80035420(u8 *value, int index, f32 value2);
+extern void fn_800356AC(u8 *value, u32 *data);
+extern void GXInitLightDistAttn(u8 *value, int index, f32 a, f32 b);
+extern void fn_1_7BB80(u8 *value, int index);
+extern void fn_1_7BD6C(int value);
+
+void fn_17_71DC(void) {
+    u32 data;
+
+    fn_1_7BCCC(lbl_17_bss_160);
+    fn_80035680(lbl_17_bss_314, lbl_17_bss_160[0], lbl_17_bss_160[1], lbl_17_bss_160[2]);
+    fn_80035690(lbl_17_bss_314, lbl_17_bss_160[0], lbl_17_bss_160[1], lbl_17_bss_160[2]);
+    fn_80035420(lbl_17_bss_314, 0, lbl_17_rodata_20);
+    data = lbl_17_rodata_25C[0];
+    fn_800356AC(lbl_17_bss_314, &data);
+    GXInitLightDistAttn(lbl_17_bss_314, 0, 0.0f, 0.0f);
+    fn_1_7BB80(lbl_17_bss_314, 1);
+    fn_1_7BD6C(1);
+}
+/* fzgx:end fn_17_71DC */
 
 /* fzgx:begin fn_17_72BC */
 // fn_17_72BC: empty in retail (single blr).

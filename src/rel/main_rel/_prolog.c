@@ -669,6 +669,53 @@ void fn_1_4374(Node **list, Node *node) {
 }
 /* fzgx:end fn_1_4374 */
 
+/* fzgx:begin fn_1_43A4 noprologue */
+#include "types.h"
+
+typedef struct ListNode ListNode;
+
+struct ListNode {
+    u32 reserved;
+    u32 reserved2;
+    ListNode *next;
+    ListNode *prev;
+};
+
+typedef struct ListManager {
+    ListNode *head;
+    u32 reserved;
+    ListNode *current;
+} ListManager;
+
+extern ListManager *lbl_1_bss_DA8;
+
+#pragma opt_propagation off
+void fn_1_43A4(void) {
+    ListNode *next;
+    ListNode *prev;
+    ListManager *manager = lbl_1_bss_DA8;
+    ListNode *node = manager->current;
+    ListNode *head;
+
+    if (node == 0) {
+        return;
+    }
+
+    next = node->next;
+    prev = node->prev;
+    prev->next = next;
+    if (next != 0) {
+        next->prev = prev;
+    }
+
+    head = manager->head;
+    node->next = head;
+    node->reserved = 0;
+    manager->head = node;
+}
+#pragma opt_propagation reset
+/* fzgx:end fn_1_43A4 */
+
 /* fzgx:begin fn_1_43E8 */
 extern u32 lbl_1_bss_DB0[2];
 

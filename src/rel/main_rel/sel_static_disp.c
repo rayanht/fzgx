@@ -699,6 +699,26 @@ void fn_1_144EE8(void) {
 }
 /* fzgx:end fn_1_144EE8 */
 
+/* fzgx:begin fn_1_149B24 */
+extern const f32 lbl_1_rodata_946C;
+
+typedef struct {
+    f32 value0;
+    u8 pad[8];
+    f32 value_c;
+} Fn149B24Data;
+
+extern void fn_1_149C2C(void* context, Fn149B24Data* data);
+
+void fn_1_149B24(void* context, Fn149B24Data* data) {
+    f32 increment = lbl_1_rodata_946C;
+
+    data->value0 += increment;
+    data->value_c += increment;
+    fn_1_149C2C(context, data);
+}
+/* fzgx:end fn_1_149B24 */
+
 /* fzgx:begin fn_1_149B64 */
 // Rebuild the display state and publish the current display and effect IDs.
 void fn_1_149B64(void* display_state, void* display_context) {
@@ -764,6 +784,31 @@ void fn_1_149C64(void) {
     fn_1_149CA4(0, display_state->unk_0, 0x280, display_config->unk_0);
 }
 /* fzgx:end fn_1_149C64 */
+
+/* fzgx:begin fn_1_149CA4 noprologue */
+#include "types.h"
+
+extern void fn_1_520A0(void);
+extern void fn_1_52070(s32 arg0);
+extern u32 fn_1_A5DB0(void);
+extern f64 lbl_1_rodata_9480[80];
+extern f32 lbl_1_rodata_942C[16];
+extern f32 fn_1_521B8(s32 arg0);
+extern s32 __cvt_fp2unsigned(f32 arg0);
+extern f32 fn_1_520F8(u32 arg0);
+extern void fn_80074188(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
+extern void fn_1_520CC(void);
+
+void fn_1_149CA4(u32 arg0, u32 arg1, u32 arg2, u32 arg3) {
+    fn_1_520A0();
+    fn_1_52070(0x140);
+    fn_80074188(__cvt_fp2unsigned(fn_1_520F8(arg0)),
+                __cvt_fp2unsigned((f32)(arg1 * (fn_1_A5DB0() & 0xffff)) / lbl_1_rodata_942C[0]),
+                __cvt_fp2unsigned(fn_1_521B8(arg2)),
+                __cvt_fp2unsigned((f32)(arg3 * (fn_1_A5DB0() & 0xffff)) / lbl_1_rodata_942C[0]));
+    fn_1_520CC();
+}
+/* fzgx:end fn_1_149CA4 */
 
 /* fzgx:begin fn_1_149DA4 */
 void fn_1_149DA4(void) {

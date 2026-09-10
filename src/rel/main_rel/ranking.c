@@ -748,6 +748,63 @@ void fn_1_1594AC(int index, int flag) {
 }
 /* fzgx:end fn_1_1594AC */
 
+/* fzgx:begin fn_1_159588 */
+extern void fn_1_159804(int index, Obj_1_data_4C810 *entry);
+extern void fn_1_4811C(s16 value);
+extern void fn_1_48004(s16 value, u32 arg);
+
+typedef struct {
+    u8 pad_0[8];
+    s16 values[16];
+    s16 start;
+    s16 end;
+    u8 limit;
+    u8 pad_2d[3];
+    u32 unk_30;
+    u32 value;
+} RankEntryView;
+
+int fn_1_159588(int arg) {
+    s16 index;
+    s16 count;
+    int value;
+    Obj_1_data_4C810 *entry;
+    RankEntryView *view;
+    s32 *table;
+
+    index = (s16)((arg >> 8) & 0xffff);
+    if (((s32 *)lbl_1_bss_8F588)[index] != 0) {
+        entry = (Obj_1_data_4C810 *)((u8 *)&lbl_1_data_4C810 +
+            ((s32 *)lbl_1_bss_8F588)[index] * 0x3c);
+        view = (RankEntryView *)entry;
+        count = view->start;
+        count = view->end - count + 1;
+        if (count < 0) {
+            count = count + 0x10;
+        }
+
+        table = (s32 *)&lbl_1_data_FCD4;
+        if (table[index * 10] != 0) {
+            fn_1_159804(index, entry);
+        } else {
+            if (count >= view->limit) {
+                fn_1_4811C(view->values[view->start]);
+                value = view->start + 1;
+                view->start = value > 0xf ? 0 : (value < 0 ? 0xf : value);
+            }
+
+            value = view->end + 1;
+            view->end = value > 0xf ? 0 : (value < 0 ? 0xf : value);
+            view->values[view->end] = index;
+            fn_1_48004(view->values[view->end], view->value);
+        }
+    } else {
+        return 0;
+    }
+    return 1;
+}
+/* fzgx:end fn_1_159588 */
+
 /* fzgx:begin fn_1_15AC00 */
 // Return the address of the ranking state byte at offset 0x3f.
 u8 *fn_1_15AC00(void) {

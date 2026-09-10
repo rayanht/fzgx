@@ -43,6 +43,49 @@ extern u32 lbl_1_rodata_6A8C[3];
 extern void fn_80008BA8(void *dst, void *value, u32 size);
 extern void fn_1_12EF80(s16 arg, s16 *out_group, s16 *out_entry);
 
+/* fzgx:begin fn_1_E38D4 */
+extern void fn_1_9C724(void);
+extern s16 fn_1_E5430(s16);
+extern void *fn_1_E54A8(s16, s16);
+extern void fn_1_DD890(void *);
+extern void fn_1_9CC40(void);
+
+typedef struct {
+    u8 pad_0[0xA];
+    s16 unk_A;
+    u8 pad_C[0x2];
+    s16 unk_E;
+    u8 pad_10[0x128];
+    u64 flags_138;
+    u8 pad_140[0x68];
+} PhysEntry;
+
+void fn_1_E38D4(void) {
+    PhysEntry *entry;
+    s16 group;
+    s16 count;
+    s16 i;
+
+    fn_1_9C724();
+    for (group = 0; group < 6; group++) {
+        count = fn_1_E5430(group);
+        entry = (PhysEntry *)fn_1_E54A8(group, 0);
+        if (entry != 0 && entry->unk_A == 4 &&
+            (entry->flags_138 & 0x80000000000ULL) == 0) {
+            fn_80077E0C(*(void **)((u8 *)*(void **)((u8 *)*(void **)((u8 *)lbl_1_bss_3BE0->unk_54 +
+                (entry->unk_E << 6) + 8) + 8) + 8));
+            fn_80076134();
+        }
+        for (i = 0; i < count; i++, entry++) {
+            if ((entry->flags_138 & 0x80000000000ULL) == 0) {
+                fn_1_DD890(entry);
+            }
+        }
+    }
+    fn_1_9CC40();
+}
+/* fzgx:end fn_1_E38D4 */
+
 /* fzgx:begin fn_1_E49D4 */
 extern u32 fn_1_E3C38(u32, u32);
 extern u32 fn_1_E5430(u32);

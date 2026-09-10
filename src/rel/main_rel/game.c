@@ -171,6 +171,34 @@ void fn_1_36ADC(void) {
 }
 /* fzgx:end fn_1_36ADC */
 
+/* fzgx:begin fn_1_3A2C4 */
+extern void fn_1_817C0(void);
+extern u32 lbl_1_bss_381FC;
+extern void fn_1_EB080(int arg0);
+extern Obj_1_bss_3C30 lbl_1_bss_3C30;
+extern u8 lbl_1_bss_38200;
+extern s64 OSGetTime(void);
+
+void fn_1_3A2C4(void) {
+    s64 time;
+    u32 lo, hi;
+
+    fn_1_817C0();
+    lbl_1_bss_381FC = 0;
+    fn_1_EB080(1);
+    time = OSGetTime();
+    lo = (u32)time;
+    hi = (u32)(time >> 32);
+    lbl_1_bss_3C30.unk_14A4 = lo;
+    lbl_1_bss_3C30.unk_14A0 = hi;
+    lbl_1_bss_3C30.unk_1494 = lo;
+    lbl_1_bss_3C30.unk_1490 = hi;
+    lbl_1_bss_3C30.unk_149C = 0;
+    lbl_1_bss_3C30.unk_1498 = 0;
+    lbl_1_bss_38200 = 0xff;
+}
+/* fzgx:end fn_1_3A2C4 */
+
 /* fzgx:begin fn_1_3DDAC */
 // Initializes global game state and configures startup resources.
 void fn_1_3DDAC(void) {

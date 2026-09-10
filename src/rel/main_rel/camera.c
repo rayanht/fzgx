@@ -218,6 +218,27 @@ void camera_forward_status(void) {
 }
 /* fzgx:end camera_forward_status */
 
+/* fzgx:begin fn_1_6EC0 */
+u32 fn_1_6EC0(u8 index) {
+    Obj_1_bss_F68_Target *state = lbl_1_bss_F68;
+
+    if (state == 0) {
+        return 0;
+    }
+    if ((state->unk_0 & ((u32)1 << 31)) != 0) {
+        return 0;
+    }
+
+    switch ((s8)state->unk_48) {
+    case 9:
+    case 10:
+        return 0;
+    }
+
+    return game_camera_entries[index].unk_A8 == 0;
+}
+/* fzgx:end fn_1_6EC0 */
+
 /* fzgx:begin camera_is_mode_0x0b */
 // Return whether the camera state is active and has the expected mode.
 u32 camera_is_mode_0x0b(void) {
@@ -784,6 +805,16 @@ f32 camera_get_target_orientation(CameraObject *camera) {
 }
 /* fzgx:end camera_get_target_orientation */
 
+/* fzgx:begin fn_1_B81C */
+struct fn_1_B81C_Copy12 { u32 a[3]; };
+
+void fn_1_B81C(struct fn_1_B81C_Copy12 *first, struct fn_1_B81C_Copy12 *second, u32 value) {
+    *(struct fn_1_B81C_Copy12 *)((u8 *)&camera_state + 4) = *first;
+    *(struct fn_1_B81C_Copy12 *)((u8 *)&camera_state + 16) = *second;
+    camera_state.unk_20 = value;
+}
+/* fzgx:end fn_1_B81C */
+
 /* fzgx:begin camera_save_parameters */
 // Saves the two current camera parameters for later processing.
 void camera_save_parameters(f32 first_parameter, f32 second_parameter) {
@@ -840,6 +871,33 @@ void camera_save_slot(u8 index) {
     dst->unk_20 = *(u32 *)&camera_state.unk_20;
 }
 /* fzgx:end camera_save_slot */
+
+/* fzgx:begin fn_1_C178 noprologue */
+#include "types.h"
+
+typedef struct { u8 pad_0[0x4]; f32 unk_4; u32 unk_8; f32 unk_C; } Bss_104C;
+typedef struct {
+    u8 pad_0[0x4]; f32 unk_4; f32 unk_8; f32 unk_C; f32 unk_10; f32 unk_14; f32 unk_18; f32 unk_1C;
+    s16 unk_20; u8 pad_22[0x6]; f32 unk_28; f32 unk_2C; f32 unk_30; f32 unk_34; f32 unk_38; f32 unk_3C; f32 unk_40;
+    s16 unk_44; u8 pad_46[0x2A];
+} Obj_1_bss_10D8;
+extern Bss_104C lbl_1_bss_104C;
+extern char lbl_1_data_406C[91];
+extern char lbl_1_data_40C8[96];
+extern Obj_1_bss_10D8 lbl_1_bss_10D8;
+extern void OSReport(char *, ...);
+
+void fn_1_C178(void *self) {
+    OSReport(lbl_1_data_406C, lbl_1_bss_104C.unk_8, lbl_1_bss_104C.unk_C,
+        lbl_1_bss_10D8.unk_4, lbl_1_bss_10D8.unk_8, lbl_1_bss_10D8.unk_C,
+        lbl_1_bss_10D8.unk_10, lbl_1_bss_10D8.unk_14, lbl_1_bss_10D8.unk_18,
+        lbl_1_bss_10D8.unk_1C, lbl_1_bss_10D8.unk_20);
+    OSReport(lbl_1_data_40C8, lbl_1_bss_10D8.unk_28, lbl_1_bss_10D8.unk_2C,
+        lbl_1_bss_10D8.unk_30, lbl_1_bss_10D8.unk_34, lbl_1_bss_10D8.unk_38,
+        lbl_1_bss_10D8.unk_3C, lbl_1_bss_10D8.unk_40, lbl_1_bss_10D8.unk_44,
+        self);
+}
+/* fzgx:end fn_1_C178 */
 
 /* fzgx:begin camera_report_position */
 // Reports the camera's current position values for debugging.

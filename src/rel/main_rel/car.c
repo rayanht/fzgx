@@ -1274,6 +1274,76 @@ void fn_1_87918(Fn187918Object *object) {
 }
 /* fzgx:end fn_1_87918 */
 
+/* fzgx:begin fn_1_879B0 noprologue */
+#include "types.h"
+#include "rel/main_rel/globals.h"
+
+extern f32 lbl_1_rodata_3508[4];
+
+extern void fn_80008BA8(void *dst, const void *src, int size);
+extern void lbl_8006D7DC(void *value);
+extern void mathutil_mtxA_rotate_y(int value);
+extern void mathutil_mtxA_rotate_z(int value);
+extern void lbl_8006DB74(void *value);
+
+typedef struct Fn1879B0Inner {
+    u8 pad_000[0xA4];
+    f32 value_A4;
+    u8 pad_A8[0x154];
+    f32 value_1FC;
+} Fn1879B0Inner;
+
+typedef struct Fn1879B0Object {
+    u8 pad_000[2];
+    s8 field_002;
+    u8 pad_003[0x209];
+    u8 field_20C[0x110];
+    u8 field_31C[0x10];
+    Fn1879B0Inner *field_32C;
+    void *field_330;
+    u8 pad_334[0x86];
+    s16 field_3BA;
+} Fn1879B0Object;
+
+void fn_1_879B0(Fn1879B0Object *object) {
+    u8 value1[12];
+    u8 value2[12];
+    f32 *constants;
+    f32 clamped;
+    f32 rate;
+    f32 product;
+
+    constants = lbl_1_rodata_3508;
+    fn_80008BA8(value1, (u8 *)object + 0x208, 12);
+    lbl_8006D7DC(value1);
+
+    if (object->field_32C != 0) {
+        clamped = constants[458];
+        rate = clamped * object->field_32C->value_A4;
+        product = rate * constants[16];
+        if (product < clamped) {
+            clamped = constants[458];
+        } else if (product > constants[15]) {
+            clamped = constants[15];
+        } else {
+            clamped = product;
+        }
+        mathutil_mtxA_rotate_y((int)(constants[17] * clamped));
+    }
+
+    lbl_8006DB74(object->field_330);
+
+    if (object != 0 && object->field_3BA == 0 && object->field_002 - 1 >= 1) {
+        fn_80008BA8(value2, (u8 *)object + 0x21c, 12);
+        lbl_8006D7DC(value2);
+        if (object->field_32C != 0) {
+            mathutil_mtxA_rotate_z((int)(constants[457] * -object->field_32C->value_1FC));
+        }
+        lbl_8006DB74((u8 *)object->field_330 + 0x30);
+    }
+}
+/* fzgx:end fn_1_879B0 */
+
 /* fzgx:begin fn_1_87AD8 */
 typedef struct Fn187AD8Inner {
     u8 pad_000[0x1FC];
@@ -3363,6 +3433,38 @@ u32 fn_1_8CA5C(void) {
 }
 /* fzgx:end fn_1_8CA5C */
 
+/* fzgx:begin fn_1_8CB78 */
+extern u8 lbl_1_data_2090C[136];
+extern void fn_1_A8DD4(u8 *, ...);
+
+typedef struct {
+    u32 count;
+    u8 *data;
+} EntryTable;
+
+typedef struct {
+    u8 pad0[4];
+    u32 pointer;
+    u16 value8;
+    u16 valueA;
+} Entry;
+
+void fn_1_8CB78(EntryTable *table) {
+    u32 offset;
+    s8 index;
+
+    offset = 0;
+    index = 0;
+    while (index < table->count) {
+        Entry *entry = (Entry *)(table->data + offset);
+        fn_1_A8DD4(lbl_1_data_2090C, index, entry->value8,
+                   entry->valueA, entry->pointer);
+        offset += 0x10;
+        index++;
+    }
+}
+/* fzgx:end fn_1_8CB78 */
+
 /* fzgx:begin fn_1_8D0A4 noprologue */
 #include "types.h"
 
@@ -3751,6 +3853,71 @@ void fn_1_92530(void *arg0) {
     fn_1_92554(arg0, 1);
 }
 /* fzgx:end fn_1_92530 */
+
+/* fzgx:begin fn_1_933D8 noprologue */
+#include "types.h"
+
+typedef struct {
+    u8 pad0[0x24];
+    void *field_24;
+} EventData;
+
+typedef struct {
+    u8 pad0[0x1c];
+    void *field_1c;
+} CarObject;
+
+typedef struct {
+    u8 pad0[0x8];
+    EventData *field_8;
+    void *field_c;
+} EventObject;
+
+typedef struct {
+    u8 pad0[0x12];
+    u16 field_12;
+    u8 pad14[0x12];
+    u8 field_26;
+    void *field_28;
+    u8 pad2c[0x8];
+    void *field_34;
+    u8 pad38[0x14];
+    u8 field_4c;
+} EventNode;
+
+extern void fn_1_95158(CarObject *arg0);
+extern void *fn_1_41418(void *arg0, u32 arg1);
+extern s32 fn_1_97174(EventNode *arg0, s32 arg1, void *arg2);
+extern void fn_1_93734(CarObject *arg0, void *arg1);
+extern void fn_1_4270C(void *arg0, s32 arg1, u32 arg2);
+
+void fn_1_933D8(CarObject *arg0, EventObject *arg1, u32 arg2) {
+    EventNode *node;
+    s32 value;
+    void *target;
+
+    if (arg1 == (EventObject *)((u8 *)arg0 + 0x148)) {
+        node = (EventNode *)arg0->field_1c;
+        fn_1_95158(arg0);
+        if (node != 0) {
+            value = (s32)fn_1_97174(node, 0, fn_1_41418(arg1->field_8->field_24, arg2 & 0xffff));
+            if (value < 0) {
+                value = 0;
+            }
+            node->field_12 = 0;
+            if ((s32)node->field_26 > 0) {
+                target = node->field_28;
+            } else {
+                target = (void *)((u8 *)node->field_34 + -(s32)node->field_4c * 0xc);
+            }
+            *(u16 *)((u8 *)target + 0xa) = (u16)value;
+        }
+        fn_1_93734(arg0, fn_1_41418(arg1->field_c, arg2 & 0xffff));
+    }
+    fn_1_4270C(arg1->field_8, 0, arg2);
+    *(u16 *)arg1 = (u16)arg2;
+}
+/* fzgx:end fn_1_933D8 */
 
 /* fzgx:begin fn_1_935E4 */
 typedef struct Fn935E4Res {

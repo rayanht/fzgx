@@ -128,6 +128,24 @@ void fn_1_45BE0(void) {
 }
 /* fzgx:end fn_1_45BE0 */
 
+/* fzgx:begin fn_1_45CD8 */
+int fn_1_45CD8(int index) {
+    s32 j;
+
+    for (j = 0; j < 0x400; j++) {
+        index++;
+        if ((&lbl_1_bss_384D8.unk_0)[index * 4] == 0) {
+            return index;
+        }
+        if (index >= 0x400) {
+            index = 0;
+        }
+    }
+
+    return index;
+}
+/* fzgx:end fn_1_45CD8 */
+
 /* fzgx:begin fn_1_45D78 */
 typedef struct {
     u32 unk_0;
