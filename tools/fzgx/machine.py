@@ -104,6 +104,24 @@ def _mwcc_formatting(signatures, stack, copy_sites, copy_sizes, float_calls, abs
     original_abi = PpcArch.function_abi
     original_switch = ir.SwitchControl.from_expr
     original_return = PpcArch.function_return
+    original_stack_var = ir.StackInfo.get_stack_var
+
+    def stack_var(self, location, *, store):
+        for base, (_, length, _) in stack.items():
+            if base <= location < base + length:
+                root = original_stack_var(self, base, store=False)
+                if isinstance(root, ir.LocalVar):
+                    self.add_local_var(root)
+                    if location == base:
+                        return root
+                    return ir.StructAccess(ir.AddressOf(root, root.type.reference()), location - base,
+                                           1, None, self, ir.Type.any_field())
+        result = original_stack_var(self, location, store=store)
+        # A callee can initialize a local through an escaped stack pointer. Such
+        # locals have reads without an explicit store in the caller's IR.
+        if isinstance(result, ir.LocalVar) and not self.in_callee_save_reg_region(location):
+            self.add_local_var(result)
+        return result
 
     def function_return(expr):
         result = original_return(expr)
@@ -261,14 +279,20 @@ def _mwcc_formatting(signatures, stack, copy_sites, copy_sizes, float_calls, abs
         if self.op in ('+', '-') and (lp or rp):
             l, r = self.left.format(fmt), self.right.format(fmt)
             if lp and not rp:
-                return f'((u8 *)({l}) {self.op} {r})'
+                value = f'((u8 *)({l}) {self.op} {r})'
+                return value if self.type.is_pointer_or_array() else f'(({self.type.format(fmt)})({value}))'
             if rp and not lp and self.op == '+':
-                return f'({l} + (u8 *)({r}))'
+                value = f'({l} + (u8 *)({r}))'
+                return value if self.type.is_pointer_or_array() else f'(({self.type.format(fmt)})({value}))'
             return f'((s32)({l}) {self.op} (s32)({r}))'
         return saved[ir.BinaryOp](self, fmt)
 
     def array(self, fmt):
         target = self.ptr.type.get_pointer_target()
+        if target is None:
+            # An address held in an integer register still needs a pointer cast
+            # at its memory use; C cannot index the integer expression itself.
+            return f'(({ir.Type.ptr(self.type).format(fmt)})({self.ptr.format(fmt)}))[{ir.format_expr(self.index, fmt)}]'
         if target and target.format(fmt) != self.type.format(fmt):
             size = target.get_size_bytes()
             if size:
@@ -293,6 +317,7 @@ def _mwcc_formatting(signatures, stack, copy_sites, copy_sizes, float_calls, abs
     ir.NodeState.make_function_call = make_call
     ir.SwitchControl.from_expr = staticmethod(switch)
     PpcArch.function_return = staticmethod(function_return)
+    ir.StackInfo.get_stack_var = stack_var
     try:
         yield
     finally:
@@ -303,6 +328,7 @@ def _mwcc_formatting(signatures, stack, copy_sites, copy_sizes, float_calls, abs
         ir.NodeState.make_function_call = original_call
         ir.SwitchControl.from_expr = staticmethod(original_switch)
         PpcArch.function_return = staticmethod(original_return)
+        ir.StackInfo.get_stack_var = original_stack_var
 
 
 def stack_context(p, fn, draft):

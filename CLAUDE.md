@@ -21,7 +21,7 @@ uv run tools/fzgx.py restore                    # (optional) load state/ledger.j
 Matching is done by many cheap subagents, one function each, through the
 `fzgx` MCP server (`tools/fzgx_mcp.py`, registered in `.mcp.json`; approve it
 when Claude Code asks at startup). Matchers have **no shell**: their tools are
-`claim` → `context` → `write_unit` → `check` (≤ 8) → `submit` or `release`,
+`claim` → `context` → `write_unit` → `check` → `submit` or `release`,
 plus read-only `Read`. The same operations exist as `uv run tools/fzgx.py ...`
 for humans, the orchestrator and the librarian. The orchestrator picks
 functions with `fzgx inventory --status unmatched --max-size N`, fans out
@@ -33,6 +33,9 @@ Rules that hold for everyone:
 
 - Never commit anything from `orig/` or `build/`; never commit compilers.
 - Never push. Commits are local; the user pushes.
+- Commit completed work before reporting it finished, including tooling, provenance,
+  and dependent source changes required by generated matches. A working-tree hash
+  check does not prove that an incomplete commit will build in CI.
 - Adjacent SDK reuse goes through `fzgx sourcealign --compile-sdk NAME --root PATH`
   (repeat `--root`), then `--discover --min-size 64`, `--saved`, and `fzgx verify`.
   `fzgx sourcealign --apply-names` imports unambiguous donor function names after

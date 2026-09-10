@@ -280,7 +280,7 @@ def _diff(project: Project, module: str, symbol: str, unit: str, max_diff_lines:
         if symbol not in right_syms:
             res.diff = [f"(symbol {symbol} not present in our object: define it, check the name)"]
         else:
-            pool_rows, res._pool_pairs = _pool_rows(project, module, left, right, lrows, rrows)
+            pool_rows, res._pool_pairs = _pool_rows(project, module, left, right, lrows, rrows, base)
             if base is not None:
                 data_rows, data_pairs = _data_pool_rows(project, module, base, left, right, lrows, rrows)
                 pool_rows |= data_rows
@@ -459,13 +459,15 @@ def _abs_rows(right: dict, lrows: List[dict], rrows: List[dict]) -> set:
 
 
 def _pool_rows(project: Project, module: str, left: dict, right: dict,
-               lrows: List[dict], rrows: List[dict]):
+               lrows: List[dict], rrows: List[dict], obj: Optional[Path] = None):
     """Rows that differ only by `relocation to a pooled constant (retail)` vs `relocation to
     our private literal with the same bytes`. Returns (row indices, [(private, pooled, desc)])."""
     lsyms, rsyms = left.get("symbols", []), right.get("symbols", [])
     syms = project.symbols(module)
     rows: set = set()
     pairs: List[tuple] = []
+    elf = poolfix.Elf(obj.read_bytes()) if obj else None
+    objects = {s['name']: s for s in elf.symbols()} if elf else {}
     for i, (l, r) in enumerate(zip(lrows, rrows)):
         if (l.get("diff_kind") or "DIFF_NONE") == "DIFF_NONE" and (r.get("diff_kind") or "DIFF_NONE") == "DIFF_NONE":
             continue
@@ -492,19 +494,43 @@ def _pool_rows(project: Project, module: str, left: dict, right: dict,
             if pair not in pairs:
                 pairs.append(pair)
             continue
-        if not s or s.kind != "object" or s.section not in (".rodata", ".sdata2"):
+        if not s or s.kind != "object" or s.section not in (".rodata", ".sdata2", ".data", ".sdata"):
             continue
-        # dtk often merges a run of pooled literals into one symbol (0x18, 0x1C, even 5504 bytes):
-        # the constant is the retail bytes at the relocation's addend, whatever the symbol's size
-        addend = int(lrel.get("addend") or 0)
-        ours = b"".join(base64.b64decode(d.get("data", "")) for d in rsym.get("data_diff", []))
-        whole = project.bytes_at(module, lname) or b""
-        retail = whole[addend:addend + len(ours)] if ours and len(ours) in (4, 8) else b""
-        if not retail or ours != retail or not rsym.get("name", "").startswith("@"):
+        if not rsym.get('name', '').startswith('@'):
             continue
-        v = struct.unpack(">d", retail)[0] if len(retail) == 8 else struct.unpack(">f", retail)[0]
+        # Private initializer objects include strings and aggregates, not just
+        # floating literals. Verify the complete object, including padding, and
+        # reject pointer-bearing data whose bytes alone cannot prove equality.
+        own = objects.get(rsym['name'])
+        if own and elf:
+            if not 0 < own['shndx'] < len(elf.sections) or not own['size']:
+                continue
+            section = elf.sections[own['shndx']]
+            if section['name'] not in ('.rodata', '.sdata2', '.data', '.sdata'):
+                continue
+            if any(rel['type'] == 4 and rel['info'] == own['shndx'] and
+                   any(own['value'] <= struct.unpack_from('>I', elf.data, off)[0] < own['value'] + own['size']
+                       for off in range(rel['offset'], rel['offset'] + rel['size'], 12)) for rel in elf.sections):
+                continue
+            start = section['offset'] + own['value']
+            ours = bytes(elf.data[start:start + own['size']])
+        else:
+            ours = b''.join(base64.b64decode(d.get('data', '')) for d in rsym.get('data_diff', []))
+            if len(ours) not in (4, 8):
+                continue
+        address = s.addr + int(lrel.get('addend') or 0) - int(rrel.get('addend') or 0)
+        anchor = s if address == s.addr else next((t for t in syms.values()
+                    if t.section == s.section and t.addr == address and t.kind == 'object'), None)
+        if anchor is None:
+            continue
+        retail = next((raw[address - base:address - base + len(ours)]
+                       for base, raw in project._rel_layout(module).values()
+                       if base <= address and address + len(ours) <= base + len(raw)), None)
+        if not ours or ours != retail:
+            continue
+        lname = anchor.name
         rows.add(i)
-        pair = (rsym["name"], lname, f"{lname}={v!r}")
+        pair = (rsym["name"], lname, f"{lname}=initializer[{len(ours)}]")
         if pair not in pairs:
             pairs.append(pair)
     return rows, pairs

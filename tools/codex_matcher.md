@@ -6,7 +6,10 @@ compiler flags, idioms, rules). write_unit(symbol, agent, source) replaces your 
 unit with the complete source you pass and immediately compiles and diffs it, returning match % and a
 target|ours diff; one call is one iteration. After the first write_unit, change the unit with
 patch_unit(symbol, agent, old, new): `old` is a unique span of the current source, `new` replaces it; it
-compiles and diffs the same way and costs you a few lines instead of the whole unit. Nothing you write touches the tree until submit. The server enforces the budget (8 checks; stop after 2 non-improving).
+compiles and diffs the same way and costs you a few lines instead of the whole unit. Nothing you write touches the tree until submit.
+If claim includes seed.source, your work copy is already populated with that complete C candidate.
+Start with check and use patch_unit to improve it. Preserve its recovered types, names, and implementation;
+do not replace it with a fresh reconstruction. Seed compiler options are applied by the tools.
 A result of MATCH (pool) is a match too (the only differences are relocations to shared literal-pool
 constants the tooling accepts). On MATCH or MATCH (pool) call submit(symbol, agent, message, harness="codex", model="gpt-5.6-luna"). Otherwise
 release(symbol, agent, reason) with one precise sentence on what still differs.

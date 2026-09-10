@@ -146,7 +146,7 @@ def cmd_reuse(a, p):
 
 def cmd_lift(a, p):
     from . import lift
-    _print(lift.apply(p, tu=a.tu, callees=a.callee, submit=not a.no_submit, engine=a.engine, resume=a.resume,
+    _print(lift.apply(p, tu=a.tu, callees=a.callee, symbols=a.symbol, submit=not a.no_submit, engine=a.engine, resume=a.resume,
                       max_size=0xFFFFFFFF if a.all else 160, limit=0 if a.all else 2000), a.json)
     return 0
 
@@ -298,6 +298,9 @@ def cmd_sourcealign(a, p):
         result = sourcealign.apply_names(p)
         _print(result, a.json)
         return 0 if result['ok'] else 1
+    if a.recheck_saved:
+        _print(sourcealign.recheck_saved(p, a.symbol, not a.no_submit), a.json)
+        return 0
     if a.compile_sdk:
         _print(sourcealign.compile_library(p, a.compile_sdk, a.root, a.functions), a.json)
         return 0
@@ -449,6 +452,7 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--discover", action="store_true", help="only identify source relatives")
     s.add_argument("--no-submit", action="store_true")
     s.add_argument("--submit-saved", action="store_true", help="recheck and submit saved exact candidates without repeating probes")
+    s.add_argument("--recheck-saved", action="store_true", help="recheck bound imports after oracle repairs without repeating layout probes")
     s.add_argument("--compile-sdk", help="compile another local SDK donor tree under build/tools")
     s.add_argument("--functions", action="store_true", help="compile donor functions independently, excluding unresolved dependencies")
     s.add_argument("--apply-names", action="store_true", help="apply unambiguous function names from verified licensed imports")
@@ -488,6 +492,7 @@ def build_parser() -> argparse.ArgumentParser:
     scope = s.add_mutually_exclusive_group(required=True)
     scope.add_argument('--tu', help='TU path relative to src/, e.g. rel/main_rel/accessory.c')
     scope.add_argument('--callee', action='append', help='direct callee to select callers of; repeat for a shared interface')
+    scope.add_argument('--symbol', action='append', help='regenerate selected functions without a size cap; repeatable')
     scope.add_argument('--all', action='store_true', help='all unmatched functions, without a size or count cap')
     s.add_argument('--engine', choices=('lift', 'm2c'), default='lift')
     s.add_argument('--resume', action='store_true', help='reuse saved m2c candidates and retry generation or compilation failures')

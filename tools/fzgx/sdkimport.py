@@ -434,7 +434,7 @@ def externalize_statics(text: str, mapping: dict) -> str:
         if '$' in name:
             locals_by_name[name.split('$')[0]].add(target)
     clean = masked(text)
-    edits, externs = [], []
+    edits = []
     for match in re.finditer(r'\bstatic\s+[^;]+;', clean):
         original = text[match.start():match.end()]
         pieces = declarations(original)
@@ -446,12 +446,13 @@ def externalize_statics(text: str, mapping: dict) -> str:
         if len(targets) != 1:
             continue
         decl = re.sub(r'^static\s+', 'extern ', original.split('=', 1)[0].strip().rstrip(';')) + ';'
-        externs.append(decl)
         mapping[name] = next(iter(targets))
-        edits.append((match.start(), match.end()))
-    for start, end in reversed(edits):
-        text = text[:start] + text[end:]
-    return '\n'.join(externs) + '\n' + text if externs else text
+        edits.append((match.start(), match.end(), decl))
+    # Keep declarations in their original scope, after the headers and private
+    # typedefs they use. Hoisting them ahead of types.h breaks otherwise valid imports.
+    for start, end, declaration in reversed(edits):
+        text = text[:start] + declaration + text[end:]
+    return text
 
 
 MEMORY_NAMES = {
@@ -915,6 +916,8 @@ def finish_source(text: str) -> str:
         if match[0] in names:
             text = text[:match.start()] + names[match[0]] + text[match.end():]
     text = format_c(text)
+    text = re.sub(r'(?m)^([^\n]*\bgoto\s+\w+\s*;[^\n]*)$',
+                  lambda m: m[0] if '//' in m[0] else m[0] + ' // Preserve the verified SDK control flow.', text)
     text = re.sub(r'(?m)^(.*\b(?:id|cid)\s*[!=]=\s*0x80000004.*)$',
                   r'\1 // fzgx-allow: A1 CARD device identifier, not a pointer', text)
     return re.sub(r'(?m)^(.*\bvolatile\b.*)$', r'// Hardware or OS state can change asynchronously.\n\1', text)

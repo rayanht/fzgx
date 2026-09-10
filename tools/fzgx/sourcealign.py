@@ -773,6 +773,38 @@ def import_candidate(p: Project, rec: dict, pieces: list, directory: Path, donor
                 matched=not oracle.unit_fully_matches(result), error=result.error, diff=result.diff, independent_error=independent_error)
 
 
+def recheck_saved(p: Project, symbols=(), do_submit=True) -> dict:
+    """Recheck bound candidates after oracle repairs without repeating layout probes."""
+    directory = STATE_DIR / 'sourcealign'
+    records = json.loads((directory / 'imports.json').read_text())
+    ledger, results, accepted = Ledger(), [], []
+    for row in records:
+        if (symbols and row['symbol'] not in symbols) or ledger.get(row['symbol'])['status'] != 'unmatched':
+            continue
+        attempts = []
+        for candidate in row['attempts']:
+            if not candidate.get('path') or not Path(candidate['path']).exists():
+                continue
+            source_license(candidate['sdk'])
+            result = oracle.check(p, row['symbol'], 6, source=Path(candidate['path']),
+                                  mw_version=candidate['mw'], extra_cflags=candidate.get('flags'))
+            match = result.ok and (result.matched or result.matched_pool) and oracle.unit_fully_matches(result) is None
+            attempts.append(dict(path=candidate['path'], percent=result.percent, matched=match, error=result.error))
+            if match:
+                save_match(candidate | dict(percent=result.percent, matched=True, error='', diff=result.diff))
+                accepted.append(row['symbol'])
+                break
+        if attempts:
+            results.append(dict(symbol=row['symbol'], size=row['size'], attempts=attempts))
+            print(row['symbol'], max(a['percent'] for a in attempts), row['symbol'] in accepted, flush=True)
+    (directory / 'rechecked.json').write_text(json.dumps(results, indent=2) + '\n')
+    output = dict(attempted=len(results), matched=len(accepted),
+                  bytes=sum(row['size'] for row in results if row['symbol'] in accepted), symbols=accepted)
+    if do_submit and accepted:
+        output['submitted'] = submit_saved(p, accepted)
+    return output
+
+
 def save_match(result: dict) -> None:
     path = STATE_DIR / 'sourcealign/matches.json'
     matches = json.loads(path.read_text()) if path.exists() else {}

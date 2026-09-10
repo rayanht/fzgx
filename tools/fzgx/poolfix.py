@@ -187,15 +187,25 @@ class Elf:
                 self._write_shdr(rs)
         return True
 
-    def drop_private_rodata(self, private_names: List[str]) -> bool:
+    def drop_private_rodata(self, private_names: List[str], section_name: str = '.rodata') -> bool:
         """Empty .rodata when every object symbol in it was retargeted; else leave it."""
-        ro = self.section(".rodata")
+        ro = self.section(section_name)
         if ro is None:
             return True
         others = [s for s in self.symbols()
                   if s["shndx"] == ro["index"] and (s["info"] & 0xF) == STT_OBJECT and s["name"] not in private_names]
-        if others:
+        if any(not s['name'].startswith('@') for s in others):
             return False
+        # MWCC can retain unused initializer objects after optimizing their
+        # consumers away. Drop them only when no relocation (including one via
+        # the section symbol) can still reach this section.
+        indices = {s['index'] for s in self.symbols() if s['shndx'] == ro['index']}
+        if any((struct.unpack_from('>I', self.data, off + 4)[0] >> 8) in indices
+               for rs in self.sections if rs['type'] == SHT_RELA
+               for off in range(rs['offset'], rs['offset'] + rs['size'], 12)):
+            return False
+        for s in others:
+            self.data[s['off'] + 4:s['off'] + 16] = struct.pack('>IIBBH', 0, 0, 0, 0, SHN_UNDEF)
         # an empty but allocatable section still makes the linker align before placing it;
         # strip ALLOC so it is not placed at all
         ro["size"] = 0
@@ -212,10 +222,15 @@ def apply(obj: Path, mapping: Dict[str, str]) -> Dict[str, object]:
     pooled = {k: v for k, v in mapping.items() if k not in tables}
     data_section = elf.section('.data')
     data_names = [s['name'] for s in elf.symbols() if data_section and s['shndx'] == data_section['index'] and s['name'] in mapping]
+    small_sections = {elf.sections[s['shndx']]['name'] for s in elf.symbols()
+                      if s['name'] in mapping and 0 < s['shndx'] < len(elf.sections)
+                      and elf.sections[s['shndx']]['name'] in ('.sdata', '.sdata2')}
     # both kinds become references to the retail symbol (the data unit that owns the retail
     # range keeps the bytes); our private copies are dropped with their section
     done, skipped = elf.retarget(mapping)
     emptied = (elf.drop_private_rodata(list(pooled)) if pooled else True) and (elf.drop_private_data(data_names) if data_names else True)
+    for name in sorted(small_sections):
+        emptied = elf.drop_private_rodata(list(pooled), name) and emptied
     obj.write_bytes(bytes(elf.data))
     return {"retargeted": done, "skipped": skipped, "rodata_emptied": emptied}
 

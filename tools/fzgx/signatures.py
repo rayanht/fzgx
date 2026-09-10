@@ -380,7 +380,17 @@ class Index:
             for text in sig.types:
                 if text not in types:
                     types.append(text)
-        return [f'#include "{h}"' for h in sorted(headers)] + types
+        # Callback interfaces commonly point back to their owning handle. The
+        # dependency walk cannot topologically order that cycle; retain the
+        # source's forward typedefs before emitting either complete definition.
+        forward = []
+        pattern = r'\btypedef\s+(?:struct|union)\s+\w+\s+\w+\s*;'
+        for text in types:
+            for declaration in re.findall(pattern, text):
+                if declaration not in forward:
+                    forward.append(declaration)
+        bodies = [re.sub(pattern, '', text).strip() for text in types]
+        return [f'#include "{h}"' for h in sorted(headers)] + forward + [text for text in bodies if text]
 
 
 _CACHE = {}

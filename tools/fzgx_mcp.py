@@ -31,7 +31,7 @@ ROOT = Path(__file__).resolve().parent.parent
 CLI = ROOT / "tools" / "fzgx.py"
 
 mcp = FastMCP("fzgx", instructions="F-Zero GX matching-decompilation oracle. One function per agent: "
-              "claim -> context -> write_unit -> check (<= 8) -> submit | release.")
+              "claim -> context -> write_unit -> check -> submit | release.")
 
 
 def _cli(*args: str, as_json: bool = True, timeout: int = 900) -> str | dict | list:
@@ -52,7 +52,7 @@ async def _run(*args: str, as_json: bool = True):
 
 @mcp.tool()
 async def claim(symbol: str, agent: str) -> dict:
-    """Claim SYMBOL for AGENT, carve it into its own unit (src/<unit>.c) and return the full context bundle (retail asm, symbols, callers, nearby matched C, flags, idioms, rules) in `context`. Fails if claimed, matched, blocked, or at the attempt cap."""
+    """Claim SYMBOL for AGENT, initialize its private work copy and return the full context bundle (retail asm, symbols, callers, nearby matched C, flags, idioms, rules) in `context`. Seeded claims include the complete existing candidate in `seed.source`."""
     return await _run("claim", symbol, "--agent", agent)
 
 
@@ -70,7 +70,7 @@ async def read_unit(symbol: str) -> dict:
 
 @mcp.tool()
 async def write_unit(symbol: str, agent: str, source: str) -> dict:
-    """Replace the whole source of the unit AGENT has claimed for SYMBOL, then compile and diff it against retail. Returns lint findings (A1/A2 hardcoded addresses, S1/S2 goto/volatile) and `check`: match % with a `target | ours` diff and the remaining budget. Refuses once the attempt's budget is exhausted (8 checks, or 2 consecutive checks without improvement): call release then."""
+    """Replace the whole source of the unit AGENT has claimed for SYMBOL, then compile and diff it against retail. Returns lint findings (A1/A2 hardcoded addresses, S1/S2 goto/volatile) and `check`: match % with a `target | ours` diff."""
     def go():
         with tempfile.NamedTemporaryFile("w", suffix=".c", delete=False, dir=ROOT / ".fzgx") as f:
             f.write(source)
@@ -85,7 +85,7 @@ async def write_unit(symbol: str, agent: str, source: str) -> dict:
 
 @mcp.tool()
 async def patch_unit(symbol: str, agent: str, old: str, new: str) -> dict:
-    """Edit the unit AGENT has claimed for SYMBOL in place: `old` must occur exactly once in the current source and is replaced by `new`; then compile and diff like write_unit (same budget, same `check` result). Use it for every change after the first write_unit: one declaration, one statement, one struct field, sent as a few lines instead of the whole unit."""
+    """Edit the unit AGENT has claimed for SYMBOL in place: `old` must occur exactly once in the current source and is replaced by `new`; then compile and diff like write_unit (same `check` result). Use it for every change after the first write_unit: one declaration, one statement, one struct field, sent as a few lines instead of the whole unit."""
     def go():
         (ROOT / ".fzgx").mkdir(exist_ok=True)
         with tempfile.NamedTemporaryFile("w", suffix=".old", delete=False, dir=ROOT / ".fzgx") as f1, \

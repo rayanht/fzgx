@@ -89,6 +89,10 @@ def codex_cmd(symbol: str, agent_id: str, model: str, fast: bool = False, revise
               effort: Optional[str] = None) -> List[str]:
     prompt = (f"SYMBOL={symbol}  AGENT_ID={agent_id}. Rewrite this matched function for readability following your loop."
               if revise else f"SYMBOL={symbol}  AGENT_ID={agent_id}. Match this function following your loop.")
+    if os.environ.get('FZGX_SEEDS'):
+        prompt += (' This is a seeded SDK repair: claim returns your existing high-scoring C in seed.source '
+                   'and installs it as your work copy. Keep that implementation and repair its remaining differences. '
+                   'Start with check, then patch_unit.')
     # --ignore-user-config: no user MCP servers/skills (480k -> 125k input tokens on a smoke test)
     cmd = ["codex", "exec", "--json", "--skip-git-repo-check", "--ignore-user-config", "-s", "read-only",
            "-m", model]
@@ -111,7 +115,10 @@ def codex_cmd(symbol: str, agent_id: str, model: str, fast: bool = False, revise
             "-c", 'mcp_servers.fzgx.args=["run","tools/fzgx_mcp.py"]',
             "-c", f'mcp_servers.fzgx.cwd="{ROOT}"',
             # the server inherits nothing from us: the attempt cap of this round travels explicitly
-            "-c", 'mcp_servers.fzgx.env={FZGX_MAX_ATTEMPTS="%s"}' % os.environ.get("FZGX_MAX_ATTEMPTS", "3"),
+            "-c", 'mcp_servers.fzgx.env={' + ','.join(
+                name + '=' + json.dumps(os.environ.get(name, default)) for name, default in (
+                    ('FZGX_MAX_ATTEMPTS', '3'), ('FZGX_MAX_CHECKS', '16'), ('FZGX_MAX_STALE', '5'),
+                    ('FZGX_CLAIM_TTL', '1800'), ('FZGX_SEEDS', ''))) + '}',
             # codex exec runs with approval_policy=never; without this every mutating MCP call is refused
             "-c", 'mcp_servers.fzgx.default_tools_approval_mode="approve"',
             prompt]
@@ -295,6 +302,10 @@ def main(argv: Optional[List[str]] = None) -> int:
     ap.add_argument("--model", help="claude: haiku|sonnet|opus (default haiku); codex: model name (default gpt-5.6-luna)")
     ap.add_argument("--parallel", type=int, default=48)
     ap.add_argument("--timeout", type=int, default=900, help="seconds per agent")
+    ap.add_argument('--seeds', type=Path, help='JSON manifest of saved C, compiler options and scores; selects its functions by default')
+    ap.add_argument('--max-checks', type=int, help='checks allowed per worker attempt')
+    ap.add_argument('--max-stale', type=int, help='consecutive non-improving checks allowed per worker')
+    ap.add_argument('--max-attempts', type=int, help='claim attempt cap for this batch')
     ap.add_argument("--symbols", nargs="*", default=[])
     ap.add_argument("--select", help="module:min_size:max_size:count, e.g. main_rel:8:96:48")
     ap.add_argument("--select-tu", nargs="*", help="whole-file batches: TU names from tus.json, e.g. camera.c coli.c")
@@ -314,6 +325,15 @@ def main(argv: Optional[List[str]] = None) -> int:
     ap.add_argument("--revise", action="store_true",
                     help="rewrite already-matched functions for readability; kept only if still 100%%")
     a = ap.parse_args(argv)
+    for option, name in ((a.max_checks, 'FZGX_MAX_CHECKS'), (a.max_stale, 'FZGX_MAX_STALE'),
+                         (a.max_attempts, 'FZGX_MAX_ATTEMPTS')):
+        if option is not None:
+            if option < 1:
+                ap.error(name + ' must be positive')
+            os.environ[name] = str(option)
+    os.environ['FZGX_CLAIM_TTL'] = str(max(api.DEFAULT_TTL, a.timeout + 300))
+    if a.seeds:
+        os.environ['FZGX_SEEDS'] = str(a.seeds.resolve())
     model = a.model or ("haiku" if a.harness == "claude" else "gpt-5.6-luna")
     if a.harness == "claude":
         EXPECTED_MODEL["claude"] = CLAUDE_MODELS.get(model, model)  # the guard checks the tier that was asked for
@@ -327,6 +347,8 @@ def main(argv: Optional[List[str]] = None) -> int:
         print(json.dumps(fr, indent=1))
         return 0 if all(x["ok"] for x in fr["passes"]) else 1
     symbols = list(a.symbols)
+    if a.seeds and not symbols:
+        symbols = list(json.loads(a.seeds.read_text()))
     if a.select:
         symbols += select(p, a.select)
     if a.select_tu:

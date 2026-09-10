@@ -14,6 +14,7 @@ file) once the oracle accepts it, and `release` keeps the best copy under
 from __future__ import annotations
 
 import json
+import hashlib
 import os
 import re
 import shutil
@@ -29,7 +30,7 @@ from .ledger import Ledger
 from .lint import lint_paths
 from .project import ROOT, STATE_DIR, Project
 
-DEFAULT_TTL = 1800
+DEFAULT_TTL = int(os.environ.get('FZGX_CLAIM_TTL', 1800))
 MAX_ATTEMPTS = int(os.environ.get("FZGX_MAX_ATTEMPTS", 3))  # a stronger-tier round raises it for its agents
 MAX_CHECKS = int(os.environ.get("FZGX_MAX_CHECKS", 16))   # per attempt
 MAX_STALE = int(os.environ.get("FZGX_MAX_STALE", 5))     # consecutive checks without improving the attempt's best %
@@ -151,12 +152,25 @@ def inventory(p: Project, module: Optional[str] = None, status: Optional[str] = 
 
 
 # ---------------------------------------------------------------------- claim
+def _seed_record(key: str) -> dict:
+    manifest = os.environ.get('FZGX_SEEDS')
+    return json.loads(Path(manifest).read_text()).get(key, {}) if manifest else {}
+
+
 def claim(p: Project, symbol: str, agent: str, ttl: int = DEFAULT_TTL,
           max_attempts: int = MAX_ATTEMPTS, no_carve: bool = False) -> Dict[str, Any]:
     l = Ledger()
     if p.resolve(symbol) is None:
         return {"ok": False, "error": f"unknown or ambiguous symbol {symbol!r} (use module:name for _prolog/_epilog)"}
     key = _key(p, symbol)
+    seed = _seed_record(key)
+    seed_body = None
+    if os.environ.get('FZGX_SEEDS') and not seed:
+        return {'ok': False, 'error': 'seeded batch has no candidate for this function'}
+    if seed:
+        seed_body = Path(seed['path']).read_text()
+        if hashlib.sha256(seed_body.encode()).hexdigest() != seed['sha256']:
+            return {'ok': False, 'error': 'seed source changed since batch preparation'}
     shadow = _is_shadow(agent)
     try:
         row = l.claim(key, agent, ttl, max_attempts, shadow=shadow)
@@ -173,15 +187,19 @@ def claim(p: Project, symbol: str, agent: str, ttl: int = DEFAULT_TTL,
     work = p.work_path(key)
     work.parent.mkdir(parents=True, exist_ok=True)
     name = p.resolve(symbol).name
-    if _is_revise(agent) and unit:
+    if seed_body is not None:
+        work.write_text(seed_body)
+    elif _is_revise(agent) and unit:
         work.write_text(_canonical_text(p, unit) or STUB.format(symbol=name, note="nothing to revise"))
     else:
         work.write_text(STUB.format(symbol=name, note="write the complete unit with write_unit"))
     tu_src = tufile.tu_source_for(p, p.resolve(symbol))
     out = {"ok": True, "symbol": symbol, "unit": unit,
            "path": _unit_label(p, unit) if unit else (f"src/{tu_src}#{name} (block created at submit)" if tu_src else f"src/{p.module_src_prefix(p.resolve(symbol).module)}/{name}.c (created at submit)"),
-           "attempt": row["attempts"] + 1, "max_attempts": max_attempts, "ttl": ttl,
-           "budget": f"{MAX_CHECKS} checks per attempt; stop after {MAX_STALE} checks without improvement"}
+           "attempt": row["attempts"] + 1}
+    if seed:
+        out['seed'] = {**seed, 'source': seed_body,
+                       'instruction': 'Your work copy already contains this C. Start with check, then patch it; do not restart from a stub.'}
     try:
         out["context"] = build_context(p, l, symbol)
     except LookupError as e:
@@ -281,7 +299,9 @@ def check(p: Project, symbol: str, max_diff_lines: int = 80, versions: Optional[
     key = _key(p, symbol)
     unit = _unit_source(p, symbol)
     src = _work_source(p, key, unit)
-    res = oracle.check(p, symbol, max_diff_lines, source=src)
+    seed = _seed_record(key)
+    res = oracle.check(p, symbol, max_diff_lines, source=src,
+                       mw_version=seed.get('mw'), extra_cflags=seed.get('flags'))
     out = res.to_json()
     if src is not None:
         # every checked body is kept with its score: the (before, after) pairs of a function that
@@ -350,7 +370,7 @@ def format_check(res: Dict[str, Any]) -> str:
                      "Drop or align the declaration named below:\n" + res["prologue_conflict"])
     b = res.get("budget")
     if b:
-        lines.append(f"budget: check {b['checks']}/{MAX_CHECKS}, {b['stale']}/{MAX_STALE} without improvement, best this attempt {b['best_in_attempt']:.1f}%")
+        lines.append(f"check {b['checks']}: best this attempt {b['best_in_attempt']:.1f}%")
     if res.get("stop"):
         lines.append(f"STOP: {res['stop']}. Do not write again; call release(symbol, agent, reason).")
     return "\n".join(lines)
@@ -410,6 +430,9 @@ def submit(p: Project, symbol: str, agent: str = "unknown", message: str = "",
         return {"ok": False, "error": "unknown or ambiguous symbol"}
     key = p.key(sym)
     unit_src = p.unit_of(sym)
+    seed = _seed_record(key)
+    mw_version = mw_version or seed.get('mw')
+    extra_cflags = extra_cflags if extra_cflags is not None else seed.get('flags')
     row = l.get(key)
     if row and row["status"] == "claimed" and row["claimed_by"] not in (agent, None):
         return {"ok": False, "error": f"claimed by {row['claimed_by']}, not {agent}"}

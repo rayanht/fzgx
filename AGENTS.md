@@ -7,6 +7,9 @@ in `.claude/agents/*.md` and say the same things.
 
 Do not add unit tests to this repository. Validate tooling changes against real
 functions with MWCC, retail object diffs, `fzgx lint`, and the 16-target hash check.
+Commit completed work locally before reporting it finished. Include the tooling,
+provenance, and dependent source changes needed to reproduce generated matches.
+Never push.
 
 ## Matcher (one function per session; cheap tier: GPT 5.6 Luna, Haiku 4.5)
 
@@ -30,8 +33,8 @@ all 16 targets and verifies every hash before committing the batch. The same ope
 Loop: `claim` (returns the context bundle) → `write_unit` (complete file:
 `#include "types.h"`, externs, minimal structs, the function; compiles and
 diffs immediately, one call per iteration) → `submit(..., names=[...])` or
-`release(reason)`. The server stops an attempt after 8 checks or 2
-consecutive checks without improvement. `check(symbol, versions="all")` only
+`release(reason)`. The runner and server enforce attempt limits; do not put limit
+guidance in matcher prompts. `check(symbol, versions="all")` only
 probes compiler versions. No messages, no summaries: the final line is exactly
 `RESULT: matched|released SYMBOL <percent>% checks=<n>`.
 

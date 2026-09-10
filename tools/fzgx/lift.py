@@ -2726,7 +2726,8 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
 
 def apply(p: Project, modules: Optional[List[str]] = None, max_size: int = 160, limit: int = 2000,
           workers: int = 12, submit: bool = True, tu: Optional[str] = None,
-          callees: Optional[List[str]] = None, engine: str = 'lift', resume: bool = False) -> Dict[str, object]:
+          callees: Optional[List[str]] = None, engine: str = 'lift', resume: bool = False,
+          symbols: Optional[List[str]] = None) -> Dict[str, object]:
     """Lift every unmatched function of the given size that the lifter accepts, check each
     against retail, submit the matches (carve-at-submit; `fzgx verify` relinks once)."""
     import sqlite3
@@ -2736,6 +2737,16 @@ def apply(p: Project, modules: Optional[List[str]] = None, max_size: int = 160, 
     db = sqlite3.connect(str(STATE_DIR / "ledger.db"))
     q = "select symbol, module, size from functions where status='unmatched' and size <= ?"
     args: List[object] = [max_size]
+    if symbols:
+        selected = []
+        for name in symbols:
+            sym = p.resolve(name)
+            if sym is None:
+                raise ValueError(f'unknown or ambiguous function: {name}')
+            selected.append(p.key(sym))
+        args[0] = 0xFFFFFFFF
+        q += ' and symbol in (%s)' % ','.join('?' for _ in selected)
+        args += selected
     if tu:
         selected = []
         for mod in modules or p.modules:
