@@ -1479,6 +1479,29 @@ void *fn_1_14EEC4(s16 index, void *obj, s16 subindex) {
 }
 /* fzgx:end fn_1_14EEC4 */
 
+/* fzgx:begin fn_1_14EF40 */
+typedef struct {
+    u8 pad[4];
+    f32 value;
+    u8 tail[8];
+} Fn1_14EF40Value;
+
+extern void fn_1_14E9E4(void *arg0, Fn1_14EF40Value *value);
+extern const f64 lbl_1_rodata_B8D0;
+
+s16 fn_1_14EF40(void *arg0, void *arg1, void *arg2) {
+    Fn1_14EF40Value value;
+    s16 accum;
+
+    fn_1_14E9E4(arg0, &value);
+    accum = (s16)value.value;
+    fn_1_14E9E4(arg1, &value);
+    accum = (s16)((f32)accum + value.value);
+    fn_1_14E9E4(arg2, &value);
+    return (s16)((f32)accum + value.value);
+}
+/* fzgx:end fn_1_14EF40 */
+
 /* fzgx:begin fn_1_14F014 */
 // fn_1_14F014: returns a constant.
 int fn_1_14F014(void) {

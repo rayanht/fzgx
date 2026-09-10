@@ -4487,3 +4487,15 @@ dol/fn_80013428.c:
 
 dol/fn_8006EF10.c:
 	.text       start:0x8006EF10 end:0x8006EFB4 align:4
+
+dol/fn_8008EB4C.c:
+	.text       start:0x8008EB4C end:0x8008EB8C align:4
+
+dol/fn_80069AE0.c:
+	.text       start:0x80069AE0 end:0x80069B10 align:4
+
+dol/TRK_main.c:
+	.text       start:0x8008D1CC end:0x8008D224 align:4
+
+dol/TRKNubWelcome.c:
+	.text       start:0x80088968 end:0x80088990 align:4

@@ -628,10 +628,18 @@ class Project:
         sym = self.symbols(module).get(name)
         if not sym or sym.kind != "object" or sym.section in (".bss", ".sbss", ".sbss2"):
             return None
-        raw = self._raw_section(module, sym.section)
+        if module == 'main':
+            region = next(((base, data) for base, data in self._rel_layout(module).values()
+                           if base <= sym.addr < base + len(data)), None)
+            if region is None:
+                return None
+            base, raw = region
+        else:
+            raw = self._raw_section(module, sym.section)
+            base = self._section_base(module, sym.section)
         if raw is None:
             return None
-        start = sym.addr - self._section_base(module, sym.section)
+        start = sym.addr - base
         if start < 0 or start >= len(raw):
             return None
         end = raw.find(b"\0", start, start + max_len)

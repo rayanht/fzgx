@@ -50,7 +50,7 @@ def cmd_context(a, p):
 
 def cmd_stuck(a, p):
     from . import stuck
-    out = stuck.run(p, a.min_percent, a.module, a.workers, a.max_size)
+    out = stuck.run(p, a.min_percent, a.module, a.workers, a.max_size, a.seeds)
     if a.json:
         print(json.dumps(out, indent=1))
     else:
@@ -474,6 +474,7 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--fixup-only", action="store_true", help="recheck and repair saved bodies without the spelling beam")
     s.add_argument("--max-size", type=int, help="only functions up to N bytes")
     s = sub.add_parser("stuck", help="classify plateaued attempts (>= N%%) by failure mode from the object diff"); s.set_defaults(fn=cmd_stuck)
+    s.add_argument('--seeds', type=Path, help='analyse saved candidates with their recorded compiler settings')
     s.add_argument("--min-percent", type=float, default=80.0); s.add_argument("--module"); s.add_argument("--workers", type=int, default=12)
     s.add_argument("--max-size", type=int, help="only functions up to N bytes")
     s.add_argument("--json", action="store_true")

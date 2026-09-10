@@ -203,11 +203,49 @@ def through_local(body: str, name: str) -> List[Tuple[str, str]]:
 def rewrites(body: str, name: str) -> List[Tuple[str, str]]:
     """Every single second-stage rewrite of a body."""
     out: List[Tuple[str, str]] = []
-    for fn in (scope_moves, split_inits, hoists, through_local):
+    for fn in (scope_moves, split_inits, hoists, through_local, return_values):
         try:
             out += fn(body, name)
         except Exception:
             continue
+    return out
+
+
+def return_values(body: str, name: str) -> List[Tuple[str, str]]:
+    """Recover an omitted result when a void draft leaves the value outside r3.
+
+    Tail calls forward their own result; preserving a local across the call would
+    create a different live range and hide the actual return convention.
+    """
+    signature = re.search(rf'\bvoid\s+{re.escape(name)}\s*\(', body)
+    span = _function_body_span(body, name)
+    if not signature or not span:
+        return []
+    locals_ = _locals(body, span)
+    values = [nm for _, _, ty, nm, dims in locals_ if not dims and
+              (ty.strip() in ('u32', 's32', 'int', 'unsigned', 'u16', 's16', 'u8', 's8') or '*' in ty)]
+    out = []
+    for value in values:
+        inner = body[span[1]:span[2]]
+        inner = re.sub(r'\breturn\s*;', f'return (u32){value};', inner)
+        inner += f'    return (u32){value};\n'
+        text = body[:span[1]] + inner + body[span[2]:]
+        text = text[:signature.start()] + 'u32' + text[signature.start() + 4:]
+        out.append((f'return {value}', text))
+        calls = set()
+        def forward(match):
+            callee = match[2]
+            if not re.search(rf'\bextern\s+void\s+{re.escape(callee)}\s*\(', text):
+                return match[0]
+            calls.add(callee)
+            return f'{match[1]}return {callee}({match[3]});'
+        inner = re.sub(r'(?m)^([ \t]*)(\w+)\(([^;\n]*)\);(?=\s*})', forward, inner)
+        if calls:
+            text = body[:span[1]] + inner + body[span[2]:]
+            text = text[:signature.start()] + 'u32' + text[signature.start() + 4:]
+            for callee in calls:
+                text = re.sub(rf'\bextern\s+void(?=\s+{re.escape(callee)}\s*\()', 'extern u32', text)
+            out.append((f'return {value}, forward tail calls', text))
     return out
 
 
@@ -282,7 +320,8 @@ def normalise(body: str) -> str:
 
 
 def search(p: Project, symbol: str, body: str, budget_s: float = 8.0, max_orders: int = 720,
-           top_k: int = 6, workers: int = WORKERS, mw_version: Optional[str] = None) -> Dict[str, object]:
+           top_k: int = 6, workers: int = WORKERS, mw_version: Optional[str] = None,
+           extra_cflags: Optional[str] = None) -> Dict[str, object]:
     """Returns {"matched", "body", "tried", "best", "secs", "stage", "label"}."""
     t0 = time.time()
     body = normalise(body)
@@ -303,6 +342,8 @@ def search(p: Project, symbol: str, body: str, budget_s: float = 8.0, max_orders
     mw, extra = oracle.version_for(p, sym, base_src)
     if mw_version:
         mw = mw_version
+    if extra_cflags is not None:
+        extra = extra_cflags
 
     def evaluate(texts: List[str]) -> List[Optional[Tuple[float, List[Tuple[int, int, int]]]]]:
         """Batched compile in parallel, masked-word score each; None when it did not compile."""

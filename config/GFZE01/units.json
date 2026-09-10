@@ -7860,6 +7860,19 @@
   },
   {
     "module": "main",
+    "source": "dol/TRKNubWelcome.c",
+    "symbols": [
+      "TRKNubWelcome"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "pool": {
+      "@5": "@62"
+    }
+  },
+  {
+    "module": "main",
     "source": "dol/TRKPostEvent.c",
     "symbols": [
       "TRKPostEvent"
@@ -8079,6 +8092,19 @@
       "-use_lmw_stmw",
       "off"
     ]
+  },
+  {
+    "module": "main",
+    "source": "dol/TRK_main.c",
+    "symbols": [
+      "TRK_main"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "pool": {
+      "@8": "@80_80095BB8"
+    }
   },
   {
     "module": "main",
@@ -17862,6 +17888,16 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_80069AE0.c",
+    "symbols": [
+      "fn_80069AE0"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
     "source": "dol/fn_8006A1F8.c",
     "symbols": [
       "fn_8006A1F8"
@@ -20226,6 +20262,16 @@
     ],
     "status": "matching",
     "mw_version": null,
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_8008EB4C.c",
+    "symbols": [
+      "fn_8008EB4C"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
     "extra_cflags": []
   },
   {
@@ -30781,6 +30827,20 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/font/fn_1_51AC0.c",
+    "symbols": [
+      "fn_1_51AC0"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/font.c",
+    "pool": {
+      "@7": "lbl_1_rodata_2758"
+    }
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/font/fn_1_51BFC.c",
     "symbols": [
       "fn_1_51BFC"
@@ -38177,6 +38237,20 @@
     "mw_version": null,
     "extra_cflags": [],
     "tu": "rel/main_rel/sel_static_disp.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/sel_static_disp/fn_1_14EF40.c",
+    "symbols": [
+      "fn_1_14EF40"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/sel_static_disp.c",
+    "pool": {
+      "@9": "lbl_1_rodata_B8D0"
+    }
   },
   {
     "module": "main_rel",

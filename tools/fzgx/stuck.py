@@ -59,7 +59,7 @@ def _norm_regs(s: str) -> str:
 
 
 def _strip_reloc(s: str) -> str:
-    return re.sub(r"\b[\w@.+-]+@(?:ha|h|l|sda21)\b", "SYM", s)
+    return re.sub(r"(?<![\w.$@])[\w$@.+-]+@(?:ha|h|l|sda21)\b", "SYM", s)
 
 
 def classify_rows(lrows: List[dict], rrows: List[dict]) -> Dict[str, int]:
@@ -191,11 +191,30 @@ def analyse(p: Project, symbol: str, path: str, res: Optional[oracle.CheckResult
 
 
 def run(p: Project, min_percent: float = 80.0, module: Optional[str] = None, workers: int = 12,
-        max_size: Optional[int] = None) -> Dict[str, object]:
-    bodies = best_bodies(p, min_percent, module, max_size)
+        max_size: Optional[int] = None, seeds: Optional[Path] = None) -> Dict[str, object]:
+    options = {}
+    if seeds is not None:
+        db = sqlite3.connect(str(STATE_DIR / 'ledger.db'))
+        unmatched = {r[0] for r in db.execute("SELECT symbol FROM functions WHERE status='unmatched'")}
+        bodies = {}
+        for key, record in json.loads(seeds.read_text()).items():
+            sym = p.resolve(key)
+            if not sym or p.key(sym) not in unmatched or record['percent'] < min_percent:
+                continue
+            if (module and sym.module != module) or (max_size is not None and sym.size > max_size):
+                continue
+            bodies[key] = (record['path'], record['percent'], sym.size, sym.module)
+            options[key] = (record.get('mw'), record.get('flags'))
+    else:
+        bodies = best_bodies(p, min_percent, module, max_size)
     items = sorted(bodies.items())
     # one parallel batched compile for every body, then the row analysis in threads
-    checks = oracle.check_many(p, [(s, Path(v[0])) for s, v in items])
+    groups = defaultdict(list)
+    for symbol, record in items:
+        groups[options.get(symbol, (None, None))].append((symbol, Path(record[0])))
+    checks = {}
+    for (mw, flags), group in groups.items():
+        checks.update(oracle.check_many(p, group, mw_version=mw, extra_cflags=flags))
     with ThreadPoolExecutor(max_workers=workers) as ex:
         results = list(ex.map(lambda kv: analyse(p, kv[0], kv[1][0], checks.get(kv[0])), items))
     for r in results:

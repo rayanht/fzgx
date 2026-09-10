@@ -31,6 +31,9 @@ file from what actually unblocked functions; keep each item one or two lines.
   a signature question, never a compiler quirk.
 - The same in reverse: if you need a parameter in `r4`, add the preceding
   parameter to the signature even when the function body ignores it.
+- A missing return can look like register allocation: `fn_80069AE0` needs the
+  loaded flags in r3 on one path and the callee's result on the other. Returning
+  the flags after both paths incorrectly keeps them live across the call.
 - (tooling, not codegen) RELs are linked without `-strip_partial` because retail
   kept unreferenced functions; with stripping on, a carved function nobody
   references vanishes from the link and every REL importing later symbols

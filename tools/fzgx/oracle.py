@@ -270,6 +270,7 @@ def _diff(project: Project, module: str, symbol: str, unit: str, max_diff_lines:
     for sec in left.get("sections", []):
         if sec.get("kind") in ("SECTION_DATA", "SECTION_BSS") and "match_percent" in sec:
             res.data_sections[sec["name"]] = float(sec["match_percent"])
+    res._object = base
     res.percent = res.symbols.get(symbol, 0.0)
     res.percent_adjusted = res.percent
     res.matched = res.percent >= 100.0
@@ -485,6 +486,11 @@ def _pool_rows(project: Project, module: str, left: dict, right: dict,
         except (IndexError, KeyError, TypeError):
             continue
         s = syms.get(lname)
+        if s is None:
+            local = re.fullmatch(r'(.+)_([0-9A-Fa-f]{8})', lname)
+            candidate = syms.get(local[1]) if local else None
+            if candidate and candidate.addr == int(local[2], 16):
+                s = candidate
         if s and s.kind == "object" and lname.startswith("jumptable_") and rsym.get("name", "").startswith("@") \
                 and int(rsym.get("size") or 0) == s.size:
             # a switch jump table: ours is a private data symbol of the same size; the unit owns
@@ -523,9 +529,16 @@ def _pool_rows(project: Project, module: str, left: dict, right: dict,
                     if t.section == s.section and t.addr == address and t.kind == 'object'), None)
         if anchor is None:
             continue
-        retail = next((raw[address - base:address - base + len(ours)]
-                       for base, raw in project._rel_layout(module).values()
-                       if base <= address and address + len(ours) <= base + len(raw)), None)
+        if module == 'main':
+            retail = next((raw[address - base:address - base + len(ours)]
+                           for base, raw in project._rel_layout(module).values()
+                           if base <= address and address + len(ours) <= base + len(raw)), None)
+        else:
+            # REL addresses are section-relative: .text and .rodata can both
+            # contain this offset. Only the relocation target's section is valid.
+            raw = project._raw_section(module, s.section)
+            offset = address - project._section_base(module, s.section)
+            retail = raw[offset:offset + len(ours)] if raw is not None and offset >= 0 else None
         if not ours or ours != retail:
             continue
         lname = anchor.name

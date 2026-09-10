@@ -1242,6 +1242,41 @@ void fn_1_51990(void *obj) {
 }
 /* fzgx:end fn_1_51990 */
 
+/* fzgx:begin fn_1_51AC0 */
+extern void fn_80038F10(void *result);
+extern u32 fn_1_A5DB0(void);
+extern const f64 lbl_1_rodata_2758;
+extern const f32 lbl_1_rodata_276C;
+
+typedef struct {
+    u8 unk0[4];
+    f32 value0;
+    u8 unk10[4];
+    f32 value1;
+    u8 tail[8];
+} FnData;
+
+f32 fn_1_51AC0(f32 value) {
+    f32 input = value;
+    f32 value0;
+    f32 value1;
+    f32 part;
+    f32 denom;
+    f32 result;
+    FnData data;
+    u64 padding;
+
+    fn_80038F10(&data);
+    value0 = data.value0;
+    value1 = data.value1;
+    denom = (f32)(fn_1_A5DB0() & 0xffff);
+    part = lbl_1_rodata_276C * value0 / denom;
+    denom = (f32)(fn_1_A5DB0() & 0xffff);
+    result = input * value1 / denom;
+    return result + part;
+}
+/* fzgx:end fn_1_51AC0 */
+
 /* fzgx:begin fn_1_51BFC */
 typedef struct {
     u8 pad[0x0c];

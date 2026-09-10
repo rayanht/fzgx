@@ -5198,3 +5198,9 @@ rel/main_rel/font/fn_1_4D0A0.c:
 
 rel/main_rel/burner/fn_1_140EE8.c:
 	.text       start:0x00140EE8 end:0x0014108C align:4
+
+rel/main_rel/font/fn_1_51AC0.c:
+	.text       start:0x00051AC0 end:0x00051B84 align:4
+
+rel/main_rel/sel_static_disp/fn_1_14EF40.c:
+	.text       start:0x0014EF40 end:0x0014F014 align:4

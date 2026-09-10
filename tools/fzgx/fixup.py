@@ -14,6 +14,8 @@ otherwise the best percentage seen is reported, never applied.
 
 from __future__ import annotations
 
+import ast
+import json
 import re
 import time
 from pathlib import Path
@@ -100,6 +102,61 @@ def _tu_of(p: Project, sym) -> Optional[str]:
     return None
 
 
+def string_literals(p: Project, module: str, body: str, base: oracle.CheckResult) -> List[Tuple[str, str]]:
+    """Correct private string literals using the relocation's retail object.
+
+    Identical instructions do not prove the strings agree. Read both strings
+    before proposing an edit, then let the ordinary oracle verify its binding.
+    """
+    from .poolfix import Elf
+    obj = getattr(base, '_object', None)
+    if obj is None:
+        return []
+    elf = Elf(obj.read_bytes())
+    own = {s['name']: s for s in elf.symbols()}
+    syms = p.symbols(module)
+    targets = dict(syms)
+    targets.update({f'{s.name}_{s.addr:08X}': s for s in syms.values()})
+    pattern = r'([A-Za-z_.$@][\w.$@]*)@(?:ha|l|sda21)\b'
+    pairs, references = set(), set()
+    for left, right in zip(*getattr(base, '_rows', ([], []))):
+        lt, rt = re.search(pattern, stuck._fmt(left)), re.search(pattern, stuck._fmt(right))
+        if not lt or not rt:
+            continue
+        target, source = targets.get(lt[1]), own.get(rt[1])
+        if not target or not source:
+            continue
+        expected = p.string_at(module, target.name)
+        if expected is not None and source['shndx'] == 0 and re.fullmatch(r'[A-Za-z_]\w*', source['name']):
+            references.add((source['name'], expected))
+        if not source['name'].startswith('@') or not 0 < source['shndx'] < len(elf.sections):
+            continue
+        section = elf.sections[source['shndx']]
+        start = section['offset'] + source['value']
+        raw = bytes(elf.data[start:start + source['size']])
+        if expected is None or not raw.endswith(b'\0') or b'\0' in raw[:-1]:
+            continue
+        current = raw[:-1].decode('latin1')
+        if current != expected:
+            pairs.add((current, expected))
+    out = []
+    for name, expected in sorted(references):
+        for token in re.finditer(rf'\b{re.escape(name)}\b', body):
+            line = body[body.rfind('\n', 0, token.start()) + 1:token.start()]
+            if line.lstrip().startswith('extern '):
+                continue
+            out.append((f'retail string for {name}', body[:token.start()] + json.dumps(expected) + body[token.end():]))
+    for current, expected in sorted(pairs):
+        for token in re.finditer(r'"(?:\\.|[^"\\])*"', body):
+            try:
+                value = ast.literal_eval(token[0])
+            except (ValueError, SyntaxError):
+                continue
+            if value == current:
+                out.append((f'retail string {expected!r}', body[:token.start()] + json.dumps(expected) + body[token.end():]))
+    return out
+
+
 def try_fix(p: Project, symbol: str, body: str, budget_s: float = 30.0, max_candidates: int = 80, _depth: int = 0,
             base: Optional[oracle.CheckResult] = None) -> Dict[str, object]:
     """Search the cheap repairs; returns {"matched": bool, "body": text or None, "tried": n, "best": %, "secs": s}.
@@ -112,7 +169,9 @@ def try_fix(p: Project, symbol: str, body: str, budget_s: float = 30.0, max_cand
 
     def check(text: str) -> oracle.CheckResult:
         scratch.write_text(text)
-        return oracle.check(p, symbol, 0, source=scratch)
+        return oracle.check(p, symbol, 0, source=scratch,
+                            mw_version=base.mw_version if base else None,
+                            extra_cflags=base.extra_cflags if base else None)
 
     if base is None:
         base = check(body)
@@ -183,6 +242,7 @@ def try_fix(p: Project, symbol: str, body: str, budget_s: float = 30.0, max_cand
                 for alt in alts[:4]:
                     candidates.append((f"{n}: {mine[n]} -> {alt}", body.replace(mine[n], alt, 1)))
     fam_marks.append((len(candidates), "sym"))
+    candidates += string_literals(p, sym.module, body, base)
     # wrong callee / wrong data symbol: the same instruction with a different relocation target.
     # The retail name is known; the body names ours verbatim, so the substitution is exact.
     subs: Dict[str, str] = {}
@@ -496,7 +556,8 @@ def try_fix(p: Project, symbol: str, body: str, budget_s: float = 30.0, max_cand
     left = budget_s - (time.time() - t0)
     if not out["matched"] and base.percent >= 85.0 and _depth == 0 and left > 0:
         from . import regalloc
-        ra = regalloc.search(p, symbol, best_text or body, budget_s=min(left, 8.0), mw_version=base.mw_version)
+        ra = regalloc.search(p, symbol, best_text or body, budget_s=min(left, 8.0),
+                             mw_version=base.mw_version, extra_cflags=base.extra_cflags)
         out["regalloc"] = {"tried": ra.get("tried"), "best": ra.get("best"), "secs": ra.get("secs")}
         out["tried"] += ra.get("tried", 0)
         if ra.get("matched") and ra.get("body"):
@@ -508,7 +569,8 @@ def try_fix(p: Project, symbol: str, body: str, budget_s: float = 30.0, max_cand
     if not out["matched"] and best_text is not None and out["best"] > out["base"] + 0.05 and _depth < 2:
         left = budget_s - (time.time() - t0)
         if left > 2:
-            nxt = try_fix(p, symbol, best_text, budget_s=left, max_candidates=max_candidates, _depth=_depth + 1)
+            nxt = try_fix(p, symbol, best_text, budget_s=left, max_candidates=max_candidates, _depth=_depth + 1,
+                          base=check(best_text))
             out["tried"] += nxt["tried"]
             if nxt["best"] > out["best"]:
                 out["best"] = nxt["best"]; out["best_label"] = f"{out.get('best_label')} + {nxt.get('best_label')}"

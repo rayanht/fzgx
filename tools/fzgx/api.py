@@ -578,7 +578,10 @@ def release(p: Project, symbol: str, reason: str, harness: Optional[str] = None,
         # last resort, a few seconds: the deterministic repairs on the best body (type flips for
         # compare/sign-extension diffs); a match is submitted in the agent's name instead of released
         from . import fixup
-        fx = fixup.try_fix(p, symbol, src.read_text(), budget_s=6.0)
+        seed = _seed_record(key)
+        base = oracle.check(p, symbol, 0, source=src,
+                            mw_version=seed.get('mw'), extra_cflags=seed.get('flags'))
+        fx = fixup.try_fix(p, symbol, src.read_text(), budget_s=6.0, base=base)
         if fx.get("matched") and fx.get("body"):
             work.parent.mkdir(parents=True, exist_ok=True)
             work.write_text(fx["body"])
