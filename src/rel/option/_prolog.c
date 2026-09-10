@@ -52,6 +52,38 @@ extern u32 fn_1_407C(u32);
 extern u32 fn_1_426C(u32);
 extern void fn_4_AB90(void);
 
+/* fzgx:begin fn_4_800 */
+extern u8 lbl_4_bss_2;
+extern u32 lbl_4_bss_8;
+extern s32 lbl_1_bss_970;
+extern u16 lbl_1_bss_968;
+extern u32 fn_1_4A00(u32, u32, u32);
+extern int fn_1_4C10(void);
+
+void fn_4_800(void) {
+    u8 value;
+
+    value = lbl_4_bss_2;
+    lbl_4_bss_2 = value + 1;
+
+    switch (lbl_1_bss_970) {
+    case 0:
+        break;
+    case 1:
+        fn_1_4A00(0, 15, lbl_4_bss_8);
+        lbl_1_bss_970 = 2;
+        break;
+    case 2:
+        if (fn_1_4C10() == 0) {
+            lbl_1_bss_968 = 1;
+        }
+        break;
+    default:
+        break;
+    }
+}
+/* fzgx:end fn_4_800 */
+
 /* fzgx:begin fn_4_894 */
 extern u32 fn_1_435C(u32);
 

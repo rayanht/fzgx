@@ -1114,6 +1114,33 @@ void fn_3_7770(void) {
 }
 /* fzgx:end fn_3_7770 */
 
+/* fzgx:begin fn_3_77B0 */
+extern u8 lbl_1_bss_9F8[];
+extern u16 lbl_1_bss_96A;
+extern u32 lbl_3_bss_20850;
+extern s16 lbl_3_data_A8[6];
+extern const f32 lbl_3_rodata_260;
+extern u8 lbl_3_data_1930[40];
+
+extern int fn_1_4C10(void);
+extern void fn_1_4A00(int, int, u32);
+extern void fn_1_496FC(f32, f32);
+extern void fn_1_4AE0C(const char *, ...);
+
+void fn_3_77B0(void) {
+    if (((*(u16 *)(lbl_1_bss_9F8 + 8) >> 9) & 1) != 0 && fn_1_4C10() == 0) {
+        fn_1_4A00(0, 15, lbl_3_bss_20850);
+        lbl_3_data_A8[0] = 0x10;
+    }
+    if (lbl_3_data_A8[0] > 0 && --lbl_3_data_A8[0] == 0) {
+        lbl_1_bss_96A = 0x61;
+    } else {
+        fn_1_496FC(lbl_3_rodata_260, lbl_3_rodata_260);
+        fn_1_4AE0C((const char *)lbl_3_data_1930);
+    }
+}
+/* fzgx:end fn_3_77B0 */
+
 /* fzgx:begin fn_3_7864 */
 // fn_3_7864: empty in retail (single blr).
 void fn_3_7864(void) {

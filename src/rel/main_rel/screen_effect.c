@@ -317,6 +317,40 @@ void fn_1_76650(fn_1_76650_ScreenEffect *effect) {
 }
 /* fzgx:end fn_1_76650 */
 
+/* fzgx:begin fn_1_76964 */
+typedef struct {
+    u8 pad_0[0xB4];
+    u32 unk_B4[6];
+    u8 pad_CC[0x10];
+    u32 unk_DC;
+    u8 pad_E0[0x20];
+    s16 unk_100;
+    s16 unk_102;
+} Fn1_76964Obj;
+
+typedef struct {
+    u8 unk_0[5];
+    u8 unk_5;
+} Fn1_76964Record;
+
+typedef u8 Sig_GXGetTexBufferSize_GXBool;
+extern u32 GXGetTexBufferSize(u16, u16, u32, Sig_GXGetTexBufferSize_GXBool, u8);
+
+void fn_1_76964(Fn1_76964Obj *obj) {
+    int i;
+
+    for (i = 0; i < ((Fn1_76964Record *)&lbl_1_data_1D9B8)[obj->unk_DC].unk_5; i++) {
+        obj->unk_B4[i] = GXGetTexBufferSize(
+            obj->unk_100,
+            obj->unk_102,
+            *(u32 *)((u8 *)&lbl_1_data_1D960 +
+                     ((*(u8 *)((u8 *)&lbl_1_data_1D9B8 + obj->unk_DC * 6 + i)) << 3)),
+            0,
+            0);
+    }
+}
+/* fzgx:end fn_1_76964 */
+
 /* fzgx:begin fn_1_76BD0 */
 void fn_1_76BD0(u8 index, u8 value) {
     Obj_1_bss_6C8EC *obj =

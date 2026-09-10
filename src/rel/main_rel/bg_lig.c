@@ -329,6 +329,55 @@ void fn_1_D79E4(void *obj) {
 }
 /* fzgx:end fn_1_D79E4 */
 
+/* fzgx:begin fn_1_D7B7C noprologue */
+#include "types.h"
+
+typedef struct {
+    u8 pad0[0x24];
+    f32 value;
+    u8 pad28[0x4];
+    s16 count;
+    u8 pad2e[0x2];
+} LigEntry;
+
+typedef struct {
+    u8 pad0[0x4];
+    void (*callback)(void);
+    LigEntry *entry;
+} LigEvent;
+
+extern void lbl_8006DCA4(void);
+extern f32 lbl_1_rodata_6524[28];
+extern s32 fn_1_54E34(LigEntry *entry, f32 value);
+extern void *fn_1_5448C(LigEntry *entry);
+extern LigEvent *fn_1_548AC(s32 size);
+extern void fn_1_D7C44(void);
+extern void fn_1_5489C(void *data, void *event);
+
+void fn_1_D7B7C(LigEntry *base) {
+    void *data;
+    LigEntry *entry;
+    s32 i;
+    LigEvent *event;
+
+    lbl_8006DCA4();
+
+    for (i = 0; i < 0x14; i++) {
+        entry = base + i + 1;
+        if (entry->count > 0 &&
+            fn_1_54E34(entry, lbl_1_rodata_6524[0] * entry->value)) {
+            data = fn_1_5448C(entry);
+            event = fn_1_548AC(0xc);
+            if (event != 0) {
+                event->callback = fn_1_D7C44;
+                event->entry = entry;
+                fn_1_5489C(data, event);
+            }
+        }
+    }
+}
+/* fzgx:end fn_1_D7B7C */
+
 /* fzgx:begin fn_1_D8388 */
 extern u32 fn_1_58C4(void);
 

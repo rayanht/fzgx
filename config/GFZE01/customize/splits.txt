@@ -398,3 +398,9 @@ rel/customize/_prolog/fn_3_3438.c:
 
 rel/customize/data/lbl_3_bss_2C7C0.c:
 	.bss        start:0x0002C7C0 end:0x0006D8C0 align:32
+
+rel/customize/_prolog/fn_3_77B0.c:
+	.text       start:0x000077B0 end:0x00007864 align:4
+
+rel/customize/emb_memcard/fn_3_F878.c:
+	.text       start:0x0000F878 end:0x0000F948 align:4

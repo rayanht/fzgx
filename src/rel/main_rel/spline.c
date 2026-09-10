@@ -1351,6 +1351,35 @@ Obj_1_bss_84428 *fn_1_FB0A8(void) {
 }
 /* fzgx:end fn_1_FB0A8 */
 
+/* fzgx:begin fn_1_FB0B4 */
+extern u32 lbl_1_rodata_74CC[3];
+extern u32 lbl_1_rodata_74D8[46];
+extern void fn_80008BA8(void *dst, const void *src, u32 size);
+
+void fn_1_FB0B4(Obj_1_bss_84428 *data) {
+    u32 first[3];
+    u32 second[3];
+
+    first[0] = lbl_1_rodata_74CC[0];
+    first[1] = lbl_1_rodata_74CC[1];
+    first[2] = lbl_1_rodata_74CC[2];
+
+    second[0] = lbl_1_rodata_74D8[0];
+    second[1] = lbl_1_rodata_74D8[1];
+    second[2] = lbl_1_rodata_74D8[2];
+
+    data->unk_0 = 0;
+    data->unk_4 = -1;
+    lbl_1_bss_84428.unk_6 = 3;
+    lbl_1_bss_84428.unk_8 = 20;
+    lbl_1_bss_84428.unk_A = 0;
+    lbl_1_bss_84428.unk_C = 30;
+
+    fn_80008BA8((u8 *)&lbl_1_bss_84428 + 0x10, first, 0xc);
+    fn_80008BA8((u8 *)&lbl_1_bss_84428 + 0x1c, second, 0xc);
+}
+/* fzgx:end fn_1_FB0B4 */
+
 /* fzgx:begin fn_1_FB180 */
 // Set the destination value to one.
 void fn_1_FB180(int *value) {
