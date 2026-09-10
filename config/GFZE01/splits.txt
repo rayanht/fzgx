@@ -4373,3 +4373,9 @@ dol/TRKTargetAccessDefault.c:
 
 dol/ClearArena.c:
 	.text       start:0x8000A24C end:0x8000A374 align:4
+
+dol/fn_800175C0.c:
+	.text       start:0x800175C0 end:0x800176D8 align:4
+
+dol/fn_80083F10.c:
+	.text       start:0x80083F10 end:0x80084F1C align:4
