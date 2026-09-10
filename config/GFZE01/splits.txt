@@ -4040,3 +4040,12 @@ dol/fn_80016B6C.c:
 
 dol/fn_80016BF8.c:
 	.text       start:0x80016BF8 end:0x80016C94 align:4
+
+dol/__OSSetExceptionHandler.c:
+	.text       start:0x8000AA30 end:0x8000AA4C align:4
+
+dol/fn_8003458C.c:
+	.text       start:0x8003458C end:0x8003462C align:4
+
+dol/fn_800218EC.c:
+	.text       start:0x800218EC end:0x80021910 align:4

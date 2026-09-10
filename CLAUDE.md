@@ -140,6 +140,10 @@ Rules that hold for everyone:
   preserve struct members and parameter scope. Reject inline assembly in dependencies too.
   `sdkimport --library` also supports AR, VI, DVD, GX, DSP, PAD, AI and runtime libraries;
   generated sources use owned declarations, never build/tools headers.
+  Refresh compiled SDK objects when the compiler or flags change; source mtime alone is
+  insufficient. Imported callback names must follow local-to-global promotion. A C function
+  can also own a retail entry label: `carve.retain_entry_labels` keeps that name as a symbolic
+  linker alias. Link failures are retained in `.fzgx/verify_last_failure.log`.
   Functions **under 256 bytes** (`--max-size 255`) are a repair corpus, not a prerequisite. `fzgx stuck --max-size 255` classifies the saved attempts; `fzgx sweep --max-size 255`
   searches them. `fzgx reuse --max-size 255` rebinds verified C when retail instruction
   shapes agree, retaining registers, immediates, relocation kinds/addends and branch targets;

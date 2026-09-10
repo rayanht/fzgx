@@ -76,6 +76,8 @@ SECTIONS
     GXFIFO = 0xCC008000;
     /* SDK absolute globals; configure.py generates their C constants. */
     __gUnknown800030E3 = 0x800030E3;
+    /* Retail labels sharing a C function entry. */
+    __OSDBJUMPEND = __OSSetExceptionHandler;
 }
 
 FORCEACTIVE

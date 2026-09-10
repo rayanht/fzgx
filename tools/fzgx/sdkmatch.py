@@ -83,12 +83,16 @@ def compile_sdk(sdk: Path, mw: str, out_dir: Path, roots=None):
         rel = src.relative_to(sdk)
         obj = out_dir / rel.with_suffix(".o")
         obj.parent.mkdir(parents=True, exist_ok=True)
-        if obj.exists() and obj.stat().st_mtime >= src.stat().st_mtime:
+        cmd = [str(wibo), str(mwcc)] + flags + incs + ["-c", str(rel), "-o", str(obj)]
+        stamp = obj.with_suffix('.command.json')
+        command = json.dumps(cmd)
+        if (obj.exists() and obj.stat().st_mtime >= src.stat().st_mtime
+                and stamp.exists() and stamp.read_text() == command):
             done.append((rel, obj))
             continue
-        cmd = [str(wibo), str(mwcc)] + flags + incs + ["-c", str(rel), "-o", str(obj)]
         cp = subprocess.run(cmd, cwd=sdk, text=True, capture_output=True, timeout=120)
         if cp.returncode == 0 and obj.exists():
+            stamp.write_text(command)
             done.append((rel, obj))
         else:
             failed.append(str(rel))

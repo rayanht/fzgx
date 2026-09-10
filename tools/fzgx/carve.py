@@ -114,6 +114,23 @@ def globalize_local_function(project: Project, module: str, name: str, res=None)
     return True
 
 
+def retain_entry_labels(project: Project, sym: Symbol) -> List[str]:
+    """A C definition replaces the function, but cannot emit its additional entry labels."""
+    template = project.module_config_dir(sym.module) / 'ldscript.tpl'
+    if not template.exists():
+        return []
+    labels = [s.name for s in project.symbols(sym.module).values()
+              if s.kind == 'label' and s.section == sym.section and s.addr == sym.addr
+              and s.scope == 'global' and s.name.isidentifier()]
+    text = template.read_text()
+    additions = [name for name in labels if not re.search(r'^\s*' + re.escape(name) + r'\s*=', text, re.M)]
+    if additions:
+        block = '\n    /* Retail labels sharing a C function entry. */\n'
+        block += ''.join(f'    {name} = {sym.name};\n' for name in additions)
+        template.write_text(text.replace('\n}\n\nFORCEACTIVE', block + '}\n\nFORCEACTIVE'))
+    return additions
+
+
 def carve(project: Project, symbol: str, dry_run: bool = False) -> CarveResult:
     sym = project.resolve(symbol)
     if sym is None or sym.kind != "function":
@@ -180,6 +197,8 @@ def carve(project: Project, symbol: str, dry_run: bool = False) -> CarveResult:
             res.notes.append("force_active: no callers")
 
     globalize_local_function(project, module, sym.name, res)
+    for label in retain_entry_labels(project, sym):
+        res.notes.append(f'{label}: linker alias of the C function entry')
     if order_labels_after_functions(project.module_config_dir(module) / "symbols.txt"):
         project._symbols.pop(module, None)
         res.notes.append("symbols.txt: function lines moved before same-address labels (mwld hang)")

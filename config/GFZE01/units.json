@@ -6903,6 +6903,27 @@
   },
   {
     "module": "main",
+    "source": "dol/__OSSetExceptionHandler.c",
+    "symbols": [
+      "__OSSetExceptionHandler"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
     "source": "dol/__OSSetInterruptHandler.c",
     "symbols": [
       "__OSSetInterruptHandler"
@@ -10059,6 +10080,16 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_800218EC.c",
+    "symbols": [
+      "fn_800218EC"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
     "source": "dol/fn_80021910.c",
     "symbols": [
       "fn_80021910"
@@ -11648,6 +11679,16 @@
     ],
     "status": "matching",
     "mw_version": null,
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_8003458C.c",
+    "symbols": [
+      "fn_8003458C"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
     "extra_cflags": []
   },
   {
