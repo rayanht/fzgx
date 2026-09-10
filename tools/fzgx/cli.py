@@ -515,5 +515,19 @@ def main(argv: Optional[List[str]] = None) -> int:
         from . import oracle
         lock = "worker-" + hashlib.sha256(assigned.encode()).hexdigest() + ".lock"
         with oracle.build_lock(lock):
-            return a.fn(a, Project(a.version))
+            p = Project(a.version)
+            rc = a.fn(a, p)
+            result_file = os.environ.get('FZGX_RESULT_FILE')
+            if result_file:
+                from .ledger import Ledger
+                attempt = Ledger().db.execute(
+                    'SELECT * FROM attempts WHERE symbol=? AND agent=? ORDER BY id DESC LIMIT 1',
+                    (api._key(p, assigned), os.environ['FZGX_AGENT_ID'])).fetchone()
+                if attempt and attempt['ended'] is not None:
+                    path = Path(result_file)
+                    path.parent.mkdir(parents=True, exist_ok=True)
+                    temporary = path.with_suffix('.tmp')
+                    temporary.write_text(json.dumps(dict(attempt)) + '\n')
+                    temporary.replace(path)
+            return rc
     return a.fn(a, Project(a.version))

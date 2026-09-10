@@ -1,0 +1,19 @@
+{
+  "parallel": 1024,
+  "elapsed_s": 39.155,
+  "loaded": 1024,
+  "called": 1024,
+  "completed": 1024,
+  "wrong_nonce": 0,
+  "hooks": 0,
+  "cost": 0.06451,
+  "tokens_in": 2367423,
+  "tokens_out": 54425,
+  "cost_basis": "DeepSeek peak/off-peak estimate by UTC usage event timestamp",
+  "error": null,
+  "overload_retries": 0,
+  "peak_rss_mib": 1792.9,
+  "peak_processes": 38,
+  "peak_turns_before_tool_result": 1009,
+  "resident_processes_at_last_sample": 2
+}

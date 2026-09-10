@@ -125,7 +125,7 @@ def _spell_fitness(tw, ow) -> float:
 
 
 def build_context(project: Project, ledger: Optional[Ledger], symbol: str,
-                  budget_tokens: int = 6000) -> str:
+                  budget_tokens: int = 6000, compiler_options: Optional[dict] = None) -> str:
     sym0 = project.resolve(symbol)
     fn = project.function_asm(sym0.module).get(sym0.name) if sym0 else None
     if fn is None:
@@ -157,7 +157,12 @@ def build_context(project: Project, ledger: Optional[Ledger], symbol: str,
     if row and not (row["claimed_by"] or "").startswith("shadow-"):
         parts.append(f"- attempts so far: {row['attempts']}  best: {row['best_percent']:.1f}%")
     parts.append(f"- hints: {_sig_hint(fn)}")
-    mw = unit_cfg.get("mw_version") or ("GC/1.2.5n" if module == "main" else "GC/1.3.2")
+    from .oracle import module_flags
+    flags, default_mw = module_flags(project, module)
+    options = compiler_options or {}
+    supplied_source = bool(options.get('path'))
+    mw = options.get('mw') or unit_cfg.get("mw_version") or default_mw
+    extra = options.get('flags') or ' '.join(unit_cfg.get('extra_cflags') or [])
     if any(re.search(r"\blis r\d+, 0xcc00\b", ln) for ln in fn.asm) if fn else False:
         parts.append("- hardware registers: the target's `lis rX, 0xcc00` / `addi rX, rX, 0xN000` pair is a link-defined absolute "
                      "symbol; declare `extern vu32 __DIRegs[];` (0xCC006000; __VIRegs 0xCC002000, __PIRegs 0xCC003000, __MEMRegs "
@@ -166,9 +171,7 @@ def build_context(project: Project, ledger: Optional[Ledger], symbol: str,
     if sym.section == ".init":
         parts.append('- section: retail placed this function in `.init`; write `__declspec(section ".init")` before the '
                      "return type (the object oracle pairs nothing across sections, and the link needs it there)")
-    parts.append(f"- compiler: `{mw}` `-O4,p -inline auto -fp hardware -enum int`"
-                 + (" `-sdata 0 -sdata2 0`" if module != "main" else "")
-                 + (f" extra: `{' '.join(unit_cfg.get('extra_cflags', []))}`" if unit_cfg.get("extra_cflags") else ""))
+    parts.append(f"- compiler: `{mw}` `{flags}`" + (f" extra overrides: `{extra}`" if extra else ''))
 
     parts.append("\n## Target assembly (retail)\n```asm")
     parts.extend(fn.asm)
@@ -256,13 +259,13 @@ def build_context(project: Project, ledger: Optional[Ledger], symbol: str,
         parts.append("\n## Matched code in this module (siblings sharing symbols first; copy their declaration style)")
         parts.extend(neigh)
 
-    if unit_src:
+    if unit_src and not supplied_source:
         work = project.work_path(project.key(sym))
         cur = work.read_text() if work.exists() else (tufile.unit_text(project, unit_cfg) if unit_cfg else "")
         if cur.strip():
             parts.append(f"\n## Current unit\n```c\n{cur}\n```")
 
-    if ledger and not (row and (row["claimed_by"] or "").startswith("shadow-")):
+    if ledger and not supplied_source and not (row and (row["claimed_by"] or "").startswith("shadow-")):
         att = ledger.db.execute(
             "SELECT * FROM attempts WHERE symbol=? AND ended IS NOT NULL ORDER BY final_percent DESC, id DESC LIMIT 1",
             (symbol,)).fetchone()
@@ -299,7 +302,7 @@ def build_context(project: Project, ledger: Optional[Ledger], symbol: str,
     # the lifter's draft: a mechanical translation of the disassembly, structurally right by
     # construction (calls, layouts, loops), shown with the rows it still misses so the agent
     # starts from it instead of from nothing
-    if ledger and row and row["status"] != "matched" and not (row["claimed_by"] or "").startswith("shadow-"):
+    if ledger and row and not supplied_source and row["status"] != "matched" and not (row["claimed_by"] or "").startswith("shadow-"):
         try:
             from . import lift as _lift, oracle as _oracle
             variants = _lift.lift_variants(project, module, symbol)

@@ -160,6 +160,17 @@ def _seed_record(key: str) -> dict:
     return json.loads(Path(manifest).read_text()).get(key, {}) if manifest else {}
 
 
+def _compiler_options(p: Project, key: str) -> dict:
+    options = _seed_record(key)
+    path = p.work_path(key).with_suffix('.compiler.json')
+    attempt = Ledger().current_attempt(key)
+    if path.exists() and attempt:
+        saved = json.loads(path.read_text())
+        if saved.get('attempt_id') == attempt['id']:
+            options = {**options, **saved}
+    return options
+
+
 def claim(p: Project, symbol: str, agent: str, ttl: int = DEFAULT_TTL,
           max_attempts: int = MAX_ATTEMPTS, no_carve: bool = False) -> Dict[str, Any]:
     l = Ledger()
@@ -176,7 +187,7 @@ def claim(p: Project, symbol: str, agent: str, ttl: int = DEFAULT_TTL,
         (key, worker, len(prefix), prefix)).fetchone() if (
             os.environ.get("FZGX_AGENT_ID") or re.search(r"-(codex|claude)-\d+$", worker)) else None
     if prior:
-        return {"ok": False, "error": "this worker already finished; return its RESULT without reclaiming",
+        return {"ok": False, "error": "this worker already finished; it cannot reclaim the function",
                 "outcome": prior["outcome"], "checks": prior["checks"], "percent": prior["best_in_attempt"]}
     seed = _seed_record(key)
     seed_body = None
@@ -199,6 +210,7 @@ def claim(p: Project, symbol: str, agent: str, ttl: int = DEFAULT_TTL,
         return {"ok": False, "error": "revise needs a matched function"}
     unit = _unit_source(p, symbol)
     # the agent's private copy: the current source for a rewrite, a stub otherwise
+    _discard_work(p, key)
     work = p.work_path(key)
     work.parent.mkdir(parents=True, exist_ok=True)
     name = p.resolve(symbol).name
@@ -207,6 +219,8 @@ def claim(p: Project, symbol: str, agent: str, ttl: int = DEFAULT_TTL,
         best = STATE_DIR / "attempts" / f"{key}.best.c"
         best.parent.mkdir(parents=True, exist_ok=True)
         best.write_text(seed_body)
+        best.with_suffix('.json').write_text(json.dumps(dict(
+            sha256=seed['sha256'], mw=seed.get('mw'), flags=seed.get('flags'))) + '\n')
     elif _is_revise(agent) and unit:
         work.write_text(_canonical_text(p, unit) or STUB.format(symbol=name, note="nothing to revise"))
     else:
@@ -223,7 +237,7 @@ def claim(p: Project, symbol: str, agent: str, ttl: int = DEFAULT_TTL,
                                        if seed.get('kind') == 'lift_total' else
                                        'Your work copy already contains this C. Start with check, then patch it; do not restart from a stub.')}
     try:
-        out["context"] = build_context(p, l, symbol)
+        out["context"] = build_context(p, l, symbol, compiler_options=_compiler_options(p, key))
     except LookupError as e:
         out["context"] = f"(no context: {e})"
     return out
@@ -248,7 +262,8 @@ def carve_many(p: Project, symbols: List[str], dry_run: bool = False) -> List[Di
 
 # -------------------------------------------------------------------- context
 def context(p: Project, symbol: str, budget_tokens: int = 6000) -> str:
-    return build_context(p, Ledger(), symbol, budget_tokens)
+    return build_context(p, Ledger(), symbol, budget_tokens,
+                         compiler_options=_compiler_options(p, _key(p, symbol)))
 
 
 def read_unit(p: Project, symbol: str) -> Dict[str, Any]:
@@ -273,7 +288,7 @@ def write_unit(p: Project, symbol: str, agent: str, source: str) -> Dict[str, An
     att = l.current_attempt(key)
     stop = _budget_stop(att)
     if stop:
-        return {"ok": False, "error": stop + "; call release(symbol, agent, reason) now"}
+        return _finish_check(p, symbol, {"ok": False, "error": stop, "stop": stop})
     work = p.work_path(key)
     work.parent.mkdir(parents=True, exist_ok=True)
     work.write_text(source if source.endswith("\n") else source + "\n")
@@ -310,6 +325,30 @@ def _budget_stop(att) -> Optional[str]:
     return None
 
 
+def _finish_check(p: Project, symbol: str, result: dict, checked: Optional[oracle.CheckResult] = None) -> dict:
+    """A bound headless worker needs no model decision to accept a match or stop."""
+    agent = os.environ.get('FZGX_AGENT_ID')
+    if not agent:
+        return result
+    row = Ledger().get(_key(p, symbol))
+    if not row or row['status'] != 'claimed' or row['claimed_by'] != agent:
+        return result
+    automatic = None
+    if checked and checked.ok and oracle.unit_fully_matches(checked) is None:
+        automatic = submit(p, symbol, agent=agent, message='oracle match accepted automatically',
+                           harness=os.environ.get('FZGX_HARNESS'), model=os.environ.get('FZGX_MODEL'),
+                           mw_version=checked.mw_version, extra_cflags=checked.extra_cflags)
+    if not (automatic and automatic.get('ok')) and result.get('stop'):
+        automatic = release(p, symbol, reason=result['stop'], agent=agent,
+                            harness=os.environ.get('FZGX_HARNESS'), model=os.environ.get('FZGX_MODEL'))
+    if automatic:
+        result['automatic'] = automatic
+        result['terminal'] = Ledger().current_attempt(_key(p, symbol)) is None
+        if result['terminal']:
+            result.pop('stop', None)
+    return result
+
+
 # --------------------------------------------------------------------- oracle
 def check(p: Project, symbol: str, max_diff_lines: int = 80, versions: Optional[str] = None) -> Dict[str, Any]:
     """Compile and diff the work copy if one exists, else the canonical unit."""
@@ -319,26 +358,64 @@ def check(p: Project, symbol: str, max_diff_lines: int = 80, versions: Optional[
     if row and row["status"] == "claimed":
         stop = _budget_stop(l.current_attempt(key))
         if stop:
-            return {"ok": False, "error": stop + "; call release(symbol, agent, reason) now"}
+            return _finish_check(p, symbol, {"ok": False, "error": stop, "stop": stop})
+    unit = _unit_source(p, symbol)
+    src = _work_source(p, key, unit)
+    options = _compiler_options(p, key)
     if versions:
-        vers = oracle.CANDIDATE_VERSIONS if versions == "all" else versions.split(",")
-        out = {}
+        if src is None and unit:
+            src = oracle.unit_source_path(p, unit)
+        vers = list(oracle.CANDIDATE_VERSIONS) if versions == "all" else versions.split(",")
+        if versions == 'all' and options.get('mw') in vers:
+            vers.remove(options['mw'])
+            vers.insert(0, options['mw'])
+        out, best = {}, None
         for ver in vers:
             if row and row["status"] == "claimed" and _budget_stop(l.current_attempt(key)):
                 break
-            result = oracle.check_versions(p, symbol, [ver], extra_cflags=_seed_record(key).get('flags'))
-            out.update(result)
-            if row and row["status"] == "claimed" and result:
-                l.bump_checks(key, max(0.0, max(result.values())))
-        return {"ok": True, "symbol": symbol, "versions": out,
+            if not (ROOT / 'build' / 'compilers' / ver / 'mwcceppc.exe').exists():
+                out[ver] = -1.0
+                continue
+            result = oracle.check(p, symbol, max_diff_lines, source=src,
+                                  mw_version=ver, extra_cflags=options.get('flags'))
+            _record_check(p, key, src, result)
+            score = (result.percent_adjusted if result.pool_rows else result.percent) if result.ok else -2.0
+            out[ver] = score
+            fully_matches = result.ok and oracle.unit_fully_matches(result) is None
+            if result.ok and (best is None or score > best[0] or fully_matches):
+                best = score, result
+            if fully_matches:
+                break
+        selected = None
+        if best:
+            selected = dict(mw=best[1].mw_version, flags=best[1].extra_cflags)
+            attempt = l.current_attempt(key)
+            if attempt:
+                p.work_path(key).with_suffix('.compiler.json').write_text(
+                    json.dumps(dict(attempt_id=attempt['id'], **selected)) + '\n')
+        response = {"ok": True, "symbol": symbol, "versions": out,
+                "selected": selected, "selected_check": best[1].to_json() if best else None,
                 "stop": _budget_stop(l.current_attempt(key)),
-                "note": "-1 compiler missing, -2 check failed; each compiler probe counts toward the attempt"}
-    unit = _unit_source(p, symbol)
-    src = _work_source(p, key, unit)
-    seed = _seed_record(key)
+                "note": "The best tested compiler is retained for subsequent edits and submit. "
+                        "-1 compiler missing, -2 check failed; each compiler probe counts toward the attempt"}
+        return _finish_check(p, symbol, response, best[1] if best else None)
     res = oracle.check(p, symbol, max_diff_lines, source=src,
-                       mw_version=seed.get('mw'), extra_cflags=seed.get('flags'))
+                       mw_version=options.get('mw'), extra_cflags=options.get('flags'))
     out = res.to_json()
+    stats = _record_check(p, key, src, res)
+    if src is not None:
+        conflict = _prologue_conflict(p, key, unit) if res.ok and unit else None
+        if conflict:
+            out["prologue_conflict"] = conflict
+        out['budget'] = stats
+        stop = _budget_stop(l.current_attempt(key))
+        if stop:
+            out['stop'] = stop
+    return _finish_check(p, symbol, out, res)
+
+
+def _record_check(p: Project, key: str, src: Optional[Path], res: oracle.CheckResult) -> dict:
+    """Archive the body and compiler settings together, including version probes."""
     if src is not None:
         # every checked body is kept with its score: the (before, after) pairs of a function that
         # went on to match are the exemplars a prompt with examples needs
@@ -356,39 +433,46 @@ def check(p: Project, symbol: str, max_diff_lines: int = 80, versions: Optional[
         except OSError:
             pass
     if src is not None:
-        conflict = _prologue_conflict(p, key, unit) if res.ok and unit else None
-        if conflict:
-            out["prologue_conflict"] = conflict
         stats = Ledger().bump_checks(key, (res.percent_adjusted if res.pool_rows else res.percent) if res.ok else 0.0)
-        out["budget"] = stats
         if stats.get("improved"):
             best = STATE_DIR / "attempts" / f"{key}.best.c"
             best.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy(p.work_path(key), best)
-        att = Ledger().current_attempt(key)
-        stop = _budget_stop(att)
-        if stop and not res.matched:
-            out["stop"] = stop
-    return out
+            shutil.copy(src, best)
+            best.with_suffix('.json').write_text(json.dumps(dict(
+                sha256=hashlib.sha256(best.read_bytes()).hexdigest(),
+                mw=res.mw_version, flags=res.extra_cflags, percent=stats['best_in_attempt'])) + '\n')
+        return stats
+    return {}
 
 
 def format_check(res: Dict[str, Any]) -> str:
+    if res.get('terminal'):
+        return 'Attempt completed automatically: ' + json.dumps(res['automatic'])
     if "versions" in res:
         text = "\n".join(f"{v:10s} {'n/a' if pct < 0 else f'{pct:.1f}%'}" for v, pct in res["versions"].items())
-        return text + (f"\nSTOP: {res['stop']}; call release(symbol, agent, reason)." if res.get("stop") else "")
+        if res.get('selected_check'):
+            text += '\nSelected for subsequent edits and submit:\n' + format_check(res['selected_check'])
+        return text + (f"\nSTOP: {res['stop']}." if res.get("stop") else "")
     if not res["ok"]:
-        return f"CHECK FAILED: {res['error']}" + (f"\nSTOP: {res['stop']}; call release(symbol, agent, reason)." if res.get("stop") else "")
+        return f"CHECK FAILED: {res['error']}" + (f"\nSTOP: {res['stop']}." if res.get("stop") else "")
     verdict = "MATCH" if res["matched"] else ("MATCH (pool)" if res.get("matched_pool") else "no match")
     lines = [f"{res['symbol']}: {res['percent']:.1f}%  unit={res['unit']}  {verdict}"]
+    if res.get('automatic'):
+        lines.append('Automatic submission rejected: ' + json.dumps(res['automatic']))
+    if res.get('mw_version'):
+        lines.append(f"compiler: {res['mw_version']}" + (f" extra: {res['extra_cflags']}" if res.get('extra_cflags') else ''))
+    if res.get('instruction_rows') and not res['matched']:
+        lines.append(f"{res['differing_rows']} of {res['instruction_rows']} aligned instruction rows still differ "
+                     "after accepted relocation equivalences; the displayed % is objdiff's similarity score.")
     if res["matched"] and res.get("pool_map"):
         lines.append("literal pool: private constants retargeted to the shared retail symbols (" + ", ".join(res["pool"]) + ")")
     if not res["matched"] and res.get("pool_rows"):
         lines.append(f"{res['pool_rows']} row(s) marked `p` are literal-pool relocations ({', '.join(res['pool'])}); the tooling "
                      f"retargets them at submit, so they already count as matching: {res['percent_adjusted']:.1f}% "
-                     "is your real score. Fix only the other marked rows.")
+                     "is the adjusted instruction-row score. Fix only the other marked rows.")
     if res.get("matched_pool"):
         lines.append("pool: the only differences are relocations to shared literal-pool constants whose value "
-                     "you reproduce (" + ", ".join(res["pool"]) + "); this counts as a match: call submit.")
+                     "you reproduce (" + ", ".join(res["pool"]) + "); this counts as a match.")
     others = {k: v for k, v in res["symbols"].items() if k != res["symbol"]}
     if others:
         lines.append("other functions in unit: " + ", ".join(f"{k}={v:.0f}%" for k, v in others.items()))
@@ -409,7 +493,7 @@ def format_check(res: Dict[str, Any]) -> str:
     if b:
         lines.append(f"check {b['checks']}: best this attempt {b['best_in_attempt']:.1f}%")
     if res.get("stop"):
-        lines.append(f"STOP: {res['stop']}. Do not write again; call release(symbol, agent, reason).")
+        lines.append(f"STOP: {res['stop']}. Do not write again.")
     return "\n".join(lines)
 
 
@@ -454,6 +538,10 @@ def _install(p: Project, unit_src: str, text: str, pool: bool = False) -> None:
 
 def _discard_work(p: Project, key: str) -> None:
     p.work_path(key).unlink(missing_ok=True)
+    p.work_path(key).with_suffix('.compiler.json').unlink(missing_ok=True)
+    best = STATE_DIR / 'attempts' / f'{key}.best.c'
+    best.unlink(missing_ok=True)
+    best.with_suffix('.json').unlink(missing_ok=True)
 
 
 # Different functions can share splits, symbol tables and TU files. Their work
@@ -470,7 +558,7 @@ def submit(p: Project, symbol: str, agent: str = "unknown", message: str = "",
         return {"ok": False, "error": "unknown or ambiguous symbol"}
     key = p.key(sym)
     unit_src = p.unit_of(sym)
-    seed = _seed_record(key)
+    seed = _compiler_options(p, key)
     mw_version = mw_version or seed.get('mw')
     extra_cflags = extra_cflags if extra_cflags is not None else seed.get('flags')
     row = l.get(key)
@@ -496,7 +584,8 @@ def submit(p: Project, symbol: str, agent: str = "unknown", message: str = "",
         promoted = _promote_referenced_locals(p, key, unit_src, res.unit)
         if promoted and unit_src:
             _reconfigure_and_split(p)
-            res = oracle.check(p, symbol, max_diff_lines, source=src)
+            res = oracle.check(p, symbol, max_diff_lines, source=src,
+                               mw_version=mw_version, extra_cflags=extra_cflags)
     reason = oracle.unit_fully_matches(res)
     if not reason and not unit_src and not _is_shadow(agent):
         # accepted: now it gets a unit (split range + entry); the batch verify does the one split+relink
@@ -535,14 +624,12 @@ def submit(p: Project, symbol: str, agent: str = "unknown", message: str = "",
         return {"ok": True, "symbol": symbol, "unit": unit_src, "revise": True, "link": link}
     if _is_shadow(agent):
         if reason:
-            _discard_work(p, key)
-            l.finish(key, "released", "unmatched", notes=f"shadow submit rejected: {reason}", model=model,
-                     harness=harness, tokens_in=tokens_in, tokens_out=tokens_out, cost_usd=cost_usd, shadow=True)
             return {"ok": False, "error": reason, "percent": res.percent, "shadow": True}
         dest = STATE_DIR / "attempts" / f"{key}.shadow.{time.time_ns()}.c"
         dest.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy(src or oracle.unit_source_path(p, unit_src), dest)
-        dest.with_suffix(".json").write_text(json.dumps({"mw": res.mw_version,
+        dest.with_suffix(".json").write_text(json.dumps({"sha256": hashlib.sha256(dest.read_bytes()).hexdigest(),
+                                                       "percent": res.percent, "mw": res.mw_version,
                                                        "flags": res.extra_cflags}) + "\n")
         _discard_work(p, key)
         l.finish(key, "matched", "matched", notes=message or "", body_path=str(dest), model=model, harness=harness,
@@ -624,25 +711,35 @@ def release(p: Project, symbol: str, reason: str, harness: Optional[str] = None,
         # last resort, a few seconds: the deterministic repairs on the best body (type flips for
         # compare/sign-extension diffs); a match is submitted in the agent's name instead of released
         from . import fixup
-        seed = _seed_record(key)
+        seed = _compiler_options(p, key)
+        metadata = best.with_suffix('.json')
+        if src == best and metadata.exists():
+            saved = json.loads(metadata.read_text())
+            if saved.get('sha256') == hashlib.sha256(src.read_bytes()).hexdigest():
+                seed = saved
         base = oracle.check(p, symbol, 0, source=src,
                             mw_version=seed.get('mw'), extra_cflags=seed.get('flags'))
         fx = fixup.try_fix(p, symbol, src.read_text(), budget_s=6.0, base=base)
         if fx.get("matched") and fx.get("body"):
             work.parent.mkdir(parents=True, exist_ok=True)
             work.write_text(fx["body"])
-            best.unlink(missing_ok=True)
             r = submit(p, symbol, agent=agent or row["claimed_by"], message=f"fixup: {fx.get('label')}; agent released: {reason}",
-                       harness=harness, model=model)
+                       harness=harness, model=model, mw_version=base.mw_version, extra_cflags=base.extra_cflags)
             if r.get("ok"):
+                best.unlink(missing_ok=True)
+                best.with_suffix('.json').unlink(missing_ok=True)
                 r["fixup"] = fx.get("label")
                 r["fixup_secs"] = fx["secs"]
                 return r
         dest = STATE_DIR / "attempts" / f"{key}.{'shadow.' if shadow else ''}{int(time.time())}.c"
         dest.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy(src, dest)  # the best-scoring body, not necessarily the last one written
+        dest.with_suffix('.json').write_text(json.dumps(dict(
+            sha256=hashlib.sha256(dest.read_bytes()).hexdigest(), mw=base.mw_version,
+            flags=base.extra_cflags, percent=base.percent_adjusted if base.pool_rows else base.percent)) + '\n')
         body_path = str(dest)
     best.unlink(missing_ok=True)
+    best.with_suffix('.json').unlink(missing_ok=True)
     _discard_work(p, key)
     l.finish(key, "released", "unmatched", notes=reason, body_path=body_path, model=model,
              harness=harness, tokens_in=tokens_in, tokens_out=tokens_out, cost_usd=cost_usd, shadow=shadow)

@@ -55,6 +55,8 @@ class CheckResult:
     percent_adjusted: float = 0.0    # match % with the pool rows counted as matching
     mw_version: Optional[str] = None  # the compiler version this verdict came from (candidates: the best)
     extra_cflags: Optional[str] = None  # the extra flags of that build (e.g. -use_lmw_stmw on)
+    instruction_rows: int = 0
+    differing_rows: int = 0
 
     def to_json(self) -> dict:
         return {k: v for k, v in self.__dict__.items() if not k.startswith("_")}
@@ -300,6 +302,12 @@ def _diff(project: Project, module: str, symbol: str, unit: str, max_diff_lines:
             real = sum(1 for i, (l, r) in enumerate(zip(lrows, rrows))
                        if (l.get("diff_kind") or "DIFF_NONE") != "DIFF_NONE" and i not in pool_rows and i not in abs_rows)
             n = max(len(lrows), len(rrows), 1)
+            res.instruction_rows = n
+            res.differing_rows = sum(
+                i not in pool_rows and i not in abs_rows and
+                ((l.get('diff_kind') or 'DIFF_NONE') != 'DIFF_NONE' or
+                 (r.get('diff_kind') or 'DIFF_NONE') != 'DIFF_NONE')
+                for i, (l, r) in enumerate(zip(lrows, rrows))) + abs(len(lrows) - len(rrows))
             res.pool_rows = len(pool_rows)
             res.percent_adjusted = round(100.0 * (n - real - abs(len(lrows) - len(rrows))) / n, 2) if (pool_rows or abs_rows) else res.percent
             res.matched_pool = bool(pool_rows) and real == 0 and len(lrows) == len(rrows)

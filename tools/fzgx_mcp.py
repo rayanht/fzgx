@@ -18,9 +18,11 @@ Run from the repository root: `uv run tools/fzgx_mcp.py`.
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
 import tempfile
+import threading
 from pathlib import Path
 from typing import List, Optional
 
@@ -30,13 +32,23 @@ from mcp.server.fastmcp import FastMCP
 ROOT = Path(__file__).resolve().parent.parent
 CLI = ROOT / "tools" / "fzgx.py"
 
-mcp = FastMCP("fzgx", instructions="F-Zero GX matching-decompilation oracle. One function per agent: "
-              "claim -> context -> write_unit -> check -> submit | release.")
+mcp = FastMCP("fzgx", instructions=(
+    "F-Zero GX matching oracle. The runner supplies the assignment, C and initial diff. "
+    "Edit and check; matches and attempt limits end the session automatically."
+    if os.environ.get('FZGX_RESULT_FILE') else
+    "F-Zero GX matching-decompilation oracle. One function per agent: "
+    "claim -> context -> write_unit -> check -> submit | release."))
 
 
 def _cli(*args: str, as_json: bool = True, timeout: int = 900) -> str | dict | list:
     cmd = [sys.executable, str(CLI)] + (["--json"] if as_json else []) + list(args)
     cp = subprocess.run(cmd, cwd=ROOT, text=True, capture_output=True, timeout=timeout)
+    result_file = os.environ.get('FZGX_RESULT_FILE')
+    if result_file and Path(result_file).exists():
+        # The runner consumes the terminal result and stops this process group.
+        # Do not send another tool result to the model just to narrate completion.
+        threading.Event().wait(30)
+        raise RuntimeError('runner did not stop the completed worker')
     out = cp.stdout.strip()
     if as_json:
         try:
@@ -100,7 +112,7 @@ async def patch_unit(symbol: str, agent: str, old: str, new: str) -> dict:
 
 @mcp.tool()
 async def check(symbol: str, versions: Optional[str] = None, max_diff_lines: int = 80) -> str:
-    """Compile SYMBOL's unit and diff against retail. Prints match % and a `target | ours` instruction diff. With versions='all' (or a comma list like 'GC/1.2.5n,GC/1.3.2') compiles under each CodeWarrior version and reports % per version instead."""
+    """Compile SYMBOL's unit and diff against retail. Prints match %, compiler settings and a `target | ours` instruction diff. With versions='all' (or a comma list like 'GC/1.2.5n,GC/1.3.2'), probe CodeWarrior versions, show the winning diff and retain that compiler for subsequent edits and submit."""
     args = ["check", symbol, "--max-diff-lines", str(max_diff_lines)]
     if versions:
         args += ["--versions", versions]

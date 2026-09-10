@@ -1,15 +1,12 @@
 #!/usr/bin/env python3
-"""Headless batch runner: one harness process per function, N in parallel, one summary.
+"""Headless matching batches: shared Codex app server, bounded local tool workers.
 
-    uv run tools/orchestrate.py --harness claude --parallel 16 --select main_rel:8:96:48
-    uv run tools/orchestrate.py --harness codex  --parallel 16 --symbols fn_1_A fn_1_B ...
+    uv run tools/orchestrate.py --provider deepseek --parallel 128 --seeds MANIFEST
 
-Each worker spawns `claude -p --agent matcher` (or `codex exec`) with only the
-project MCP server, no skills, no other MCPs, and the matcher's tool list. Tool
-outcomes, token usage and reported or estimated cost are written to the ledger;
-crashed or timed-out workers have their claim released,
-and a batch report lands in .fzgx/reports/ (local, not committed). The orchestrating model calls this
-once per batch and acts on the summary.
+Codex sessions share one app-server process. The runner assigns functions,
+serves bound dynamic tools, enforces attempt limits, and stops completed turns.
+Local compiler concurrency is independent of the number of model sessions.
+Claude's legacy CLI transport remains available with --harness claude.
 """
 
 from __future__ import annotations
@@ -31,8 +28,7 @@ from fzgx import api, reuse, trivial
 from fzgx.ledger import Ledger
 from fzgx.project import ROOT, STATE_DIR, Project
 
-MATCHER_TOOLS = ["Read", "mcp__fzgx__claim", "mcp__fzgx__write_unit", "mcp__fzgx__patch_unit", "mcp__fzgx__check",
-                 "mcp__fzgx__submit", "mcp__fzgx__release"]
+MATCHER_TOOLS = ["Read", "mcp__fzgx__write_unit", "mcp__fzgx__patch_unit", "mcp__fzgx__check", "mcp__fzgx__release"]
 # The user's defaults are Fable 5.1 (claude) and GPT-6 Astra (codex); matchers must never run on those.
 EXPECTED_MODEL = {"claude": "claude-haiku-4-5", "codex": "gpt-5.6-luna"}
 CLAUDE_MODELS = {"haiku": "claude-haiku-4-5", "sonnet": "claude-sonnet-5", "opus": "claude-opus-5"}
@@ -48,7 +44,8 @@ CODEX_INSTRUCTIONS = ROOT / "tools" / "codex_matcher.md"  # replaces Codex's 17.
 CODEX_REVISE_INSTRUCTIONS = ROOT / "tools" / "codex_revise.md"
 CODEX_DISABLE = ["plugins", "recommended_plugins", "plugin_sharing", "remote_plugin", "apps", "browser_use",
                  "browser_use_external", "in_app_browser", "computer_use", "skill_search", "skill_mcp_dependency_install",
-                 "multi_agent", "multi_agent_v2", "goals"]
+                 "multi_agent", "multi_agent_v2", "goals", "hooks", "memories",
+                 "shell_snapshot", "shell_snapshot_v2"]
 
 
 def select(p: Project, spec: str) -> List[str]:
@@ -89,56 +86,36 @@ def claude_cmd(symbol: str, agent_id: str, model: str) -> List[str]:
             "--allowedTools", ",".join(MATCHER_TOOLS)]
 
 
-def codex_cmd(symbol: str, agent_id: str, model: str, fast: bool = False, revise: bool = False,
-              effort: Optional[str] = None, provider: str = "openai") -> List[str]:
-    prompt = (f"SYMBOL={symbol}  AGENT_ID={agent_id}  MODEL={model}. Rewrite this matched function for readability following your loop."
-              if revise else f"SYMBOL={symbol}  AGENT_ID={agent_id}  MODEL={model}. Match this function following your loop.")
-    if os.environ.get('FZGX_SEEDS'):
-        prompt += (' Continue the saved candidate: claim returns your existing reconstruction in seed.source '
-                   'and installs it as your work copy. Follow seed.instruction: lifter drafts may need '
-                   'unresolved instructions completed before compiling. Preserve the recovered implementation.')
-    # --ignore-user-config: no user MCP servers/skills (480k -> 125k input tokens on a smoke test)
-    cmd = ["codex", "exec", "--json", "--skip-git-repo-check", "--ignore-user-config", "-s", "read-only",
-           "-m", model]
-    if provider == "deepseek":
-        # Run-local overrides preserve the user's normal Codex setup. Only the
-        # environment variable name goes in argv/session config, never its value.
-        cmd += ["-c", 'model_provider="deepseek"',
-                "-c", 'model_providers.deepseek.name="DeepSeek"',
-                "-c", 'model_providers.deepseek.base_url="https://api.deepseek.com"',
-                "-c", 'model_providers.deepseek.wire_api="responses"',
-                "-c", 'model_providers.deepseek.env_key="DEEPSEEK_API_KEY"',
-                "-c", 'model_providers.deepseek.requires_openai_auth=false',
-                "-c", f'model_catalog_json="{ROOT / "tools/codex_models.json"}"',
-                "-c", 'model_reasoning_summary="none"',
-                "-c", 'web_search="disabled"']
-    # none of these belong in a matcher's context (each adds tool schemas or injected text every call)
-    for feat in CODEX_DISABLE:
-        cmd += ["--disable", feat]
-    if fast:
-        cmd += ["-c", 'service_tier="fast"']
+def codex_server_cmd(model: str, provider: str, effort: Optional[str], fast: bool = False) -> List[str]:
+    """Process-local overrides only; never change personal Codex config/auth."""
+    overrides = {
+        'model': model, 'model_provider': provider, 'approval_policy': 'never',
+        'sandbox_mode': 'read-only', 'skills.include_instructions': False,
+        'project_doc_max_bytes': 0, 'web_search': 'disabled',
+        'tools.web_search': False, 'model_reasoning_summary': 'none',
+        'orchestrator.skills.enabled': False,
+        'include_environment_context': False, 'include_apps_instructions': False,
+        'include_collaboration_mode_instructions': False, 'thread_unload_delay_secs': 0,
+    }
+    for feature in CODEX_DISABLE + ['shell_tool', 'unified_exec', 'view_image']:
+        overrides['features.' + feature] = False
     if effort:
-        cmd += ["-c", f'model_reasoning_effort="{effort}"']
-    # context trims measured on a smoke run: 13.3k -> ~8k tokens on the first call
-    cmd += ["-c", f'model_instructions_file="{CODEX_REVISE_INSTRUCTIONS if revise else CODEX_INSTRUCTIONS}"',
-            "-c", "skills.include_instructions=false",                 # no <skills_instructions> block
-            "-c", "project_doc_max_bytes=0",                            # no AGENTS.md concatenation (global + repo)
-            "-c", 'mcp_servers.fzgx.enabled_tools=["claim","write_unit","patch_unit","check","submit","release"]',
-            "-c", "tools.web_search=false",
-            "--disable", "shell_tool", "--disable", "unified_exec", "--disable", "view_image"]
-    return cmd + [
-            "-c", 'mcp_servers.fzgx.command="uv"',
-            "-c", 'mcp_servers.fzgx.args=["run","tools/fzgx_mcp.py"]',
-            "-c", f'mcp_servers.fzgx.cwd="{ROOT}"',
-            # the server inherits nothing from us: the attempt cap of this round travels explicitly
-            "-c", 'mcp_servers.fzgx.env={' + ','.join(
-                name + '=' + json.dumps(os.environ.get(name, default)) for name, default in (
-                    ('FZGX_MAX_ATTEMPTS', '3'), ('FZGX_MAX_CHECKS', '16'), ('FZGX_MAX_STALE', '5'),
-                    ('FZGX_CLAIM_TTL', '1800'), ('FZGX_SEEDS', '')))
-            + ',FZGX_AGENT_ID=' + json.dumps(agent_id) + ',FZGX_SYMBOL=' + json.dumps(symbol) + '}',
-            # codex exec runs with approval_policy=never; without this every mutating MCP call is refused
-            "-c", 'mcp_servers.fzgx.default_tools_approval_mode="approve"',
-            prompt]
+        overrides['model_reasoning_effort'] = effort
+    if fast:
+        overrides['service_tier'] = 'fast'
+    if provider == 'deepseek':
+        overrides.update({
+            'model_providers.deepseek.name': 'DeepSeek',
+            'model_providers.deepseek.base_url': 'https://api.deepseek.com',
+            'model_providers.deepseek.wire_api': 'responses',
+            'model_providers.deepseek.env_key': 'DEEPSEEK_API_KEY',
+            'model_providers.deepseek.requires_openai_auth': False,
+            'model_catalog_json': str(ROOT / 'tools/codex_models.json'),
+        })
+    command = ['codex', 'app-server']
+    for key, value in overrides.items():
+        command += ['-c', key + '=' + json.dumps(value)]
+    return command
 
 
 def parse_claude(out: str) -> Dict:
@@ -156,39 +133,6 @@ def parse_claude(out: str) -> Dict:
     return {"text": out, "cost": 0.0, "turns": None, "tokens_in": 0, "tokens_out": 0, "model": ""}
 
 
-def codex_session_info(thread_id: str) -> tuple[str, Dict, List]:
-    """Rollouts retain the model and usage even when a turn fails before turn.completed."""
-    if not thread_id:
-        return "", {}, []
-    root = Path.home() / ".codex" / "sessions"
-    for f in sorted(root.rglob(f"*{thread_id}*"), key=lambda f: f.stat().st_mtime, reverse=True):
-        model, usage, samples, records = "", {}, [], {}
-        for line in f.read_text(errors="replace").splitlines():
-            try:
-                event = json.loads(line)
-            except json.JSONDecodeError:
-                continue
-            payload = event.get("payload", {})
-            if event.get("type") == "turn_context":
-                model = payload.get("model") or model
-            if event.get("type") == "token_usage_record" and payload.get("thread_id") == thread_id:
-                records[payload["response_id"]] = (event.get("timestamp"), payload["usage"])
-            if payload.get("type") == "token_count":
-                total = (payload.get("info") or {}).get("total_token_usage") or usage
-                delta = {k: max(0, total.get(k, 0) - usage.get(k, 0)) for k in
-                         ("input_tokens", "cached_input_tokens", "cache_write_input_tokens", "output_tokens")}
-                if delta["input_tokens"] or delta["output_tokens"]:
-                    samples.append((event.get("timestamp"), delta))
-                usage = total
-        if model or usage:
-            if records:
-                samples = list(records.values())
-                usage = {key: sum(u.get(key, 0) for _, u in samples) for key in
-                         ("input_tokens", "cached_input_tokens", "cache_write_input_tokens", "output_tokens")}
-            return model, usage, samples
-    return "", {}, []
-
-
 def deepseek_rate_multiplier(timestamp: Optional[str]) -> float:
     if not timestamp:
         return 1.0  # missing timestamps cannot establish eligibility for the discount
@@ -197,49 +141,19 @@ def deepseek_rate_multiplier(timestamp: Optional[str]) -> float:
     return 1.0 if peak else 0.5
 
 
-def parse_codex(out: str, fast: bool = False, provider: str = "openai") -> Dict:
-    text, tin, tout, model, thread = "", 0, 0, "", ""
-    cached = cache_w = 0
-    for line in out.splitlines():
-        if not line.startswith("{"):
-            continue
-        try:
-            ev = json.loads(line)
-        except json.JSONDecodeError:
-            continue
-        t = ev.get("type", "")
-        if t == "thread.started":
-            thread = ev.get("thread_id", "")
-        if t == "item.completed" and ev.get("item", {}).get("type") == "agent_message":
-            text = ev["item"].get("text", text)
-        if t == "turn.completed":
-            u = ev.get("usage", {})
-            # OpenAI usage: input_tokens already includes cached_input_tokens; output includes reasoning
-            tin += u.get("input_tokens", 0)
-            cached += u.get("cached_input_tokens", 0)
-            cache_w += u.get("cache_write_input_tokens", 0)
-            tout += u.get("output_tokens", 0)
-        model = ev.get("model", model) or model
-    session_model, usage, samples = codex_session_info(thread)
-    model = model or session_model
-    if usage:
-        tin = usage.get("input_tokens", 0)
-        cached = usage.get("cached_input_tokens", 0)
-        cache_w = usage.get("cache_write_input_tokens", 0)
-        tout = usage.get("output_tokens", 0)
-    prices = DEEPSEEK_PRICES if provider == "deepseek" else CODEX_PRICES
+def price_usage(model: str, samples: List, provider: str, fast: bool = False) -> Dict:
+    prices = DEEPSEEK_PRICES if provider == 'deepseek' else CODEX_PRICES
     pi, pc, pw, po = prices.get(model, (0.0, 0.0, 0.0, 0.0))
-    cost = ((tin - cached) * pi + cached * pc + cache_w * pw + tout * po) / 1e6 * (FAST_MULTIPLIER if fast else 1.0)
-    basis = "OpenAI fast-rate estimate" if fast else "OpenAI standard-rate estimate"
-    if provider == "deepseek":
-        basis = "DeepSeek peak-rate estimate (request timestamps unavailable)"
-        if samples:
-            cost = sum(((u["input_tokens"] - u["cached_input_tokens"]) * pi
-                        + u["cached_input_tokens"] * pc + u["cache_write_input_tokens"] * pw
-                        + u["output_tokens"] * po) / 1e6 * deepseek_rate_multiplier(t) for t, u in samples)
-            basis = "DeepSeek peak/off-peak estimate by UTC response timestamp"
-    return {"text": text or out[-2000:], "cost": round(cost, 6), "turns": None, "tokens_in": tin,
-            "tokens_out": tout, "model": model, "cost_basis": basis}
+    cost = 0.0
+    for timestamp, usage in samples:
+        multiplier = deepseek_rate_multiplier(timestamp) if provider == 'deepseek' else (FAST_MULTIPLIER if fast else 1.0)
+        cost += ((usage.get('input_tokens', 0) - usage.get('cached_input_tokens', 0)) * pi
+                 + usage.get('cached_input_tokens', 0) * pc + usage.get('cache_write_input_tokens', 0) * pw
+                 + usage.get('output_tokens', 0) * po) / 1e6 * multiplier
+    return dict(cost=round(cost, 6), tokens_in=sum(u.get('input_tokens', 0) for _, u in samples),
+                tokens_out=sum(u.get('output_tokens', 0) for _, u in samples),
+                cost_basis=('DeepSeek peak/off-peak estimate by UTC usage event timestamp' if provider == 'deepseek'
+                            else 'OpenAI fast-rate estimate' if fast else 'OpenAI standard-rate estimate'))
 
 
 def run_one(p: Project, harness: str, model: str, symbol: str, idx: int, timeout: int, batch: str,
@@ -248,25 +162,103 @@ def run_one(p: Project, harness: str, model: str, symbol: str, idx: int, timeout
     agent_id = f"{prefix}{batch}-{harness}-{idx}"
     if harness == "claude" and revise:
         raise SystemExit("--revise is implemented for the codex harness only")
-    cmd = claude_cmd(symbol, agent_id, model) if harness == "claude" else codex_cmd(symbol, agent_id, model, fast, revise, EFFORT.get("level"), provider)
     t0 = time.time()
-    # own process group: on timeout the agent AND its MCP server die (they leaked before)
-    proc = subprocess.Popen(cmd, cwd=ROOT, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                            stdin=subprocess.DEVNULL, start_new_session=True,
-                            env={**os.environ, "CLAUDE_CODE_DISABLE_TERMINAL_TITLE": "1"})
-    try:
-        so, se = proc.communicate(timeout=timeout)
-        out, rc = (so or "") + "\n" + (se or ""), proc.returncode
-    except subprocess.TimeoutExpired:
+    directory = STATE_DIR / 'runs' / batch
+    directory.mkdir(parents=True, exist_ok=True)
+    result_file = directory / f'{symbol}.terminal.json'
+    if result_file.exists():
+        raise ValueError(f'{result_file}: worker already completed; use a new batch name')
+    env = {**os.environ, 'CLAUDE_CODE_DISABLE_TERMINAL_TITLE': '1', 'FZGX_AGENT_ID': agent_id,
+           'FZGX_SYMBOL': symbol, 'FZGX_HARNESS': harness, 'FZGX_MODEL': model,
+           'FZGX_RESULT_FILE': str(result_file)}
+
+    def worker_cli(*args, timeout_s=900):
+        cp = subprocess.run([sys.executable, str(ROOT / 'tools/fzgx.py'), '--json', *args],
+                            cwd=ROOT, env=env, text=True, capture_output=True, timeout=timeout_s)
         try:
-            os.killpg(proc.pid, signal.SIGKILL)
-        except ProcessLookupError:
-            pass
-        so, se = proc.communicate()
-        def _s(x):
-            return x.decode(errors="replace") if isinstance(x, bytes) else (x or "")
-        out, rc = _s(so) + "\n" + _s(se), -9
-    info = parse_claude(out) if harness == "claude" else parse_codex(out, fast, provider)
+            return json.loads(cp.stdout)
+        except ValueError:
+            raise RuntimeError((cp.stderr or cp.stdout or 'worker CLI returned no result')[-2000:])
+
+    out, rc, proc, setup_secs = '', 0, None, 0.0
+    try:
+        assignment = worker_cli('claim', symbol, '--agent', agent_id, timeout_s=timeout)
+        if not assignment.get('ok'):
+            raise RuntimeError('assignment failed: ' + json.dumps(assignment))
+        seed = assignment.get('seed') or {}
+        if seed and not revise and not (seed.get('kind') == 'lift_total' and '???' in seed['source']):
+            initial = worker_cli('check', symbol)
+            assignment['initial_check'] = api.format_check(initial)
+            seed['instruction'] = 'Your work copy contains this C. Continue from initial_check with patch_unit.'
+        elif revise:
+            assignment['source'] = p.work_path(api._key(p, symbol)).read_text()
+        (directory / f'{symbol}.assignment.json').write_text(json.dumps(assignment, indent=2) + '\n')
+        setup_secs = round(time.time() - t0, 3)
+        if not result_file.exists():
+            cmd = claude_cmd(symbol, agent_id, model)
+            task = {'context': assignment['context']}
+            if seed:
+                task['seed'] = {k: seed[k] for k in ('source', 'kind', 'instruction') if k in seed}
+            if assignment.get('source'):
+                task['source'] = assignment['source']
+            if assignment.get('initial_check'):
+                task['initial_check'] = assignment['initial_check']
+            prompt = (f'SYMBOL={symbol} AGENT_ID={agent_id} MODEL={model}. The runner has already assigned '
+                      'this function and installed its work copy. Continue from the supplied C and initial diff.\n'
+                      + json.dumps(task))
+            cmd[cmd.index('-p') + 1] = prompt
+            stdin = None
+            (directory / f'{symbol}.prompt.txt').write_text(prompt + '\n')
+            # A terminal tool call writes result_file before its MCP response is
+            # returned. Stop the process group before another model request.
+            proc = subprocess.Popen(cmd, cwd=ROOT, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                    stdin=subprocess.PIPE if stdin else subprocess.DEVNULL,
+                                    start_new_session=True, env=env)
+            first = True
+            while True:
+                remaining = timeout - (time.time() - t0)
+                if remaining <= 0:
+                    raise subprocess.TimeoutExpired(cmd, timeout)
+                try:
+                    so, se = proc.communicate(input=stdin if first else None, timeout=min(0.25, remaining))
+                    out, rc = (so or '') + '\n' + (se or ''), proc.returncode
+                    break
+                except subprocess.TimeoutExpired:
+                    first = False
+                    if result_file.exists():
+                        try:
+                            os.killpg(proc.pid, signal.SIGTERM)
+                        except ProcessLookupError:
+                            pass
+                        try:
+                            so, se = proc.communicate(timeout=5)
+                        except subprocess.TimeoutExpired:
+                            os.killpg(proc.pid, signal.SIGKILL)
+                            so, se = proc.communicate()
+                        out, rc = (so or '') + '\n' + (se or ''), proc.returncode
+                        break
+        else:
+            out = 'Completed during deterministic preflight; no model request.\n'
+    except subprocess.TimeoutExpired:
+        if proc:
+            try:
+                os.killpg(proc.pid, signal.SIGKILL)
+            except ProcessLookupError:
+                pass
+            so, se = proc.communicate()
+            out = (so or '') + '\n' + (se or '')
+        rc = -9
+    except Exception as error:
+        if proc and proc.poll() is None:
+            try:
+                os.killpg(proc.pid, signal.SIGKILL)
+            except ProcessLookupError:
+                pass
+            so, se = proc.communicate()
+            out += (so or '') + '\n' + (se or '')
+        out += '\nHarness error: ' + str(error)
+        rc = 1
+    info = parse_claude(out)
     key = api._key(p, symbol)
     l = Ledger()
     att = l.db.execute("SELECT * FROM attempts WHERE symbol=? AND agent=? ORDER BY id DESC LIMIT 1",
@@ -280,9 +272,14 @@ def run_one(p: Project, harness: str, model: str, symbol: str, idx: int, timeout
     row = l.get(key)
     if not terminal and row and row["status"] == "claimed" and row["claimed_by"] == agent_id:
         try:
-            api.abort_attempt(p, symbol, f"{outcome}: agent exited without submitting or releasing (rc={rc})")
-        except Exception:
-            pass
+            worker_cli('release', symbol, '--agent', agent_id,
+                       '--reason', f'harness {outcome} (rc={rc}); saved best candidate automatically', timeout_s=120)
+            att = l.db.execute('SELECT * FROM attempts WHERE symbol=? AND agent=? ORDER BY id DESC LIMIT 1',
+                               (key, agent_id)).fetchone()
+            if att and att['ended']:
+                outcome = 'matched' if att['outcome'] in ('matched', 'matched-pool', 'shadow-matched') else outcome + '+released'
+        except Exception as error:
+            out += '\nAutomatic cleanup failed: ' + str(error)
     if info["model"] and not info["model"].startswith(EXPECTED_MODEL[harness]):
         outcome = f"WRONG-MODEL({info['model']})"
     pct = 100.0 if outcome == "matched" else (att["best_in_attempt"] if att else None)
@@ -291,24 +288,22 @@ def run_one(p: Project, harness: str, model: str, symbol: str, idx: int, timeout
     l.db.execute("UPDATE attempts SET tokens_in=?, tokens_out=?, cost_usd=?, harness=?, model=COALESCE(NULLIF(?, ''), model) "
                  "WHERE id=(SELECT id FROM attempts WHERE symbol=? AND agent=? ORDER BY id DESC LIMIT 1)",
                  (info["tokens_in"], info["tokens_out"], info["cost"], harness, info["model"], key, agent_id))
-    row = l.get(key)
-    if row and row["status"] == "claimed" and row["claimed_by"] == agent_id:
-        api.release(p, symbol, f"harness {outcome} (rc={rc}); no RESULT line", harness=harness, model=info["model"], agent=agent_id)
-        outcome = f"{outcome}+released"
     log = STATE_DIR / "runs" / batch / f"{symbol}.log"
     log.parent.mkdir(parents=True, exist_ok=True)
     log.write_text(out)
     return {"symbol": symbol, "outcome": outcome, "percent": pct, "checks": checks, "cost": info["cost"], "model": info["model"],
             "cost_basis": info.get("cost_basis", "provider-reported"),
             "tokens_in": info["tokens_in"], "tokens_out": info["tokens_out"], "turns": info["turns"],
-            "secs": round(time.time() - t0, 1), "rc": rc}
-
-
-EFFORT: Dict[str, Optional[str]] = {"level": None}
+            "secs": round(time.time() - t0, 1), "setup_secs": setup_secs, "model_started": proc is not None, "rc": rc}
 
 
 def fan_out(p: Project, a, model: str, symbols: List[str], batch: str, revise: bool) -> tuple:
     """Run one agent per symbol, `a.parallel` at a time, within `a.budget_usd`."""
+    if a.harness == 'codex':
+        import asyncio
+        from codex_server import fan_out as server_fan_out
+        return asyncio.run(server_fan_out(p, a, model, symbols, batch, revise,
+                           codex_server_cmd(model, a.provider, a.effort, a.fast), price_usage))
     results: List[Dict] = []
     spent = 0.0
     with ThreadPoolExecutor(max_workers=a.parallel) as ex:
@@ -367,11 +362,13 @@ def finish_round(p: Project, a, model: str, module: str) -> Dict:
 
 def main(argv: Optional[List[str]] = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("--harness", choices=["claude", "codex"], default="claude")
+    ap.add_argument("--harness", choices=["claude", "codex"], default="codex")
     ap.add_argument("--provider", choices=["openai", "deepseek"], default="openai", help="codex model provider")
     ap.add_argument("--api-key-file", type=Path, help="DeepSeek key file; otherwise use DEEPSEEK_API_KEY")
     ap.add_argument("--model", help="claude: haiku|sonnet|opus (default haiku); codex: model name (default gpt-5.6-luna)")
     ap.add_argument("--parallel", type=int, default=48)
+    ap.add_argument("--tool-parallel", type=int, default=min(16, os.cpu_count() or 4),
+                    help="maximum simultaneous local tool processes, independent of model sessions")
     ap.add_argument("--timeout", type=int, default=900, help="seconds per agent")
     ap.add_argument('--seeds', type=Path, help='JSON manifest of saved C, compiler options and scores; selects its functions by default')
     ap.add_argument('--max-checks', type=int, help='checks allowed per worker attempt')
@@ -396,6 +393,10 @@ def main(argv: Optional[List[str]] = None) -> int:
     ap.add_argument("--revise", action="store_true",
                     help="rewrite already-matched functions for readability; kept only if still 100%%")
     a = ap.parse_args(argv)
+    if a.parallel < 1 or a.tool_parallel < 1 or a.timeout < 1:
+        ap.error('parallel, tool-parallel and timeout must be positive')
+    if len(a.symbols) != len(set(a.symbols)):
+        ap.error('duplicate symbols are not allowed')
     if a.provider == "deepseek":
         if a.harness != "codex":
             ap.error("--provider deepseek requires --harness codex")
@@ -432,7 +433,6 @@ def main(argv: Optional[List[str]] = None) -> int:
         EXPECTED_MODEL["claude"] = CLAUDE_MODELS.get(model, model)  # the guard checks the tier that was asked for
     elif a.model:
         EXPECTED_MODEL["codex"] = a.model
-    EFFORT["level"] = a.effort
     p = Project()
 
     if a.finish_only:
@@ -446,10 +446,11 @@ def main(argv: Optional[List[str]] = None) -> int:
         symbols += select(p, a.select)
     if a.select_tu:
         symbols += select_tu(p, a.module, a.select_tu, a.max_size, a.revise, a.retry)
+    symbols = list(dict.fromkeys(symbols))
     if not symbols:
         print("nothing selected", file=sys.stderr)
         return 2
-    print(f"batch {a.batch}: {len(symbols)} functions, harness={a.harness} provider={a.provider} model={model} parallel={a.parallel}")
+    print(f"batch {a.batch}: {len(symbols)} functions, harness={a.harness} provider={a.provider} model={model} parallel={a.parallel} tool_parallel={a.tool_parallel}")
     if a.dry_run:
         print(" ".join(symbols))
         return 0
@@ -466,7 +467,7 @@ def main(argv: Optional[List[str]] = None) -> int:
 
     t0 = time.time()
     results, spent = fan_out(p, a, model, symbols, a.batch, a.revise)
-    ver = {"verified": [], "rejected": []}
+    ver = {"ok": True, "verified": [], "rejected": []}
     if not a.shadow:
         ver = api.verify_links(p, f"batch {a.batch}: link-verified matches")
         print(f"verify: {len(ver.get('verified', []))} verified, {len(ver.get('rejected', []))} rejected"
@@ -482,7 +483,8 @@ def main(argv: Optional[List[str]] = None) -> int:
     other = [r for r in results if r not in matched and r not in released]
     models = sorted({r.get("model") for r in results if r.get("model")})
     summary = {"batch": a.batch, "harness": a.harness, "model": model + (" (fast)" if a.fast else ""), "models_seen": models, "n": len(results), "matched": len(matched),
-               "provider": a.provider, "cost_basis": "; ".join(sorted({r["cost_basis"] for r in results})),
+               "provider": a.provider, "transport": "app-server" if a.harness == "codex" else "cli",
+               "parallel": a.parallel, "tool_parallel": a.tool_parallel, "cost_basis": "; ".join(sorted({r["cost_basis"] for r in results})),
                "link_rejected": len(ver.get("rejected", [])),
                "released": len(released), "failed": len(other), "cost_usd": round(spent, 3),
                "wall_s": round(time.time() - t0, 1), "finish": finish_result, "results": results}
@@ -503,7 +505,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     subprocess.run(["git", "commit", "-q", "-m", f"batch {a.batch}: {len(matched)}/{len(results)} matched ({a.harness}/{model})"],
                    cwd=ROOT, capture_output=True)
     print(json.dumps({k: v for k, v in summary.items() if k != "results"}))
-    return 0
+    return 0 if ver.get("ok") and not other else 1
 
 
 if __name__ == "__main__":

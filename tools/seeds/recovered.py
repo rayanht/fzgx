@@ -97,6 +97,9 @@ class SavedCandidates:
         for row in self.ledger.db.execute('SELECT * FROM attempts ORDER BY id'):
             record = dict(percent=max(row['best_in_attempt'] or 0, row['final_percent'] or 0),
                           path=row['best_body_path'])
+            metadata = Path(row['best_body_path']).with_suffix('.json') if row['best_body_path'] else None
+            if metadata and metadata.exists():
+                record.update(json.loads(metadata.read_text()))
             self.add(row['symbol'], record, f'ledger:attempt/{row["id"]}')
 
         # Only compile-result stores: donor discovery/fuzzy scores measure opcode

@@ -18,16 +18,15 @@ uv run tools/fzgx.py restore                    # (optional) load state/ledger.j
 
 ## Agent workflow
 
-Matching is done by many cheap subagents, one function each, through the
-`fzgx` MCP server (`tools/fzgx_mcp.py`, registered in `.mcp.json`; approve it
-when Claude Code asks at startup). Matchers have **no shell**: their tools are
-`claim` → `context` → `write_unit` → `check` → `submit` or `release`,
-plus read-only `Read`. The same operations exist as `uv run tools/fzgx.py ...`
-for humans, the orchestrator and the librarian. The orchestrator picks
-functions with `fzgx inventory --status unmatched --max-size N`, fans out
-`matcher` subagents (`.claude/agents/matcher.md`), then runs the `librarian`
-once per wave, then `triage` for functions at the attempt cap. Details:
-SPEC.md (local, not committed) and `docs/CODING_RULES.md`.
+Headless batches use `uv run tools/orchestrate.py --harness codex ...`.
+One local Codex app server multiplexes the model sessions; a bounded pool of
+short-lived CLI processes serves dynamic tools. The runner assigns functions
+and supplies their existing C and initial diff. Models only edit/check their
+bound work copy or release early for a technical reason. Tooling accepts matches
+and releases exhausted attempts; the runner interrupts and unloads the thread.
+No model-generated claim, submit, limit acknowledgement, or RESULT line is
+needed. The manual CLI/MCP operations remain available. See
+`AGENTS.md`, `docs/CODEX_APP_SERVER.md`, and `docs/CODING_RULES.md`.
 
 Rules that hold for everyone:
 
@@ -234,10 +233,20 @@ Rules that hold for everyone:
   at weekday UTC 01:00-04:00 / 06:00-10:00 peak rates, half otherwise; retain usage
   from failed turns too. Label estimates explicitly; use provider-reported dollar
   cost when available. Supported effort levels are `low`, `high`, and `max`.
-  Load the six matcher tools directly (`supports_search_tool=false`): DeepSeek rejects
+  Load the four matcher dynamic tools directly (`supports_search_tool=false`): DeepSeek rejects
   duplicate MCP namespaces returned by parallel Codex tool searches. Shadow trials
   retain matched C and compiler options under `.fzgx/attempts/` for later integration;
   finishing or aborting them preserves the function's original matching status.
+  App-server control commands use bounded concurrency with separate completion
+  slots. Retry only explicit JSON-RPC -32001 overload rejections, never ambiguous
+  timeouts. Codex 0.153.4 requires each inherited MCP server to be disabled in
+  thread-local config; the global orchestrator MCP switch does not suppress
+  their initialization. Disable worker hooks through runner overrides too.
+  Completed items retain reasoning/text; do not persist every token delta at scale.
+  Compiler probes must persist their selected version for subsequent edits,
+  submit, release repairs, and the next batch's saved-body selection. Context
+  must display the actual seed compiler/flags. Similarity scores near 100% can
+  still hide many register or scheduling differences; show remaining diff rows.
   Bind each headless worker to its assigned symbol and agent id. A successful
   submit/release ends that worker's attempt; reclaiming cannot reset its counters.
   Reject repeated shadow submits before checking or finishing: a finished trial no

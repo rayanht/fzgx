@@ -1,0 +1,15 @@
+[
+  {
+    "symbol": "fn_80021930",
+    "source": "src/dol/fn_80021930.c",
+    "sha256": "30bc47d02298a2b8d0ad88166ff1d43199eacf6ad39955050bd5353290c22ff7",
+    "origin_batch": "deepseek-recovered-above90-128-low-20260910",
+    "origin_attempt": 10348,
+    "origin_sha256": "30bc47d02298a2b8d0ad88166ff1d43199eacf6ad39955050bd5353290c22ff7",
+    "baseline_percent": 99.92857,
+    "mw": "GC/1.2.5n",
+    "flags": "-opt nodeadstore",
+    "repair": "unchanged recovered C; disable dead-store optimization to match the retail stack frame",
+    "pipeline": "tools/diagnose_batch.py --saved followed by seeded orchestrator preflight"
+  }
+]

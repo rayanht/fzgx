@@ -21,9 +21,9 @@ extern DVDCommandBlock DummyCommandBlock_8015CE80;
 
 void stateReady();
 
-void cbForStateMotorStopped_800186E8(u32 intType);
+void cbForStateMotorStopped(u32 intType);
 
-void cbForStateMotorStopped_800186E8(u32 intType);
+void cbForStateMotorStopped(u32 intType);
 
 void stateReady();
 
@@ -83,7 +83,7 @@ BOOL DVDCancelAsync(DVDCommandBlock *block, DVDCBCallback callback) {
     case 7:
     case 11:
         old = DVDLowClearCallback();
-        if (old != cbForStateMotorStopped_800186E8) {
+        if (old != cbForStateMotorStopped) {
             OSRestoreInterrupts(enabled);
             return 0;
         }

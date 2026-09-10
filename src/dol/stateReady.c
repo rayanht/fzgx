@@ -9,7 +9,7 @@
 #define CurrCommand CurrCommand_801A68DC
 #define ResumeFromHere ResumeFromHere_801A68E8
 #define CancelLastError CancelLastError_801A68EC
-#define cbForStateMotorStopped cbForStateMotorStopped_800186E8
+#define cbForStateMotorStopped cbForStateMotorStopped
 
 // Hardware or OS state can change asynchronously.
 typedef volatile u32 vu32;
