@@ -3599,3 +3599,420 @@ dol/GXSetCPUFifo.c:
 
 dol/fn_80075D48.c:
 	.text       start:0x80075D48 end:0x80076134 align:4
+
+dol/ARStartDMA.c:
+	.text       start:0x8001E864 end:0x8001E954 align:4
+
+dol/fn_8001EA30.c:
+	.text       start:0x8001EA30 end:0x8001EAF4 align:4
+
+dol/fn_8001EAF4.c:
+	.text       start:0x8001EAF4 end:0x8001EB6C align:4
+
+dol/fn_8001EB6C.c:
+	.text       start:0x8001EB6C end:0x80020360 align:4
+
+dol/fn_80020360.c:
+	.text       start:0x80020360 end:0x80020460 align:4
+
+dol/fn_80020464.c:
+	.text       start:0x80020464 end:0x80020530 align:4
+
+dol/fn_800205A0.c:
+	.text       start:0x800205A0 end:0x800206FC align:4
+
+dol/fn_8002AF34.c:
+	.text       start:0x8002AF34 end:0x8002BA8C align:4
+
+dol/fn_8000A224.c:
+	.text       start:0x8000A224 end:0x8000A24C align:4
+
+dol/__OSGetExceptionHandler.c:
+	.text       start:0x8000AA4C end:0x8000AA60 align:4
+
+dol/InsertAlarm.c:
+	.text       start:0x8000AC44 end:0x8000AE94 align:4
+
+dol/fn_8000AF78.c:
+	.text       start:0x8000AF78 end:0x8000B094 align:4
+
+dol/DecrementerExceptionCallback.c:
+	.text       start:0x8000B094 end:0x8000B2C4 align:4
+
+dol/OSSetErrorHandler.c:
+	.text       start:0x8000C5C8 end:0x8000C7E0 align:4
+
+dol/__OSInterruptInit.c:
+	.text       start:0x8000D570 end:0x8000D5E4 align:4
+
+dol/fn_8000D9CC.c:
+	.text       start:0x8000D9CC end:0x8000DD10 align:4
+
+dol/OSRegisterResetFunction.c:
+	.text       start:0x8000EE70 end:0x8000EEF4 align:4
+
+dol/EXIInit.c:
+	.text       start:0x80014CD0 end:0x80014EA4 align:4
+
+dol/EXIGetID.c:
+	.text       start:0x800150B4 end:0x80015464 align:4
+
+dol/__OSEnableBarnacle.c:
+	.text       start:0x800155F0 end:0x800157AC align:4
+
+dol/fn_8001581C.c:
+	.text       start:0x8001581C end:0x80015A38 align:4
+
+dol/__VIInit.c:
+	.text       start:0x8001A8B4 end:0x8001AAB4 align:4
+
+dol/fn_8001AFB8.c:
+	.text       start:0x8001AFB8 end:0x8001B28C align:4
+
+dol/fn_8001BE74.c:
+	.text       start:0x8001BE74 end:0x8001BEDC align:4
+
+dol/fn_8001BEDC.c:
+	.text       start:0x8001BEDC end:0x8001BF84 align:4
+
+dol/fn_8001BF84.c:
+	.text       start:0x8001BF84 end:0x8001C01C align:4
+
+dol/AlarmHandlerForTimeout.c:
+	.text       start:0x80016324 end:0x80016394 align:4
+
+dol/DVDLowWaitCoverClose.c:
+	.text       start:0x80016850 end:0x8001687C align:4
+
+dol/DVDLowReset.c:
+	.text       start:0x80016C94 end:0x80016D50 align:4
+
+dol/fn_800170EC.c:
+	.text       start:0x800170EC end:0x80017160 align:4
+
+dol/fn_80017160.c:
+	.text       start:0x80017160 end:0x80017228 align:4
+
+dol/fn_8001724C.c:
+	.text       start:0x8001724C end:0x800173AC align:4
+
+dol/fn_800173AC.c:
+	.text       start:0x800173AC end:0x80017470 align:4
+
+dol/fn_80017470.c:
+	.text       start:0x80017470 end:0x800174D0 align:4
+
+dol/DVDInit.c:
+	.text       start:0x8001776C end:0x80017838 align:4
+
+dol/fn_80017B14.c:
+	.text       start:0x80017B14 end:0x80017DA8 align:4
+
+dol/fn_80017ED0.c:
+	.text       start:0x80017ED0 end:0x80018028 align:4
+
+dol/fn_8001821C.c:
+	.text       start:0x8001821C end:0x80018330 align:4
+
+dol/fn_80018414.c:
+	.text       start:0x80018414 end:0x80018510 align:4
+
+dol/stateBusy.c:
+	.text       start:0x800189FC end:0x80018D1C align:4
+
+dol/DVDReset.c:
+	.text       start:0x80019760 end:0x800197A4 align:4
+
+dol/fn_800198FC.c:
+	.text       start:0x800198FC end:0x80019B78 align:4
+
+dol/fn_80019C50.c:
+	.text       start:0x80019C50 end:0x80019D48 align:4
+
+dol/fn_80019D48.c:
+	.text       start:0x80019D48 end:0x80019E64 align:4
+
+dol/__DVDCheckWaitingQueue.c:
+	.text       start:0x80019FA4 end:0x80019FFC align:4
+
+dol/DVDCompareDiskID.c:
+	.text       start:0x8001A1F4 end:0x8001A2EC align:4
+
+dol/cb.c:
+	.text       start:0x8001A31C end:0x8001A3F4 align:4
+
+dol/fn_80016D64.c:
+	.text       start:0x80016D64 end:0x80016D7C align:4
+
+dol/ErrorCode2Num.c:
+	.text       start:0x8001A05C end:0x8001A178 align:4
+
+dol/fn_80032014.c:
+	.text       start:0x80032014 end:0x800320F0 align:4
+
+dol/fn_80034230.c:
+	.text       start:0x80034230 end:0x800342B8 align:4
+
+dol/fn_800342D4.c:
+	.text       start:0x800342D4 end:0x800342E8 align:4
+
+dol/fn_80035EC4.c:
+	.text       start:0x80035EC4 end:0x80036058 align:4
+
+dol/fn_80039B7C.c:
+	.text       start:0x80039B7C end:0x80039C40 align:4
+
+dol/DSPReadMailFromDSP.c:
+	.text       start:0x80028CE0 end:0x80028CF8 align:4
+
+dol/DSPSendMailToDSP.c:
+	.text       start:0x80028CF8 end:0x80028D0C align:4
+
+dol/fn_80028FA0.c:
+	.text       start:0x80028FA0 end:0x800293C4 align:4
+
+dol/fn_800296F0.c:
+	.text       start:0x800296F0 end:0x80029790 align:4
+
+dol/fn_80029790.c:
+	.text       start:0x80029790 end:0x80029824 align:4
+
+dol/ClampStick.c:
+	.text       start:0x8001C0C0 end:0x8001C1F0 align:4
+
+dol/fn_8001C304.c:
+	.text       start:0x8001C304 end:0x8001C4A8 align:4
+
+dol/SPEC0_MakeStatus.c:
+	.text       start:0x8001D4E8 end:0x8001D65C align:4
+
+dol/SPEC1_MakeStatus.c:
+	.text       start:0x8001D65C end:0x8001D7D0 align:4
+
+dol/fn_8001DBC8.c:
+	.text       start:0x8001DBC8 end:0x8001DC3C align:4
+
+dol/PADClamp.c:
+	.text       start:0x8001C1F0 end:0x8001C304 align:4
+
+dol/fn_8001C56C.c:
+	.text       start:0x8001C56C end:0x8001C62C align:4
+
+dol/fn_8001CA30.c:
+	.text       start:0x8001CA30 end:0x8001CB64 align:4
+
+dol/fn_8001D7D0.c:
+	.text       start:0x8001D7D0 end:0x8001DBC8 align:4
+
+dol/__PADDisableRecalibration.c:
+	.text       start:0x8001DE84 end:0x8001DF00 align:4
+
+dol/AIInitDMA.c:
+	.text       start:0x8001DF44 end:0x8001DFCC align:4
+
+dol/AIStopDMA.c:
+	.text       start:0x8001DFE4 end:0x8001DFFC align:4
+
+dol/AISetStreamPlayState.c:
+	.text       start:0x8001DFFC end:0x8001E0D4 align:4
+
+dol/AISetDSPSampleRate.c:
+	.text       start:0x8001E0E4 end:0x8001E1C4 align:4
+
+dol/__AI_set_stream_sample_rate.c:
+	.text       start:0x8001E1D8 end:0x8001E2AC align:4
+
+dol/AISetStreamVolLeft.c:
+	.text       start:0x8001E2BC end:0x8001E2D8 align:4
+
+dol/AISetStreamVolRight.c:
+	.text       start:0x8001E2E8 end:0x8001E304 align:4
+
+dol/fn_8001E480.c:
+	.text       start:0x8001E480 end:0x8001E4FC align:4
+
+dol/fn_8001E4FC.c:
+	.text       start:0x8001E4FC end:0x8001E5A8 align:4
+
+dol/fn_8002D8F8.c:
+	.text       start:0x8002D8F8 end:0x8002DD08 align:4
+
+dol/__OSResetSWInterruptHandler.c:
+	.text       start:0x8000F264 end:0x8000F358 align:4
+
+dol/fn_80010410.c:
+	.text       start:0x80010410 end:0x800105D0 align:4
+
+dol/fn_80010828.c:
+	.text       start:0x80010828 end:0x80010A10 align:4
+
+dol/fn_80010A10.c:
+	.text       start:0x80010A10 end:0x80010AF4 align:4
+
+dol/OSCancelThread.c:
+	.text       start:0x80010AF4 end:0x80010CB0 align:4
+
+dol/fn_80010F38.c:
+	.text       start:0x80010F38 end:0x800110A8 align:4
+
+dol/fn_800110A8.c:
+	.text       start:0x800110A8 end:0x80011194 align:4
+
+dol/fn_80011194.c:
+	.text       start:0x80011194 end:0x80011298 align:4
+
+dol/fn_8000F358.c:
+	.text       start:0x8000F358 end:0x8000F5F0 align:4
+
+dol/fn_80031B50.c:
+	.text       start:0x80031B50 end:0x80031C84 align:4
+
+dol/GXSetGPFifo.c:
+	.text       start:0x80031E7C end:0x80031FF4 align:4
+
+dol/fn_800320F0.c:
+	.text       start:0x800320F0 end:0x80032140 align:4
+
+dol/fn_80032370.c:
+	.text       start:0x80032370 end:0x800324C8 align:4
+
+dol/fn_800324C8.c:
+	.text       start:0x800324C8 end:0x80032818 align:4
+
+dol/fn_80032818.c:
+	.text       start:0x80032818 end:0x80032B8C align:4
+
+dol/fn_80032B8C.c:
+	.text       start:0x80032B8C end:0x80032BE0 align:4
+
+dol/fn_80032D04.c:
+	.text       start:0x80032D04 end:0x80032EB8 align:4
+
+dol/fn_80032F48.c:
+	.text       start:0x80032F48 end:0x80032F80 align:4
+
+dol/fn_800336EC.c:
+	.text       start:0x800336EC end:0x8003396C align:4
+
+dol/fn_800339E0.c:
+	.text       start:0x800339E0 end:0x80033A6C align:4
+
+dol/fn_80033A7C.c:
+	.text       start:0x80033A7C end:0x80033D4C align:4
+
+dol/fn_800340D4.c:
+	.text       start:0x800340D4 end:0x8003416C align:4
+
+dol/fn_8003471C.c:
+	.text       start:0x8003471C end:0x800347A4 align:4
+
+dol/fn_800347A4.c:
+	.text       start:0x800347A4 end:0x800347EC align:4
+
+dol/fn_80034918.c:
+	.text       start:0x80034918 end:0x8003493C align:4
+
+dol/fn_80034A5C.c:
+	.text       start:0x80034A5C end:0x80034AEC align:4
+
+dol/fn_80034AEC.c:
+	.text       start:0x80034AEC end:0x80034B7C align:4
+
+dol/fn_80034D0C.c:
+	.text       start:0x80034D0C end:0x80034D34 align:4
+
+dol/fn_80034D9C.c:
+	.text       start:0x80034D9C end:0x80034E64 align:4
+
+dol/fn_80034E64.c:
+	.text       start:0x80034E64 end:0x80034ECC align:4
+
+dol/fn_800353E8.c:
+	.text       start:0x800353E8 end:0x80035420 align:4
+
+dol/GXGetTexBufferSize.c:
+	.text       start:0x80035A2C end:0x80035B88 align:4
+
+dol/__GetImageTileCount.c:
+	.text       start:0x80035B88 end:0x80035C50 align:4
+
+dol/fn_8003666C.c:
+	.text       start:0x8003666C end:0x800367E8 align:4
+
+dol/__GXSetTmemConfig.c:
+	.text       start:0x800367E8 end:0x80036A28 align:4
+
+dol/fn_80036A28.c:
+	.text       start:0x80036A28 end:0x80036AC4 align:4
+
+dol/fn_80036C24.c:
+	.text       start:0x80036C24 end:0x80036DA0 align:4
+
+dol/fn_80036DA0.c:
+	.text       start:0x80036DA0 end:0x80036EB4 align:4
+
+dol/__GXFlushTextureState.c:
+	.text       start:0x80036FF0 end:0x80037014 align:4
+
+dol/fn_80037354.c:
+	.text       start:0x80037354 end:0x800373C0 align:4
+
+dol/fn_800373C0.c:
+	.text       start:0x800373C0 end:0x8003742C align:4
+
+dol/fn_8003742C.c:
+	.text       start:0x8003742C end:0x80037480 align:4
+
+dol/fn_80037480.c:
+	.text       start:0x80037480 end:0x80037518 align:4
+
+dol/fn_80037518.c:
+	.text       start:0x80037518 end:0x8003756C align:4
+
+dol/fn_8003756C.c:
+	.text       start:0x8003756C end:0x800375F0 align:4
+
+dol/fn_80037A14.c:
+	.text       start:0x80037A14 end:0x80037B14 align:4
+
+dol/fn_80037D7C.c:
+	.text       start:0x80037D7C end:0x80037DB4 align:4
+
+dol/fn_80038A88.c:
+	.text       start:0x80038A88 end:0x80038B3C align:4
+
+dol/fn_80039060.c:
+	.text       start:0x80039060 end:0x80039088 align:4
+
+dol/fn_80039088.c:
+	.text       start:0x80039088 end:0x8003910C align:4
+
+dol/fn_80028D0C.c:
+	.text       start:0x80028D0C end:0x80028DD0 align:4
+
+dol/fn_8001E314.c:
+	.text       start:0x8001E314 end:0x8001E480 align:4
+
+dol/fn_8001E600.c:
+	.text       start:0x8001E600 end:0x8001E7E4 align:4
+
+dol/fwide.c:
+	.text       start:0x800858E4 end:0x8008596C align:4
+
+dol/fn_8002D6B0.c:
+	.text       start:0x8002D6B0 end:0x8002D77C align:4
+
+dol/fn_800375F0.c:
+	.text       start:0x800375F0 end:0x800377C8 align:4
+
+dol/fn_8000CDD8.c:
+	.text       start:0x8000CDD8 end:0x8000CE30 align:4
+
+dol/fn_8001B28C.c:
+	.text       start:0x8001B28C end:0x8001B42C align:4
+
+dol/fn_80018554.c:
+	.text       start:0x80018554 end:0x80018620 align:4
+
+dol/fn_80037014.c:
+	.text       start:0x80037014 end:0x800370A0 align:4

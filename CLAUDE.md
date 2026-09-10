@@ -118,11 +118,10 @@ Rules that hold for everyone:
   never model them as ordinary calls. Self-xor/subtract zeroing idioms have no input.
   Fixup variants of the same symbol run serially because their scratch files are shared;
   different symbols may run in parallel. Keep the best saved draft when trying another backend.
-- The largest measured coherent game-code target is the font/sprite UI interface: `font.c`
-  plus its unmatched callers, especially `sel.c`, `sel_static_disp.c` and `toolkit.c`.
-  Recover the shared font state, 0x58-byte draw packets and call ABI before another broad
-  lift pass. `include/font.h` records the variadic text wrapper and packet submission
-  result; do not infer sixteen fixed parameters from a varargs register-save prologue.
+- The font/sprite UI interface has many large callers, but that dependency count is not
+  evidence of a collapsible matching bucket: the corrected 318-function UI lift closed zero.
+  `include/font.h` records the variadic text wrapper and 0x58-byte packet submission result;
+  do not infer sixteen fixed parameters from a varargs register-save prologue.
 - Prioritize deterministic SDK C imports (CARD, then OS, EXI, SI) regardless of size.
   Include REL middleware: the reconstructed Sofdec sources in the CC0 MK Deception decomp
   yielded 60,888 bytes from 24 functions (including one complete `mpvabdec.c` TU).
@@ -132,6 +131,15 @@ Rules that hold for everyone:
   SDK imports must retain active compiler pragmas and distinguish function-pointer objects
   from prototypes. After a pool-backed submit re-splits retail objects, invalidate the
   in-memory object index before checking the next function (`api._reconfigure_and_split`).
+  Code relocation masks apply to the containing instruction: MWCC's halfword SDA21 offsets
+  and DTK's word offsets denote the same field. Use `poolfix.masked_code` for SDK signatures
+  and candidate scoring, and normalized offsets for symbol binding. Never mask four bytes
+  starting at a halfword relocation; that erases part of the following instruction.
+  The corrected scan exposed 202 unmatched signatures / 76,612 bytes at >=64 bytes.
+  SDK declaration closure includes enum members and local statics; symbol replacement must
+  preserve struct members and parameter scope. Reject inline assembly in dependencies too.
+  `sdkimport --library` also supports AR, VI, DVD, GX, DSP, PAD, AI and runtime libraries;
+  generated sources use owned declarations, never build/tools headers.
   Functions **under 256 bytes** (`--max-size 255`) are a repair corpus, not a prerequisite. `fzgx stuck --max-size 255` classifies the saved attempts; `fzgx sweep --max-size 255`
   searches them. `fzgx reuse --max-size 255` rebinds verified C when retail instruction
   shapes agree, retaining registers, immediates, relocation kinds/addends and branch targets;

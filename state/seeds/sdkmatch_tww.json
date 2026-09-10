@@ -38,7 +38,7 @@
   "src/PowerPC_EABI_Support/MSL/MSL_C/PPC_EABI/Src/math_ppc.c"
  ],
  "sdk_functions": 913,
- "dol_functions": 1982,
+ "dol_functions": 1992,
  "hits": [
   {
    "dol": "PPCHalt",
@@ -89,6 +89,42 @@
    "named": true
   },
   {
+   "dol": "__OSFPRInit",
+   "size": 296,
+   "addr": 2147524860,
+   "sdk": [
+    "__OSFPRInit"
+   ],
+   "sources": [
+    "src/dolphin/os/OS.c"
+   ],
+   "named": true
+  },
+  {
+   "dol": "fn_8000A224",
+   "size": 40,
+   "addr": 2147525156,
+   "sdk": [
+    "OSGetConsoleType"
+   ],
+   "sources": [
+    "src/dolphin/os/OS.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "ClearArena",
+   "size": 296,
+   "addr": 2147525196,
+   "sdk": [
+    "ClearArena"
+   ],
+   "sources": [
+    "src/dolphin/os/OS.c"
+   ],
+   "named": true
+  },
+  {
    "dol": "InquiryCallback",
    "size": 60,
    "addr": 2147525492,
@@ -106,6 +142,30 @@
    "addr": 2147527176,
    "sdk": [
     "__OSDBIntegrator"
+   ],
+   "sources": [
+    "src/dolphin/os/OS.c"
+   ],
+   "named": true
+  },
+  {
+   "dol": "__OSSetExceptionHandler",
+   "size": 28,
+   "addr": 2147527216,
+   "sdk": [
+    "__OSSetExceptionHandler"
+   ],
+   "sources": [
+    "src/dolphin/os/OS.c"
+   ],
+   "named": true
+  },
+  {
+   "dol": "__OSGetExceptionHandler",
+   "size": 20,
+   "addr": 2147527244,
+   "sdk": [
+    "__OSGetExceptionHandler"
    ],
    "sources": [
     "src/dolphin/os/OS.c"
@@ -149,11 +209,47 @@
    "named": true
   },
   {
+   "dol": "OSRegisterVersion",
+   "size": 44,
+   "addr": 2147527612,
+   "sdk": [
+    "OSRegisterVersion"
+   ],
+   "sources": [
+    "src/dolphin/os/OS.c"
+   ],
+   "named": true
+  },
+  {
+   "dol": "OSInitAlarm",
+   "size": 76,
+   "addr": 2147527656,
+   "sdk": [
+    "OSInitAlarm"
+   ],
+   "sources": [
+    "src/dolphin/os/OSAlarm.c"
+   ],
+   "named": true
+  },
+  {
    "dol": "OSCreateAlarm",
    "size": 16,
    "addr": 2147527732,
    "sdk": [
     "OSCreateAlarm"
+   ],
+   "sources": [
+    "src/dolphin/os/OSAlarm.c"
+   ],
+   "named": true
+  },
+  {
+   "dol": "InsertAlarm",
+   "size": 592,
+   "addr": 2147527748,
+   "sdk": [
+    "InsertAlarm"
    ],
    "sources": [
     "src/dolphin/os/OSAlarm.c"
@@ -183,6 +279,42 @@
     "src/dolphin/os/OSAlarm.c"
    ],
    "named": true
+  },
+  {
+   "dol": "fn_8000AF78",
+   "size": 284,
+   "addr": 2147528568,
+   "sdk": [
+    "OSCancelAlarm"
+   ],
+   "sources": [
+    "src/dolphin/os/OSAlarm.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "DecrementerExceptionCallback",
+   "size": 560,
+   "addr": 2147528852,
+   "sdk": [
+    "DecrementerExceptionCallback"
+   ],
+   "sources": [
+    "src/dolphin/os/OSAlarm.c"
+   ],
+   "named": true
+  },
+  {
+   "dol": "fn_8000B334",
+   "size": 44,
+   "addr": 2147529524,
+   "sdk": [
+    "OSAllocFromArenaLo"
+   ],
+   "sources": [
+    "src/dolphin/os/OSArena.c"
+   ],
+   "named": false
   },
   {
    "dol": "__OSInitAudioSystem",
@@ -389,30 +521,6 @@
    "named": true
   },
   {
-   "dol": "__OSLoadFPUContext",
-   "size": 292,
-   "addr": 2147531692,
-   "sdk": [
-    "__OSLoadFPUContext"
-   ],
-   "sources": [
-    "src/dolphin/os/OSContext.c"
-   ],
-   "named": true
-  },
-  {
-   "dol": "__OSSaveFPUContext",
-   "size": 296,
-   "addr": 2147531984,
-   "sdk": [
-    "__OSSaveFPUContext"
-   ],
-   "sources": [
-    "src/dolphin/os/OSContext.c"
-   ],
-   "named": true
-  },
-  {
    "dol": "OSSetCurrentContext",
    "size": 92,
    "addr": 2147532288,
@@ -485,18 +593,6 @@
    "named": true
   },
   {
-   "dol": "OSSwitchFPUContext",
-   "size": 132,
-   "addr": 2147533648,
-   "sdk": [
-    "OSSwitchFPUContext"
-   ],
-   "sources": [
-    "src/dolphin/os/OSContext.c"
-   ],
-   "named": true
-  },
-  {
    "dol": "__OSContextInit",
    "size": 72,
    "addr": 2147533780,
@@ -533,6 +629,42 @@
    "named": true
   },
   {
+   "dol": "OSSetErrorHandler",
+   "size": 536,
+   "addr": 2147534280,
+   "sdk": [
+    "OSSetErrorHandler"
+   ],
+   "sources": [
+    "src/dolphin/os/OSError.c"
+   ],
+   "named": true
+  },
+  {
+   "dol": "__OSUnhandledException",
+   "size": 744,
+   "addr": 2147534816,
+   "sdk": [
+    "__OSUnhandledException"
+   ],
+   "sources": [
+    "src/dolphin/os/OSError.c"
+   ],
+   "named": true
+  },
+  {
+   "dol": "fn_8000CDD8",
+   "size": 88,
+   "addr": 2147536344,
+   "sdk": [
+    "OSGetFontEncode"
+   ],
+   "sources": [
+    "src/dolphin/os/OSFont.c"
+   ],
+   "named": false
+  },
+  {
    "dol": "OSDisableInterrupts",
    "size": 20,
    "addr": 2147538164,
@@ -562,6 +694,42 @@
    "addr": 2147538204,
    "sdk": [
     "OSRestoreInterrupts"
+   ],
+   "sources": [
+    "src/dolphin/os/OSInterrupt.c"
+   ],
+   "named": true
+  },
+  {
+   "dol": "__OSSetInterruptHandler",
+   "size": 28,
+   "addr": 2147538240,
+   "sdk": [
+    "__OSSetInterruptHandler"
+   ],
+   "sources": [
+    "src/dolphin/os/OSInterrupt.c"
+   ],
+   "named": true
+  },
+  {
+   "dol": "fn_8000D55C",
+   "size": 20,
+   "addr": 2147538268,
+   "sdk": [
+    "__OSGetInterruptHandler"
+   ],
+   "sources": [
+    "src/dolphin/os/OSInterrupt.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "__OSInterruptInit",
+   "size": 116,
+   "addr": 2147538288,
+   "sdk": [
+    "__OSInterruptInit"
    ],
    "sources": [
     "src/dolphin/os/OSInterrupt.c"
@@ -605,6 +773,18 @@
    "named": true
   },
   {
+   "dol": "fn_8000D9CC",
+   "size": 836,
+   "addr": 2147539404,
+   "sdk": [
+    "__OSDispatchInterrupt"
+   ],
+   "sources": [
+    "src/dolphin/os/OSInterrupt.c"
+   ],
+   "named": false
+  },
+  {
    "dol": "Relocate",
    "size": 700,
    "addr": 2147540340,
@@ -617,7 +797,7 @@
    "named": true
   },
   {
-   "dol": "fn_8000E030",
+   "dol": "Link",
    "size": 736,
    "addr": 2147541040,
    "sdk": [
@@ -626,10 +806,10 @@
    "sources": [
     "src/dolphin/os/OSLink.c"
    ],
-   "named": false
+   "named": true
   },
   {
-   "dol": "fn_8000E310",
+   "dol": "OSLink",
    "size": 36,
    "addr": 2147541776,
    "sdk": [
@@ -638,10 +818,10 @@
    "sources": [
     "src/dolphin/os/OSLink.c"
    ],
-   "named": false
+   "named": true
   },
   {
-   "dol": "fn_8000E334",
+   "dol": "OSLinkFixed",
    "size": 60,
    "addr": 2147541812,
    "sdk": [
@@ -650,7 +830,7 @@
    "sources": [
     "src/dolphin/os/OSLink.c"
    ],
-   "named": false
+   "named": true
   },
   {
    "dol": "Undo",
@@ -713,42 +893,6 @@
    "named": true
   },
   {
-   "dol": "Config24MB",
-   "size": 128,
-   "addr": 2147543124,
-   "sdk": [
-    "Config24MB"
-   ],
-   "sources": [
-    "src/dolphin/os/OSMemory.c"
-   ],
-   "named": true
-  },
-  {
-   "dol": "Config48MB",
-   "size": 128,
-   "addr": 2147543252,
-   "sdk": [
-    "Config48MB"
-   ],
-   "sources": [
-    "src/dolphin/os/OSMemory.c"
-   ],
-   "named": true
-  },
-  {
-   "dol": "RealMode",
-   "size": 24,
-   "addr": 2147543380,
-   "sdk": [
-    "RealMode"
-   ],
-   "sources": [
-    "src/dolphin/os/OSMemory.c"
-   ],
-   "named": true
-  },
-  {
    "dol": "__OSUnlockAllMutex",
    "size": 112,
    "addr": 2147543684,
@@ -773,11 +917,11 @@
    "named": true
   },
   {
-   "dol": "Reset",
-   "size": 112,
-   "addr": 2147544820,
+   "dol": "OSRegisterResetFunction",
+   "size": 132,
+   "addr": 2147544688,
    "sdk": [
-    "Reset"
+    "OSRegisterResetFunction"
    ],
    "sources": [
     "src/dolphin/os/OSReset.c"
@@ -807,6 +951,30 @@
     "src/dolphin/os/OSReset.c"
    ],
    "named": true
+  },
+  {
+   "dol": "__OSResetSWInterruptHandler",
+   "size": 244,
+   "addr": 2147545700,
+   "sdk": [
+    "__OSResetSWInterruptHandler"
+   ],
+   "sources": [
+    "src/dolphin/os/OSResetSW.c"
+   ],
+   "named": true
+  },
+  {
+   "dol": "fn_8000F358",
+   "size": 664,
+   "addr": 2147545944,
+   "sdk": [
+    "OSGetResetButtonState"
+   ],
+   "sources": [
+    "src/dolphin/os/OSResetSW.c"
+   ],
+   "named": false
   },
   {
    "dol": "WriteSramCallback",
@@ -1001,6 +1169,18 @@
    "named": true
   },
   {
+   "dol": "__OSThreadInit",
+   "size": 344,
+   "addr": 2147549508,
+   "sdk": [
+    "__OSThreadInit"
+   ],
+   "sources": [
+    "src/dolphin/os/OSThread.c"
+   ],
+   "named": true
+  },
+  {
    "dol": "OSInitThreadQueue",
    "size": 16,
    "addr": 2147549852,
@@ -1025,6 +1205,42 @@
    "named": true
   },
   {
+   "dol": "OSDisableScheduler",
+   "size": 64,
+   "addr": 2147549932,
+   "sdk": [
+    "OSDisableScheduler"
+   ],
+   "sources": [
+    "src/dolphin/os/OSThread.c"
+   ],
+   "named": true
+  },
+  {
+   "dol": "OSEnableScheduler",
+   "size": 64,
+   "addr": 2147549996,
+   "sdk": [
+    "OSEnableScheduler"
+   ],
+   "sources": [
+    "src/dolphin/os/OSThread.c"
+   ],
+   "named": true
+  },
+  {
+   "dol": "fn_8001036C",
+   "size": 104,
+   "addr": 2147550060,
+   "sdk": [
+    "UnsetRun"
+   ],
+   "sources": [
+    "src/dolphin/os/OSThread.c"
+   ],
+   "named": false
+  },
+  {
    "dol": "__OSGetEffectivePriority",
    "size": 60,
    "addr": 2147550164,
@@ -1035,6 +1251,126 @@
     "src/dolphin/os/OSThread.c"
    ],
    "named": true
+  },
+  {
+   "dol": "fn_80010410",
+   "size": 448,
+   "addr": 2147550224,
+   "sdk": [
+    "SetEffectivePriority"
+   ],
+   "sources": [
+    "src/dolphin/os/OSThread.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "__OSReschedule",
+   "size": 48,
+   "addr": 2147551224,
+   "sdk": [
+    "__OSReschedule"
+   ],
+   "sources": [
+    "src/dolphin/os/OSThread.c"
+   ],
+   "named": true
+  },
+  {
+   "dol": "fn_80010828",
+   "size": 488,
+   "addr": 2147551272,
+   "sdk": [
+    "OSCreateThread"
+   ],
+   "sources": [
+    "src/dolphin/os/OSThread.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80010A10",
+   "size": 228,
+   "addr": 2147551760,
+   "sdk": [
+    "OSExitThread"
+   ],
+   "sources": [
+    "src/dolphin/os/OSThread.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "OSCancelThread",
+   "size": 444,
+   "addr": 2147551988,
+   "sdk": [
+    "OSCancelThread"
+   ],
+   "sources": [
+    "src/dolphin/os/OSThread.c"
+   ],
+   "named": true
+  },
+  {
+   "dol": "fn_80010CB0",
+   "size": 648,
+   "addr": 2147552432,
+   "sdk": [
+    "OSResumeThread"
+   ],
+   "sources": [
+    "src/dolphin/os/OSThread.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80010F38",
+   "size": 368,
+   "addr": 2147553080,
+   "sdk": [
+    "OSSuspendThread"
+   ],
+   "sources": [
+    "src/dolphin/os/OSThread.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_800110A8",
+   "size": 236,
+   "addr": 2147553448,
+   "sdk": [
+    "OSSleepThread"
+   ],
+   "sources": [
+    "src/dolphin/os/OSThread.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80011194",
+   "size": 260,
+   "addr": 2147553684,
+   "sdk": [
+    "OSWakeupThread"
+   ],
+   "sources": [
+    "src/dolphin/os/OSThread.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80011298",
+   "size": 192,
+   "addr": 2147553944,
+   "sdk": [
+    "OSSetThreadPriority"
+   ],
+   "sources": [
+    "src/dolphin/os/OSThread.c"
+   ],
+   "named": false
   },
   {
    "dol": "OSClearStack",
@@ -1145,6 +1481,18 @@
    "named": true
   },
   {
+   "dol": "SIInterruptHandler",
+   "size": 836,
+   "addr": 2147556468,
+   "sdk": [
+    "SIInterruptHandler"
+   ],
+   "sources": [
+    "src/dolphin/si/SIBios.c"
+   ],
+   "named": true
+  },
+  {
    "dol": "SIEnablePollingInterrupt",
    "size": 152,
    "addr": 2147557304,
@@ -1174,6 +1522,18 @@
    "addr": 2147557660,
    "sdk": [
     "SIUnregisterPollingHandler"
+   ],
+   "sources": [
+    "src/dolphin/si/SIBios.c"
+   ],
+   "named": true
+  },
+  {
+   "dol": "SIInit",
+   "size": 180,
+   "addr": 2147557904,
+   "sdk": [
+    "SIInit"
    ],
    "sources": [
     "src/dolphin/si/SIBios.c"
@@ -1313,6 +1673,30 @@
    "named": true
   },
   {
+   "dol": "GetTypeCallback",
+   "size": 664,
+   "addr": 2147560052,
+   "sdk": [
+    "GetTypeCallback"
+   ],
+   "sources": [
+    "src/dolphin/si/SIBios.c"
+   ],
+   "named": true
+  },
+  {
+   "dol": "SIGetType",
+   "size": 452,
+   "addr": 2147560716,
+   "sdk": [
+    "SIGetType"
+   ],
+   "sources": [
+    "src/dolphin/si/SIBios.c"
+   ],
+   "named": true
+  },
+  {
    "dol": "SIGetTypeAsync",
    "size": 316,
    "addr": 2147561168,
@@ -1349,6 +1733,54 @@
    "named": true
   },
   {
+   "dol": "SISetSamplingRate",
+   "size": 228,
+   "addr": 2147562196,
+   "sdk": [
+    "SISetSamplingRate"
+   ],
+   "sources": [
+    "src/dolphin/si/SISamplingRate.c"
+   ],
+   "named": true
+  },
+  {
+   "dol": "fn_800133B8",
+   "size": 36,
+   "addr": 2147562424,
+   "sdk": [
+    "SIRefreshSamplingRate"
+   ],
+   "sources": [
+    "src/dolphin/si/SISamplingRate.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80013934",
+   "size": 96,
+   "addr": 2147563828,
+   "sdk": [
+    "SamplingHandler"
+   ],
+   "sources": [
+    "src/dolphin/pad/Pad.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80013994",
+   "size": 84,
+   "addr": 2147563924,
+   "sdk": [
+    "PADSetSamplingCallback"
+   ],
+   "sources": [
+    "src/dolphin/pad/Pad.c"
+   ],
+   "named": false
+  },
+  {
    "dol": "EXIClearInterrupts",
    "size": 72,
    "addr": 2147566000,
@@ -1357,6 +1789,30 @@
    ],
    "sources": [
     "src/dolphin/exi/EXIBios.c"
+   ],
+   "named": true
+  },
+  {
+   "dol": "fn_800157AC",
+   "size": 112,
+   "addr": 2147571628,
+   "sdk": [
+    "InitializeUART"
+   ],
+   "sources": [
+    "src/dolphin/exi/EXIUart.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "DBInit",
+   "size": 40,
+   "addr": 2147572280,
+   "sdk": [
+    "DBInit"
+   ],
+   "sources": [
+    "src/dolphin/db/db.c"
    ],
    "named": true
   },
@@ -1385,6 +1841,306 @@
    "named": true
   },
   {
+   "dol": "__DBIsExceptionMarked",
+   "size": 28,
+   "addr": 2147572408,
+   "sdk": [
+    "__DBIsExceptionMarked"
+   ],
+   "sources": [
+    "src/dolphin/db/db.c"
+   ],
+   "named": true
+  },
+  {
+   "dol": "__DVDInitWA",
+   "size": 64,
+   "addr": 2147573632,
+   "sdk": [
+    "__DVDInitWA"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvdlow.c"
+   ],
+   "named": true
+  },
+  {
+   "dol": "__DVDInterruptHandler",
+   "size": 736,
+   "addr": 2147573696,
+   "sdk": [
+    "__DVDInterruptHandler"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvdlow.c"
+   ],
+   "named": true
+  },
+  {
+   "dol": "fn_800162A0",
+   "size": 132,
+   "addr": 2147574432,
+   "sdk": [
+    "AlarmHandler"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvdlow.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "AlarmHandlerForTimeout",
+   "size": 112,
+   "addr": 2147574564,
+   "sdk": [
+    "AlarmHandlerForTimeout"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvdlow.c"
+   ],
+   "named": true
+  },
+  {
+   "dol": "fn_80016394",
+   "size": 272,
+   "addr": 2147574676,
+   "sdk": [
+    "Read"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvdlow.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_800164A4",
+   "size": 128,
+   "addr": 2147574948,
+   "sdk": [
+    "SeekTwiceBeforeRead"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvdlow.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80016524",
+   "size": 664,
+   "addr": 2147575076,
+   "sdk": [
+    "DVDLowRead"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvdlow.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_800167BC",
+   "size": 148,
+   "addr": 2147575740,
+   "sdk": [
+    "DVDLowSeek"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvdlow.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "DVDLowWaitCoverClose",
+   "size": 44,
+   "addr": 2147575888,
+   "sdk": [
+    "DVDLowWaitCoverClose"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvdlow.c"
+   ],
+   "named": true
+  },
+  {
+   "dol": "fn_8001687C",
+   "size": 164,
+   "addr": 2147575932,
+   "sdk": [
+    "DVDLowReadDiskID"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvdlow.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "DVDLowStopMotor",
+   "size": 140,
+   "addr": 2147576096,
+   "sdk": [
+    "DVDLowStopMotor"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvdlow.c"
+   ],
+   "named": true
+  },
+  {
+   "dol": "fn_800169AC",
+   "size": 140,
+   "addr": 2147576236,
+   "sdk": [
+    "DVDLowRequestError"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvdlow.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80016A38",
+   "size": 156,
+   "addr": 2147576376,
+   "sdk": [
+    "DVDLowInquiry"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvdlow.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80016AD4",
+   "size": 152,
+   "addr": 2147576532,
+   "sdk": [
+    "DVDLowAudioStream"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvdlow.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80016B6C",
+   "size": 140,
+   "addr": 2147576684,
+   "sdk": [
+    "DVDLowRequestAudioStatus"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvdlow.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80016BF8",
+   "size": 156,
+   "addr": 2147576824,
+   "sdk": [
+    "DVDLowAudioBufferConfig"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvdlow.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "DVDLowReset",
+   "size": 188,
+   "addr": 2147576980,
+   "sdk": [
+    "DVDLowReset"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvdlow.c"
+   ],
+   "named": true
+  },
+  {
+   "dol": "fn_80016D50",
+   "size": 20,
+   "addr": 2147577168,
+   "sdk": [
+    "DVDLowBreak"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvdlow.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80016D64",
+   "size": 24,
+   "addr": 2147577188,
+   "sdk": [
+    "DVDLowClearCallback"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvdlow.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "__DVDLowSetWAType",
+   "size": 68,
+   "addr": 2147577212,
+   "sdk": [
+    "__DVDLowSetWAType"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvdlow.c"
+   ],
+   "named": true
+  },
+  {
+   "dol": "__DVDFSInit",
+   "size": 56,
+   "addr": 2147577280,
+   "sdk": [
+    "__DVDFSInit"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvdfs.c"
+   ],
+   "named": true
+  },
+  {
+   "dol": "fn_80016DF8",
+   "size": 756,
+   "addr": 2147577336,
+   "sdk": [
+    "DVDConvertPathToEntrynum"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvdfs.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_800170EC",
+   "size": 116,
+   "addr": 2147578092,
+   "sdk": [
+    "DVDFastOpen"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvdfs.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80017160",
+   "size": 200,
+   "addr": 2147578208,
+   "sdk": [
+    "DVDOpen"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvdfs.c"
+   ],
+   "named": false
+  },
+  {
    "dol": "DVDClose",
    "size": 36,
    "addr": 2147578408,
@@ -1397,7 +2153,67 @@
    "named": true
   },
   {
-   "dol": "fn_800176FC",
+   "dol": "fn_8001724C",
+   "size": 352,
+   "addr": 2147578444,
+   "sdk": [
+    "entryToPath"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvdfs.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_800173AC",
+   "size": 196,
+   "addr": 2147578796,
+   "sdk": [
+    "DVDGetCurrentDir"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvdfs.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80017470",
+   "size": 96,
+   "addr": 2147578992,
+   "sdk": [
+    "DVDChangeDir"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvdfs.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_800174D0",
+   "size": 192,
+   "addr": 2147579088,
+   "sdk": [
+    "DVDReadAsyncPrio"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvdfs.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_800175C0",
+   "size": 280,
+   "addr": 2147579328,
+   "sdk": [
+    "DVDReadPrio"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvdfs.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "DVDGetTransferredSize",
    "size": 108,
    "addr": 2147579644,
    "sdk": [
@@ -1406,7 +2222,43 @@
    "sources": [
     "src/dolphin/dvd/dvdfs.c"
    ],
+   "named": true
+  },
+  {
+   "dol": "DVDInit",
+   "size": 204,
+   "addr": 2147579756,
+   "sdk": [
+    "DVDInit"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvd.c"
+   ],
+   "named": true
+  },
+  {
+   "dol": "fn_800178CC",
+   "size": 140,
+   "addr": 2147580108,
+   "sdk": [
+    "cbForStateReadingFST"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvd.c"
+   ],
    "named": false
+  },
+  {
+   "dol": "cbForStateError",
+   "size": 172,
+   "addr": 2147580248,
+   "sdk": [
+    "cbForStateError"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvd.c"
+   ],
+   "named": true
   },
   {
    "dol": "stateTimeout",
@@ -1421,6 +2273,90 @@
    "named": true
   },
   {
+   "dol": "fn_80017A60",
+   "size": 180,
+   "addr": 2147580512,
+   "sdk": [
+    "CategorizeError"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvd.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80017B14",
+   "size": 660,
+   "addr": 2147580692,
+   "sdk": [
+    "cbForStateGettingError"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvd.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80017DA8",
+   "size": 104,
+   "addr": 2147581352,
+   "sdk": [
+    "cbForUnrecoveredError"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvd.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80017E10",
+   "size": 152,
+   "addr": 2147581456,
+   "sdk": [
+    "cbForUnrecoveredErrorRetry"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvd.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80017ED0",
+   "size": 344,
+   "addr": 2147581648,
+   "sdk": [
+    "cbForStateGoToRetry"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvd.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80018028",
+   "size": 224,
+   "addr": 2147581992,
+   "sdk": [
+    "stateCheckID"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvd.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80018170",
+   "size": 116,
+   "addr": 2147582320,
+   "sdk": [
+    "cbForStateCheckID2a"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvd.c"
+   ],
+   "named": false
+  },
+  {
    "dol": "stateCheckID2",
    "size": 56,
    "addr": 2147582436,
@@ -1433,11 +2369,179 @@
    "named": true
   },
   {
+   "dol": "fn_8001821C",
+   "size": 276,
+   "addr": 2147582492,
+   "sdk": [
+    "cbForStateCheckID1"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvd.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80018414",
+   "size": 252,
+   "addr": 2147582996,
+   "sdk": [
+    "cbForStateCheckID3"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvd.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "AlarmHandler",
+   "size": 68,
+   "addr": 2147583248,
+   "sdk": [
+    "AlarmHandler"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvd.c"
+   ],
+   "named": true
+  },
+  {
+   "dol": "fn_80018554",
+   "size": 204,
+   "addr": 2147583316,
+   "sdk": [
+    "stateCoverClosed"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvd.c"
+   ],
+   "named": false
+  },
+  {
    "dol": "stateCoverClosed_CMD",
    "size": 48,
    "addr": 2147583520,
    "sdk": [
     "stateCoverClosed_CMD"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvd.c"
+   ],
+   "named": true
+  },
+  {
+   "dol": "fn_80018650",
+   "size": 112,
+   "addr": 2147583568,
+   "sdk": [
+    "cbForStateCoverClosed"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvd.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "cbForStateMotorStopped",
+   "size": 228,
+   "addr": 2147583720,
+   "sdk": [
+    "cbForStateMotorStopped"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvd.c"
+   ],
+   "named": true
+  },
+  {
+   "dol": "stateBusy",
+   "size": 800,
+   "addr": 2147584508,
+   "sdk": [
+    "stateBusy"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvd.c"
+   ],
+   "named": true
+  },
+  {
+   "dol": "fn_80018D1C",
+   "size": 1592,
+   "addr": 2147585308,
+   "sdk": [
+    "cbForStateBusy"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvd.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80019354",
+   "size": 220,
+   "addr": 2147586900,
+   "sdk": [
+    "DVDReadAbsAsyncPrio"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvd.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80019430",
+   "size": 208,
+   "addr": 2147587120,
+   "sdk": [
+    "DVDReadAbsAsyncForBS"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvd.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "DVDReadDiskID",
+   "size": 212,
+   "addr": 2147587328,
+   "sdk": [
+    "DVDReadDiskID"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvd.c"
+   ],
+   "named": true
+  },
+  {
+   "dol": "fn_800195D4",
+   "size": 188,
+   "addr": 2147587540,
+   "sdk": [
+    "DVDCancelStreamAsync"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvd.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "DVDInquiryAsync",
+   "size": 208,
+   "addr": 2147587728,
+   "sdk": [
+    "DVDInquiryAsync"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvd.c"
+   ],
+   "named": true
+  },
+  {
+   "dol": "DVDReset",
+   "size": 68,
+   "addr": 2147587936,
+   "sdk": [
+    "DVDReset"
    ],
    "sources": [
     "src/dolphin/dvd/dvd.c"
@@ -1455,6 +2559,54 @@
     "src/dolphin/dvd/dvd.c"
    ],
    "named": true
+  },
+  {
+   "dol": "DVDGetDriveStatus",
+   "size": 172,
+   "addr": 2147588080,
+   "sdk": [
+    "DVDGetDriveStatus"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvd.c"
+   ],
+   "named": true
+  },
+  {
+   "dol": "fn_800198AC",
+   "size": 80,
+   "addr": 2147588268,
+   "sdk": [
+    "DVDResume"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvd.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80019B78",
+   "size": 172,
+   "addr": 2147588984,
+   "sdk": [
+    "DVDCancel"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvd.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80019D48",
+   "size": 284,
+   "addr": 2147589448,
+   "sdk": [
+    "__DVDPrepareResetAsync"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvd.c"
+   ],
+   "named": false
   },
   {
    "dol": "__DVDClearWaitingQueue",
@@ -1553,6 +2705,42 @@
    "named": true
   },
   {
+   "dol": "cb",
+   "size": 216,
+   "addr": 2147590940,
+   "sdk": [
+    "cb"
+   ],
+   "sources": [
+    "src/dolphin/dvd/fstload.c"
+   ],
+   "named": true
+  },
+  {
+   "dol": "__fstLoad",
+   "size": 360,
+   "addr": 2147591156,
+   "sdk": [
+    "__fstLoad"
+   ],
+   "sources": [
+    "src/dolphin/dvd/fstload.c"
+   ],
+   "named": true
+  },
+  {
+   "dol": "fn_8001A55C",
+   "size": 560,
+   "addr": 2147591516,
+   "sdk": [
+    "__VIRetraceHandler"
+   ],
+   "sources": [
+    "src/dolphin/vi/vi.c"
+   ],
+   "named": false
+  },
+  {
    "dol": "getTiming",
    "size": 160,
    "addr": 2147592212,
@@ -1577,11 +2765,143 @@
    "named": true
   },
   {
+   "dol": "fn_8001AAB4",
+   "size": 1200,
+   "addr": 2147592884,
+   "sdk": [
+    "VIInit"
+   ],
+   "sources": [
+    "src/dolphin/vi/vi.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_8001AF64",
+   "size": 84,
+   "addr": 2147594084,
+   "sdk": [
+    "VIWaitForRetrace"
+   ],
+   "sources": [
+    "src/dolphin/vi/vi.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_8001AFB8",
+   "size": 724,
+   "addr": 2147594168,
+   "sdk": [
+    "setFbbRegs"
+   ],
+   "sources": [
+    "src/dolphin/vi/vi.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_8001B28C",
+   "size": 416,
+   "addr": 2147594892,
+   "sdk": [
+    "setVerticalRegs"
+   ],
+   "sources": [
+    "src/dolphin/vi/vi.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_8001B42C",
+   "size": 2088,
+   "addr": 2147595308,
+   "sdk": [
+    "VIConfigure"
+   ],
+   "sources": [
+    "src/dolphin/vi/vi.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_8001BC54",
+   "size": 304,
+   "addr": 2147597396,
+   "sdk": [
+    "VIFlush"
+   ],
+   "sources": [
+    "src/dolphin/vi/vi.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_8001BD84",
+   "size": 108,
+   "addr": 2147597700,
+   "sdk": [
+    "VISetNextFrameBuffer"
+   ],
+   "sources": [
+    "src/dolphin/vi/vi.c"
+   ],
+   "named": false
+  },
+  {
    "dol": "VISetBlack",
    "size": 124,
    "addr": 2147597808,
    "sdk": [
     "VISetBlack"
+   ],
+   "sources": [
+    "src/dolphin/vi/vi.c"
+   ],
+   "named": true
+  },
+  {
+   "dol": "fn_8001BE74",
+   "size": 104,
+   "addr": 2147597940,
+   "sdk": [
+    "getCurrentFieldEvenOdd"
+   ],
+   "sources": [
+    "src/dolphin/vi/vi.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_8001BEDC",
+   "size": 168,
+   "addr": 2147598044,
+   "sdk": [
+    "VIGetNextField"
+   ],
+   "sources": [
+    "src/dolphin/vi/vi.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_8001BF84",
+   "size": 152,
+   "addr": 2147598212,
+   "sdk": [
+    "VIGetCurrentLine"
+   ],
+   "sources": [
+    "src/dolphin/vi/vi.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "VIGetTvFormat",
+   "size": 104,
+   "addr": 2147598364,
+   "sdk": [
+    "VIGetTvFormat"
    ],
    "sources": [
     "src/dolphin/vi/vi.c"
@@ -1625,6 +2945,150 @@
    "named": true
   },
   {
+   "dol": "fn_8001C304",
+   "size": 420,
+   "addr": 2147599108,
+   "sdk": [
+    "UpdateOrigin"
+   ],
+   "sources": [
+    "src/dolphin/pad/Pad.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_8001C4A8",
+   "size": 196,
+   "addr": 2147599528,
+   "sdk": [
+    "PADOriginCallback"
+   ],
+   "sources": [
+    "src/dolphin/pad/Pad.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_8001C56C",
+   "size": 192,
+   "addr": 2147599724,
+   "sdk": [
+    "PADOriginUpdateCallback"
+   ],
+   "sources": [
+    "src/dolphin/pad/Pad.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_8001C62C",
+   "size": 216,
+   "addr": 2147599916,
+   "sdk": [
+    "PADProbeCallback"
+   ],
+   "sources": [
+    "src/dolphin/pad/Pad.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_8001C704",
+   "size": 812,
+   "addr": 2147600132,
+   "sdk": [
+    "PADTypeAndStatusCallback"
+   ],
+   "sources": [
+    "src/dolphin/pad/Pad.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_8001CA30",
+   "size": 308,
+   "addr": 2147600944,
+   "sdk": [
+    "PADReceiveCheckCallback"
+   ],
+   "sources": [
+    "src/dolphin/pad/Pad.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_8001CB64",
+   "size": 256,
+   "addr": 2147601252,
+   "sdk": [
+    "PADReset"
+   ],
+   "sources": [
+    "src/dolphin/pad/Pad.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_8001CC64",
+   "size": 260,
+   "addr": 2147601508,
+   "sdk": [
+    "PADRecalibrate"
+   ],
+   "sources": [
+    "src/dolphin/pad/Pad.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_8001CD68",
+   "size": 536,
+   "addr": 2147601768,
+   "sdk": [
+    "PADInit"
+   ],
+   "sources": [
+    "src/dolphin/pad/Pad.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_8001CF80",
+   "size": 940,
+   "addr": 2147602304,
+   "sdk": [
+    "PADRead"
+   ],
+   "sources": [
+    "src/dolphin/pad/Pad.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_8001D3E4",
+   "size": 164,
+   "addr": 2147603428,
+   "sdk": [
+    "PADControlMotor"
+   ],
+   "sources": [
+    "src/dolphin/pad/Pad.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_8001D488",
+   "size": 96,
+   "addr": 2147603592,
+   "sdk": [
+    "PADSetSpec"
+   ],
+   "sources": [
+    "src/dolphin/pad/Pad.c"
+   ],
+   "named": false
+  },
+  {
    "dol": "SPEC0_MakeStatus",
    "size": 372,
    "addr": 2147603688,
@@ -1647,6 +3111,66 @@
     "src/dolphin/pad/Pad.c"
    ],
    "named": true
+  },
+  {
+   "dol": "fn_8001D7D0",
+   "size": 1016,
+   "addr": 2147604432,
+   "sdk": [
+    "SPEC2_MakeStatus"
+   ],
+   "sources": [
+    "src/dolphin/pad/Pad.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_8001DBC8",
+   "size": 116,
+   "addr": 2147605448,
+   "sdk": [
+    "PADSetAnalogMode"
+   ],
+   "sources": [
+    "src/dolphin/pad/Pad.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_8001DC3C",
+   "size": 404,
+   "addr": 2147605564,
+   "sdk": [
+    "OnReset"
+   ],
+   "sources": [
+    "src/dolphin/pad/Pad.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_8001DDD0",
+   "size": 96,
+   "addr": 2147605968,
+   "sdk": [
+    "SamplingHandler"
+   ],
+   "sources": [
+    "src/dolphin/pad/Pad.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_8001DE30",
+   "size": 84,
+   "addr": 2147606064,
+   "sdk": [
+    "PADSetSamplingCallback"
+   ],
+   "sources": [
+    "src/dolphin/pad/Pad.c"
+   ],
+   "named": false
   },
   {
    "dol": "__PADDisableRecalibration",
@@ -1805,6 +3329,42 @@
    "named": true
   },
   {
+   "dol": "fn_8001E314",
+   "size": 364,
+   "addr": 2147607316,
+   "sdk": [
+    "AIInit"
+   ],
+   "sources": [
+    "src/dolphin/ai/ai.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_8001E480",
+   "size": 124,
+   "addr": 2147607680,
+   "sdk": [
+    "__AISHandler"
+   ],
+   "sources": [
+    "src/dolphin/ai/ai.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_8001E4FC",
+   "size": 172,
+   "addr": 2147607804,
+   "sdk": [
+    "__AIDHandler"
+   ],
+   "sources": [
+    "src/dolphin/ai/ai.c"
+   ],
+   "named": false
+  },
+  {
    "dol": "__AICallbackStackSwitch",
    "size": 88,
    "addr": 2147607976,
@@ -1817,6 +3377,18 @@
    "named": true
   },
   {
+   "dol": "fn_8001E600",
+   "size": 484,
+   "addr": 2147608064,
+   "sdk": [
+    "__AI_SRC_INIT"
+   ],
+   "sources": [
+    "src/dolphin/ai/ai.c"
+   ],
+   "named": false
+  },
+  {
    "dol": "ARStartDMA",
    "size": 240,
    "addr": 2147608676,
@@ -1827,6 +3399,114 @@
     "src/dolphin/ar/ar.c"
    ],
    "named": true
+  },
+  {
+   "dol": "fn_8001E954",
+   "size": 104,
+   "addr": 2147608916,
+   "sdk": [
+    "ARAlloc"
+   ],
+   "sources": [
+    "src/dolphin/ar/ar.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_8001EA30",
+   "size": 196,
+   "addr": 2147609136,
+   "sdk": [
+    "ARInit"
+   ],
+   "sources": [
+    "src/dolphin/ar/ar.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_8001EAF4",
+   "size": 120,
+   "addr": 2147609332,
+   "sdk": [
+    "__ARHandler"
+   ],
+   "sources": [
+    "src/dolphin/ar/ar.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_8001EB6C",
+   "size": 6132,
+   "addr": 2147609452,
+   "sdk": [
+    "__ARChecksize"
+   ],
+   "sources": [
+    "src/dolphin/ar/ar.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80020360",
+   "size": 256,
+   "addr": 2147615584,
+   "sdk": [
+    "__ARQServiceQueueLo"
+   ],
+   "sources": [
+    "src/dolphin/ar/arq.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80020464",
+   "size": 204,
+   "addr": 2147615844,
+   "sdk": [
+    "__ARQInterruptServiceRoutine"
+   ],
+   "sources": [
+    "src/dolphin/ar/arq.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80020530",
+   "size": 112,
+   "addr": 2147616048,
+   "sdk": [
+    "ARQInit"
+   ],
+   "sources": [
+    "src/dolphin/ar/arq.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_800205A0",
+   "size": 348,
+   "addr": 2147616160,
+   "sdk": [
+    "ARQPostRequest"
+   ],
+   "sources": [
+    "src/dolphin/ar/arq.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80021B84",
+   "size": 44,
+   "addr": 2147621764,
+   "sdk": [
+    "cbForCancelAllSync"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvd.c"
+   ],
+   "named": false
   },
   {
    "dol": "DSPCheckMailToDSP",
@@ -1877,6 +3557,18 @@
    "named": true
   },
   {
+   "dol": "fn_80028D0C",
+   "size": 196,
+   "addr": 2147650828,
+   "sdk": [
+    "DSPInit"
+   ],
+   "sources": [
+    "src/dolphin/dsp/dsp.c"
+   ],
+   "named": false
+  },
+  {
    "dol": "__DSP_exec_task",
    "size": 416,
    "addr": 2147652548,
@@ -1899,6 +3591,30 @@
     "src/dolphin/dsp/dsp_task.c"
    ],
    "named": true
+  },
+  {
+   "dol": "fn_800296F0",
+   "size": 160,
+   "addr": 2147653360,
+   "sdk": [
+    "__DSP_insert_task"
+   ],
+   "sources": [
+    "src/dolphin/dsp/dsp_task.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80029790",
+   "size": 148,
+   "addr": 2147653520,
+   "sdk": [
+    "__DSP_remove_task"
+   ],
+   "sources": [
+    "src/dolphin/dsp/dsp_task.c"
+   ],
+   "named": false
   },
   {
    "dol": "__CARDSyncCallback",
@@ -2081,6 +3797,18 @@
    "named": true
   },
   {
+   "dol": "fn_8002A698",
+   "size": 172,
+   "addr": 2147657368,
+   "sdk": [
+    "CARDInit"
+   ],
+   "sources": [
+    "src/dolphin/card/CARDBios.c"
+   ],
+   "named": false
+  },
+  {
    "dol": "__CARDSetDiskID",
    "size": 56,
    "addr": 2147657588,
@@ -2187,6 +3915,30 @@
     "src/dolphin/card/CARDUnlock.c"
    ],
    "named": true
+  },
+  {
+   "dol": "fn_8002AE70",
+   "size": 196,
+   "addr": 2147659376,
+   "sdk": [
+    "DummyLen"
+   ],
+   "sources": [
+    "src/dolphin/card/CARDUnlock.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_8002AF34",
+   "size": 2904,
+   "addr": 2147659572,
+   "sdk": [
+    "__CARDUnlock"
+   ],
+   "sources": [
+    "src/dolphin/card/CARDUnlock.c"
+   ],
+   "named": false
   },
   {
    "dol": "InitCallback",
@@ -2441,6 +4193,18 @@
    "named": true
   },
   {
+   "dol": "fn_8002D6B0",
+   "size": 204,
+   "addr": 2147669680,
+   "sdk": [
+    "IsCard"
+   ],
+   "sources": [
+    "src/dolphin/card/CARDMount.c"
+   ],
+   "named": false
+  },
+  {
    "dol": "CARDProbeEx",
    "size": 380,
    "addr": 2147669884,
@@ -2451,6 +4215,18 @@
     "src/dolphin/card/CARDMount.c"
    ],
    "named": true
+  },
+  {
+   "dol": "fn_8002D8F8",
+   "size": 1040,
+   "addr": 2147670264,
+   "sdk": [
+    "DoMount"
+   ],
+   "sources": [
+    "src/dolphin/card/CARDMount.c"
+   ],
+   "named": false
   },
   {
    "dol": "__CARDMountCallback",
@@ -2537,7 +4313,7 @@
    "named": true
   },
   {
-   "dol": "fn_8002E9BC",
+   "dol": "__CARDAccess",
    "size": 152,
    "addr": 2147674556,
    "sdk": [
@@ -2546,10 +4322,10 @@
    "sources": [
     "src/dolphin/card/CARDOpen.c"
    ],
-   "named": false
+   "named": true
   },
   {
-   "dol": "fn_8002EA54",
+   "dol": "__CARDIsPublic",
    "size": 48,
    "addr": 2147674708,
    "sdk": [
@@ -2558,10 +4334,10 @@
    "sources": [
     "src/dolphin/card/CARDOpen.c"
    ],
-   "named": false
+   "named": true
   },
   {
-   "dol": "fn_8002EA84",
+   "dol": "__CARDGetFileNo",
    "size": 336,
    "addr": 2147674756,
    "sdk": [
@@ -2570,10 +4346,10 @@
    "sources": [
     "src/dolphin/card/CARDOpen.c"
    ],
-   "named": false
+   "named": true
   },
   {
-   "dol": "fn_8002EBD4",
+   "dol": "CARDOpen",
    "size": 376,
    "addr": 2147675092,
    "sdk": [
@@ -2582,7 +4358,7 @@
    "sources": [
     "src/dolphin/card/CARDOpen.c"
    ],
-   "named": false
+   "named": true
   },
   {
    "dol": "CARDClose",
@@ -2657,7 +4433,7 @@
    "named": true
   },
   {
-   "dol": "fn_8002F428",
+   "dol": "CARDReadAsync",
    "size": 328,
    "addr": 2147677224,
    "sdk": [
@@ -2666,7 +4442,7 @@
    "sources": [
     "src/dolphin/card/CARDRead.c"
    ],
-   "named": false
+   "named": true
   },
   {
    "dol": "WriteCallback_CARDWrite",
@@ -2717,7 +4493,7 @@
    "named": true
   },
   {
-   "dol": "fn_8002FE54",
+   "dol": "CARDGetStatus",
    "size": 300,
    "addr": 2147679828,
    "sdk": [
@@ -2726,7 +4502,7 @@
    "sources": [
     "src/dolphin/card/CARDStat.c"
    ],
-   "named": false
+   "named": true
   },
   {
    "dol": "CARDSetStatusAsync",
@@ -2753,6 +4529,18 @@
    "named": true
   },
   {
+   "dol": "fn_80031B50",
+   "size": 308,
+   "addr": 2147687248,
+   "sdk": [
+    "GXCPInterruptHandler"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXFifo.c"
+   ],
+   "named": false
+  },
+  {
    "dol": "GXInitFifoBase",
    "size": 108,
    "addr": 2147687556,
@@ -2765,7 +4553,7 @@
    "named": true
   },
   {
-   "dol": "fn_80031CF0",
+   "dol": "GXInitFifoPtrs",
    "size": 112,
    "addr": 2147687664,
    "sdk": [
@@ -2773,6 +4561,222 @@
    ],
    "sources": [
     "src/dolphin/gx/GXFifo.c"
+   ],
+   "named": true
+  },
+  {
+   "dol": "GXSetCPUFifo",
+   "size": 272,
+   "addr": 2147687788,
+   "sdk": [
+    "GXSetCPUFifo"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXFifo.c"
+   ],
+   "named": true
+  },
+  {
+   "dol": "GXSetGPFifo",
+   "size": 376,
+   "addr": 2147688060,
+   "sdk": [
+    "GXSetGPFifo"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXFifo.c"
+   ],
+   "named": true
+  },
+  {
+   "dol": "fn_80032014",
+   "size": 220,
+   "addr": 2147688468,
+   "sdk": [
+    "__GXSaveCPUFifoAux"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXFifo.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_800320F0",
+   "size": 80,
+   "addr": 2147688688,
+   "sdk": [
+    "GXGetGPStatus"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXFifo.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "__GXFifoInit",
+   "size": 76,
+   "addr": 2147688988,
+   "sdk": [
+    "__GXFifoInit"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXFifo.c"
+   ],
+   "named": true
+  },
+  {
+   "dol": "fn_80032268",
+   "size": 36,
+   "addr": 2147689064,
+   "sdk": [
+    "__GXFifoReadEnable"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXFifo.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_8003228C",
+   "size": 32,
+   "addr": 2147689100,
+   "sdk": [
+    "__GXFifoReadDisable"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXFifo.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_800322AC",
+   "size": 60,
+   "addr": 2147689132,
+   "sdk": [
+    "__GXFifoLink"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXFifo.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_800322E8",
+   "size": 60,
+   "addr": 2147689192,
+   "sdk": [
+    "__GXWriteFifoIntEnable"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXFifo.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80032324",
+   "size": 60,
+   "addr": 2147689252,
+   "sdk": [
+    "__GXWriteFifoIntReset"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXFifo.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80032370",
+   "size": 344,
+   "addr": 2147689328,
+   "sdk": [
+    "__GXXfVtxSpecs"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXAttr.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_800324C8",
+   "size": 848,
+   "addr": 2147689672,
+   "sdk": [
+    "GXSetVtxDesc"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXAttr.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80032818",
+   "size": 884,
+   "addr": 2147690520,
+   "sdk": [
+    "GXSetVtxDescv"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXAttr.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80032B8C",
+   "size": 84,
+   "addr": 2147691404,
+   "sdk": [
+    "__GXSetVCD"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXAttr.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80032BE0",
+   "size": 292,
+   "addr": 2147691488,
+   "sdk": [
+    "__GXCalculateVLim"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXAttr.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80032D04",
+   "size": 436,
+   "addr": 2147691780,
+   "sdk": [
+    "GXGetVtxDesc"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXAttr.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80032F48",
+   "size": 56,
+   "addr": 2147692360,
+   "sdk": [
+    "GXClearVtxDesc"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXAttr.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_800336EC",
+   "size": 640,
+   "addr": 2147694316,
+   "sdk": [
+    "GXGetVtxAttrFmt"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXAttr.c"
    ],
    "named": false
   },
@@ -2789,6 +4793,18 @@
    "named": true
   },
   {
+   "dol": "fn_800339E0",
+   "size": 140,
+   "addr": 2147695072,
+   "sdk": [
+    "GXSetArray"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXAttr.c"
+   ],
+   "named": false
+  },
+  {
    "dol": "GXInvalidateVtxCache",
    "size": 16,
    "addr": 2147695212,
@@ -2801,6 +4817,162 @@
    "named": true
   },
   {
+   "dol": "fn_80033A7C",
+   "size": 720,
+   "addr": 2147695228,
+   "sdk": [
+    "GXSetTexCoordGen2"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXAttr.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80033D4C",
+   "size": 64,
+   "addr": 2147695948,
+   "sdk": [
+    "GXSetNumTexGens"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXAttr.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80033E20",
+   "size": 92,
+   "addr": 2147696160,
+   "sdk": [
+    "GXFlush"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXMisc.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_800340D4",
+   "size": 152,
+   "addr": 2147696852,
+   "sdk": [
+    "GXSetDrawDone"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXMisc.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_8003416C",
+   "size": 128,
+   "addr": 2147697004,
+   "sdk": [
+    "GXDrawDone"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXMisc.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_800341EC",
+   "size": 20,
+   "addr": 2147697132,
+   "sdk": [
+    "GXPokeAlphaMode"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXMisc.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80034200",
+   "size": 20,
+   "addr": 2147697152,
+   "sdk": [
+    "GXPokeAlphaRead"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXMisc.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80034214",
+   "size": 28,
+   "addr": 2147697172,
+   "sdk": [
+    "GXPokeAlphaUpdate"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXMisc.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80034230",
+   "size": 136,
+   "addr": 2147697200,
+   "sdk": [
+    "GXPokeBlendMode"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXMisc.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_800342B8",
+   "size": 28,
+   "addr": 2147697336,
+   "sdk": [
+    "GXPokeColorUpdate"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXMisc.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_800342D4",
+   "size": 20,
+   "addr": 2147697364,
+   "sdk": [
+    "GXPokeDstAlpha"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXMisc.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_800342E8",
+   "size": 28,
+   "addr": 2147697384,
+   "sdk": [
+    "GXPokeDither"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXMisc.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80034304",
+   "size": 40,
+   "addr": 2147697412,
+   "sdk": [
+    "GXPokeZMode"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXMisc.c"
+   ],
+   "named": false
+  },
+  {
    "dol": "GXPeekZ",
    "size": 40,
    "addr": 2147697488,
@@ -2811,6 +4983,186 @@
     "src/dolphin/gx/GXMisc.c"
    ],
    "named": true
+  },
+  {
+   "dol": "fn_800343BC",
+   "size": 136,
+   "addr": 2147697596,
+   "sdk": [
+    "GXTokenInterruptHandler"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXMisc.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80034488",
+   "size": 132,
+   "addr": 2147697800,
+   "sdk": [
+    "GXFinishInterruptHandler"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXMisc.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "__GXPEInit",
+   "size": 128,
+   "addr": 2147697932,
+   "sdk": [
+    "__GXPEInit"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXMisc.c"
+   ],
+   "named": true
+  },
+  {
+   "dol": "fn_8003471C",
+   "size": 136,
+   "addr": 2147698460,
+   "sdk": [
+    "__GXSendFlushPrim"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXGeometry.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_800347A4",
+   "size": 72,
+   "addr": 2147698596,
+   "sdk": [
+    "GXSetLineWidth"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXGeometry.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_800347EC",
+   "size": 72,
+   "addr": 2147698668,
+   "sdk": [
+    "GXSetPointSize"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXGeometry.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_800348DC",
+   "size": 60,
+   "addr": 2147698908,
+   "sdk": [
+    "GXSetCoPlanar"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXGeometry.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80034918",
+   "size": 36,
+   "addr": 2147698968,
+   "sdk": [
+    "__GXSetGenMode"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXGeometry.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80034A5C",
+   "size": 144,
+   "addr": 2147699292,
+   "sdk": [
+    "GXSetDispCopySrc"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXFrameBuf.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80034AEC",
+   "size": 144,
+   "addr": 2147699436,
+   "sdk": [
+    "GXSetTexCopySrc"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXFrameBuf.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80034D0C",
+   "size": 40,
+   "addr": 2147699980,
+   "sdk": [
+    "GXSetDispCopyFrame2Field"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXFrameBuf.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80034D9C",
+   "size": 200,
+   "addr": 2147700124,
+   "sdk": [
+    "GXSetDispCopyYScale"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXFrameBuf.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80034E64",
+   "size": 104,
+   "addr": 2147700324,
+   "sdk": [
+    "GXSetCopyClear"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXFrameBuf.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_800350F4",
+   "size": 28,
+   "addr": 2147700980,
+   "sdk": [
+    "GXSetDispCopyGamma"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXFrameBuf.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_800353E8",
+   "size": 56,
+   "addr": 2147701736,
+   "sdk": [
+    "GXClearBoundingBox"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXFrameBuf.c"
+   ],
+   "named": false
   },
   {
    "dol": "GXGetTexBufferSize",
@@ -2837,6 +5189,18 @@
    "named": true
   },
   {
+   "dol": "fn_80035EC4",
+   "size": 404,
+   "addr": 2147704516,
+   "sdk": [
+    "GXInitTexObjLOD"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXTexture.c"
+   ],
+   "named": false
+  },
+  {
    "dol": "GXGetTexObjWidth",
    "size": 16,
    "addr": 2147705060,
@@ -2859,6 +5223,18 @@
     "src/dolphin/gx/GXTexture.c"
    ],
    "named": true
+  },
+  {
+   "dol": "fn_80036388",
+   "size": 84,
+   "addr": 2147705736,
+   "sdk": [
+    "GXLoadTexObj"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXTexture.c"
+   ],
+   "named": false
   },
   {
    "dol": "GXInitTexCacheRegion",
@@ -2897,6 +5273,42 @@
    "named": true
   },
   {
+   "dol": "fn_8003658C",
+   "size": 20,
+   "addr": 2147706252,
+   "sdk": [
+    "GXSetTexRegionCallback"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXTexture.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_800365A0",
+   "size": 20,
+   "addr": 2147706272,
+   "sdk": [
+    "GXSetTlutRegionCallback"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXTexture.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_8003666C",
+   "size": 380,
+   "addr": 2147706476,
+   "sdk": [
+    "__GXSetSUTexRegs"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXTexture.c"
+   ],
+   "named": false
+  },
+  {
    "dol": "__GXSetTmemConfig",
    "size": 576,
    "addr": 2147706856,
@@ -2907,6 +5319,270 @@
     "src/dolphin/gx/GXTexture.c"
    ],
    "named": true
+  },
+  {
+   "dol": "fn_80036A28",
+   "size": 156,
+   "addr": 2147707432,
+   "sdk": [
+    "GXSetTevIndirect"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXBump.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80036C24",
+   "size": 380,
+   "addr": 2147707940,
+   "sdk": [
+    "GXSetIndTexCoordScale"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXBump.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80036DA0",
+   "size": 276,
+   "addr": 2147708320,
+   "sdk": [
+    "GXSetIndTexOrder"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXBump.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80036EB4",
+   "size": 40,
+   "addr": 2147708596,
+   "sdk": [
+    "GXSetNumIndStages"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXBump.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "__GXFlushTextureState",
+   "size": 36,
+   "addr": 2147708912,
+   "sdk": [
+    "__GXFlushTextureState"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXBump.c"
+   ],
+   "named": true
+  },
+  {
+   "dol": "fn_80037014",
+   "size": 140,
+   "addr": 2147708948,
+   "sdk": [
+    "GXSetTevOp"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXTev.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80037354",
+   "size": 108,
+   "addr": 2147709780,
+   "sdk": [
+    "GXSetTevKColorSel"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXTev.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_800373C0",
+   "size": 108,
+   "addr": 2147709888,
+   "sdk": [
+    "GXSetTevKAlphaSel"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXTev.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_8003742C",
+   "size": 84,
+   "addr": 2147709996,
+   "sdk": [
+    "GXSetTevSwapMode"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXTev.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80037480",
+   "size": 152,
+   "addr": 2147710080,
+   "sdk": [
+    "GXSetTevSwapModeTable"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXTev.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80037518",
+   "size": 84,
+   "addr": 2147710232,
+   "sdk": [
+    "GXSetAlphaCompare"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXTev.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_8003756C",
+   "size": 132,
+   "addr": 2147710316,
+   "sdk": [
+    "GXSetZTexture"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXTev.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_800375F0",
+   "size": 472,
+   "addr": 2147710448,
+   "sdk": [
+    "GXSetTevOrder"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXTev.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_800377C8",
+   "size": 48,
+   "addr": 2147710920,
+   "sdk": [
+    "GXSetNumTevStages"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXTev.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80037A14",
+   "size": 256,
+   "addr": 2147711508,
+   "sdk": [
+    "GXSetFogRangeAdj"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXPixel.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80037BF4",
+   "size": 56,
+   "addr": 2147711988,
+   "sdk": [
+    "GXSetZCompLoc"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXPixel.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80037D7C",
+   "size": 56,
+   "addr": 2147712380,
+   "sdk": [
+    "GXSetFieldMask"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXPixel.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80037DB4",
+   "size": 124,
+   "addr": 2147712436,
+   "sdk": [
+    "GXSetFieldMode"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXPixel.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80038A18",
+   "size": 112,
+   "addr": 2147715608,
+   "sdk": [
+    "GXCallDisplayList"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXDisplayList.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80038A88",
+   "size": 180,
+   "addr": 2147715720,
+   "sdk": [
+    "GXSetProjection"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXTransform.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80038B3C",
+   "size": 192,
+   "addr": 2147715900,
+   "sdk": [
+    "GXSetProjectionv"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXTransform.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80038BFC",
+   "size": 96,
+   "addr": 2147716092,
+   "sdk": [
+    "GXGetProjectionv"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXTransform.c"
+   ],
+   "named": false
   },
   {
    "dol": "GXLoadPosMtxImm",
@@ -2933,6 +5609,18 @@
    "named": true
   },
   {
+   "dol": "fn_80038CFC",
+   "size": 56,
+   "addr": 2147716348,
+   "sdk": [
+    "GXSetCurrentMtx"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXTransform.c"
+   ],
+   "named": false
+  },
+  {
    "dol": "GXLoadTexMtxImm",
    "size": 180,
    "addr": 2147716404,
@@ -2943,6 +5631,102 @@
     "src/dolphin/gx/GXTransform.c"
    ],
    "named": true
+  },
+  {
+   "dol": "fn_80038F48",
+   "size": 144,
+   "addr": 2147716936,
+   "sdk": [
+    "GXSetScissor"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXTransform.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80038FD8",
+   "size": 72,
+   "addr": 2147717080,
+   "sdk": [
+    "GXGetScissor"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXTransform.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80039020",
+   "size": 64,
+   "addr": 2147717152,
+   "sdk": [
+    "GXSetScissorBoxOffset"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXTransform.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80039060",
+   "size": 40,
+   "addr": 2147717216,
+   "sdk": [
+    "GXSetClipMode"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXTransform.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80039088",
+   "size": 132,
+   "addr": 2147717256,
+   "sdk": [
+    "__GXSetMatrixIndex"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXTransform.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_8003910C",
+   "size": 2120,
+   "addr": 2147717388,
+   "sdk": [
+    "GXSetGPMetric"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXPerf.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80039AFC",
+   "size": 16,
+   "addr": 2147719932,
+   "sdk": [
+    "GXClearGPMetric"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXPerf.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80039B7C",
+   "size": 196,
+   "addr": 2147720060,
+   "sdk": [
+    "GXReadXfRasMetric"
+   ],
+   "sources": [
+    "src/dolphin/gx/GXPerf.c"
+   ],
+   "named": false
   },
   {
    "dol": "__cvt_fp2unsigned",
@@ -3101,6 +5885,18 @@
    "named": true
   },
   {
+   "dol": "__stdio_atexit",
+   "size": 16,
+   "addr": 2148009596,
+   "sdk": [
+    "__stdio_atexit"
+   ],
+   "sources": [
+    "src/PowerPC_EABI_Support/MSL/MSL_C/MSL_Common/Src/misc_io.c"
+   ],
+   "named": true
+  },
+  {
    "dol": "strrchr",
    "size": 72,
    "addr": 2148023060,
@@ -3175,142 +5971,38 @@
  ],
  "ambiguous": [
   {
-   "dol": "fn_80006BDC",
-   "size": 80,
-   "addr": 2147511260,
+   "dol": "fn_8001A7D0",
+   "size": 68,
+   "addr": 2147592144,
    "sdk": [
-    "DBPrintf",
-    "__DSP_debug_printf"
+    "AIRegisterDMACallback",
+    "ARRegisterDMACallback",
+    "GXSetBreakPtCallback",
+    "GXSetDrawDoneCallback",
+    "GXSetDrawSyncCallback",
+    "VISetPostRetraceCallback",
+    "VISetPreRetraceCallback"
    ],
    "sources": [
-    "src/dolphin/db/db.c",
-    "src/dolphin/dsp/dsp_debug.c"
+    "src/dolphin/ai/ai.c",
+    "src/dolphin/ar/ar.c",
+    "src/dolphin/gx/GXFifo.c",
+    "src/dolphin/gx/GXMisc.c",
+    "src/dolphin/vi/vi.c"
    ],
    "named": false
   },
   {
-   "dol": "DecrementerExceptionHandler",
-   "size": 80,
-   "addr": 2147529412,
+   "dol": "fn_80070DF0",
+   "size": 16,
+   "addr": 2147945968,
    "sdk": [
-    "DecrementerExceptionHandler",
-    "ExternalInterruptHandler"
+    "DVDSetAutoInvalidation",
+    "OSSetCurrentHeap"
    ],
    "sources": [
-    "src/dolphin/os/OSAlarm.c",
-    "src/dolphin/os/OSInterrupt.c"
-   ],
-   "named": true
-  },
-  {
-   "dol": "ExternalInterruptHandler",
-   "size": 80,
-   "addr": 2147540240,
-   "sdk": [
-    "DecrementerExceptionHandler",
-    "ExternalInterruptHandler"
-   ],
-   "sources": [
-    "src/dolphin/os/OSAlarm.c",
-    "src/dolphin/os/OSInterrupt.c"
-   ],
-   "named": true
-  },
-  {
-   "dol": "fn_80017A38",
-   "size": 40,
-   "addr": 2147580472,
-   "sdk": [
-    "stateGettingError",
-    "stateGoToRetry",
-    "stateMotorStopped"
-   ],
-   "sources": [
-    "src/dolphin/dvd/dvd.c"
-   ],
-   "named": false
-  },
-  {
-   "dol": "fn_80017EA8",
-   "size": 40,
-   "addr": 2147581608,
-   "sdk": [
-    "stateGettingError",
-    "stateGoToRetry",
-    "stateMotorStopped"
-   ],
-   "sources": [
-    "src/dolphin/dvd/dvd.c"
-   ],
-   "named": false
-  },
-  {
-   "dol": "fn_800186C0",
-   "size": 40,
-   "addr": 2147583680,
-   "sdk": [
-    "stateGettingError",
-    "stateGoToRetry",
-    "stateMotorStopped"
-   ],
-   "sources": [
-    "src/dolphin/dvd/dvd.c"
-   ],
-   "named": false
-  },
-  {
-   "dol": "fn_8002F570",
-   "size": 72,
-   "addr": 2147677552,
-   "sdk": [
-    "CARDRead",
-    "CARDWrite"
-   ],
-   "sources": [
-    "src/dolphin/card/CARDRead.c",
-    "src/dolphin/card/CARDWrite.c"
-   ],
-   "named": false
-  },
-  {
-   "dol": "fn_8002F8EC",
-   "size": 72,
-   "addr": 2147678444,
-   "sdk": [
-    "CARDRead",
-    "CARDWrite"
-   ],
-   "sources": [
-    "src/dolphin/card/CARDRead.c",
-    "src/dolphin/card/CARDWrite.c"
-   ],
-   "named": false
-  },
-  {
-   "dol": "fn_800300F4",
-   "size": 72,
-   "addr": 2147680500,
-   "sdk": [
-    "CARDMount",
-    "CARDSetStatus"
-   ],
-   "sources": [
-    "src/dolphin/card/CARDMount.c",
-    "src/dolphin/card/CARDStat.c"
-   ],
-   "named": false
-  },
-  {
-   "dol": "fn_80030338",
-   "size": 72,
-   "addr": 2147681080,
-   "sdk": [
-    "CARDMount",
-    "CARDSetStatus"
-   ],
-   "sources": [
-    "src/dolphin/card/CARDMount.c",
-    "src/dolphin/card/CARDStat.c"
+    "src/dolphin/dvd/dvd.c",
+    "src/dolphin/os/OSAlloc.c"
    ],
    "named": false
   },
@@ -3338,9 +6030,9 @@
    "named": false
   },
   {
-   "dol": "fn_8002DFE0",
+   "dol": "fn_80030338",
    "size": 72,
-   "addr": 2147672032,
+   "addr": 2147681080,
    "sdk": [
     "CARDMount",
     "CARDSetStatus"
@@ -3348,6 +6040,147 @@
    "sources": [
     "src/dolphin/card/CARDMount.c",
     "src/dolphin/card/CARDStat.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_800186C0",
+   "size": 40,
+   "addr": 2147583680,
+   "sdk": [
+    "stateGettingError",
+    "stateGoToRetry",
+    "stateMotorStopped"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvd.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80077BAC",
+   "size": 16,
+   "addr": 2147974060,
+   "sdk": [
+    "DVDSetAutoInvalidation",
+    "OSSetCurrentHeap"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvd.c",
+    "src/dolphin/os/OSAlloc.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80018108",
+   "size": 52,
+   "addr": 2147582216,
+   "sdk": [
+    "stateCheckID2a",
+    "stateCheckID3"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvd.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_8002F8EC",
+   "size": 72,
+   "addr": 2147678444,
+   "sdk": [
+    "CARDRead",
+    "CARDWrite"
+   ],
+   "sources": [
+    "src/dolphin/card/CARDRead.c",
+    "src/dolphin/card/CARDWrite.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_800176D8",
+   "size": 36,
+   "addr": 2147579608,
+   "sdk": [
+    "cbForCancelSync",
+    "cbForChangeDiskSync",
+    "cbForInquirySync",
+    "cbForPrepareStreamSync",
+    "cbForReadSync",
+    "cbForSeekSync"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvd.c",
+    "src/dolphin/dvd/dvdfs.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_800300F4",
+   "size": 72,
+   "addr": 2147680500,
+   "sdk": [
+    "CARDMount",
+    "CARDSetStatus"
+   ],
+   "sources": [
+    "src/dolphin/card/CARDMount.c",
+    "src/dolphin/card/CARDStat.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80034444",
+   "size": 68,
+   "addr": 2147697732,
+   "sdk": [
+    "AIRegisterDMACallback",
+    "ARRegisterDMACallback",
+    "GXSetBreakPtCallback",
+    "GXSetDrawDoneCallback",
+    "GXSetDrawSyncCallback",
+    "VISetPostRetraceCallback",
+    "VISetPreRetraceCallback"
+   ],
+   "sources": [
+    "src/dolphin/ai/ai.c",
+    "src/dolphin/ar/ar.c",
+    "src/dolphin/gx/GXFifo.c",
+    "src/dolphin/gx/GXMisc.c",
+    "src/dolphin/vi/vi.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "DBPrintf",
+   "size": 80,
+   "addr": 2147572436,
+   "sdk": [
+    "DBPrintf",
+    "__DSP_debug_printf"
+   ],
+   "sources": [
+    "src/dolphin/db/db.c",
+    "src/dolphin/dsp/dsp_debug.c"
+   ],
+   "named": true
+  },
+  {
+   "dol": "fn_80019C24",
+   "size": 36,
+   "addr": 2147589156,
+   "sdk": [
+    "cbForCancelSync",
+    "cbForChangeDiskSync",
+    "cbForInquirySync",
+    "cbForPrepareStreamSync",
+    "cbForReadSync",
+    "cbForSeekSync"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvd.c",
+    "src/dolphin/dvd/dvdfs.c"
    ],
    "named": false
   },
@@ -3375,6 +6208,184 @@
    "named": true
   },
   {
+   "dol": "fn_800068F4",
+   "size": 16,
+   "addr": 2147510516,
+   "sdk": [
+    "DVDSetAutoInvalidation",
+    "OSSetCurrentHeap"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvd.c",
+    "src/dolphin/os/OSAlloc.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80006BDC",
+   "size": 80,
+   "addr": 2147511260,
+   "sdk": [
+    "DBPrintf",
+    "__DSP_debug_printf"
+   ],
+   "sources": [
+    "src/dolphin/db/db.c",
+    "src/dolphin/dsp/dsp_debug.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80070DE0",
+   "size": 16,
+   "addr": 2147945952,
+   "sdk": [
+    "DVDSetAutoInvalidation",
+    "OSSetCurrentHeap"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvd.c",
+    "src/dolphin/os/OSAlloc.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_8002DFE0",
+   "size": 72,
+   "addr": 2147672032,
+   "sdk": [
+    "CARDMount",
+    "CARDSetStatus"
+   ],
+   "sources": [
+    "src/dolphin/card/CARDMount.c",
+    "src/dolphin/card/CARDStat.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80017EA8",
+   "size": 40,
+   "addr": 2147581608,
+   "sdk": [
+    "stateGettingError",
+    "stateGoToRetry",
+    "stateMotorStopped"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvd.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_8001A78C",
+   "size": 68,
+   "addr": 2147592076,
+   "sdk": [
+    "AIRegisterDMACallback",
+    "ARRegisterDMACallback",
+    "GXSetBreakPtCallback",
+    "GXSetDrawDoneCallback",
+    "GXSetDrawSyncCallback",
+    "VISetPostRetraceCallback",
+    "VISetPreRetraceCallback"
+   ],
+   "sources": [
+    "src/dolphin/ai/ai.c",
+    "src/dolphin/ar/ar.c",
+    "src/dolphin/gx/GXFifo.c",
+    "src/dolphin/gx/GXMisc.c",
+    "src/dolphin/vi/vi.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_8002F570",
+   "size": 72,
+   "addr": 2147677552,
+   "sdk": [
+    "CARDRead",
+    "CARDWrite"
+   ],
+   "sources": [
+    "src/dolphin/card/CARDRead.c",
+    "src/dolphin/card/CARDWrite.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "MWTRACE",
+   "size": 80,
+   "addr": 2148067016,
+   "sdk": [
+    "DBPrintf",
+    "__DSP_debug_printf"
+   ],
+   "sources": [
+    "src/dolphin/db/db.c",
+    "src/dolphin/dsp/dsp_debug.c"
+   ],
+   "named": true
+  },
+  {
+   "dol": "fn_80006904",
+   "size": 16,
+   "addr": 2147510532,
+   "sdk": [
+    "DVDSetAutoInvalidation",
+    "OSSetCurrentHeap"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvd.c",
+    "src/dolphin/os/OSAlloc.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_8001DF00",
+   "size": 68,
+   "addr": 2147606272,
+   "sdk": [
+    "AIRegisterDMACallback",
+    "ARRegisterDMACallback",
+    "GXSetBreakPtCallback",
+    "GXSetDrawDoneCallback",
+    "GXSetDrawSyncCallback",
+    "VISetPostRetraceCallback",
+    "VISetPreRetraceCallback"
+   ],
+   "sources": [
+    "src/dolphin/ai/ai.c",
+    "src/dolphin/ar/ar.c",
+    "src/dolphin/gx/GXFifo.c",
+    "src/dolphin/gx/GXMisc.c",
+    "src/dolphin/vi/vi.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_8001E7E4",
+   "size": 68,
+   "addr": 2147608548,
+   "sdk": [
+    "AIRegisterDMACallback",
+    "ARRegisterDMACallback",
+    "GXSetBreakPtCallback",
+    "GXSetDrawDoneCallback",
+    "GXSetDrawSyncCallback",
+    "VISetPostRetraceCallback",
+    "VISetPreRetraceCallback"
+   ],
+   "sources": [
+    "src/dolphin/ai/ai.c",
+    "src/dolphin/ar/ar.c",
+    "src/dolphin/gx/GXFifo.c",
+    "src/dolphin/gx/GXMisc.c",
+    "src/dolphin/vi/vi.c"
+   ],
+   "named": false
+  },
+  {
    "dol": "_ExitProcess",
    "size": 32,
    "addr": 2147555580,
@@ -3398,18 +6409,60 @@
    "named": true
   },
   {
-   "dol": "DBPrintf",
-   "size": 80,
-   "addr": 2147572436,
+   "dol": "fn_8001989C",
+   "size": 16,
+   "addr": 2147588252,
    "sdk": [
-    "DBPrintf",
-    "__DSP_debug_printf"
+    "DVDSetAutoInvalidation",
+    "OSSetCurrentHeap"
    ],
    "sources": [
-    "src/dolphin/db/db.c",
-    "src/dolphin/dsp/dsp_debug.c"
+    "src/dolphin/dvd/dvd.c",
+    "src/dolphin/os/OSAlloc.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_8001A2EC",
+   "size": 48,
+   "addr": 2147590892,
+   "sdk": [
+    "GDOverflowed",
+    "__DVDPrintFatalMessage"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvdFatal.c",
+    "src/dolphin/gd/GDBase.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "_epilog_rel_sample",
+   "size": 40,
+   "addr": 2147580472,
+   "sdk": [
+    "stateGettingError",
+    "stateGoToRetry",
+    "stateMotorStopped"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvd.c"
    ],
    "named": true
+  },
+  {
+   "dol": "fn_8006FFCC",
+   "size": 16,
+   "addr": 2147942348,
+   "sdk": [
+    "DVDSetAutoInvalidation",
+    "OSSetCurrentHeap"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvd.c",
+    "src/dolphin/os/OSAlloc.c"
+   ],
+   "named": false
   },
   {
    "dol": "fn_80017590",
@@ -3426,9 +6479,23 @@
    "named": false
   },
   {
-   "dol": "MWTRACE",
+   "dol": "fn_80074A7C",
+   "size": 16,
+   "addr": 2147961468,
+   "sdk": [
+    "DVDSetAutoInvalidation",
+    "OSSetCurrentHeap"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvd.c",
+    "src/dolphin/os/OSAlloc.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_80028F50",
    "size": 80,
-   "addr": 2148067016,
+   "addr": 2147651408,
    "sdk": [
     "DBPrintf",
     "__DSP_debug_printf"
@@ -3437,7 +6504,51 @@
     "src/dolphin/db/db.c",
     "src/dolphin/dsp/dsp_debug.c"
    ],
-   "named": true
+   "named": false
+  },
+  {
+   "dol": "fn_80034378",
+   "size": 68,
+   "addr": 2147697528,
+   "sdk": [
+    "AIRegisterDMACallback",
+    "ARRegisterDMACallback",
+    "GXSetBreakPtCallback",
+    "GXSetDrawDoneCallback",
+    "GXSetDrawSyncCallback",
+    "VISetPostRetraceCallback",
+    "VISetPreRetraceCallback"
+   ],
+   "sources": [
+    "src/dolphin/ai/ai.c",
+    "src/dolphin/ar/ar.c",
+    "src/dolphin/gx/GXFifo.c",
+    "src/dolphin/gx/GXMisc.c",
+    "src/dolphin/vi/vi.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_800321D8",
+   "size": 68,
+   "addr": 2147688920,
+   "sdk": [
+    "AIRegisterDMACallback",
+    "ARRegisterDMACallback",
+    "GXSetBreakPtCallback",
+    "GXSetDrawDoneCallback",
+    "GXSetDrawSyncCallback",
+    "VISetPostRetraceCallback",
+    "VISetPreRetraceCallback"
+   ],
+   "sources": [
+    "src/dolphin/ai/ai.c",
+    "src/dolphin/ar/ar.c",
+    "src/dolphin/gx/GXFifo.c",
+    "src/dolphin/gx/GXMisc.c",
+    "src/dolphin/vi/vi.c"
+   ],
+   "named": false
   },
   {
    "dol": "fn_8000F5F0",
@@ -3463,42 +6574,55 @@
    "named": false
   },
   {
-   "dol": "fn_80028F50",
-   "size": 80,
-   "addr": 2147651408,
+   "dol": "fn_80074D08",
+   "size": 16,
+   "addr": 2147962120,
    "sdk": [
-    "DBPrintf",
-    "__DSP_debug_printf"
+    "DVDSetAutoInvalidation",
+    "OSSetCurrentHeap"
    ],
    "sources": [
-    "src/dolphin/db/db.c",
-    "src/dolphin/dsp/dsp_debug.c"
+    "src/dolphin/dvd/dvd.c",
+    "src/dolphin/os/OSAlloc.c"
+   ],
+   "named": false
+  },
+  {
+   "dol": "fn_8001813C",
+   "size": 52,
+   "addr": 2147582268,
+   "sdk": [
+    "stateCheckID2a",
+    "stateCheckID3"
+   ],
+   "sources": [
+    "src/dolphin/dvd/dvd.c"
    ],
    "named": false
   }
  ],
  "summary": {
-  "hits": 261,
-  "bytes": 48952,
-  "unnamed_hits": 11,
-  "unnamed_bytes": 2592,
-  "ambiguous": 19,
+  "hits": 494,
+  "bytes": 115452,
+  "unnamed_hits": 188,
+  "unnamed_bytes": 55384,
+  "ambiguous": 38,
   "by_lib": {
-   "card": 21016,
-   "os": 13688,
-   "si": 4108,
-   "gx": 2320,
-   "dvd": 1536,
-   "pad": 1448,
-   "ai": 1040,
+   "card": 25532,
+   "os": 22200,
+   "gx": 17624,
+   "dvd": 15688,
+   "pad": 7740,
+   "ar": 7712,
+   "vi": 6868,
+   "si": 6504,
+   "ai": 2184,
+   "dsp": 1392,
    "Runtime": 948,
-   "dsp": 888,
-   "vi": 856,
-   "MSL": 572,
-   "ar": 240,
-   "base": 132,
-   "db": 88,
-   "exi": 72
+   "MSL": 588,
+   "exi": 184,
+   "db": 156,
+   "base": 132
   }
  }
 }

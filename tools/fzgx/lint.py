@@ -5,6 +5,7 @@ Rules (docs/CODING_RULES.md):
       0xC0000000..0xC17FFFFF (uncached) or 0xCC000000..0xCC00FFFF (hardware
       registers) outside include/dolphin/hw_regs.h
   A2  no cast of a literal to a pointer:  (T *)0x...
+  A3  no inline assembly bodies in reconstructed C
   S1  no `goto` without a justification comment on the same or previous line
   S2  no `volatile` / codegen-only `union` without a justification comment
 A line may opt out with `// fzgx-allow: <rule> <reason>`.
@@ -50,6 +51,8 @@ def lint_file(path: Path) -> List[Tuple[str, int, str]]:
                 findings.append(("A1", i, f"hardcoded address 0x{v:08X}; use a symbol"))
         if PTR_CAST_RE.search(code) and "A2" not in allow:
             findings.append(("A2", i, "literal cast to pointer; declare an extern symbol"))
+        if re.search(r'\b(?:asm|__asm__)\s*(?:volatile\s*)?\{', code):
+            findings.append(("A3", i, "inline assembly body in reconstructed C"))
         if re.search(r"\bgoto\b", code) and not justified and "S1" not in allow:
             findings.append(("S1", i, "goto without a justification comment"))
         if re.search(r"\bvolatile\b", code) and not justified and "S2" not in allow:

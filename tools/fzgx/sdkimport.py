@@ -14,7 +14,7 @@ from pathlib import Path
 
 from . import api, oracle, sdkmatch
 from .ledger import Ledger
-from .poolfix import Elf
+from .poolfix import Elf, code_reloc_offset
 from .project import ROOT, STATE_DIR, Project
 from .reuse import replace_symbols
 
@@ -26,8 +26,21 @@ BASE_TYPES = {'s8', 's16', 's32', 's64', 'u8', 'u16', 'u32', 'u64', 'f32', 'f64'
 
 def replace_c_symbols(text: str, mapping: dict) -> str:
     clean = masked(text)
+    members = set()
+    for record in re.finditer(r'\b(?:struct|union)\s*(?:\w+\s*)?\{', clean):
+        depth = 1
+        end = record.end()
+        while end < len(clean) and depth:
+            depth += (clean[end] == '{') - (clean[end] == '}')
+            end += 1
+        body = clean[record.end():end - 1]
+        for member in re.finditer(r'\b(\w+)\s*(?:\[[^\]]*\]\s*)*;', body):
+            members.add(record.end() + member.start(1))
+        for member in re.finditer(r'\(\s*\*\s*(\w+)\s*\)', body):
+            members.add(record.end() + member.start(1))
     edits = [(m.start(), m.end(), mapping[m[0]]) for m in IDENT.finditer(clean)
-             if m[0] in mapping and not re.search(r'(?:\.|->)\s*$', clean[:m.start()])]
+             if m[0] in mapping and m.start() not in members
+             and not re.search(r'(?:\.|->)\s*$', clean[:m.start()])]
     for start, end, value in reversed(edits):
         text = text[:start] + value + text[end:]
     return text
@@ -35,6 +48,23 @@ def replace_c_symbols(text: str, mapping: dict) -> str:
 
 def masked(text: str) -> str:
     return LEXICAL.sub(lambda m: ''.join('\n' if c == '\n' else ' ' for c in m[0]), text)
+
+
+def isolate_parameters(text: str, mapping: dict) -> str:
+    """Parameter names have function scope even when an SDK global has the same name."""
+    for piece in declarations(text):
+        if piece.kind not in ('function', 'prototype'):
+            continue
+        signature = piece.signature if piece.kind == 'function' else piece.text
+        parameters = signature[signature.find('(') + 1:signature.rfind(')')]
+        local = {}
+        for parameter in parameters.split(','):
+            name = re.search(r'[\s*](\w+)\s*(?:\[[^\]]*\]\s*)*$', parameter)
+            if name and name[1] in mapping:
+                local[name[1]] = 'sdk_arg_' + name[1]
+        if local:
+            text = text.replace(piece.text, replace_c_symbols(piece.text, local))
+    return text
 
 
 @dataclass
@@ -131,6 +161,10 @@ def declarations(text: str) -> list:
                     if var:
                         names.add(var[1])
                     kind = 'object'
+            enumeration = re.search(r'\benum\s*(?:\w+\s*)?\{([^{}]*)\}', masked(part), re.S)
+            if enumeration:
+                names.update(re.findall(r'(?:^|,)\s*(\w+)', enumeration[1]))
+                kind = 'type'
             out.append(Piece(kind, names, part, address=address))
     return out
 
@@ -184,7 +218,7 @@ def relocations(obj: Path, name: str) -> dict:
             addr, info, addend = struct.unpack_from('>IIi', elf.data, off)
             if fn['value'] <= addr < fn['value'] + fn['size']:
                 symbol = symbols[info >> 8]
-                out[addr - fn['value']] = (symbol['name'], addend, info & 255)
+                out[code_reloc_offset(addr, info & 255) - fn['value']] = (symbol['name'], addend, info & 255)
     return out
 
 
@@ -228,12 +262,32 @@ def bindings(p: Project, rec: dict) -> dict:
         if off not in right:
             raise ValueError(f'{off:#x}: source relocation {name} has no retail relocation')
         dest, dest_addend, dest_kind = right[off]
+        if kind == dest_kind and (addend != dest_addend or name in mapping and mapping[name] != dest):
+            target_sym = retail_symbol(p, sym.module, dest)
+            previous = retail_symbol(p, sym.module, mapping[name]) if name in mapping else None
+            if target_sym:
+                address = target_sym.addr + dest_addend - addend
+                if previous and previous.addr == address:
+                    continue
+                if not previous:
+                    base = next((s for s in p.symbols(sym.module).values()
+                                 if s.addr == address and s.name.isidentifier()), None)
+                    if base:
+                        mapping[name] = base.name
+                        continue
         if (addend, kind) != (dest_addend, dest_kind):
             raise ValueError(f'{off:#x}: {name}+{addend:#x} -> {dest}+{dest_addend:#x}, relocation {kind}/{dest_kind}')
         if name in mapping and mapping[name] != dest:
             raise ValueError(f'inconsistent binding of {name}: {mapping[name]} / {dest}')
         mapping[name] = dest
     return mapping
+
+
+def retail_symbol(p: Project, module: str, name: str):
+    sym = p.symbols(module).get(name)
+    if sym is None:
+        sym = next((s for s in p.symbols(module).values() if name == f'{s.name}_{s.addr:08X}'), None)
+    return sym
 
 
 def dependency_closure(pieces: list, function: Piece, mapping: dict) -> tuple:
@@ -292,11 +346,14 @@ def prepare(p: Project, library: str) -> dict:
                 mapping = bindings(p, rec)
                 types, externs = dependency_closure(pieces, function, mapping)
                 text = '\n\n'.join(types + externs + [re.sub(r'^static\s+', '', function.text)]) + '\n'
+                if re.search(r'\basm\s*\{', masked(text)):
+                    raise ValueError('inline assembly dependency')
+                text = externalize_statics(text, mapping)
                 text, absolutes = absolute_declarations(pieces, text)
                 for aggregate in (True, False):
                     bound = dict(mapping)
                     raw = shared_storage(p, rec, pieces, text, bound, aggregate=aggregate)
-                    raw = replace_c_symbols(raw, bound)
+                    raw = replace_c_symbols(isolate_parameters(raw, bound), bound)
                     for messages in (False, True):
                         body = literal_storage(p, rec, raw) if messages else raw
                         variant = ('aggregate' if aggregate else 'direct') + ('-messages' if messages else '')
@@ -309,6 +366,33 @@ def prepare(p: Project, library: str) -> dict:
                 result['errors'].append({**rec, 'error': str(e)})
     (root / 'prepare.json').write_text(json.dumps(result, indent=2) + '\n')
     return result
+
+
+def externalize_statics(text: str, mapping: dict) -> str:
+    """Bind function-local static objects using their compiler-emitted symbol identities."""
+    locals_by_name = defaultdict(set)
+    for name, target in mapping.items():
+        if '$' in name:
+            locals_by_name[name.split('$')[0]].add(target)
+    clean = masked(text)
+    edits, externs = [], []
+    for match in re.finditer(r'\bstatic\s+[^;]+;', clean):
+        original = text[match.start():match.end()]
+        pieces = declarations(original)
+        if len(pieces) != 1 or pieces[0].kind != 'object':
+            continue
+        piece = pieces[0]
+        name = next(iter(piece.names), '')
+        targets = locals_by_name.get(name, set())
+        if len(targets) != 1:
+            continue
+        decl = re.sub(r'^static\s+', 'extern ', original.split('=', 1)[0].strip().rstrip(';')) + ';'
+        externs.append(decl)
+        mapping[name] = next(iter(targets))
+        edits.append((match.start(), match.end()))
+    for start, end in reversed(edits):
+        text = text[:start] + text[end:]
+    return '\n'.join(externs) + '\n' + text if externs else text
 
 
 MEMORY_NAMES = {
@@ -402,11 +486,16 @@ def shared_storage(p: Project, rec: dict, pieces: list, text: str, mapping: dict
         fields, cursor, replacements = [], 0, {}
         tag = 'SDK_' + Path(rec['source']).stem + '_' + re.sub(r'\W', '_', anchor)
         local = 'sdk_storage_' + re.sub(r'\W', '_', anchor)
+        used = set(IDENT.findall(masked(text)))
         for s in sorted(objects, key=lambda s: s['value']):
-            if s['name'].startswith('@'):
+            if s['name'].startswith('@') or s['name'] not in used:
                 continue
             offset = s['value'] - source['value']
-            if not any(t.addr <= dest.addr + offset and t.end >= dest.addr + offset + s['size'] for t in retail):
+            # DTK may split an SDK aggregate (OSAlarm/OSThread) into smaller symbols.
+            # Its fields must fit the retail section, not one guessed symbol extent.
+            section_symbols = [t for t in retail if t.section == dest.section]
+            if not (min(t.addr for t in section_symbols) <= dest.addr + offset
+                    and dest.addr + offset + s['size'] <= max(t.end for t in section_symbols)):
                 raise ValueError(f"data-base layout differs: {anchor} + {offset:#x} ({s['name']})")
             piece = next((x for x in pieces if x.kind == 'object' and s['name'] in x.names), None)
             if piece is None:
@@ -418,6 +507,14 @@ def shared_storage(p: Project, rec: dict, pieces: list, text: str, mapping: dict
                 # Initializers supply array bounds in C, but aggregate members
                 # have no initializer. The compiled symbol carries that extent.
                 decl = re.sub(r'\[\s*\]', f"[{s['size']}]", decl)
+            elif re.search(r'\[\s*\]', decl) and '=' in piece.text:
+                initializer = masked(piece.text.split('=', 1)[1]).strip().rstrip(';').strip()
+                if initializer.startswith('{') and initializer.endswith('}'):
+                    depth, count = 0, 0
+                    for ch in initializer[1:-1].strip().rstrip(','):
+                        depth += (ch in '{([') - (ch in '})]')
+                        count += ch == ',' and depth == 0
+                    decl = re.sub(r'\[\s*\]', f'[{count + 1}]', decl, count=1)
             if offset < cursor:
                 raise ValueError(f"overlapping data-base fields: {s['name']}")
             if offset > cursor:
@@ -542,7 +639,7 @@ def format_c(text: str) -> str:
 def materialize(result: dict) -> list:
     """Adapt reference C to the project's Dolphin interface; retain TU-local declarations."""
     header = {'card': 'dolphin/card/CARDPriv.h', 'os': 'dolphin/os.h',
-              'exi': 'dolphin/exi/EXIPriv.h', 'si': 'dolphin/si/SIPriv.h'}[result['library']]
+              'exi': 'dolphin/exi/EXIPriv.h', 'si': 'dolphin/si/SIPriv.h'}.get(result['library'], 'types.h')
     if not (ROOT / 'include' / header).exists():
         raise ValueError(f'add the project-owned interface {header} before importing {result["library"]}')
     provided = set(BASE_TYPES)
@@ -759,6 +856,8 @@ def finish_source(text: str) -> str:
         if match[0] in names:
             text = text[:match.start()] + names[match[0]] + text[match.end():]
     text = format_c(text)
+    text = re.sub(r'(?m)^(.*\b(?:id|cid)\s*[!=]=\s*0x80000004.*)$',
+                  r'\1 // fzgx-allow: A1 CARD device identifier, not a pointer', text)
     return re.sub(r'(?m)^(.*\bvolatile\b.*)$', r'// Hardware or OS state can change asynchronously.\n\1', text)
 
 

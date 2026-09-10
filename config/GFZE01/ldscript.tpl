@@ -62,6 +62,20 @@ SECTIONS
     __OSPhysicalMemSize = 0x80000028;
     __OSSimulatedMemSize = 0x800000F0;
     __OSUnmappedMemory = 0x81800000;
+    /* SDK absolute globals; configure.py generates their C constants. */
+    BOOT_REGION_END = 0x812FDFEC;
+    BOOT_REGION_START = 0x812FDFF0;
+    OS_CURRENT_THREAD = 0x800000E4;
+    OS_REBOOT_BOOL = 0x800030E2;
+    OS_THREAD_QUEUE = 0x800000DC;
+    UNK_817FFFF8 = 0x817FFFF8;
+    UNK_817FFFFC = 0x817FFFFC;
+    __OSActiveThreadQueue = 0x800000DC;
+    __OSTVMode = 0x800000CC;
+    /* SDK absolute globals; configure.py generates their C constants. */
+    GXFIFO = 0xCC008000;
+    /* SDK absolute globals; configure.py generates their C constants. */
+    __gUnknown800030E3 = 0x800030E3;
 }
 
 FORCEACTIVE

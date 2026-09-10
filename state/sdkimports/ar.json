@@ -1,0 +1,164 @@
+{
+  "ARStartDMA": {
+    "absolutes": {
+      "__DSPRegs": 3422572544
+    },
+    "bindings": {
+      "ARStartDMA": "ARStartDMA",
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSRestoreInterrupts": "OSRestoreInterrupts"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "ARStartDMA",
+    "size": 240,
+    "source": "libs/dolphin/ar/ar.c",
+    "symbol": "ARStartDMA",
+    "variant": "aggregate"
+  },
+  "fn_8001EA30": {
+    "absolutes": {
+      "__DSPRegs": 3422572544
+    },
+    "bindings": {
+      "ARInit": "fn_8001EA30",
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSRegisterVersion": "OSRegisterVersion",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "__ARChecksize": "fn_8001EB6C",
+      "__ARHandler": "fn_8001EAF4",
+      "__ARVersion": "lbl_801A64D8",
+      "__AR_BlockLength": "lbl_801A69F8",
+      "__AR_Callback": "lbl_801A69E0",
+      "__AR_FreeBlocks": "lbl_801A69F4",
+      "__AR_StackPointer": "lbl_801A69F0",
+      "__AR_init_flag": "lbl_801A69FC",
+      "__OSSetInterruptHandler": "__OSSetInterruptHandler",
+      "__OSUnmaskInterrupts": "__OSUnmaskInterrupts"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "ARInit",
+    "size": 196,
+    "source": "libs/dolphin/ar/ar.c",
+    "symbol": "fn_8001EA30",
+    "variant": "aggregate"
+  },
+  "fn_8001EAF4": {
+    "absolutes": {
+      "__DSPRegs": 3422572544
+    },
+    "bindings": {
+      "OSClearContext": "OSClearContext",
+      "OSSetCurrentContext": "OSSetCurrentContext",
+      "__ARHandler": "fn_8001EAF4",
+      "__AR_Callback": "lbl_801A69E0"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "__ARHandler",
+    "size": 120,
+    "source": "libs/dolphin/ar/ar.c",
+    "symbol": "fn_8001EAF4",
+    "variant": "aggregate"
+  },
+  "fn_8001EB6C": {
+    "absolutes": {
+      "__DSPRegs": 3422572544
+    },
+    "bindings": {
+      "DCFlushRange": "DCFlushRange",
+      "DCInvalidateRange": "DCInvalidateRange",
+      "PPCSync": "fn_80009FF4",
+      "__ARChecksize": "fn_8001EB6C",
+      "__AR_ExpansionSize": "lbl_801A69EC",
+      "__AR_InternalSize": "lbl_801A69E8",
+      "__AR_Size": "lbl_801A69E4",
+      "memset": "memset"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "__ARChecksize",
+    "size": 6132,
+    "source": "libs/dolphin/ar/ar.c",
+    "symbol": "fn_8001EB6C",
+    "variant": "aggregate"
+  },
+  "fn_80020360": {
+    "absolutes": {},
+    "bindings": {
+      "ARStartDMA": "ARStartDMA",
+      "__ARQCallbackLo": "lbl_801A6A1C",
+      "__ARQChunkSize": "lbl_801A6A20",
+      "__ARQRequestPendingLo": "lbl_801A6A14",
+      "__ARQRequestQueueLo": "lbl_801A6A08",
+      "__ARQServiceQueueLo": "fn_80020360"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "__ARQServiceQueueLo",
+    "size": 256,
+    "source": "libs/dolphin/ar/arq.c",
+    "symbol": "fn_80020360",
+    "variant": "aggregate"
+  },
+  "fn_80020464": {
+    "absolutes": {},
+    "bindings": {
+      "ARStartDMA": "ARStartDMA",
+      "__ARQCallbackHi": "lbl_801A6A18",
+      "__ARQCallbackLo": "lbl_801A6A1C",
+      "__ARQInterruptServiceRoutine": "fn_80020464",
+      "__ARQRequestPendingHi": "lbl_801A6A10",
+      "__ARQRequestPendingLo": "lbl_801A6A14",
+      "__ARQRequestQueueHi": "lbl_801A6A00",
+      "__ARQServiceQueueLo": "fn_80020360"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "__ARQInterruptServiceRoutine",
+    "size": 204,
+    "source": "libs/dolphin/ar/arq.c",
+    "symbol": "fn_80020464",
+    "variant": "aggregate"
+  },
+  "fn_800205A0": {
+    "absolutes": {},
+    "bindings": {
+      "ARQPostRequest": "fn_800205A0",
+      "ARStartDMA": "ARStartDMA",
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "__ARQCallbackHack": "fn_80020460",
+      "__ARQCallbackHi": "lbl_801A6A18",
+      "__ARQRequestPendingHi": "lbl_801A6A10",
+      "__ARQRequestPendingLo": "lbl_801A6A14",
+      "__ARQRequestQueueHi": "lbl_801A6A00",
+      "__ARQRequestQueueLo": "lbl_801A6A08",
+      "__ARQRequestTailHi": "lbl_801A6A04",
+      "__ARQRequestTailLo": "lbl_801A6A0C",
+      "__ARQServiceQueueLo": "fn_80020360"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "ARQPostRequest",
+    "size": 348,
+    "source": "libs/dolphin/ar/arq.c",
+    "symbol": "fn_800205A0",
+    "variant": "aggregate"
+  }
+}

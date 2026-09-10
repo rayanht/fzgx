@@ -420,7 +420,7 @@ def build_parser() -> argparse.ArgumentParser:
     s = sub.add_parser("tu-finish", help="one pass over every TU of a module: include, tidy, hoist, reflag, collapse complete TUs; prints the revise queue"); s.set_defaults(fn=cmd_tu_finish)
     s.add_argument("--module", default="main_rel"); s.add_argument("-v", "--verbose", action="store_true")
     s = sub.add_parser("sdkimport", help="import saved SDK C signatures with shared declarations and verified relocation bindings"); s.set_defaults(fn=cmd_sdkimport)
-    s.add_argument("--library", choices=["card", "os", "exi", "si"], default="card")
+    s.add_argument("--library", choices=["card", "os", "exi", "si", "ar", "vi", "dvd", "gx", "dsp", "pad", "ai", "Runtime", "MSL"], default="card")
     s.add_argument("--no-submit", action="store_true", help="adapt and check C without submitting units")
     s.add_argument("--consolidate", action="store_true", help="combine complete, identified SDK source files and verify the link")
     s = sub.add_parser("sdkmatch", help="identify SDK/runtime functions in the DOL by masked-byte signatures of a compiled public SDK decomp"); s.set_defaults(fn=cmd_sdkmatch)

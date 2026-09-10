@@ -38,6 +38,33 @@ SHT_SYMTAB = 2
 SHT_RELA = 4
 SHT_STRTAB = 3
 
+# Masks apply to the containing instruction, not the ELF relocation's byte offset.
+# MWCC uses halfword offsets for SDA21; DTK uses word offsets for the same field.
+CODE_RELOC_MASKS = {1: 0x00000000, 4: 0xFFFF0000, 5: 0xFFFF0000, 6: 0xFFFF0000,
+                    10: 0xFC000003, 11: 0xFFFF0003, 109: 0xFFE00000}
+
+
+def code_reloc_offset(offset: int, kind: int) -> int:
+    return offset & ~3 if kind in (4, 5, 6, 109) else offset
+
+
+def masked_code(elf, section: dict, start: int = 0, size: int | None = None) -> bytes:
+    end = start + size if size is not None else section['size']
+    buf = bytearray(elf.data[section['offset'] + start:section['offset'] + end])
+    for reloc in elf.sections:
+        if reloc['type'] != SHT_RELA or reloc['info'] != section['index']:
+            continue
+        for pos in range(reloc['offset'], reloc['offset'] + reloc['size'], 12):
+            offset, info, _ = struct.unpack_from('>IIi', elf.data, pos)
+            kind = info & 255
+            offset = code_reloc_offset(offset, kind)
+            if start <= offset and offset + 4 <= end:
+                # Unknown relocation kinds must not erase arbitrary instructions.
+                mask = CODE_RELOC_MASKS.get(kind, 0xFFFFFFFF)
+                word = struct.unpack_from('>I', buf, offset - start)[0]
+                struct.pack_into('>I', buf, offset - start, word & mask)
+    return bytes(buf)
+
 
 class Elf:
     def __init__(self, data: bytes):

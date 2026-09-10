@@ -111,6 +111,41 @@
     "symbol": "EXIDma",
     "variant": "aggregate"
   },
+  "EXIGetID": {
+    "absolutes": {
+      "__EXIProbeStartTime": 2147496128
+    },
+    "bindings": {
+      "EXIClearInterrupts": "EXIClearInterrupts",
+      "EXIDeselect": "EXIDeselect",
+      "EXIGetID": "EXIGetID",
+      "EXIImm": "EXIImm",
+      "EXILock": "EXILock",
+      "EXISelect": "EXISelect",
+      "EXISync": "EXISync",
+      "Ecb": "Ecb_8015CCB0",
+      "IDSerialPort1": "IDSerialPort1_801A6838",
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "SetExiInterruptMask": "SetExiInterruptMask",
+      "UnlockedHandler": "UnlockedHandler",
+      "__EXIProbe": "__EXIProbe",
+      "__OSMaskInterrupts": "__OSMaskInterrupts",
+      "__OSUnmaskInterrupts": "__OSUnmaskInterrupts",
+      "memmove": "memmove"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [
+      "#pragma scheduling off"
+    ],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "EXIGetID",
+    "size": 944,
+    "source": "libs/dolphin/exi/EXIBios.c",
+    "symbol": "EXIGetID",
+    "variant": "aggregate"
+  },
   "EXIGetState": {
     "absolutes": {},
     "bindings": {
@@ -170,6 +205,39 @@
     "size": 160,
     "source": "libs/dolphin/exi/EXIBios.c",
     "symbol": "EXIImmEx",
+    "variant": "aggregate"
+  },
+  "EXIInit": {
+    "absolutes": {
+      "__EXIProbeStartTime": 2147496128,
+      "__EXIRegs": 3422578688
+    },
+    "bindings": {
+      "EXIGetID": "EXIGetID",
+      "EXIInit": "EXIInit",
+      "EXIIntrruptHandler": "EXIIntrruptHandler",
+      "EXTIntrruptHandler": "EXTIntrruptHandler",
+      "Ecb": "Ecb_8015CCB0",
+      "IDSerialPort1": "IDSerialPort1_801A6838",
+      "OSRegisterVersion": "OSRegisterVersion",
+      "TCIntrruptHandler": "TCIntrruptHandler",
+      "__EXIProbe": "__EXIProbe",
+      "__EXIVersion": "__EXIVersion",
+      "__OSEnableBarnacle": "__OSEnableBarnacle",
+      "__OSInIPL": "__OSInIPL",
+      "__OSMaskInterrupts": "__OSMaskInterrupts",
+      "__OSSetInterruptHandler": "__OSSetInterruptHandler"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [
+      "#pragma scheduling off"
+    ],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "EXIInit",
+    "size": 468,
+    "source": "libs/dolphin/exi/EXIBios.c",
+    "symbol": "EXIInit",
     "variant": "aggregate"
   },
   "EXIIntrruptHandler": {
@@ -479,6 +547,53 @@
     "size": 372,
     "source": "libs/dolphin/exi/EXIBios.c",
     "symbol": "__EXIProbe",
+    "variant": "aggregate"
+  },
+  "__OSEnableBarnacle": {
+    "absolutes": {},
+    "bindings": {
+      "BarnacleEnabled": "lbl_801A684C",
+      "Chan": "lbl_801A6840",
+      "Dev": "lbl_801A6844",
+      "EXIGetID": "EXIGetID",
+      "Enabled": "lbl_801A6848",
+      "ProbeBarnacle": "ProbeBarnacle",
+      "__OSEnableBarnacle": "__OSEnableBarnacle"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "__OSEnableBarnacle",
+    "size": 444,
+    "source": "libs/dolphin/exi/EXIUart.c",
+    "symbol": "__OSEnableBarnacle",
+    "variant": "aggregate"
+  },
+  "fn_8001581C": {
+    "absolutes": {},
+    "bindings": {
+      "Chan": "lbl_801A6840",
+      "Dev": "lbl_801A6844",
+      "EXIDeselect": "EXIDeselect",
+      "EXIImm": "EXIImm",
+      "EXILock": "EXILock",
+      "EXISelect": "EXISelect",
+      "EXISync": "EXISync",
+      "EXIUnlock": "EXIUnlock",
+      "Enabled": "lbl_801A6848",
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "WriteUARTN": "fn_8001581C"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "WriteUARTN",
+    "size": 540,
+    "source": "libs/dolphin/exi/EXIUart.c",
+    "symbol": "fn_8001581C",
     "variant": "aggregate"
   }
 }

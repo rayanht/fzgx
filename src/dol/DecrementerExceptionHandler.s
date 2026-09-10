@@ -26,5 +26,5 @@
 /* 8000B304 00008304  7C 17 E2 A6 */	mfspr r0, GQR7
 /* 8000B308 00008308  90 04 01 C0 */	stw r0, 0x1c0(r4)
 /* 8000B30C 0000830C  94 21 FF F8 */	stwu r1, -0x8(r1)
-/* 8000B310 00008310  4B FF FD 84 */	b DecrementerExceptionCallback_8000B094
+/* 8000B310 00008310  4B FF FD 84 */	b DecrementerExceptionCallback
 .endfn DecrementerExceptionHandler_8000B2C4

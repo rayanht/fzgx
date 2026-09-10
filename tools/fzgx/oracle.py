@@ -290,6 +290,7 @@ def _diff(project: Project, module: str, symbol: str, unit: str, max_diff_lines:
                 res._pool_pairs += bss_pairs
             res.pool = [d for _, _, d in res._pool_pairs]
             abs_rows = _abs_rows(right, lrows, rrows)
+            abs_rows |= _equivalent_reloc_rows(project, module, base, left, right, lrows, rrows)
             res.diff = _render_diff(lrows, rrows, max_diff_lines, pool_rows | abs_rows)
             # what is left once the pool rows are taken out: what the agent can still act on
             real = sum(1 for i, (l, r) in enumerate(zip(lrows, rrows))
@@ -303,6 +304,28 @@ def _diff(project: Project, module: str, symbol: str, unit: str, max_diff_lines:
                 # resolved literal): the link produces retail's bytes; verify's hash is the guard
                 res.matched = True
     return res
+
+
+def _equivalent_reloc_rows(project, module, obj, left, right, lrows, rrows):
+    """A split data label and an external base plus addend resolve to the same address."""
+    undefined = {s['name'] for s in poolfix.Elf(obj.read_bytes()).symbols() if s['shndx'] == 0}
+    addresses = {s.name: s.addr for s in project.symbols(module).values()}
+    addresses.update({f'{s.name}_{s.addr:08X}': s.addr for s in project.symbols(module).values()})
+    rows = set()
+    for i, (l, r) in enumerate(zip(lrows, rrows)):
+        li, ri = l.get('instruction', {}), r.get('instruction', {})
+        lr, rr = li.get('relocation'), ri.get('relocation')
+        if not lr or not rr or lr.get('type') != rr.get('type'):
+            continue
+        if [x for x in li.get('parts', []) if 'reloc' not in json.dumps(x)] != [x for x in ri.get('parts', []) if 'reloc' not in json.dumps(x)]:
+            continue
+        lname = left['symbols'][lr['target_symbol']]['name']
+        rname = right['symbols'][rr['target_symbol']]['name']
+        if rname not in undefined or lname not in addresses or rname not in addresses:
+            continue
+        if addresses[lname] + int(lr.get('addend') or 0) == addresses[rname] + int(rr.get('addend') or 0):
+            rows.add(i)
+    return rows
 
 
 def _bss_base_rows(project, module, obj, left, right, lrows, rrows):
@@ -701,9 +724,6 @@ def check_many(project: Project, items: List[Tuple[str, Path]], max_diff_lines: 
     return results
 
 
-_RELOC_MASKS = {1: 0x00000000, 4: 0xFFFF0000, 5: 0xFFFF0000, 6: 0xFFFF0000, 10: 0xFC000003, 11: 0xFFFF0003, 109: 0xFFE00000}
-
-
 def words(obj: Path, name: str) -> Optional[List[int]]:
     """The function's machine words with every relocation field zeroed: the cheap, exact
     comparison for candidate loops (no objdiff, ~0.3 ms). None when the object or symbol is missing."""
@@ -722,15 +742,7 @@ def words(obj: Path, name: str) -> Optional[List[int]]:
         return None
     text = exec_idx[sym["shndx"]]
     lo, hi = sym["value"], sym["value"] + sym["size"]
-    buf = bytearray(data[text["offset"] + lo:text["offset"] + hi])
-    for s_ in elf.sections:
-        if s_["type"] == 4 and s_["info"] == text["index"]:  # SHT_RELA against .text
-            for i in range(s_["size"] // 12):
-                off, info, _ = struct.unpack(">IIi", data[s_["offset"] + 12 * i:s_["offset"] + 12 * i + 12])
-                if lo <= off < hi and off + 4 <= hi:
-                    o = off - lo
-                    word = struct.unpack(">I", buf[o:o + 4])[0] & _RELOC_MASKS.get(info & 0xFF, 0)
-                    buf[o:o + 4] = struct.pack(">I", word)
+    buf = poolfix.masked_code(elf, text, lo, hi - lo)
     n = len(buf) // 4
     return list(struct.unpack(f">{n}I", bytes(buf[:n * 4])))
 

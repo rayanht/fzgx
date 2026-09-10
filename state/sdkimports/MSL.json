@@ -1,0 +1,17 @@
+{
+  "fwide": {
+    "absolutes": {},
+    "bindings": {
+      "fwide": "fwide"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "fwide",
+    "size": 136,
+    "source": "src/PowerPC_EABI_Support/MSL/MSL_C/MSL_Common/Src/wchar_io.c",
+    "symbol": "fwide",
+    "variant": "aggregate"
+  }
+}

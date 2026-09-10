@@ -11,23 +11,18 @@ from __future__ import annotations
 
 import hashlib
 import json
-import struct
 import subprocess
 from collections import defaultdict
 from pathlib import Path
 from typing import Dict, List, Tuple
 
-from .poolfix import Elf
+from .poolfix import Elf, CODE_RELOC_MASKS, masked_code
 from .project import ROOT, Project
 
 SHT_RELA = 4
 STT_FUNC = 2
 # relocation type -> mask of the bits the linker keeps (big-endian word)
-MASKS = {1: 0x00000000,                               # R_PPC_ADDR32
-         4: 0xFFFF0000, 5: 0xFFFF0000, 6: 0xFFFF0000,  # ADDR16_LO/HI/HA
-         10: 0xFC000003,                              # REL24
-         11: 0xFFFF0003,                              # REL14
-         109: 0xFFE00000}                             # EMB_SDA21
+MASKS = CODE_RELOC_MASKS
 
 BASE = ["-nodefaults", "-proc", "gekko", "-align", "powerpc", "-enum", "int", "-fp", "hardware",
         "-Cpp_exceptions", "off", "-pragma", "cats off", "-pragma", "warn_notinlined off",
@@ -45,15 +40,7 @@ def function_hashes(obj: Path, min_size: int) -> Dict[str, Tuple[str, int]]:
     text = elf.section(".text")
     if text is None:
         return {}
-    buf = bytearray(data[text["offset"]:text["offset"] + text["size"]])
-    for s in elf.sections:
-        if s["type"] == SHT_RELA and s["info"] == text["index"]:
-            for i in range(s["size"] // 12):
-                off, info, _ = struct.unpack(">IIi", data[s["offset"] + 12 * i:s["offset"] + 12 * i + 12])
-                if off + 4 > len(buf):
-                    continue
-                word = struct.unpack(">I", buf[off:off + 4])[0] & MASKS.get(info & 0xFF, 0)
-                buf[off:off + 4] = struct.pack(">I", word)
+    buf = masked_code(elf, text)
     out = {}
     for sym in elf.symbols():
         if (sym["info"] & 0xF) == STT_FUNC and sym["shndx"] == text["index"] and sym["size"] >= min_size:
@@ -116,13 +103,16 @@ def run(p: Project, sdk: str = "build/tools/mkdd", mw: str = "GC/1.2.5n", min_si
     for rel, obj in done:
         for name, (h, size) in function_hashes(obj, min_size).items():
             sdk_hashes[h].append((name, str(rel), size))
-    dol_objs = list((p.build_dir / "obj").glob("*.o"))  # module main's split objects
+    # Old split objects remain on disk after a carve; only scan current ownership.
+    dol_objs = {obj for sym in p.functions('main') if (obj := p.target_object_for(sym))}
     dol: Dict[str, Tuple[str, int]] = {}
     for o in dol_objs:
         dol.update(function_hashes(o, min_size))
     syms = p.symbols("main")
     hits, ambiguous = [], []
     for name, (h, size) in dol.items():
+        if name not in syms or syms[name].kind != 'function':
+            continue
         cands = sdk_hashes.get(h)
         if not cands:
             continue

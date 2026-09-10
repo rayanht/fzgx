@@ -1,0 +1,193 @@
+{
+  "ClampStick": {
+    "absolutes": {},
+    "bindings": {
+      "ClampStick": "ClampStick"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "ClampStick",
+    "size": 304,
+    "source": "libs/dolphin/pad/Padclamp.c",
+    "symbol": "ClampStick",
+    "variant": "aggregate"
+  },
+  "PADClamp": {
+    "absolutes": {},
+    "bindings": {
+      "...rodata.0": "lbl_8008FF40",
+      "ClampRegion": "lbl_8008FF40",
+      "ClampStick": "ClampStick",
+      "PADClamp": "PADClamp"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "PADClamp",
+    "size": 276,
+    "source": "libs/dolphin/pad/Padclamp.c",
+    "symbol": "PADClamp",
+    "variant": "direct"
+  },
+  "SPEC0_MakeStatus": {
+    "absolutes": {},
+    "bindings": {
+      "SPEC0_MakeStatus": "SPEC0_MakeStatus"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "SPEC0_MakeStatus",
+    "size": 372,
+    "source": "libs/dolphin/pad/Pad.c",
+    "symbol": "SPEC0_MakeStatus",
+    "variant": "aggregate"
+  },
+  "SPEC1_MakeStatus": {
+    "absolutes": {},
+    "bindings": {
+      "SPEC1_MakeStatus": "SPEC1_MakeStatus"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "SPEC1_MakeStatus",
+    "size": 372,
+    "source": "libs/dolphin/pad/Pad.c",
+    "symbol": "SPEC1_MakeStatus",
+    "variant": "aggregate"
+  },
+  "__PADDisableRecalibration": {
+    "absolutes": {
+      "__gUnknown800030E3": 2147496163
+    },
+    "bindings": {
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "__PADDisableRecalibration": "__PADDisableRecalibration"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "__PADDisableRecalibration",
+    "size": 124,
+    "source": "src/dolphin/pad/Pad.c",
+    "symbol": "__PADDisableRecalibration",
+    "variant": "aggregate"
+  },
+  "fn_8001C304": {
+    "absolutes": {},
+    "bindings": {
+      "AnalogMode": "lbl_801A64BC",
+      "Origin": "lbl_8015D0C0",
+      "SIGetType": "SIGetType",
+      "UpdateOrigin": "fn_8001C304",
+      "XPatchBits": "lbl_801A64B8"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "UpdateOrigin",
+    "size": 420,
+    "source": "libs/dolphin/pad/Pad.c",
+    "symbol": "fn_8001C304",
+    "variant": "aggregate"
+  },
+  "fn_8001C56C": {
+    "absolutes": {},
+    "bindings": {
+      "CheckingBits": "lbl_801A698C",
+      "EnabledBits": "lbl_801A697C",
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "OSSetWirelessID": "OSSetWirelessID",
+      "PADOriginUpdateCallback": "fn_8001C56C",
+      "PendingBits": "lbl_801A6990",
+      "SIDisablePolling": "SIDisablePolling",
+      "UpdateOrigin": "fn_8001C304",
+      "WaitingBits": "lbl_801A6988"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "PADOriginUpdateCallback",
+    "size": 192,
+    "source": "src/dolphin/pad/Pad.c",
+    "symbol": "fn_8001C56C",
+    "variant": "aggregate"
+  },
+  "fn_8001CA30": {
+    "absolutes": {},
+    "bindings": {
+      "CheckingBits": "lbl_801A698C",
+      "CmdReadOrigin": "lbl_801A64C8",
+      "EnabledBits": "lbl_801A697C",
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "OSSetWirelessID": "OSSetWirelessID",
+      "Origin": "lbl_8015D0C0",
+      "PADOriginUpdateCallback": "fn_8001C56C",
+      "PADReceiveCheckCallback": "fn_8001CA30",
+      "PendingBits": "lbl_801A6990",
+      "SIDisablePolling": "SIDisablePolling",
+      "SITransfer": "SITransfer",
+      "WaitingBits": "lbl_801A6988"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "PADReceiveCheckCallback",
+    "size": 308,
+    "source": "src/dolphin/pad/Pad.c",
+    "symbol": "fn_8001CA30",
+    "variant": "aggregate"
+  },
+  "fn_8001D7D0": {
+    "absolutes": {},
+    "bindings": {
+      "AnalogMode": "lbl_801A64BC",
+      "Origin": "lbl_8015D0C0",
+      "SPEC2_MakeStatus": "fn_8001D7D0"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "SPEC2_MakeStatus",
+    "size": 1016,
+    "source": "src/dolphin/pad/Pad.c",
+    "symbol": "fn_8001D7D0",
+    "variant": "aggregate"
+  },
+  "fn_8001DBC8": {
+    "absolutes": {},
+    "bindings": {
+      "AnalogMode": "lbl_801A64BC",
+      "CheckingBits": "lbl_801A698C",
+      "EnabledBits": "lbl_801A697C",
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "PADSetAnalogMode": "fn_8001DBC8",
+      "SIDisablePolling": "SIDisablePolling",
+      "WaitingBits": "lbl_801A6988"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "PADSetAnalogMode",
+    "size": 116,
+    "source": "libs/dolphin/pad/Pad.c",
+    "symbol": "fn_8001DBC8",
+    "variant": "aggregate"
+  }
+}
