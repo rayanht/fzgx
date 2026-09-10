@@ -389,6 +389,89 @@ void fn_10_8800(void) {
 }
 /* fzgx:end fn_10_8800 */
 
+/* fzgx:begin fn_10_8930 */
+typedef struct SelState {
+    s16 state;
+    u8 pad2[0x92];
+    u32 flags;
+    u8 pad98[6];
+    u8 mode;
+    u8 pad9f[0xa1];
+    u32 unk140;
+} SelState;
+
+typedef struct SelEntry {
+    u8 pad0[8];
+    u16 flags;
+    u8 pad0a[0xa];
+} SelEntry;
+
+extern s32 lbl_10_bss_14;
+extern SelState lbl_1_bss_8B3A0;
+extern SelEntry lbl_1_bss_9F8[];
+extern s16 lbl_1_bss_96A;
+extern s16 lbl_10_bss_4938C;
+extern u32 lbl_10_bss_49388;
+extern u32 lbl_10_bss_51744;
+extern u32 lbl_1_bss_6EAB4;
+
+extern s32 fn_1_4C10(void);
+extern void fn_10_BD64(void *value);
+extern s32 fn_1_12F228(void);
+extern s32 fn_1_D66A0(u32 arg);
+extern void fn_1_4A00(u32 arg0, u32 arg1, u32 arg2);
+
+void fn_10_8930(void) {
+    s32 ready;
+    u32 flags;
+    SelState *st;
+
+    if (lbl_10_bss_14 == -1) {
+        fn_1_4C10();
+    }
+
+    flags = lbl_1_bss_8B3A0.unk140;
+    if ((flags & 0x80000000) != 0 &&
+        (flags & 0x40000000) == 0 &&
+        (lbl_1_bss_8B3A0.flags & 8) == 0) {
+        ready = 1;
+    } else {
+        if (fn_1_4C10() != 0) {
+            ready = 1;
+        } else {
+            ready = 0;
+        }
+    }
+
+    if (ready != 0) {
+        return;
+    }
+
+    if (lbl_10_bss_14 != -1) {
+        s32 value = lbl_10_bss_14;
+        lbl_10_bss_14 = -1;
+        lbl_1_bss_96A = (s16)value;
+        return;
+    }
+
+    st = &lbl_1_bss_8B3A0;
+    if (((lbl_1_bss_9F8[*(u8 *)((u8 *)st + 0x9e)].flags >> 12) & 1) != 0) {
+        st->state = 9;
+        fn_10_BD64(st);
+        lbl_10_bss_14 = 0x1a;
+        fn_1_4A00(0, (u32)(lbl_10_bss_4938C & 0xff), lbl_10_bss_49388);
+        lbl_10_bss_51744 = 0;
+        if (lbl_10_bss_14 != 0x15) {
+            lbl_1_bss_6EAB4 |= 0x24;
+        }
+    } else if (fn_1_12F228() != 0 &&
+               ((u8)fn_1_D66A0(0xd)) == 0 &&
+               ((u8)fn_1_D66A0(0xf)) == 0) {
+        lbl_1_bss_8B3A0.flags |= 0x4000000;
+    }
+}
+/* fzgx:end fn_10_8930 */
+
 /* fzgx:begin fn_10_8AAC */
 extern s32 lbl_10_bss_51740;
 extern u32 lbl_10_bss_49388;
