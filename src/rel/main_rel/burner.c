@@ -184,6 +184,83 @@ void fn_1_9835C(void) {
 }
 /* fzgx:end fn_1_9835C */
 
+/* fzgx:begin fn_1_983CC */
+typedef struct {
+    u32 x;
+    u32 y;
+    u32 z;
+} Fn1983CCVec3;
+
+typedef struct {
+    u8 unk_00[0x03];
+    s8 unk_03;
+    u8 unk_04[0x3C];
+    s8 unk_40;
+    u8 unk_41[0x03];
+    Fn1983CCVec3 unk_44;
+    Fn1983CCVec3 unk_50;
+    f32 unk_5C;
+    f32 unk_60;
+    f32 unk_64;
+    f32 unk_68;
+    f32 unk_6C;
+    f32 unk_70;
+    f32 unk_74;
+} Fn1983CCEntry;
+
+typedef struct {
+    u8 unk_00[0x08];
+    s32 unk_08;
+    Fn1983CCVec3 unk_0C;
+    Fn1983CCVec3 unk_18;
+    f32 unk_24;
+    f32 unk_28;
+    f32 unk_2C;
+    f32 unk_30;
+    f32 unk_34;
+    f32 unk_38;
+    f32 unk_3C;
+    u8 unk_40[0x08];
+    void *unk_48;
+    u8 unk_4C[0x458];
+    f32 unk_4A4;
+} Fn1983CCWorkData;
+
+typedef union {
+    Fn1983CCWorkData data;
+    u8 raw[0x4B0];
+} Fn1983CCWork;
+
+extern const f32 lbl_1_rodata_4100;
+extern void *memset(void *dest, int value, u32 size);
+extern void fn_1_98640(Fn1983CCWork *work);
+
+void fn_1_983CC(void *arg0, Fn1983CCEntry *entries) {
+    Fn1983CCWork work;
+    Fn1983CCEntry *entry;
+    s32 i;
+
+    memset(&work, 0, 0x4AC);
+    work.data.unk_48 = arg0;
+    entry = entries;
+    for (i = 0; i < entries->unk_03; i++) {
+        work.data.unk_08 = entry->unk_40;
+        work.data.unk_18 = entry->unk_50;
+        work.data.unk_0C = entry->unk_44;
+        work.data.unk_24 = entry->unk_5C / lbl_1_rodata_4100;
+        work.data.unk_28 = entry->unk_60;
+        work.data.unk_2C = entry->unk_64;
+        work.data.unk_30 = entry->unk_68;
+        work.data.unk_34 = entry->unk_6C;
+        work.data.unk_38 = entry->unk_70;
+        work.data.unk_3C = entry->unk_74;
+        work.data.unk_4A4 = lbl_1_bss_6EA00;
+        fn_1_98640(&work);
+        entry = (Fn1983CCEntry *)((u8 *)entry + 0x38);
+    }
+}
+/* fzgx:end fn_1_983CC */
+
 /* fzgx:begin fn_1_984F0 */
 typedef struct BurnerNode BurnerNode;
 

@@ -5480,3 +5480,6 @@ rel/main_rel/car_test/fn_1_7C13C.c:
 
 rel/main_rel/driver/fn_1_A93C4.c:
 	.text       start:0x000A93C4 end:0x000A9420 align:4
+
+rel/main_rel/burner/fn_1_983CC.c:
+	.text       start:0x000983CC end:0x000984F0 align:4
