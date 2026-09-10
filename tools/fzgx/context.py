@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import re
 import struct
+from functools import lru_cache
 from pathlib import Path
 from typing import List, Optional
 
@@ -53,25 +54,30 @@ def _decl_for(sym: Symbol, project: Optional[Project] = None, called: bool = Fal
     return f"extern {ctype} {sym.name}{arr};  // {sym.section}:0x{sym.addr:08X} size 0x{sym.size:X} scope {sym.scope}"
 
 
+@lru_cache(maxsize=32)
+def _header_pieces(hdr):
+    from .sdkimport import declarations
+    return declarations(hdr)
+
+
 def _header_decl(hdr: str, name: str) -> str:
-    """The typedef (if any) and extern line for `name` from a generated globals header."""
-    m = re.search(rf"^extern (\w+) \*?{re.escape(name)};", hdr, re.M)
-    if not m:
+    """The complete typedef dependencies and extern, including arrays/unions."""
+    from .sdkimport import masked
+    pieces = _header_pieces(hdr)
+    declaration = next((p.text.strip() for p in pieces if name in p.names
+                        and re.match(r'\s*extern\b', p.text)), None)
+    if not declaration:
         return ""
-    tname = m.group(1)
-
-    def td_of(t: str) -> str:
-        td = re.search(rf"^typedef struct \{{\n(?:(?!typedef).*\n)*?\}} {re.escape(t)};", hdr, re.M)
-        body = td.group(0) if td else ""
-        if body.count("\n") > 40:  # keep bundles small: show the first fields and a count
-            lines = body.splitlines()
-            body = "\n".join(lines[:30]) + f"\n    /* ... {len(lines) - 31} more fields ... */\n" + lines[-1]
-        return body
-
-    body = td_of(tname)
-    # pointee typedefs referenced by pointer fields come first, as in the header
-    pointees = [td_of(t) for t in re.findall(r"^\s+(\w+) \*unk_", body, re.M)]
-    return "\n".join(x for x in pointees + [body] if x) + ("\n" if body else "") + m.group(0)
+    types = {n: p.text.strip() for p in pieces if p.kind == 'type' for n in p.names}
+    seen, result = set(), []
+    def visit(text):
+        for word in re.findall(r'\b[A-Za-z_]\w*\b', masked(text)):
+            if word in types and word not in seen:
+                seen.add(word)
+                visit(types[word])
+                result.append(types[word])
+    visit(declaration)
+    return '\n'.join(result + [declaration])
 
 
 # failure mode (from stuck.classify_rows / _pure) -> what changed in bodies that then matched
@@ -106,7 +112,8 @@ MODE_TIPS = {
 
 def _pooled_constant(project: Project, s: Symbol) -> Optional[str]:
     """A float/double literal in .rodata/.sdata2 with its retail value, as a declaration."""
-    if s.kind != "object" or s.section not in (".rodata", ".sdata2") or s.size not in (4, 8):
+    if (s.kind != "object" or s.section not in (".rodata", ".sdata2") or s.size not in (4, 8)
+            or (s.attrs.get('data'), s.size) not in (('float', 4), ('double', 8))):
         return None
     raw = project.bytes_at(s.module, s.name)
     if raw is None:
@@ -204,21 +211,30 @@ def build_context(project: Project, ledger: Optional[Ledger], symbol: str,
         shown_from_header = []
         parts.append("\n## Referenced symbols (declare what you use; names are provisional)\n```c")
         pooled = []
+        imported = []
+        from . import datacontext
         for name in references:
             s = project.find_symbol(name, module) or project.find_symbol(name)
             if not s:
+                continue
+            if record := datacontext.lookup(project, s):
+                imported.append(record)
                 continue
             const = _pooled_constant(project, s)
             if const:  # a literal-pool constant beats whatever the header calls it
                 parts.append(const)
                 pooled.append(name)
                 continue
-            if hdr_text and re.search(rf"^extern .*\b{re.escape(name)};", hdr_text, re.M):
+            if hdr_text and _header_decl(hdr_text, name):
                 shown_from_header.append(name)
                 continue
             source = f'{project.module_src_prefix(module)}/{tu_stem}.c' if tu_stem else None
             parts.append(_decl_for(s, project, name in direct_calls, source, signature_index))
         parts.append("```")
+        if imported:
+            parts.append('\n## Owned data declarations (already defined; include or declare only)\n```c')
+            parts.extend(datacontext.declarations(project, record) for record in imported)
+            parts.append('```')
         if pooled:
             parts.append("Constant pool: the target loads these from the module's shared literal pool. "
                          "Use the exact values or the declared symbols. The oracle accepts private literals "
@@ -244,7 +260,7 @@ def build_context(project: Project, ledger: Optional[Ledger], symbol: str,
     # Matched C in the same module: first the siblings that share callees and globals with this
     # function (their declaration style is what the compiler wanted), then the nearest by address.
     matched_units = [u for u in project.load_units()
-                     if u["module"] == module and u["status"] == "matching" and u["source"] != unit_src]
+                     if u["module"] == module and u["status"] == "matching" and not u.get('data') and u["source"] != unit_src]
     asm_index = project.function_asm(module)
     my_refs = set(fn.refs)
     def overlap(u):

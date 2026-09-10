@@ -879,7 +879,7 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                     # `cmplwi n, 0; beq end` just before or just after the mtctr: the guard of an
                     # up-counting for loop
                     for x in list(range(max(0, mt - 3), mt)) + list(range(mt + 1, min(t_, mt + 3))):
-                        if ins[x][0] in ("cmplwi", "cmpwi") and ins[x][1][0] == ins[mt][1][0] and _imm(ins[x][1][1]) == 0 \
+                        if ins[x][0] in ("cmplwi", "cmpwi") and len(ins[x][1]) == 2 and ins[x][1][0] == ins[mt][1][0] and _imm(ins[x][1][1]) == 0 \
                                 and x + 1 < len(ins) and ins[x + 1][0] == "beq" and labels.get(ins[x + 1][1][-1], -1) > k_:
                             skip.add(x); skip.add(x + 1); ctr_guarded.add(mt)
             continue
@@ -934,8 +934,12 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
     def switch_tree(j: int):
         """A compare tree on one register with constant cases (MWCC's small switch): the tree's
         instruction indices, {leaf index: ranges}, and whether the compares are unsigned."""
+        # This recognizer models CR0 only. Explicit CR operands must remain
+        # with the ordinary instruction lowering, not become case constants.
+        def branch(idx):
+            return idx < len(ins) and BCOND_RE.match(ins[idx][0]) and len(ins[idx][1]) == 1
         mn0, a0 = ins[j]
-        if mn0 not in ("cmpwi", "cmplwi") or not a0 or j + 1 >= len(ins) or not BCOND_RE.match(ins[j + 1][0]):
+        if mn0 not in ("cmpwi", "cmplwi") or len(a0) != 2 or not branch(j + 1):
             return None
         reg = a0[0]; uns = mn0 == "cmplwi"
         tree: set = set(); leaves: Dict[int, list] = {}
@@ -946,11 +950,11 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                 if idx >= len(ins) or idx in tree and idx != j:
                     return False
                 mn_, a_ = ins[idx]
-                if mn_ in ("cmpwi", "cmplwi") and a_ and a_[0] == reg and idx + 1 < len(ins) and BCOND_RE.match(ins[idx + 1][0]):
+                if mn_ in ("cmpwi", "cmplwi") and len(a_) == 2 and a_[0] == reg and branch(idx + 1):
                     if (mn_ == "cmplwi") != uns:
                         return False
                     K = _imm(a_[1]); tree.add(idx); idx += 1
-                    while idx < len(ins) and BCOND_RE.match(ins[idx][0]) and ins[idx][1] and ins[idx][1][-1].startswith(".L_"):
+                    while branch(idx) and ins[idx][1][-1].startswith(".L_"):
                         op = ins[idx][0][1:]; tgt = labels.get(ins[idx][1][-1])
                         if tgt is None or tgt <= idx:
                             return False

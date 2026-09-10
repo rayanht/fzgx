@@ -33,7 +33,7 @@ def save(project, key, result):
     sym = project.resolve(key)
     fn = project.function_asm(sym.module).get(sym.name)
     payload = dict(identity=_identity(project, key), result=result.to_json(), diff=lines,
-                   data=data_context(project, fn) if fn else [])
+                   data=data_context(project, fn, full=True) if fn else [])
     path = _path(project, key)
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_suffix('.tmp')

@@ -44,6 +44,11 @@ diff in pages of 80 lines. The response supplies the next cursor and separate
 target/candidate object addresses; the old first column is an aligned row index
 times four, not a retail code address. `section="data"` supplies relocated switch
 entries and exact floating constants, including loads through a shared TU base.
+Imported data contributes its owned header declarations, complete typedefs, relevant
+string bytes and symbolic relocation bindings. Initial context bounds string/table
+previews; data pages retain the complete evidence. Large structured text pools show
+their recovered dimensions instead of embedding all text. Mutable BSS values are
+not treated as constants. Data-only units are excluded from matched-function examples.
 Reads never compile, increment checks/stale counts, or change the selected compiler.
 Cache identity includes the source hash, attempt and compiler options. Failed
 compiles invalidate successful evidence; compiler probes cache the selected result.
@@ -120,6 +125,17 @@ excludes functions already integrated since that release. Use the resulting
 manifest with a new batch name; its function count is the full-width `--parallel`.
 
 ## Runtime isolation and records
+
+To prepare every currently unmatched function below 1 KiB, retaining the best saved
+C and its compiler settings before lifting functions without a candidate:
+
+```sh
+uv run tools/seeds/small.py --max-size 1023 --output NEW_SEED_DIRECTORY
+```
+
+The frozen manifest records source hashes and origins. Selection excludes obsolete
+ledger names absent from the current function map and fails if any selected function
+cannot be seeded. Use it with the requested `--parallel` and `--effort` settings.
 
 All provider, model, effort, feature, and MCP settings are process/thread-local
 overrides constructed by the runner. It never writes personal Codex configuration

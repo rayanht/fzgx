@@ -146,9 +146,13 @@ def inventory(p: Project, module: Optional[str] = None, status: Optional[str] = 
               limit: Optional[int] = None, max_size: Optional[int] = None) -> List[Dict[str, Any]]:
     l = Ledger()
     l.expire_claims()
-    rows = l.list(module=module, status=status, limit=limit)
+    rows = l.list(module=module, status=status)
+    current = {p.key(s) for mod in ([module] if module else p.modules) for s in p.functions(mod)}
+    rows = [r for r in rows if r['symbol'] in current]
     if max_size:
         rows = [r for r in rows if r["size"] <= max_size]
+    if limit is not None:
+        rows = rows[:limit]
     return [{"symbol": r["symbol"], "module": r["module"], "size": r["size"], "status": r["status"],
              "attempts": r["attempts"], "best": r["best_percent"], "unit": r["unit"],
              "claimed_by": r["claimed_by"]} for r in rows]

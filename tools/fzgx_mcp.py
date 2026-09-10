@@ -82,7 +82,7 @@ async def read_unit(symbol: str) -> dict:
 
 @mcp.tool()
 async def read_evidence(symbol: str, section: str = 'diff', cursor: int = 0) -> str:
-    """Read cached diff or decoded retail data by line cursor, without compiling or spending a check."""
+    """Read cached diff or owned data layouts, values and bindings by line cursor, without compiling or spending a check."""
     return await _run('read-evidence', symbol, '--section', section, '--cursor', str(cursor), as_json=False)
 
 

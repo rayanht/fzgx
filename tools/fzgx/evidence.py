@@ -158,14 +158,15 @@ def jump_tables(project, fn):
     return tables
 
 
-def data_context(project, fn):
+def data_context(project, fn, full=False):
     lines = []
     for name, targets in jump_tables(project, fn).items():
         lines.append(f'{name}: {len(targets)} relocated entries; indices are table indices, before any switch bias.')
         for index, address in enumerate(targets):
             lines.append(f'  [{index}] -> {fn.symbol.name}+0x{address - fn.symbol.addr:X} (assembly {address:08X})')
     accesses = {}
-    for load in memory_loads(assembly_rows(fn)).values():
+    loads = memory_loads(assembly_rows(fn))
+    for load in loads.values():
         if load['op'] not in ('lfs', 'lfd'):
             continue
         key = (load['symbol'], load['offset'], load['width'])
@@ -180,4 +181,6 @@ def data_context(project, fn):
         kind = 'f32' if width == 4 else 'f64'
         lines.append(f'  {name}{offset:+#x}: {kind} {value!r}; bits {raw.hex()}; '
                      f'{len(sites)} load(s), first at {sites[0]:08X}')
+    from .datacontext import evidence
+    lines.extend(evidence(project, fn, loads, full))
     return lines
