@@ -5570,3 +5570,30 @@ rel/main_rel/bg_san/fn_1_DAB5C.c:
 
 rel/main_rel/game/fn_1_4017C.c:
 	.text       start:0x0004017C end:0x00040224 align:4
+
+rel/main_rel/camera/fn_1_6898.c:
+	.text       start:0x00006898 end:0x00006914 align:4
+
+rel/main_rel/bg_win/fn_1_15E330.c:
+	.text       start:0x0015E330 end:0x0015E3E0 align:4
+
+rel/main_rel/ptclput/fn_1_9F7DC.c:
+	.text       start:0x0009F7DC end:0x0009F870 align:4
+
+rel/main_rel/driver/fn_1_A8DD4.c:
+	.text       start:0x000A8DD4 end:0x000A8E78 align:4
+
+rel/main_rel/sel_static_disp/fn_1_13F72C.c:
+	.text       start:0x0013F72C end:0x0013F7F8 align:4
+
+rel/main_rel/car/fn_1_86A10.c:
+	.text       start:0x00086A10 end:0x00086A2C align:4
+
+rel/main_rel/car/fn_1_801F8.c:
+	.text       start:0x000801F8 end:0x00080270 align:4
+
+rel/main_rel/accessory/fn_1_128AAC.c:
+	.text       start:0x00128AAC end:0x00128B00 align:4
+
+rel/main_rel/archive/fn_1_12C710.c:
+	.text       start:0x0012C710 end:0x0012C7B8 align:4

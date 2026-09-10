@@ -643,6 +643,31 @@ f32 fn_1_1289BC(const Point1024C4 *a, const Point1024C4 *b) {
 }
 /* fzgx:end fn_1_1289BC */
 
+/* fzgx:begin fn_1_128AAC */
+extern f32 lbl_1_rodata_7B58[40];
+
+f32 fn_1_128AAC(s32 exponent, f32 value) {
+    s32 sign;
+    s32 n;
+    f32 result = 1.0f;
+
+    sign = exponent >> 31;
+    n = sign ^ exponent;
+    n -= sign;
+    while (n != 0) {
+        if (n & 1) {
+            result *= value;
+        }
+        value *= value;
+        n >>= 1;
+    }
+    if (exponent >= 0) {
+        return result;
+    }
+    return lbl_1_rodata_7B58[0] / result;
+}
+/* fzgx:end fn_1_128AAC */
+
 /* fzgx:begin fn_1_128B00 */
 s32 fn_1_128B00(s16 value) {
     switch (value) {

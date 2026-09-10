@@ -92,6 +92,26 @@ void fn_1_15E260(s32 index) {
 }
 /* fzgx:end fn_1_15E260 */
 
+/* fzgx:begin fn_1_15E330 */
+extern void *fn_1_435C(void *arg);
+extern void fn_1_15E1E8(u8 *arg);
+extern void fn_1_3F8C(void *arg0, void *arg1, u8 *arg2, s32 arg3);
+
+void fn_1_15E330(s32 index, u32 value, void *arg) {
+    if (lbl_1_bss_3C30.unk_13F4 - (&lbl_1_bss_8FDA8.unk_8)[index * 0x34] < 4) {
+        void *result;
+
+        (&lbl_1_bss_8FDA8.unk_0)[index * 0x34] |= 8;
+        (&lbl_1_bss_8FDA8.unk_C)[index * 13] = value;
+        result = fn_1_435C(arg);
+        fn_1_3F8C(lbl_1_data_4C980, fn_1_15E1E8,
+                  &(&lbl_1_bss_8FDA8.unk_9)[index * 0x34], 13);
+        (&lbl_1_bss_8FDA8.unk_9)[index * 0x34] = 0x3c;
+        fn_1_435C(result);
+    }
+}
+/* fzgx:end fn_1_15E330 */
+
 /* fzgx:begin fn_1_15E3E0 */
 // Records the selected window index and updates its value when the index is valid.
 void fn_1_15E3E0(s32 index, u32 value) {

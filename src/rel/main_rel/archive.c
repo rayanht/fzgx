@@ -319,6 +319,33 @@ void fn_1_12C6BC(void *arg) {
 }
 /* fzgx:end fn_1_12C6BC */
 
+/* fzgx:begin fn_1_12C710 */
+extern s16 fn_1_12C930(s16 arg);
+
+s16 fn_1_12C710(int arg) {
+    s16 i;
+
+    switch (arg) {
+    case 0x15:
+    case 0x29:
+        return 0x15;
+    case 0x21:
+    case 0x2a:
+    case 0x2b:
+        return 0x21;
+    }
+
+    i = 0;
+    while (i < 0x29) {
+        if (arg == fn_1_12C930(i)) {
+            return i;
+        }
+        i++;
+    }
+    return -1;
+}
+/* fzgx:end fn_1_12C710 */
+
 /* fzgx:begin fn_1_12C7B8 */
 typedef struct {
     u8 pad0[5];

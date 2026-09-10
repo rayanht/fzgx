@@ -13646,6 +13646,16 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_80024DF0.c",
+    "symbols": [
+      "fn_80024DF0"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
     "source": "dol/fn_80024E3C.c",
     "symbols": [
       "fn_80024E3C"
@@ -15280,6 +15290,16 @@
     "pool": {
       "@3": "lbl_801A71C0"
     }
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_8003E958.c",
+    "symbols": [
+      "fn_8003E958"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": []
   },
   {
     "module": "main",
@@ -19002,6 +19022,16 @@
     "source": "dol/fn_8006B55C.c",
     "symbols": [
       "fn_8006B55C"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_8006B628.c",
+    "symbols": [
+      "fn_8006B628"
     ],
     "status": "matching",
     "mw_version": "GC/1.3.2",
@@ -23547,6 +23577,20 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/accessory/fn_1_128AAC.c",
+    "symbols": [
+      "fn_1_128AAC"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/accessory.c",
+    "pool": {
+      "@13": "lbl_1_rodata_7B58"
+    }
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/accessory/fn_1_128B00.c",
     "symbols": [
       "fn_1_128B00"
@@ -24037,6 +24081,17 @@
     "source": "rel/main_rel/archive/fn_1_12C6BC.c",
     "symbols": [
       "fn_1_12C6BC"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/archive.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/archive/fn_1_12C710.c",
+    "symbols": [
+      "fn_1_12C710"
     ],
     "status": "matching",
     "mw_version": null,
@@ -26182,6 +26237,17 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/bg_win/fn_1_15E330.c",
+    "symbols": [
+      "fn_1_15E330"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/bg_win.c"
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/bg_win/fn_1_15E3E0.c",
     "symbols": [
       "fn_1_15E3E0"
@@ -27227,6 +27293,17 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/camera/fn_1_6898.c",
+    "symbols": [
+      "fn_1_6898"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/camera.c"
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/camera/fn_1_6914.c",
     "symbols": [
       "fn_1_6914"
@@ -27577,6 +27654,17 @@
     "source": "rel/main_rel/car/fn_1_8019C.c",
     "symbols": [
       "fn_1_8019C"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/car.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/car/fn_1_801F8.c",
+    "symbols": [
+      "fn_1_801F8"
     ],
     "status": "matching",
     "mw_version": null,
@@ -28185,6 +28273,17 @@
     "source": "rel/main_rel/car/fn_1_869E0.c",
     "symbols": [
       "fn_1_869E0"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/car.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/car/fn_1_86A10.c",
+    "symbols": [
+      "fn_1_86A10"
     ],
     "status": "matching",
     "mw_version": null,
@@ -30215,6 +30314,17 @@
     "source": "rel/main_rel/driver/fn_1_A8DC4.c",
     "symbols": [
       "fn_1_A8DC4"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/driver.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/driver/fn_1_A8DD4.c",
+    "symbols": [
+      "fn_1_A8DD4"
     ],
     "status": "matching",
     "mw_version": null,
@@ -38147,6 +38257,17 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/ptclput/fn_1_9F7DC.c",
+    "symbols": [
+      "fn_1_9F7DC"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/ptclput.c"
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/ptclput/fn_1_9F870.c",
     "symbols": [
       "fn_1_9F870"
@@ -40219,6 +40340,20 @@
     "mw_version": null,
     "extra_cflags": [],
     "tu": "rel/main_rel/sel_static_disp.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/sel_static_disp/fn_1_13F72C.c",
+    "symbols": [
+      "fn_1_13F72C"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/sel_static_disp.c",
+    "pool": {
+      "@14": "lbl_1_rodata_8600"
+    }
   },
   {
     "module": "main_rel",
@@ -44530,6 +44665,16 @@
   },
   {
     "module": "movie_module",
+    "source": "rel/movie_module/fn_12_22FBC.c",
+    "symbols": [
+      "fn_12_22FBC"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "movie_module",
     "source": "rel/movie_module/fn_12_23078.c",
     "symbols": [
       "fn_12_23078"
@@ -44746,6 +44891,16 @@
     ],
     "status": "matching",
     "mw_version": null,
+    "extra_cflags": []
+  },
+  {
+    "module": "movie_module",
+    "source": "rel/movie_module/fn_12_24B80.c",
+    "symbols": [
+      "fn_12_24B80"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
     "extra_cflags": []
   },
   {
@@ -49504,6 +49659,17 @@
     ],
     "status": "matching",
     "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/pilotpoint/pilotpoint.c"
+  },
+  {
+    "module": "pilotpoint",
+    "source": "rel/pilotpoint/pilotpoint/fn_14_33DC.c",
+    "symbols": [
+      "fn_14_33DC"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
     "extra_cflags": [],
     "tu": "rel/pilotpoint/pilotpoint.c"
   },

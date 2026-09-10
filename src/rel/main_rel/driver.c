@@ -401,6 +401,33 @@ u32 fn_1_A8DC4(void) {
 }
 /* fzgx:end fn_1_A8DC4 */
 
+/* fzgx:begin fn_1_A8DD4 noprologue */
+#include "types.h"
+
+typedef struct {
+    signed char gpr;
+    signed char fpr;
+    unsigned short reserved;
+    char *input_arg_area;
+    char *reg_save_area;
+} Sig_parse_format_MkVaListState;
+typedef Sig_parse_format_MkVaListState Sig_parse_format_va_list;
+
+extern void fn_1_A9420(u8 value);
+extern s32 fn_8008077C(u32 buffer, const char *format, Sig_parse_format_va_list *args);
+extern void fn_1_A948C(char *text);
+
+void fn_1_A8DD4(const char *format, ...) {
+    char buffer[0x200];
+    Sig_parse_format_va_list args;
+
+    fn_1_A9420(0);
+    __builtin_va_info(&args);
+    fn_8008077C((u32)buffer, format, &args);
+    fn_1_A948C(buffer);
+}
+/* fzgx:end fn_1_A8DD4 */
+
 /* fzgx:begin fn_1_A8E78 */
 // fn_1_A8E78: Take an argument, call fn_1_A9420(0), then fn_1_A948C with original arg.
 

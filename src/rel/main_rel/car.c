@@ -299,6 +299,26 @@ void fn_1_8019C(void *arg0) {
 }
 /* fzgx:end fn_1_8019C */
 
+/* fzgx:begin fn_1_801F8 */
+extern void fn_80083DB0(void *arg0, const void *arg1);
+
+void fn_1_801F8(s16 arg0, void *arg1) {
+    u8 *base = (u8 *)&lbl_1_data_1F1D8;
+
+    switch (arg0) {
+    case 6:
+        fn_80083DB0(arg1, base + 0x13e4);
+        break;
+    case 0:
+        fn_80083DB0(arg1, base + 0x13ec);
+        break;
+    case 1:
+        fn_80083DB0(arg1, base + 0x13f4);
+        break;
+    }
+}
+/* fzgx:end fn_1_801F8 */
+
 /* fzgx:begin fn_1_80270 */
 void fn_1_80270(void *arg0, void *arg1) {
     fn_1_80294(arg0, arg1, 0);
@@ -1106,6 +1126,12 @@ void fn_1_869E0(int index, u32 *out) {
     *(Copy12 *)out = *(Copy12 *)&data->value_5c;
 }
 /* fzgx:end fn_1_869E0 */
+
+/* fzgx:begin fn_1_86A10 */
+u8 fn_1_86A10(u32 arg0) {
+    return ((u8 *)lbl_1_bss_6D838)[arg0 * 0x620 + 0x482];
+}
+/* fzgx:end fn_1_86A10 */
 
 /* fzgx:begin fn_1_87074 */
 extern u32 lbl_1_bss_6D8F4[31];

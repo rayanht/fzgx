@@ -673,6 +673,42 @@ void fn_1_13EDDC(u32 arg0, u32 arg1, u32 arg2, u32 arg3, s32 arg4) {
 }
 /* fzgx:end fn_1_13EDDC */
 
+/* fzgx:begin fn_1_13F72C noprologue */
+#include "types.h"
+
+typedef struct {
+    s16 first;
+    u16 pad;
+    u32 vals[6];
+} Entry;
+
+typedef struct {
+    Entry e[5];
+} EntryTable;
+
+extern u8 lbl_1_rodata_8EB4[];
+extern const f64 lbl_1_rodata_8600;
+extern u32 fn_80083DB0(u32, u32);
+
+u32 fn_1_13F72C(s16 arg0, u32 arg1, f32 farg0) {
+    EntryTable tbl;
+    Entry* p;
+    s16 i;
+
+    tbl = *(const EntryTable*)lbl_1_rodata_8EB4;
+    p = tbl.e;
+    i = 0;
+    while (1) {
+        if (farg0 >= (f32)p->first) {
+            fn_80083DB0(arg1, tbl.e[i].vals[arg0]);
+            return arg1;
+        }
+        p++;
+        i++;
+    }
+}
+/* fzgx:end fn_1_13F72C */
+
 /* fzgx:begin fn_1_13F81C */
 extern u8 lbl_1_bss_8E3E4[32];
 

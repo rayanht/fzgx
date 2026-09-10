@@ -6,6 +6,36 @@ extern u16 lbl_1_bss_6EA94;
 extern struct fn_1_9F870_lbl_801A6410 lbl_801A6410;
 extern u32 fn_1_46B4(u32, u32, void *, u32);
 
+/* fzgx:begin fn_1_9F7DC noprologue */
+#include "types.h"
+#include "rel/main_rel/globals.h"
+#include "rel/main_rel/ptclput.h"
+
+extern struct fn_1_9F7DC_lbl_801A6410 lbl_801A6410;
+extern u32 fn_1_45D0(u32, u32, void *, u32);
+
+struct fn_1_9F7DC_lbl_1_bss_6EA88 {
+    u32 unk_0;
+    u32 unk_4;
+    u32 unk_8;
+};
+struct fn_1_9F7DC_lbl_801A6410 {
+    u32 unk_0;
+};
+
+void fn_1_9F7DC(void) {
+    struct fn_1_9F7DC_lbl_1_bss_6EA88 *p_lbl_1_bss_6EA88;
+    p_lbl_1_bss_6EA88 = (struct fn_1_9F7DC_lbl_1_bss_6EA88 *)&lbl_1_bss_6EA88;
+
+    p_lbl_1_bss_6EA88->unk_0 =
+        fn_1_45D0(lbl_801A6410.unk_0, 0x4000, &lbl_1_data_2CD20, 0x4c1);
+    p_lbl_1_bss_6EA88->unk_4 =
+        fn_1_45D0(lbl_801A6410.unk_0, 0x4000, &lbl_1_data_2CD20, 0x4c2);
+    p_lbl_1_bss_6EA88->unk_8 =
+        fn_1_45D0(lbl_801A6410.unk_0, 0x1800, &lbl_1_data_2CD20, 0x4c3);
+}
+/* fzgx:end fn_1_9F7DC */
+
 /* fzgx:begin fn_1_9F870 */
 #include "types.h"
 
