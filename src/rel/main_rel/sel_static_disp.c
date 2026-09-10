@@ -799,6 +799,33 @@ void fn_1_13F9F0(void) {
 }
 /* fzgx:end fn_1_13F9F0 */
 
+/* fzgx:begin fn_1_13FA88 */
+u32 fn_1_13FA88(s16 arg0) {
+    switch (arg0) {
+    case 4:
+        return 1;
+    case 6:
+        if (lbl_1_bss_8B3A0.unk_4 == 3) {
+            break;
+        }
+        return 1;
+    case 3:
+        if (lbl_1_bss_8B3A0.unk_4 == 4) {
+            return 1;
+        }
+        break;
+    case 7:
+        if (lbl_1_bss_8B3A0.unk_4 == 2) {
+            break;
+        }
+        return 1;
+    case 5:
+        return 1;
+    }
+    return 0;
+}
+/* fzgx:end fn_1_13FA88 */
+
 /* fzgx:begin fn_1_141338 */
 extern const f32 lbl_1_rodata_863C;
 extern u32 fn_1_141360(u32, u32, u32, u32, f32, f32);
@@ -1938,6 +1965,48 @@ s32 fn_1_14ED00(s32 arg0, void *arg1, s32 arg2) {
     return (s32)arg1;
 }
 /* fzgx:end fn_1_14ED00 */
+
+/* fzgx:begin fn_1_14EE00 noprologue */
+#include "types.h"
+#include "rel/main_rel/globals.h"
+
+extern u8 lbl_1_rodata_B794[240];
+extern u8 jumptable_1_data_462DC[36];
+extern void fn_80083DB0(void *, void *);
+
+typedef struct {
+    u32 word[60];
+} Table240;
+
+int fn_1_14EE00(s16 arg0, void *arg1, s16 arg2) {
+    u32 table[60];
+
+    *(Table240 *)table = *(Table240 *)lbl_1_rodata_B794;
+
+    switch (arg0) {
+    case 0:
+        arg0 = 1;
+        break;
+    case 2:
+        arg0 = 3;
+        break;
+    case 4:
+        arg0 = 5;
+        break;
+    case 6:
+        arg0 = 7;
+        break;
+    case 8:
+        arg0 = 9;
+        break;
+    default:
+        break;
+    }
+
+    fn_80083DB0(arg1, (void *)*(u32 *)((u8 *)table + arg0 * 24 + arg2 * 4));
+    return (int)arg1;
+}
+/* fzgx:end fn_1_14EE00 */
 
 /* fzgx:begin fn_1_14EEC4 */
 typedef struct {
