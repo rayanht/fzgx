@@ -111,9 +111,12 @@ def _prologue_conflict(p: Project, key: str, unit_src: str) -> Optional[str]:
     probe = work.with_suffix(".prologue.c")
     probe.write_text(tf.prologue + "\n" + ("\n".join(extra) + "\n\n" if extra else "") + body)
     unit = p.objdiff_unit_name(u["module"], unit_src)
-    obj = oracle._base_object(p, unit)
-    cp = oracle.compile_unit(p, unit, unit_src, probe)
-    probe.unlink(missing_ok=True)
+    obj = probe.with_suffix(".o")
+    try:
+        cp = oracle.compile_unit(p, unit, unit_src, probe, output=obj)
+    finally:
+        probe.unlink(missing_ok=True)
+        obj.unlink(missing_ok=True)
     if cp.returncode == 0:
         return None
     err = [l for l in (cp.stdout + cp.stderr).splitlines() if l.startswith("#") and "File" not in l and "---" not in l]
@@ -332,7 +335,6 @@ def check(p: Project, symbol: str, max_diff_lines: int = 80, versions: Optional[
         conflict = _prologue_conflict(p, key, unit) if unit else None
         if conflict:
             out["prologue_conflict"] = conflict
-            oracle.compile_unit(p, res.unit, unit, src)  # the probe overwrote the object; restore ours
         stats = Ledger().bump_checks(key, res.percent_adjusted if res.pool_rows else res.percent)
         out["budget"] = stats
         if stats.get("improved"):
@@ -487,7 +489,6 @@ def submit(p: Project, symbol: str, agent: str = "unknown", message: str = "",
         if not reason and src is not None and unit_src:
             conflict = _prologue_conflict(p, key, unit_src)
             if conflict:
-                oracle.compile_unit(p, res.unit, unit_src, src)
                 reason = "PROLOGUE CONFLICT (fix the declaration, then submit again):\n" + conflict
         if reason:
             _discard_work(p, key)

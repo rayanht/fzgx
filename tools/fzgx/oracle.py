@@ -879,21 +879,21 @@ def unit_source_path(project: Project, unit_src: str) -> Path:
 
 
 def compile_unit(project: Project, unit: str, unit_src: str,
-                 source: Optional[Path] = None) -> subprocess.CompletedProcess:
+                 source: Optional[Path] = None, *, output: Optional[Path] = None) -> subprocess.CompletedProcess:
     """Compile one unit straight with mwcc (via wibo) into its objdiff base object.
 
     No ninja and no build lock: two agents compile two different files, so nothing
     is shared. The flags come from objdiff.json (the same ones ninja uses) plus the
     include dirs the ninja rule adds. ninja will still consider the object up to
     date at relink time because the object is newer than its source. `source`
-    overrides the input (an agent's work copy, already assembled with the TU prologue).
+    overrides the input; probes must supply a scratch `output` to preserve the link object.
     """
     meta = project.objdiff_units().get(unit, {})
     flags = meta.get("scratch", {}).get("c_flags", "").replace(" -lang=c", "")
     flags += f" -i include -i build/{project.version}/include"
     ucfg = project.unit_record(unit_src) or {}
     mw = ucfg.get("mw_version") or ("GC/1.2.5n" if unit.startswith("main/") else "GC/1.3.2")
-    obj = _base_object(project, unit)
+    obj = output or _base_object(project, unit)
     obj.parent.mkdir(parents=True, exist_ok=True)
     src = source or unit_source_path(project, unit_src)
     cmd = [str(ROOT / "build" / "tools" / "wibo"), str(ROOT / "build" / "compilers" / mw / "mwcceppc.exe")]
