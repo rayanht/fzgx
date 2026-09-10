@@ -226,6 +226,31 @@ int fn_1_152840(s16 id, Entry *entries, s16 outer_count, s16 inner_count) {
 }
 /* fzgx:end fn_1_152840 */
 
+/* fzgx:begin fn_1_1528D0 */
+typedef struct Cell {
+    s16 id;
+    u8 pad[2];
+    u32 flags;
+} Cell;
+
+s32 fn_1_1528D0(s16 x, s16 y, Cell *table, s16 unused, s16 multiplier) {
+    s32 value;
+
+    if (lbl_1_bss_8B3A0.unk_94 & 0x00020000) {
+        if (table[(x * multiplier) + y].flags & ~0x3FFFFFFF)
+            return -1;
+    } else {
+        if (table[(x * multiplier) + y].flags & 0x40000000)
+            return -1;
+    }
+
+    value = table[(x * multiplier) + y].id;
+    if (value != -1)
+        return value;
+    return -1;
+}
+/* fzgx:end fn_1_1528D0 */
+
 /* fzgx:begin fn_1_153988 */
 // fn_1_153988: empty in retail (single blr).
 void fn_1_153988(void) {

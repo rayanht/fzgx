@@ -24286,6 +24286,17 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/bg_aur/fn_1_1528D0.c",
+    "symbols": [
+      "fn_1_1528D0"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "tu": "rel/main_rel/bg_aur.c"
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/bg_aur/fn_1_153988.c",
     "symbols": [
       "fn_1_153988"
