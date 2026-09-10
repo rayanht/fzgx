@@ -1352,6 +1352,46 @@ void fn_1_51990(void *obj) {
 }
 /* fzgx:end fn_1_51990 */
 
+/* fzgx:begin fn_1_519AC noprologue */
+#include "types.h"
+
+struct fn_1_519AC_lbl_1_rodata_26F8 {
+    u8 pad_0[0x58];
+    f32 unk_58;
+    f32 unk_5C;
+    u8 pad_60[0x4C];
+    f32 unk_AC;
+    f32 unk_B0;
+    f32 unk_B4;
+};
+
+extern struct fn_1_519AC_lbl_1_rodata_26F8 lbl_1_rodata_26F8;
+
+f32 fn_1_519AC(u32 value) {
+    struct fn_1_519AC_lbl_1_rodata_26F8 *base = &lbl_1_rodata_26F8;
+
+    switch (value) {
+    case 0:
+    case 14:
+        return base->unk_AC;
+    case 1:
+    case 2:
+    case 17:
+        return base->unk_5C;
+    case 3:
+    case 4:
+    case 5:
+    case 19:
+        return base->unk_B0;
+    case 6:
+    case 22:
+        return base->unk_B4;
+    default:
+        return base->unk_58;
+    }
+}
+/* fzgx:end fn_1_519AC */
+
 /* fzgx:begin fn_1_51AC0 */
 extern void fn_80038F10(void *result);
 extern u32 fn_1_A5DB0(void);

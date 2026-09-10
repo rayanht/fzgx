@@ -4853,3 +4853,6 @@ dol/OSGetTick.c:
 
 dol/__check_pad3.c:
 	.init       start:0x80003100 end:0x80003140 align:4
+
+dol/fn_80072CC4.c:
+	.text       start:0x80072CC4 end:0x80072D64 align:4

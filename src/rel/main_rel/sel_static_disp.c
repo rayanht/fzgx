@@ -1877,6 +1877,32 @@ int fn_1_14E944(const Fn1_14E944Entry *arg0, const Fn1_14E944Entry *arg1) {
 }
 /* fzgx:end fn_1_14E944 */
 
+/* fzgx:begin fn_1_14E9E4 noprologue */
+#include "types.h"
+
+typedef struct {
+    u8 data[4];
+    f32 value;
+    u8 tail[8];
+} Fn1_14E9E4Entry;
+
+typedef struct {
+    Fn1_14E9E4Entry entries[75];
+} Fn1_14E9E4Blob;
+
+extern u8 lbl_1_rodata_9CDC[1200];
+extern Fn1_14E9E4Entry *fn_1_14F608(int arg0);
+extern void fn_80008BA8(void *arg0, void *arg1, int arg2);
+
+void fn_1_14E9E4(int arg0, void *arg1) {
+    Fn1_14E9E4Blob buf;
+
+    buf = *(Fn1_14E9E4Blob *)lbl_1_rodata_9CDC;
+    buf.entries[(s16)arg0].value = fn_1_14F608(arg0)->value;
+    fn_80008BA8(arg1, &buf.entries[(s16)arg0], 16);
+}
+/* fzgx:end fn_1_14E9E4 */
+
 /* fzgx:begin fn_1_14ED00 */
 typedef struct {
     u32 values[5];
