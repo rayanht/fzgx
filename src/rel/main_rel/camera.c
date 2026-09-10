@@ -197,6 +197,59 @@ void fn_1_6914(u32 index, u32 *output) {
 #pragma peephole reset
 /* fzgx:end fn_1_6914 */
 
+/* fzgx:begin fn_1_6990 noprologue */
+#include "types.h"
+
+struct fn_1_6990_Copy12 {
+    u32 unk_0;
+    u32 unk_4;
+    u32 unk_8;
+};
+
+struct fn_1_6990_Entry {
+    u8 pad_0[0x64];
+    struct fn_1_6990_Copy12 unk_64;
+    u8 pad_70[0x1FC - 0x70];
+};
+
+struct fn_1_6990_Other {
+    u8 pad_0[0x70];
+    struct fn_1_6990_Copy12 unk_70;
+};
+
+struct fn_1_6990_Globals {
+    u32 state;
+    struct fn_1_6990_Entry *entries;
+    struct fn_1_6990_Other *other;
+};
+
+extern struct fn_1_6990_Globals lbl_1_bss_F68;
+
+#pragma peephole off
+void fn_1_6990(u32 index, u32 *output) {
+    struct fn_1_6990_Globals *globals = &lbl_1_bss_F68;
+    u32 state = globals->state;
+    s8 mode;
+
+    if (state == 0) {
+        return;
+    }
+
+    mode = *(s8 *)((u8 *)state + 0x48);
+
+    switch (mode) {
+    case 9:
+    case 10:
+        *(struct fn_1_6990_Copy12 *)output = globals->other->unk_70;
+        return;
+    default:
+        *(struct fn_1_6990_Copy12 *)output = globals->entries[index & 0xff].unk_64;
+        return;
+    }
+}
+#pragma peephole reset
+/* fzgx:end fn_1_6990 */
+
 /* fzgx:begin camera_get_mode */
 // Return the normalized camera status, treating inactive states as zero.
 s16 camera_get_mode(void) {

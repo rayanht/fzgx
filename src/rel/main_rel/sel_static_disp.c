@@ -826,6 +826,27 @@ u32 fn_1_13FA88(s16 arg0) {
 }
 /* fzgx:end fn_1_13FA88 */
 
+/* fzgx:begin fn_1_13FB24 */
+int fn_1_13FB24(u32 arg0) {
+    switch ((s16)arg0) {
+    case 6:
+        return 1;
+    case 3:
+        return 1;
+    case 7:
+        return 1;
+    case 1:
+        return 1;
+    case 5:
+        if (lbl_1_bss_8B3A0.unk_12C != 0) {
+            break;
+        }
+        return 1;
+    }
+    return 0;
+}
+/* fzgx:end fn_1_13FB24 */
+
 /* fzgx:begin fn_1_141338 */
 extern const f32 lbl_1_rodata_863C;
 extern u32 fn_1_141360(u32, u32, u32, u32, f32, f32);
@@ -1170,6 +1191,37 @@ void fn_1_14A27C(void) {
 void fn_1_14A280(void) {
 }
 /* fzgx:end fn_1_14A280 */
+
+/* fzgx:begin fn_1_14A284 noprologue */
+#include "types.h"
+#include "rel/main_rel/sel_static_disp.h"
+
+extern void *fn_1_5910(void);
+extern s32 fn_1_149FB4(void *obj);
+extern int fn_1_3F864(void);
+extern void fn_1_A52B0(u8 value);
+extern void fn_1_A2D84(u32 value);
+
+void fn_1_14A284(void) {
+    void *obj;
+    s32 value;
+    s32 ok;
+
+    obj = fn_1_5910();
+    fn_1_149FB4(obj);
+    if (fn_1_3F864() != 0) {
+        if (lbl_1_bss_3C30.unk_5 == 2) {
+            value = fn_1_149FB4(obj);
+            ok = (value + 1 > 30) ? 0 : (value + 1 >= 1);
+            if (ok != 0) {
+                fn_1_A52B0((u8)(value + 1));
+            }
+        } else {
+            fn_1_A2D84(0xA9071F00);
+        }
+    }
+}
+/* fzgx:end fn_1_14A284 */
 
 /* fzgx:begin fn_1_14A9CC */
 // fn_1_14A9CC: empty in retail (single blr).

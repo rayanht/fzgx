@@ -18176,6 +18176,16 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_800576DC.c",
+    "symbols": [
+      "fn_800576DC"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
     "source": "dol/fn_80057728.c",
     "symbols": [
       "fn_80057728"
@@ -25754,6 +25764,17 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/bg_san/fn_1_DAB5C.c",
+    "symbols": [
+      "fn_1_DAB5C"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/bg_san.c"
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/bg_san/fn_1_DAD68.c",
     "symbols": [
       "fn_1_DAD68"
@@ -27209,6 +27230,17 @@
     "source": "rel/main_rel/camera/fn_1_6914.c",
     "symbols": [
       "fn_1_6914"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "tu": "rel/main_rel/camera.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/camera/fn_1_6990.c",
+    "symbols": [
+      "fn_1_6990"
     ],
     "status": "matching",
     "mw_version": "GC/1.3.2",
@@ -34544,6 +34576,17 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/game/fn_1_4017C.c",
+    "symbols": [
+      "fn_1_4017C"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/game.c"
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/game/fn_1_40224.c",
     "symbols": [
       "fn_1_40224"
@@ -40278,6 +40321,20 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/sel_static_disp/fn_1_13FB24.c",
+    "symbols": [
+      "fn_1_13FB24"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/sel_static_disp.c",
+    "pool": {
+      "@13": "jumptable_1_data_41EA8"
+    }
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/sel_static_disp/fn_1_141338.c",
     "symbols": [
       "fn_1_141338"
@@ -40548,6 +40605,17 @@
     "source": "rel/main_rel/sel_static_disp/fn_1_14A280.c",
     "symbols": [
       "fn_1_14A280"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/sel_static_disp.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/sel_static_disp/fn_1_14A284.c",
+    "symbols": [
+      "fn_1_14A284"
     ],
     "status": "matching",
     "mw_version": null,
@@ -45611,6 +45679,16 @@
     "source": "rel/movie_module/fn_12_2E218.c",
     "symbols": [
       "fn_12_2E218"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "movie_module",
+    "source": "rel/movie_module/fn_12_2E334.c",
+    "symbols": [
+      "fn_12_2E334"
     ],
     "status": "matching",
     "mw_version": "GC/1.3.2",

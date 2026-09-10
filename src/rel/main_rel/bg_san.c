@@ -188,6 +188,37 @@ void fn_1_DAB3C(void) {
 }
 /* fzgx:end fn_1_DAB3C */
 
+/* fzgx:begin fn_1_DAB5C */
+typedef struct {
+    u8 pad_0[0x14];
+    f32 unk_14;
+    u8 pad_18[0xC];
+    u32 unk_24;
+} Fn1DAB5C_Obj;
+
+s32 fn_1_DAB5C(s32 mode, Fn1DAB5C_Obj **arg) {
+    Obj_1_data_2A7E0_At3C *dest;
+    Fn1DAB5C_Obj *obj;
+    u32 val;
+
+    obj = *arg;
+    dest = lbl_1_data_2A7E0.unk_3C;
+    val = obj->unk_24;
+    switch (mode) {
+    case 1:
+        dest->unk_BD4 = val;
+        break;
+    case 3:
+        dest->unk_AF0 = obj->unk_14;
+        break;
+    case 4:
+        dest->unk_18AC = (u32)obj;
+        break;
+    }
+    return 1;
+}
+/* fzgx:end fn_1_DAB5C */
+
 /* fzgx:begin fn_1_DAD68 */
 // fn_1_DAD68: empty in retail (single blr).
 void fn_1_DAD68(void) {

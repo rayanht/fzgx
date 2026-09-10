@@ -1553,3 +1553,6 @@ rel/movie_module/fn_12_8878.c:
 
 rel/movie_module/fn_12_26D24.c:
 	.text       start:0x00026D24 end:0x00026D68 align:4
+
+rel/movie_module/fn_12_2E334.c:
+	.text       start:0x0002E334 end:0x0002E374 align:4

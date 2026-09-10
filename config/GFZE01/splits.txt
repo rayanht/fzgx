@@ -4868,3 +4868,6 @@ dol/fn_800898E4.c:
 
 dol/fn_800035C0.c:
 	.init       start:0x800035C0 end:0x800035E4 align:4
+
+dol/fn_800576DC.c:
+	.text       start:0x800576DC end:0x80057728 align:4

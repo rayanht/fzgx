@@ -877,6 +877,33 @@ void fn_1_3FF90(void) {
 }
 /* fzgx:end fn_1_3FF90 */
 
+/* fzgx:begin fn_1_4017C noprologue */
+#include "types.h"
+
+extern int fn_1_FA070(void);
+extern int fn_1_FA180(int, u8);
+
+int fn_1_4017C(void) {
+    int i;
+    int result1;
+    int result2;
+    int result3;
+
+    if (fn_1_FA070() != 0) {
+        return 1;
+    }
+    for (i = 0; i < 3; i++) {
+        result1 = fn_1_FA180(1, i);
+        result2 = fn_1_FA180(2, i);
+        result3 = fn_1_FA180(3, i);
+        if (result1 == 0 && result2 == 0 && result3 == 0) {
+            return 0;
+        }
+    }
+    return 1;
+}
+/* fzgx:end fn_1_4017C */
+
 /* fzgx:begin fn_1_40224 */
 int fn_1_40224(void) {
     int result;
