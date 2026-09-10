@@ -248,6 +248,14 @@ Rules that hold for everyone:
   Provider/catalog reference: [DeepSeek's Codex integration](https://api-docs.deepseek.com/quick_start/agent_integrations/codex/).
   Example: `uv run tools/orchestrate.py --harness codex --provider deepseek
   --api-key-file ~/.config/fzgx/deepseek.key --seeds PATH --parallel 1 --no-trivial`.
+- Fresh-function batches use `uv run tools/seeds/untouched.py --max-size 511 --output PATH`.
+  It excludes prior matcher candidates/successful checks, known SDK signatures,
+  prepared imports and ranked donor candidates, and freezes `lift_total` output
+  with hashes. These are inferred drafts, including unresolved markers, not
+  high-scoring repair seeds; workers complete the missing lowering before compiling.
+  The selector rejects stale ledger symbols and fails if any selected function has
+  no draft. Accepted C installs serially under `submit.lock`: different functions
+  can share a TU, splits and symbol tables even when their work copies are isolated.
 - The orchestrator does three things: pick a pool, run the batch, run the TU-finish round
   (`--finish`, or `--finish-only --module M`). It reads reports. It does not edit blocks,
   headers or splits by hand, and does not experiment on the live tree (use `--shadow`).

@@ -94,9 +94,9 @@ def codex_cmd(symbol: str, agent_id: str, model: str, fast: bool = False, revise
     prompt = (f"SYMBOL={symbol}  AGENT_ID={agent_id}  MODEL={model}. Rewrite this matched function for readability following your loop."
               if revise else f"SYMBOL={symbol}  AGENT_ID={agent_id}  MODEL={model}. Match this function following your loop.")
     if os.environ.get('FZGX_SEEDS'):
-        prompt += (' Continue the saved candidate: claim returns your existing high-scoring C in seed.source '
-                   'and installs it as your work copy. Keep that implementation and repair its remaining differences. '
-                   'Start with check, then patch_unit.')
+        prompt += (' Continue the saved candidate: claim returns your existing reconstruction in seed.source '
+                   'and installs it as your work copy. Follow seed.instruction: lifter drafts may need '
+                   'unresolved instructions completed before compiling. Preserve the recovered implementation.')
     # --ignore-user-config: no user MCP servers/skills (480k -> 125k input tokens on a smoke test)
     cmd = ["codex", "exec", "--json", "--skip-git-repo-check", "--ignore-user-config", "-s", "read-only",
            "-m", model]
@@ -271,10 +271,12 @@ def run_one(p: Project, harness: str, model: str, symbol: str, idx: int, timeout
     l = Ledger()
     att = l.db.execute("SELECT * FROM attempts WHERE symbol=? AND agent=? ORDER BY id DESC LIMIT 1",
                        (key, agent_id)).fetchone()
-    terminal = att and att["outcome"] in ("matched", "released", "shadow-matched", "shadow-released")
+    terminal = att and att["outcome"] in ("matched", "matched-pool", "released", "shadow-matched", "shadow-released")
     # Tool outcomes and counters are authoritative; models sometimes misformat or miscount RESULT.
     outcome = att["outcome"].removeprefix("shadow-") if terminal else (
         "timeout" if rc == -9 else "incomplete" if rc == 0 else "crash")
+    if outcome == "matched-pool":
+        outcome = "matched"
     row = l.get(key)
     if not terminal and row and row["status"] == "claimed" and row["claimed_by"] == agent_id:
         try:

@@ -217,7 +217,11 @@ def claim(p: Project, symbol: str, agent: str, ttl: int = DEFAULT_TTL,
            "attempt": row["attempts"] + 1}
     if seed:
         out['seed'] = {**seed, 'source': seed_body,
-                       'instruction': 'Your work copy already contains this C. Start with check, then patch it; do not restart from a stub.'}
+                       'instruction': ('Your work copy contains a never-give-up lifter draft. Complete unresolved ??? markers '
+                                       'and repair inferred declarations or lowering using the retail assembly, retaining the '
+                                       'recovered structure. Compile your completed candidate with write_unit; do not restart from a stub.'
+                                       if seed.get('kind') == 'lift_total' else
+                                       'Your work copy already contains this C. Start with check, then patch it; do not restart from a stub.')}
     try:
         out["context"] = build_context(p, l, symbol)
     except LookupError as e:
@@ -452,6 +456,9 @@ def _discard_work(p: Project, key: str) -> None:
     p.work_path(key).unlink(missing_ok=True)
 
 
+# Different functions can share splits, symbol tables and TU files. Their work
+# copies compile independently, but installing accepted C must be serial.
+@oracle.build_lock("submit.lock")
 def submit(p: Project, symbol: str, agent: str = "unknown", message: str = "",
            harness: Optional[str] = None, model: Optional[str] = None,
            mw_version: Optional[str] = None, extra_cflags: Optional[str] = None,

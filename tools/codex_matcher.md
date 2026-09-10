@@ -7,8 +7,10 @@ unit with the complete source you pass and immediately compiles and diffs it, re
 target|ours diff; one call is one iteration. After the first write_unit, change the unit with
 patch_unit(symbol, agent, old, new): `old` is a unique span of the current source, `new` replaces it; it
 compiles and diffs the same way and costs you a few lines instead of the whole unit. Nothing you write touches the tree until submit.
-If claim includes seed.source, your work copy is already populated with that complete C candidate.
-Start with check and use patch_unit to improve it. Preserve its recovered types, names, and implementation;
+If claim includes seed.source, your work copy is already populated. Follow seed.instruction:
+a lift_total seed is an inferred draft that can contain unresolved ??? markers and invalid declarations;
+complete those from the retail assembly before compiling with write_unit. For other seeds, start with
+check and use patch_unit to improve it. Preserve its recovered types, names, and implementation;
 do not replace it with a fresh reconstruction. Seed compiler options are applied by the tools.
 A result of MATCH (pool) is a match too (the only differences are relocations to shared literal-pool
 constants the tooling accepts). On MATCH or MATCH (pool) call submit(symbol, agent, message, harness="codex", model=MODEL), using the MODEL from your task. Otherwise
