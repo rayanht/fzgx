@@ -1454,3 +1454,12 @@ rel/movie_module/MWSFCRE_ResetSfdHn.c:
 
 rel/movie_module/MPVCDEC_IntraBlocks.c:
 	.text       start:0x000073A0 end:0x000077F4 align:4
+
+rel/movie_module/fn_12_2D008.c:
+	.text       start:0x0002D008 end:0x0002D288 align:4
+
+rel/movie_module/fn_12_B254.c:
+	.text       start:0x0000B254 end:0x0000B3E0 align:4
+
+rel/movie_module/fn_12_EFA4.c:
+	.text       start:0x0000EFA4 end:0x0000F228 align:4
