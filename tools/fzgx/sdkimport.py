@@ -249,19 +249,23 @@ def source_object(p: Project, rec: dict) -> Path:
     return p.build_dir / 'sdkmatch' / rec['sdk'] / Path(rec['source']).with_suffix('.o')
 
 
-def bindings(p: Project, rec: dict) -> dict:
+def bindings(p: Project, rec: dict, offsets: dict | None = None) -> dict:
     source_obj = source_object(p, rec)
     sym = p.resolve(rec['symbol'])
     target = p.target_object_for(sym)
     left = relocations(source_obj, rec['sdk_symbol'])
     right = relocations(target, sym.name)
-    mapping = {rec['sdk_symbol']: sym.name}
+    known = rec.get('known_bindings', {})
+    mapping = dict(known) | {rec['sdk_symbol']: sym.name}
     for off, (name, addend, kind) in left.items():
-        if name.startswith('@'):
+        if name.startswith('@') or re.fullmatch(r'_(?:save|rest)[gf]pr_\d+', name):
             continue
-        if off not in right:
+        if name in known:
+            continue  # Earlier aligned source references; the oracle checks every use.
+        target_off = offsets.get(off) if offsets is not None else off
+        if target_off not in right:
             raise ValueError(f'{off:#x}: source relocation {name} has no retail relocation')
-        dest, dest_addend, dest_kind = right[off]
+        dest, dest_addend, dest_kind = right[target_off]
         dest_sym = retail_symbol(p, sym.module, dest)
         if dest_sym and dest_sym.scope != 'local':
             dest = dest_sym.name

@@ -288,6 +288,14 @@ def cmd_sdkimport(a, p):
     return 0 if not r.get('still') and not r.get('errors') and not r.get('failed') else 1
 
 
+def cmd_sourcealign(a, p):
+    from . import sourcealign
+    result = sourcealign.submit_saved(p, a.symbol) if a.submit_saved else sourcealign.run(
+        p, a.min_size, a.symbol, a.saved, not a.no_submit, a.discover)
+    _print(result, a.json)
+    return 0
+
+
 def cmd_why_link(a, p):
     from . import oracle  # scoped
     _print(oracle.why_link(p, a.symbol), a.json); return 0
@@ -423,6 +431,13 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--library", choices=["card", "os", "exi", "si", "ar", "vi", "dvd", "gx", "dsp", "pad", "ai", "Runtime", "MSL"], default="card")
     s.add_argument("--no-submit", action="store_true", help="adapt and check C without submitting units")
     s.add_argument("--consolidate", action="store_true", help="combine complete, identified SDK source files and verify the link")
+    s = sub.add_parser("sourcealign", help="recover SDK relatives and C layouts from instruction alignment and compiler probes"); s.set_defaults(fn=cmd_sourcealign)
+    s.add_argument("--min-size", type=int, default=256)
+    s.add_argument("--symbol", action="append", default=[])
+    s.add_argument("--saved", action="store_true", help="use the saved source discovery")
+    s.add_argument("--discover", action="store_true", help="only identify source relatives")
+    s.add_argument("--no-submit", action="store_true")
+    s.add_argument("--submit-saved", action="store_true", help="recheck and submit saved exact candidates without repeating probes")
     s = sub.add_parser("sdkmatch", help="identify SDK/runtime functions in the DOL by masked-byte signatures of a compiled public SDK decomp"); s.set_defaults(fn=cmd_sdkmatch)
     s.add_argument("--sdk", default="build/tools/mkdd"); s.add_argument("--mw", default="GC/1.2.5n"); s.add_argument("--min-size", type=int, default=16)
     s.add_argument("--apply", action="store_true", help="name the identified unnamed DOL functions from the saved runs (link-verified)")
