@@ -26882,6 +26882,17 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/camera/fn_1_7000.c",
+    "symbols": [
+      "fn_1_7000"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "tu": "rel/main_rel/camera.c"
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/camera/fn_1_715C.c",
     "symbols": [
       "fn_1_715C"
@@ -51392,6 +51403,17 @@
     "source": "rel/winning/winning/fn_15_2620.c",
     "symbols": [
       "fn_15_2620"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "tu": "rel/winning/winning.c"
+  },
+  {
+    "module": "winning",
+    "source": "rel/winning/winning/fn_15_2CF0.c",
+    "symbols": [
+      "fn_15_2CF0"
     ],
     "status": "matching",
     "mw_version": "GC/1.3.2",

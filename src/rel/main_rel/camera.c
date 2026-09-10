@@ -277,6 +277,30 @@ s32 fn_1_6F84(void) {
 }
 /* fzgx:end fn_1_6F84 */
 
+/* fzgx:begin fn_1_7000 */
+s32 fn_1_7000(void) {
+    Obj_1_bss_F68_Target *state = lbl_1_bss_F68;
+
+    if (state == 0) {
+        return 0;
+    }
+    if ((state->unk_0 & ((u32)1 << 31)) != 0) {
+        return 0;
+    }
+
+    switch ((s8)state->unk_48) {
+    case 9:
+    case 10:
+        if (live_camera->unk_2 == 5) {
+            return 1;
+        }
+        return 0;
+    }
+
+    return 0;
+}
+/* fzgx:end fn_1_7000 */
+
 /* fzgx:begin camera_set_entry_field_0xa8 */
 void camera_set_entry_field_0xa8(u8 index, s16 value) {
     // Store the selected camera entry's parameter.

@@ -542,6 +542,28 @@ void fn_15_2CEC(void) {
 }
 /* fzgx:end fn_15_2CEC */
 
+/* fzgx:begin fn_15_2CF0 */
+extern u32 lbl_15_bss_9C[13];
+extern u8 lbl_15_data_A4[176];
+extern u32 lbl_801A6410;
+extern void fn_1_8F494(void *);
+extern u32 fn_1_46B4(u32, u32, const u8 *, int);
+
+void fn_15_2CF0(void) {
+    u32 *p;
+    s32 i;
+
+    p = lbl_15_bss_9C;
+    for (i = 0; i < 12; i++) {
+        if (p[i] != 0) {
+            fn_1_8F494((void *)p[i]);
+            fn_1_46B4(lbl_801A6410, p[i], lbl_15_data_A4, 0x8cf);
+            p[i] = 0;
+        }
+    }
+}
+/* fzgx:end fn_15_2CF0 */
+
 /* fzgx:begin fn_15_30E8 */
 extern struct fn_15_30E8_lbl_15_bss_0 lbl_15_bss_0;
 extern void fn_15_3368(s16);
