@@ -7724,6 +7724,27 @@
   },
   {
     "module": "main",
+    "source": "dol/SelectThread.c",
+    "symbols": [
+      "SelectThread"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
     "source": "dol/SetEffectivePriority.c",
     "symbols": [
       "SetEffectivePriority"

@@ -4817,3 +4817,6 @@ dol/fn_80057EC4.c:
 
 dol/fn_8007785C.c:
 	.text       start:0x8007785C end:0x80077A18 align:4
+
+dol/SelectThread.c:
+	.text       start:0x800105D0 end:0x800107F8 align:4
