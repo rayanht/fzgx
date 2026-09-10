@@ -18013,6 +18013,16 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_80056C64.c",
+    "symbols": [
+      "fn_80056C64"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
     "source": "dol/fn_80056CD0.c",
     "symbols": [
       "fn_80056CD0"
@@ -29950,6 +29960,20 @@
     "mw_version": null,
     "extra_cflags": [],
     "tu": "rel/main_rel/driver.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/driver/fn_1_A9250.c",
+    "symbols": [
+      "fn_1_A9250"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "tu": "rel/main_rel/driver.c",
+    "pool": {
+      "@18": "lbl_1_rodata_4A98"
+    }
   },
   {
     "module": "main_rel",

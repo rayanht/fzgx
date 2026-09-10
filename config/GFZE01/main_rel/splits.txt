@@ -5489,3 +5489,6 @@ rel/main_rel/driver/fn_1_A78CC.c:
 
 rel/main_rel/accessory/fn_1_10C7B4.c:
 	.text       start:0x0010C7B4 end:0x0010C9B0 align:4
+
+rel/main_rel/driver/fn_1_A9250.c:
+	.text       start:0x000A9250 end:0x000A93C4 align:4

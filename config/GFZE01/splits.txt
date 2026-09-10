@@ -4820,3 +4820,6 @@ dol/fn_8007785C.c:
 
 dol/SelectThread.c:
 	.text       start:0x800105D0 end:0x800107F8 align:4
+
+dol/fn_80056C64.c:
+	.text       start:0x80056C64 end:0x80056CD0 align:4

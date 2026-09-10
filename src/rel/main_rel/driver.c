@@ -440,6 +440,66 @@ void fn_1_A8F78(void) {
 }
 /* fzgx:end fn_1_A8F78 */
 
+/* fzgx:begin fn_1_A9250 noprologue */
+#include "types.h"
+
+extern void fn_1_49410(void);
+extern u32 lbl_1_data_35990[3];
+extern void fn_1_494DC(s16);
+extern void fn_1_520A0(void);
+extern void fn_1_52088(void);
+extern u32 lbl_1_bss_71658[6];
+extern const f64 lbl_1_rodata_4A98;
+extern void fn_1_49714(f32, f32, f32);
+extern void fn_1_49680(f32, f32);
+extern void fn_1_A93C4(u8);
+extern void fn_1_4A0D8(void *);
+extern void fn_1_520CC(void);
+
+typedef struct {
+    u8 kind;
+    u8 callback;
+    u8 flags;
+    u8 pad3;
+    s16 x;
+    s16 y;
+    s16 z;
+    s16 padA;
+    void *data;
+} Fn1A9250Entry;
+
+extern Fn1A9250Entry lbl_1_bss_70658[];
+
+void fn_1_A9250(int arg) {
+    int i;
+
+    fn_1_49410();
+    fn_1_494DC((s16)lbl_1_data_35990[(u8)arg]);
+    fn_1_520A0();
+    fn_1_52088();
+
+    for (i = 0; i < (int)lbl_1_bss_71658[0]; i++) {
+        if ((u8)arg == lbl_1_bss_70658[i].kind) {
+            if (((lbl_1_bss_70658[i].flags >> 1) & 1) != 0) {
+                fn_1_49714(
+                    (f32)(lbl_1_bss_70658[i].x + lbl_1_bss_70658[i].z),
+                    (f32)lbl_1_bss_70658[i].y,
+                    (f32)lbl_1_bss_70658[i].x);
+            } else {
+                fn_1_49680(
+                    (f32)(lbl_1_bss_70658[i].x + lbl_1_bss_70658[i].z),
+                    (f32)lbl_1_bss_70658[i].y);
+            }
+            fn_1_A93C4(lbl_1_bss_70658[i].callback);
+            fn_1_4A0D8(lbl_1_bss_70658[i].data);
+        }
+    }
+
+    fn_1_49410();
+    fn_1_520CC();
+}
+/* fzgx:end fn_1_A9250 */
+
 /* fzgx:begin fn_1_A93C4 */
 extern void fn_1_49514(u32 *);
 
