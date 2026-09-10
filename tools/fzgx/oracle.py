@@ -209,12 +209,14 @@ def check(project: Project, symbol: str, max_diff_lines: int = 80, source: Optio
             scratch_obj = STATE_DIR / "work" / (project.key(sym).replace(":", "__") + ".o")
             scratch_obj.parent.mkdir(parents=True, exist_ok=True)
             ucfg = project.unit_record(unit_src) or {}
-            cp = compile_source(project, sym.module, source, scratch_obj, mw_version or ucfg.get("mw_version"),
-                                extra_cflags or (" ".join(ucfg.get("extra_cflags") or []) or None))
+            chosen = (mw_version or ucfg.get("mw_version"),
+                      extra_cflags or (" ".join(ucfg.get("extra_cflags") or []) or None))
+            cp = compile_source(project, sym.module, source, scratch_obj, *chosen)
             if cp.returncode != 0 or not scratch_obj.exists():
                 err = "\n".join(l for l in (cp.stdout + cp.stderr).splitlines() if "Usage Warning" not in l)
                 return CheckResult(False, symbol, unit, error=err.strip()[-4000:])
             res = _diff(project, sym.module, symbol, unit, max_diff_lines, target=target, base=scratch_obj)
+            res.mw_version, res.extra_cflags = chosen
             if res.ok and res.matched_pool:
                 mapping = {private: pooled for private, pooled, _ in res._pool_pairs}
                 r = poolfix.apply(scratch_obj, mapping)
@@ -222,6 +224,7 @@ def check(project: Project, symbol: str, max_diff_lines: int = 80, source: Optio
                     res2 = _diff(project, sym.module, symbol, unit, max_diff_lines, target=target, base=scratch_obj)
                     if res2.ok and res2.matched:
                         res2.pool_map, res2.pool = mapping, res.pool
+                        res2.mw_version, res2.extra_cflags = chosen
                         return res2
             return res
 
