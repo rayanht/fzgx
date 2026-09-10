@@ -23,6 +23,9 @@ The runner claims the function, verifies and installs the saved C, and performs
 the initial compile before starting a model turn. An exact seed completes without
 a model request. Seeded context excludes duplicate old attempts and fresh lifter
 drafts; it reports the seed's actual compiler and flags.
+The complete target assembly and referenced declarations are mandatory; the context
+budget bounds auxiliary examples/history only. A `lift_total` seed can include a
+`prior_attempt` reference so a new draft does not hide an existing reconstruction.
 Assignment and preflight use one `claim --check` CLI call in one tool slot.
 A full-width claim queue therefore cannot put every initial check behind all
 the remaining claims before any model starts.

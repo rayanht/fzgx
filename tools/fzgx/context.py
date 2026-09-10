@@ -229,6 +229,10 @@ def build_context(project: Project, ledger: Optional[Ledger], symbol: str,
                 parts.append(_header_decl(hdr_text, name))
             parts.append("```")
 
+    # The matcher has no file/assembly reader. Its target and referenced types
+    # must survive even when one large function exceeds the auxiliary budget.
+    required_chars = len("\n".join(parts))
+
     callers = project.callers(symbol)
     if callers:
         parts.append(f"\n## Callers: {', '.join(f'`{c}`' for c in callers)}")
@@ -378,8 +382,8 @@ def build_context(project: Project, ledger: Optional[Ledger], symbol: str,
         parts.append("\n## Rules (excerpt)\n" + rules[: 1800].strip())
 
     text = "\n".join(parts)
-    # crude token cap: ~4 chars per token
-    limit = budget_tokens * 4
+    # Bound examples/history/idioms, never the assembly or its declarations.
+    limit = required_chars + budget_tokens * 4
     if len(text) > limit:
         text = text[:limit] + "\n\n[context truncated to budget]"
     return text

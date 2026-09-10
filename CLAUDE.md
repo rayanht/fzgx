@@ -284,6 +284,12 @@ Rules that hold for everyone:
   The selector rejects stale ledger symbols and fails if any selected function has
   no draft. Accepted C installs serially under `submit.lock`: different functions
   can share a TU, splits and symbol tables even when their work copies are isolated.
+- Largest-function batches use `uv run tools/seeds/largest.py --count 50 --output NEW_DIRECTORY`.
+  Select globally by unmatched retail byte size, without SDK or attempt exclusions.
+  Size `lift_total`'s instruction allowance to each selected function and fail if any
+  draft is missing. Include existing saved reconstructions as additional seed references.
+  Context budgets apply to auxiliary examples/history; never truncate the target
+  assembly or its referenced declarations, since matchers have no file reader.
 - Recovered-candidate batches use `uv run tools/seeds/recovered.py --above 90 --output PATH`.
   This selects strict historical scores above the threshold without a size cap or SDK
   exclusion, joining attempt bodies, check archives, lifter drafts, owned SDK imports,

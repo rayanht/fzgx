@@ -199,7 +199,7 @@ def run_one(p: Project, harness: str, model: str, symbol: str, idx: int, timeout
             cmd = claude_cmd(symbol, agent_id, model)
             task = {'context': assignment['context']}
             if seed:
-                task['seed'] = {k: seed[k] for k in ('source', 'kind', 'instruction') if k in seed}
+                task['seed'] = {k: seed[k] for k in ('source', 'kind', 'instruction', 'prior_attempt') if k in seed}
             if assignment.get('source'):
                 task['source'] = assignment['source']
             if assignment.get('initial_check'):
