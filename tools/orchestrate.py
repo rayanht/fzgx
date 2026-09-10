@@ -90,7 +90,7 @@ def codex_cmd(symbol: str, agent_id: str, model: str, fast: bool = False, revise
     prompt = (f"SYMBOL={symbol}  AGENT_ID={agent_id}. Rewrite this matched function for readability following your loop."
               if revise else f"SYMBOL={symbol}  AGENT_ID={agent_id}. Match this function following your loop.")
     if os.environ.get('FZGX_SEEDS'):
-        prompt += (' This is a seeded SDK repair: claim returns your existing high-scoring C in seed.source '
+        prompt += (' Continue the saved candidate: claim returns your existing high-scoring C in seed.source '
                    'and installs it as your work copy. Keep that implementation and repair its remaining differences. '
                    'Start with check, then patch_unit.')
     # --ignore-user-config: no user MCP servers/skills (480k -> 125k input tokens on a smoke test)

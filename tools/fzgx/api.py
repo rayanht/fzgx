@@ -315,7 +315,8 @@ def check(p: Project, symbol: str, max_diff_lines: int = 80, versions: Optional[
             with (hdir / "index.jsonl").open("a") as f:
                 f.write(json.dumps({"n": n, "t": int(time.time()), "ok": res.ok, "percent": res.percent if res.ok else None,
                                     "adjusted": res.percent_adjusted if res.ok else None, "matched": bool(res.ok and (res.matched or res.matched_pool)),
-                                    "rows": res.pool_rows if res.ok else None}) + "\n")
+                                    "rows": res.pool_rows if res.ok else None,
+                                    "mw": res.mw_version, "flags": res.extra_cflags}) + "\n")
         except OSError:
             pass
     if res.ok and src is not None:
