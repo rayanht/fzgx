@@ -17,7 +17,8 @@ Headless Codex matchers use `tools/orchestrate.py` and one shared local Codex
 app server. The runner claims each function, installs its saved C, and supplies
 context plus the initial object diff before starting the model. Matchers have
 no shell or filesystem tools. Their dynamic tools are `write_unit(source)`,
-`patch_unit(old, new)`, `check(versions)`, and `release(reason)`; the host binds
+`patch_unit(old, new)`, `check(versions)`, `read_evidence(section, cursor)`, and
+`release(reason)`; the host binds
 the function and identity, so models cannot select another unit.
 
 Continue the supplied C. Writes compile and diff immediately. A full oracle
@@ -27,6 +28,9 @@ submit, administrative release, or final RESULT message is required from the
 model. Voluntary release is for a concrete technical obstacle. Numeric limits
 belong in runner flags and tooling, never matcher prompts. Compiler probes
 retain the selected compiler and archive the body with its compiler settings.
+Evidence reads page through the selected compile's complete diff and decoded
+retail data without compiling or consuming checks. Use the supplied cursor;
+changing the work copy or compiler invalidates the cached diff.
 
 The manual CLI (`uv run tools/fzgx.py ...`) and MCP server
 (`tools/fzgx_mcp.py`) retain claim/context/check/submit/release operations for

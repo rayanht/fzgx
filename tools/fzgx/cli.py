@@ -76,9 +76,17 @@ def cmd_uncarve(a, p):
 def cmd_check(a, p):
     r = api.check(p, a.symbol, a.max_diff_lines, a.versions)
     _print(r if a.json else api.format_check(r), a.json)
+    if 'evidence' in r:
+        return 0 if r['ok'] else 2
     if "versions" in r:
         return 0 if any(v >= 100.0 for v in r["versions"].values()) else 1
     return 0 if r["ok"] and r["matched"] else 1
+
+
+def cmd_read_evidence(a, p):
+    r = api.read_evidence(p, a.symbol, a.section, a.cursor)
+    _print(r if a.json else api.format_check(r), a.json)
+    return 0 if r['ok'] else 2
 
 
 def cmd_submit(a, p):
@@ -408,6 +416,9 @@ def build_parser() -> argparse.ArgumentParser:
     s = sub.add_parser("context", help="print the context bundle"); s.set_defaults(fn=cmd_context)
     s.add_argument("symbol"); s.add_argument("--budget-tokens", type=int, default=6000)
     s = sub.add_parser("read-unit", help="print a carved unit's source"); s.set_defaults(fn=cmd_read_unit); s.add_argument("symbol")
+    s = sub.add_parser('read-evidence', help='read a cached diff or decoded retail data without compiling'); s.set_defaults(fn=cmd_read_evidence)
+    s.add_argument('symbol'); s.add_argument('--section', choices=('diff', 'data'), default='diff')
+    s.add_argument('--cursor', type=int, default=0)
     s = sub.add_parser("write-unit", help="replace a claimed unit's source from a file"); s.set_defaults(fn=cmd_write_unit)
     s.add_argument("symbol"); s.add_argument("--agent", required=True); s.add_argument("--file", required=True)
     s = sub.add_parser("patch-unit", help="replace one unique span of a claimed unit's work copy, then check"); s.set_defaults(fn=cmd_patch_unit)
@@ -523,7 +534,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     a = build_parser().parse_args(argv)
     assigned = os.environ.get("FZGX_SYMBOL")
     if assigned:
-        if (a.cmd not in {"claim", "context", "read-unit", "write-unit", "patch-unit", "check", "submit", "release"}
+        if (a.cmd not in {"claim", "context", "read-unit", "read-evidence", "write-unit", "patch-unit", "check", "submit", "release"}
                 or getattr(a, "symbol", None) != assigned
                 or getattr(a, "agent", os.environ["FZGX_AGENT_ID"]) != os.environ["FZGX_AGENT_ID"]):
             _print({"ok": False, "error": "tool call is outside this worker's assigned function and identity"}, a.json)

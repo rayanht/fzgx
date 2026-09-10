@@ -116,9 +116,11 @@ def _base_object(project: Project, unit: str) -> Path:
 
 
 def _render_diff(left_rows: List[dict], right_rows: List[dict], max_lines: int,
-                 pool_rows: Optional[set] = None) -> List[str]:
+                 pool_rows: Optional[set] = None, addresses: bool = False) -> List[str]:
     """Side-by-side rendering: `target | ours`, with a marker on differing rows
     (`p` = literal-pool relocation the tooling retargets; not yours to fix)."""
+    if max_lines <= 0:
+        return []
     out: List[str] = []
     n = max(len(left_rows), len(right_rows))
     for i in range(n):
@@ -132,7 +134,13 @@ def _render_diff(left_rows: List[dict], right_rows: List[dict], max_lines: int,
         if pool_rows and i in pool_rows:
             mark = "p"
         if kind != "DIFF_NONE" or len(out) < 4:
-            out.append(f"{mark} {i * 4:04X}  {lf:<34} | {rf}")
+            where = f'{i * 4:04X}'
+            if addresses:
+                def addr(row):
+                    value = row.get('instruction', {}).get('address')
+                    return f'{int(value):08X}' if value is not None else '--------'
+                where += f' T:{addr(l)} C:{addr(r)}'
+            out.append(f"{mark} {where}  {lf:<34} | {rf}")
     if len(out) > max_lines:
         head = out[: max_lines - 1]
         head.append(f"... {len(out) - (max_lines - 1)} more differing rows")
@@ -298,6 +306,7 @@ def _diff(project: Project, module: str, symbol: str, unit: str, max_diff_lines:
             abs_rows = _abs_rows(right, lrows, rrows)
             abs_rows |= _equivalent_reloc_rows(project, module, base, left, right, lrows, rrows)
             res.diff = _render_diff(lrows, rrows, max_diff_lines, pool_rows | abs_rows)
+            res._accepted_rows = pool_rows | abs_rows
             # what is left once the pool rows are taken out: what the agent can still act on
             real = sum(1 for i, (l, r) in enumerate(zip(lrows, rrows))
                        if (l.get("diff_kind") or "DIFF_NONE") != "DIFF_NONE" and i not in pool_rows and i not in abs_rows)
@@ -321,8 +330,8 @@ def _diff(project: Project, module: str, symbol: str, unit: str, max_diff_lines:
 def _equivalent_reloc_rows(project, module, obj, left, right, lrows, rrows):
     """A split data label and an external base plus addend resolve to the same address."""
     undefined = {s['name'] for s in poolfix.Elf(obj.read_bytes()).symbols() if s['shndx'] == 0}
-    addresses = {s.name: s.addr for s in project.symbols(module).values()}
-    addresses.update({f'{s.name}_{s.addr:08X}': s.addr for s in project.symbols(module).values()})
+    addresses = {s.name: s for s in project.symbols(module).values()}
+    addresses.update({f'{s.name}_{s.addr:08X}': s for s in project.symbols(module).values()})
     rows = set()
     for i, (l, r) in enumerate(zip(lrows, rrows)):
         li, ri = l.get('instruction', {}), r.get('instruction', {})
@@ -335,7 +344,9 @@ def _equivalent_reloc_rows(project, module, obj, left, right, lrows, rrows):
         rname = right['symbols'][rr['target_symbol']]['name']
         if rname not in undefined or lname not in addresses or rname not in addresses:
             continue
-        if addresses[lname] + int(lr.get('addend') or 0) == addresses[rname] + int(rr.get('addend') or 0):
+        lsym, rsym = addresses[lname], addresses[rname]
+        if (lsym.section == rsym.section and
+                lsym.addr + int(lr.get('addend') or 0) == rsym.addr + int(rr.get('addend') or 0)):
             rows.add(i)
     return rows
 

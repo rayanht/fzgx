@@ -28,7 +28,7 @@ from fzgx import api, reuse, trivial
 from fzgx.ledger import Ledger
 from fzgx.project import ROOT, STATE_DIR, Project
 
-MATCHER_TOOLS = ["Read", "mcp__fzgx__write_unit", "mcp__fzgx__patch_unit", "mcp__fzgx__check", "mcp__fzgx__release"]
+MATCHER_TOOLS = ["Read", "mcp__fzgx__write_unit", "mcp__fzgx__patch_unit", "mcp__fzgx__check", "mcp__fzgx__read_evidence", "mcp__fzgx__release"]
 # The user's defaults are Fable 5.1 (claude) and GPT-6 Astra (codex); matchers must never run on those.
 EXPECTED_MODEL = {"claude": "claude-haiku-4-5", "codex": "gpt-5.6-luna"}
 CLAUDE_MODELS = {"haiku": "claude-haiku-4-5", "sonnet": "claude-sonnet-5", "opus": "claude-opus-5"}

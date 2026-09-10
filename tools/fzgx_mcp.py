@@ -81,6 +81,12 @@ async def read_unit(symbol: str) -> dict:
 
 
 @mcp.tool()
+async def read_evidence(symbol: str, section: str = 'diff', cursor: int = 0) -> str:
+    """Read cached diff or decoded retail data by line cursor, without compiling or spending a check."""
+    return await _run('read-evidence', symbol, '--section', section, '--cursor', str(cursor), as_json=False)
+
+
+@mcp.tool()
 async def write_unit(symbol: str, agent: str, source: str) -> dict:
     """Replace the whole source of the unit AGENT has claimed for SYMBOL, then compile and diff it against retail. Returns lint findings (A1/A2 hardcoded addresses, S1/S2 goto/volatile) and `check`: match % with a `target | ours` diff."""
     def go():

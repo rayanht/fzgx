@@ -1,0 +1,97 @@
+{
+  "diff": {
+    "symbol": "fn_1_B277C",
+    "lines": 118,
+    "pages": 2,
+    "seconds": 0.0016,
+    "ledger_unchanged": true,
+    "stale_source_rejected": true,
+    "failed_check_invalidates": true
+  },
+  "switch": {
+    "jumptable_1_data_3CAB4": 39
+  },
+  "switch_context_untruncated": true,
+  "vectors": {
+    "fn_1_10E3B4": {
+      "before_unknown_instructions": 182,
+      "after_unknown_instructions": 0,
+      "source_sha256": "0d24997df5e9740c08f9942ae58386c77754d571d958183ff98b04a9fe2c71a9",
+      "mw": "GC/1.3.2",
+      "size": 7252,
+      "percent": 57.75345,
+      "differing_rows": 1784,
+      "paired_ops": {
+        "target": {
+          "ps_add": 1,
+          "ps_madds0": 29,
+          "ps_muls0": 4,
+          "ps_sub": 22
+        },
+        "candidate": {
+          "ps_add": 1,
+          "ps_madd": 29,
+          "ps_merge00": 33,
+          "ps_mul": 4,
+          "ps_sub": 22
+        }
+      }
+    },
+    "fn_1_120804": {
+      "before_unknown_instructions": 138,
+      "after_unknown_instructions": 0,
+      "source_sha256": "3a38a4c86296400677121f4266f4d5327b5a64ff6fbf0536a3b885950cc113d5",
+      "mw": "GC/1.3.2",
+      "size": 6980,
+      "percent": 50.910603,
+      "differing_rows": 1822,
+      "paired_ops": {
+        "target": {
+          "ps_add": 1,
+          "ps_madds0": 19,
+          "ps_muls0": 5,
+          "ps_sub": 15
+        },
+        "candidate": {
+          "ps_add": 1,
+          "ps_madd": 19,
+          "ps_merge00": 24,
+          "ps_mul": 5,
+          "ps_sub": 15
+        }
+      }
+    },
+    "fn_1_123050": {
+      "before_unknown_instructions": 111,
+      "after_unknown_instructions": 0,
+      "source_sha256": "ec283a0edb2025856d023cbd148c3dd721a6ba314054d5f82de69dde6cd09b2c",
+      "mw": "GC/1.3.2",
+      "size": 5280,
+      "percent": 59.71818,
+      "differing_rows": 1273,
+      "paired_ops": {
+        "target": {
+          "ps_madds0": 19,
+          "ps_muls0": 3,
+          "ps_sub": 14
+        },
+        "candidate": {
+          "ps_madd": 19,
+          "ps_merge00": 22,
+          "ps_mul": 3,
+          "ps_sub": 14
+        }
+      }
+    }
+  },
+  "pool": {
+    "symbol": "fn_3_1D338",
+    "recovered_constants": 39
+  },
+  "repairs": {
+    "functions": 17,
+    "candidates": 6475,
+    "matches": 0,
+    "seconds": 55.2
+  }
+}

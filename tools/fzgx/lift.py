@@ -18,7 +18,8 @@ from .project import ROOT, Project
 WIDTH = {"lwz": 4, "lhz": 2, "lha": 2, "lbz": 1, "lfs": 4, "lfd": 8, "stw": 4, "sth": 2, "stb": 1, "stfs": 4, "stfd": 8}
 LOAD_T = {"lwz": "u32", "lhz": "u16", "lha": "s16", "lbz": "u8", "lfs": "f32", "lfd": "f64",
           "lwzu": "u32", "lhzu": "u16", "lbzu": "u8", "lfsu": "f32", "lfdu": "f64"}
-STORE_T = {"stw": "u32", "sth": "u16", "stb": "u8", "stfs": "f32", "stfd": "f64"}
+STORE_T = {"stw": "u32", "sth": "u16", "stb": "u8", "stfs": "f32", "stfd": "f64", "psq_st": "__vec2x32float__"}
+WIDTH['psq_st'] = 8
 LABELS: List[Dict[str, int]] = [{}]
 ARITY_HINT: List[Dict[str, int]] = [{}]        # callee -> widest integer-argument count (second run)
 ARITY_SEEN: List[Dict[str, List[int]]] = [{}]  # filled by a run: what each site passed
@@ -292,6 +293,8 @@ def lift_variants(p: Project, module: str, name: str) -> List[str]:
 
 def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site_temps: bool = True, partial: bool = False,
           total: bool = False) -> Optional[str]:
+    from .paired import Paired, VECTOR
+    paired = Paired(name)
     syms = p.symbols(module)
     regs: Dict[str, str] = {}          # register -> C expression
     rtype: Dict[str, str] = {}         # register -> C type of the expression
@@ -315,8 +318,10 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
             cur = len(ins)
         return r in def_idx and def_idx[r] < cur
 
-    def use(r: str) -> str:
+    def use(r: str, vector: bool = False) -> str:
         if r in regs:
+            if rtype.get(r) == VECTOR and not vector:
+                return paired.lane(regs[r])
             return regs[r]
         if re.fullmatch(r"r([3-9]|10)", r) or re.fullmatch(r"f[1-8]", r):
             # parameters are contiguous from r3 (or f1): reading r5 implies r3 and r4 exist
@@ -703,6 +708,7 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
         inline_copies.setdefault(-1, ())
     magic_div: Dict[str, Tuple[str, int]] = {}  # register holding mulhwu(x, magic) -> (x, magic)
     pending_div: Dict[int, Tuple[str, str]] = {}  # index of the idiom's last instruction -> (register, quotient expression)
+    signed_shift_values = {}
     int_float_loads = integer_float_pairs(ins, LABELS[0])
     int_float_stores = {store for pair in int_float_loads.values() for store in pair}
     int_float_values = {}
@@ -833,13 +839,15 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
         member = signature_index.member(typ, offset, access)
         if member:
             field, field_type = member
-            return f"({use(base)})->{field}", field_type
+            return f"(({typ})({use(base)}))->{field}", field_type
         if signature_index.category(typ) == "pointer" and typ != "void *":
             return f"*({access} *)((u8 *){use(base)} + {offset})", access
         return None
     void_calls: set = set()
     temps_written: List[Tuple[str, int]] = []
     carried: Dict[str, str] = {}     # register -> local name while inside a loop region
+    carried_vectors = {}           # one FPR may hold unrelated scalar and paired lifetimes
+    carried_words = set()          # GPR lifetimes that mix addresses and integer values
     loop_regions: List[Tuple[int, int, int]] = []  # (body_start, test_start, backbranch_index)
     for j_, (mn_, a_) in enumerate(ins):
         if mn_ == "b" and a_ and a_[-1].startswith(".L_"):
@@ -1208,7 +1216,8 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
             init = regs.get(rw)
             if init is None and re.fullmatch(r"r([3-9]|10)|f[1-8]", rw) and rw not in params and rw not in def_idx:
                 init = use(rw)  # a parameter not seen before: its value is the argument
-            temps.append(f"{rtype.get(rw, 'u32')} {tn};")
+            typ = rtype.get(rw, 'u32')
+            temps.append(f"{typ} {tn};")
             if init is not None:
                 stmts.append(f"{tn} = {init};")
             regs[rw] = tn; carried[rw] = tn
@@ -1241,7 +1250,8 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
             init = regs.get(r_)
             if init is None:
                 init = use(r_) if re.fullmatch(r"r([3-9]|10)|f[1-8]", r_) else "0"
-            temps.append(f"{rtype.get(r_, 'u32')} {tn};")
+            typ = rtype.get(r_, 'u32')
+            temps.append(f"{typ} {tn};")
             stmts.append(f"{tn} = {init};")
             regs[r_] = tn; carried[r_] = tn
             carried_until[r_] = max(carried_until.get(r_, 0), k_ + 1)
@@ -1278,6 +1288,25 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                     e_ = regs.get(r_)
                     if e_.startswith(("__I2D__", "__XORIS__", "__FCTIWZ__")):
                         continue  # Publish the converted value, not the compiler's scratch encoding.
+                    typ = rtype.get(r_, 'u32')
+                    declared = next((d.rsplit(' ', 1)[0] for d in temps if d.endswith(' ' + tn + ';')), typ)
+                    if (r_.startswith('r') and signature_index.category(declared) == 'pointer'
+                            and signature_index.category(typ) == 'integer'):
+                        temps[temps.index(f'{declared} {tn};')] = f'u32 {tn};'
+                        carried_words.add(tn)
+                    if r_.startswith('f'):
+                        if (typ == VECTOR) != (declared == VECTOR):
+                            # Never assign an eight-byte vector into the scalar
+                            # local chosen before this register was repurposed.
+                            origin = carried_vectors.get(tn, {})
+                            origin.setdefault(declared == VECTOR, tn)
+                            new = origin.get(typ == VECTOR)
+                            if new is None:
+                                new = f'v{len(temps)}'
+                                temps.append(f'{typ} {new};')
+                                origin[typ == VECTOR] = new
+                            carried_vectors[tn] = carried_vectors[new] = origin
+                            carried[r_] = tn = new
                     if e_.startswith(("((u8 *)", "(u8 *)", "&", "(struct ")):
                         e_ = f"(u32){e_}"  # a register reused for an address: the local is an integer
                     # another register still holds an expression over the old value: that value
@@ -1638,9 +1667,58 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                 frame = True
                 continue
             if mn == "addi" and len(a) == 3 and a[1] == "r1":
+                next_use = next(((op, args) for op, args in ins[i + 1:]
+                                 if op.startswith('b') or any('r11' in arg for arg in args)), None)
+                if a[0] == 'r11' and next_use and next_use[0] in ('bl', 'b') and next_use[1][0].startswith(('_savegpr_', '_restgpr_')):
+                    frame = True
+                    continue
                 off_ = _imm(a[2])
                 local_at(off_, 0, "u8"); slocals[off_]["addr"] = True
                 regs[a[0]] = f"&loc_{off_:X}"; rtype[a[0]] = "void *"; frame = True
+                continue
+            if mn in ('psq_l', 'psq_st'):
+                if re.fullmatch(r'f(1[4-9]|2\d|3[01])', a[0]) and slot_ in saved_slots:
+                    frame = True
+                    continue
+                if len(a) != 4 or a[2] not in ('0', '1') or a[3] != 'qr0':
+                    raise Give('quantized paired access requires recovered GQR format')
+                mem = MEM_RE.fullmatch(a[1])
+                if not mem:
+                    raise Give('paired address is not recovered')
+                width = 4 if a[2] == '1' else 8
+                typ = 'f32' if width == 4 else VECTOR
+                if mem[2] == 'r1':
+                    access = local_at(_imm(mem[1]), width, typ)
+                    frame = True
+                elif sym_of(mem[1]):
+                    symbol = sym_of(mem[1])
+                    declare(symbol, 'u8', far_ref=True)
+                    access = f'*({typ} *)((u8 *)&{symbol} + {sym_off(mem[1])})'
+                else:
+                    access = f'*({typ} *)((u8 *){use(mem[2])} + {_imm(mem[1])})'
+                if mn == 'psq_l':
+                    value = paired.pair(access, '1.0f') if width == 4 else access
+                    temp = f'v{len(temps)}'
+                    temps.append(f'{VECTOR} {temp};')
+                    stmts.append(f'{temp} = {value};')
+                    regs[a[0]], rtype[a[0]] = temp, VECTOR
+                else:
+                    if width == 8 and rtype.get(a[0]) != VECTOR:
+                        raise Give('paired store needs both recovered lanes')
+                    stmts.append(f'{access} = {use(a[0], vector=width == 8)};')
+                continue
+            if mn.startswith('ps_'):
+                def vector(reg):
+                    if rtype.get(reg) != VECTOR:
+                        raise Give(f'{reg}: paired upper lane is not recovered')
+                    return use(reg, vector=True)
+                value = paired.expression(mn, a, vector, use)
+                if value is None:
+                    raise Give(f'paired operation {mn} is not lowered')
+                temp = f'v{len(temps)}'
+                temps.append(f'{VECTOR} {temp};')
+                stmts.append(f'{temp} = {value};')
+                regs[a[0]], rtype[a[0]] = temp, VECTOR
                 continue
             if i in int_float_stores:
                 int_float_values[i] = use(a[0])
@@ -1925,7 +2003,9 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                             regs[d] = f"({m2.group(1)} / {dv})"; rtype[d] = "u32"
                         else:
                             regs[d] = f"((u32){use(a[1])} >> {_imm(a[2])})"; rtype[d] = "u32"
-                elif mn == "srawi": regs[d] = f"((s32){use(a[1])} >> {_imm(a[2])})"; rtype[d] = "s32"
+                elif mn == "srawi":
+                    signed_shift_values[i] = use(a[1])
+                    regs[d] = f"((s32){use(a[1])} >> {_imm(a[2])})"; rtype[d] = "s32"
                 elif mn == "add":
                     x, y = use(a[1]), use(a[2])
                     # address + integer: byte arithmetic, or the pointee size scales the sum
@@ -1999,9 +2079,20 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                 rot = f"({use(a[1])} << {sh})" if sh else use(a[1])
                 regs[a[0]] = f"(({use(a[0])} & ~0x{mask:X}) | ({rot} & 0x{mask:X}))"; rtype[a[0]] = "u32"; continue
             if mn == "addze":
-                m_ = re.fullmatch(r"\(\(s32\)(.+) >> (\d+)\)", regs.get(a[1], ""))
-                if m_ and i > 0 and ins[i - 1][0] == "srawi" and ins[i - 1][1][0] == a[1]:
-                    regs[a[0]] = f"((s32){m_.group(1)} / {1 << int(m_.group(2))})"; rtype[a[0]] = "s32"; continue
+                carry_ops = {'addc', 'adde', 'addme', 'addze', 'addic', 'subfc', 'subfe', 'subfme',
+                             'subfze', 'subfic', 'sraw', 'srawi'}
+                producer = next((j for j in range(i - 1, -1, -1)
+                                 if ins[j][0].rstrip('.') in carry_ops or ins[j][0].startswith('b')), None)
+                if producer is not None and ins[producer][0] == 'srawi' and ins[producer][1][0] == a[1]:
+                    source = ins[producer][1][1]
+                    overwritten = any(args and args[0] in (a[1], source) and op not in STORE_T
+                                      and not op.startswith(('st', 'cmp', 'mt'))
+                                      for op, args in ins[producer + 1:i])
+                    if not overwritten and producer in signed_shift_values:
+                        shift = _imm(ins[producer][1][2])
+                        regs[a[0]] = f'((s32){signed_shift_values[producer]} / {1 << shift})'
+                        rtype[a[0]] = 's32'
+                        continue
                 raise Give("addze")
             if mn == "rotlwi":
                 n_ = _imm(a[2]); x_ = use(a[1])
@@ -2090,7 +2181,7 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                 if m_ and op == "-":
                     cast = "(s32)" if m_.group(2) == "signed" else "(u32)"
                     regs[a[0]] = f"({t}){cast}{m_.group(1)}"; rtype[a[0]] = t
-                    written_since_call.discard(a[2]); regs.pop(a[2], None)  # the constant, not an argument
+                    written_since_call.discard(a[2])  # not an argument; later conversions may reuse the bias
                     continue
                 regs[a[0]] = f"({use(a[1])} {op} {use(a[2])})"; rtype[a[0]] = t; continue
             if mn in ("fmadds", "fmadd"):
@@ -2098,7 +2189,8 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
             if mn in ("fmsubs", "fmsub"):
                 regs[a[0]] = f"(({use(a[1])} * {use(a[2])}) - {use(a[3])})"; rtype[a[0]] = "f32" if mn.endswith("s") else "f64"; continue
             if mn == "fmr":
-                regs[a[0]] = use(a[1]); rtype[a[0]] = rtype.get(a[1], "f32"); continue
+                # Scalar fmr does not establish the paired upper lane.
+                regs[a[0]] = use(a[1]); rtype[a[0]] = "f32" if rtype.get(a[1]) == VECTOR else rtype.get(a[1], "f32"); continue
             if mn == "fneg":
                 regs[a[0]] = f"(-{use(a[1])})"; rtype[a[0]] = rtype.get(a[1], "f32"); continue
             if mn == "frsp":
@@ -2106,6 +2198,10 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
             if mn == "andc":
                 regs[a[0]] = f"({use(a[1])} & ~{use(a[2])})"; rtype[a[0]] = "u32"; continue
             if mn == "mulhwu":
+                if total:
+                    regs[a[0]] = f'(u32)(((u64)(u32){use(a[1])} * (u64)(u32){use(a[2])}) >> 32)'
+                    rtype[a[0]] = 'u32'
+                    continue
                 # unsigned division by a constant: q = mulhu(x, m) then the fix-up sequence; the
                 # divisor is recovered from the magic number (Hacker's Delight magicu). The whole
                 # idiom is matched here by looking ahead, so its steps never leak into expressions.
@@ -2438,6 +2534,10 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
             ent = slocals[off_]
             nxt = offs[i_ + 1] if i_ + 1 < len(offs) else top
             size = max(nxt - off_, ent["w"] or 1)
+            if ent['w'] and not ent['addr'] and not ent.get('wrapped') and not ent.get('array'):
+                # Padding before the next stack slot is not part of a scalar
+                # whose address never escapes.
+                size = ent['w']
             w = ent["w"] or 1
             if ent.get("ctype"):
                 decls.append((off_, f"{ent['ctype']} loc_{off_:X};", "struct")); continue
@@ -2480,7 +2580,7 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
         fixed_temps = []
         for tdecl in temps:
             m_ = re.fullmatch(r"(\S+) (v\d+);", tdecl)
-            if m_:
+            if m_ and m_[2] not in carried_words:
                 init_line = next((b for b in body if re.match(rf"{m_.group(2)} = ", b)), None)
                 if init_line:
                     rhs = init_line[len(m_.group(2)) + 3:].rstrip(";")
@@ -2617,7 +2717,13 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
             return value_types[expr]
         cast = re.match(r'^\(([\w *]+)\)', expr)
         if cast:
-            return cast[1]
+            base = re.sub(r'\b(const|volatile|restrict)\b|\*', '', cast[1]).strip()
+            base = ' '.join(base.split())
+            if (base in {'void', 'char', 'short', 'int', 'long', 'unsigned', 'signed', 'float', 'double',
+                         's8', 'u8', 's16', 'u16', 's32', 'u32', 's64', 'u64', 'f32', 'f64', VECTOR}
+                    or base in signature_index.types or re.fullmatch(r'(struct|union|enum) \w+', base)
+                    or re.fullmatch(r'(unsigned|signed) (char|short|int|long)', base)):
+                return cast[1]
         if expr.startswith('&'):
             return 'void *'
         return None
@@ -2719,6 +2825,7 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
     if structs:
         text += structs + [""]
     text += sorted(externs.values())
+    text += paired.declarations()
     # a function retail placed in .init (boot, cache and debug code) must be sectioned the same
     # way, or objdiff pairs nothing and the link puts it in .text
     sect = p.symbols(module).get(name)

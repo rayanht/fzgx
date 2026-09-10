@@ -444,36 +444,12 @@ def context(p, module, name, draft):
 
 def assembly(p, fn):
     """Supply switch destinations from retail data, retaining their function-relative labels."""
-    instructions = '\n'.join(fn.asm)
+    from .evidence import jump_tables
     tables, labels = [], {}
-    if re.search(r'\bbctr\b', instructions):
-        cache = p.__dict__.setdefault('_machine_data', {})
-        module = fn.symbol.module
-        if module not in cache:
-            objects = {}
-            for path in sorted(p._asm_files(module), key=lambda path: path.stat().st_mtime_ns):
-                for match in re.finditer(r'(?ms)^\.obj\s+(\S+),[^\n]*\n(.*?)^\.endobj', path.read_text()):
-                    objects[match[1]] = match[2]
-            cache[module] = objects
-        for name in fn.refs:
-            data = cache[module].get(name, '')
-            values = re.findall(r'^\s*\.4byte\s+([^\n]+)', data, re.M)
-            if not values:
-                continue
-            targets = []
-            for value in values:
-                match = re.fullmatch(r'([\w.$]+)(?:\+(0x[0-9a-fA-F]+|\d+))?', value.strip())
-                sym = (p.symbols(module).get(match[1]) or p.find_symbol(match[1])) if match else None
-                if not sym or sym.module != module or sym.section != fn.symbol.section:
-                    break
-                address = sym.addr + (int(match[2], 0) if match[2] else 0)
-                if not fn.symbol.addr <= address < fn.symbol.end or address % 4:
-                    break
-                targets.append(address)
-            else:
-                for address in targets:
-                    labels[address] = f'.L_{address:08X}'
-                tables.append(name + ':\n' + '\n'.join(f'.4byte {labels[a]}' for a in targets))
+    for name, targets in jump_tables(p, fn).items():
+        for address in targets:
+            labels[address] = f'.L_{address:08X}'
+        tables.append(name + ':\n' + '\n'.join(f'.4byte {labels[a]}' for a in targets))
     lines = ['.section .text', '.global ' + fn.symbol.name, fn.symbol.name + ':']
     emitted = {line[:-1] for line in fn.asm if line.endswith(':')}
     for index, line in enumerate(fn.asm):

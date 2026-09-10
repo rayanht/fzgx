@@ -30,13 +30,27 @@ Assignment and preflight use one `claim --check` CLI call in one tool slot.
 A full-width claim queue therefore cannot put every initial check behind all
 the remaining claims before any model starts.
 
-The model has four dynamic tools: `write_unit`, `patch_unit`, `check`, and
-`release`. Their schemas omit symbol, agent identity, paths, harness, and model.
+The model has five dynamic tools: `write_unit`, `patch_unit`, `check`,
+`read_evidence`, and `release`. Their schemas omit symbol, agent identity,
+paths, harness, and model.
 The host supplies these from the thread's assignment, rejects extra arguments,
 and serializes calls within each function. The bound CLI independently checks
 ownership. There is no shell, file-reading, claim, or submit tool for the model.
 An invalid patch anchor returns the current C without changing it or consuming a
 compiler check, so the next patch can use an exact span of the installed source.
+
+`read_evidence(section="diff", cursor="0")` reads the selected compile's cached
+diff in pages of 80 lines. The response supplies the next cursor and separate
+target/candidate object addresses; the old first column is an aligned row index
+times four, not a retail code address. `section="data"` supplies relocated switch
+entries and exact floating constants, including loads through a shared TU base.
+Reads never compile, increment checks/stale counts, or change the selected compiler.
+Cache identity includes the source hash, attempt and compiler options. Failed
+compiles invalidate successful evidence; compiler probes cache the selected result.
+Existing app-server threads keep their original schemas and may use
+`check(versions="diff:80")` or `check(versions="data:0")` for the same read-only
+operations. Check responses advertise this route; restarting a running batch is
+unnecessary. New assignments include decoded retail data in mandatory context.
 
 The API submits a full object match automatically and saves/releases attempts
 when check or stale limits are reached. The CLI writes its terminal record only
@@ -121,8 +135,8 @@ and unrelated tools are disabled in the runner. Shell snapshots were launching
 login shells despite matchers having no shell tools.
 Disable the request-user-input tool through its worker-local setting and clear
 `apply_patch_tool_type` in the DeepSeek catalog as well as the freeform-patch
-feature. A local HTTP capture of Codex 0.153.4 confirmed exactly the four dynamic
-matcher tools and `reasoning.effort=low`; disabling shell alone left a built-in
+feature. The original local HTTP capture of Codex 0.153.4 confirmed exactly the
+then-four dynamic matcher tools and `reasoning.effort=low`; disabling shell alone left a built-in
 patch tool available.
 
 Assignments, prompts, completed reasoning/messages, tool calls/results, usage,

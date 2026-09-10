@@ -357,6 +357,12 @@ def _finish_check(p: Project, symbol: str, result: dict, checked: Optional[oracl
 def check(p: Project, symbol: str, max_diff_lines: int = 80, versions: Optional[str] = None) -> Dict[str, Any]:
     """Compile and diff the work copy if one exists, else the canonical unit."""
     key = _key(p, symbol)
+    from . import checkview
+    # Already-running app-server threads retain their original tool schema.
+    # Their existing check argument can address the new read-only surface too.
+    if versions and re.fullmatch(r'(diff|data):\d+', versions):
+        section, cursor = versions.split(':')
+        return read_evidence(p, symbol, section, int(cursor))
     l = Ledger()
     row = l.get(key)
     if row and row["status"] == "claimed":
@@ -397,6 +403,9 @@ def check(p: Project, symbol: str, max_diff_lines: int = 80, versions: Optional[
             if attempt:
                 p.work_path(key).with_suffix('.compiler.json').write_text(
                     json.dumps(dict(attempt_id=attempt['id'], **selected)) + '\n')
+            checkview.save(p, key, best[1])
+        else:
+            p.work_path(key).with_suffix('.diff.json').unlink(missing_ok=True)
         response = {"ok": True, "symbol": symbol, "versions": out,
                 "selected": selected, "selected_check": best[1].to_json() if best else None,
                 "stop": _budget_stop(l.current_attempt(key)),
@@ -405,6 +414,7 @@ def check(p: Project, symbol: str, max_diff_lines: int = 80, versions: Optional[
         return _finish_check(p, symbol, response, best[1] if best else None)
     res = oracle.check(p, symbol, max_diff_lines, source=src,
                        mw_version=options.get('mw'), extra_cflags=options.get('flags'))
+    checkview.save(p, key, res)
     out = res.to_json()
     stats = _record_check(p, key, src, res)
     if src is not None:
@@ -416,6 +426,13 @@ def check(p: Project, symbol: str, max_diff_lines: int = 80, versions: Optional[
         if stop:
             out['stop'] = stop
     return _finish_check(p, symbol, out, res)
+
+
+def read_evidence(p: Project, symbol: str, section: str = 'diff', cursor: int = 0) -> dict:
+    from . import checkview
+    if p.resolve(symbol) is None:
+        return dict(ok=False, error='unknown or ambiguous symbol (use module:name)')
+    return checkview.read(p, _key(p, symbol), section, cursor)
 
 
 def _record_check(p: Project, key: str, src: Optional[Path], res: oracle.CheckResult) -> dict:
@@ -543,6 +560,7 @@ def _install(p: Project, unit_src: str, text: str, pool: bool = False) -> None:
 def _discard_work(p: Project, key: str) -> None:
     p.work_path(key).unlink(missing_ok=True)
     p.work_path(key).with_suffix('.compiler.json').unlink(missing_ok=True)
+    p.work_path(key).with_suffix('.diff.json').unlink(missing_ok=True)
     best = STATE_DIR / 'attempts' / f'{key}.best.c'
     best.unlink(missing_ok=True)
     best.with_suffix('.json').unlink(missing_ok=True)

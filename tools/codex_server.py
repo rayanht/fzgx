@@ -33,6 +33,8 @@ MATCHER_TOOLS = [
          old='Exact text occurring once', new='Replacement text'),
     tool('check', 'Probe compiler versions and retain the best compiler for subsequent edits.',
          versions='all, a comma-separated compiler list, or empty to check the current compiler'),
+    tool('read_evidence', 'Read any page of the cached object diff or decoded retail data. No compilation or check charged.',
+         section='diff or data', cursor='Line cursor from the previous result, or 0 for the first page'),
     tool('release', 'Stop working on this function, saving your best candidate.', reason='Precise remaining technical obstacle'),
 ]
 
@@ -301,6 +303,8 @@ class Matcher:
                             path.unlink(missing_ok=True)
                 elif name == 'check':
                     result = await self.cli('check', self.symbol, *(['--versions', args['versions']] if args['versions'] else []))
+                elif name == 'read_evidence':
+                    result = await self.cli('read-evidence', self.symbol, '--section', args['section'], '--cursor', args['cursor'])
                 else:
                     result = await self.cli('release', self.symbol, '--agent', self.agent, '--reason', args['reason'])
                 self.log.write(json.dumps(dict(timestamp=utcnow(), method='fzgx/tool/result',
@@ -310,7 +314,7 @@ class Matcher:
                     # Codex cannot issue a model request just to summarize it.
                     await self.interrupt()
                     return
-                text = api.format_check(result) if name == 'check' else json.dumps(result)
+                text = api.format_check(result) if name in ('check', 'read_evidence') else json.dumps(result)
                 response = dict(success=result.get('ok', True), contentItems=[dict(type='inputText', text=text)])
             except Exception as error:
                 response = dict(success=False, contentItems=[dict(type='inputText', text=str(error))])

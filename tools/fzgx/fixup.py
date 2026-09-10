@@ -222,7 +222,40 @@ def float_literals(p: Project, symbol: str, body: str, base: oracle.CheckResult)
         expected = raw[offset:offset + width]
         if current != expected:
             floats.add((width, current, expected))
-    out = []
+    # A whole-TU pool often has only one lis/addi relocation: its later loads
+    # carry ordinary offsets. Follow both objects' bases rather than expecting
+    # a relocation on every lfs/lfd. Conflicting alignments are not evidence.
+    from .evidence import memory_loads, retail_bytes
+    inferred, locations = {}, {}
+    left_loads, right_loads = (memory_loads(rows) for rows in base._rows)
+    for i, target in left_loads.items():
+        private = right_loads.get(i)
+        if not private or target['op'] not in ('lfs', 'lfd') or target['op'] != private['op']:
+            continue
+        anchor = own.get(private['symbol'])
+        if not anchor or not private['symbol'].startswith(('@', '...rodata')):
+            continue
+        if not 0 < anchor['shndx'] < len(elf.sections):
+            continue
+        section = elf.sections[anchor['shndx']]
+        offset, width = anchor['value'] + private['offset'], private['width']
+        if offset < 0 or offset + width > section['size']:
+            continue
+        if any(r['type'] == 4 and r['info'] == anchor['shndx'] and
+               any(offset <= struct.unpack_from('>I', elf.data, pos)[0] < offset + width
+                   for pos in range(r['offset'], r['offset'] + r['size'], 12)) for r in elf.sections):
+            continue
+        current = bytes(elf.data[section['offset'] + offset:section['offset'] + offset + width])
+        expected = retail_bytes(p, sym.module, target['symbol'], target['offset'], width)
+        if expected is not None:
+            inferred.setdefault((width, current), set()).add(expected)
+            locations.setdefault((width, current), set()).add((target['symbol'], target['offset']))
+    floats.update((width, current, next(iter(expected))) for (width, current), expected in inferred.items()
+                  if len(expected) == 1 and current != next(iter(expected)))
+    from .sdkimport import masked
+    code = masked(body)
+    out, all_edits, bound_edits = [], {}, {}
+    ambiguous = set()
     for width, current, expected in sorted(floats):
         fmt = '>f' if width == 4 else '>d'
         value = struct.unpack(fmt, expected)[0]
@@ -230,20 +263,80 @@ def float_literals(p: Project, symbol: str, body: str, base: oracle.CheckResult)
             continue
         replacement = repr(value) + ('f' if width == 4 else '')
         edits = []
-        for token in re.finditer(r'(?<![\w.])-?\d+\.\d*(?:[eE][+-]?\d+)?[fF]?(?![\w.])', body[span[0]:span[1]]):
+        for token in re.finditer(r'(?<![\w.])-?\d+\.\d*(?:[eE][+-]?\d+)?[fF]?(?![\w.])', code):
+            if (width == 4) != token[0].lower().endswith('f'):
+                continue
             try:
                 actual = struct.pack(fmt, float(token[0].rstrip('fF')))
             except (OverflowError, ValueError):
                 continue
             if actual == current:
-                start, end = span[0] + token.start(), span[0] + token.end()
+                start, end = token.span()
                 edits.append((start, end))
                 out.append((f'retail float {token[0]} -> {replacement}', body[:start] + replacement + body[end:]))
+                if (start, end) in all_edits and all_edits[start, end] != replacement:
+                    ambiguous.add((start, end))
+                all_edits[start, end] = replacement
+                refs = locations.get((width, current), set())
+                if len(refs) == 1:
+                    anchor, offset = next(iter(refs))
+                    if offset >= 0 and not re.search(r'\b' + re.escape(anchor) + r'\b', code):
+                        bound_edits[start, end] = (anchor, offset, width)
         if len(edits) > 1:
             combined = body
             for start, end in reversed(edits):
                 combined = combined[:start] + replacement + combined[end:]
             out.append((f'all references to retail float {replacement}', combined))
+    combined = body
+    for (start, end), replacement in sorted(all_edits.items(), reverse=True):
+        if (start, end) not in ambiguous:
+            combined = combined[:start] + replacement + combined[end:]
+    if combined != body:
+        out.insert(0, ('recover shared-pool literal values', combined))
+    # Express the shared layout in owned C declarations. Code bytes, including
+    # load offsets, still have to pass the oracle; this does not patch code or
+    # mark unequal pools equivalent.
+    layouts = {}
+    bound = body
+    for (start, end), (anchor, offset, width) in sorted(bound_edits.items(), reverse=True):
+        if (start, end) in ambiguous:
+            continue
+        layouts.setdefault(anchor, {})[offset] = width
+        bound = bound[:start] + f'{anchor}.unk_{offset:X}' + bound[end:]
+    declarations = []
+    for anchor, offsets in sorted(layouts.items()):
+        cursor = 0
+        fields = []
+        for offset, width in sorted(offsets.items()):
+            if offset < cursor or offset % width:
+                fields = []
+                break
+            if offset > cursor:
+                fields.append(f'    u8 pad_{cursor:X}[0x{offset - cursor:X}];')
+            fields.append(f'    {"f32" if width == 4 else "f64"} unk_{offset:X};')
+            cursor = offset + width
+        if not fields:
+            declarations = []
+            break
+        declarations.append('extern const struct ' + sym.name + '_' + anchor + '_pool {\n'
+                            + '\n'.join(fields) + '\n} ' + anchor + ';\n')
+    if declarations:
+        # Place after includes so the repository's fixed-width types are in scope.
+        includes = list(re.finditer(r'^\s*#include[^\n]*\n', bound, re.M))
+        pos = includes[-1].end() if includes else 0
+        bound = bound[:pos] + '\n' + '\n'.join(declarations) + bound[pos:]
+        out.insert(0, ('bind recovered shared-pool fields', bound))
+        start = re.search(r'\b' + re.escape(sym.name) + r'\s*\([^;{]*\)\s*\{', bound)
+        if start:
+            pointers = []
+            for anchor in sorted(layouts):
+                typ = 'struct ' + sym.name + '_' + anchor + '_pool'
+                pointer = 'pool_' + anchor
+                pointers.append(f'\n    {typ} *{pointer} = ({typ} *)&{anchor};')
+                bound = bound.replace(anchor + '.unk_', pointer + '->unk_')
+            start = re.search(r'\b' + re.escape(sym.name) + r'\s*\([^;{]*\)\s*\{', bound)
+            bound = bound[:start.end()] + ''.join(pointers) + bound[start.end():]
+            out.insert(0, ('retain recovered shared-pool bases', bound))
     return out
 
 
@@ -330,6 +423,11 @@ def try_fix(p: Project, symbol: str, body: str, budget_s: float = 30.0, max_cand
     span = _function_span(body, sym.name)
     candidates: List[Tuple[str, str]] = []
     fam_marks: List[Tuple[int, str]] = []
+    # These candidates are derived from retail bytes. Large functions can
+    # exhaust the candidate budget on type permutations before reaching them.
+    fam_marks.append((len(candidates), 'literal'))
+    literals = float_literals(p, symbol, body, base)
+    candidates += literals[:3]
     fam_marks.append((len(candidates), "compiler"))
     candidates += optimizer_pragmas(body, sym.name)
     fam_marks.append((len(candidates), "type"))
@@ -385,7 +483,7 @@ def try_fix(p: Project, symbol: str, body: str, budget_s: float = 30.0, max_cand
                     candidates.append((f"{n}: {mine[n]} -> {alt}", body.replace(mine[n], alt, 1)))
     fam_marks.append((len(candidates), "sym"))
     candidates += string_literals(p, sym.module, body, base)
-    candidates += float_literals(p, symbol, body, base)
+    candidates += literals[3:]
     # wrong callee / wrong data symbol: the same instruction with a different relocation target.
     # The retail name is known; the body names ours verbatim, so the substitution is exact.
     subs: Dict[str, str] = {}
@@ -592,7 +690,8 @@ def try_fix(p: Project, symbol: str, body: str, budget_s: float = 30.0, max_cand
     def _addr(a):
         if a is None:
             return None
-        return int(a, 16) if isinstance(a, str) else int(a)
+        # objdiff serializes u64 addresses as decimal strings, not hex.
+        return int(a)
     fn_addr = next((_addr(taddr(l)) for l in lrows if taddr(l) is not None), None)
     def tidx(row):
         a = _addr(taddr(row))

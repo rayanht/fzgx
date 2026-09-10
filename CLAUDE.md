@@ -125,6 +125,11 @@ Rules that hold for everyone:
   occurrences together as well as individually. Keep the original C as a register
   search seed alongside a locally improved rewrite, within the same repair budget;
   a better intermediate word score can remove the exact declaration-order solution.
+  Shared-pool recovery follows symbolic bases through control-flow joins and reads
+  ordinary load offsets as well as direct relocations. It proposes exact literal
+  values and sparse external pool layouts, including uses in macros. No load
+  immediate or mismatching data is patched in the object. Objdiff JSON addresses
+  are decimal strings; parsing them as hex corrupts repair row accounting.
 - `fzgx trivial` matches single-`blr` and `li r3,N; blr` functions mechanically (419 landed on
   2026-09-08) and then lifts straight-line functions from the disassembly (`tools/fzgx/lift.py`:
   getters, setters, one-call wrappers, short call-free bodies; 102 landed the same day). Run it
@@ -165,6 +170,13 @@ Rules that hold for everyone:
   locals, and 64-bit call arguments. `ppc_lowering.py` carries XER_CA through arithmetic and
   recovers consumed condition-register bits. Paired-single data stores must never disappear
   as backend no-ops; only recognized FPR frame saves may be elided.
+  The default lifter uses MWCC's `__vec2x32float__` for paired arithmetic and
+  unquantized loads/stores. It keeps scalar and paired FPR lifetimes distinct;
+  unknown upper lanes and GQR formats remain explicit gaps. Native vector C can
+  emit indexed loads and merge/multiply pairs where retail uses displacement
+  loads and `ps_muls0`/`ps_madds0`; a compilable draft is not an object match.
+  Keep reused int-to-float bias registers alive and follow XER_CA across
+  intervening non-carry instructions in signed power-of-two division.
   Declaration normalization must parse lines without nested repetition over arbitrary C;
   the old regex stalled real drafts such as `fn_80005738` beyond repair time budgets.
   Read disassembly only from the active `build/GFZE01/config.json` split units. Orphaned

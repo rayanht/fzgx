@@ -177,6 +177,10 @@ def build_context(project: Project, ledger: Optional[Ledger], symbol: str,
     parts.append("\n## Target assembly (retail)\n```asm")
     parts.extend(fn.asm)
     parts.append("```")
+    from .evidence import data_context
+    data = data_context(project, fn)
+    if data:
+        parts.append('\n## Decoded retail data\n```text\n' + '\n'.join(data) + '\n```')
 
     direct_calls = list(dict.fromkeys(m[1] for line in fn.asm
                                      if (m := re.match(r'^[0-9A-Fa-f]+:\s*bl\s+(\w+)$', line))))
@@ -217,8 +221,8 @@ def build_context(project: Project, ledger: Optional[Ledger], symbol: str,
         parts.append("```")
         if pooled:
             parts.append("Constant pool: the target loads these from the module's shared literal pool. "
-                         "Declare them `extern const` as shown and use the symbol; writing the literal "
-                         "in C emits a private constant with a different relocation and never matches.")
+                         "Use the exact values or the declared symbols. The oracle accepts private literals "
+                         "only when their bytes and relocation bindings agree with retail.")
         if shown_from_header:
             inc = f"{project.module_src_prefix(module)}/{tu_stem}.h" if tu_hdr_text else f"{project.module_src_prefix(module)}/globals.h"
             parts.append(f"\nThese are declared in `include/{inc}` with recovered struct layouts; "
