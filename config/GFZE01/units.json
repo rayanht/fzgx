@@ -31442,6 +31442,17 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/enemy_ctrl/fn_1_C771C.c",
+    "symbols": [
+      "fn_1_C771C"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "tu": "rel/main_rel/enemy_ctrl.c"
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/enemy_ctrl/fn_1_CA218.c",
     "symbols": [
       "fn_1_CA218"

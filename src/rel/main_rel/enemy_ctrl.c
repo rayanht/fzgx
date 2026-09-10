@@ -157,6 +157,80 @@ void fn_1_C7224(void) {
 }
 /* fzgx:end fn_1_C7224 */
 
+/* fzgx:begin fn_1_C771C noprologue */
+#include "types.h"
+
+typedef struct EnemyCtrl {
+    u8 pad_000[0x118];
+    int field_118;
+    u8 pad_11c[0xd0];
+    u8 field_1ec;
+    u8 field_1ed;
+    u16 field_1ee;
+} EnemyCtrl;
+
+extern s16 camera_get_mode(void);
+extern EnemyCtrl *fn_1_8627C(int);
+extern u32 fn_1_58C4(void);
+extern void fn_1_52070(int);
+extern void fn_1_CA690(int, int, int);
+extern void fn_1_52088(void);
+extern void fn_1_CD51C(int);
+extern void fn_1_CD7BC(int);
+extern void fn_1_C8DC0(int);
+extern void fn_1_CADC4(int);
+extern u32 fn_1_3F114(void);
+extern void fn_1_CC280(int, int, int, u32);
+extern u32 fn_1_CFA0C(int, int);
+extern void fn_1_CBC24(int, int, u8, u8, u16);
+extern int fn_1_5910(void);
+extern void fn_1_CB424(int, int, int);
+extern void fn_1_CB028(int, int);
+extern void fn_1_CAB38(int, int, int);
+
+void fn_1_C771C(void) {
+    int mode;
+    EnemyCtrl *ctrl;
+    int value;
+
+    mode = camera_get_mode();
+    if (mode == -1 || mode < 0) {
+        return;
+    }
+    ctrl = fn_1_8627C(mode);
+    if (ctrl == 0) {
+        return;
+    }
+    if (fn_1_58C4() == 1) {
+        fn_1_52070(0x60);
+    }
+    fn_1_CA690(mode, 0x18, 0x19c);
+    fn_1_52088();
+    if (fn_1_58C4() == 1) {
+        fn_1_52070(0x140);
+    }
+    fn_1_CD51C(mode);
+    fn_1_CD7BC(mode);
+    fn_1_52088();
+    if (fn_1_58C4() == 1) {
+        fn_1_52070(0x220);
+    }
+    value = 0;
+    fn_1_C8DC0(mode);
+    fn_1_CADC4(mode);
+    fn_1_CC280(0x19a, 0x18, ctrl->field_118 + 1, fn_1_3F114() & 0xff);
+    if ((fn_1_CFA0C(0x268, 0x43) & 0xff) != 0) {
+        value = 0x25;
+    }
+    fn_1_CBC24(0x1bc, value + 0x43, ctrl->field_1ec,
+               ctrl->field_1ed, ctrl->field_1ee);
+    fn_1_CB424(0x269, value + 0x6e, fn_1_5910());
+    fn_1_CB028(0x269, value + 0x96);
+    fn_1_CAB38(mode, 0x268, value);
+    fn_1_52088();
+}
+/* fzgx:end fn_1_C771C */
+
 /* fzgx:begin fn_1_CA218 */
 typedef struct EnemyCtrl_CA218 {
     u32 value;
