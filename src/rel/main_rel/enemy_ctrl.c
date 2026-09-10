@@ -530,6 +530,52 @@ u8* fn_1_D0E64(void) {
 }
 /* fzgx:end fn_1_D0E64 */
 
+/* fzgx:begin fn_1_D0E74 noprologue */
+#include "types.h"
+
+struct Sig_fn_8003432C_fn_8003432C_Arg2 {
+    u32 unk_0;
+};
+
+struct Sig_GXPeekZ_GXPeekZ_Arg2 {
+    u32 unk_0;
+};
+
+struct fn_1_D0E74_lbl_1_data_3D648 {
+    u8 pad_0[0x4];
+    u16 unk_4;
+    u16 unk_6;
+    u16 unk_8;
+    u8 pad_A[0x16];
+    u8 unk_20;
+    u8 unk_21;
+    u8 unk_22;
+    u8 unk_23;
+};
+struct fn_1_D0E74_lbl_1_rodata_6080 {
+    f64 unk_0;
+};
+extern f32 lbl_1_rodata_6078;
+extern struct fn_1_D0E74_lbl_1_data_3D648 lbl_1_data_3D648;
+extern struct fn_1_D0E74_lbl_1_rodata_6080 lbl_1_rodata_6080;
+extern void fn_80034200(u32);
+extern u32 fn_8003432C(u32, u32, struct Sig_fn_8003432C_fn_8003432C_Arg2 *);
+extern u32 GXPeekZ(u32, u32, struct Sig_GXPeekZ_GXPeekZ_Arg2 *);
+extern u16 fn_1_A5DB0(void);
+
+
+void fn_1_D0E74(void) {
+    fn_80034200((u32)(2U));
+    fn_8003432C((u32)((u32) lbl_1_data_3D648.unk_4), (u32)((u32) lbl_1_data_3D648.unk_6), (struct Sig_fn_8003432C_fn_8003432C_Arg2 *)((struct Sig_fn_8003432C_fn_8003432C_Arg2 *) ((u8 *)((u8 *)(&lbl_1_data_3D648) + 28))));
+    lbl_1_data_3D648.unk_20 = (u8) ((u32) (*(u32 *)((u8 *)(&lbl_1_data_3D648) + 28)) >> 0x18U);
+    lbl_1_data_3D648.unk_21 = (u8) ((u32) (*(u32 *)((u8 *)(&lbl_1_data_3D648) + 28)) >> 0x10U);
+    lbl_1_data_3D648.unk_22 = (u8) ((u32) (*(u32 *)((u8 *)(&lbl_1_data_3D648) + 28)) >> 8U);
+    lbl_1_data_3D648.unk_23 = (u8) (*(u32 *)((u8 *)(&lbl_1_data_3D648) + 28));
+    GXPeekZ((u32)((u32) lbl_1_data_3D648.unk_4), (u32)((u32) lbl_1_data_3D648.unk_6), (struct Sig_GXPeekZ_GXPeekZ_Arg2 *)((struct Sig_GXPeekZ_GXPeekZ_Arg2 *) ((u8 *)((u8 *)(&lbl_1_data_3D648) + 12))));
+    lbl_1_data_3D648.unk_8 = (u16) (s32) (((*(f32 *)((u8 *)(&lbl_1_rodata_6078) + 0)) * (f32) lbl_1_data_3D648.unk_6) / (f32) fn_1_A5DB0());
+}
+/* fzgx:end fn_1_D0E74 */
+
 /* fzgx:begin fn_1_D2F50 */
 // Stores the initialized enemy-control handle for later subsystem updates.
 void fn_1_D2F50(void) {

@@ -1439,3 +1439,6 @@ rel/movie_module/fn_12_147C.c:
 
 rel/movie_module/fn_12_11A8.c:
 	.text       start:0x000011A8 end:0x0000132C align:4
+
+rel/movie_module/fn_12_38DC8.c:
+	.text       start:0x00038DC8 end:0x00038E24 align:4

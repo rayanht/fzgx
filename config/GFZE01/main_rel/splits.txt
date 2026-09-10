@@ -5108,3 +5108,9 @@ rel/main_rel/enemy_ctrl/fn_1_CAEBC.c:
 
 rel/main_rel/enemy_ctrl/fn_1_CADC4.c:
 	.text       start:0x000CADC4 end:0x000CAEBC align:4
+
+rel/main_rel/memcard/fn_1_BF520.c:
+	.text       start:0x000BF520 end:0x000BF600 align:4
+
+rel/main_rel/enemy_ctrl/fn_1_D0E74.c:
+	.text       start:0x000D0E74 end:0x000D0F60 align:4

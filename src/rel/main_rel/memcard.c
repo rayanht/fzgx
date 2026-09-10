@@ -2098,6 +2098,37 @@ void fn_1_BC29C(void) {
 }
 /* fzgx:end fn_1_BC29C */
 
+/* fzgx:begin fn_1_BF520 noprologue */
+#include "types.h"
+
+struct fn_1_BF520_Arg4 {
+    u32 unk_0;
+};
+struct fn_1_BF520_Copy88 { u32 a[22]; };
+struct fn_1_BF520_lbl_1_rodata_4CB0 {
+    f64 unk_0;
+};
+extern f32 lbl_1_rodata_4D18;
+extern f32 lbl_1_rodata_5080;
+extern struct fn_1_BF520_lbl_1_rodata_4CB0 lbl_1_rodata_4CB0;
+extern u32 lbl_1_rodata_26F8;
+extern void fn_1_50164(f32, f32, f32, f32, void *);
+
+struct FzgxCopy_88 { u32 words[22]; };
+void fn_1_BF520(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u32 *arg4) {
+    struct FzgxCopy_88 loc_8;
+    s32 sp4;
+
+    loc_8 = *(const struct FzgxCopy_88 *)((((s32)(((u8 *)(&lbl_1_rodata_26F8) + -4))) + 4));
+    loc_8.words[0] = 0xC;
+    loc_8.words[0xF] = *(u32 *)((u8 *)(arg4) + 0);
+    (*(f32 *)((u8 *)(&loc_8) + 12)) = *(f32 *)((u8 *)(&lbl_1_rodata_5080) + 0);
+    (*(f32 *)((u8 *)(&loc_8) + 4)) = (f32) arg0;
+    (*(f32 *)((u8 *)(&loc_8) + 8)) = (f32) arg1;
+    fn_1_50164((f32)((f32) arg2), (f32)((f32) arg3), (f32)(*(f32 *)((u8 *)(&lbl_1_rodata_4D18) + 0)), (f32)(*(f32 *)((u8 *)(&lbl_1_rodata_4D18) + 0)), (void *)(&loc_8));
+}
+/* fzgx:end fn_1_BF520 */
+
 /* fzgx:begin fn_1_C0510 noprologue */
 #include "types.h"
 
