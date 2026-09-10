@@ -1435,6 +1435,37 @@ void fn_1_14D8DC(u8 *arg0, u8 *arg1, s16 arg2) {
 }
 /* fzgx:end fn_1_14D8DC */
 
+/* fzgx:begin fn_1_14DB48 */
+extern void fn_1_12AB38(void *arg0);
+extern void fn_1_14D728(void *arg0, void *arg1);
+
+typedef struct {
+    u16 values[3];
+    u32 extra;
+} StaticDispPacket;
+
+void fn_1_14DB48(u32 *state, void *arg1, u32 arg2) {
+    u32 flags = *state;
+
+    if ((flags & (1u << 31)) == 0 || (flags & (1u << 30)) == 0) {
+        return;
+    }
+
+    {
+        u8 *base = (u8 *)state + 0x10000;
+        StaticDispPacket packet;
+
+        packet.extra = arg2;
+        packet.values[0] = base[0x81a4 - 0x10000];
+        packet.values[1] = base[0x81ac - 0x10000];
+        packet.values[2] = base[0x81b4 - 0x10000];
+        fn_1_12AB38(lbl_1_data_45204);
+        fn_1_14D728(&packet, arg1);
+        fn_1_12AB38(&lbl_1_data_45200);
+    }
+}
+/* fzgx:end fn_1_14DB48 */
+
 /* fzgx:begin fn_1_14DBCC */
 typedef struct {
     u8 pad[0x340];

@@ -5465,3 +5465,12 @@ rel/main_rel/sound/fn_1_A4BC8.c:
 
 rel/main_rel/sel_static_disp/fn_1_141614.c:
 	.text       start:0x00141614 end:0x00141754 align:4
+
+rel/main_rel/load/fn_1_464BC.c:
+	.text       start:0x000464BC end:0x000465D0 align:4
+
+rel/main_rel/sel_static_disp/fn_1_14DB48.c:
+	.text       start:0x0014DB48 end:0x0014DBCC align:4
+
+rel/main_rel/replay/fn_1_F37F4.c:
+	.text       start:0x000F37F4 end:0x000F38C0 align:4

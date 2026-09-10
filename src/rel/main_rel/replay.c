@@ -144,6 +144,35 @@ u32 fn_1_F2F58(void) {
 }
 /* fzgx:end fn_1_F2F58 */
 
+/* fzgx:begin fn_1_F37F4 noprologue */
+#include "types.h"
+
+extern u32 lbl_1_bss_7EFD8[17];
+extern u8 lbl_1_bss_3C30[5308];
+
+extern s8 fn_1_86678(s32 index);
+extern u32 fn_1_864E8(s32 index);
+extern u32 fn_1_86810(s32 index);
+extern void fn_1_F3574(void *state, u8 index, u8 value, s32 kind, u32 result);
+
+void fn_1_F37F4(void) {
+    s32 index;
+
+    if (*(u16 *)((u8 *)lbl_1_bss_7EFD8[16] + 0xfef0) == 0) {
+        return;
+    }
+
+    for (index = 0; index < 4; index++) {
+        if (index < lbl_1_bss_3C30[9] &&
+            fn_1_86678(index) != -1 &&
+            ((u8 *)lbl_1_bss_7EFD8)[index + 0x24] == 0 &&
+            (fn_1_864E8(index) & 0x10000) != 0) {
+            fn_1_F3574(lbl_1_bss_7EFD8, (u8)index, (u8)index, 6, fn_1_86810(index));
+        }
+    }
+}
+/* fzgx:end fn_1_F37F4 */
+
 /* fzgx:begin fn_1_F43F0 */
 void fn_1_F43F0(u8 *bits, u32 *position, u32 mask, u32 count, u32 limit) {
     u32 value;

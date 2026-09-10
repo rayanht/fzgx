@@ -198,6 +198,59 @@ s32 fn_1_45E84(s32 value) {
 }
 /* fzgx:end fn_1_45E84 */
 
+/* fzgx:begin fn_1_464BC */
+typedef struct Fn464BCEntry {
+    u32 unk_00;
+    u32 unk_04;
+    u32 unk_08;
+} Fn464BCEntry;
+
+typedef struct Fn464BCObject {
+    u8 unk_00[4];
+    Fn464BCEntry *unk_04;
+    u8 unk_08[8];
+    u8 *unk_10;
+} Fn464BCObject;
+
+extern u32 lbl_801A6410;
+extern u8 lbl_1_data_6730[76];
+extern u16 lbl_1_data_67CC;
+extern void *fn_1_4630(u32 arg0, u32 arg1, u8 *arg2, u32 arg3);
+extern void *fn_1_46B4(u32 arg0, void *arg1, u8 *arg2, u32 arg3);
+extern void fn_80083DB0(void *arg0, void *arg1);
+extern void strcat(void *arg0, void *arg1);
+
+void fn_1_464BC(Fn464BCObject *object, u32 index, void *arg2, void *arg3) {
+    void *result;
+    Fn464BCEntry *base;
+    Fn464BCEntry *entry;
+    u32 value;
+    s32 flag;
+
+    base = object->unk_04;
+    entry = &base[index];
+    result = fn_1_4630(lbl_801A6410, (u32)arg3, lbl_1_data_6730, 0x3f4);
+    value = entry->unk_00;
+    fn_80083DB0(arg2, object->unk_10 + (value & 0x00ffffff));
+
+    while (entry > base) {
+        value = entry->unk_00;
+        flag = (value & 0xff000000) != 0;
+        if (flag != 0) {
+            fn_80083DB0(result, object->unk_10 + (value & 0x00ffffff));
+            strcat(result, &lbl_1_data_67CC);
+            strcat(result, arg2);
+            fn_80083DB0(arg2, result);
+            entry = &base[entry->unk_04];
+        } else {
+            entry--;
+        }
+    }
+
+    fn_1_46B4(lbl_801A6410, result, lbl_1_data_6730, 0x402);
+}
+/* fzgx:end fn_1_464BC */
+
 /* fzgx:begin fn_1_465D0 */
 // Queues a completed load operation in the circular load queue.
 s32 fn_1_465D0(s32 arg0, s32 arg1) {
