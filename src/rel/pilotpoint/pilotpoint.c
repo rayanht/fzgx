@@ -100,6 +100,74 @@ void fn_14_258C(void) {
 }
 /* fzgx:end fn_14_258C */
 
+/* fzgx:begin fn_14_2AFC */
+struct PilotPoint {
+    s16 unk0;
+    u8 pad_2[0x35E];
+    s16 unk360;
+    u8 pad_362[0x35E];
+    s16 unk6C0;
+    u8 pad_6C2[0x35E];
+};
+
+extern s16 fn_14_32DC(s16 *);
+extern s16 fn_14_3384(s16 *);
+extern struct PilotPoint * lbl_14_bss_8340;
+extern u32 fn_14_3334(s16 *);
+extern u32 fn_14_33DC(s16 *);
+extern u32 fn_14_342C(void);
+extern u32 fn_14_34A8(void);
+extern u32 fn_14_DC2C(void);
+extern u8 * fn_1_36AD0(void);
+extern void * fn_14_316C(void *, void *, void *);
+extern void * fn_14_3230(void *, void *, void *);
+
+void fn_14_2AFC(void) {
+    struct PilotPoint *v0;
+    s32 v5;
+    s16 loc_10[6];
+    s16 loc_C[2];
+    s16 loc_A;
+    s16 loc_8;
+    u8 * t9;
+    fn_14_316C((void *)loc_C, (void *)&loc_A, (void *)&loc_8);
+    v0 = lbl_14_bss_8340;
+    loc_C[0] = v0[loc_C[0]].unk0;
+    loc_A = v0[loc_A].unk360;
+    loc_8 = v0[loc_8].unk6C0;
+    fn_14_342C();
+    fn_14_3230((void *)loc_C, (void *)&loc_A, (void *)&loc_8);
+    if (loc_C[0] != 15) {
+        loc_C[0] = lbl_14_bss_8340[loc_C[0]].unk0;
+    }
+    if (loc_A != 15) {
+        loc_A = lbl_14_bss_8340[loc_A].unk360;
+    }
+    if (loc_8 != 15) {
+        loc_8 = lbl_14_bss_8340[loc_8].unk6C0;
+    }
+    fn_14_34A8();
+    loc_10[0] = 75;
+    loc_10[1] = 75;
+    loc_10[2] = 75;
+    fn_14_32DC(loc_10);
+    loc_10[0] = 75;
+    loc_10[1] = 75;
+    loc_10[2] = 75;
+    loc_10[3] = 75;
+    loc_10[4] = 75;
+    loc_10[5] = 75;
+    fn_14_3334(loc_10);
+    loc_10[0] = 41;
+    fn_14_3384(loc_10);
+    loc_10[0] = 41;
+    fn_14_33DC(loc_10);
+    v5 = (fn_14_DC2C() & 0xFF) * (0x10000 - 32320);
+    t9 = (u8 *)(fn_1_36AD0());
+    *(u32 *)((u8 *)t9 + v5) = (*(u32 *)((u8 *)t9 + v5) | 0xC0000000); /* fzgx-allow: A1 bit-set mask, not an address */
+}
+/* fzgx:end fn_14_2AFC */
+
 /* fzgx:begin fn_14_315C */
 extern struct fn_14_315C_lbl_14_bss_110 lbl_14_bss_110;
 
@@ -398,6 +466,53 @@ u32 fn_14_C4F8(void) {
 void fn_14_C698(void) {
 }
 /* fzgx:end fn_14_C698 */
+
+/* fzgx:begin fn_14_C69C */
+struct fn_14_C69C_Arg0 {
+    char **unk_0;
+    u32 unk_4;
+    s32 unk_8;
+};
+
+extern char *strncpy(char *, const char *, size_t);
+extern int sprintf(char *, const char *, ...);
+extern size_t strlen(const char *);
+extern u32 __cvt_fp2unsigned(f32);
+extern void fn_1_4AE0C(const char *, ...);
+extern f32 lbl_14_rodata_30;
+extern f32 lbl_14_rodata_364;
+extern const f64 lbl_14_rodata_110;
+extern char lbl_14_data_300C[];
+extern char lbl_14_data_3244[];
+extern u32 lbl_801A66A0;
+extern u32 lbl_801A66B4;
+
+void fn_14_C69C(struct fn_14_C69C_Arg0 *arg0, f32 arg1) {
+    char buf[256];
+
+    if (arg0->unk_8 != 0 || lbl_14_rodata_30 == arg1) {
+        sprintf(buf, lbl_14_data_300C, arg0->unk_0[lbl_801A66B4]);
+        fn_1_4AE0C(buf);
+        return;
+    }
+    if (arg1 < lbl_14_rodata_364) {
+        f32 lenf = (f32)strlen(arg0->unk_0[lbl_801A66B4]);
+        u32 n = __cvt_fp2unsigned(lenf * arg1);
+        strncpy(buf, arg0->unk_0[lbl_801A66B4], n);
+        if ((lbl_801A66A0 & 3) < 2) {
+            buf[n] = '_';
+            buf[n + 1] = 0;
+        } else {
+            buf[n] = 0;
+        }
+    } else if ((lbl_801A66A0 & 3) < 2) {
+        sprintf(buf, lbl_14_data_3244, arg0->unk_0[lbl_801A66B4]);
+    } else {
+        sprintf(buf, lbl_14_data_300C, arg0->unk_0[lbl_801A66B4]);
+    }
+    fn_1_4AE0C(buf);
+}
+/* fzgx:end fn_14_C69C */
 
 /* fzgx:begin fn_14_DC28 */
 // fn_14_DC28: empty in retail (single blr).

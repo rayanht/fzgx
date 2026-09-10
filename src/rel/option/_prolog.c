@@ -131,6 +131,71 @@ void fn_4_D10(void) {
 }
 /* fzgx:end fn_4_D10 */
 
+/* fzgx:begin fn_4_D7C noprologue */
+#include "types.h"
+#include "rel/option/globals.h"
+
+extern int fn_1_4C10(void);
+extern void fn_1_1280(u32);
+extern void fn_1_A2D84(u32);
+extern u32 fn_4_0(u32, u32, u32, u32, u32);
+extern u32 fn_1_4A00(u32, u32, u32);
+extern u16 lbl_1_bss_96A;
+
+struct fn_4_D7C_lbl_1_bss_970 {
+    s32 unk_0;
+    u8 unk_4;
+};
+extern struct fn_4_D7C_lbl_1_bss_970 lbl_1_bss_970;
+
+struct fn_4_D7C_lbl_1_bss_6EAB4 {
+    u32 unk_0;
+};
+extern struct fn_4_D7C_lbl_1_bss_6EAB4 lbl_1_bss_6EAB4;
+
+struct fn_4_D7C_lbl_1_bss_9F8 {
+    u8 pad_0[0x8];
+    u16 unk_8;
+};
+extern struct fn_4_D7C_lbl_1_bss_9F8 lbl_1_bss_9F8;
+
+struct fn_4_D7C_lbl_4_data_144C {
+    s16 unk_0;
+    u8 pad_2[0x1A];
+};
+extern struct fn_4_D7C_lbl_4_data_144C lbl_4_data_144C[];
+
+void fn_4_D7C(void) {
+    struct fn_4_D7C_lbl_1_bss_970 *p;
+    u32 v;
+    struct fn_4_D7C_lbl_1_bss_6EAB4 *q;
+
+    p = (struct fn_4_D7C_lbl_1_bss_970 *)&lbl_1_bss_970;
+    if (p->unk_0 <= 0) {
+        if (lbl_4_bss_10.unk_0 != 0) {
+            if (fn_1_4C10() == 0) {
+                fn_1_1280(1);
+                lbl_1_bss_96A = lbl_4_bss_10.unk_0;
+                lbl_4_bss_10.unk_0 = 0;
+            }
+        } else {
+            p->unk_4 = fn_4_0(p->unk_4, 0, 2, -1, 0);
+            if ((lbl_1_bss_9F8.unk_8 >> 9) & 1) {
+                fn_1_A2D84(0xA9010200);
+                q = (struct fn_4_D7C_lbl_1_bss_6EAB4 *)&lbl_1_bss_6EAB4;
+                v = q->unk_0;
+                q->unk_0 = v | 0x2C;
+                lbl_1_bss_970.unk_0 = 1;
+            } else if ((lbl_1_bss_9F8.unk_8 >> 8) & 1) {
+                fn_1_A2D84(0xA9010100);
+                lbl_4_bss_10.unk_0 = lbl_4_data_144C[p->unk_4].unk_0;
+                fn_1_4A00(0, 15, lbl_4_bss_8);
+            }
+        }
+    }
+}
+/* fzgx:end fn_4_D7C */
+
 /* fzgx:begin fn_4_EA0 */
 // Clear the pending option selection after applying its associated value.
 void fn_4_EA0(void) {
@@ -301,6 +366,80 @@ void fn_4_4B10(void) {
     }
 }
 /* fzgx:end fn_4_4B10 */
+
+/* fzgx:begin fn_4_4B74 noprologue */
+#include "types.h"
+
+extern u8 jumptable_4_data_2974[36];
+
+struct fn_4_4B74_obj {
+    u16 unk_0;
+    u16 unk_2;
+    u16 unk_4;
+    u16 unk_6;
+    u32 unk_8;
+    u32 unk_C;
+    u32 unk_10;
+    u32 unk_14;
+    u32 unk_18;
+};
+
+extern struct fn_4_4B74_obj lbl_4_bss_C4[];
+
+s32 fn_4_4B74(u32 arg0, u32 arg1) {
+    u32 idx;
+    u32 v;
+
+    switch (arg0) {
+    case 0:
+    case 4:
+    default:
+        idx = 0;
+        break;
+    case 1:
+        idx = 0;
+        break;
+    case 2:
+        idx = 1;
+        break;
+    case 3:
+        idx = 2;
+        break;
+    }
+
+    switch (arg1) {
+    case 0:
+        v = lbl_4_bss_C4[idx].unk_0;
+        break;
+    case 1:
+        v = lbl_4_bss_C4[idx].unk_2;
+        break;
+    case 2:
+        v = lbl_4_bss_C4[idx].unk_4;
+        break;
+    case 3:
+        v = lbl_4_bss_C4[idx].unk_6;
+        break;
+    case 4:
+        v = lbl_4_bss_C4[idx].unk_8;
+        break;
+    case 5:
+        v = lbl_4_bss_C4[idx].unk_C;
+        break;
+    case 6:
+        v = lbl_4_bss_C4[idx].unk_10;
+        break;
+    case 7:
+        v = lbl_4_bss_C4[idx].unk_14;
+        break;
+    case 8:
+        v = lbl_4_bss_C4[idx].unk_18;
+        break;
+    }
+
+    return 31 - __cntlzw(v);
+}
+/* fzgx:end fn_4_4B74 */
 
 /* fzgx:begin fn_4_6678 noprologue */
 #include "types.h"

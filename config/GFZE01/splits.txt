@@ -4565,3 +4565,126 @@ dol/fn_800735C8.c:
 
 dol/fn_80021200.c:
 	.text       start:0x80021200 end:0x8002123C align:4
+
+dol/fn_80077240.c:
+	.text       start:0x80077240 end:0x80077384 align:4
+
+dol/fn_80008A4C.c:
+	.text       start:0x80008A4C end:0x80008BA8 align:4
+
+dol/fn_80076134.c:
+	.text       start:0x80076134 end:0x80076238 align:4
+
+dol/fn_80073B50.c:
+	.text       start:0x80073B50 end:0x80073C6C align:4
+
+dol/fn_800734A8.c:
+	.text       start:0x800734A8 end:0x800735C8 align:4
+
+dol/fn_8008A80C.c:
+	.text       start:0x8008A80C end:0x8008A91C align:4
+
+dol/fn_8008E21C.c:
+	.text       start:0x8008E21C end:0x8008E324 align:4
+
+dol/fn_800717BC.c:
+	.text       start:0x800717BC end:0x800718BC align:4
+
+dol/fn_8008E114.c:
+	.text       start:0x8008E114 end:0x8008E21C align:4
+
+dol/fn_80028B3C.c:
+	.text       start:0x80028B3C end:0x80028CC0 align:4
+
+dol/fn_80056A50.c:
+	.text       start:0x80056A50 end:0x80056B50 align:4
+
+dol/fn_8003B798.c:
+	.text       start:0x8003B798 end:0x8003B8A8 align:4
+
+dol/fn_80071484.c:
+	.text       start:0x80071484 end:0x800715A0 align:4
+
+dol/fn_800077E0.c:
+	.text       start:0x800077E0 end:0x800079A0 align:4
+
+dol/fn_8003A760.c:
+	.text       start:0x8003A760 end:0x8003A91C align:4
+
+dol/fn_800738E0.c:
+	.text       start:0x800738E0 end:0x800739E0 align:4
+
+dol/fn_80056850.c:
+	.text       start:0x80056850 end:0x80056950 align:4
+
+dol/fn_8005DB68.c:
+	.text       start:0x8005DB68 end:0x8005DCEC align:4
+
+dol/fn_80025854.c:
+	.text       start:0x80025854 end:0x80025A24 align:4
+
+dol/fn_800793D4.c:
+	.text       start:0x800793D4 end:0x800794F0 align:4
+
+dol/fn_800504EC.c:
+	.text       start:0x800504EC end:0x80050670 align:4
+
+dol/fn_80023284.c:
+	.text       start:0x80023284 end:0x80023394 align:4
+
+dol/fn_80078768.c:
+	.text       start:0x80078768 end:0x80078884 align:4
+
+dol/fn_800702E4.c:
+	.text       start:0x800702E4 end:0x8007048C align:4
+
+dol/TRKTargetInterrupt.c:
+	.text       start:0x8008B940 end:0x8008BAD0 align:4
+
+dol/fn_800135CC.c:
+	.text       start:0x800135CC end:0x800136E8 align:4
+
+dol/fn_80056294.c:
+	.text       start:0x80056294 end:0x800563F8 align:4
+
+dol/fn_80024C88.c:
+	.text       start:0x80024C88 end:0x80024D84 align:4
+
+dol/fn_8006CE44.c:
+	.text       start:0x8006CE44 end:0x8006CFF8 align:4
+
+dol/TRKDispatchMessage.c:
+	.text       start:0x800896C4 end:0x80089834 align:4
+
+dol/fn_800781B8.c:
+	.text       start:0x800781B8 end:0x80078344 align:4
+
+dol/fn_8006E5FC.c:
+	.text       start:0x8006E5FC end:0x8006E7E4 align:4
+
+dol/fn_8000691C.c:
+	.text       start:0x8000691C end:0x80006AEC align:4
+
+dol/fn_800631EC.c:
+	.text       start:0x800631EC end:0x8006331C align:4
+
+dol/fn_80005EDC.c:
+	.text       start:0x80005EDC end:0x800060D8 align:4
+
+dol/fn_800747D0.c:
+	.text       start:0x800747D0 end:0x80074918 align:4
+
+dol/fn_800712E4.c:
+	.text       start:0x800712E4 end:0x800713E0 align:4
+
+dol/fn_80069B10.c:
+	.text       start:0x80069B10 end:0x80069CE4 align:4
+
+dol/fn_80035420.c:
+	.text       start:0x80035420 end:0x800355B0 align:4
+
+dol/fn_8006FDEC.c:
+	.text       start:0x8006FDEC end:0x8006FEFC align:4
+
+dol/fn_8002420C.c:
+	.text       start:0x8002420C end:0x80024308 align:4

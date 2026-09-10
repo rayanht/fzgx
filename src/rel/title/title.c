@@ -134,6 +134,82 @@ void fn_8_1F74(void) {
 }
 /* fzgx:end fn_8_1F74 */
 
+/* fzgx:begin fn_8_1FB0 */
+extern const f32 lbl_8_rodata_8;
+
+extern s32 fn_1_A66FC(s32);
+extern void fn_1_4FEC(void);
+extern u32 fn_1_C3378(void);
+extern u32 fn_1_F7A20(void);
+extern void fn_1_3EF8C(u8);
+extern u32 fn_1_3ED8C(u32, u32, u32, u32, u32, u32, u32);
+extern u32 fn_1_3EB78(u32, u32, u32, u32);
+extern void fn_1_3EFF0(void (*)(u32), u8);
+extern void fn_8006CE1C(f32);
+extern void fn_1_3EF08(u8);
+extern void fn_8_784(u32);
+
+extern u8 lbl_801A66B8;
+extern u8 lbl_801A66B9;
+extern s32 lbl_1_bss_7180C;
+extern s16 lbl_1_bss_96A;
+
+struct fn_8_1FB0_lbl_1_bss_58 {
+    u8 pad_0[0x15];
+    s8 unk_15;
+};
+extern struct fn_8_1FB0_lbl_1_bss_58 lbl_1_bss_58;
+
+struct fn_8_1FB0_lbl_8_bss_224 {
+    s16 unk_0;
+};
+extern struct fn_8_1FB0_lbl_8_bss_224 lbl_8_bss_224;
+
+struct fn_8_1FB0_lbl_8_bss_238 {
+    u32 unk_0;
+};
+extern struct fn_8_1FB0_lbl_8_bss_238 lbl_8_bss_238;
+
+f32 fn_8_1FB0(f32 arg0) {
+    s32 v2;
+
+    if (lbl_801A66B8 != 0 || fn_1_A66FC(lbl_8_bss_238.unk_0) != 0) {
+        if (lbl_1_bss_7180C == 0) {
+            if (lbl_801A66B9 == 0) {
+                fn_1_4FEC();
+                fn_1_C3378();
+                fn_1_F7A20();
+                lbl_801A66B9 = 1;
+            }
+            v2 = lbl_1_bss_58.unk_15;
+            switch (v2) {
+            case 1:
+            case 3:
+                lbl_1_bss_96A = 0xa4;
+                break;
+            case 0:
+            case 2:
+            default:
+                lbl_1_bss_96A = 0x9c;
+                break;
+            }
+            lbl_1_bss_58.unk_15 = (v2 + 1) & 3;
+            if (lbl_1_bss_96A == 0x9c) {
+                fn_1_3EF8C(6);
+                fn_1_3ED8C(0, 3, 1, lbl_8_bss_224.unk_0 & 0xff, 10, 30, 0);
+                fn_1_3EB78(0, 0, 0, 0);
+                fn_1_3EFF0(&fn_8_784, 1);
+                fn_8006CE1C(lbl_8_rodata_8);
+                fn_1_3EF08(1);
+            }
+        } else {
+            lbl_1_bss_96A = 0x9a;
+        }
+        lbl_801A66B8 = 1;
+    }
+}
+/* fzgx:end fn_8_1FB0 */
+
 /* fzgx:begin fn_8_2120 */
 // fn_8_2120: empty in retail (single blr).
 void fn_8_2120(void) {

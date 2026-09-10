@@ -245,6 +245,79 @@ void fn_8_8C48(void) {
 }
 /* fzgx:end fn_8_8C48 */
 
+/* fzgx:begin fn_8_8C80 */
+struct fn_8_8C80_ctx {
+    u8 pad_0[0x13c];
+    u32 unk_13C[9];
+    u32 unk_160[9];
+    u32 unk_184[9];
+    u32 unk_1A8[9];
+    u32 unk_1CC[9][4];
+};
+
+struct fn_8_8C80_lbl_801A6410 {
+    u32 unk_0;
+};
+
+extern struct fn_8_8C80_ctx lbl_8_bss_2A8;
+extern struct fn_8_8C80_lbl_801A6410 lbl_801A6410;
+extern u8 lbl_8_data_8AD4[];
+extern void fn_1_469BC(void);
+extern u32 fn_1_46EE8(void);
+extern void fn_1_46B4(u32, u32, const char *, int);
+
+void fn_8_8C80(void) {
+    u32 base;
+    u32 *v0;
+    u32 *v1;
+    u32 *v2;
+    u32 *v3;
+    u32 (*v4)[4];
+    s32 v5;
+    s32 v6;
+    u32 v7;
+
+    base = (u32)&lbl_8_bss_2A8;
+    fn_1_469BC();
+    fn_1_46EE8();
+    v0 = (u32 *)(base + 0x13c);
+    v1 = (u32 *)(base + 0x160);
+    v2 = (u32 *)(base + 0x184);
+    v3 = (u32 *)(base + 0x1a8);
+    v4 = (u32 (*)[4])(base + 0x1cc);
+    for (v5 = 0; v5 < 9; v5++) {
+        if (v0[0] != 0) {
+            fn_1_46B4(lbl_801A6410.unk_0, v0[0], (const char *)&lbl_8_data_8AD4, 1975);
+            v0[0] = 0;
+        }
+        if (v1[0] != 0) {
+            fn_1_46B4(lbl_801A6410.unk_0, v1[0], (const char *)&lbl_8_data_8AD4, 1979);
+            v1[0] = 0;
+        }
+        if (v2[0] != 0) {
+            fn_1_46B4(lbl_801A6410.unk_0, v2[0], (const char *)&lbl_8_data_8AD4, 1983);
+            v2[0] = 0;
+        }
+        if (v3[0] != 0) {
+            fn_1_46B4(lbl_801A6410.unk_0, v3[0], (const char *)&lbl_8_data_8AD4, 1987);
+            v3[0] = 0;
+        }
+        v7 = 0;
+        for (v6 = 0; v6 < 4; v6++) {
+            if (v4[0][v6] != 0) {
+                fn_1_46B4(lbl_801A6410.unk_0, v4[0][v6], (const char *)&lbl_8_data_8AD4, 1992);
+                v4[0][v6] = v7;
+            }
+        }
+        v0++;
+        v1++;
+        v2++;
+        v3++;
+        v4++;
+    }
+}
+/* fzgx:end fn_8_8C80 */
+
 /* fzgx:begin fn_8_9B04 */
 extern struct fn_8_9B04_lbl_8_bss_2A8 lbl_8_bss_2A8;
 extern u32 fn_80008BA8(u32, u32, u32);
@@ -270,6 +343,93 @@ void fn_8_9B04(void) {
 void fn_8_9B40(void) {
 }
 /* fzgx:end fn_8_9B40 */
+
+/* fzgx:begin fn_8_BC04 noprologue */
+#include "types.h"
+
+struct fn_8_BC04_lbl_8_bss_2A8 {
+    u8 pad_0[0x124];
+    s32 unk_124;
+    s32 unk_128;
+};
+
+extern f32 lbl_8_rodata_198[89];
+extern struct fn_8_BC04_lbl_8_bss_2A8 lbl_8_bss_2A8;
+extern u32 fn_1_5370(s8, u32);
+extern void fn_80008BEC(void *, int, u32);
+extern void fn_8006CE1C(f32);
+
+void fn_8_BC04(void) {
+    struct fn_8_BC04_lbl_8_bss_2A8 *p;
+
+    p = &lbl_8_bss_2A8;
+    if (p->unk_124 == p->unk_128 / 2) {
+        fn_80008BEC((u8 *)p + 36, 0, 60);
+        fn_80008BEC((u8 *)p + 96, 0, 60);
+        fn_80008BEC((u8 *)p + 156, 0, 60);
+        fn_80008BEC((u8 *)p + 216, 0, 60);
+        fn_1_5370(1, 0);
+    }
+    fn_8006CE1C(lbl_8_rodata_198[0] - (f32)__fabs((f32)(p->unk_124 - p->unk_128 / 2)) / (f32)(p->unk_128 / 2));
+}
+/* fzgx:end fn_8_BC04 */
+
+/* fzgx:begin fn_8_C7B0 */
+extern f32 lbl_8_rodata_2FC[27];
+extern u32 fn_800371F8(u32, void *);
+extern void fn_8003462C(u32, u32, u32);
+extern void fn_8007245C(u32);
+extern void fn_80072864(u32);
+extern void fn_800728A8(s32, s32, s32, s32);
+extern void fn_80072AB0(s32, s32, s32);
+extern void fn_80072C24(s32, s32, s32, s32, s32);
+extern void fn_80072CC4(u32, u32, u32, u32, u32);
+extern void fn_80072D64(u32, u32, u32, u32, u32, u32);
+extern void fn_80072E20(s32, s32, s32, s32, u8, s32);
+extern void fn_800734A8(u32, s32, s32, s32);
+extern void fn_80073678(u32);
+extern void fn_80073C6C(s32);
+extern void fn_80074660(u32);
+extern void fn_80074788(u32);
+extern void fn_800747D0(u32, u32, u32, u32, u32, u32, u32);
+extern void fn_80074918(u8, s32, u8);
+
+void fn_8_C7B0(void *arg0, f32 arg1, f32 arg2, f32 arg3, f32 arg4) {
+    u32 loc_8;
+
+    fn_80074918(1, 7, 1);
+    fn_80074788(1);
+    fn_80074660(0);
+    fn_80073678(1);
+    fn_80073C6C(0);
+    fn_800747D0(4, 0, 0, 0, 0, 2, 2);
+    fn_80072AB0(0, 0, 0);
+    fn_800734A8(0, 255, 255, 4);
+    fn_80072C24(0, 15, 15, 15, 2);
+    fn_80072D64(0, 0, 0, 0, 1, 0);
+    fn_80072CC4(0, 7, 7, 7, 1);
+    fn_80072E20(0, 0, 0, 0, 1, 0);
+    fn_800728A8(1, 4, 5, 0);
+    fn_80072864(2);
+    fn_8007245C(512);
+    loc_8 = *(u32 *)((u8 *)arg0 + 0);
+    fn_800371F8(1, (void *)&loc_8);
+    fn_8003462C(128, 7, 4);
+    *(f32 *)((u8 *)0xCC008000) = arg3;  /* fzgx-allow: A1,A2 GX FIFO write port */
+    *(f32 *)((u8 *)0xCC008000) = arg1;  /* fzgx-allow: A1,A2 GX FIFO write port */
+    *(f32 *)((u8 *)0xCC008000) = lbl_8_rodata_2FC[0];  /* fzgx-allow: A1,A2 GX FIFO write port */
+    *(f32 *)((u8 *)0xCC008000) = arg4;  /* fzgx-allow: A1,A2 GX FIFO write port */
+    *(f32 *)((u8 *)0xCC008000) = arg1;  /* fzgx-allow: A1,A2 GX FIFO write port */
+    *(f32 *)((u8 *)0xCC008000) = lbl_8_rodata_2FC[0];  /* fzgx-allow: A1,A2 GX FIFO write port */
+    *(f32 *)((u8 *)0xCC008000) = arg4;  /* fzgx-allow: A1,A2 GX FIFO write port */
+    *(f32 *)((u8 *)0xCC008000) = arg2;  /* fzgx-allow: A1,A2 GX FIFO write port */
+    *(f32 *)((u8 *)0xCC008000) = lbl_8_rodata_2FC[0];  /* fzgx-allow: A1,A2 GX FIFO write port */
+    *(f32 *)((u8 *)0xCC008000) = arg3;  /* fzgx-allow: A1,A2 GX FIFO write port */
+    *(f32 *)((u8 *)0xCC008000) = arg2;  /* fzgx-allow: A1,A2 GX FIFO write port */
+    *(f32 *)((u8 *)0xCC008000) = lbl_8_rodata_2FC[0];  /* fzgx-allow: A1,A2 GX FIFO write port */
+    fn_80074918(1, 3, 1);
+}
+/* fzgx:end fn_8_C7B0 */
 
 /* fzgx:begin fn_8_CC2C */
 struct OperationValue {
