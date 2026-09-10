@@ -1841,6 +1841,17 @@
   },
   {
     "module": "interview",
+    "source": "rel/interview/interview/fn_17_416C.c",
+    "symbols": [
+      "fn_17_416C"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/interview/interview.c"
+  },
+  {
+    "module": "interview",
     "source": "rel/interview/interview/fn_17_4214.c",
     "symbols": [
       "fn_17_4214"
@@ -36227,6 +36238,21 @@
     "mw_version": null,
     "extra_cflags": [],
     "tu": "rel/main_rel/memcard.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/memcard/fn_1_ABE88.c",
+    "symbols": [
+      "fn_1_ABE88"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/memcard.c",
+    "pool": {
+      "@10": "lbl_1_rodata_4CB0",
+      "@12": "lbl_1_rodata_4CB8"
+    }
   },
   {
     "module": "main_rel",

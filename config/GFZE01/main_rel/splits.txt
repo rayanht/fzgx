@@ -5543,3 +5543,6 @@ rel/main_rel/sel_static_disp/fn_1_14E9E4.c:
 
 rel/main_rel/sound/fn_1_A116C.c:
 	.text       start:0x000A116C end:0x000A11EC align:4
+
+rel/main_rel/memcard/fn_1_ABE88.c:
+	.text       start:0x000ABE88 end:0x000ABF44 align:4

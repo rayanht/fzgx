@@ -111,6 +111,31 @@ void fn_17_3270(void *arg0, void *arg1) {
 }
 /* fzgx:end fn_17_3270 */
 
+/* fzgx:begin fn_17_416C */
+extern u32 lbl_17_bss_34[8];
+extern u32 lbl_17_bss_D8[8];
+extern u8 lbl_17_data_63E50[592];
+extern u32 lbl_801A6410;
+
+extern void fn_1_9818C(s16 value);
+extern void fn_1_8F494(void *arg0);
+extern void fn_1_46B4(u32 arg0, u32 arg1, u8 *arg2, s32 arg3);
+
+void fn_17_416C(void) {
+    s32 i;
+
+    for (i = 0; i < 8; i++) {
+        fn_1_9818C((s16)lbl_17_bss_34[i]);
+        lbl_17_bss_34[i] = (u32)-1;
+        if (lbl_17_bss_D8[i] != 0) {
+            fn_1_8F494((void *)lbl_17_bss_D8[i]);
+            fn_1_46B4(lbl_801A6410, lbl_17_bss_D8[i], lbl_17_data_63E50, 0x9e8);
+            lbl_17_bss_D8[i] = 0;
+        }
+    }
+}
+/* fzgx:end fn_17_416C */
+
 /* fzgx:begin fn_17_4214 */
 extern u32 lbl_17_rodata_1B8;
 
