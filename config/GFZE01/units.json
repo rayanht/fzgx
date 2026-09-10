@@ -13689,6 +13689,16 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_80024378.c",
+    "symbols": [
+      "fn_80024378"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
     "source": "dol/fn_80024C88.c",
     "symbols": [
       "fn_80024C88"
@@ -13738,6 +13748,16 @@
     "mw_version": null,
     "extra_cflags": [],
     "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_800253F0.c",
+    "symbols": [
+      "fn_800253F0"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": []
   },
   {
     "module": "main",
@@ -23405,6 +23425,17 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/_prolog/fn_1_48E8.c",
+    "symbols": [
+      "fn_1_48E8"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/_prolog.c"
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/_prolog/fn_1_634.c",
     "symbols": [
       "fn_1_634"
@@ -26425,6 +26456,17 @@
     "mw_version": null,
     "extra_cflags": [],
     "tu": "rel/main_rel/bg_win.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/bitmap/fn_1_47EE4.c",
+    "symbols": [
+      "fn_1_47EE4"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/bitmap.c"
   },
   {
     "module": "main_rel",
@@ -48833,6 +48875,16 @@
   },
   {
     "module": "movie_module",
+    "source": "rel/movie_module/fn_12_873C.c",
+    "symbols": [
+      "fn_12_873C"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "movie_module",
     "source": "rel/movie_module/fn_12_8878.c",
     "symbols": [
       "fn_12_8878"
@@ -52197,6 +52249,17 @@
   },
   {
     "module": "sel",
+    "source": "rel/sel/sel/fn_10_5148.c",
+    "symbols": [
+      "fn_10_5148"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/sel/sel.c"
+  },
+  {
+    "module": "sel",
     "source": "rel/sel/sel/fn_10_51BC.c",
     "symbols": [
       "fn_10_51BC"
@@ -52613,6 +52676,17 @@
     "source": "rel/sel/sel/fn_10_CD90.c",
     "symbols": [
       "fn_10_CD90"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/sel/sel.c"
+  },
+  {
+    "module": "sel",
+    "source": "rel/sel/sel/fn_10_CDE8.c",
+    "symbols": [
+      "fn_10_CDE8"
     ],
     "status": "matching",
     "mw_version": null,

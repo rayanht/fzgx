@@ -1150,3 +1150,32 @@ s32 fn_1_48B0(u32 arg0, u32 arg1) {
     return v0;
 }
 /* fzgx:end fn_1_48B0 */
+
+/* fzgx:begin fn_1_48E8 noprologue */
+#include "types.h"
+#include "rel/main_rel/globals.h"
+
+extern u32 lbl_801A6CFC;
+extern u32 lbl_801A6CF8;
+
+#pragma opt_propagation off
+s32 fn_1_48E8(u32 arg0, u32 arg1) {
+    u32 step;
+    u32 *counter;
+    u32 value;
+    s32 result;
+    u32 total;
+
+    counter = &lbl_801A6CFC;
+    value = *counter;
+    step = ((value - 1) / arg1) + 1;
+    result = arg1 * step;
+    total = result + arg0;
+    if (total > lbl_801A6CF8) {
+        return 0;
+    }
+    *counter = total;
+    return result;
+}
+#pragma opt_propagation reset
+/* fzgx:end fn_1_48E8 */

@@ -5615,3 +5615,9 @@ rel/main_rel/effect/fn_1_63518.c:
 
 rel/main_rel/bg_win/fn_1_15E5E4.c:
 	.text       start:0x0015E5E4 end:0x0015E688 align:4
+
+rel/main_rel/bitmap/fn_1_47EE4.c:
+	.text       start:0x00047EE4 end:0x00047F74 align:4
+
+rel/main_rel/_prolog/fn_1_48E8.c:
+	.text       start:0x000048E8 end:0x00004928 align:4

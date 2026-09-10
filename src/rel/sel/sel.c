@@ -187,6 +187,28 @@ void fn_10_4A84(void) {
 }
 /* fzgx:end fn_10_4A84 */
 
+/* fzgx:begin fn_10_5148 */
+extern u8 lbl_10_bss_0[];
+extern char lbl_10_data_6A4[11];
+extern void fn_10_13D64(void);
+extern void *fn_1_435C(void *);
+extern void *fn_1_3F8C(void *, void *, u32, u32);
+extern void fn_1_4A00(u32, u32, void *);
+
+void fn_10_5148(void) {
+    u8 *base = (u8 *)lbl_10_bss_0 + 0x50000;
+    void *value;
+    s16 flag;
+
+    value = fn_1_435C(*(void **)(base - 0x6c78));
+    value = fn_1_3F8C(lbl_10_data_6A4, fn_10_13D64, 0, 8);
+    flag = *(s16 *)(base - 0x6c74);
+    *(void **)(base + 0x1740) = value;
+    fn_1_4A00(1, (u8)flag, *(void **)(base - 0x6c78));
+    *(u32 *)(base + 0x1744) = 0;
+}
+/* fzgx:end fn_10_5148 */
+
 /* fzgx:begin fn_10_51BC */
 extern u16 lbl_1_bss_96A;
 
@@ -1274,6 +1296,29 @@ void fn_10_CD90(u32 arg0) {
     }
 }
 /* fzgx:end fn_10_CD90 */
+
+/* fzgx:begin fn_10_CDE8 */
+extern u8 lbl_10_bss_0[];
+extern char lbl_10_data_8F4[19];
+extern void fn_10_13E18(void);
+
+extern void fn_1_435C(void *resource);
+extern void *fn_1_3F8C(char *data, void (*handler)(void), int arg2, int arg3);
+extern void fn_1_4A00(int arg0, int arg1, void *resource);
+
+void fn_10_CDE8(void) {
+    u8 *state = (u8 *)lbl_10_bss_0 + 0x50000;
+    void *registration;
+    s16 mode;
+
+    fn_1_435C(*(void **)(state - 0x6c78));
+    registration = fn_1_3F8C(lbl_10_data_8F4, fn_10_13E18, 0, 8);
+    mode = *(s16 *)(state - 0x6c74);
+    *(void **)(state + 0x1740) = registration;
+    fn_1_4A00(1, (u8)mode, *(void **)(state - 0x6c78));
+    *(u32 *)(state + 0x1744) = 0;
+}
+/* fzgx:end fn_10_CDE8 */
 
 /* fzgx:begin fn_10_CE5C */
 extern u16 lbl_1_bss_96A;

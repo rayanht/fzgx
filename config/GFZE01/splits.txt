@@ -4901,3 +4901,9 @@ dol/fn_8006B7B4.c:
 
 dol/fn_80015CB0.c:
 	.text       start:0x80015CB0 end:0x80015D7C align:4
+
+dol/fn_80024378.c:
+	.text       start:0x80024378 end:0x800243C4 align:4
+
+dol/fn_800253F0.c:
+	.text       start:0x800253F0 end:0x80025440 align:4

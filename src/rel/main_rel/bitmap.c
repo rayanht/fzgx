@@ -19,6 +19,36 @@ extern f32 lbl_1_bss_3E05C;
 
 extern void *fn_1_48730(u32 value);
 
+/* fzgx:begin fn_1_47EE4 noprologue */
+#include "rel/main_rel/bitmap.h"
+
+typedef struct {
+    s32 unk_0;
+    u8 pad_4[0x24];
+} Fn147EE4Entry;
+
+extern void OSPanic(const unsigned char *, ...);
+extern void fn_1_47AD4(Fn147EE4Entry *object, s32 arg1, s32 arg2, s32 arg3);
+
+void fn_1_47EE4(s32 index) {
+    Fn147EE4Entry *object;
+    s32 valid;
+
+    object = (Fn147EE4Entry *)((u8 *)&lbl_1_data_FCD4 + index * 0x28);
+    if (index > 0xbb) {
+        valid = 0;
+    } else {
+        valid = index >= 0;
+    }
+    if (valid == 0) {
+        OSPanic(lbl_1_data_1A368, 0x1a8, lbl_1_data_1A374);
+    }
+    if (object->unk_0 == 0) {
+        fn_1_47AD4(object, 0, 1, 1);
+    }
+}
+/* fzgx:end fn_1_47EE4 */
+
 /* fzgx:begin fn_1_4811C */
 // Enables the bitmap entry identified by the caller.
 void fn_1_4811C(int arg) {
