@@ -1,21 +1,14 @@
-"""Deferred link verification.
-
-`submit` accepts a unit on the per-object oracle (objdiff 100% for every
-function in the unit, data sections equal, lint clean) and flips it to
-Matching without relinking. This module relinks once for many accepted units,
-verifies every hash, commits them together, and on the rare failure bisects
-to find the units whose objects do not link byte-exact.
-
-Why: a relink costs configure (~1 s) + link + hash (~1–3 s) and runs under the
-single build lock, so at 16–24 agents in parallel each submit waited ~20 s in
-the queue. One relink per batch removes that from the critical path entirely.
-"""
+"""Incremental live link verification; isolate rejected units only on failure."""
 
 from __future__ import annotations
 
 import subprocess
 import time
+import json
+import os
+import signal
 from typing import Dict, List, Optional
+from pathlib import Path
 
 from . import oracle, tufile
 from .ledger import Ledger
@@ -43,41 +36,59 @@ def _units_for(p: Project, keys: List[str]) -> Dict[str, str]:
 
 def _set_status(p: Project, sources: List[str], status: str) -> None:
     units = p.load_units()
+    changed = False
     for u in units:
-        if u["source"] in sources:
+        if u["source"] in sources and u['status'] != status:
             u["status"] = status
-    p.save_units(units)
+            changed = True
+    if changed:
+        p.save_units(units)
 
 
 def _relink(p: Project) -> bool:
-    cp = oracle.configure(p)
-    if cp.returncode != 0:
-        (STATE_DIR / 'verify_last_failure.log').write_text(cp.stdout + cp.stderr)
-        return False
+    # Ninja tracks units.json, split config, sources and headers, including its
+    # own configure edge. Explicit configure invalidated otherwise clean work.
     cp = oracle.relink(p)
+    with (STATE_DIR / 'verify_builds.jsonl').open('a') as log:
+        log.write(json.dumps(dict(t=time.time(), ok=cp.returncode == 0, output=cp.stdout + cp.stderr)) + '\n')
     if cp.returncode:
         (STATE_DIR / 'verify_last_failure.log').write_text(cp.stdout + cp.stderr)
     return cp.returncode == 0
 
 
+@oracle.build_lock('submit.lock', timeout_s=1800)
 def verify(p: Project, message: Optional[str] = None) -> Dict[str, object]:
     """Relink with every pending unit Matching; commit on success; bisect on failure."""
     l = Ledger()
     keys = pending(l)
-    if not keys:
+    journal = STATE_DIR / 'verify_dependencies.jsonl'
+    dependencies = [str(ROOT / path) for line in journal.read_text().splitlines() for path in json.loads(line)] if journal.exists() else []
+    if not keys and not dependencies:
         return {"ok": True, "verified": [], "rejected": [], "note": "nothing pending"}
     units = _units_for(p, keys)
+    if missing := sorted(set(keys) - units.keys()):
+        return dict(ok=False, error=f'pending functions have no units: {missing}', verified=[], rejected=[])
+    sources = []
+    for source in units.values():
+        rec = p.unit_record(source)
+        sources.append(ROOT / 'src' / (rec['tu'] if rec and rec.get('tu') else source))
     t0 = time.time()
     with oracle.build_lock():
-        # baseline first: if the tree does not link with every pending unit held back, the
-        # fault is elsewhere (a header, a tool change) and bisecting would blame them all
-        _set_status(p, list(units.values()), "nonmatching")
-        if not _relink(p):
+        _set_status(p, list(units.values()), 'matching')
+        if _relink(p):
+            good, bad = list(units), []
+            fast_path = True
+        else:
+            # Establish a known-good baseline only after an actual failure.
+            # This distinguishes a bad candidate from a pre-existing breakage.
             _set_status(p, list(units.values()), "nonmatching")
-            return {"ok": False, "error": "baseline relink failed with all pending units held back; "
-                    "the tree is broken independently of them (byte-diff the REL); nothing changed",
-                    "verified": [], "rejected": []}
-        good, bad = _bisect(p, list(units.keys()), units)
+            if not _relink(p):
+                _set_status(p, list(units.values()), 'matching')
+                return {"ok": False, "error": "baseline relink failed with all pending units held back; "
+                        "the tree is broken independently of them; pending status restored",
+                        "verified": [], "rejected": [], 'secs': round(time.time() - t0, 3)}
+            good, bad = _bisect(p, list(units), units, known_failure=True)
+            fast_path = False
         # final state: good units Matching, bad units uncarved (no unit without matched code); relink once more if we bisected
         if bad:
             from .uncarve import uncarve
@@ -97,32 +108,42 @@ def verify(p: Project, message: Optional[str] = None) -> Dict[str, object]:
             uncarve(p, [units[k] for k in bad], split=False)  # the unit, its split range and gen stub
             _set_status(p, [units[k] for k in good], "matching")
             if not _relink(p):
-                return {"ok": False, "error": "relink failed even after bisect; tree left with all pending units nonmatching",
+                return {"ok": False, "error": "relink failed after removing rejected units; accepted units remain matching",
                         "rejected": bad, "verified": []}
         commit = None
-        if good:
+        if good or bad or dependencies:
             files = [str(p.units_path)]
-            for k in good:
-                rec = p.unit_record(units[k])
-                files.append(str(ROOT / "src" / (rec["tu"] if rec and rec.get("tu") else units[k])))
-            for mod in {p.resolve(k).module for k in good}:
+            # Rejection also changes existing TU files. Include those and tracked
+            # deletions, but not removed candidates that were never committed.
+            for source in sources:
+                if source.exists() or subprocess.run(['git', 'ls-files', '--error-unmatch', str(source)],
+                        cwd=ROOT, capture_output=True).returncode == 0:
+                    files.append(str(source))
+            for mod in {p.resolve(k).module for k in good + bad}:
                 d = p.module_config_dir(mod)
                 files += [str(d / "splits.txt"), str(d / "symbols.txt")]
-            subprocess.run(["git", "add", *files], cwd=ROOT, capture_output=True)
+            files.extend(dependencies)
+            files = sorted(set(files))
+            subprocess.run(["git", "add", '--', *files], cwd=ROOT, capture_output=True, check=True)
             msg = message or f"match: {len(good)} functions link-verified"
             names = ", ".join(p.resolve(k).name for k in good[:8]) + (" ..." if len(good) > 8 else "")
-            subprocess.run(["git", "commit", "-q", "-m", f"{msg} ({names})"], cwd=ROOT, capture_output=True)
+            changed = subprocess.run(['git', 'diff', '--cached', '--quiet', '--', *files], cwd=ROOT).returncode
+            if changed:
+                subprocess.run(["git", "commit", '--only', "-q", "-m", msg + (f" ({names})" if names else ''), '--', *files],
+                               cwd=ROOT, capture_output=True, check=True)
             commit = subprocess.run(["git", "rev-parse", "--short", "HEAD"], cwd=ROOT, text=True,
                                     capture_output=True).stdout.strip()
             for k in good:
                 l.db.execute("UPDATE functions SET link_state='verified', matched_commit=? WHERE symbol=?", (commit, k))
-    return {"ok": True, "verified": good, "rejected": bad, "commit": commit, "secs": round(time.time() - t0, 1)}
+            journal.unlink(missing_ok=True)
+    return {"ok": True, "verified": good, "rejected": bad, "commit": commit,
+            "fast_path": fast_path, "secs": round(time.time() - t0, 3)}
 
 
-def _bisect(p: Project, keys: List[str], units: Dict[str, str]) -> tuple[List[str], List[str]]:
+def _bisect(p: Project, keys: List[str], units: Dict[str, str], known_failure=False) -> tuple[List[str], List[str]]:
     """Return (good, bad). Assumes the caller holds the build lock."""
     _set_status(p, [units[k] for k in keys], "matching")
-    if _relink(p):
+    if not known_failure and _relink(p):
         return keys, []
     if len(keys) == 1:
         _set_status(p, [units[keys[0]]], "nonmatching")
@@ -136,3 +157,45 @@ def _bisect(p: Project, keys: List[str], units: Dict[str, str]) -> tuple[List[st
     rg, rb = _bisect(p, right, units)
     _set_status(p, [units[k] for k in lg + rg], "matching")
     return lg + rg, lb + rb
+
+
+def watch(version: str, interval: float, until_pid: Optional[int] = None,
+          stop_file: Optional[Path] = None, message: Optional[str] = None):
+    """Drain completed work periodically; an outlier model cannot delay commits.
+
+    Stop signals are observed between transactions, never in the middle of
+    a link, rejection rollback or commit. Parent death triggers a final drain.
+    """
+    stop_requested = False
+
+    def request_stop(signum, frame):
+        nonlocal stop_requested
+        stop_requested = True
+
+    signal.signal(signal.SIGTERM, request_stop)
+    signal.signal(signal.SIGINT, request_stop)
+    while True:
+        if pending(Ledger()) or (STATE_DIR / 'verify_dependencies.jsonl').exists():
+            try:
+                result = verify(Project(version), message)
+            except Exception as error:
+                result = dict(ok=False, error=str(error), verified=[], rejected=[])
+            print(json.dumps(dict(timestamp=time.time(), **result)), flush=True)
+        deadline = time.monotonic() + interval
+        while True:
+            stopping = stop_requested or (stop_file is not None and stop_file.exists())
+            if until_pid:
+                try:
+                    os.kill(until_pid, 0)
+                except ProcessLookupError:
+                    stopping = True
+            if stopping:
+                # A submit may have completed during the last sleep.
+                if pending(Ledger()) or (STATE_DIR / 'verify_dependencies.jsonl').exists():
+                    result = verify(Project(version), message)
+                    print(json.dumps(dict(timestamp=time.time(), **result)), flush=True)
+                return
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                break
+            time.sleep(min(1.0, remaining))

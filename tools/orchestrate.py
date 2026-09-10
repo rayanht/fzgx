@@ -298,6 +298,33 @@ def run_one(p: Project, harness: str, model: str, symbol: str, idx: int, timeout
 
 
 def fan_out(p: Project, a, model: str, symbols: List[str], batch: str, revise: bool) -> tuple:
+    if a.shadow or not a.verify_interval:
+        return _fan_out(p, a, model, symbols, batch, revise)
+    directory = STATE_DIR / 'runs' / batch
+    directory.mkdir(parents=True, exist_ok=True)
+    stop = directory / 'verify.stop'
+    if stop.exists():
+        raise ValueError(f'{batch}: batch already finished; use a new batch name')
+    with (directory / 'verify.jsonl').open('a') as output, (directory / 'verify.stderr.log').open('a') as errors:
+        watcher = subprocess.Popen([
+            sys.executable, str(ROOT / 'tools/fzgx.py'), '--json', 'verify', '--watch',
+            '--interval', str(a.verify_interval), '--until-pid', str(os.getpid()), '--stop-file', str(stop),
+            '--message', f'Live matches from {batch}'], cwd=ROOT, stdout=output, stderr=errors)
+        try:
+            return _fan_out(p, a, model, symbols, batch, revise)
+        finally:
+            stop.touch()
+            # Allow an active transaction to finish; never terminate a linker
+            # or verifier halfway through updating source ownership.
+            if watcher.wait():
+                error = dict(timestamp=time.time(), ok=False, verified=[], rejected=[],
+                             error=f'live verifier exited {watcher.returncode}; see verify.stderr.log')
+                output.write(json.dumps(error) + '\n')
+                output.flush()
+                print(error['error'], file=sys.stderr, flush=True)
+
+
+def _fan_out(p: Project, a, model: str, symbols: List[str], batch: str, revise: bool) -> tuple:
     """Run one agent per symbol, `a.parallel` at a time, within `a.budget_usd`."""
     if a.harness == 'codex':
         import asyncio
@@ -370,6 +397,8 @@ def main(argv: Optional[List[str]] = None) -> int:
     ap.add_argument("--tool-parallel", type=int, default=min(16, os.cpu_count() or 4),
                     help="maximum simultaneous local tool processes, independent of model sessions")
     ap.add_argument("--timeout", type=int, default=900, help="seconds per agent")
+    ap.add_argument('--verify-interval', type=float, default=60,
+                    help='seconds between live verification passes; 0 keeps end-only verification')
     ap.add_argument('--seeds', type=Path, help='JSON manifest of saved C, compiler options and scores; selects its functions by default')
     ap.add_argument('--max-checks', type=int, help='checks allowed per worker attempt')
     ap.add_argument('--max-stale', type=int, help='consecutive non-improving checks allowed per worker')
@@ -395,6 +424,8 @@ def main(argv: Optional[List[str]] = None) -> int:
     a = ap.parse_args(argv)
     if a.parallel < 1 or a.tool_parallel < 1 or a.timeout < 1:
         ap.error('parallel, tool-parallel and timeout must be positive')
+    if a.verify_interval < 0:
+        ap.error('--verify-interval must be nonnegative')
     if len(a.symbols) != len(set(a.symbols)):
         ap.error('duplicate symbols are not allowed')
     if a.provider == "deepseek":
@@ -468,8 +499,16 @@ def main(argv: Optional[List[str]] = None) -> int:
     t0 = time.time()
     results, spent = fan_out(p, a, model, symbols, a.batch, a.revise)
     ver = {"ok": True, "verified": [], "rejected": []}
+    live = []
     if not a.shadow:
         ver = api.verify_links(p, f"batch {a.batch}: link-verified matches")
+        live_log = STATE_DIR / 'runs' / a.batch / 'verify.jsonl'
+        if live_log.exists():
+            live = [json.loads(line) for line in live_log.read_text().splitlines() if line.strip()]
+            ver['verified'] = sorted(set(ver.get('verified', []) + [s for r in live for s in r.get('verified', [])]))
+            ver['rejected'] = sorted(set(ver.get('rejected', []) + [s for r in live for s in r.get('rejected', [])]))
+            # The final drain retries any pending work after a watcher failure;
+            # its result determines current health, not an earlier transient error.
         print(f"verify: {len(ver.get('verified', []))} verified, {len(ver.get('rejected', []))} rejected"
               + (f" ({ver.get('error')})" if ver.get("error") else ""), flush=True)
         for r in results:
@@ -485,6 +524,8 @@ def main(argv: Optional[List[str]] = None) -> int:
     summary = {"batch": a.batch, "harness": a.harness, "model": model + (" (fast)" if a.fast else ""), "models_seen": models, "n": len(results), "matched": len(matched),
                "provider": a.provider, "transport": "app-server" if a.harness == "codex" else "cli",
                "parallel": a.parallel, "tool_parallel": a.tool_parallel, "cost_basis": "; ".join(sorted({r["cost_basis"] for r in results})),
+               "verify_interval": a.verify_interval, "live_verifications": len(live),
+               "live_verify_errors": sum(not r.get('ok') for r in live),
                "link_rejected": len(ver.get("rejected", [])),
                "released": len(released), "failed": len(other), "cost_usd": round(spent, 3),
                "wall_s": round(time.time() - t0, 1), "finish": finish_result, "results": results}
@@ -501,9 +542,9 @@ def main(argv: Optional[List[str]] = None) -> int:
     rep.parent.mkdir(parents=True, exist_ok=True)
     rep.write_text("\n".join(lines) + "\n")
     api.snapshot(p)
-    subprocess.run(["git", "add", str(ROOT / "state" / "ledger.json")], cwd=ROOT, capture_output=True)
-    subprocess.run(["git", "commit", "-q", "-m", f"batch {a.batch}: {len(matched)}/{len(results)} matched ({a.harness}/{model})"],
-                   cwd=ROOT, capture_output=True)
+    subprocess.run(["git", "add", str(ROOT / "state" / "ledger.json")], cwd=ROOT, capture_output=True, check=True)
+    subprocess.run(["git", "commit", '--only', "-q", "-m", f"batch {a.batch}: {len(matched)}/{len(results)} matched ({a.harness}/{model})",
+                    '--', str(ROOT / 'state/ledger.json')], cwd=ROOT, capture_output=True, check=True)
     print(json.dumps({k: v for k, v in summary.items() if k != "results"}))
     return 0 if ver.get("ok") and not other else 1
 

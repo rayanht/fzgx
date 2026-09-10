@@ -180,6 +180,12 @@ def cmd_compare(a, p):
 
 
 def cmd_verify(a, p):
+    if a.watch:
+        if a.interval <= 0:
+            raise ValueError('--interval must be positive')
+        from . import verify
+        verify.watch(p.version, a.interval, a.until_pid, a.stop_file, a.message)
+        return 0
     r = api.verify_links(p, a.message)
     _print(r, a.json); return 0 if r.get("ok") else 1
 
@@ -484,6 +490,10 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("sources", nargs="*"); s.add_argument("--stubs", action="store_true")
     s = sub.add_parser("verify", help="relink once for all accepted units, verify hashes, commit; bisect on failure"); s.set_defaults(fn=cmd_verify)
     s.add_argument("--message")
+    s.add_argument('--watch', action='store_true', help='verify completed matches periodically, independent of model sessions')
+    s.add_argument('--interval', type=float, default=60, help='seconds between pending-work checks in watch mode')
+    s.add_argument('--until-pid', type=int, help='watch until this parent exits, then drain once more')
+    s.add_argument('--stop-file', type=Path, help='stop between transactions when this file exists, after a final drain')
     s = sub.add_parser("compare", help="A/B table for two agent-id prefixes (e.g. b3c-claude vs shadow-b3c-codex)"); s.set_defaults(fn=cmd_compare)
     s.add_argument("--a", required=True); s.add_argument("--b", required=True)
     s = sub.add_parser("trivial", help="mechanically match single-blr and `li r3,N; blr` functions"); s.set_defaults(fn=cmd_trivial)

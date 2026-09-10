@@ -432,6 +432,11 @@ class Project:
             if rewritten != body:
                 path.write_text(rewritten)
                 changed.append(str(path.relative_to(ROOT)))
+        if changed:
+            # A promoted function can rename callers outside its own new unit.
+            # Those dependencies must land in the same hash-verified commit.
+            with (STATE_DIR / 'verify_dependencies.jsonl').open('a') as out:
+                out.write(json.dumps(changed) + '\n')
         return changed
 
     def promote_to_global(self, module: str, names: List[str]) -> List[str]:

@@ -31,7 +31,9 @@ retain the selected compiler and archive the body with its compiler settings.
 The manual CLI (`uv run tools/fzgx.py ...`) and MCP server
 (`tools/fzgx_mcp.py`) retain claim/context/check/submit/release operations for
 humans and other harnesses. `fzgx verify` relinks all 16 targets and verifies
-every hash before committing accepted source. Rules enforced by tooling:
+every hash before committing accepted source. Batches verify every 60 seconds by
+default and drain again on exit; completed matches do not wait for outlier models.
+Rules enforced by tooling:
 no hardcoded addresses, no inline asm, no writes outside the assigned work copy.
 
 ## Librarian (serial; stronger model)
@@ -40,7 +42,7 @@ Applies name proposals (`fzgx names`), promotes shared structs into
 `include/`, merges fully matched ranges into translation units, adjusts data
 ownership in `splits.txt`, appends to `docs/MWCC_IDIOMS.md`. Always ends with
 `python3 configure.py && ninja` printing `16 files OK`, `fzgx lint`,
-`fzgx snapshot`, and a commit prefixed `librarian:`.
+`fzgx snapshot`, and a concise commit describing the actual changes.
 
 ## Triage
 

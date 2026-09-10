@@ -58,8 +58,10 @@ Rules that hold for everyone:
   `git clean/checkout/restore/reset/stash/rebase/push` and `ninja -t clean`
   for every agent in this repo. If the build looks broken, run
   `python3 configure.py && ninja build/GFZE01/ok` and report; do not "clean".
-- `fzgx submit` is the only path that flips a unit to `matching`; `fzgx verify` relinks once
-  per batch and verifies every hash before committing. Literal-pool constants: retail pooled
+- `fzgx submit` is the only path that flips a unit to `matching`; the batch verifier drains
+  completed matches every 60 seconds (`--verify-interval`) and checks every hash before
+  committing. Its normal path runs one incremental Ninja build; baseline restoration and
+  bisection run only after a failure. Literal-pool constants: retail pooled
   literals per TU (e.g. the 2^52 int-to-double constant), so a per-function unit's private
   `@N` literal never matches the relocation. When the only diffs are such relocations with
   equal bytes, `check` retargets the private symbols to the retail ones in the object
@@ -218,7 +220,7 @@ Rules that hold for everyone:
   anchors (then `fzgx tu-organize` and regenerate headers).
 - Batches: `uv run tools/orchestrate.py --harness codex ...` (codex only; tiers: gpt-5.6-luna, then gpt-5.6-terra;
   Sonnet and Gemini Flash were tried and dropped) (headless, one report
-  per batch, `fzgx verify` relinks once at the end). Never use in-process subagents.
+  per batch, periodic live verification and a final drain). Never use in-process subagents.
 - DeepSeek trials use the same Codex harness: `--provider deepseek --model deepseek-flash`
   selects DeepSeek-V4.1-Flash. Supply `DEEPSEEK_API_KEY` or `--api-key-file PATH`;
   keys stay outside the repository and out of command arguments. The provider and
@@ -280,6 +282,12 @@ Rules that hold for everyone:
   Pass the resulting manifest to the orchestrator with `--seeds PATH --no-trivial`;
   `--provider deepseek --parallel 128 --effort low` requests the lowest supported
   reasoning effort through worker-local overrides.
+- Retry a completed batch's still-unmatched releases with `uv run tools/seeds/released.py
+  --batch BATCH --seeds ORIGINAL_MANIFEST --output NEW_DIRECTORY`. This freezes each
+  release's saved C and compiler settings without a size or score cutoff. Older metadata
+  is recovered only from identical checked C or an identical original seed. The runner
+  performs the current compile as preflight. Use a new batch name and set `--parallel`
+  to the manifest's function count for full-width concurrency.
 - The orchestrator does three things: pick a pool, run the batch, run the TU-finish round
   (`--finish`, or `--finish-only --module M`). It reads reports. It does not edit blocks,
   headers or splits by hand, and does not experiment on the live tree (use `--shadow`).
@@ -299,8 +307,9 @@ Rules that hold for everyone:
   compile through `oracle.compile_many`/`check_many` (parallel chunks), never one process per body.
 - While a batch runs, never call `configure.py`, `ninja` or `dtk` by hand: go through
   `fzgx verify` or `oracle.build_lock()`. Two concurrent splits kill each other (exit 137)
-  and a broken baseline makes a bisect blame every pending unit (verify now checks the
-  baseline first, but the split race still corrupts `build/`).
+  and a broken baseline makes a bisect blame every pending unit. Verification holds
+  submit.lock then the build lock; after a failed incremental build it establishes a
+  known-good baseline before bisection. Never wrap verify in another submit.lock.
 
 ## Layout
 

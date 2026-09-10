@@ -54,7 +54,48 @@ On timeout or disconnect the host stops the turn, drains any in-flight tool
 mutation, and releases the saved best candidate. Finished threads are unsubscribed
 with an unload delay of zero. SIGTERM follows the same cleanup path. Killing a
 compiler submission halfway through carving is avoided. All accepted source
-still passes the normal deferred 16-target link/hash verification.
+still passes all 16 target hashes before being committed.
+
+## Live verification
+
+One verifier process drains completed matches every 60 seconds, independently of
+model sessions. `--verify-interval SECONDS` changes the interval; zero selects
+end-only verification. Shutdown waits for any active transaction and drains again.
+SIGTERM/SIGINT stop the watcher between transactions. To attach to an older runner:
+
+```sh
+uv run tools/fzgx.py --json verify --watch --interval 60 --until-pid RUNNER_PID
+```
+
+The normal path runs one incremental Ninja build and hash check. It does not
+disable accepted units or rerun configure unconditionally. Only a failed build
+triggers baseline restoration and bisection. Submission and build locks cover
+the transaction and commit; model reasoning and private compiles continue.
+Symbol promotion journals dependent caller/header edits so they are committed
+with the verified source. Rejection preserves the saved C and restores ownership.
+Commits include only these paths, leaving unrelated staged work alone.
+
+`verify.jsonl` records pass results in the batch directory; `verify.stderr.log`
+retains watcher errors. Final reports include periodic acceptances/rejections.
+Build output is retained in `.fzgx/verify_builds.jsonl`.
+
+On real `fn_80021930`, rechecking already-built accepted C fell from 8.630 seconds
+to 0.118 seconds. Forcing its MWCC recompile and relink took 1.837 seconds and
+passed all 16 hashes. These are single-function measurements, not full-batch
+throughput. Replaying the archived object-only match `fn_1_F9028` exercised the
+watcher's failure path: it rejected the candidate, restored all 16 hashes, and
+exited cleanly in 26.834 seconds.
+
+To resume a batch's releases, preserving their saved reconstructions:
+
+```sh
+uv run tools/seeds/released.py --batch PREVIOUS_BATCH \
+  --seeds ORIGINAL_MANIFEST --output NEW_SEED_DIRECTORY
+```
+
+This selects still-unmatched final releases, with no size or score cutoff. It
+excludes functions already integrated since that release. Use the resulting
+manifest with a new batch name; its function count is the full-width `--parallel`.
 
 ## Runtime isolation and records
 

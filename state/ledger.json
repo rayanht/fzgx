@@ -1,5 +1,5 @@
 {
- "generated": 1789056355,
+ "generated": 1789056663,
  "functions": [
   {
    "symbol": "car_colchg:_prolog",
@@ -90026,7 +90026,7 @@
    "addr": 1019944,
    "size": 540,
    "status": "unmatched",
-   "attempts": 4,
+   "attempts": 6,
    "best_percent": 100.0,
    "claimed_by": null,
    "claimed_at": null,
@@ -337598,6 +337598,25 @@
    "cost_usd": 0.0,
    "outcome": "matched",
    "notes": "oracle match accepted automatically",
+   "best_body_path": null,
+   "stale_checks": 0,
+   "best_in_attempt": 100.0
+  },
+  {
+   "id": 10846,
+   "symbol": "fn_1_F9028",
+   "agent": "verify-replay-20260910",
+   "harness": null,
+   "model": null,
+   "started": 1789056536,
+   "ended": 1789056541,
+   "checks": 1,
+   "final_percent": 100.0,
+   "tokens_in": 0,
+   "tokens_out": 0,
+   "cost_usd": 0.0,
+   "outcome": "link-mismatch",
+   "notes": "oracle match accepted automatically [object matched but link differed]",
    "best_body_path": null,
    "stale_checks": 0,
    "best_in_attempt": 100.0
