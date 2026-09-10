@@ -226,8 +226,11 @@ Rules that hold for everyone:
   `tools/codex_models.json` are selected with run-local overrides; normal Codex config
   is untouched. Never set `forced_login_method="api"` for these runs: Codex 0.153.4
   deletes the shared ChatGPT login when enforcing it. `env_key` authenticates the
-  custom provider without changing the OpenAI login. DeepSeek cost estimates use
-  peak rates as an upper bound; supported effort levels are `low`, `high`, and `max`.
+  custom provider without changing the OpenAI login. DeepSeek returns token usage,
+  not dollar cost (confirmed with the live Responses API). Estimate each response
+  at weekday UTC 01:00-04:00 / 06:00-10:00 peak rates, half otherwise; retain usage
+  from failed turns too. Label estimates explicitly; use provider-reported dollar
+  cost when available. Supported effort levels are `low`, `high`, and `max`.
   Load the six matcher tools directly (`supports_search_tool=false`): DeepSeek rejects
   duplicate MCP namespaces returned by parallel Codex tool searches. Shadow trials
   retain matched C and compiler options under `.fzgx/attempts/` for later integration;

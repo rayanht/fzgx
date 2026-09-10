@@ -23,6 +23,7 @@ import subprocess
 import sys
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, List, Optional
 
@@ -40,7 +41,7 @@ CLAUDE_MODELS = {"haiku": "claude-haiku-4-5", "sonnet": "claude-sonnet-5", "opus
 # Codex reports usage but no cost; Claude Code reports total_cost_usd itself.
 CODEX_PRICES = {"gpt-5.6-luna": (0.20, 0.02, 0.25, 1.20), "gpt-5.6-terra": (2.00, 0.20, 2.50, 12.00),
                 "gpt-5.6-sol": (4.00, 0.40, 5.00, 20.00), "gpt-6-astra": (10.00, 1.00, 12.50, 50.00)}
-# DeepSeek peak rates are a conservative batch-budget estimate; off-peak is half.
+# DeepSeek peak rates; weekday UTC 01-04 and 06-10, otherwise half price.
 # https://api-docs.deepseek.com/quick_start/pricing/ (2026-09-10)
 DEEPSEEK_PRICES = {"deepseek-flash": (0.30, 0.006, 0.0, 1.20)}
 FAST_MULTIPLIER = 2.0  # "Fast mode" (formerly priority processing) is 2x standard on every line
@@ -154,16 +155,39 @@ def parse_claude(out: str) -> Dict:
     return {"text": out, "cost": 0.0, "turns": None, "tokens_in": 0, "tokens_out": 0, "model": ""}
 
 
-def codex_session_model(thread_id: str) -> str:
-    """Codex's --json events omit the model; its session rollout records it."""
+def codex_session_info(thread_id: str) -> tuple[str, Dict, List]:
+    """Rollouts retain the model and usage even when a turn fails before turn.completed."""
     if not thread_id:
-        return ""
+        return "", {}, []
     root = Path.home() / ".codex" / "sessions"
     for f in sorted(root.rglob(f"*{thread_id}*"), key=lambda f: f.stat().st_mtime, reverse=True):
-        m = re.search(r'"model":"([^"]+)"', f.read_text(errors="replace"))
-        if m:
-            return m.group(1)
-    return ""
+        model, usage, samples = "", {}, []
+        for line in f.read_text(errors="replace").splitlines():
+            try:
+                event = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            payload = event.get("payload", {})
+            if event.get("type") == "turn_context":
+                model = payload.get("model") or model
+            if payload.get("type") == "token_count":
+                total = (payload.get("info") or {}).get("total_token_usage") or usage
+                delta = {k: max(0, total.get(k, 0) - usage.get(k, 0)) for k in
+                         ("input_tokens", "cached_input_tokens", "cache_write_input_tokens", "output_tokens")}
+                if delta["input_tokens"] or delta["output_tokens"]:
+                    samples.append((event.get("timestamp"), delta))
+                usage = total
+        if model or usage:
+            return model, usage, samples
+    return "", {}, []
+
+
+def deepseek_rate_multiplier(timestamp: Optional[str]) -> float:
+    if not timestamp:
+        return 1.0  # missing timestamps cannot establish eligibility for the discount
+    when = datetime.fromisoformat(timestamp.replace("Z", "+00:00")).astimezone(timezone.utc)
+    peak = when.weekday() < 5 and (1 <= when.hour < 4 or 6 <= when.hour < 10)
+    return 1.0 if peak else 0.5
 
 
 def parse_codex(out: str, fast: bool = False, provider: str = "openai") -> Dict:
@@ -189,12 +213,26 @@ def parse_codex(out: str, fast: bool = False, provider: str = "openai") -> Dict:
             cache_w += u.get("cache_write_input_tokens", 0)
             tout += u.get("output_tokens", 0)
         model = ev.get("model", model) or model
-    model = model or codex_session_model(thread)
+    session_model, usage, samples = codex_session_info(thread)
+    model = model or session_model
+    if usage.get("input_tokens", 0) > tin:
+        tin = usage.get("input_tokens", 0)
+        cached = usage.get("cached_input_tokens", 0)
+        cache_w = usage.get("cache_write_input_tokens", 0)
+        tout = usage.get("output_tokens", 0)
     prices = DEEPSEEK_PRICES if provider == "deepseek" else CODEX_PRICES
     pi, pc, pw, po = prices.get(model, (0.0, 0.0, 0.0, 0.0))
     cost = ((tin - cached) * pi + cached * pc + cache_w * pw + tout * po) / 1e6 * (FAST_MULTIPLIER if fast else 1.0)
+    basis = "OpenAI fast-rate estimate" if fast else "OpenAI standard-rate estimate"
+    if provider == "deepseek":
+        basis = "DeepSeek peak-rate estimate (request timestamps unavailable)"
+        if samples:
+            cost = sum(((u["input_tokens"] - u["cached_input_tokens"]) * pi
+                        + u["cached_input_tokens"] * pc + u["cache_write_input_tokens"] * pw
+                        + u["output_tokens"] * po) / 1e6 * deepseek_rate_multiplier(t) for t, u in samples)
+            basis = "DeepSeek peak/off-peak estimate by UTC response timestamp"
     return {"text": text or out[-2000:], "cost": round(cost, 6), "turns": None, "tokens_in": tin,
-            "tokens_out": tout, "model": model}
+            "tokens_out": tout, "model": model, "cost_basis": basis}
 
 
 def run_one(p: Project, harness: str, model: str, symbol: str, idx: int, timeout: int, batch: str,
@@ -247,6 +285,7 @@ def run_one(p: Project, harness: str, model: str, symbol: str, idx: int, timeout
     log.parent.mkdir(parents=True, exist_ok=True)
     log.write_text(out)
     return {"symbol": symbol, "outcome": outcome, "percent": pct, "checks": checks, "cost": info["cost"], "model": info["model"],
+            "cost_basis": info.get("cost_basis", "provider-reported"),
             "tokens_in": info["tokens_in"], "tokens_out": info["tokens_out"], "turns": info["turns"],
             "secs": round(time.time() - t0, 1), "rc": rc}
 
@@ -330,7 +369,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     ap.add_argument("--module", default="main_rel", help="module for --select-tu")
     ap.add_argument("--max-size", type=int, default=0, help="size cap for --select-tu")
     ap.add_argument("--retry", type=int, default=0, help="--select-tu: also functions with fewer than N attempts")
-    ap.add_argument("--budget-usd", type=float, help="stop launching new agents past estimated spend; DeepSeek uses peak rates")
+    ap.add_argument("--budget-usd", type=float, help="stop launching new agents past spend; token-priced providers are estimates")
     ap.add_argument("--batch", default=time.strftime("b%Y%m%d-%H%M"))
     ap.add_argument("--no-trivial", action="store_true", help="skip the mechanical blr/li pass first")
     ap.add_argument("--dry-run", action="store_true")
@@ -429,9 +468,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     other = [r for r in results if r not in matched and r not in released]
     models = sorted({r.get("model") for r in results if r.get("model")})
     summary = {"batch": a.batch, "harness": a.harness, "model": model + (" (fast)" if a.fast else ""), "models_seen": models, "n": len(results), "matched": len(matched),
-               "provider": a.provider, "cost_basis": ("DeepSeek peak-rate upper bound" if a.provider == "deepseek" else
-                                                        "provider-reported" if a.harness == "claude" else
-                                                        "OpenAI fast rates" if a.fast else "OpenAI standard rates"),
+               "provider": a.provider, "cost_basis": "; ".join(sorted({r["cost_basis"] for r in results})),
                "link_rejected": len(ver.get("rejected", [])),
                "released": len(released), "failed": len(other), "cost_usd": round(spent, 3),
                "wall_s": round(time.time() - t0, 1), "finish": finish_result, "results": results}
