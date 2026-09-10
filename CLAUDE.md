@@ -261,6 +261,16 @@ Rules that hold for everyone:
   The selector rejects stale ledger symbols and fails if any selected function has
   no draft. Accepted C installs serially under `submit.lock`: different functions
   can share a TU, splits and symbol tables even when their work copies are isolated.
+- Recovered-candidate batches use `uv run tools/seeds/recovered.py --above 90 --output PATH`.
+  This selects strict historical scores above the threshold without a size cap or SDK
+  exclusion, joining attempt bodies, check archives, lifter drafts, owned SDK imports,
+  repair results and sweep/spelling history. Donor fuzzy scores are not C match scores.
+  Freeze the actual saved C, hashes, provenance and compiler settings; recheck it and
+  try saved alternatives for regressed seeds. Keep historical eligibility separate
+  from current scores in the manifest. Missing saved bodies fail preparation.
+  Pass the resulting manifest to the orchestrator with `--seeds PATH --no-trivial`;
+  `--provider deepseek --parallel 128 --effort low` requests the lowest supported
+  reasoning effort through worker-local overrides.
 - The orchestrator does three things: pick a pool, run the batch, run the TU-finish round
   (`--finish`, or `--finish-only --module M`). It reads reports. It does not edit blocks,
   headers or splits by hand, and does not experiment on the live tree (use `--shadow`).

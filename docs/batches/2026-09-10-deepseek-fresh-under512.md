@@ -4,6 +4,11 @@ Batch `deepseek-fresh-under512-128-20260910-095154` uses 128 Codex workers, Deep
 (`deepseek-flash`, high effort), 16 matcher checks and four consecutive stale
 checks. Timeout is 7,200 seconds per worker.
 
+Completed: 56 matched, 109 released, zero failed; all 56 accepted functions
+passed link verification with zero rejections. Wall time was 2,065.8 seconds;
+estimated API cost was $6.776. Sources and the final ledger were committed
+locally in `8968135` and `50399d4`.
+
 The pool is 165 functions / 59,648 bytes, selected from 1,556 unmatched
 ledger rows smaller than 512 bytes. The selector excludes 1364 rows with
 prior saved matcher C or successful checks, 23 with SDK signatures/prepared
