@@ -569,6 +569,72 @@ void fn_1_156B18(fn_1_156B18_State *state) {
 }
 /* fzgx:end fn_1_156B18 */
 
+/* fzgx:begin fn_1_1574E0 noprologue */
+#include "types.h"
+
+extern void fn_8006B55C(void *, void *, void *);
+extern void fn_8006B628(u32, void *);
+extern void fn_8006B7B4(u32);
+extern void fn_8006B6F8(u32);
+
+typedef struct {
+    u8 _pad00[4];
+    void *owner;
+    u8 _pad08[0x1c];
+    u32 value;
+} RankingState;
+
+typedef struct {
+    u8 type;
+    u8 _pad01[3];
+    u32 duration;
+    u32 flags;
+    u8 strength;
+    u8 _pad0d;
+    s16 angle;
+    s16 value10;
+    s16 value12;
+    s16 value14;
+    u32 value18;
+    u32 value1c;
+    u8 value20;
+    u8 value21;
+} RankingConfig;
+
+void fn_1_1574E0(RankingState *state) {
+    u32 value = state->value;
+
+    if (value + 0x10000u == 0xffffu) {
+        RankingConfig config;
+        void *owner;
+
+        config.type = 2;
+        config.duration = 300;
+        config.flags = 0;
+        config.strength = 100;
+        config.angle = 90;
+        config.value10 = 15;
+        config.value12 = 0;
+        config.value14 = 0;
+        config.value18 = 0;
+        config.value1c = 0;
+        config.value20 = 0;
+        config.value21 = 0;
+
+        owner = state->owner;
+        if (value + 0x10000u == 0xffffu) {
+            fn_8006B55C(owner, &state->value, &config);
+        } else {
+            fn_8006B628(value, &config);
+        }
+    } else {
+        fn_8006B7B4(value);
+    }
+
+    fn_8006B6F8(state->value);
+}
+/* fzgx:end fn_1_1574E0 */
+
 /* fzgx:begin fn_1_1577D0 noprologue */
 #include "types.h"
 

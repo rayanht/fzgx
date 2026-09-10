@@ -5501,3 +5501,6 @@ rel/main_rel/custom_memcard/fn_1_131558.c:
 
 rel/main_rel/car_test/fn_1_7C1E8.c:
 	.text       start:0x0007C1E8 end:0x0007C2A0 align:4
+
+rel/main_rel/ranking/fn_1_1574E0.c:
+	.text       start:0x001574E0 end:0x00157598 align:4
