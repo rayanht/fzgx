@@ -52,8 +52,12 @@ def _set_status(p: Project, sources: List[str], status: str) -> None:
 def _relink(p: Project) -> bool:
     cp = oracle.configure(p)
     if cp.returncode != 0:
+        (STATE_DIR / 'verify_last_failure.log').write_text(cp.stdout + cp.stderr)
         return False
-    return oracle.relink(p).returncode == 0
+    cp = oracle.relink(p)
+    if cp.returncode:
+        (STATE_DIR / 'verify_last_failure.log').write_text(cp.stdout + cp.stderr)
+    return cp.returncode == 0
 
 
 def verify(p: Project, message: Optional[str] = None) -> Dict[str, object]:

@@ -4016,3 +4016,27 @@ dol/fn_80018554.c:
 
 dol/fn_80037014.c:
 	.text       start:0x80037014 end:0x800370A0 align:4
+
+dol/fn_800167BC.c:
+	.text       start:0x800167BC end:0x80016850 align:4
+
+dol/fn_8001687C.c:
+	.text       start:0x8001687C end:0x80016920 align:4
+
+dol/DVDLowStopMotor.c:
+	.text       start:0x80016920 end:0x800169AC align:4
+
+dol/fn_800169AC.c:
+	.text       start:0x800169AC end:0x80016A38 align:4
+
+dol/fn_80016A38.c:
+	.text       start:0x80016A38 end:0x80016AD4 align:4
+
+dol/fn_80016AD4.c:
+	.text       start:0x80016AD4 end:0x80016B6C align:4
+
+dol/fn_80016B6C.c:
+	.text       start:0x80016B6C end:0x80016BF8 align:4
+
+dol/fn_80016BF8.c:
+	.text       start:0x80016BF8 end:0x80016C94 align:4

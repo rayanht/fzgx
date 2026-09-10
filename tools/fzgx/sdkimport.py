@@ -262,6 +262,9 @@ def bindings(p: Project, rec: dict) -> dict:
         if off not in right:
             raise ValueError(f'{off:#x}: source relocation {name} has no retail relocation')
         dest, dest_addend, dest_kind = right[off]
+        dest_sym = retail_symbol(p, sym.module, dest)
+        if dest_sym and dest_sym.scope != 'local':
+            dest = dest_sym.name
         if kind == dest_kind and (addend != dest_addend or name in mapping and mapping[name] != dest):
             target_sym = retail_symbol(p, sym.module, dest)
             previous = retail_symbol(p, sym.module, mapping[name]) if name in mapping else None

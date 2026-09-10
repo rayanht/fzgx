@@ -96,7 +96,7 @@
     },
     "bindings": {
       "AlarmForTimeout": "AlarmForTimeout_8015CDD8",
-      "AlarmHandlerForTimeout": "AlarmHandlerForTimeout_80016324",
+      "AlarmHandlerForTimeout": "AlarmHandlerForTimeout",
       "Callback": "Callback_801A6860",
       "DVDLowStopMotor": "DVDLowStopMotor",
       "OSCreateAlarm": "OSCreateAlarm",
@@ -215,7 +215,7 @@
     },
     "bindings": {
       "AlarmForTimeout": "AlarmForTimeout_8015CDD8",
-      "AlarmHandlerForTimeout": "AlarmHandlerForTimeout_80016324",
+      "AlarmHandlerForTimeout": "AlarmHandlerForTimeout",
       "Callback": "Callback_801A6860",
       "DVDLowSeek": "fn_800167BC",
       "OSCreateAlarm": "OSCreateAlarm",
@@ -239,7 +239,7 @@
     },
     "bindings": {
       "AlarmForTimeout": "AlarmForTimeout_8015CDD8",
-      "AlarmHandlerForTimeout": "AlarmHandlerForTimeout_80016324",
+      "AlarmHandlerForTimeout": "AlarmHandlerForTimeout",
       "Callback": "Callback_801A6860",
       "DVDLowReadDiskID": "fn_8001687C",
       "OSCreateAlarm": "OSCreateAlarm",
@@ -263,7 +263,7 @@
     },
     "bindings": {
       "AlarmForTimeout": "AlarmForTimeout_8015CDD8",
-      "AlarmHandlerForTimeout": "AlarmHandlerForTimeout_80016324",
+      "AlarmHandlerForTimeout": "AlarmHandlerForTimeout",
       "Callback": "Callback_801A6860",
       "DVDLowRequestError": "fn_800169AC",
       "OSCreateAlarm": "OSCreateAlarm",
@@ -287,7 +287,7 @@
     },
     "bindings": {
       "AlarmForTimeout": "AlarmForTimeout_8015CDD8",
-      "AlarmHandlerForTimeout": "AlarmHandlerForTimeout_80016324",
+      "AlarmHandlerForTimeout": "AlarmHandlerForTimeout",
       "Callback": "Callback_801A6860",
       "DVDLowInquiry": "fn_80016A38",
       "OSCreateAlarm": "OSCreateAlarm",
@@ -311,7 +311,7 @@
     },
     "bindings": {
       "AlarmForTimeout": "AlarmForTimeout_8015CDD8",
-      "AlarmHandlerForTimeout": "AlarmHandlerForTimeout_80016324",
+      "AlarmHandlerForTimeout": "AlarmHandlerForTimeout",
       "Callback": "Callback_801A6860",
       "DVDLowAudioStream": "fn_80016AD4",
       "OSCreateAlarm": "OSCreateAlarm",
@@ -335,7 +335,7 @@
     },
     "bindings": {
       "AlarmForTimeout": "AlarmForTimeout_8015CDD8",
-      "AlarmHandlerForTimeout": "AlarmHandlerForTimeout_80016324",
+      "AlarmHandlerForTimeout": "AlarmHandlerForTimeout",
       "Callback": "Callback_801A6860",
       "DVDLowRequestAudioStatus": "fn_80016B6C",
       "OSCreateAlarm": "OSCreateAlarm",
@@ -359,7 +359,7 @@
     },
     "bindings": {
       "AlarmForTimeout": "AlarmForTimeout_8015CDD8",
-      "AlarmHandlerForTimeout": "AlarmHandlerForTimeout_80016324",
+      "AlarmHandlerForTimeout": "AlarmHandlerForTimeout",
       "Callback": "Callback_801A6860",
       "DVDLowAudioBufferConfig": "fn_80016BF8",
       "OSCreateAlarm": "OSCreateAlarm",

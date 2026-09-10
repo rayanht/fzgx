@@ -2815,6 +2815,27 @@
   },
   {
     "module": "main",
+    "source": "dol/DVDLowStopMotor.c",
+    "symbols": [
+      "DVDLowStopMotor"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
     "source": "dol/DVDLowWaitCoverClose.c",
     "symbols": [
       "DVDLowWaitCoverClose"
@@ -8475,6 +8496,153 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_800167BC.c",
+    "symbols": [
+      "fn_800167BC"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_8001687C.c",
+    "symbols": [
+      "fn_8001687C"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_800169AC.c",
+    "symbols": [
+      "fn_800169AC"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_80016A38.c",
+    "symbols": [
+      "fn_80016A38"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_80016AD4.c",
+    "symbols": [
+      "fn_80016AD4"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_80016B6C.c",
+    "symbols": [
+      "fn_80016B6C"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_80016BF8.c",
+    "symbols": [
+      "fn_80016BF8"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
   },
   {
     "module": "main",
