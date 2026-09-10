@@ -24,6 +24,31 @@ void fn_14_220(void) {
 }
 /* fzgx:end fn_14_220 */
 
+/* fzgx:begin fn_14_268 */
+struct fn_14_268_lbl_1_bss_8B3A0 {
+    u8 pad_0[0x124];
+    u32 unk_124;
+};
+
+struct fn_14_268_lbl_14_bss_0 {
+    u32 unk_0;
+};
+
+extern struct fn_14_268_lbl_1_bss_8B3A0 lbl_1_bss_8B3A0;
+extern struct fn_14_268_lbl_14_bss_0 lbl_14_bss_0;
+
+u32 fn_14_268(void) {
+    u32 v0;
+
+    lbl_14_bss_0.unk_0--;
+    v0 = lbl_1_bss_8B3A0.unk_124;
+    if (v0 + 0x10000 != 0xffff) {
+        lbl_1_bss_8B3A0.unk_124 = v0 - 1;
+    }
+    return (u32)v0;
+}
+/* fzgx:end fn_14_268 */
+
 /* fzgx:begin fn_14_2A0 */
 typedef u32 (*fn_14_2A0_Fn0)(void);
 struct fn_14_2A0_Entry {
