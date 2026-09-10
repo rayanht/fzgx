@@ -4892,3 +4892,6 @@ dol/SIInit.c:
 
 dol/fn_8004E8F8.c:
 	.text       start:0x8004E8F8 end:0x8004E9A8 align:4
+
+dol/fn_8006F828.c:
+	.text       start:0x8006F828 end:0x8006F900 align:4
