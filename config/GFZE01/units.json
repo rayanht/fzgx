@@ -29753,6 +29753,17 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/driver/fn_1_A78CC.c",
+    "symbols": [
+      "fn_1_A78CC"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "tu": "rel/main_rel/driver.c"
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/driver/fn_1_A7968.c",
     "symbols": [
       "fn_1_A7968"

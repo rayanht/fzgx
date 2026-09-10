@@ -5483,3 +5483,6 @@ rel/main_rel/driver/fn_1_A93C4.c:
 
 rel/main_rel/burner/fn_1_983CC.c:
 	.text       start:0x000983CC end:0x000984F0 align:4
+
+rel/main_rel/driver/fn_1_A78CC.c:
+	.text       start:0x000A78CC end:0x000A7968 align:4

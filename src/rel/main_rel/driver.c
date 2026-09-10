@@ -141,6 +141,29 @@ void fn_1_A7854(FnA7854Object *object, void *arg1) {
 }
 /* fzgx:end fn_1_A7854 */
 
+/* fzgx:begin fn_1_A78CC */
+extern u8 lbl_1_data_34354[72];
+extern void *lbl_801A6410;
+extern void *fn_1_4630(void *arg0, s32 arg1, void *arg2, s32 arg3);
+
+void fn_1_A78CC(void) {
+    u32 **table;
+    s32 offset;
+    s32 index;
+
+    lbl_1_bss_6F638 = (u32)fn_1_4630(lbl_801A6410, 0xb0, lbl_1_data_34354, 0x145);
+    table = (u32 **)&lbl_1_bss_6F638;
+    index = 0;
+    offset = 0;
+    do {
+        *(u32 *)((u8 *)*table + offset) =
+            (u32)fn_1_4630(lbl_801A6410, 0x30c, lbl_1_data_34354, 0x147);
+        index++;
+        offset += 4;
+    } while (index < 0x2c);
+}
+/* fzgx:end fn_1_A78CC */
+
 /* fzgx:begin fn_1_A7968 */
 void fn_1_A7968(void) {
     s32 **table;
