@@ -146,6 +146,29 @@ void fn_1_15E540(s32 index, void *arg) {
 }
 /* fzgx:end fn_1_15E540 */
 
+/* fzgx:begin fn_1_15E5E4 */
+extern void *fn_1_435C(void *);
+extern void fn_1_15E220(u8 *value);
+extern void fn_1_3F8C(void *, void *, u8 *, s32);
+
+// Initializes a background-window entry once, then marks it ready for reuse.
+void fn_1_15E5E4(s32 index, void *arg) {
+    Obj_1_bss_8FDA8 *obj;
+    s32 offset = index * 0x34;
+
+    obj = (Obj_1_bss_8FDA8 *)((u8 *)&lbl_1_bss_8FDA8 + offset);
+
+    if (!(obj->unk_0 & 2)) {
+        void *value = fn_1_435C(arg);
+
+        fn_1_3F8C(lbl_1_data_4C994, fn_1_15E220, &obj->unk_2, 13);
+        (&lbl_1_bss_8FDA8.unk_2)[offset] = 0xff;
+        fn_1_435C(value);
+        obj->unk_0 |= 2;
+    }
+}
+/* fzgx:end fn_1_15E5E4 */
+
 /* fzgx:begin fn_1_15F618 */
 void *fn_1_15F618(s32 index) {
     return (u8 *)&lbl_1_bss_8FDA8 + index * 0x34;
