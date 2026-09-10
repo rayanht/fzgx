@@ -397,6 +397,24 @@ void fn_1_3238(void) {
 }
 /* fzgx:end fn_1_3238 */
 
+/* fzgx:begin fn_1_3B34 */
+extern u8 lbl_1_bss_AA0[336];
+extern u8 lbl_1_rodata_108[88];
+extern u32 fn_80008BEC(void *, u32, u32);
+extern u32 fn_80008BA8(void *, void *, u32);
+
+void fn_1_3B34(void) {
+    u32 i;
+
+    fn_80008BEC(lbl_1_bss_AA0, 0, 0x150);
+    i = 0;
+    do {
+        fn_80008BA8(lbl_1_bss_AA0 + i * 0x54, lbl_1_rodata_108, 0x54);
+        i++;
+    } while (i < 4);
+}
+/* fzgx:end fn_1_3B34 */
+
 /* fzgx:begin fn_1_3BB0 */
 u8 fn_1_3BB0(u32 arg0) {
     return *(u8 *)((u8 *)&lbl_1_data_2B78 + arg0);

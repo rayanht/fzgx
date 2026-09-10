@@ -4886,3 +4886,6 @@ dol/fn_800565FC.c:
 
 dol/fn_8008DC10.c:
 	.text       start:0x8008DC10 end:0x8008DCCC align:4
+
+dol/SIInit.c:
+	.text       start:0x80012210 end:0x800122C4 align:4
