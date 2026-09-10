@@ -40,6 +40,9 @@ CLAUDE_MODELS = {"haiku": "claude-haiku-4-5", "sonnet": "claude-sonnet-5", "opus
 # Codex reports usage but no cost; Claude Code reports total_cost_usd itself.
 CODEX_PRICES = {"gpt-5.6-luna": (0.20, 0.02, 0.25, 1.20), "gpt-5.6-terra": (2.00, 0.20, 2.50, 12.00),
                 "gpt-5.6-sol": (4.00, 0.40, 5.00, 20.00), "gpt-6-astra": (10.00, 1.00, 12.50, 50.00)}
+# DeepSeek peak rates are a conservative batch-budget estimate; off-peak is half.
+# https://api-docs.deepseek.com/quick_start/pricing/ (2026-09-10)
+DEEPSEEK_PRICES = {"deepseek-flash": (0.30, 0.006, 0.0, 1.20)}
 FAST_MULTIPLIER = 2.0  # "Fast mode" (formerly priority processing) is 2x standard on every line
 CODEX_INSTRUCTIONS = ROOT / "tools" / "codex_matcher.md"  # replaces Codex's 17.7k-char default persona prompt
 CODEX_REVISE_INSTRUCTIONS = ROOT / "tools" / "codex_revise.md"
@@ -86,9 +89,9 @@ def claude_cmd(symbol: str, agent_id: str, model: str) -> List[str]:
 
 
 def codex_cmd(symbol: str, agent_id: str, model: str, fast: bool = False, revise: bool = False,
-              effort: Optional[str] = None) -> List[str]:
-    prompt = (f"SYMBOL={symbol}  AGENT_ID={agent_id}. Rewrite this matched function for readability following your loop."
-              if revise else f"SYMBOL={symbol}  AGENT_ID={agent_id}. Match this function following your loop.")
+              effort: Optional[str] = None, provider: str = "openai") -> List[str]:
+    prompt = (f"SYMBOL={symbol}  AGENT_ID={agent_id}  MODEL={model}. Rewrite this matched function for readability following your loop."
+              if revise else f"SYMBOL={symbol}  AGENT_ID={agent_id}  MODEL={model}. Match this function following your loop.")
     if os.environ.get('FZGX_SEEDS'):
         prompt += (' Continue the saved candidate: claim returns your existing high-scoring C in seed.source '
                    'and installs it as your work copy. Keep that implementation and repair its remaining differences. '
@@ -96,6 +99,18 @@ def codex_cmd(symbol: str, agent_id: str, model: str, fast: bool = False, revise
     # --ignore-user-config: no user MCP servers/skills (480k -> 125k input tokens on a smoke test)
     cmd = ["codex", "exec", "--json", "--skip-git-repo-check", "--ignore-user-config", "-s", "read-only",
            "-m", model]
+    if provider == "deepseek":
+        # Run-local overrides preserve the user's normal Codex setup. Only the
+        # environment variable name goes in argv/session config, never its value.
+        cmd += ["-c", 'model_provider="deepseek"',
+                "-c", 'model_providers.deepseek.name="DeepSeek"',
+                "-c", 'model_providers.deepseek.base_url="https://api.deepseek.com"',
+                "-c", 'model_providers.deepseek.wire_api="responses"',
+                "-c", 'model_providers.deepseek.env_key="DEEPSEEK_API_KEY"',
+                "-c", 'model_providers.deepseek.requires_openai_auth=false',
+                "-c", f'model_catalog_json="{ROOT / "tools/codex_models.json"}"',
+                "-c", 'model_reasoning_summary="none"',
+                "-c", 'web_search="disabled"']
     # none of these belong in a matcher's context (each adds tool schemas or injected text every call)
     for feat in CODEX_DISABLE:
         cmd += ["--disable", feat]
@@ -151,7 +166,7 @@ def codex_session_model(thread_id: str) -> str:
     return ""
 
 
-def parse_codex(out: str, fast: bool = False) -> Dict:
+def parse_codex(out: str, fast: bool = False, provider: str = "openai") -> Dict:
     text, tin, tout, model, thread = "", 0, 0, "", ""
     cached = cache_w = 0
     for line in out.splitlines():
@@ -175,19 +190,20 @@ def parse_codex(out: str, fast: bool = False) -> Dict:
             tout += u.get("output_tokens", 0)
         model = ev.get("model", model) or model
     model = model or codex_session_model(thread)
-    pi, pc, pw, po = CODEX_PRICES.get(model, (0.0, 0.0, 0.0, 0.0))
+    prices = DEEPSEEK_PRICES if provider == "deepseek" else CODEX_PRICES
+    pi, pc, pw, po = prices.get(model, (0.0, 0.0, 0.0, 0.0))
     cost = ((tin - cached) * pi + cached * pc + cache_w * pw + tout * po) / 1e6 * (FAST_MULTIPLIER if fast else 1.0)
     return {"text": text or out[-2000:], "cost": round(cost, 6), "turns": None, "tokens_in": tin,
             "tokens_out": tout, "model": model}
 
 
 def run_one(p: Project, harness: str, model: str, symbol: str, idx: int, timeout: int, batch: str,
-            shadow: bool = False, fast: bool = False, revise: bool = False) -> Dict:
+            shadow: bool = False, fast: bool = False, revise: bool = False, provider: str = "openai") -> Dict:
     prefix = "revise-" if revise else ("shadow-" if shadow else "")
     agent_id = f"{prefix}{batch}-{harness}-{idx}"
     if harness == "claude" and revise:
         raise SystemExit("--revise is implemented for the codex harness only")
-    cmd = claude_cmd(symbol, agent_id, model) if harness == "claude" else codex_cmd(symbol, agent_id, model, fast, revise, EFFORT.get("level"))
+    cmd = claude_cmd(symbol, agent_id, model) if harness == "claude" else codex_cmd(symbol, agent_id, model, fast, revise, EFFORT.get("level"), provider)
     t0 = time.time()
     # own process group: on timeout the agent AND its MCP server die (they leaked before)
     proc = subprocess.Popen(cmd, cwd=ROOT, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
@@ -205,7 +221,7 @@ def run_one(p: Project, harness: str, model: str, symbol: str, idx: int, timeout
         def _s(x):
             return x.decode(errors="replace") if isinstance(x, bytes) else (x or "")
         out, rc = _s(so) + "\n" + _s(se), -9
-    info = parse_claude(out) if harness == "claude" else parse_codex(out, fast)
+    info = parse_claude(out) if harness == "claude" else parse_codex(out, fast, provider)
     m = RESULT_RE.search(info["text"] or "") or RESULT_RE.search(out)
     outcome = m.group(1) if m else ("timeout" if rc == -9 else "crash")
     if not m:  # no RESULT line: the agent never finished its loop; do not charge an attempt
@@ -248,7 +264,7 @@ def fan_out(p: Project, a, model: str, symbols: List[str], batch: str, revise: b
         while queue or futs:
             while queue and len(futs) < a.parallel and (a.budget_usd is None or spent < a.budget_usd):
                 i, s = queue.pop(0)
-                futs[ex.submit(run_one, p, a.harness, model, s, i, a.timeout, batch, a.shadow, a.fast, revise)] = s
+                futs[ex.submit(run_one, p, a.harness, model, s, i, a.timeout, batch, a.shadow, a.fast, revise, a.provider)] = s
             if not futs:
                 break
             done = next(as_completed(list(futs)))
@@ -299,6 +315,8 @@ def finish_round(p: Project, a, model: str, module: str) -> Dict:
 def main(argv: Optional[List[str]] = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--harness", choices=["claude", "codex"], default="claude")
+    ap.add_argument("--provider", choices=["openai", "deepseek"], default="openai", help="codex model provider")
+    ap.add_argument("--api-key-file", type=Path, help="DeepSeek key file; otherwise use DEEPSEEK_API_KEY")
     ap.add_argument("--model", help="claude: haiku|sonnet|opus (default haiku); codex: model name (default gpt-5.6-luna)")
     ap.add_argument("--parallel", type=int, default=48)
     ap.add_argument("--timeout", type=int, default=900, help="seconds per agent")
@@ -312,12 +330,12 @@ def main(argv: Optional[List[str]] = None) -> int:
     ap.add_argument("--module", default="main_rel", help="module for --select-tu")
     ap.add_argument("--max-size", type=int, default=0, help="size cap for --select-tu")
     ap.add_argument("--retry", type=int, default=0, help="--select-tu: also functions with fewer than N attempts")
-    ap.add_argument("--budget-usd", type=float, help="stop launching new agents past this spend (claude only reports cost)")
+    ap.add_argument("--budget-usd", type=float, help="stop launching new agents past estimated spend; DeepSeek uses peak rates")
     ap.add_argument("--batch", default=time.strftime("b%Y%m%d-%H%M"))
     ap.add_argument("--no-trivial", action="store_true", help="skip the mechanical blr/li pass first")
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--fast", action="store_true", help="codex: service_tier=fast (2x price, faster generation)")
-    ap.add_argument("--effort", choices=["minimal", "low", "medium", "high", "xhigh"], help="codex: model_reasoning_effort")
+    ap.add_argument("--effort", choices=["minimal", "low", "medium", "high", "xhigh", "max"], help="codex: model_reasoning_effort")
     ap.add_argument("--shadow", action="store_true",
                     help="A/B trial: run on already-matched functions without relinking or committing")
     ap.add_argument("--finish", action="store_true", help="after the batch: TU-finish pass, revise round on its queue, pass again")
@@ -325,6 +343,28 @@ def main(argv: Optional[List[str]] = None) -> int:
     ap.add_argument("--revise", action="store_true",
                     help="rewrite already-matched functions for readability; kept only if still 100%%")
     a = ap.parse_args(argv)
+    if a.provider == "deepseek":
+        if a.harness != "codex":
+            ap.error("--provider deepseek requires --harness codex")
+        if a.fast:
+            ap.error("DeepSeek does not support Codex's OpenAI --fast service tier")
+        if a.effort and a.effort not in ("low", "high", "max"):
+            ap.error("DeepSeek supports --effort low, high, or max")
+        if a.model and a.model not in DEEPSEEK_PRICES:
+            ap.error("use --model deepseek-flash for DeepSeek-V4.1-Flash")
+        a.model = a.model or "deepseek-flash"
+        a.effort = a.effort or "high"
+        if a.api_key_file:
+            try:
+                os.environ["DEEPSEEK_API_KEY"] = a.api_key_file.expanduser().read_text().strip()
+            except OSError as error:
+                ap.error(f"cannot read --api-key-file: {error}")
+        if not a.dry_run and not os.environ.get("DEEPSEEK_API_KEY"):
+            ap.error("set DEEPSEEK_API_KEY or pass --api-key-file")
+    elif a.api_key_file:
+        ap.error("--api-key-file requires --provider deepseek")
+    if a.harness == "claude":
+        a.provider = "anthropic"
     for option, name in ((a.max_checks, 'FZGX_MAX_CHECKS'), (a.max_stale, 'FZGX_MAX_STALE'),
                          (a.max_attempts, 'FZGX_MAX_ATTEMPTS')):
         if option is not None:
@@ -356,7 +396,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     if not symbols:
         print("nothing selected", file=sys.stderr)
         return 2
-    print(f"batch {a.batch}: {len(symbols)} functions, harness={a.harness} model={model} parallel={a.parallel}")
+    print(f"batch {a.batch}: {len(symbols)} functions, harness={a.harness} provider={a.provider} model={model} parallel={a.parallel}")
     if a.dry_run:
         print(" ".join(symbols))
         return 0
@@ -389,6 +429,9 @@ def main(argv: Optional[List[str]] = None) -> int:
     other = [r for r in results if r not in matched and r not in released]
     models = sorted({r.get("model") for r in results if r.get("model")})
     summary = {"batch": a.batch, "harness": a.harness, "model": model + (" (fast)" if a.fast else ""), "models_seen": models, "n": len(results), "matched": len(matched),
+               "provider": a.provider, "cost_basis": ("DeepSeek peak-rate upper bound" if a.provider == "deepseek" else
+                                                        "provider-reported" if a.harness == "claude" else
+                                                        "OpenAI fast rates" if a.fast else "OpenAI standard rates"),
                "link_rejected": len(ver.get("rejected", [])),
                "released": len(released), "failed": len(other), "cost_usd": round(spent, 3),
                "wall_s": round(time.time() - t0, 1), "finish": finish_result, "results": results}
@@ -397,6 +440,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     lines = [f"# Batch {a.batch}{' (shadow A/B trial)' if a.shadow else ''} — {a.harness}/{model}, {a.parallel} parallel",
              "", f"{len(results)} functions: {len(matched)} matched, {len(released)} released, {len(other)} failed; "
              f"${spent:.2f}; {summary['wall_s']} s wall.", "",
+             f"Provider: {a.provider}. Cost basis: {summary['cost_basis']}.", "",
              "| Function | Outcome | % | Checks | Turns | $ | s |", "|---|---|---|---|---|---|---|"]
     for r in sorted(results, key=lambda r: r["symbol"]):
         lines.append(f"| {r['symbol']} | {r['outcome']} | {'' if r['percent'] is None else r['percent']} | "

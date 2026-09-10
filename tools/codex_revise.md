@@ -13,6 +13,6 @@ pointer arithmetic, or private struct copies; keep every symbol name as it is (r
 step); declare callees with the real parameter types when the header makes them evident; one comment
 line on what the function does; no hardcoded addresses; no inline asm. The server enforces a budget of
 8 checks and stops you after 2 checks without improvement. When check prints MATCH or MATCH (pool), call
-submit(symbol, agent, message, harness="codex", model="gpt-5.6-luna"); the rewrite is kept only if the
+submit(symbol, agent, message, harness="codex", model=MODEL), using the MODEL from your task; the rewrite is kept only if the
 whole unit still matches. If you cannot keep 100%, call release(symbol, agent, reason): the original stays
 as it is. Finish with exactly one line: RESULT: matched|released SYMBOL <percent>% checks=<n>

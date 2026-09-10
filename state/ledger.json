@@ -1,5 +1,5 @@
 {
- "generated": 1789041992,
+ "generated": 1789042674,
  "functions": [
   {
    "symbol": "car_colchg:_prolog",
@@ -55466,11 +55466,11 @@
    "addr": 261296,
    "size": 36,
    "status": "unmatched",
-   "attempts": 3,
+   "attempts": 1,
    "best_percent": 98.888885,
    "claimed_by": null,
    "claimed_at": null,
-   "claim_ttl": null,
+   "claim_ttl": 1800,
    "matched_commit": null,
    "blocked_issue": null,
    "blocked_reason": null,
@@ -310773,6 +310773,44 @@
    "best_body_path": null,
    "stale_checks": 0,
    "best_in_attempt": 0.0
+  },
+  {
+   "id": 9434,
+   "symbol": "fn_1_3FCB0",
+   "agent": "deepseek-smoke-20260910-2-codex-1",
+   "harness": null,
+   "model": null,
+   "started": 1789042022,
+   "ended": 1789042231,
+   "checks": 3,
+   "final_percent": 70.55556,
+   "tokens_in": 0,
+   "tokens_out": 0,
+   "cost_usd": 0.0,
+   "outcome": "crash",
+   "notes": "Codex restart interrupted the DeepSeek integration trial; retry from the saved best candidate",
+   "best_body_path": null,
+   "stale_checks": 2,
+   "best_in_attempt": 98.888885
+  },
+  {
+   "id": 9435,
+   "symbol": "fn_1_3FCB0",
+   "agent": "deepseek-smoke-20260910-3-codex-1",
+   "harness": "codex",
+   "model": "deepseek-flash",
+   "started": 1789042234,
+   "ended": 1789042674,
+   "checks": 26,
+   "final_percent": 98.888885,
+   "tokens_in": 0,
+   "tokens_out": 0,
+   "cost_usd": 0.0,
+   "outcome": "crash",
+   "notes": "crash: agent exited without a result (rc=0)",
+   "best_body_path": null,
+   "stale_checks": 25,
+   "best_in_attempt": 98.888885
   }
  ],
  "names": [

@@ -11,7 +11,7 @@ If claim includes seed.source, your work copy is already populated with that com
 Start with check and use patch_unit to improve it. Preserve its recovered types, names, and implementation;
 do not replace it with a fresh reconstruction. Seed compiler options are applied by the tools.
 A result of MATCH (pool) is a match too (the only differences are relocations to shared literal-pool
-constants the tooling accepts). On MATCH or MATCH (pool) call submit(symbol, agent, message, harness="codex", model="gpt-5.6-luna"). Otherwise
+constants the tooling accepts). On MATCH or MATCH (pool) call submit(symbol, agent, message, harness="codex", model=MODEL), using the MODEL from your task. Otherwise
 release(symbol, agent, reason) with one precise sentence on what still differs.
 Float constants the target loads from a lbl_*_rodata_* symbol live in a shared literal pool: declare
 `extern const f64 NAME;` (or f32) exactly as the context shows and use the symbol. A C literal can also

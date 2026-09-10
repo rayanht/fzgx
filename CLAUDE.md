@@ -220,6 +220,17 @@ Rules that hold for everyone:
 - Batches: `uv run tools/orchestrate.py --harness codex ...` (codex only; tiers: gpt-5.6-luna, then gpt-5.6-terra;
   Sonnet and Gemini Flash were tried and dropped) (headless, one report
   per batch, `fzgx verify` relinks once at the end). Never use in-process subagents.
+- DeepSeek trials use the same Codex harness: `--provider deepseek --model deepseek-flash`
+  selects DeepSeek-V4.1-Flash. Supply `DEEPSEEK_API_KEY` or `--api-key-file PATH`;
+  keys stay outside the repository and out of command arguments. The provider and
+  `tools/codex_models.json` are selected with run-local overrides; normal Codex config
+  is untouched. Never set `forced_login_method="api"` for these runs: Codex 0.153.4
+  deletes the shared ChatGPT login when enforcing it. `env_key` authenticates the
+  custom provider without changing the OpenAI login. DeepSeek cost estimates use
+  peak rates as an upper bound; supported effort levels are `low`, `high`, and `max`.
+  Provider/catalog reference: [DeepSeek's Codex integration](https://api-docs.deepseek.com/quick_start/agent_integrations/codex/).
+  Example: `uv run tools/orchestrate.py --harness codex --provider deepseek
+  --api-key-file ~/.config/fzgx/deepseek.key --seeds PATH --parallel 1 --no-trivial`.
 - The orchestrator does three things: pick a pool, run the batch, run the TU-finish round
   (`--finish`, or `--finish-only --module M`). It reads reports. It does not edit blocks,
   headers or splits by hand, and does not experiment on the live tree (use `--shadow`).
