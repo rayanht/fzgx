@@ -1163,6 +1163,50 @@ void fn_1_63514(void) {
 }
 /* fzgx:end fn_1_63514 */
 
+/* fzgx:begin fn_1_63518 */
+typedef struct Effect_63518_vec {
+    u32 x;
+    u32 y;
+    u32 z;
+} Effect_63518_vec;
+
+typedef struct Effect_63518 {
+    u8 unk00[0x14];
+    u32 unk14;
+    u8 unk18[0x20];
+    Effect_63518_vec *unk38;
+    Effect_63518_vec unk3c;
+    u8 unk48[0x10];
+    u16 unk58;
+    u8 unk5a[0x06];
+    Effect_63518_vec unk60;
+    u8 unk6c[0x40];
+    u16 unkac;
+    u16 unkae;
+    u16 unkb0;
+} Effect_63518;
+
+extern u32 fn_1_58C4(void);
+
+void fn_1_63518(Effect_63518 *effect) {
+    Effect_63518_vec *dst;
+    u32 i;
+
+    effect->unk14 = 0;
+    effect->unkac = 0;
+    effect->unkae = 0;
+    effect->unkb0 = 0;
+    effect->unk58 = 0;
+
+    effect->unk60 = effect->unk3c;
+    dst = effect->unk38;
+
+    for (i = 0; i < fn_1_58C4() * 8; i++) {
+        *dst++ = effect->unk3c;
+    }
+}
+/* fzgx:end fn_1_63518 */
+
 /* fzgx:begin fn_1_63858 */
 struct LocalData {
     u8 data[0x10];

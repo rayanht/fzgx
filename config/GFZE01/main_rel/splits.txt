@@ -5609,3 +5609,6 @@ rel/main_rel/bg_lig/fn_1_D7B7C.c:
 
 rel/main_rel/_prolog/fn_1_3B34.c:
 	.text       start:0x00003B34 end:0x00003BB0 align:4
+
+rel/main_rel/effect/fn_1_63518.c:
+	.text       start:0x00063518 end:0x000635BC align:4
