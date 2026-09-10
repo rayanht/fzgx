@@ -574,6 +574,43 @@ void fn_1_127FB8(Fn127FB8Object *obj) {
 }
 /* fzgx:end fn_1_127FB8 */
 
+/* fzgx:begin fn_1_128884 */
+extern void fn_80008BA8(void *dst, void *src, int size);
+extern void *fn_1_45D0(void *manager, int type, void *data, int code);
+extern void fn_1_46B4(void *manager, void *object, void *data, int code);
+extern void *lbl_801A6410;
+
+void fn_1_128884(void *arg0, void *arg1, int type) {
+    u8 tmp1[0x44];
+    u8 tmp2[0x0c];
+    void *object;
+
+    switch (type) {
+    case 0x44: {
+        u32 size = type;
+        fn_80008BA8(tmp1, arg0, size);
+        fn_80008BA8(arg0, arg1, size);
+        fn_80008BA8(arg1, tmp1, size);
+        break;
+    }
+    case 0x0c: {
+        u32 size = type;
+        fn_80008BA8(tmp2, arg0, size);
+        fn_80008BA8(arg0, arg1, size);
+        fn_80008BA8(arg1, tmp2, size);
+        break;
+    }
+    default:
+        object = fn_1_45D0(lbl_801A6410, type, &lbl_1_data_40530, 0x308d);
+        fn_80008BA8(object, arg0, type);
+        fn_80008BA8(arg0, arg1, type);
+        fn_80008BA8(arg1, object, type);
+        fn_1_46B4(lbl_801A6410, object, &lbl_1_data_40530, 0x3091);
+        break;
+    }
+}
+/* fzgx:end fn_1_128884 */
+
 /* fzgx:begin fn_1_1289BC */
 #include "rel/main_rel/cloth.h"
 
