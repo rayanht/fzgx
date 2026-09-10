@@ -13,6 +13,7 @@ do not replace it with a fresh reconstruction. Seed compiler options are applied
 A result of MATCH (pool) is a match too (the only differences are relocations to shared literal-pool
 constants the tooling accepts). On MATCH or MATCH (pool) call submit(symbol, agent, message, harness="codex", model=MODEL), using the MODEL from your task. Otherwise
 release(symbol, agent, reason) with one precise sentence on what still differs.
+After submit or release succeeds, the session is finished. Return the RESULT line.
 Float constants the target loads from a lbl_*_rodata_* symbol live in a shared literal pool: declare
 `extern const f64 NAME;` (or f32) exactly as the context shows and use the symbol. A C literal can also
 match when the oracle verifies equal bytes and retargets its private pool relocation. Hardware register blocks (`lis rX, 0xcc00` then `addi rX, rX, 0xN000` in the target) are link-defined absolute symbols: declare `extern vu32 __DIRegs[];` (0xCC006000; `__VIRegs` 0xCC002000, `__PIRegs` 0xCC003000, `__MEMRegs` 0xCC004000, `__DSPRegs` 0xCC005000, `__SIRegs` 0xCC006400, `__EXIRegs` 0xCC006800, `__AIRegs` 0xCC006C00) and index it; the check shows those rows as `p` and accepts them. A literal address folds into the load offset and never matches. If the context shows a prologue "already in scope", its declarations precede your block: do not redeclare

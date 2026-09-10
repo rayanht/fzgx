@@ -163,9 +163,21 @@ def _seed_record(key: str) -> dict:
 def claim(p: Project, symbol: str, agent: str, ttl: int = DEFAULT_TTL,
           max_attempts: int = MAX_ATTEMPTS, no_carve: bool = False) -> Dict[str, Any]:
     l = Ledger()
+    if os.environ.get("FZGX_AGENT_ID", agent) != agent or os.environ.get("FZGX_SYMBOL", symbol) != symbol:
+        return {"ok": False, "error": "use the function and agent identity assigned to this worker"}
     if p.resolve(symbol) is None:
         return {"ok": False, "error": f"unknown or ambiguous symbol {symbol!r} (use module:name for _prolog/_epilog)"}
     key = _key(p, symbol)
+    worker = re.sub(r"(-(codex|claude)-\d+)-.*$", r"\1", agent)
+    prefix = worker + "-"
+    prior = l.db.execute(
+        "SELECT outcome,checks,best_in_attempt FROM attempts WHERE symbol=? AND ended IS NOT NULL "
+        "AND (agent=? OR substr(agent,1,?)=?) ORDER BY id DESC LIMIT 1",
+        (key, worker, len(prefix), prefix)).fetchone() if (
+            os.environ.get("FZGX_AGENT_ID") or re.search(r"-(codex|claude)-\d+$", worker)) else None
+    if prior:
+        return {"ok": False, "error": "this worker already finished; return its RESULT without reclaiming",
+                "outcome": prior["outcome"], "checks": prior["checks"], "percent": prior["best_in_attempt"]}
     seed = _seed_record(key)
     seed_body = None
     if os.environ.get('FZGX_SEEDS') and not seed:

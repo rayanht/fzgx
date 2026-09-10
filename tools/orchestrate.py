@@ -134,7 +134,8 @@ def codex_cmd(symbol: str, agent_id: str, model: str, fast: bool = False, revise
             "-c", 'mcp_servers.fzgx.env={' + ','.join(
                 name + '=' + json.dumps(os.environ.get(name, default)) for name, default in (
                     ('FZGX_MAX_ATTEMPTS', '3'), ('FZGX_MAX_CHECKS', '16'), ('FZGX_MAX_STALE', '5'),
-                    ('FZGX_CLAIM_TTL', '1800'), ('FZGX_SEEDS', ''))) + '}',
+                    ('FZGX_CLAIM_TTL', '1800'), ('FZGX_SEEDS', '')))
+            + ',FZGX_AGENT_ID=' + json.dumps(agent_id) + ',FZGX_SYMBOL=' + json.dumps(symbol) + '}',
             # codex exec runs with approval_policy=never; without this every mutating MCP call is refused
             "-c", 'mcp_servers.fzgx.default_tools_approval_mode="approve"',
             prompt]

@@ -235,6 +235,9 @@ Rules that hold for everyone:
   duplicate MCP namespaces returned by parallel Codex tool searches. Shadow trials
   retain matched C and compiler options under `.fzgx/attempts/` for later integration;
   finishing or aborting them preserves the function's original matching status.
+  Bind each headless worker to its assigned symbol and agent id. A successful
+  submit/release ends that worker's attempt; reclaiming cannot reset its counters.
+  Direct checks and compiler-version probes must honor the same stop as source edits.
   Provider/catalog reference: [DeepSeek's Codex integration](https://api-docs.deepseek.com/quick_start/agent_integrations/codex/).
   Example: `uv run tools/orchestrate.py --harness codex --provider deepseek
   --api-key-file ~/.config/fzgx/deepseek.key --seeds PATH --parallel 1 --no-trivial`.
