@@ -294,12 +294,18 @@ def _budget_stop(att) -> Optional[str]:
 # --------------------------------------------------------------------- oracle
 def check(p: Project, symbol: str, max_diff_lines: int = 80, versions: Optional[str] = None) -> Dict[str, Any]:
     """Compile and diff the work copy if one exists, else the canonical unit."""
+    key = _key(p, symbol)
+    l = Ledger()
+    row = l.get(key)
+    if row and row["status"] == "claimed":
+        stop = _budget_stop(l.current_attempt(key))
+        if stop:
+            return {"ok": False, "error": stop + "; call release(symbol, agent, reason) now"}
     if versions:
         vers = oracle.CANDIDATE_VERSIONS if versions == "all" else versions.split(",")
         out = oracle.check_versions(p, symbol, vers)
         return {"ok": True, "symbol": symbol, "versions": out,
                 "note": "-1 compiler missing, -2 compile error, -3 diff error"}
-    key = _key(p, symbol)
     unit = _unit_source(p, symbol)
     src = _work_source(p, key, unit)
     seed = _seed_record(key)
