@@ -29432,6 +29432,17 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/car_test/fn_1_7C1E8.c",
+    "symbols": [
+      "fn_1_7C1E8"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "tu": "rel/main_rel/car_test.c"
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/car_test/fn_1_7D694.c",
     "symbols": [
       "fn_1_7D694"
@@ -29669,6 +29680,17 @@
     ],
     "status": "matching",
     "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/custom_memcard.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/custom_memcard/fn_1_131558.c",
+    "symbols": [
+      "fn_1_131558"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
     "extra_cflags": [],
     "tu": "rel/main_rel/custom_memcard.c"
   },
@@ -39101,6 +39123,17 @@
     ],
     "status": "matching",
     "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/rob.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/rob/fn_1_97204.c",
+    "symbols": [
+      "fn_1_97204"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
     "extra_cflags": [],
     "tu": "rel/main_rel/rob.c"
   },

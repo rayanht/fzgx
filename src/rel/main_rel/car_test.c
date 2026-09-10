@@ -55,6 +55,29 @@ void fn_1_7C13C(Fn17C13CEntry *arg0) {
 }
 /* fzgx:end fn_1_7C13C */
 
+/* fzgx:begin fn_1_7C1E8 */
+extern const f32 lbl_1_rodata_33B0[84];
+extern u8 lbl_1_data_1EF5C[128];
+extern void *lbl_801A6410;
+extern void *fn_1_4630(void *arg0, int arg1, void *arg2, int arg3);
+extern void *memset(void *dst, int value, u32 size);
+
+void fn_1_7C1E8(void *out) {
+    u8 *p;
+    s8 i;
+
+    p = (u8 *)out;
+    for (i = 0; i < 2; i++) {
+        *(u32 *)p = (u32)fn_1_4630(lbl_801A6410, 4, lbl_1_data_1EF5C, 0x68);
+        memset(*(void **)p, 0xff, 4);
+        *(f32 *)(p + 4) = lbl_1_rodata_33B0[0];
+        *(u16 *)(p + 8) = 0xE000;
+        *(s16 *)(p + 10) = 0x2000;
+        p += 0xc;
+    }
+}
+/* fzgx:end fn_1_7C1E8 */
+
 /* fzgx:begin fn_1_7D694 */
 typedef struct {
     u8 _pad4[4];

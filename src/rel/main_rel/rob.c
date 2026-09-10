@@ -303,6 +303,18 @@ s32 fn_1_97174(Fn197174Owner *owner, void *arg1, void *arg2) {
 }
 /* fzgx:end fn_1_97174 */
 
+/* fzgx:begin fn_1_97204 */
+extern void fn_1_9724C(void *arg0, void *arg1);
+extern u8 fn_1_97F80(void *arg0, void *arg1);
+
+void fn_1_97204(void *arg0, void *arg1) {
+    fn_1_9724C(arg0, arg1);
+    if (fn_1_97F80(arg0, arg1)) {
+        return;
+    }
+}
+/* fzgx:end fn_1_97204 */
+
 /* fzgx:begin fn_1_9724C */
 // Loads the active resource value when the initialization check has not completed.
 void fn_1_9724C(void) {

@@ -5492,3 +5492,12 @@ rel/main_rel/accessory/fn_1_10C7B4.c:
 
 rel/main_rel/driver/fn_1_A9250.c:
 	.text       start:0x000A9250 end:0x000A93C4 align:4
+
+rel/main_rel/rob/fn_1_97204.c:
+	.text       start:0x00097204 end:0x0009724C align:4
+
+rel/main_rel/custom_memcard/fn_1_131558.c:
+	.text       start:0x00131558 end:0x00131620 align:4
+
+rel/main_rel/car_test/fn_1_7C1E8.c:
+	.text       start:0x0007C1E8 end:0x0007C2A0 align:4

@@ -73,6 +73,48 @@ void fn_1_1314A4(void) {
 }
 /* fzgx:end fn_1_1314A4 */
 
+/* fzgx:begin fn_1_131558 noprologue */
+#include "types.h"
+
+typedef struct {
+    s32 unk_00;
+    s32 unk_04;
+    s32 unk_08;
+    u8 pad_0C[8];
+    u32 unk_14;
+    u8 pad_18[0x128];
+    u8 unk_140[0x1800];
+} CustomMemcardState;
+
+extern CustomMemcardState lbl_1_bss_8CA40;
+extern u8 lbl_1_data_40EA4[84];
+extern char lbl_1_data_40F30[34];
+
+extern void OSPanic(const char* arg0, s32 arg1, const char* arg2, ...);
+extern void fn_80008BEC(void* dst, s32 value, u32 size);
+extern void fn_1_AA6D8(s32 arg0, u8 arg1, void* arg2);
+
+void fn_1_131558(void) {
+    CustomMemcardState* state = &lbl_1_bss_8CA40;
+    u8 request[0x24];
+
+    if (state->unk_14 == 0) {
+        OSPanic((const char*)lbl_1_data_40EA4, 0x197, (const char*)lbl_1_data_40F30);
+        state->unk_00 = -1;
+        state->unk_08 = -1;
+    } else if (state->unk_08 == -1) {
+        state->unk_00 = -1;
+    } else {
+        fn_80008BEC(state->unk_140, 0, 0x1800);
+        fn_80008BEC(request, 0, 0x24);
+        request[0] = 3;
+        *(void**)((u8*)request + 0x0C) = state->unk_140;
+        fn_1_AA6D8(4, (u8)state->unk_08, request);
+        state->unk_04 = 7;
+    }
+}
+/* fzgx:end fn_1_131558 */
+
 /* fzgx:begin fn_1_1317B4 */
 u32 fn_1_1317B4(void) {
     return lbl_1_bss_8CA6C[0];
