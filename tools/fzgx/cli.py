@@ -290,6 +290,10 @@ def cmd_sdkimport(a, p):
 
 def cmd_sourcealign(a, p):
     from . import sourcealign
+    if a.fuzzy:
+        from . import fuzzy
+        _print(fuzzy.run(p, a.min_size, a.root, a.rel_only), a.json)
+        return 0
     if a.apply_names:
         result = sourcealign.apply_names(p)
         _print(result, a.json)
@@ -450,6 +454,7 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--apply-names", action="store_true", help="apply unambiguous function names from verified licensed imports")
     s.add_argument("--root", action="append", default=[], help="source root relative to the SDK; filters compilation or discovery, repeatable")
     s.add_argument("--rel-only", action="store_true", help="discover matches in REL modules only")
+    s.add_argument("--fuzzy", action="store_true", help="rank whole-function and partial overlap below import cutoffs")
     s = sub.add_parser("sdkmatch", help="identify SDK/runtime functions in the DOL by masked-byte signatures of a compiled public SDK decomp"); s.set_defaults(fn=cmd_sdkmatch)
     s.add_argument("--sdk", default="build/tools/mkdd"); s.add_argument("--mw", default="GC/1.2.5n"); s.add_argument("--min-size", type=int, default=16)
     s.add_argument("--apply", action="store_true", help="name the identified unnamed DOL functions from the saved runs (link-verified)")

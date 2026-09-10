@@ -46,6 +46,12 @@ Rules that hold for everyone:
   independent declaration closures when a full donor TU needs unavailable assets;
   unresolved dependencies are excluded. F-Zero X's N64 build defines are supplied
   by the importer, without inheriting F-Zero GX's project defines.
+  `sourcealign --fuzzy --rel-only --min-size 256 --root PATH` ranks whole-function
+  and partial opcode overlap without the importer's size and similarity cutoffs;
+  `.fzgx/sourcealign/fuzzy.jsonl` retains block offsets and operand agreement.
+  Compiler variants share shortlist slots; partial ranking counts distinct opcode
+  four-grams so repeated stores and structure copies do not dominate. These are
+  investigation leads, never evidence for automatic names or matching status.
 - Never delete `build/` or `.fzgx/`. `.claude/settings.json` denies `rm -r`,
   `git clean/checkout/restore/reset/stash/rebase/push` and `ninja -t clean`
   for every agent in this repo. If the build looks broken, run
