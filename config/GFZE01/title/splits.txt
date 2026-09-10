@@ -188,3 +188,6 @@ rel/title/operation/fn_8_C7B0.c:
 
 rel/title/title/fn_8_1FB0.c:
 	.text       start:0x00001FB0 end:0x00002120 align:4
+
+rel/title/operation/fn_8_6A70.c:
+	.text       start:0x00006A70 end:0x00006C50 align:4

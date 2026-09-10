@@ -194,6 +194,135 @@ void fn_1_10B7D8(void *accessory) {
 }
 /* fzgx:end fn_1_10B7D8 */
 
+/* fzgx:begin fn_1_10C7B4 */
+extern void *fn_80077B14(void *);
+extern void lbl_8006DBAC(void *);
+extern void lbl_8006DAEC(void);
+extern void lbl_8006DBE4(void);
+extern void lbl_8006E1B0(void *, void *);
+extern void lbl_8006DC20(void);
+extern void fn_8006E250(void *, void *);
+extern const f64 lbl_1_rodata_7BF8;
+
+typedef struct {
+    u8 pad_0[0x150];
+    struct {
+        u8 pad_0[8];
+        u8 *unk_8;
+    } *unk_150;
+} AccessoryData;
+
+typedef struct {
+    u8 unk_0;
+    u8 pad_1[7];
+    u32 unk_8;
+    AccessoryData *unk_C;
+    void *unk_10;
+    u8 pad_14[4];
+    u32 unk_18;
+    u8 pad_1C[8];
+    u8 *unk_24;
+} AccessoryObject;
+
+typedef union {
+    u32 raw;
+    f32 value;
+} FloatVal;
+
+typedef struct {
+    u32 x;
+    u32 y;
+    u32 z;
+} Fn1_10C7B4_Triple;
+
+typedef struct {
+    u8 pad_0[0x10];
+    FloatVal unk_10;
+    FloatVal unk_14;
+    FloatVal unk_18;
+    FloatVal unk_1C;
+    FloatVal unk_20;
+    FloatVal unk_24;
+    u8 pad_28[0xC];
+    f32 unk_34;
+    f32 unk_38;
+    f32 unk_3C;
+} AccessoryItem;
+
+void fn_1_10C7B4(AccessoryObject *self) {
+    if (self != 0) {
+        if (self->unk_10 != 0) {
+            fn_80077B14(self->unk_10);
+            if (self->unk_0 & 2) {
+                AccessoryItem *item;
+                u32 i;
+
+                self->unk_0 &= ~2;
+                lbl_8006DBAC(self->unk_C->unk_150->unk_8 +
+                    ((u32 *)&lbl_1_data_3FFBC)[self->unk_8] * 0x18c + 0x88);
+                lbl_8006DAEC();
+                item = (AccessoryItem *)self->unk_24;
+                i = 0;
+                while (i < self->unk_18) {
+                    lbl_8006DBE4();
+                    lbl_8006E1B0((u8 *)item + 0x28, (u8 *)item + 0x10);
+                    i++;
+                    item = (AccessoryItem *)((u8 *)item + 0x44);
+                }
+                lbl_8006DC20();
+            }
+
+            {
+                Fn1_10C7B4_Triple *src;
+                u32 j;
+                AccessoryItem *dst = (AccessoryItem *)self->unk_24;
+                j = 0;
+                src = (Fn1_10C7B4_Triple *)&lbl_1_bss_88B50;
+                while (j < self->unk_18) {
+                    *(Fn1_10C7B4_Triple *)&dst->unk_10 = src[j];
+                    dst->unk_14.value = dst->unk_14.value - lbl_1_rodata_7BF8;
+                    j++;
+                    dst = (AccessoryItem *)((u8 *)dst + 0x44);
+                }
+            }
+
+            {
+                u32 k;
+                AccessoryItem *dst = (AccessoryItem *)self->unk_24;
+                for (k = 0; k < self->unk_18; k++) {
+                    dst->unk_34 = dst->unk_10.value - dst->unk_1C.value;
+                    dst->unk_38 = dst->unk_14.value - dst->unk_20.value;
+                    dst->unk_3C = dst->unk_18.value - dst->unk_24.value;
+                    dst = (AccessoryItem *)((u8 *)dst + 0x44);
+                }
+            }
+
+            {
+                u8 *base = (u8 *)fn_80077B14(self->unk_10);
+                u8 *entry;
+                int m;
+                u32 n;
+                u8 *p;
+
+                lbl_8006DBAC(self->unk_C->unk_150->unk_8 +
+                    ((u32 *)&lbl_1_data_3FFBC)[self->unk_8] * 0x18c + 0x88);
+                entry = self->unk_24;
+                n = 0;
+                while (n < self->unk_18) {
+                    p = entry;
+                    for (m = 0; m < entry[2]; m++) {
+                        fn_8006E250(entry + 0x10, base + *(u16 *)(p + 4) * 0x40);
+                        p += 2;
+                    }
+                    n++;
+                    entry += 0x44;
+                }
+            }
+        }
+    }
+}
+/* fzgx:end fn_1_10C7B4 */
+
 /* fzgx:begin fn_1_1154D0 */
 typedef struct {
     u8 active;

@@ -199,6 +199,122 @@ void fn_8_6A50(void) {
 }
 /* fzgx:end fn_8_6A50 */
 
+/* fzgx:begin fn_8_6A70 */
+struct fn_8_6A70_lbl_8_bss_2A8 {
+    u8 pad_0[0x18];
+    u32 unk_18;
+    u8 pad_1C[0x4];
+    u32 unk_20;
+    u8 pad_24[0xF0];
+    u32 unk_114;
+    u32 unk_118;
+    u32 unk_11C;
+    u32 unk_120;
+};
+
+struct fn_8_6A70_lbl_801A63C0 {
+    u32 unk_0;
+};
+
+extern struct fn_8_6A70_lbl_801A63C0 lbl_801A63C0;
+extern struct fn_8_6A70_lbl_8_bss_2A8 lbl_8_bss_2A8;
+extern u32 lbl_801A66B4;
+extern u32 fn_1_3EB78(u32, u32, u32, u32);
+extern u32 fn_1_3ED8C(u32, u32, u32, u32, u32, u32, u32);
+extern u32 fn_8_BD08(void);
+extern void fn_8_663C(void);
+extern void fn_8_67F8(u32, u32, u32, u32);
+extern void fn_1_3EF08(u8);
+extern void fn_1_3EF8C(u8);
+extern void fn_1_3EFF0(u32, u8);
+extern void fn_1_3F02C(u32);
+extern void fn_1_411A4(u32);
+extern void fn_80008BEC(void *, int, u32);
+
+void fn_8_6A70(void) {
+    struct fn_8_6A70_lbl_8_bss_2A8 *p_lbl_8_bss_2A8;
+    u32 v0;
+    u32 v1;
+    u32 v2;
+    u32 v3;
+    s32 v4;
+    s32 v5;
+    u32 v6;
+    u32 v7;
+
+    p_lbl_8_bss_2A8 = (struct fn_8_6A70_lbl_8_bss_2A8 *)&lbl_8_bss_2A8;
+    v0 = p_lbl_8_bss_2A8->unk_18;
+    if ((s32)v0 == 1) {
+        v0 = 0x2AAB0000;
+        v1 = lbl_801A63C0.unk_0;
+        v2 = (v0 - 21845);
+        v0 = (v1 * (0x676A0000 + 19307));
+        v3 = (v0 + 13259);
+        v0 = ((v3 >> 16) & 0x7FFF);
+        lbl_801A63C0.unk_0 = v3;
+        v4 = ((s32)v0 >> 8);
+        v5 = v4 % 6;
+        switch (v5) {
+        case 0:
+            v6 = 31;
+            break;
+        case 1:
+            v6 = 32;
+            break;
+        case 2:
+            v6 = 33;
+            break;
+        case 3:
+            v6 = 34;
+            break;
+        case 4:
+            v6 = 35;
+            break;
+        default:
+            v6 = 36;
+        }
+        v0 = 6;
+        fn_1_3EF8C(v0);
+        v0 = 0;
+        fn_1_3ED8C(v0, 3, 1, (v6 & 0xFF), 10, 15, 0);
+        v0 = 0;
+        fn_1_3EB78(v0, 0, 0, 0);
+        v0 = (u32)&fn_8_663C;
+        fn_1_3EFF0(v0, 1);
+        v0 = (u32)&fn_8_67F8;
+        fn_1_3F02C(v0);
+        v0 = 0;
+        fn_1_3EF08(v0);
+        p_lbl_8_bss_2A8->unk_20 = 0;
+        if ((s32)lbl_801A66B4 == 5) {
+            v0 = 4;
+            fn_1_411A4(v0);
+        } else {
+            v0 = 5;
+            fn_1_411A4(v0);
+        }
+        v7 = p_lbl_8_bss_2A8->unk_18;
+        p_lbl_8_bss_2A8->unk_18 = (v7 - 1);
+        fn_80008BEC((void *)((u8 *)p_lbl_8_bss_2A8 + 36), 0, 60);
+        v0 = (u32)((u8 *)p_lbl_8_bss_2A8 + 96);
+        fn_80008BEC((void *)v0, 0, 60);
+        v0 = (u32)((u8 *)p_lbl_8_bss_2A8 + 156);
+        fn_80008BEC((void *)v0, 0, 60);
+        v0 = (u32)((u8 *)p_lbl_8_bss_2A8 + 216);
+        fn_80008BEC((void *)v0, 0, 60);
+        p_lbl_8_bss_2A8->unk_114 = 0;
+        p_lbl_8_bss_2A8->unk_118 = 0;
+        p_lbl_8_bss_2A8->unk_11C = 0;
+        p_lbl_8_bss_2A8->unk_120 = 0;
+    } else {
+        p_lbl_8_bss_2A8->unk_18 = (v0 - 1);
+        if ((s32)v0 <= 0) {
+            fn_8_BD08();
+        }
+    }
+}
+/* fzgx:end fn_8_6A70 */
+
 /* fzgx:begin fn_8_6C50 */
 extern u32 fn_1_412A0(u32);
 extern u32 lbl_801A66B4;
