@@ -31,7 +31,6 @@ from fzgx import api, reuse, trivial
 from fzgx.ledger import Ledger
 from fzgx.project import ROOT, STATE_DIR, Project
 
-RESULT_RE = re.compile(r"RESULT:\s*(matched|released)\s+(\S+)\s+([\d.]+)%(?:\s+checks=(\d+))?")
 MATCHER_TOOLS = ["Read", "mcp__fzgx__claim", "mcp__fzgx__write_unit", "mcp__fzgx__patch_unit", "mcp__fzgx__check",
                  "mcp__fzgx__submit", "mcp__fzgx__release"]
 # The user's defaults are Fable 5.1 (claude) and GPT-6 Astra (codex); matchers must never run on those.

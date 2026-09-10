@@ -467,6 +467,8 @@ def submit(p: Project, symbol: str, agent: str = "unknown", message: str = "",
     mw_version = mw_version or seed.get('mw')
     extra_cflags = extra_cflags if extra_cflags is not None else seed.get('flags')
     row = l.get(key)
+    if _is_shadow(agent) and (row is None or row["status"] != "claimed"):
+        return {"ok": False, "error": "this trial has no active claim; its result is already final"}
     if row and row["status"] == "claimed" and row["claimed_by"] not in (agent, None):
         return {"ok": False, "error": f"claimed by {row['claimed_by']}, not {agent}"}
     work = p.work_path(key)

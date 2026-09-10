@@ -237,6 +237,8 @@ Rules that hold for everyone:
   finishing or aborting them preserves the function's original matching status.
   Bind each headless worker to its assigned symbol and agent id. A successful
   submit/release ends that worker's attempt; reclaiming cannot reset its counters.
+  Reject repeated shadow submits before checking or finishing: a finished trial no
+  longer has the saved previous status and must not mark existing matched C unmatched.
   Direct checks and compiler-version probes must honor the same stop as source edits.
   Set catalog `multi_agent_version=null` as well as disabling `multi_agent` and
   `multi_agent_v2`: catalog v2 can enable delegation despite those feature flags. Nested agents
