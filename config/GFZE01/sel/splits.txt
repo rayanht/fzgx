@@ -233,3 +233,6 @@ rel/sel/_prolog/fn_10_834.c:
 
 rel/sel/sel/fn_10_BEF8.c:
 	.text       start:0x0000BEF8 end:0x0000C084 align:4
+
+rel/sel/sel/fn_10_BD64.c:
+	.text       start:0x0000BD64 end:0x0000BEF0 align:4

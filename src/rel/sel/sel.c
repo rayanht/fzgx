@@ -576,6 +576,87 @@ int fn_10_A7DC(s16 mode) {
 }
 /* fzgx:end fn_10_A7DC */
 
+/* fzgx:begin fn_10_BD64 */
+#define SEL_MAX(x, y) ((x) > (y) ? (x) : (y))
+
+typedef struct Fn10BD64 {
+    s16 unk0;
+    s16 unk2;
+    s16 value4;
+    s16 value6;
+    s16 unk8;
+    u8 padA[0x8A];
+    u32 flags94;
+} Fn10BD64;
+
+typedef struct {
+    u8 pad0[0x94];
+    u32 flags;
+} SelGlobal;
+
+extern u8 lbl_10_bss_4938E;
+extern SelGlobal lbl_1_bss_8B3A0;
+
+void fn_10_BD64(Fn10BD64 *self) {
+    s32 value;
+
+    switch (self->unk0) {
+    case 0:
+        self->value4 = 1;
+        value = 30;
+        if (self->flags94 & 0x2) {
+            value = *(s8 *)&lbl_10_bss_4938E;
+        }
+        self->value6 = value;
+        break;
+    case 1:
+        if (lbl_1_bss_8B3A0.flags & 0x200) {
+            self->value6 = SEL_MAX(1, SEL_MAX(self->value6, SEL_MAX(self->value4, 1)));
+        } else {
+            self->value6 = self->value4;
+        }
+        break;
+    case 2:
+        self->value4 = 1;
+        self->value6 = 1;
+        break;
+    case 3:
+        self->value4 = 1;
+        self->value6 = 1;
+        break;
+    case 4:
+        self->value6 = 30;
+        self->value4 = 1;
+        self->unk8 = 1;
+        break;
+    case 5:
+        self->value4 = 1;
+        self->value6 = 1;
+        self->unk8 = 1;
+        break;
+    case 6:
+    case 7:
+    case 8:
+    case 9:
+    case 10:
+    case 11:
+    default:
+        break;
+    }
+
+    if (self->value4 <= 1) {
+        self->flags94 |= 0x20000000;
+        return;
+    }
+    self->flags94 &= 0xDFFFFFFF;
+    if (self->value4 == 2) {
+        self->flags94 |= 0x00040000;
+        return;
+    }
+    self->flags94 &= ~0x00040000;
+}
+/* fzgx:end fn_10_BD64 */
+
 /* fzgx:begin fn_10_BEF0 */
 // fn_10_BEF0: empty in retail (single blr).
 void fn_10_BEF0(void) {

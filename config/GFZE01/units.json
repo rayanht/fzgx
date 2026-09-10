@@ -49831,6 +49831,20 @@
   },
   {
     "module": "sel",
+    "source": "rel/sel/sel/fn_10_BD64.c",
+    "symbols": [
+      "fn_10_BD64"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "tu": "rel/sel/sel.c",
+    "pool": {
+      "@51": "jumptable_10_data_84C"
+    }
+  },
+  {
+    "module": "sel",
     "source": "rel/sel/sel/fn_10_BEF8.c",
     "symbols": [
       "fn_10_BEF8"
