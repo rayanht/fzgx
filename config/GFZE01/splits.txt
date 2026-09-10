@@ -4847,3 +4847,9 @@ dol/fn_8007B338.c:
 
 dol/data/__files.c:
 	.data       start:0x8015AE58 end:0x8015AF98 align:8
+
+dol/OSGetTick.c:
+	.text       start:0x80011424 end:0x8001142C align:4
+
+dol/__check_pad3.c:
+	.init       start:0x80003100 end:0x80003140 align:4

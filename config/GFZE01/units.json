@@ -6384,6 +6384,16 @@
   },
   {
     "module": "main",
+    "source": "dol/OSGetTick.c",
+    "symbols": [
+      "OSGetTick"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
     "source": "dol/OSGetTime.c",
     "symbols": [
       "OSGetTime"
@@ -10495,6 +10505,16 @@
     ],
     "status": "matching",
     "mw_version": null,
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/__check_pad3.c",
+    "symbols": [
+      "__check_pad3"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
     "extra_cflags": []
   },
   {

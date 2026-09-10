@@ -1,4 +1,4 @@
-__check_pad3 = .init:0x80003100; // type:function size:0x40 scope:local
+__check_pad3 = .init:0x80003100; // type:function size:0x40 scope:global force_active
 __set_debug_bba = .init:0x80003140; // type:function size:0xC scope:global force_active
 __get_debug_bba = .init:0x8000314C; // type:function size:0x8 scope:global force_active
 __start = .init:0x80003154; // type:function size:0x15C scope:weak force_active
