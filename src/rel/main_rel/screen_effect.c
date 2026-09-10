@@ -51,7 +51,7 @@ extern const f32 lbl_1_rodata_32CC;
 extern void fn_1_79C88(void *arg0, s32 arg1, f32 arg2, s32 arg3);
 extern void lbl_8006DBAC(void *arg0);
 extern void lbl_8006E1B0(void *arg0, void *arg1);
-extern void fn_8008069C(char *dst, const char *format, ...);
+extern void sprintf(char *dst, const char *format, ...);
 extern void fn_1_465D0(char *text, int arg);
 extern void fn_1_14D5C(void *object, int arg);
 extern void fn_1_46EA8(int value);
@@ -627,8 +627,8 @@ void fn_1_7B084(void *object, int value) {
     char text_b[32];
     const char *data = (const char *)&lbl_1_data_1DCF0;
 
-    fn_8008069C(text_a, data + 0x7d0, data + 0x7e0, object);
-    fn_8008069C(text_b, data + 0x7e8, data + 0x7e0, object);
+    sprintf(text_a, data + 0x7d0, data + 0x7e0, object);
+    sprintf(text_b, data + 0x7e8, data + 0x7e0, object);
     if (value == 0) {
         fn_1_465D0(text_a, 1);
         fn_1_465D0(text_b, 1);
@@ -640,7 +640,7 @@ void fn_1_7B084(void *object, int value) {
     }
     fn_1_46EA8(value);
     fn_1_12620(object);
-    fn_8008069C(text_a, data + 0x7f8, object);
+    sprintf(text_a, data + 0x7f8, object);
     fn_1_465D0(text_a, 1);
     fn_1_46EA8(0);
 }
@@ -653,9 +653,9 @@ void fn_1_7B184(void *arg) {
     char buf_08[0x20];
     u8 *base = (u8 *)&lbl_1_data_1DCF0;
 
-    fn_8008069C(buf_48, (const char *)(base + 0x7d0), (const char *)(base + 0x7e0), arg);
-    fn_8008069C(buf_28, (const char *)(base + 0x7e8), (const char *)(base + 0x7e0), arg);
-    fn_8008069C(buf_08, (const char *)(base + 0x810), arg);
+    sprintf(buf_48, (const char *)(base + 0x7d0), (const char *)(base + 0x7e0), arg);
+    sprintf(buf_28, (const char *)(base + 0x7e8), (const char *)(base + 0x7e0), arg);
+    sprintf(buf_08, (const char *)(base + 0x810), arg);
 
     fn_1_46DC4(buf_48);
     fn_1_46DC4(buf_28);
@@ -675,7 +675,7 @@ typedef struct {
 } ScreenEffectData;
 
 extern u16 fn_1_12EF24(s16 value, s16 index);
-extern void fn_8008069C(char *dst, const char *format, const char *text, ...);
+extern void sprintf(char *dst, const char *format, const char *text, ...);
 extern void fn_1_465D0(char *text, s32 mode);
 
 void fn_1_7B218(s32 enabled) {
@@ -689,8 +689,8 @@ void fn_1_7B218(s32 enabled) {
     do {
         index = fn_1_12EF24(lbl_1_bss_8B3A0.unk_8C, i);
         if (index >= 0) {
-            fn_8008069C(text_a, data->unk_82c, data->unk_7e0, index);
-            fn_8008069C(text_b, data->unk_840, data->unk_7e0, index);
+            sprintf(text_a, data->unk_82c, data->unk_7e0, index);
+            sprintf(text_b, data->unk_840, data->unk_7e0, index);
             if (enabled == 0) {
                 fn_1_465D0(text_a, 1);
                 fn_1_465D0(text_b, 1);

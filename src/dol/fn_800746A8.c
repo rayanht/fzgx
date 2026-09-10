@@ -8,11 +8,11 @@ typedef struct GlobalState {
 } GlobalState;
 
 extern GlobalState *lbl_801A6D38;
-extern void fn_800347A4(u8, s32);
+extern void GXSetLineWidth(u8, s32);
 
 void fn_800746A8(u8 value, s32 arg, u32 lab_unused0) {
     if (lbl_801A6D38->unk_09 != value || lbl_801A6D38->unk_0C != arg) {
-        fn_800347A4(value, arg);
+        GXSetLineWidth(value, arg);
         lbl_801A6D38->unk_09 = value;
         lbl_801A6D38->unk_0C = arg;
     }

@@ -16,7 +16,7 @@ extern s16 fn_1_3F0C8(void *obj);
 extern u32 fn_1_864E8(u32 value);
 extern void OSPanic(char*, ...);
 extern u32 fn_1_86810(u32);
-extern void fn_8008279C(void*, u32, u32, void*);
+extern void qsort(void*, u32, u32, void*);
 extern s32 fn_1_D2E18(u8*, u8*);
 extern u32 lbl_1_bss_7AD00;
 extern u32 lbl_1_bss_7AD04;
@@ -152,7 +152,7 @@ s32 fn_1_D2E44(u32 index) {
         for (i = 0; (u8)i < lbl_1_bss_7ACE5; i++) {
             values[(u8)i] = fn_1_86810((u8)i);
         }
-        fn_8008279C(values, lbl_1_bss_7ACE5, 1, fn_1_D2E18);
+        qsort(values, lbl_1_bss_7ACE5, 1, fn_1_D2E18);
         for (j = 0; (u8)j < lbl_1_bss_7ACE5; j++) {
             if (values[(u8)j] == (u8)fn_1_86810(index)) {
                 return j;
@@ -195,7 +195,7 @@ extern u32 lbl_801A6CFC;
 extern char lbl_1_data_3DB58[51];
 extern char lbl_1_data_3DB8C[51];
 
-extern int fn_80017160(void*, LocalData*);
+extern int DVDOpen(void*, LocalData*);
 extern void* fn_1_48E8(u32, u32);
 extern int fn_80006354(LocalData*, void*, u32, u32);
 extern void OSLink(void*, void*);
@@ -212,7 +212,7 @@ void fn_1_D3020(void* unused, Output* output) {
     }
     output->data = 0;
     output->aux = 0;
-    if (fn_80017160(unused, &local) == 0) {
+    if (DVDOpen(unused, &local) == 0) {
         return;
     }
     size = (local.size + 0x1f) & ~0x1f;

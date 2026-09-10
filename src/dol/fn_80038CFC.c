@@ -6,10 +6,10 @@ typedef struct GXContext {
 } GXContext;
 
 extern GXContext* gx;
-extern void fn_80039088(u32);
+extern void __GXSetMatrixIndex(u32);
 
 void fn_80038CFC(u32 value) {
     GXContext* context = gx;
     context->field_80 = (context->field_80 & ~0x3fu) | value;
-    fn_80039088(0);
+    __GXSetMatrixIndex(0);
 }

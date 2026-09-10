@@ -1,7 +1,7 @@
 #include "types.h"
 
 extern u32 fn_8001CD68(void);
-extern u32 fn_8001DBC8(u32);
+extern u32 PADSetAnalogMode(u32);
 extern u32 fn_8006B188(void);
 extern u8 lbl_801A66AC;
 
@@ -12,7 +12,7 @@ u8 fn_800058D8(void) {
     t0 = fn_8001CD68();
     v0 = t0;
     v0 = 3;
-    t1 = fn_8001DBC8(v0);
+    t1 = PADSetAnalogMode(v0);
     v0 = t1;
     t2 = fn_8006B188();
     v0 = t2;

@@ -8,7 +8,7 @@ typedef struct FileEntry {
 } FileEntry;
 
 extern u8 __files[320];
-extern s32 fn_8007F8D4(FileEntry *);
+extern s32 fflush(FileEntry *);
 
 s32 fn_8007B0B4(void) {
     s32 result;
@@ -18,7 +18,7 @@ s32 fn_8007B0B4(void) {
     entry = (FileEntry *)&__files;
     while (entry != 0) {
         if (((entry->unk04 >> 6) & 7) != 0) {
-            if (fn_8007F8D4(entry) != 0) {
+            if (fflush(entry) != 0) {
                 result = -1;
             }
         }

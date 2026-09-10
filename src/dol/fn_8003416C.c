@@ -2,7 +2,7 @@
 
 extern u32 OSDisableInterrupts(void);
 extern u32 OSRestoreInterrupts(u32);
-extern u32 fn_800110A8(u32);
+extern u32 OSSleepThread(u32);
 extern u32 lbl_801A6C1C;
 extern u8 lbl_801A6C18;
 extern void fn_80033E20(void);
@@ -17,7 +17,7 @@ void fn_8003416C(u32 lab_unused0) {
     OSRestoreInterrupts(t0);
     t3 = OSDisableInterrupts();
     while (lbl_801A6C18 == 0) {
-    fn_800110A8((u32)&lbl_801A6C1C);
+    OSSleepThread((u32)&lbl_801A6C1C);
     }
     OSRestoreInterrupts(t3);
 }

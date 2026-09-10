@@ -23,7 +23,7 @@ extern void fn_8004B180(u32, u32, u32, u32, u32);
 extern s32 fn_8004ADF4(u32);
 extern u32 fn_80042198(u32, u32);
 extern u32 fn_8004212C(u32);
-extern u32 fn_8004651C(u32);
+extern u32 ADXAMP_Start(u32);
 extern u32 lbl_80178CB8[];
 
 void fn_8004C980(struct fn_8004C980_Arg0 *arg0, u32 arg1, u32 arg2, u32 arg3, u32 arg4) {
@@ -65,6 +65,6 @@ void fn_8004C980(struct fn_8004C980_Arg0 *arg0, u32 arg1, u32 arg2, u32 arg3, u3
     *(u32 *)((u8 *)arg0 + 160) = lbl_80178CB8[0];
     v4 = *(u32 *)((u8 *)arg0 + 116);
     if (v4 != 0) {
-        fn_8004651C(v4);
+        ADXAMP_Start(v4);
     }
 }

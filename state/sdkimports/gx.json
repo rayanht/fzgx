@@ -1,4 +1,86 @@
 {
+  "GXCPInterruptHandler": {
+    "absolutes": {},
+    "bindings": {
+      "BreakPointCB": "lbl_801A6C04",
+      "GXCPInterruptHandler": "GXCPInterruptHandler",
+      "GXOverflowSuspendInProgress": "lbl_801A6C00",
+      "OSClearContext": "OSClearContext",
+      "OSResumeThread": "fn_80010CB0",
+      "OSSetCurrentContext": "OSSetCurrentContext",
+      "OSSuspendThread": "OSSuspendThread",
+      "__GXCurrentThread": "lbl_801A6BF8",
+      "__GXOverflowCount": "lbl_801A6C08",
+      "__GXWriteFifoIntEnable": "fn_800322E8",
+      "__GXWriteFifoIntReset": "fn_80032324",
+      "__cpReg": "__cpReg",
+      "gx": "gx"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_80031B50",
+    "pragmas": [],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "GXCPInterruptHandler",
+    "size": 308,
+    "source": "src/dolphin/gx/GXFifo.c",
+    "symbol": "GXCPInterruptHandler",
+    "variant": "aggregate"
+  },
+  "GXClearBoundingBox": {
+    "absolutes": {
+      "GXFIFO": 3422584832
+    },
+    "bindings": {
+      "GXClearBoundingBox": "GXClearBoundingBox",
+      "gx": "gx"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_800353E8",
+    "pragmas": [],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "GXClearBoundingBox",
+    "size": 56,
+    "source": "src/dolphin/gx/GXFrameBuf.c",
+    "symbol": "GXClearBoundingBox",
+    "variant": "aggregate"
+  },
+  "GXClearVtxDesc": {
+    "absolutes": {},
+    "bindings": {
+      "GXClearVtxDesc": "GXClearVtxDesc",
+      "gx": "gx"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_80032F48",
+    "pragmas": [],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "GXClearVtxDesc",
+    "size": 56,
+    "source": "src/dolphin/gx/GXAttr.c",
+    "symbol": "GXClearVtxDesc",
+    "variant": "aggregate"
+  },
+  "GXGetGPStatus": {
+    "absolutes": {},
+    "bindings": {
+      "GXGetGPStatus": "GXGetGPStatus",
+      "__cpReg": "__cpReg",
+      "gx": "gx"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_800320F0",
+    "pragmas": [],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "GXGetGPStatus",
+    "size": 80,
+    "source": "src/dolphin/gx/GXFifo.c",
+    "symbol": "GXGetGPStatus",
+    "variant": "aggregate"
+  },
   "GXGetTexBufferSize": {
     "absolutes": {},
     "bindings": {
@@ -12,6 +94,304 @@
     "size": 348,
     "source": "src/dolphin/gx/GXTexture.c",
     "symbol": "GXGetTexBufferSize",
+    "variant": "aggregate"
+  },
+  "GXGetVtxAttrFmt": {
+    "absolutes": {},
+    "bindings": {
+      "GXGetVtxAttrFmt": "GXGetVtxAttrFmt",
+      "gx": "gx"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_800336EC",
+    "pragmas": [],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "GXGetVtxAttrFmt",
+    "size": 640,
+    "source": "src/dolphin/gx/GXAttr.c",
+    "symbol": "GXGetVtxAttrFmt",
+    "variant": "aggregate"
+  },
+  "GXGetVtxDesc": {
+    "absolutes": {},
+    "bindings": {
+      "GXGetVtxDesc": "GXGetVtxDesc",
+      "gx": "gx"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_80032D04",
+    "pragmas": [],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "GXGetVtxDesc",
+    "size": 436,
+    "source": "src/dolphin/gx/GXAttr.c",
+    "symbol": "GXGetVtxDesc",
+    "variant": "aggregate"
+  },
+  "GXInitTexObjLOD": {
+    "absolutes": {},
+    "bindings": {
+      "GX2HWFiltConv": "lbl_801A6570",
+      "GXInitTexObjLOD": "GXInitTexObjLOD"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_80035EC4",
+    "pragmas": [],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "GXInitTexObjLOD",
+    "size": 404,
+    "source": "src/dolphin/gx/GXTexture.c",
+    "symbol": "GXInitTexObjLOD",
+    "variant": "aggregate"
+  },
+  "GXPokeBlendMode": {
+    "absolutes": {},
+    "bindings": {
+      "GXPokeBlendMode": "GXPokeBlendMode",
+      "__peReg": "__peReg"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_80034230",
+    "pragmas": [],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "GXPokeBlendMode",
+    "size": 136,
+    "source": "src/dolphin/gx/GXMisc.c",
+    "symbol": "GXPokeBlendMode",
+    "variant": "aggregate"
+  },
+  "GXPokeDstAlpha": {
+    "absolutes": {},
+    "bindings": {
+      "GXPokeDstAlpha": "GXPokeDstAlpha",
+      "__peReg": "__peReg"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_800342D4",
+    "pragmas": [],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "GXPokeDstAlpha",
+    "size": 20,
+    "source": "src/dolphin/gx/GXMisc.c",
+    "symbol": "GXPokeDstAlpha",
+    "variant": "aggregate"
+  },
+  "GXReadXfRasMetric": {
+    "absolutes": {},
+    "bindings": {
+      "GXReadXfRasMetric": "GXReadXfRasMetric",
+      "__cpReg": "__cpReg"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_80039B7C",
+    "pragmas": [
+      "#pragma scheduling off"
+    ],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "GXReadXfRasMetric",
+    "size": 196,
+    "source": "src/dolphin/gx/GXPerf.c",
+    "symbol": "GXReadXfRasMetric",
+    "variant": "aggregate"
+  },
+  "GXSetAlphaCompare": {
+    "absolutes": {
+      "GXFIFO": 3422584832
+    },
+    "bindings": {
+      "GXSetAlphaCompare": "GXSetAlphaCompare",
+      "gx": "gx"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_80037518",
+    "pragmas": [],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "GXSetAlphaCompare",
+    "size": 84,
+    "source": "src/dolphin/gx/GXTev.c",
+    "symbol": "GXSetAlphaCompare",
+    "variant": "aggregate"
+  },
+  "GXSetArray": {
+    "absolutes": {
+      "GXFIFO": 3422584832
+    },
+    "bindings": {
+      "GXSetArray": "GXSetArray",
+      "gx": "gx"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_800339E0",
+    "pragmas": [],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "GXSetArray",
+    "size": 140,
+    "source": "src/dolphin/gx/GXAttr.c",
+    "symbol": "GXSetArray",
+    "variant": "aggregate"
+  },
+  "GXSetClipMode": {
+    "absolutes": {
+      "GXFIFO": 3422584832
+    },
+    "bindings": {
+      "GXSetClipMode": "GXSetClipMode",
+      "gx": "gx"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_80039060",
+    "pragmas": [
+      "#pragma peephole off"
+    ],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "GXSetClipMode",
+    "size": 40,
+    "source": "src/dolphin/gx/GXTransform.c",
+    "symbol": "GXSetClipMode",
+    "variant": "aggregate"
+  },
+  "GXSetCopyClear": {
+    "absolutes": {
+      "GXFIFO": 3422584832
+    },
+    "bindings": {
+      "GXSetCopyClear": "GXSetCopyClear",
+      "gx": "gx"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_80034E64",
+    "pragmas": [],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "GXSetCopyClear",
+    "size": 104,
+    "source": "src/dolphin/gx/GXFrameBuf.c",
+    "symbol": "GXSetCopyClear",
+    "variant": "aggregate"
+  },
+  "GXSetDispCopyFrame2Field": {
+    "absolutes": {},
+    "bindings": {
+      "GXSetDispCopyFrame2Field": "GXSetDispCopyFrame2Field",
+      "gx": "gx"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_80034D0C",
+    "pragmas": [],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "GXSetDispCopyFrame2Field",
+    "size": 40,
+    "source": "src/dolphin/gx/GXFrameBuf.c",
+    "symbol": "GXSetDispCopyFrame2Field",
+    "variant": "aggregate"
+  },
+  "GXSetDispCopySrc": {
+    "absolutes": {},
+    "bindings": {
+      "GXSetDispCopySrc": "GXSetDispCopySrc",
+      "gx": "gx"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_80034A5C",
+    "pragmas": [],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "GXSetDispCopySrc",
+    "size": 144,
+    "source": "src/dolphin/gx/GXFrameBuf.c",
+    "symbol": "GXSetDispCopySrc",
+    "variant": "aggregate"
+  },
+  "GXSetDispCopyYScale": {
+    "absolutes": {
+      "GXFIFO": 3422584832
+    },
+    "bindings": {
+      "GXSetDispCopyYScale": "GXSetDispCopyYScale",
+      "__cvt_fp2unsigned": "__cvt_fp2unsigned",
+      "gx": "gx"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_80034D9C",
+    "pragmas": [],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "GXSetDispCopyYScale",
+    "size": 200,
+    "source": "src/dolphin/gx/GXFrameBuf.c",
+    "symbol": "GXSetDispCopyYScale",
+    "variant": "aggregate"
+  },
+  "GXSetDrawDone": {
+    "absolutes": {
+      "GXFIFO": 3422584832
+    },
+    "bindings": {
+      "DrawDone": "lbl_801A6C18",
+      "GXSetDrawDone": "GXSetDrawDone",
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "PPCSync": "fn_80009FF4",
+      "__GXSetDirtyState": "fn_8003458C",
+      "gx": "gx"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_800340D4",
+    "pragmas": [],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "GXSetDrawDone",
+    "size": 152,
+    "source": "src/dolphin/gx/GXMisc.c",
+    "symbol": "GXSetDrawDone",
+    "variant": "aggregate"
+  },
+  "GXSetFieldMask": {
+    "absolutes": {
+      "GXFIFO": 3422584832
+    },
+    "bindings": {
+      "GXSetFieldMask": "GXSetFieldMask",
+      "gx": "gx"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_80037D7C",
+    "pragmas": [],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "GXSetFieldMask",
+    "size": 56,
+    "source": "src/dolphin/gx/GXPixel.c",
+    "symbol": "GXSetFieldMask",
+    "variant": "aggregate"
+  },
+  "GXSetFogRangeAdj": {
+    "absolutes": {
+      "GXFIFO": 3422584832
+    },
+    "bindings": {
+      "GXSetFogRangeAdj": "GXSetFogRangeAdj",
+      "gx": "gx"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_80037A14",
+    "pragmas": [],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "GXSetFogRangeAdj",
+    "size": 256,
+    "source": "src/dolphin/gx/GXPixel.c",
+    "symbol": "GXSetFogRangeAdj",
     "variant": "aggregate"
   },
   "GXSetGPFifo": {
@@ -41,6 +421,314 @@
     "symbol": "GXSetGPFifo",
     "variant": "aggregate"
   },
+  "GXSetIndTexCoordScale": {
+    "absolutes": {
+      "GXFIFO": 3422584832
+    },
+    "bindings": {
+      "GXSetIndTexCoordScale": "GXSetIndTexCoordScale",
+      "gx": "gx"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_80036C24",
+    "pragmas": [],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "GXSetIndTexCoordScale",
+    "size": 380,
+    "source": "src/dolphin/gx/GXBump.c",
+    "symbol": "GXSetIndTexCoordScale",
+    "variant": "aggregate"
+  },
+  "GXSetIndTexOrder": {
+    "absolutes": {
+      "GXFIFO": 3422584832
+    },
+    "bindings": {
+      "GXSetIndTexOrder": "GXSetIndTexOrder",
+      "gx": "gx"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_80036DA0",
+    "pragmas": [],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "GXSetIndTexOrder",
+    "size": 276,
+    "source": "src/dolphin/gx/GXBump.c",
+    "symbol": "GXSetIndTexOrder",
+    "variant": "aggregate"
+  },
+  "GXSetLineWidth": {
+    "absolutes": {
+      "GXFIFO": 3422584832
+    },
+    "bindings": {
+      "GXSetLineWidth": "GXSetLineWidth",
+      "gx": "gx"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_800347A4",
+    "pragmas": [],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "GXSetLineWidth",
+    "size": 72,
+    "source": "src/dolphin/gx/GXGeometry.c",
+    "symbol": "GXSetLineWidth",
+    "variant": "aggregate"
+  },
+  "GXSetProjection": {
+    "absolutes": {
+      "GXFIFO": 3422584832
+    },
+    "bindings": {
+      "GXSetProjection": "GXSetProjection",
+      "gx": "gx"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_80038A88",
+    "pragmas": [
+      "#pragma peephole off"
+    ],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "GXSetProjection",
+    "size": 180,
+    "source": "src/dolphin/gx/GXTransform.c",
+    "symbol": "GXSetProjection",
+    "variant": "aggregate"
+  },
+  "GXSetTevIndirect": {
+    "absolutes": {
+      "GXFIFO": 3422584832
+    },
+    "bindings": {
+      "GXSetTevIndirect": "GXSetTevIndirect",
+      "gx": "gx"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_80036A28",
+    "pragmas": [],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "GXSetTevIndirect",
+    "size": 156,
+    "source": "src/dolphin/gx/GXBump.c",
+    "symbol": "GXSetTevIndirect",
+    "variant": "aggregate"
+  },
+  "GXSetTevKAlphaSel": {
+    "absolutes": {
+      "GXFIFO": 3422584832
+    },
+    "bindings": {
+      "GXSetTevKAlphaSel": "GXSetTevKAlphaSel",
+      "gx": "gx"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_800373C0",
+    "pragmas": [],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "GXSetTevKAlphaSel",
+    "size": 108,
+    "source": "src/dolphin/gx/GXTev.c",
+    "symbol": "GXSetTevKAlphaSel",
+    "variant": "aggregate"
+  },
+  "GXSetTevKColorSel": {
+    "absolutes": {
+      "GXFIFO": 3422584832
+    },
+    "bindings": {
+      "GXSetTevKColorSel": "GXSetTevKColorSel",
+      "gx": "gx"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_80037354",
+    "pragmas": [],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "GXSetTevKColorSel",
+    "size": 108,
+    "source": "src/dolphin/gx/GXTev.c",
+    "symbol": "GXSetTevKColorSel",
+    "variant": "aggregate"
+  },
+  "GXSetTevOp": {
+    "absolutes": {
+      "GXFIFO": 3422584832
+    },
+    "bindings": {
+      "...data.0": "lbl_8012B368",
+      "GXSetTevOp": "GXSetTevOp",
+      "TEVAOpTableST0": "(sdk_storage____data_0->sdk_TEVAOpTableST0)",
+      "TEVAOpTableST1": "(sdk_storage____data_0->sdk_TEVAOpTableST1)",
+      "TEVCOpTableST0": "(sdk_storage____data_0->sdk_TEVCOpTableST0)",
+      "TEVCOpTableST1": "(sdk_storage____data_0->sdk_TEVCOpTableST1)",
+      "gx": "gx"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_80037014",
+    "pragmas": [],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "GXSetTevOp",
+    "size": 140,
+    "source": "src/dolphin/gx/GXTev.c",
+    "symbol": "GXSetTevOp",
+    "variant": "aggregate-array-base"
+  },
+  "GXSetTevOrder": {
+    "absolutes": {
+      "GXFIFO": 3422584832
+    },
+    "bindings": {
+      "GXSetTevOrder": "GXSetTevOrder",
+      "c2r": "lbl_8012B3B8",
+      "c2r$118": "lbl_8012B3B8",
+      "gx": "gx"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_800375F0",
+    "pragmas": [],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "GXSetTevOrder",
+    "size": 472,
+    "source": "src/dolphin/gx/GXTev.c",
+    "symbol": "GXSetTevOrder",
+    "variant": "aggregate"
+  },
+  "GXSetTevSwapMode": {
+    "absolutes": {
+      "GXFIFO": 3422584832
+    },
+    "bindings": {
+      "GXSetTevSwapMode": "GXSetTevSwapMode",
+      "gx": "gx"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_8003742C",
+    "pragmas": [],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "GXSetTevSwapMode",
+    "size": 84,
+    "source": "src/dolphin/gx/GXTev.c",
+    "symbol": "GXSetTevSwapMode",
+    "variant": "aggregate"
+  },
+  "GXSetTevSwapModeTable": {
+    "absolutes": {
+      "GXFIFO": 3422584832
+    },
+    "bindings": {
+      "GXSetTevSwapModeTable": "GXSetTevSwapModeTable",
+      "gx": "gx"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_80037480",
+    "pragmas": [],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "GXSetTevSwapModeTable",
+    "size": 152,
+    "source": "src/dolphin/gx/GXTev.c",
+    "symbol": "GXSetTevSwapModeTable",
+    "variant": "aggregate"
+  },
+  "GXSetTexCoordGen2": {
+    "absolutes": {
+      "GXFIFO": 3422584832
+    },
+    "bindings": {
+      "GXSetTexCoordGen2": "GXSetTexCoordGen2",
+      "__GXSetMatrixIndex": "__GXSetMatrixIndex",
+      "gx": "gx"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_80033A7C",
+    "pragmas": [],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "GXSetTexCoordGen2",
+    "size": 720,
+    "source": "src/dolphin/gx/GXAttr.c",
+    "symbol": "GXSetTexCoordGen2",
+    "variant": "aggregate"
+  },
+  "GXSetTexCopySrc": {
+    "absolutes": {},
+    "bindings": {
+      "GXSetTexCopySrc": "GXSetTexCopySrc",
+      "gx": "gx"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_80034AEC",
+    "pragmas": [],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "GXSetTexCopySrc",
+    "size": 144,
+    "source": "src/dolphin/gx/GXFrameBuf.c",
+    "symbol": "GXSetTexCopySrc",
+    "variant": "aggregate"
+  },
+  "GXSetVtxDesc": {
+    "absolutes": {},
+    "bindings": {
+      "GXSetVtxDesc": "GXSetVtxDesc",
+      "gx": "gx"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_800324C8",
+    "pragmas": [],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "GXSetVtxDesc",
+    "size": 848,
+    "source": "src/dolphin/gx/GXAttr.c",
+    "symbol": "GXSetVtxDesc",
+    "variant": "aggregate"
+  },
+  "GXSetVtxDescv": {
+    "absolutes": {},
+    "bindings": {
+      "GXSetVtxDescv": "GXSetVtxDescv",
+      "gx": "gx"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_80032818",
+    "pragmas": [],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "GXSetVtxDescv",
+    "size": 884,
+    "source": "src/dolphin/gx/GXAttr.c",
+    "symbol": "GXSetVtxDescv",
+    "variant": "aggregate"
+  },
+  "GXSetZTexture": {
+    "absolutes": {
+      "GXFIFO": 3422584832
+    },
+    "bindings": {
+      "GXSetZTexture": "GXSetZTexture",
+      "gx": "gx"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_8003756C",
+    "pragmas": [],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "GXSetZTexture",
+    "size": 132,
+    "source": "src/dolphin/gx/GXTev.c",
+    "symbol": "GXSetZTexture",
+    "variant": "aggregate"
+  },
   "__GXFlushTextureState": {
     "absolutes": {
       "GXFIFO": 3422584832
@@ -57,6 +745,107 @@
     "size": 36,
     "source": "src/dolphin/gx/GXBump.c",
     "symbol": "__GXFlushTextureState",
+    "variant": "aggregate"
+  },
+  "__GXSaveCPUFifoAux": {
+    "absolutes": {},
+    "bindings": {
+      "CPGPLinked": "lbl_801A6BFC",
+      "GXFlush": "fn_80033E20",
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "__GXSaveCPUFifoAux": "__GXSaveCPUFifoAux",
+      "__cpReg": "__cpReg",
+      "__piReg": "__piReg"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_80032014",
+    "pragmas": [],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "__GXSaveCPUFifoAux",
+    "size": 220,
+    "source": "src/dolphin/gx/GXFifo.c",
+    "symbol": "__GXSaveCPUFifoAux",
+    "variant": "aggregate"
+  },
+  "__GXSendFlushPrim": {
+    "absolutes": {
+      "GXFIFO": 3422584832
+    },
+    "bindings": {
+      "__GXSendFlushPrim": "__GXSendFlushPrim",
+      "gx": "gx"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_8003471C",
+    "pragmas": [],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "__GXSendFlushPrim",
+    "size": 136,
+    "source": "src/dolphin/gx/GXGeometry.c",
+    "symbol": "__GXSendFlushPrim",
+    "variant": "aggregate"
+  },
+  "__GXSetGenMode": {
+    "absolutes": {
+      "GXFIFO": 3422584832
+    },
+    "bindings": {
+      "__GXSetGenMode": "__GXSetGenMode",
+      "gx": "gx"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_80034918",
+    "pragmas": [],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "__GXSetGenMode",
+    "size": 36,
+    "source": "src/dolphin/gx/GXGeometry.c",
+    "symbol": "__GXSetGenMode",
+    "variant": "aggregate"
+  },
+  "__GXSetMatrixIndex": {
+    "absolutes": {
+      "GXFIFO": 3422584832
+    },
+    "bindings": {
+      "__GXSetMatrixIndex": "__GXSetMatrixIndex",
+      "gx": "gx"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_80039088",
+    "pragmas": [
+      "#pragma peephole off"
+    ],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "__GXSetMatrixIndex",
+    "size": 132,
+    "source": "src/dolphin/gx/GXTransform.c",
+    "symbol": "__GXSetMatrixIndex",
+    "variant": "aggregate"
+  },
+  "__GXSetSUTexRegs": {
+    "absolutes": {},
+    "bindings": {
+      "__GXSetSUTexRegs": "__GXSetSUTexRegs",
+      "__SetSURegs": "fn_800365B4",
+      "gx": "gx"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_8003666C",
+    "pragmas": [
+      "#pragma dont_inline on"
+    ],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "__GXSetSUTexRegs",
+    "size": 380,
+    "source": "src/dolphin/gx/GXTexture.c",
+    "symbol": "__GXSetSUTexRegs",
     "variant": "aggregate"
   },
   "__GXSetTmemConfig": {
@@ -76,6 +865,45 @@
     "symbol": "__GXSetTmemConfig",
     "variant": "aggregate"
   },
+  "__GXSetVCD": {
+    "absolutes": {
+      "GXFIFO": 3422584832
+    },
+    "bindings": {
+      "__GXSetVCD": "__GXSetVCD",
+      "__GXXfVtxSpecs": "__GXXfVtxSpecs",
+      "gx": "gx"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_80032B8C",
+    "pragmas": [],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "__GXSetVCD",
+    "size": 84,
+    "source": "src/dolphin/gx/GXAttr.c",
+    "symbol": "__GXSetVCD",
+    "variant": "aggregate"
+  },
+  "__GXXfVtxSpecs": {
+    "absolutes": {
+      "GXFIFO": 3422584832
+    },
+    "bindings": {
+      "__GXXfVtxSpecs": "__GXXfVtxSpecs",
+      "gx": "gx"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_80032370",
+    "pragmas": [],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "__GXXfVtxSpecs",
+    "size": 344,
+    "source": "src/dolphin/gx/GXAttr.c",
+    "symbol": "__GXXfVtxSpecs",
+    "variant": "aggregate"
+  },
   "__GetImageTileCount": {
     "absolutes": {},
     "bindings": {
@@ -89,791 +917,6 @@
     "size": 200,
     "source": "src/dolphin/gx/GXTexture.c",
     "symbol": "__GetImageTileCount",
-    "variant": "aggregate"
-  },
-  "fn_80031B50": {
-    "absolutes": {},
-    "bindings": {
-      "BreakPointCB": "lbl_801A6C04",
-      "GXCPInterruptHandler": "fn_80031B50",
-      "GXOverflowSuspendInProgress": "lbl_801A6C00",
-      "OSClearContext": "OSClearContext",
-      "OSResumeThread": "fn_80010CB0",
-      "OSSetCurrentContext": "OSSetCurrentContext",
-      "OSSuspendThread": "fn_80010F38",
-      "__GXCurrentThread": "lbl_801A6BF8",
-      "__GXOverflowCount": "lbl_801A6C08",
-      "__GXWriteFifoIntEnable": "fn_800322E8",
-      "__GXWriteFifoIntReset": "fn_80032324",
-      "__cpReg": "__cpReg",
-      "gx": "gx"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
-    "sdk": "tww",
-    "sdk_symbol": "GXCPInterruptHandler",
-    "size": 308,
-    "source": "src/dolphin/gx/GXFifo.c",
-    "symbol": "fn_80031B50",
-    "variant": "aggregate"
-  },
-  "fn_80032014": {
-    "absolutes": {},
-    "bindings": {
-      "CPGPLinked": "lbl_801A6BFC",
-      "GXFlush": "fn_80033E20",
-      "OSDisableInterrupts": "OSDisableInterrupts",
-      "OSRestoreInterrupts": "OSRestoreInterrupts",
-      "__GXSaveCPUFifoAux": "fn_80032014",
-      "__cpReg": "__cpReg",
-      "__piReg": "__piReg"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
-    "sdk": "tww",
-    "sdk_symbol": "__GXSaveCPUFifoAux",
-    "size": 220,
-    "source": "src/dolphin/gx/GXFifo.c",
-    "symbol": "fn_80032014",
-    "variant": "aggregate"
-  },
-  "fn_800320F0": {
-    "absolutes": {},
-    "bindings": {
-      "GXGetGPStatus": "fn_800320F0",
-      "__cpReg": "__cpReg",
-      "gx": "gx"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
-    "sdk": "tww",
-    "sdk_symbol": "GXGetGPStatus",
-    "size": 80,
-    "source": "src/dolphin/gx/GXFifo.c",
-    "symbol": "fn_800320F0",
-    "variant": "aggregate"
-  },
-  "fn_80032370": {
-    "absolutes": {
-      "GXFIFO": 3422584832
-    },
-    "bindings": {
-      "__GXXfVtxSpecs": "fn_80032370",
-      "gx": "gx"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
-    "sdk": "tww",
-    "sdk_symbol": "__GXXfVtxSpecs",
-    "size": 344,
-    "source": "src/dolphin/gx/GXAttr.c",
-    "symbol": "fn_80032370",
-    "variant": "aggregate"
-  },
-  "fn_800324C8": {
-    "absolutes": {},
-    "bindings": {
-      "GXSetVtxDesc": "fn_800324C8",
-      "gx": "gx"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
-    "sdk": "tww",
-    "sdk_symbol": "GXSetVtxDesc",
-    "size": 848,
-    "source": "src/dolphin/gx/GXAttr.c",
-    "symbol": "fn_800324C8",
-    "variant": "aggregate"
-  },
-  "fn_80032818": {
-    "absolutes": {},
-    "bindings": {
-      "GXSetVtxDescv": "fn_80032818",
-      "gx": "gx"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
-    "sdk": "tww",
-    "sdk_symbol": "GXSetVtxDescv",
-    "size": 884,
-    "source": "src/dolphin/gx/GXAttr.c",
-    "symbol": "fn_80032818",
-    "variant": "aggregate"
-  },
-  "fn_80032B8C": {
-    "absolutes": {
-      "GXFIFO": 3422584832
-    },
-    "bindings": {
-      "__GXSetVCD": "fn_80032B8C",
-      "__GXXfVtxSpecs": "fn_80032370",
-      "gx": "gx"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
-    "sdk": "tww",
-    "sdk_symbol": "__GXSetVCD",
-    "size": 84,
-    "source": "src/dolphin/gx/GXAttr.c",
-    "symbol": "fn_80032B8C",
-    "variant": "aggregate"
-  },
-  "fn_80032D04": {
-    "absolutes": {},
-    "bindings": {
-      "GXGetVtxDesc": "fn_80032D04",
-      "gx": "gx"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
-    "sdk": "tww",
-    "sdk_symbol": "GXGetVtxDesc",
-    "size": 436,
-    "source": "src/dolphin/gx/GXAttr.c",
-    "symbol": "fn_80032D04",
-    "variant": "aggregate"
-  },
-  "fn_80032F48": {
-    "absolutes": {},
-    "bindings": {
-      "GXClearVtxDesc": "fn_80032F48",
-      "gx": "gx"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
-    "sdk": "tww",
-    "sdk_symbol": "GXClearVtxDesc",
-    "size": 56,
-    "source": "src/dolphin/gx/GXAttr.c",
-    "symbol": "fn_80032F48",
-    "variant": "aggregate"
-  },
-  "fn_800336EC": {
-    "absolutes": {},
-    "bindings": {
-      "GXGetVtxAttrFmt": "fn_800336EC",
-      "gx": "gx"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
-    "sdk": "tww",
-    "sdk_symbol": "GXGetVtxAttrFmt",
-    "size": 640,
-    "source": "src/dolphin/gx/GXAttr.c",
-    "symbol": "fn_800336EC",
-    "variant": "aggregate"
-  },
-  "fn_800339E0": {
-    "absolutes": {
-      "GXFIFO": 3422584832
-    },
-    "bindings": {
-      "GXSetArray": "fn_800339E0",
-      "gx": "gx"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
-    "sdk": "tww",
-    "sdk_symbol": "GXSetArray",
-    "size": 140,
-    "source": "src/dolphin/gx/GXAttr.c",
-    "symbol": "fn_800339E0",
-    "variant": "aggregate"
-  },
-  "fn_80033A7C": {
-    "absolutes": {
-      "GXFIFO": 3422584832
-    },
-    "bindings": {
-      "GXSetTexCoordGen2": "fn_80033A7C",
-      "__GXSetMatrixIndex": "fn_80039088",
-      "gx": "gx"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
-    "sdk": "tww",
-    "sdk_symbol": "GXSetTexCoordGen2",
-    "size": 720,
-    "source": "src/dolphin/gx/GXAttr.c",
-    "symbol": "fn_80033A7C",
-    "variant": "aggregate"
-  },
-  "fn_800340D4": {
-    "absolutes": {
-      "GXFIFO": 3422584832
-    },
-    "bindings": {
-      "DrawDone": "lbl_801A6C18",
-      "GXSetDrawDone": "fn_800340D4",
-      "OSDisableInterrupts": "OSDisableInterrupts",
-      "OSRestoreInterrupts": "OSRestoreInterrupts",
-      "PPCSync": "fn_80009FF4",
-      "__GXSetDirtyState": "fn_8003458C",
-      "gx": "gx"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
-    "sdk": "tww",
-    "sdk_symbol": "GXSetDrawDone",
-    "size": 152,
-    "source": "src/dolphin/gx/GXMisc.c",
-    "symbol": "fn_800340D4",
-    "variant": "aggregate"
-  },
-  "fn_80034230": {
-    "absolutes": {},
-    "bindings": {
-      "GXPokeBlendMode": "fn_80034230",
-      "__peReg": "__peReg"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
-    "sdk": "tww",
-    "sdk_symbol": "GXPokeBlendMode",
-    "size": 136,
-    "source": "src/dolphin/gx/GXMisc.c",
-    "symbol": "fn_80034230",
-    "variant": "aggregate"
-  },
-  "fn_800342D4": {
-    "absolutes": {},
-    "bindings": {
-      "GXPokeDstAlpha": "fn_800342D4",
-      "__peReg": "__peReg"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
-    "sdk": "tww",
-    "sdk_symbol": "GXPokeDstAlpha",
-    "size": 20,
-    "source": "src/dolphin/gx/GXMisc.c",
-    "symbol": "fn_800342D4",
-    "variant": "aggregate"
-  },
-  "fn_8003471C": {
-    "absolutes": {
-      "GXFIFO": 3422584832
-    },
-    "bindings": {
-      "__GXSendFlushPrim": "fn_8003471C",
-      "gx": "gx"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
-    "sdk": "tww",
-    "sdk_symbol": "__GXSendFlushPrim",
-    "size": 136,
-    "source": "src/dolphin/gx/GXGeometry.c",
-    "symbol": "fn_8003471C",
-    "variant": "aggregate"
-  },
-  "fn_800347A4": {
-    "absolutes": {
-      "GXFIFO": 3422584832
-    },
-    "bindings": {
-      "GXSetLineWidth": "fn_800347A4",
-      "gx": "gx"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
-    "sdk": "tww",
-    "sdk_symbol": "GXSetLineWidth",
-    "size": 72,
-    "source": "src/dolphin/gx/GXGeometry.c",
-    "symbol": "fn_800347A4",
-    "variant": "aggregate"
-  },
-  "fn_80034918": {
-    "absolutes": {
-      "GXFIFO": 3422584832
-    },
-    "bindings": {
-      "__GXSetGenMode": "fn_80034918",
-      "gx": "gx"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
-    "sdk": "tww",
-    "sdk_symbol": "__GXSetGenMode",
-    "size": 36,
-    "source": "src/dolphin/gx/GXGeometry.c",
-    "symbol": "fn_80034918",
-    "variant": "aggregate"
-  },
-  "fn_80034A5C": {
-    "absolutes": {},
-    "bindings": {
-      "GXSetDispCopySrc": "fn_80034A5C",
-      "gx": "gx"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
-    "sdk": "tww",
-    "sdk_symbol": "GXSetDispCopySrc",
-    "size": 144,
-    "source": "src/dolphin/gx/GXFrameBuf.c",
-    "symbol": "fn_80034A5C",
-    "variant": "aggregate"
-  },
-  "fn_80034AEC": {
-    "absolutes": {},
-    "bindings": {
-      "GXSetTexCopySrc": "fn_80034AEC",
-      "gx": "gx"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
-    "sdk": "tww",
-    "sdk_symbol": "GXSetTexCopySrc",
-    "size": 144,
-    "source": "src/dolphin/gx/GXFrameBuf.c",
-    "symbol": "fn_80034AEC",
-    "variant": "aggregate"
-  },
-  "fn_80034D0C": {
-    "absolutes": {},
-    "bindings": {
-      "GXSetDispCopyFrame2Field": "fn_80034D0C",
-      "gx": "gx"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
-    "sdk": "tww",
-    "sdk_symbol": "GXSetDispCopyFrame2Field",
-    "size": 40,
-    "source": "src/dolphin/gx/GXFrameBuf.c",
-    "symbol": "fn_80034D0C",
-    "variant": "aggregate"
-  },
-  "fn_80034D9C": {
-    "absolutes": {
-      "GXFIFO": 3422584832
-    },
-    "bindings": {
-      "GXSetDispCopyYScale": "fn_80034D9C",
-      "__cvt_fp2unsigned": "__cvt_fp2unsigned",
-      "gx": "gx"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
-    "sdk": "tww",
-    "sdk_symbol": "GXSetDispCopyYScale",
-    "size": 200,
-    "source": "src/dolphin/gx/GXFrameBuf.c",
-    "symbol": "fn_80034D9C",
-    "variant": "aggregate"
-  },
-  "fn_80034E64": {
-    "absolutes": {
-      "GXFIFO": 3422584832
-    },
-    "bindings": {
-      "GXSetCopyClear": "fn_80034E64",
-      "gx": "gx"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
-    "sdk": "tww",
-    "sdk_symbol": "GXSetCopyClear",
-    "size": 104,
-    "source": "src/dolphin/gx/GXFrameBuf.c",
-    "symbol": "fn_80034E64",
-    "variant": "aggregate"
-  },
-  "fn_800353E8": {
-    "absolutes": {
-      "GXFIFO": 3422584832
-    },
-    "bindings": {
-      "GXClearBoundingBox": "fn_800353E8",
-      "gx": "gx"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
-    "sdk": "tww",
-    "sdk_symbol": "GXClearBoundingBox",
-    "size": 56,
-    "source": "src/dolphin/gx/GXFrameBuf.c",
-    "symbol": "fn_800353E8",
-    "variant": "aggregate"
-  },
-  "fn_80035EC4": {
-    "absolutes": {},
-    "bindings": {
-      "GX2HWFiltConv": "lbl_801A6570",
-      "GXInitTexObjLOD": "fn_80035EC4"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
-    "sdk": "tww",
-    "sdk_symbol": "GXInitTexObjLOD",
-    "size": 404,
-    "source": "src/dolphin/gx/GXTexture.c",
-    "symbol": "fn_80035EC4",
-    "variant": "aggregate"
-  },
-  "fn_8003666C": {
-    "absolutes": {},
-    "bindings": {
-      "__GXSetSUTexRegs": "fn_8003666C",
-      "__SetSURegs": "fn_800365B4",
-      "gx": "gx"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [
-      "#pragma dont_inline on"
-    ],
-    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
-    "sdk": "tww",
-    "sdk_symbol": "__GXSetSUTexRegs",
-    "size": 380,
-    "source": "src/dolphin/gx/GXTexture.c",
-    "symbol": "fn_8003666C",
-    "variant": "aggregate"
-  },
-  "fn_80036A28": {
-    "absolutes": {
-      "GXFIFO": 3422584832
-    },
-    "bindings": {
-      "GXSetTevIndirect": "fn_80036A28",
-      "gx": "gx"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
-    "sdk": "tww",
-    "sdk_symbol": "GXSetTevIndirect",
-    "size": 156,
-    "source": "src/dolphin/gx/GXBump.c",
-    "symbol": "fn_80036A28",
-    "variant": "aggregate"
-  },
-  "fn_80036C24": {
-    "absolutes": {
-      "GXFIFO": 3422584832
-    },
-    "bindings": {
-      "GXSetIndTexCoordScale": "fn_80036C24",
-      "gx": "gx"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
-    "sdk": "tww",
-    "sdk_symbol": "GXSetIndTexCoordScale",
-    "size": 380,
-    "source": "src/dolphin/gx/GXBump.c",
-    "symbol": "fn_80036C24",
-    "variant": "aggregate"
-  },
-  "fn_80036DA0": {
-    "absolutes": {
-      "GXFIFO": 3422584832
-    },
-    "bindings": {
-      "GXSetIndTexOrder": "fn_80036DA0",
-      "gx": "gx"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
-    "sdk": "tww",
-    "sdk_symbol": "GXSetIndTexOrder",
-    "size": 276,
-    "source": "src/dolphin/gx/GXBump.c",
-    "symbol": "fn_80036DA0",
-    "variant": "aggregate"
-  },
-  "fn_80037014": {
-    "absolutes": {
-      "GXFIFO": 3422584832
-    },
-    "bindings": {
-      "...data.0": "lbl_8012B368",
-      "GXSetTevOp": "fn_80037014",
-      "TEVAOpTableST0": "(sdk_storage____data_0->sdk_TEVAOpTableST0)",
-      "TEVAOpTableST1": "(sdk_storage____data_0->sdk_TEVAOpTableST1)",
-      "TEVCOpTableST0": "(sdk_storage____data_0->sdk_TEVCOpTableST0)",
-      "TEVCOpTableST1": "(sdk_storage____data_0->sdk_TEVCOpTableST1)",
-      "gx": "gx"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
-    "sdk": "tww",
-    "sdk_symbol": "GXSetTevOp",
-    "size": 140,
-    "source": "src/dolphin/gx/GXTev.c",
-    "symbol": "fn_80037014",
-    "variant": "aggregate-array-base"
-  },
-  "fn_80037354": {
-    "absolutes": {
-      "GXFIFO": 3422584832
-    },
-    "bindings": {
-      "GXSetTevKColorSel": "fn_80037354",
-      "gx": "gx"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
-    "sdk": "tww",
-    "sdk_symbol": "GXSetTevKColorSel",
-    "size": 108,
-    "source": "src/dolphin/gx/GXTev.c",
-    "symbol": "fn_80037354",
-    "variant": "aggregate"
-  },
-  "fn_800373C0": {
-    "absolutes": {
-      "GXFIFO": 3422584832
-    },
-    "bindings": {
-      "GXSetTevKAlphaSel": "fn_800373C0",
-      "gx": "gx"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
-    "sdk": "tww",
-    "sdk_symbol": "GXSetTevKAlphaSel",
-    "size": 108,
-    "source": "src/dolphin/gx/GXTev.c",
-    "symbol": "fn_800373C0",
-    "variant": "aggregate"
-  },
-  "fn_8003742C": {
-    "absolutes": {
-      "GXFIFO": 3422584832
-    },
-    "bindings": {
-      "GXSetTevSwapMode": "fn_8003742C",
-      "gx": "gx"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
-    "sdk": "tww",
-    "sdk_symbol": "GXSetTevSwapMode",
-    "size": 84,
-    "source": "src/dolphin/gx/GXTev.c",
-    "symbol": "fn_8003742C",
-    "variant": "aggregate"
-  },
-  "fn_80037480": {
-    "absolutes": {
-      "GXFIFO": 3422584832
-    },
-    "bindings": {
-      "GXSetTevSwapModeTable": "fn_80037480",
-      "gx": "gx"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
-    "sdk": "tww",
-    "sdk_symbol": "GXSetTevSwapModeTable",
-    "size": 152,
-    "source": "src/dolphin/gx/GXTev.c",
-    "symbol": "fn_80037480",
-    "variant": "aggregate"
-  },
-  "fn_80037518": {
-    "absolutes": {
-      "GXFIFO": 3422584832
-    },
-    "bindings": {
-      "GXSetAlphaCompare": "fn_80037518",
-      "gx": "gx"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
-    "sdk": "tww",
-    "sdk_symbol": "GXSetAlphaCompare",
-    "size": 84,
-    "source": "src/dolphin/gx/GXTev.c",
-    "symbol": "fn_80037518",
-    "variant": "aggregate"
-  },
-  "fn_8003756C": {
-    "absolutes": {
-      "GXFIFO": 3422584832
-    },
-    "bindings": {
-      "GXSetZTexture": "fn_8003756C",
-      "gx": "gx"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
-    "sdk": "tww",
-    "sdk_symbol": "GXSetZTexture",
-    "size": 132,
-    "source": "src/dolphin/gx/GXTev.c",
-    "symbol": "fn_8003756C",
-    "variant": "aggregate"
-  },
-  "fn_800375F0": {
-    "absolutes": {
-      "GXFIFO": 3422584832
-    },
-    "bindings": {
-      "GXSetTevOrder": "fn_800375F0",
-      "c2r": "lbl_8012B3B8",
-      "c2r$118": "lbl_8012B3B8",
-      "gx": "gx"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
-    "sdk": "tww",
-    "sdk_symbol": "GXSetTevOrder",
-    "size": 472,
-    "source": "src/dolphin/gx/GXTev.c",
-    "symbol": "fn_800375F0",
-    "variant": "aggregate"
-  },
-  "fn_80037A14": {
-    "absolutes": {
-      "GXFIFO": 3422584832
-    },
-    "bindings": {
-      "GXSetFogRangeAdj": "fn_80037A14",
-      "gx": "gx"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
-    "sdk": "tww",
-    "sdk_symbol": "GXSetFogRangeAdj",
-    "size": 256,
-    "source": "src/dolphin/gx/GXPixel.c",
-    "symbol": "fn_80037A14",
-    "variant": "aggregate"
-  },
-  "fn_80037D7C": {
-    "absolutes": {
-      "GXFIFO": 3422584832
-    },
-    "bindings": {
-      "GXSetFieldMask": "fn_80037D7C",
-      "gx": "gx"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
-    "sdk": "tww",
-    "sdk_symbol": "GXSetFieldMask",
-    "size": 56,
-    "source": "src/dolphin/gx/GXPixel.c",
-    "symbol": "fn_80037D7C",
-    "variant": "aggregate"
-  },
-  "fn_80038A88": {
-    "absolutes": {
-      "GXFIFO": 3422584832
-    },
-    "bindings": {
-      "GXSetProjection": "fn_80038A88",
-      "gx": "gx"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [
-      "#pragma peephole off"
-    ],
-    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
-    "sdk": "tww",
-    "sdk_symbol": "GXSetProjection",
-    "size": 180,
-    "source": "src/dolphin/gx/GXTransform.c",
-    "symbol": "fn_80038A88",
-    "variant": "aggregate"
-  },
-  "fn_80039060": {
-    "absolutes": {
-      "GXFIFO": 3422584832
-    },
-    "bindings": {
-      "GXSetClipMode": "fn_80039060",
-      "gx": "gx"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [
-      "#pragma peephole off"
-    ],
-    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
-    "sdk": "tww",
-    "sdk_symbol": "GXSetClipMode",
-    "size": 40,
-    "source": "src/dolphin/gx/GXTransform.c",
-    "symbol": "fn_80039060",
-    "variant": "aggregate"
-  },
-  "fn_80039088": {
-    "absolutes": {
-      "GXFIFO": 3422584832
-    },
-    "bindings": {
-      "__GXSetMatrixIndex": "fn_80039088",
-      "gx": "gx"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [
-      "#pragma peephole off"
-    ],
-    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
-    "sdk": "tww",
-    "sdk_symbol": "__GXSetMatrixIndex",
-    "size": 132,
-    "source": "src/dolphin/gx/GXTransform.c",
-    "symbol": "fn_80039088",
-    "variant": "aggregate"
-  },
-  "fn_80039B7C": {
-    "absolutes": {},
-    "bindings": {
-      "GXReadXfRasMetric": "fn_80039B7C",
-      "__cpReg": "__cpReg"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [
-      "#pragma scheduling off"
-    ],
-    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
-    "sdk": "tww",
-    "sdk_symbol": "GXReadXfRasMetric",
-    "size": 196,
-    "source": "src/dolphin/gx/GXPerf.c",
-    "symbol": "fn_80039B7C",
     "variant": "aggregate"
   }
 }

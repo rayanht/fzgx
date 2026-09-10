@@ -26,5 +26,5 @@
 /* 8000DD50 0000AD50  7C 17 E2 A6 */	mfspr r0, GQR7
 /* 8000DD54 0000AD54  90 04 01 C0 */	stw r0, 0x1c0(r4)
 /* 8000DD58 0000AD58  94 21 FF F8 */	stwu r1, -0x8(r1)
-/* 8000DD5C 0000AD5C  4B FF FC 70 */	b fn_8000D9CC
+/* 8000DD5C 0000AD5C  4B FF FC 70 */	b __OSDispatchInterrupt
 .endfn ExternalInterruptHandler_8000DD10

@@ -1486,14 +1486,14 @@ s32 fn_1_14FD6C(s32 *arg0, s32 *arg1) {
 
 /* fzgx:begin fn_1_14FD7C */
 extern void fn_1_14FD6C(void);
-extern void fn_8008279C(void *arg0, u32 arg1, s32 arg2, void *callback);
+extern void qsort(void *arg0, u32 arg1, s32 arg2, void *callback);
 
 // Forward a callback and its selector to the dispatch helper.
 void fn_1_14FD7C(u32 *arg0, u32 arg1) {
     s16 selector = arg1;
     void (*callback)(void) = fn_1_14FD6C;
 
-    fn_8008279C(arg0, selector, 4, callback);
+    qsort(arg0, selector, 4, callback);
 }
 /* fzgx:end fn_1_14FD7C */
 

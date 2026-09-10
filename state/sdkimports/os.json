@@ -165,6 +165,27 @@
     "symbol": "MEMIntrruptHandler",
     "variant": "aggregate"
   },
+  "OSCancelAlarm": {
+    "absolutes": {},
+    "bindings": {
+      "AlarmQueue": "AlarmQueue_801A6788",
+      "OSCancelAlarm": "OSCancelAlarm",
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "PPCMtdec": "PPCMtdec",
+      "__OSGetSystemTime": "__OSGetSystemTime"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_8000AF78",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "OSCancelAlarm",
+    "size": 284,
+    "source": "libs/dolphin/os/OSAlarm.c",
+    "symbol": "OSCancelAlarm",
+    "variant": "aggregate"
+  },
   "OSCancelThread": {
     "absolutes": {
       "__OSActiveThreadQueue": 2147483868
@@ -174,10 +195,10 @@
       "OSClearContext": "OSClearContext",
       "OSDisableInterrupts": "OSDisableInterrupts",
       "OSRestoreInterrupts": "OSRestoreInterrupts",
-      "OSWakeupThread": "fn_80011194",
+      "OSWakeupThread": "OSWakeupThread",
       "RunQueueHint": "RunQueueHint_801A67FC",
       "SelectThread": "SelectThread",
-      "SetEffectivePriority": "fn_80010410",
+      "SetEffectivePriority": "SetEffectivePriority",
       "UnsetRun": "fn_8001036C",
       "__OSGetEffectivePriority": "__OSGetEffectivePriority",
       "__OSUnlockAllMutex": "__OSUnlockAllMutex"
@@ -229,6 +250,30 @@
     "symbol": "OSClearStack",
     "variant": "aggregate"
   },
+  "OSCreateThread": {
+    "absolutes": {
+      "__OSActiveThreadQueue": 2147483868
+    },
+    "bindings": {
+      "OSCreateThread": "OSCreateThread",
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSExitThread": "OSExitThread",
+      "OSInitContext": "OSInitContext",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "__OSErrorTable": "__OSErrorTable",
+      "__OSFpscrEnableBits": "lbl_801A6430"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_80010828",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "OSCreateThread",
+    "size": 488,
+    "source": "libs/dolphin/os/OSThread.c",
+    "symbol": "OSCreateThread",
+    "variant": "aggregate"
+  },
   "OSDumpContext": {
     "absolutes": {
       "__OSCurrentContext": 2147483860,
@@ -253,6 +298,101 @@
     "size": 680,
     "source": "libs/dolphin/os/OSContext.c",
     "symbol": "OSDumpContext",
+    "variant": "aggregate"
+  },
+  "OSExitThread": {
+    "absolutes": {
+      "__OSActiveThreadQueue": 2147483868,
+      "__OSCurrentThread": 2147483876
+    },
+    "bindings": {
+      "OSClearContext": "OSClearContext",
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSExitThread": "OSExitThread",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "OSWakeupThread": "OSWakeupThread",
+      "RunQueueHint": "RunQueueHint_801A67FC",
+      "SelectThread": "SelectThread",
+      "__OSUnlockAllMutex": "__OSUnlockAllMutex"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_80010A10",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "OSExitThread",
+    "size": 228,
+    "source": "libs/dolphin/os/OSThread.c",
+    "symbol": "OSExitThread",
+    "variant": "aggregate"
+  },
+  "OSGetConsoleType": {
+    "absolutes": {},
+    "bindings": {
+      "BootInfo": "BootInfo_801A6748",
+      "OSGetConsoleType": "OSGetConsoleType"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_8000A224",
+    "pragmas": [
+      "#pragma peephole off"
+    ],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "OSGetConsoleType",
+    "size": 40,
+    "source": "libs/dolphin/os/OS.c",
+    "symbol": "OSGetConsoleType",
+    "variant": "aggregate"
+  },
+  "OSGetFontEncode": {
+    "absolutes": {
+      "__OSTVMode": 2147483852,
+      "__VIRegs": 3422560256
+    },
+    "bindings": {
+      "OSGetFontEncode": "OSGetFontEncode",
+      "fontEncode": "lbl_801A6438",
+      "fontEncode$3": "lbl_801A6438"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_8000CDD8",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "OSGetFontEncode",
+    "size": 88,
+    "source": "libs/dolphin/os/OSFont.c",
+    "symbol": "OSGetFontEncode",
+    "variant": "aggregate"
+  },
+  "OSGetResetButtonState": {
+    "absolutes": {
+      "GameChoice": 2147496163,
+      "__OSBusClock": 2147483896,
+      "__PIRegs": 3422564352
+    },
+    "bindings": {
+      "Down": "lbl_801A67DC",
+      "HoldDown": "lbl_801A67F0",
+      "HoldUp": "lbl_801A67E8",
+      "LastState": "lbl_801A67E0",
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSGetResetButtonState": "OSGetResetButtonState",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "__OSGetSystemTime": "__OSGetSystemTime",
+      "__OSStartTime": "__OSStartTime",
+      "__div2i": "__div2i"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_8000F358",
+    "pragmas": [],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "OSGetResetButtonState",
+    "size": 664,
+    "source": "src/dolphin/os/OSResetSW.c",
+    "symbol": "OSGetResetButtonState",
     "variant": "aggregate"
   },
   "OSGetResetCode": {
@@ -412,6 +552,51 @@
     "symbol": "OSSetWirelessID",
     "variant": "aggregate-locked"
   },
+  "OSSleepThread": {
+    "absolutes": {
+      "__OSCurrentThread": 2147483876
+    },
+    "bindings": {
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "OSSleepThread": "OSSleepThread",
+      "RunQueueHint": "RunQueueHint_801A67FC",
+      "SelectThread": "SelectThread"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_800110A8",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "OSSleepThread",
+    "size": 236,
+    "source": "libs/dolphin/os/OSThread.c",
+    "symbol": "OSSleepThread",
+    "variant": "aggregate"
+  },
+  "OSSuspendThread": {
+    "absolutes": {},
+    "bindings": {
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "OSSuspendThread": "OSSuspendThread",
+      "RunQueueHint": "RunQueueHint_801A67FC",
+      "SelectThread": "SelectThread",
+      "SetEffectivePriority": "SetEffectivePriority",
+      "UnsetRun": "fn_8001036C",
+      "__OSGetEffectivePriority": "__OSGetEffectivePriority"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_80010F38",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "OSSuspendThread",
+    "size": 368,
+    "source": "libs/dolphin/os/OSThread.c",
+    "symbol": "OSSuspendThread",
+    "variant": "aggregate"
+  },
   "OSTicksToCalendarTime": {
     "absolutes": {
       "__OSBusClock": 2147483896
@@ -455,6 +640,28 @@
     "symbol": "OSUnlink",
     "variant": "aggregate"
   },
+  "OSWakeupThread": {
+    "absolutes": {},
+    "bindings": {
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "OSWakeupThread": "OSWakeupThread",
+      "RunQueue": "RunQueue_8015C018",
+      "RunQueueBits": "RunQueueBits_801A67F8",
+      "RunQueueHint": "RunQueueHint_801A67FC",
+      "SelectThread": "SelectThread"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_80011194",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "OSWakeupThread",
+    "size": 260,
+    "source": "libs/dolphin/os/OSThread.c",
+    "symbol": "OSWakeupThread",
+    "variant": "aggregate"
+  },
   "OnReset": {
     "absolutes": {
       "__MEMRegs": 3422568448
@@ -489,6 +696,26 @@
     "size": 700,
     "source": "libs/dolphin/os/OSLink.c",
     "symbol": "Relocate",
+    "variant": "aggregate"
+  },
+  "SetEffectivePriority": {
+    "absolutes": {},
+    "bindings": {
+      "RunQueue": "RunQueue_8015C018",
+      "RunQueueBits": "RunQueueBits_801A67F8",
+      "RunQueueHint": "RunQueueHint_801A67FC",
+      "SetEffectivePriority": "SetEffectivePriority",
+      "UnsetRun": "fn_8001036C"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_80010410",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "SetEffectivePriority",
+    "size": 448,
+    "source": "libs/dolphin/os/OSThread.c",
+    "symbol": "SetEffectivePriority",
     "variant": "aggregate"
   },
   "SetInterruptMask": {
@@ -630,6 +857,42 @@
     "size": 72,
     "source": "libs/dolphin/os/OSContext.c",
     "symbol": "__OSContextInit",
+    "variant": "aggregate"
+  },
+  "__OSDispatchInterrupt": {
+    "absolutes": {
+      "__AIRegs": 3422579712,
+      "__DSPRegs": 3422572544,
+      "__EXIRegs": 3422578688,
+      "__MEMRegs": 3422568448,
+      "__OSGlobalInterruptMask": 2147483844,
+      "__OSLocalInterruptMask": 2147483848,
+      "__PIRegs": 3422564352
+    },
+    "bindings": {
+      "InterruptHandlerTable": "InterruptHandlerTable_801A67A8",
+      "InterruptPrioTable": "lbl_80123A60",
+      "OSDisableScheduler": "OSDisableScheduler",
+      "OSEnableScheduler": "OSEnableScheduler",
+      "OSGetTime": "OSGetTime",
+      "OSLoadContext": "OSLoadContext",
+      "__OSDispatchInterrupt": "__OSDispatchInterrupt",
+      "__OSLastInterrupt": "__OSLastInterrupt",
+      "__OSLastInterruptSrr0": "__OSLastInterruptSrr0",
+      "__OSLastInterruptTime": "__OSLastInterruptTime",
+      "__OSReschedule": "__OSReschedule"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_8000D9CC",
+    "pragmas": [
+      "#pragma peephole off"
+    ],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "__OSDispatchInterrupt",
+    "size": 836,
+    "source": "libs/dolphin/os/OSInterrupt.c",
+    "symbol": "__OSDispatchInterrupt",
     "variant": "aggregate"
   },
   "__OSGetExceptionHandler": {
@@ -952,258 +1215,6 @@
     "size": 136,
     "source": "libs/dolphin/os/OSInterrupt.c",
     "symbol": "__OSUnmaskInterrupts",
-    "variant": "aggregate"
-  },
-  "fn_8000A224": {
-    "absolutes": {},
-    "bindings": {
-      "BootInfo": "BootInfo_801A6748",
-      "OSGetConsoleType": "fn_8000A224"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [
-      "#pragma peephole off"
-    ],
-    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
-    "sdk": "mkdd",
-    "sdk_symbol": "OSGetConsoleType",
-    "size": 40,
-    "source": "libs/dolphin/os/OS.c",
-    "symbol": "fn_8000A224",
-    "variant": "aggregate"
-  },
-  "fn_8000AF78": {
-    "absolutes": {},
-    "bindings": {
-      "AlarmQueue": "AlarmQueue_801A6788",
-      "OSCancelAlarm": "fn_8000AF78",
-      "OSDisableInterrupts": "OSDisableInterrupts",
-      "OSRestoreInterrupts": "OSRestoreInterrupts",
-      "PPCMtdec": "PPCMtdec",
-      "__OSGetSystemTime": "__OSGetSystemTime"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
-    "sdk": "mkdd",
-    "sdk_symbol": "OSCancelAlarm",
-    "size": 284,
-    "source": "libs/dolphin/os/OSAlarm.c",
-    "symbol": "fn_8000AF78",
-    "variant": "aggregate"
-  },
-  "fn_8000CDD8": {
-    "absolutes": {
-      "__OSTVMode": 2147483852,
-      "__VIRegs": 3422560256
-    },
-    "bindings": {
-      "OSGetFontEncode": "fn_8000CDD8",
-      "fontEncode": "lbl_801A6438",
-      "fontEncode$3": "lbl_801A6438"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
-    "sdk": "mkdd",
-    "sdk_symbol": "OSGetFontEncode",
-    "size": 88,
-    "source": "libs/dolphin/os/OSFont.c",
-    "symbol": "fn_8000CDD8",
-    "variant": "aggregate"
-  },
-  "fn_8000D9CC": {
-    "absolutes": {
-      "__AIRegs": 3422579712,
-      "__DSPRegs": 3422572544,
-      "__EXIRegs": 3422578688,
-      "__MEMRegs": 3422568448,
-      "__OSGlobalInterruptMask": 2147483844,
-      "__OSLocalInterruptMask": 2147483848,
-      "__PIRegs": 3422564352
-    },
-    "bindings": {
-      "InterruptHandlerTable": "InterruptHandlerTable_801A67A8",
-      "InterruptPrioTable": "lbl_80123A60",
-      "OSDisableScheduler": "OSDisableScheduler",
-      "OSEnableScheduler": "OSEnableScheduler",
-      "OSGetTime": "OSGetTime",
-      "OSLoadContext": "OSLoadContext",
-      "__OSDispatchInterrupt": "fn_8000D9CC",
-      "__OSLastInterrupt": "__OSLastInterrupt",
-      "__OSLastInterruptSrr0": "__OSLastInterruptSrr0",
-      "__OSLastInterruptTime": "__OSLastInterruptTime",
-      "__OSReschedule": "__OSReschedule"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [
-      "#pragma peephole off"
-    ],
-    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
-    "sdk": "mkdd",
-    "sdk_symbol": "__OSDispatchInterrupt",
-    "size": 836,
-    "source": "libs/dolphin/os/OSInterrupt.c",
-    "symbol": "fn_8000D9CC",
-    "variant": "aggregate"
-  },
-  "fn_8000F358": {
-    "absolutes": {
-      "GameChoice": 2147496163,
-      "__OSBusClock": 2147483896,
-      "__PIRegs": 3422564352
-    },
-    "bindings": {
-      "Down": "lbl_801A67DC",
-      "HoldDown": "lbl_801A67F0",
-      "HoldUp": "lbl_801A67E8",
-      "LastState": "lbl_801A67E0",
-      "OSDisableInterrupts": "OSDisableInterrupts",
-      "OSGetResetButtonState": "fn_8000F358",
-      "OSRestoreInterrupts": "OSRestoreInterrupts",
-      "__OSGetSystemTime": "__OSGetSystemTime",
-      "__OSStartTime": "__OSStartTime",
-      "__div2i": "__div2i"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
-    "sdk": "tww",
-    "sdk_symbol": "OSGetResetButtonState",
-    "size": 664,
-    "source": "src/dolphin/os/OSResetSW.c",
-    "symbol": "fn_8000F358",
-    "variant": "aggregate"
-  },
-  "fn_80010410": {
-    "absolutes": {},
-    "bindings": {
-      "RunQueue": "RunQueue_8015C018",
-      "RunQueueBits": "RunQueueBits_801A67F8",
-      "RunQueueHint": "RunQueueHint_801A67FC",
-      "SetEffectivePriority": "fn_80010410",
-      "UnsetRun": "fn_8001036C"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
-    "sdk": "mkdd",
-    "sdk_symbol": "SetEffectivePriority",
-    "size": 448,
-    "source": "libs/dolphin/os/OSThread.c",
-    "symbol": "fn_80010410",
-    "variant": "aggregate"
-  },
-  "fn_80010828": {
-    "absolutes": {
-      "__OSActiveThreadQueue": 2147483868
-    },
-    "bindings": {
-      "OSCreateThread": "fn_80010828",
-      "OSDisableInterrupts": "OSDisableInterrupts",
-      "OSExitThread": "fn_80010A10",
-      "OSInitContext": "OSInitContext",
-      "OSRestoreInterrupts": "OSRestoreInterrupts",
-      "__OSErrorTable": "__OSErrorTable",
-      "__OSFpscrEnableBits": "lbl_801A6430"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
-    "sdk": "mkdd",
-    "sdk_symbol": "OSCreateThread",
-    "size": 488,
-    "source": "libs/dolphin/os/OSThread.c",
-    "symbol": "fn_80010828",
-    "variant": "aggregate"
-  },
-  "fn_80010A10": {
-    "absolutes": {
-      "__OSActiveThreadQueue": 2147483868,
-      "__OSCurrentThread": 2147483876
-    },
-    "bindings": {
-      "OSClearContext": "OSClearContext",
-      "OSDisableInterrupts": "OSDisableInterrupts",
-      "OSExitThread": "fn_80010A10",
-      "OSRestoreInterrupts": "OSRestoreInterrupts",
-      "OSWakeupThread": "fn_80011194",
-      "RunQueueHint": "RunQueueHint_801A67FC",
-      "SelectThread": "SelectThread",
-      "__OSUnlockAllMutex": "__OSUnlockAllMutex"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
-    "sdk": "mkdd",
-    "sdk_symbol": "OSExitThread",
-    "size": 228,
-    "source": "libs/dolphin/os/OSThread.c",
-    "symbol": "fn_80010A10",
-    "variant": "aggregate"
-  },
-  "fn_80010F38": {
-    "absolutes": {},
-    "bindings": {
-      "OSDisableInterrupts": "OSDisableInterrupts",
-      "OSRestoreInterrupts": "OSRestoreInterrupts",
-      "OSSuspendThread": "fn_80010F38",
-      "RunQueueHint": "RunQueueHint_801A67FC",
-      "SelectThread": "SelectThread",
-      "SetEffectivePriority": "fn_80010410",
-      "UnsetRun": "fn_8001036C",
-      "__OSGetEffectivePriority": "__OSGetEffectivePriority"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
-    "sdk": "mkdd",
-    "sdk_symbol": "OSSuspendThread",
-    "size": 368,
-    "source": "libs/dolphin/os/OSThread.c",
-    "symbol": "fn_80010F38",
-    "variant": "aggregate"
-  },
-  "fn_800110A8": {
-    "absolutes": {
-      "__OSCurrentThread": 2147483876
-    },
-    "bindings": {
-      "OSDisableInterrupts": "OSDisableInterrupts",
-      "OSRestoreInterrupts": "OSRestoreInterrupts",
-      "OSSleepThread": "fn_800110A8",
-      "RunQueueHint": "RunQueueHint_801A67FC",
-      "SelectThread": "SelectThread"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
-    "sdk": "mkdd",
-    "sdk_symbol": "OSSleepThread",
-    "size": 236,
-    "source": "libs/dolphin/os/OSThread.c",
-    "symbol": "fn_800110A8",
-    "variant": "aggregate"
-  },
-  "fn_80011194": {
-    "absolutes": {},
-    "bindings": {
-      "OSDisableInterrupts": "OSDisableInterrupts",
-      "OSRestoreInterrupts": "OSRestoreInterrupts",
-      "OSWakeupThread": "fn_80011194",
-      "RunQueue": "RunQueue_8015C018",
-      "RunQueueBits": "RunQueueBits_801A67F8",
-      "RunQueueHint": "RunQueueHint_801A67FC",
-      "SelectThread": "SelectThread"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
-    "sdk": "mkdd",
-    "sdk_symbol": "OSWakeupThread",
-    "size": 260,
-    "source": "libs/dolphin/os/OSThread.c",
-    "symbol": "fn_80011194",
     "variant": "aggregate"
   }
 }

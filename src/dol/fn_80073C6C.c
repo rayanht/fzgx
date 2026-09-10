@@ -14,7 +14,7 @@ typedef struct {
     s32 unk_1C;
 } Entry;
 
-extern void fn_80036A28(s32, s32, s32, s32, s32, s32, s32, s32, s32, s32);
+extern void GXSetTevIndirect(s32, s32, s32, s32, s32, s32, s32, s32, s32, s32);
 
 void fn_80073C6C(s32 index) {
 
@@ -30,7 +30,7 @@ void fn_80073C6C(s32 index) {
         entry->unk_18 != 0 ||
         entry->unk_19 != 0 ||
         entry->unk_1C != 0) {
-        fn_80036A28(index, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+        GXSetTevIndirect(index, 0, 0, 0, 0, 0, 0, 0, 0, 0);
         entry->unk_00 = 0;
         entry->unk_04 = 0;
         entry->unk_08 = 0;

@@ -16,7 +16,7 @@ struct fn_800164A4_CommandList_8015CD70 {
 extern struct fn_800164A4_CommandList_8015CD70 CommandList_8015CD70[];
 extern u32 NextCommandNumber_801A689C;
 extern u32 WorkAroundSeekLocation_801A6880;
-extern u32 fn_800167BC(u32, u32, u32, u32);
+extern u32 DVDLowSeek(u32, u32, u32, u32);
 
 void fn_800164A4(u32 arg0, u32 arg1, u32 arg2, u32 arg3, u32 arg4, u32 arg5, u32 arg6, u32 arg7) {
     struct fn_800164A4_CommandList_8015CD70 *cmd;
@@ -39,5 +39,5 @@ void fn_800164A4(u32 arg0, u32 arg1, u32 arg2, u32 arg3, u32 arg4, u32 arg5, u32
     cmd->unk_24 = arg3;
     cmd->unk_28 = -1;
     NextCommandNumber_801A689C = 0;
-    fn_800167BC(v0, arg3, arg2, arg3);
+    DVDLowSeek(v0, arg3, arg2, arg3);
 }

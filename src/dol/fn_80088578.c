@@ -1,7 +1,7 @@
 #include "types.h"
 
-extern u32 fn_80085EF8(void);
+extern u32 __ieee754_log10(void);
 
 void fn_80088578(void) {
-    fn_80085EF8();
+    __ieee754_log10();
 }

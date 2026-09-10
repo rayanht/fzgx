@@ -82,7 +82,7 @@ extern u8 lbl_1_data_34348[12];
 extern void fn_1_12A2B8(s32 value);
 extern void fn_1_12A2C4(s32 value);
 extern void fn_1_12A2D0(s32 value);
-extern void fn_8008069C(char *buffer, const char *format, ...);
+extern void sprintf(char *buffer, const char *format, ...);
 extern void fn_1_A7B5C(void *arg0, s32 arg1, void *arg2, s8 arg3, void *arg4);
 
 extern void fn_1_7F658(void *arg0);
@@ -107,7 +107,7 @@ extern void fn_1_12A2B8(s32 value);
 extern void fn_1_12A2C4(s32 value);
 extern void fn_1_12A2D0(s32 value);
 extern void fn_1_12AB38(void *value);
-extern void fn_8008069C(char *buffer, const char *format, ...);
+extern void sprintf(char *buffer, const char *format, ...);
 extern void fn_1_A7B5C(void *arg0, s32 arg1, void *arg2, s8 arg3, void *arg4);
 
 /* fzgx:begin fn_1_7F428 */
@@ -4054,9 +4054,9 @@ void fn_1_A7E60(void *arg0, s8 arg1, FnA7E60Object *object, s32 arg3, void *arg4
 
     fn_1_12AB38(data + 0x40);
     format_value = ((s32 *)lbl_1_data_20D1C)[index];
-    fn_8008069C(buffer, (const char *)(data + 0x18), format_value);
+    sprintf(buffer, (const char *)(data + 0x18), format_value);
     object->unk_108 = fn_1_12AC00((unsigned char *)buffer);
-    fn_8008069C(buffer, (const char *)(data + 0x48), format_value);
+    sprintf(buffer, (const char *)(data + 0x48), format_value);
     object->unk_104 = fn_1_12ADA0((unsigned char *)buffer, object->unk_108);
     fn_1_12AB38(data + 0x3c);
     fn_1_12A2B8(0);

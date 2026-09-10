@@ -1,6 +1,6 @@
 #include "types.h"
 
-extern void fn_800336EC(void *vat, int attr, u32 *cnt, u32 *type, u32 *frac);
+extern void GXGetVtxAttrFmt(void *vat, int attr, u32 *cnt, u32 *type, u32 *frac);
 
 typedef struct GXVtxAttrFmt {
     u32 attr;
@@ -14,7 +14,7 @@ void GXGetVtxAttrFmtv(void *vat, GXVtxAttrFmt *fmt) {
 
     for (attr = 9; attr <= 20; attr++) {
         fmt->attr = (u32)attr;
-        fn_800336EC(vat, attr, &fmt->cnt, &fmt->type, &fmt->frac);
+        GXGetVtxAttrFmt(vat, attr, &fmt->cnt, &fmt->type, &fmt->frac);
         fmt++;
     }
     fmt->attr = 0xff;

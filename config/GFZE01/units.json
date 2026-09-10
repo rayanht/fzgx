@@ -1841,6 +1841,332 @@
   },
   {
     "module": "main",
+    "source": "dol/ADXAMP_Start.c",
+    "symbols": [
+      "ADXAMP_Start"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/ADXB_Create.c",
+    "symbols": [
+      "ADXB_Create"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "on"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/ADXB_ExecOneAuUlaw.c",
+    "symbols": [
+      "ADXB_ExecOneAuUlaw"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/ADXB_ExecOneWav4.c",
+    "symbols": [
+      "ADXB_ExecOneWav4"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/ADXB_ExecOneWav8.c",
+    "symbols": [
+      "ADXB_ExecOneWav8"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/ADXF_ExecServer.c",
+    "symbols": [
+      "ADXF_ExecServer"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "0",
+      "-sdata2",
+      "0",
+      "-use_lmw_stmw",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/ADXPD_Create.c",
+    "symbols": [
+      "ADXPD_Create"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/ADXPD_ExecHndl.c",
+    "symbols": [
+      "ADXPD_ExecHndl"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "0",
+      "-sdata2",
+      "0",
+      "-use_lmw_stmw",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/ADXSJE_ExecServer.c",
+    "symbols": [
+      "ADXSJE_ExecServer"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/ADXSJE_Start.c",
+    "symbols": [
+      "ADXSJE_Start"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/ADXSTM_ExecServer.c",
+    "symbols": [
+      "ADXSTM_ExecServer"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "0",
+      "-sdata2",
+      "0",
+      "-use_lmw_stmw",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/ADXT_DestroyAll.c",
+    "symbols": [
+      "ADXT_DestroyAll"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/ADXT_Finish.c",
+    "symbols": [
+      "ADXT_Finish"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "0",
+      "-sdata2",
+      "0",
+      "-use_lmw_stmw",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/ADXT_InsertHdrSfa.c",
+    "symbols": [
+      "ADXT_InsertHdrSfa"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "on"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/ADXT_Pause.c",
+    "symbols": [
+      "ADXT_Pause"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "0",
+      "-sdata2",
+      "0",
+      "-use_lmw_stmw",
+      "off"
+    ],
+    "pool": {
+      "@17": "lbl_80090A20"
+    }
+  },
+  {
+    "module": "main",
+    "source": "dol/ADXT_SetOutPan.c",
+    "symbols": [
+      "ADXT_SetOutPan"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/ADXT_Stop.c",
+    "symbols": [
+      "ADXT_Stop"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/ADX_DecodeInfoExLoop.c",
+    "symbols": [
+      "ADX_DecodeInfoExLoop"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/ADX_ScanInfoCode.c",
+    "symbols": [
+      "ADX_ScanInfoCode"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
     "source": "dol/AIGetDSPSampleRate.c",
     "symbols": [
       "AIGetDSPSampleRate"
@@ -1888,6 +2214,27 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/AIInit.c",
+    "symbols": [
+      "AIInit"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
   },
   {
     "module": "main",
@@ -2047,6 +2394,48 @@
   },
   {
     "module": "main",
+    "source": "dol/ARInit.c",
+    "symbols": [
+      "ARInit"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/ARQPostRequest.c",
+    "symbols": [
+      "ARQPostRequest"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
     "source": "dol/ARStartDMA.c",
     "symbols": [
       "ARStartDMA"
@@ -2063,6 +2452,57 @@
       "-char",
       "signed",
       "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/AXRNA_ExecServer.c",
+    "symbols": [
+      "AXRNA_ExecServer"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/AXRNA_Finish.c",
+    "symbols": [
+      "AXRNA_Finish"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "0",
+      "-sdata2",
+      "0",
+      "-use_lmw_stmw",
+      "on"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/AXRNA_SetOutPan.c",
+    "symbols": [
+      "AXRNA_SetOutPan"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
       "off"
     ]
   },
@@ -2729,6 +3169,27 @@
   },
   {
     "module": "main",
+    "source": "dol/DSPInit.c",
+    "symbols": [
+      "DSPInit"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
     "source": "dol/DSPReadMailFromDSP.c",
     "symbols": [
       "DSPReadMailFromDSP"
@@ -2771,6 +3232,75 @@
   },
   {
     "module": "main",
+    "source": "dol/DVDCancelAsync.c",
+    "symbols": [
+      "DVDCancelAsync"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ],
+    "pool": {
+      "@54": "jumptable_801240A8"
+    }
+  },
+  {
+    "module": "main",
+    "source": "dol/DVDChangeDir.c",
+    "symbols": [
+      "DVDChangeDir"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/DVDCheckDisk.c",
+    "symbols": [
+      "DVDCheckDisk"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ],
+    "pool": {
+      "@36": "jumptable_801240DC"
+    }
+  },
+  {
+    "module": "main",
     "source": "dol/DVDClose.c",
     "symbols": [
       "DVDClose"
@@ -2802,6 +3332,27 @@
   },
   {
     "module": "main",
+    "source": "dol/DVDFastOpen.c",
+    "symbols": [
+      "DVDFastOpen"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
     "source": "dol/DVDGetCommandBlockStatus.c",
     "symbols": [
       "DVDGetCommandBlockStatus"
@@ -2809,6 +3360,27 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/DVDGetCurrentDir.c",
+    "symbols": [
+      "DVDGetCurrentDir"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
   },
   {
     "module": "main",
@@ -2856,9 +3428,177 @@
   },
   {
     "module": "main",
+    "source": "dol/DVDLowAudioBufferConfig.c",
+    "symbols": [
+      "DVDLowAudioBufferConfig"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/DVDLowAudioStream.c",
+    "symbols": [
+      "DVDLowAudioStream"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/DVDLowClearCallback.c",
+    "symbols": [
+      "DVDLowClearCallback"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/DVDLowInquiry.c",
+    "symbols": [
+      "DVDLowInquiry"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/DVDLowReadDiskID.c",
+    "symbols": [
+      "DVDLowReadDiskID"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/DVDLowRequestAudioStatus.c",
+    "symbols": [
+      "DVDLowRequestAudioStatus"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/DVDLowRequestError.c",
+    "symbols": [
+      "DVDLowRequestError"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
     "source": "dol/DVDLowReset.c",
     "symbols": [
       "DVDLowReset"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/DVDLowSeek.c",
+    "symbols": [
+      "DVDLowSeek"
     ],
     "status": "matching",
     "mw_version": "GC/1.2.5n",
@@ -2919,6 +3659,30 @@
   },
   {
     "module": "main",
+    "source": "dol/DVDOpen.c",
+    "symbols": [
+      "DVDOpen"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ],
+    "pool": {
+      "@11": "lbl_80123EF0"
+    }
+  },
+  {
+    "module": "main",
     "source": "dol/DVDReadDiskID.c",
     "symbols": [
       "DVDReadDiskID"
@@ -2945,6 +3709,23 @@
       "-char",
       "signed",
       "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/Decode.c",
+    "symbols": [
+      "Decode"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
       "off"
     ]
   },
@@ -2989,6 +3770,27 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/DoMount.c",
+    "symbols": [
+      "DoMount"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
   },
   {
     "module": "main",
@@ -3537,6 +4339,124 @@
   },
   {
     "module": "main",
+    "source": "dol/GXAdjustForOverscan.c",
+    "symbols": [
+      "GXAdjustForOverscan"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/GXCPInterruptHandler.c",
+    "symbols": [
+      "GXCPInterruptHandler"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/GXClearBoundingBox.c",
+    "symbols": [
+      "GXClearBoundingBox"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/GXClearVtxDesc.c",
+    "symbols": [
+      "GXClearVtxDesc"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/GXGetFifoPtrs.c",
+    "symbols": [
+      "GXGetFifoPtrs"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/GXGetGPStatus.c",
+    "symbols": [
+      "GXGetGPStatus"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
     "source": "dol/GXGetTexBufferSize.c",
     "symbols": [
       "GXGetTexBufferSize"
@@ -3581,6 +4501,30 @@
   },
   {
     "module": "main",
+    "source": "dol/GXGetVtxAttrFmt.c",
+    "symbols": [
+      "GXGetVtxAttrFmt"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ],
+    "pool": {
+      "@35": "jumptable_8012AF00"
+    }
+  },
+  {
+    "module": "main",
     "source": "dol/GXGetVtxAttrFmtv.c",
     "symbols": [
       "GXGetVtxAttrFmtv"
@@ -3588,6 +4532,30 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/GXGetVtxDesc.c",
+    "symbols": [
+      "GXGetVtxDesc"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ],
+    "pool": {
+      "@34": "jumptable_8012AE10"
+    }
   },
   {
     "module": "main",
@@ -3611,6 +4579,28 @@
   },
   {
     "module": "main",
+    "source": "dol/GXInitLightDistAttn.c",
+    "symbols": [
+      "GXInitLightDistAttn"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ],
+    "pool": {
+      "@15": "lbl_801A7088",
+      "@16": "lbl_801A70A0",
+      "@17": "lbl_801A70B4"
+    }
+  },
+  {
+    "module": "main",
     "source": "dol/GXInitTexCacheRegion.c",
     "symbols": [
       "GXInitTexCacheRegion"
@@ -3618,6 +4608,58 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/GXInitTexObj.c",
+    "symbols": [
+      "GXInitTexObj"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "on"
+    ],
+    "pool": {
+      "@63": "lbl_801A70C0",
+      "@61": "lbl_801A70B8",
+      "@65": "jumptable_8012B328"
+    }
+  },
+  {
+    "module": "main",
+    "source": "dol/GXInitTexObjLOD.c",
+    "symbols": [
+      "GXInitTexObjLOD"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ],
+    "pool": {
+      "@23": "lbl_801A70C8",
+      "@24": "lbl_801A70CC",
+      "@25": "lbl_801A70D0",
+      "@26": "lbl_801A70D4",
+      "@27": "lbl_801A70D8",
+      "@28": "lbl_801A70DC",
+      "@29": "lbl_801A70B8"
+    }
   },
   {
     "module": "main",
@@ -3661,6 +4703,111 @@
   },
   {
     "module": "main",
+    "source": "dol/GXPokeBlendMode.c",
+    "symbols": [
+      "GXPokeBlendMode"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/GXPokeDstAlpha.c",
+    "symbols": [
+      "GXPokeDstAlpha"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/GXReadXfRasMetric.c",
+    "symbols": [
+      "GXReadXfRasMetric"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/GXSetAlphaCompare.c",
+    "symbols": [
+      "GXSetAlphaCompare"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/GXSetArray.c",
+    "symbols": [
+      "GXSetArray"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
     "source": "dol/GXSetCPUFifo.c",
     "symbols": [
       "GXSetCPUFifo"
@@ -3671,9 +4818,634 @@
   },
   {
     "module": "main",
+    "source": "dol/GXSetClipMode.c",
+    "symbols": [
+      "GXSetClipMode"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/GXSetCopyClear.c",
+    "symbols": [
+      "GXSetCopyClear"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/GXSetDispCopyFrame2Field.c",
+    "symbols": [
+      "GXSetDispCopyFrame2Field"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/GXSetDispCopySrc.c",
+    "symbols": [
+      "GXSetDispCopySrc"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/GXSetDispCopyYScale.c",
+    "symbols": [
+      "GXSetDispCopyYScale"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ],
+    "pool": {
+      "@24": "lbl_801A7080"
+    }
+  },
+  {
+    "module": "main",
+    "source": "dol/GXSetDrawDone.c",
+    "symbols": [
+      "GXSetDrawDone"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/GXSetFieldMask.c",
+    "symbols": [
+      "GXSetFieldMask"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/GXSetFogRangeAdj.c",
+    "symbols": [
+      "GXSetFogRangeAdj"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
     "source": "dol/GXSetGPFifo.c",
     "symbols": [
       "GXSetGPFifo"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/GXSetIndTexCoordScale.c",
+    "symbols": [
+      "GXSetIndTexCoordScale"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/GXSetIndTexOrder.c",
+    "symbols": [
+      "GXSetIndTexOrder"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/GXSetLineWidth.c",
+    "symbols": [
+      "GXSetLineWidth"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/GXSetProjection.c",
+    "symbols": [
+      "GXSetProjection"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/GXSetTevIndirect.c",
+    "symbols": [
+      "GXSetTevIndirect"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/GXSetTevKAlphaSel.c",
+    "symbols": [
+      "GXSetTevKAlphaSel"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/GXSetTevKColorSel.c",
+    "symbols": [
+      "GXSetTevKColorSel"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/GXSetTevOp.c",
+    "symbols": [
+      "GXSetTevOp"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/GXSetTevOrder.c",
+    "symbols": [
+      "GXSetTevOrder"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/GXSetTevSwapMode.c",
+    "symbols": [
+      "GXSetTevSwapMode"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/GXSetTevSwapModeTable.c",
+    "symbols": [
+      "GXSetTevSwapModeTable"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/GXSetTexCoordGen2.c",
+    "symbols": [
+      "GXSetTexCoordGen2"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ],
+    "pool": {
+      "@78": "jumptable_8012AF60",
+      "@79": "jumptable_8012AF44"
+    }
+  },
+  {
+    "module": "main",
+    "source": "dol/GXSetTexCopySrc.c",
+    "symbols": [
+      "GXSetTexCopySrc"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/GXSetVtxAttrFmt.c",
+    "symbols": [
+      "GXSetVtxAttrFmt"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-pragma",
+      "'cats",
+      "off'",
+      "-pragma",
+      "'warn_notinlined",
+      "off'",
+      "-use_lmw_stmw",
+      "on",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-multibyte",
+      "-DMATCHING=1",
+      "-inline",
+      "auto",
+      "-lang=c",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-str",
+      "reuse",
+      "-common",
+      "off",
+      "-O4,p"
+    ],
+    "pool": {
+      "@36": "jumptable_8012AE78"
+    }
+  },
+  {
+    "module": "main",
+    "source": "dol/GXSetVtxAttrFmtv.c",
+    "symbols": [
+      "GXSetVtxAttrFmtv"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-pragma",
+      "'cats",
+      "off'",
+      "-pragma",
+      "'warn_notinlined",
+      "off'",
+      "-use_lmw_stmw",
+      "on",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-multibyte",
+      "-DMATCHING=1",
+      "-inline",
+      "auto",
+      "-lang=c",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-str",
+      "reuse",
+      "-common",
+      "off",
+      "-O4,p"
+    ],
+    "pool": {
+      "@45": "jumptable_8012AEBC"
+    }
+  },
+  {
+    "module": "main",
+    "source": "dol/GXSetVtxDesc.c",
+    "symbols": [
+      "GXSetVtxDesc"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ],
+    "pool": {
+      "@84": "jumptable_8012AD40"
+    }
+  },
+  {
+    "module": "main",
+    "source": "dol/GXSetVtxDescv.c",
+    "symbols": [
+      "GXSetVtxDescv"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ],
+    "pool": {
+      "@91": "jumptable_8012ADA8"
+    }
+  },
+  {
+    "module": "main",
+    "source": "dol/GXSetZTexture.c",
+    "symbols": [
+      "GXSetZTexture"
     ],
     "status": "matching",
     "mw_version": "GC/1.2.5n",
@@ -3708,6 +5480,23 @@
       "-char",
       "signed",
       "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/GetFontCode.c",
+    "symbols": [
+      "GetFontCode"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
       "off"
     ]
   },
@@ -3841,6 +5630,27 @@
   },
   {
     "module": "main",
+    "source": "dol/IsCard.c",
+    "symbols": [
+      "IsCard"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
     "source": "dol/L2GlobalInvalidate.c",
     "symbols": [
       "L2GlobalInvalidate"
@@ -3905,6 +5715,26 @@
     "mw_version": null,
     "extra_cflags": [],
     "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/LSC_Start.c",
+    "symbols": [
+      "LSC_Start"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ],
+    "pool": {
+      "@40": "lbl_80092188"
+    }
   },
   {
     "module": "main",
@@ -3983,6 +5813,27 @@
   },
   {
     "module": "main",
+    "source": "dol/OSCancelAlarm.c",
+    "symbols": [
+      "OSCancelAlarm"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
     "source": "dol/OSCancelThread.c",
     "symbols": [
       "OSCancelThread"
@@ -4053,6 +5904,27 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/OSCreateThread.c",
+    "symbols": [
+      "OSCreateThread"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
   },
   {
     "module": "main",
@@ -4145,6 +6017,27 @@
   },
   {
     "module": "main",
+    "source": "dol/OSExitThread.c",
+    "symbols": [
+      "OSExitThread"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
     "source": "dol/OSGetArenaHi.c",
     "symbols": [
       "OSGetArenaHi"
@@ -4165,6 +6058,48 @@
   },
   {
     "module": "main",
+    "source": "dol/OSGetConsoleType.c",
+    "symbols": [
+      "OSGetConsoleType"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/OSGetFontEncode.c",
+    "symbols": [
+      "OSGetFontEncode"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
     "source": "dol/OSGetProgressiveMode.c",
     "symbols": [
       "OSGetProgressiveMode"
@@ -4172,6 +6107,27 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/OSGetResetButtonState.c",
+    "symbols": [
+      "OSGetResetButtonState"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
   },
   {
     "module": "main",
@@ -4524,6 +6480,48 @@
   },
   {
     "module": "main",
+    "source": "dol/OSSleepThread.c",
+    "symbols": [
+      "OSSleepThread"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/OSSuspendThread.c",
+    "symbols": [
+      "OSSuspendThread"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
     "source": "dol/OSSwitchFPUContext.c",
     "symbols": [
       "OSSwitchFPUContext"
@@ -4577,6 +6575,27 @@
   },
   {
     "module": "main",
+    "source": "dol/OSWakeupThread.c",
+    "symbols": [
+      "OSWakeupThread"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
     "source": "dol/OnReset.c",
     "symbols": [
       "OnReset"
@@ -4611,6 +6630,69 @@
     "source": "dol/PADClamp.c",
     "symbols": [
       "PADClamp"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/PADOriginUpdateCallback.c",
+    "symbols": [
+      "PADOriginUpdateCallback"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/PADReceiveCheckCallback.c",
+    "symbols": [
+      "PADReceiveCheckCallback"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/PADSetAnalogMode.c",
+    "symbols": [
+      "PADSetAnalogMode"
     ],
     "status": "matching",
     "mw_version": "GC/1.2.5n",
@@ -4866,6 +6948,26 @@
       "-common",
       "off"
     ]
+  },
+  {
+    "module": "main",
+    "source": "dol/RNARES_Create.c",
+    "symbols": [
+      "RNARES_Create"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ],
+    "pool": {
+      "@15": "lbl_80092988"
+    }
   },
   {
     "module": "main",
@@ -5290,6 +7392,23 @@
   },
   {
     "module": "main",
+    "source": "dol/SJ_SearchTag.c",
+    "symbols": [
+      "SJ_SearchTag"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "on"
+    ]
+  },
+  {
+    "module": "main",
     "source": "dol/SPEC0_MakeStatus.c",
     "symbols": [
       "SPEC0_MakeStatus"
@@ -5314,6 +7433,65 @@
     "source": "dol/SPEC1_MakeStatus.c",
     "symbols": [
       "SPEC1_MakeStatus"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/SPEC2_MakeStatus.c",
+    "symbols": [
+      "SPEC2_MakeStatus"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/SVM_CallErr.c",
+    "symbols": [
+      "SVM_CallErr"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "0",
+      "-sdata2",
+      "0",
+      "-use_lmw_stmw",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/SetEffectivePriority.c",
+    "symbols": [
+      "SetEffectivePriority"
     ],
     "status": "matching",
     "mw_version": "GC/1.2.5n",
@@ -5401,6 +7579,74 @@
       "-char",
       "signed",
       "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/TRKAppendBuffer.c",
+    "symbols": [
+      "TRKAppendBuffer"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/TRKAppendBuffer1_ui64.c",
+    "symbols": [
+      "TRKAppendBuffer1_ui64"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "0",
+      "-sdata2",
+      "0",
+      "-use_lmw_stmw",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/TRKAppendBuffer_ui32.c",
+    "symbols": [
+      "TRKAppendBuffer_ui32"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "0",
+      "-sdata2",
+      "0",
+      "-use_lmw_stmw",
+      "on"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/TRKAppendBuffer_ui8.c",
+    "symbols": [
+      "TRKAppendBuffer_ui8"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
       "off"
     ]
   },
@@ -5581,6 +7827,91 @@
   },
   {
     "module": "main",
+    "source": "dol/TRKPostEvent.c",
+    "symbols": [
+      "TRKPostEvent"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/TRKReadBuffer.c",
+    "symbols": [
+      "TRKReadBuffer"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/TRKReadBuffer1_ui64.c",
+    "symbols": [
+      "TRKReadBuffer1_ui64"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "0",
+      "-sdata2",
+      "0",
+      "-use_lmw_stmw",
+      "on"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/TRKReadBuffer_ui32.c",
+    "symbols": [
+      "TRKReadBuffer_ui32"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "0",
+      "-sdata2",
+      "0",
+      "-use_lmw_stmw",
+      "on"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/TRKReadBuffer_ui8.c",
+    "symbols": [
+      "TRKReadBuffer_ui8"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "on"
+    ]
+  },
+  {
+    "module": "main",
     "source": "dol/TRKRestoreExtended1Block.c",
     "symbols": [
       "TRKRestoreExtended1Block"
@@ -5611,6 +7942,23 @@
     "mw_version": null,
     "extra_cflags": [],
     "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/TRKTargetAccessDefault.c",
+    "symbols": [
+      "TRKTargetAccessDefault"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ]
   },
   {
     "module": "main",
@@ -5681,6 +8029,23 @@
     "status": "matching",
     "mw_version": "GC/1.3.2",
     "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/TRK_fill_mem.c",
+    "symbols": [
+      "TRK_fill_mem"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ]
   },
   {
     "module": "main",
@@ -5823,6 +8188,48 @@
   },
   {
     "module": "main",
+    "source": "dol/UpdateOrigin.c",
+    "symbols": [
+      "UpdateOrigin"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/VIGetCurrentLine.c",
+    "symbols": [
+      "VIGetCurrentLine"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
     "source": "dol/VIGetDTVStatus.c",
     "symbols": [
       "VIGetDTVStatus"
@@ -5830,6 +8237,27 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/VIGetNextField.c",
+    "symbols": [
+      "VIGetNextField"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
   },
   {
     "module": "main",
@@ -5926,6 +8354,27 @@
   },
   {
     "module": "main",
+    "source": "dol/WriteUARTN.c",
+    "symbols": [
+      "WriteUARTN"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
     "source": "dol/_ExitProcess.c",
     "symbols": [
       "_ExitProcess"
@@ -5936,9 +8385,156 @@
   },
   {
     "module": "main",
+    "source": "dol/__AIDHandler.c",
+    "symbols": [
+      "__AIDHandler"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/__AISHandler.c",
+    "symbols": [
+      "__AISHandler"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/__AI_SRC_INIT.c",
+    "symbols": [
+      "__AI_SRC_INIT"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
     "source": "dol/__AI_set_stream_sample_rate.c",
     "symbols": [
       "__AI_set_stream_sample_rate"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/__ARChecksize.c",
+    "symbols": [
+      "__ARChecksize"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/__ARHandler.c",
+    "symbols": [
+      "__ARHandler"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/__ARQInterruptServiceRoutine.c",
+    "symbols": [
+      "__ARQInterruptServiceRoutine"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/__ARQServiceQueueLo.c",
+    "symbols": [
+      "__ARQServiceQueueLo"
     ],
     "status": "matching",
     "mw_version": "GC/1.2.5n",
@@ -6290,6 +8886,27 @@
   },
   {
     "module": "main",
+    "source": "dol/__CARDUnlock.c",
+    "symbols": [
+      "__CARDUnlock"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
     "source": "dol/__CARDUnlockedHandler.c",
     "symbols": [
       "__CARDUnlockedHandler"
@@ -6394,6 +9011,27 @@
   },
   {
     "module": "main",
+    "source": "dol/__DSPHandler.c",
+    "symbols": [
+      "__DSPHandler"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
     "source": "dol/__DSP_boot_task.c",
     "symbols": [
       "__DSP_boot_task"
@@ -6456,6 +9094,48 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/__DSP_insert_task.c",
+    "symbols": [
+      "__DSP_insert_task"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/__DSP_remove_task.c",
+    "symbols": [
+      "__DSP_remove_task"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
   },
   {
     "module": "main",
@@ -6540,6 +9220,27 @@
   },
   {
     "module": "main",
+    "source": "dol/__DVDPrepareResetAsync.c",
+    "symbols": [
+      "__DVDPrepareResetAsync"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
     "source": "dol/__DVDPushWaitingQueue.c",
     "symbols": [
       "__DVDPushWaitingQueue"
@@ -6591,6 +9292,23 @@
   },
   {
     "module": "main",
+    "source": "dol/__GXDefaultTexRegionCallback.c",
+    "symbols": [
+      "__GXDefaultTexRegionCallback"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
     "source": "dol/__GXFifoInit.c",
     "symbols": [
       "__GXFifoInit"
@@ -6632,9 +9350,156 @@
   },
   {
     "module": "main",
+    "source": "dol/__GXSaveCPUFifoAux.c",
+    "symbols": [
+      "__GXSaveCPUFifoAux"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/__GXSendFlushPrim.c",
+    "symbols": [
+      "__GXSendFlushPrim"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/__GXSetGenMode.c",
+    "symbols": [
+      "__GXSetGenMode"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/__GXSetMatrixIndex.c",
+    "symbols": [
+      "__GXSetMatrixIndex"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/__GXSetSUTexRegs.c",
+    "symbols": [
+      "__GXSetSUTexRegs"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
     "source": "dol/__GXSetTmemConfig.c",
     "symbols": [
       "__GXSetTmemConfig"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/__GXSetVCD.c",
+    "symbols": [
+      "__GXSetVCD"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/__GXXfVtxSpecs.c",
+    "symbols": [
+      "__GXXfVtxSpecs"
     ],
     "status": "matching",
     "mw_version": "GC/1.2.5n",
@@ -6741,6 +9606,27 @@
     "mw_version": null,
     "extra_cflags": [],
     "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/__OSDispatchInterrupt.c",
+    "symbols": [
+      "__OSDispatchInterrupt"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
   },
   {
     "module": "main",
@@ -7267,6 +10153,40 @@
   },
   {
     "module": "main",
+    "source": "dol/__copy_longs_rev_unaligned.c",
+    "symbols": [
+      "__copy_longs_rev_unaligned"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/__copy_longs_unaligned.c",
+    "symbols": [
+      "__copy_longs_unaligned"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
     "source": "dol/__destroy_global_chain.c",
     "symbols": [
       "__destroy_global_chain"
@@ -7284,6 +10204,23 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/__equals_dec.c",
+    "symbols": [
+      "__equals_dec"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ]
   },
   {
     "module": "main",
@@ -7331,6 +10268,96 @@
   },
   {
     "module": "main",
+    "source": "dol/__ieee754_log.c",
+    "symbols": [
+      "__ieee754_log"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ],
+    "pool": {
+      "@35": "lbl_801A7598",
+      "@36": "lbl_801A75A0",
+      "@37": "lbl_801A75A8",
+      "@51": "lbl_801A7610",
+      "@39": "lbl_801A75B8",
+      "@38": "lbl_801A75B0",
+      "@41": "lbl_801A75C8",
+      "@40": "lbl_801A75C0",
+      "@42": "lbl_801A75D0",
+      "@46": "lbl_801A75F0",
+      "@45": "lbl_801A75E8",
+      "@44": "lbl_801A75E0",
+      "@49": "lbl_801A7608",
+      "@48": "lbl_801A7600",
+      "@43": "lbl_801A75D8",
+      "@47": "lbl_801A75F8"
+    }
+  },
+  {
+    "module": "main",
+    "source": "dol/__ieee754_log10.c",
+    "symbols": [
+      "__ieee754_log10"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ],
+    "pool": {
+      "@16": "lbl_801A7618",
+      "@17": "lbl_801A7620",
+      "@22": "lbl_801A7640",
+      "@19": "lbl_801A7630",
+      "@18": "lbl_801A7628",
+      "@20": "lbl_801A7638"
+    }
+  },
+  {
+    "module": "main",
+    "source": "dol/__ieee754_rem_pio2.c",
+    "symbols": [
+      "__ieee754_rem_pio2"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ],
+    "pool": {
+      "@60": "lbl_801A7758",
+      "@61": "lbl_801A7760",
+      "@62": "lbl_801A7768",
+      "@63": "lbl_801A7770",
+      "@64": "lbl_801A7778",
+      "@66": "lbl_801A7788",
+      "@65": "lbl_801A7780",
+      "@72": "lbl_801A77A8",
+      "@67": "lbl_801A7790",
+      "@68": "lbl_801A7798",
+      "@69": "lbl_801A77A0"
+    }
+  },
+  {
+    "module": "main",
     "source": "dol/__init_hardware.c",
     "symbols": [
       "__init_hardware"
@@ -7352,6 +10379,61 @@
   },
   {
     "module": "main",
+    "source": "dol/__kernel_cos.c",
+    "symbols": [
+      "__kernel_cos"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ],
+    "pool": {
+      "@16": "lbl_801A77B0",
+      "@22": "lbl_801A77E0",
+      "@21": "lbl_801A77D8",
+      "@20": "lbl_801A77D0",
+      "@19": "lbl_801A77C8",
+      "@18": "lbl_801A77C0",
+      "@17": "lbl_801A77B8",
+      "@23": "lbl_801A77E8",
+      "@24": "lbl_801A77F0"
+    }
+  },
+  {
+    "module": "main",
+    "source": "dol/__kernel_rem_pio2.c",
+    "symbols": [
+      "__kernel_rem_pio2"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "on"
+    ],
+    "pool": {
+      "@263": "lbl_801A7830",
+      "@254": "lbl_801A77F8",
+      "@255": "lbl_801A7800",
+      "@256": "lbl_801A7808",
+      "@258": "lbl_801A7818",
+      "@257": "lbl_801A7810",
+      "@259": "lbl_801A7820",
+      "@260": "lbl_801A7828"
+    }
+  },
+  {
+    "module": "main",
     "source": "dol/__kill_critical_regions.c",
     "symbols": [
       "__kill_critical_regions"
@@ -7369,6 +10451,43 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/__num2dec.c",
+    "symbols": [
+      "__num2dec"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/__num2dec_internal.c",
+    "symbols": [
+      "__num2dec_internal"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "on"
+    ],
+    "pool": {
+      "@143": "lbl_801A74B0"
+    }
   },
   {
     "module": "main",
@@ -7413,6 +10532,46 @@
   },
   {
     "module": "main",
+    "source": "dol/__strtoul.c",
+    "symbols": [
+      "__strtoul"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "on"
+    ],
+    "pool": {
+      "@161": "jumptable_8015B77C"
+    }
+  },
+  {
+    "module": "main",
+    "source": "dol/__strtoull.c",
+    "symbols": [
+      "__strtoull"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "on"
+    ],
+    "pool": {
+      "@162": "jumptable_8015B738"
+    }
+  },
+  {
+    "module": "main",
     "source": "dol/__va_arg.c",
     "symbols": [
       "__va_arg"
@@ -7437,6 +10596,108 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/adxsjd_get_wr.c",
+    "symbols": [
+      "adxsjd_get_wr"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "on"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/adxt_eos_entry.c",
+    "symbols": [
+      "adxt_eos_entry"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/adxt_set_outpan.c",
+    "symbols": [
+      "adxt_set_outpan"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/atoi.c",
+    "symbols": [
+      "atoi"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/axrna_update_play.c",
+    "symbols": [
+      "axrna_update_play"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "0",
+      "-sdata2",
+      "0",
+      "-use_lmw_stmw",
+      "on"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/axrna_voice_drop.c",
+    "symbols": [
+      "axrna_voice_drop"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ]
   },
   {
     "module": "main",
@@ -7482,6 +10743,48 @@
   },
   {
     "module": "main",
+    "source": "dol/cbForStateCheckID1.c",
+    "symbols": [
+      "cbForStateCheckID1"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/cbForStateCheckID3.c",
+    "symbols": [
+      "cbForStateCheckID3"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
     "source": "dol/cbForStateError.c",
     "symbols": [
       "cbForStateError"
@@ -7489,6 +10792,65 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/cbForStateGettingError.c",
+    "symbols": [
+      "cbForStateGettingError"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/cbForStateGoToRetry.c",
+    "symbols": [
+      "cbForStateGoToRetry"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/cvFsExecServer.c",
+    "symbols": [
+      "cvFsExecServer"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ]
   },
   {
     "module": "main",
@@ -7572,6 +10934,44 @@
   },
   {
     "module": "main",
+    "source": "dol/deallocate_from_fixed_pools.c",
+    "symbols": [
+      "deallocate_from_fixed_pools"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/entryToPath.c",
+    "symbols": [
+      "entryToPath"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
     "source": "dol/exit.c",
     "symbols": [
       "exit"
@@ -7586,6 +10986,61 @@
       "-use_lmw_stmw",
       "off"
     ]
+  },
+  {
+    "module": "main",
+    "source": "dol/fclose.c",
+    "symbols": [
+      "fclose"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/fflush.c",
+    "symbols": [
+      "fflush"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/floor.c",
+    "symbols": [
+      "floor"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ],
+    "pool": {
+      "@44": "lbl_801A78B0",
+      "@45": "lbl_801A78B8"
+    }
   },
   {
     "module": "main",
@@ -8232,27 +11687,6 @@
   },
   {
     "module": "main",
-    "source": "dol/fn_8000A224.c",
-    "symbols": [
-      "fn_8000A224"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
     "source": "dol/fn_8000AA2C.c",
     "symbols": [
       "fn_8000AA2C"
@@ -8261,27 +11695,6 @@
     "mw_version": null,
     "extra_cflags": [],
     "asm": true
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_8000AF78.c",
-    "symbols": [
-      "fn_8000AF78"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
   },
   {
     "module": "main",
@@ -8326,61 +11739,6 @@
   },
   {
     "module": "main",
-    "source": "dol/fn_8000CAC8.c",
-    "symbols": [
-      "fn_8000CAC8"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_8000CC64.c",
-    "symbols": [
-      "fn_8000CC64"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_8000CDD8.c",
-    "symbols": [
-      "fn_8000CDD8"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
     "source": "dol/fn_8000CE30.c",
     "symbols": [
       "fn_8000CE30"
@@ -8398,27 +11756,6 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_8000D9CC.c",
-    "symbols": [
-      "fn_8000D9CC"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
   },
   {
     "module": "main",
@@ -8502,27 +11839,6 @@
   },
   {
     "module": "main",
-    "source": "dol/fn_8000F358.c",
-    "symbols": [
-      "fn_8000F358"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
     "source": "dol/fn_8000F5F0.c",
     "symbols": [
       "fn_8000F5F0"
@@ -8560,132 +11876,6 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80010410.c",
-    "symbols": [
-      "fn_80010410"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80010828.c",
-    "symbols": [
-      "fn_80010828"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80010A10.c",
-    "symbols": [
-      "fn_80010A10"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80010F38.c",
-    "symbols": [
-      "fn_80010F38"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_800110A8.c",
-    "symbols": [
-      "fn_800110A8"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80011194.c",
-    "symbols": [
-      "fn_80011194"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
   },
   {
     "module": "main",
@@ -8779,27 +11969,6 @@
   },
   {
     "module": "main",
-    "source": "dol/fn_8001581C.c",
-    "symbols": [
-      "fn_8001581C"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
     "source": "dol/fn_800164A4.c",
     "symbols": [
       "fn_800164A4"
@@ -8810,153 +11979,6 @@
   },
   {
     "module": "main",
-    "source": "dol/fn_800167BC.c",
-    "symbols": [
-      "fn_800167BC"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_8001687C.c",
-    "symbols": [
-      "fn_8001687C"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_800169AC.c",
-    "symbols": [
-      "fn_800169AC"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80016A38.c",
-    "symbols": [
-      "fn_80016A38"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80016AD4.c",
-    "symbols": [
-      "fn_80016AD4"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80016B6C.c",
-    "symbols": [
-      "fn_80016B6C"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80016BF8.c",
-    "symbols": [
-      "fn_80016BF8"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
     "source": "dol/fn_80016D50.c",
     "symbols": [
       "fn_80016D50"
@@ -8964,135 +11986,6 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80016D64.c",
-    "symbols": [
-      "fn_80016D64"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_800170EC.c",
-    "symbols": [
-      "fn_800170EC"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80017160.c",
-    "symbols": [
-      "fn_80017160"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ],
-    "pool": {
-      "@11": "lbl_80123EF0"
-    }
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_8001724C.c",
-    "symbols": [
-      "fn_8001724C"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_800173AC.c",
-    "symbols": [
-      "fn_800173AC"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80017470.c",
-    "symbols": [
-      "fn_80017470"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
   },
   {
     "module": "main",
@@ -9156,27 +12049,6 @@
   },
   {
     "module": "main",
-    "source": "dol/fn_80017B14.c",
-    "symbols": [
-      "fn_80017B14"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
     "source": "dol/fn_80017DA8.c",
     "symbols": [
       "fn_80017DA8"
@@ -9204,27 +12076,6 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80017ED0.c",
-    "symbols": [
-      "fn_80017ED0"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
   },
   {
     "module": "main",
@@ -9258,27 +12109,6 @@
   },
   {
     "module": "main",
-    "source": "dol/fn_8001821C.c",
-    "symbols": [
-      "fn_8001821C"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
     "source": "dol/fn_80018330.c",
     "symbols": [
       "fn_80018330"
@@ -9286,48 +12116,6 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80018414.c",
-    "symbols": [
-      "fn_80018414"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80018554.c",
-    "symbols": [
-      "fn_80018554"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
   },
   {
     "module": "main",
@@ -9401,30 +12189,6 @@
   },
   {
     "module": "main",
-    "source": "dol/fn_800198FC.c",
-    "symbols": [
-      "fn_800198FC"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ],
-    "pool": {
-      "@54": "jumptable_801240A8"
-    }
-  },
-  {
-    "module": "main",
     "source": "dol/fn_80019B78.c",
     "symbols": [
       "fn_80019B78"
@@ -9452,51 +12216,6 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80019C50.c",
-    "symbols": [
-      "fn_80019C50"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ],
-    "pool": {
-      "@36": "jumptable_801240DC"
-    }
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80019D48.c",
-    "symbols": [
-      "fn_80019D48"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
   },
   {
     "module": "main",
@@ -9540,48 +12259,6 @@
   },
   {
     "module": "main",
-    "source": "dol/fn_8001AFB8.c",
-    "symbols": [
-      "fn_8001AFB8"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_8001B28C.c",
-    "symbols": [
-      "fn_8001B28C"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
     "source": "dol/fn_8001BD84.c",
     "symbols": [
       "fn_8001BD84"
@@ -9599,132 +12276,6 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_8001BE74.c",
-    "symbols": [
-      "fn_8001BE74"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_8001BEDC.c",
-    "symbols": [
-      "fn_8001BEDC"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_8001BF84.c",
-    "symbols": [
-      "fn_8001BF84"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_8001C304.c",
-    "symbols": [
-      "fn_8001C304"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_8001C56C.c",
-    "symbols": [
-      "fn_8001C56C"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_8001CA30.c",
-    "symbols": [
-      "fn_8001CA30"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
   },
   {
     "module": "main",
@@ -9758,48 +12309,6 @@
   },
   {
     "module": "main",
-    "source": "dol/fn_8001D7D0.c",
-    "symbols": [
-      "fn_8001D7D0"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_8001DBC8.c",
-    "symbols": [
-      "fn_8001DBC8"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
     "source": "dol/fn_8001DDD0.c",
     "symbols": [
       "fn_8001DDD0"
@@ -9827,90 +12336,6 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_8001E314.c",
-    "symbols": [
-      "fn_8001E314"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_8001E480.c",
-    "symbols": [
-      "fn_8001E480"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_8001E4FC.c",
-    "symbols": [
-      "fn_8001E4FC"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_8001E600.c",
-    "symbols": [
-      "fn_8001E600"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
   },
   {
     "module": "main",
@@ -9944,90 +12369,6 @@
   },
   {
     "module": "main",
-    "source": "dol/fn_8001EA30.c",
-    "symbols": [
-      "fn_8001EA30"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_8001EAF4.c",
-    "symbols": [
-      "fn_8001EAF4"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_8001EB6C.c",
-    "symbols": [
-      "fn_8001EB6C"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80020360.c",
-    "symbols": [
-      "fn_80020360"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
     "source": "dol/fn_80020460.c",
     "symbols": [
       "fn_80020460"
@@ -10038,27 +12379,6 @@
   },
   {
     "module": "main",
-    "source": "dol/fn_80020464.c",
-    "symbols": [
-      "fn_80020464"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
     "source": "dol/fn_80020530.c",
     "symbols": [
       "fn_80020530"
@@ -10066,27 +12386,6 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_800205A0.c",
-    "symbols": [
-      "fn_800205A0"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
   },
   {
     "module": "main",
@@ -11055,27 +13354,6 @@
   },
   {
     "module": "main",
-    "source": "dol/fn_80028D0C.c",
-    "symbols": [
-      "fn_80028D0C"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
     "source": "dol/fn_80028DD0.c",
     "symbols": [
       "fn_80028DD0"
@@ -11113,69 +13391,6 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80028FA0.c",
-    "symbols": [
-      "fn_80028FA0"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_800296F0.c",
-    "symbols": [
-      "fn_800296F0"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80029790.c",
-    "symbols": [
-      "fn_80029790"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
   },
   {
     "module": "main",
@@ -11229,27 +13444,6 @@
   },
   {
     "module": "main",
-    "source": "dol/fn_8002AF34.c",
-    "symbols": [
-      "fn_8002AF34"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
     "source": "dol/fn_8002C0A0.c",
     "symbols": [
       "fn_8002C0A0"
@@ -11277,48 +13471,6 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_8002D6B0.c",
-    "symbols": [
-      "fn_8002D6B0"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_8002D8F8.c",
-    "symbols": [
-      "fn_8002D8F8"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
   },
   {
     "module": "main",
@@ -11392,44 +13544,6 @@
   },
   {
     "module": "main",
-    "source": "dol/fn_800307CC.c",
-    "symbols": [
-      "fn_800307CC"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80031B50.c",
-    "symbols": [
-      "fn_80031B50"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
     "source": "dol/fn_80031D60.c",
     "symbols": [
       "fn_80031D60"
@@ -11447,65 +13561,6 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80032014.c",
-    "symbols": [
-      "fn_80032014"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_800320F0.c",
-    "symbols": [
-      "fn_800320F0"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80032140.c",
-    "symbols": [
-      "fn_80032140"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "off"
-    ]
   },
   {
     "module": "main",
@@ -11589,319 +13644,6 @@
   },
   {
     "module": "main",
-    "source": "dol/fn_80032370.c",
-    "symbols": [
-      "fn_80032370"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_800324C8.c",
-    "symbols": [
-      "fn_800324C8"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ],
-    "pool": {
-      "@84": "jumptable_8012AD40"
-    }
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80032818.c",
-    "symbols": [
-      "fn_80032818"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ],
-    "pool": {
-      "@91": "jumptable_8012ADA8"
-    }
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80032B8C.c",
-    "symbols": [
-      "fn_80032B8C"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80032D04.c",
-    "symbols": [
-      "fn_80032D04"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ],
-    "pool": {
-      "@34": "jumptable_8012AE10"
-    }
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80032F48.c",
-    "symbols": [
-      "fn_80032F48"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80032F80.c",
-    "symbols": [
-      "fn_80032F80"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-nodefaults",
-      "-proc",
-      "gekko",
-      "-align",
-      "powerpc",
-      "-enum",
-      "int",
-      "-fp",
-      "hardware",
-      "-Cpp_exceptions",
-      "off",
-      "-pragma",
-      "'cats",
-      "off'",
-      "-pragma",
-      "'warn_notinlined",
-      "off'",
-      "-use_lmw_stmw",
-      "on",
-      "-maxerrors",
-      "1",
-      "-nosyspath",
-      "-RTTI",
-      "off",
-      "-multibyte",
-      "-DMATCHING=1",
-      "-inline",
-      "auto",
-      "-lang=c",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-str",
-      "reuse",
-      "-common",
-      "off",
-      "-O4,p"
-    ],
-    "pool": {
-      "@36": "jumptable_8012AE78"
-    }
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_800332D8.c",
-    "symbols": [
-      "fn_800332D8"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-nodefaults",
-      "-proc",
-      "gekko",
-      "-align",
-      "powerpc",
-      "-enum",
-      "int",
-      "-fp",
-      "hardware",
-      "-Cpp_exceptions",
-      "off",
-      "-pragma",
-      "'cats",
-      "off'",
-      "-pragma",
-      "'warn_notinlined",
-      "off'",
-      "-use_lmw_stmw",
-      "on",
-      "-maxerrors",
-      "1",
-      "-nosyspath",
-      "-RTTI",
-      "off",
-      "-multibyte",
-      "-DMATCHING=1",
-      "-inline",
-      "auto",
-      "-lang=c",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-str",
-      "reuse",
-      "-common",
-      "off",
-      "-O4,p"
-    ],
-    "pool": {
-      "@45": "jumptable_8012AEBC"
-    }
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_800336EC.c",
-    "symbols": [
-      "fn_800336EC"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ],
-    "pool": {
-      "@35": "jumptable_8012AF00"
-    }
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_800339E0.c",
-    "symbols": [
-      "fn_800339E0"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80033A7C.c",
-    "symbols": [
-      "fn_80033A7C"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ],
-    "pool": {
-      "@78": "jumptable_8012AF60",
-      "@79": "jumptable_8012AF44"
-    }
-  },
-  {
-    "module": "main",
     "source": "dol/fn_80033D4C.c",
     "symbols": [
       "fn_80033D4C"
@@ -11929,27 +13671,6 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_800340D4.c",
-    "symbols": [
-      "fn_800340D4"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
   },
   {
     "module": "main",
@@ -11993,27 +13714,6 @@
   },
   {
     "module": "main",
-    "source": "dol/fn_80034230.c",
-    "symbols": [
-      "fn_80034230"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
     "source": "dol/fn_800342B8.c",
     "symbols": [
       "fn_800342B8"
@@ -12021,27 +13721,6 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_800342D4.c",
-    "symbols": [
-      "fn_800342D4"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
   },
   {
     "module": "main",
@@ -12125,48 +13804,6 @@
   },
   {
     "module": "main",
-    "source": "dol/fn_8003471C.c",
-    "symbols": [
-      "fn_8003471C"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_800347A4.c",
-    "symbols": [
-      "fn_800347A4"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
     "source": "dol/fn_800347EC.c",
     "symbols": [
       "fn_800347EC"
@@ -12197,152 +13834,6 @@
   },
   {
     "module": "main",
-    "source": "dol/fn_80034918.c",
-    "symbols": [
-      "fn_80034918"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_8003493C.c",
-    "symbols": [
-      "fn_8003493C"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80034A5C.c",
-    "symbols": [
-      "fn_80034A5C"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80034AEC.c",
-    "symbols": [
-      "fn_80034AEC"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80034D0C.c",
-    "symbols": [
-      "fn_80034D0C"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80034D9C.c",
-    "symbols": [
-      "fn_80034D9C"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ],
-    "pool": {
-      "@24": "lbl_801A7080"
-    }
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80034E64.c",
-    "symbols": [
-      "fn_80034E64"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
     "source": "dol/fn_800350F4.c",
     "symbols": [
       "fn_800350F4"
@@ -12350,49 +13841,6 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_800353E8.c",
-    "symbols": [
-      "fn_800353E8"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_800355B0.c",
-    "symbols": [
-      "fn_800355B0"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "off"
-    ],
-    "pool": {
-      "@15": "lbl_801A7088",
-      "@16": "lbl_801A70A0",
-      "@17": "lbl_801A70B4"
-    }
   },
   {
     "module": "main",
@@ -12433,58 +13881,6 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80035C50.c",
-    "symbols": [
-      "fn_80035C50"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "on"
-    ],
-    "pool": {
-      "@63": "lbl_801A70C0",
-      "@61": "lbl_801A70B8",
-      "@65": "jumptable_8012B328"
-    }
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80035EC4.c",
-    "symbols": [
-      "fn_80035EC4"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ],
-    "pool": {
-      "@23": "lbl_801A70C8",
-      "@24": "lbl_801A70CC",
-      "@25": "lbl_801A70D0",
-      "@26": "lbl_801A70D4",
-      "@27": "lbl_801A70D8",
-      "@28": "lbl_801A70DC",
-      "@29": "lbl_801A70B8"
-    }
   },
   {
     "module": "main",
@@ -12558,90 +13954,6 @@
   },
   {
     "module": "main",
-    "source": "dol/fn_8003666C.c",
-    "symbols": [
-      "fn_8003666C"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80036A28.c",
-    "symbols": [
-      "fn_80036A28"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80036C24.c",
-    "symbols": [
-      "fn_80036C24"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80036DA0.c",
-    "symbols": [
-      "fn_80036DA0"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
     "source": "dol/fn_80036EB4.c",
     "symbols": [
       "fn_80036EB4"
@@ -12662,174 +13974,6 @@
   },
   {
     "module": "main",
-    "source": "dol/fn_80037014.c",
-    "symbols": [
-      "fn_80037014"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80037354.c",
-    "symbols": [
-      "fn_80037354"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_800373C0.c",
-    "symbols": [
-      "fn_800373C0"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_8003742C.c",
-    "symbols": [
-      "fn_8003742C"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80037480.c",
-    "symbols": [
-      "fn_80037480"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80037518.c",
-    "symbols": [
-      "fn_80037518"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_8003756C.c",
-    "symbols": [
-      "fn_8003756C"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_800375F0.c",
-    "symbols": [
-      "fn_800375F0"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
     "source": "dol/fn_800377C8.c",
     "symbols": [
       "fn_800377C8"
@@ -12840,27 +13984,6 @@
   },
   {
     "module": "main",
-    "source": "dol/fn_80037A14.c",
-    "symbols": [
-      "fn_80037A14"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
     "source": "dol/fn_80037BF4.c",
     "symbols": [
       "fn_80037BF4"
@@ -12868,27 +13991,6 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80037D7C.c",
-    "symbols": [
-      "fn_80037D7C"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
   },
   {
     "module": "main",
@@ -12919,27 +14021,6 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80038A88.c",
-    "symbols": [
-      "fn_80038A88"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
   },
   {
     "module": "main",
@@ -12996,48 +14077,6 @@
   },
   {
     "module": "main",
-    "source": "dol/fn_80039060.c",
-    "symbols": [
-      "fn_80039060"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80039088.c",
-    "symbols": [
-      "fn_80039088"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
     "source": "dol/fn_80039AFC.c",
     "symbols": [
       "fn_80039AFC"
@@ -13055,27 +14094,6 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80039B7C.c",
-    "symbols": [
-      "fn_80039B7C"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.2.5n",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on",
-      "-fp",
-      "fmadd",
-      "-fp_contract",
-      "off",
-      "-char",
-      "signed",
-      "-common",
-      "off"
-    ]
   },
   {
     "module": "main",
@@ -13160,23 +14178,6 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80041164.c",
-    "symbols": [
-      "fn_80041164"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "0",
-      "-sdata2",
-      "0",
-      "-use_lmw_stmw",
-      "off"
-    ]
   },
   {
     "module": "main",
@@ -13460,23 +14461,6 @@
   },
   {
     "module": "main",
-    "source": "dol/fn_80041E00.c",
-    "symbols": [
-      "fn_80041E00"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "on"
-    ]
-  },
-  {
-    "module": "main",
     "source": "dol/fn_800420F4.c",
     "symbols": [
       "fn_800420F4"
@@ -13587,40 +14571,6 @@
   },
   {
     "module": "main",
-    "source": "dol/fn_800425D0.c",
-    "symbols": [
-      "fn_800425D0"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80042980.c",
-    "symbols": [
-      "fn_80042980"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
     "source": "dol/fn_80043050.c",
     "symbols": [
       "fn_80043050"
@@ -13705,23 +14655,6 @@
     "status": "matching",
     "mw_version": "GC/1.3.2",
     "extra_cflags": []
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80043FE8.c",
-    "symbols": [
-      "fn_80043FE8"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "off"
-    ]
   },
   {
     "module": "main",
@@ -14032,23 +14965,6 @@
   },
   {
     "module": "main",
-    "source": "dol/fn_80045D90.c",
-    "symbols": [
-      "fn_80045D90"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "on"
-    ]
-  },
-  {
-    "module": "main",
     "source": "dol/fn_80045F58.c",
     "symbols": [
       "fn_80045F58"
@@ -14119,23 +15035,6 @@
   },
   {
     "module": "main",
-    "source": "dol/fn_8004651C.c",
-    "symbols": [
-      "fn_8004651C"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
     "source": "dol/fn_800466D4.c",
     "symbols": [
       "fn_800466D4"
@@ -14186,23 +15085,6 @@
   },
   {
     "module": "main",
-    "source": "dol/fn_800469A4.c",
-    "symbols": [
-      "fn_800469A4"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
     "source": "dol/fn_80046AC0.c",
     "symbols": [
       "fn_80046AC0"
@@ -14230,23 +15112,6 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80046D18.c",
-    "symbols": [
-      "fn_80046D18"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "off"
-    ]
   },
   {
     "module": "main",
@@ -14320,23 +15185,6 @@
   },
   {
     "module": "main",
-    "source": "dol/fn_8004768C.c",
-    "symbols": [
-      "fn_8004768C"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "on"
-    ]
-  },
-  {
-    "module": "main",
     "source": "dol/fn_80047834.c",
     "symbols": [
       "fn_80047834"
@@ -14354,23 +15202,6 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80047864.c",
-    "symbols": [
-      "fn_80047864"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "off"
-    ]
   },
   {
     "module": "main",
@@ -14401,23 +15232,6 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80047B04.c",
-    "symbols": [
-      "fn_80047B04"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "off"
-    ]
   },
   {
     "module": "main",
@@ -14498,23 +15312,6 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_8004A578.c",
-    "symbols": [
-      "fn_8004A578"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "0",
-      "-sdata2",
-      "0",
-      "-use_lmw_stmw",
-      "off"
-    ]
   },
   {
     "module": "main",
@@ -14691,26 +15488,6 @@
   },
   {
     "module": "main",
-    "source": "dol/fn_8004BC0C.c",
-    "symbols": [
-      "fn_8004BC0C"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "0",
-      "-sdata2",
-      "0",
-      "-use_lmw_stmw",
-      "off"
-    ],
-    "pool": {
-      "@17": "lbl_80090A20"
-    }
-  },
-  {
-    "module": "main",
     "source": "dol/fn_8004BD5C.c",
     "symbols": [
       "fn_8004BD5C"
@@ -14781,23 +15558,6 @@
   },
   {
     "module": "main",
-    "source": "dol/fn_8004BFAC.c",
-    "symbols": [
-      "fn_8004BFAC"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
     "source": "dol/fn_8004C05C.c",
     "symbols": [
       "fn_8004C05C"
@@ -14838,23 +15598,6 @@
   },
   {
     "module": "main",
-    "source": "dol/fn_8004C698.c",
-    "symbols": [
-      "fn_8004C698"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
     "source": "dol/fn_8004C980.c",
     "symbols": [
       "fn_8004C980"
@@ -14875,57 +15618,6 @@
     "status": "matching",
     "mw_version": "GC/1.3.2",
     "extra_cflags": []
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_8004DBBC.c",
-    "symbols": [
-      "fn_8004DBBC"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_8004DDE4.c",
-    "symbols": [
-      "fn_8004DDE4"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_8004E098.c",
-    "symbols": [
-      "fn_8004E098"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "0",
-      "-sdata2",
-      "0",
-      "-use_lmw_stmw",
-      "off"
-    ]
   },
   {
     "module": "main",
@@ -15056,23 +15748,6 @@
     "status": "matching",
     "mw_version": "GC/1.3.2",
     "extra_cflags": []
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_8004E354.c",
-    "symbols": [
-      "fn_8004E354"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "off"
-    ]
   },
   {
     "module": "main",
@@ -15426,40 +16101,6 @@
   },
   {
     "module": "main",
-    "source": "dol/fn_8004FAA8.c",
-    "symbols": [
-      "fn_8004FAA8"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "0",
-      "-sdata2",
-      "0",
-      "-use_lmw_stmw",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_8004FC38.c",
-    "symbols": [
-      "fn_8004FC38"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
     "source": "dol/fn_80050180.c",
     "symbols": [
       "fn_80050180"
@@ -15793,23 +16434,6 @@
   },
   {
     "module": "main",
-    "source": "dol/fn_80054760.c",
-    "symbols": [
-      "fn_80054760"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
     "source": "dol/fn_800547C8.c",
     "symbols": [
       "fn_800547C8"
@@ -16051,26 +16675,6 @@
     "status": "matching",
     "mw_version": "GC/1.3.2",
     "extra_cflags": []
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80056D8C.c",
-    "symbols": [
-      "fn_80056D8C"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "off"
-    ],
-    "pool": {
-      "@40": "lbl_80092188"
-    }
   },
   {
     "module": "main",
@@ -16344,23 +16948,6 @@
   },
   {
     "module": "main",
-    "source": "dol/fn_800587A8.c",
-    "symbols": [
-      "fn_800587A8"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "on"
-    ]
-  },
-  {
-    "module": "main",
     "source": "dol/fn_800589BC.c",
     "symbols": [
       "fn_800589BC"
@@ -16421,23 +17008,6 @@
   },
   {
     "module": "main",
-    "source": "dol/fn_800595FC.c",
-    "symbols": [
-      "fn_800595FC"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "0",
-      "-sdata2",
-      "0",
-      "-use_lmw_stmw",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
     "source": "dol/fn_80059BAC.c",
     "symbols": [
       "fn_80059BAC"
@@ -16485,43 +17055,6 @@
     "status": "matching",
     "mw_version": "GC/1.3.2",
     "extra_cflags": []
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_8005A1B4.c",
-    "symbols": [
-      "fn_8005A1B4"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "0",
-      "-sdata2",
-      "0",
-      "-use_lmw_stmw",
-      "off"
-    ],
-    "pool": {
-      "@21": "lbl_80092634"
-    }
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_8005A47C.c",
-    "symbols": [
-      "fn_8005A47C"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "0",
-      "-sdata2",
-      "0",
-      "-use_lmw_stmw",
-      "off"
-    ]
   },
   {
     "module": "main",
@@ -16625,23 +17158,6 @@
   },
   {
     "module": "main",
-    "source": "dol/fn_8005A698.c",
-    "symbols": [
-      "fn_8005A698"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
     "source": "dol/fn_8005A74C.c",
     "symbols": [
       "fn_8005A74C"
@@ -16659,40 +17175,6 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_8005A95C.c",
-    "symbols": [
-      "fn_8005A95C"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_8005AE98.c",
-    "symbols": [
-      "fn_8005AE98"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "0",
-      "-sdata2",
-      "0",
-      "-use_lmw_stmw",
-      "on"
-    ]
   },
   {
     "module": "main",
@@ -16723,40 +17205,6 @@
     "status": "matching",
     "mw_version": "GC/1.3.2",
     "extra_cflags": []
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_8005BC20.c",
-    "symbols": [
-      "fn_8005BC20"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_8005BCB4.c",
-    "symbols": [
-      "fn_8005BCB4"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "0",
-      "-sdata2",
-      "0",
-      "-use_lmw_stmw",
-      "on"
-    ]
   },
   {
     "module": "main",
@@ -16797,26 +17245,6 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_8005BEAC.c",
-    "symbols": [
-      "fn_8005BEAC"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "off"
-    ],
-    "pool": {
-      "@15": "lbl_80092988"
-    }
   },
   {
     "module": "main",
@@ -18384,23 +18812,6 @@
   },
   {
     "module": "main",
-    "source": "dol/fn_8007A2E8.c",
-    "symbols": [
-      "fn_8007A2E8"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
     "source": "dol/fn_8007AB58.c",
     "symbols": [
       "fn_8007AB58"
@@ -18441,60 +18852,6 @@
   },
   {
     "module": "main",
-    "source": "dol/fn_8007C3B8.c",
-    "symbols": [
-      "fn_8007C3B8"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_8007C55C.c",
-    "symbols": [
-      "fn_8007C55C"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "on"
-    ],
-    "pool": {
-      "@143": "lbl_801A74B0"
-    }
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_8007CE0C.c",
-    "symbols": [
-      "fn_8007CE0C"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
     "source": "dol/fn_8007E914.c",
     "symbols": [
       "fn_8007E914"
@@ -18502,23 +18859,6 @@
     "status": "matching",
     "mw_version": "GC/1.3.2",
     "extra_cflags": []
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_8007EA58.c",
-    "symbols": [
-      "fn_8007EA58"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "on"
-    ]
   },
   {
     "module": "main",
@@ -18542,91 +18882,6 @@
   },
   {
     "module": "main",
-    "source": "dol/fn_8007F684.c",
-    "symbols": [
-      "fn_8007F684"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_8007F8D4.c",
-    "symbols": [
-      "fn_8007F8D4"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_8007FA0C.c",
-    "symbols": [
-      "fn_8007FA0C"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80080030.c",
-    "symbols": [
-      "fn_80080030"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80080150.c",
-    "symbols": [
-      "fn_80080150"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
     "source": "dol/fn_8008023C.c",
     "symbols": [
       "fn_8008023C"
@@ -18634,40 +18889,6 @@
     "status": "matching",
     "mw_version": "GC/1.3.2",
     "extra_cflags": []
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_800803AC.c",
-    "symbols": [
-      "fn_800803AC"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80080458.c",
-    "symbols": [
-      "fn_80080458"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "off"
-    ]
   },
   {
     "module": "main",
@@ -18681,23 +18902,6 @@
   },
   {
     "module": "main",
-    "source": "dol/fn_8008069C.c",
-    "symbols": [
-      "fn_8008069C"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "on"
-    ]
-  },
-  {
-    "module": "main",
     "source": "dol/fn_8008077C.c",
     "symbols": [
       "fn_8008077C"
@@ -18708,23 +18912,6 @@
   },
   {
     "module": "main",
-    "source": "dol/fn_8008088C.c",
-    "symbols": [
-      "fn_8008088C"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
     "source": "dol/fn_80080974.c",
     "symbols": [
       "fn_80080974"
@@ -18732,23 +18919,6 @@
     "status": "matching",
     "mw_version": "GC/1.3.2",
     "extra_cflags": []
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_8008279C.c",
-    "symbols": [
-      "fn_8008279C"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "on"
-    ]
   },
   {
     "module": "main",
@@ -18812,80 +18982,6 @@
   },
   {
     "module": "main",
-    "source": "dol/fn_80084F1C.c",
-    "symbols": [
-      "fn_80084F1C"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80084FDC.c",
-    "symbols": [
-      "fn_80084FDC"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80085088.c",
-    "symbols": [
-      "fn_80085088"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "on"
-    ],
-    "pool": {
-      "@162": "jumptable_8015B738"
-    }
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80085494.c",
-    "symbols": [
-      "fn_80085494"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "on"
-    ],
-    "pool": {
-      "@161": "jumptable_8015B77C"
-    }
-  },
-  {
-    "module": "main",
     "source": "dol/fn_8008580C.c",
     "symbols": [
       "fn_8008580C"
@@ -18903,151 +18999,6 @@
     "status": "matching",
     "mw_version": "GC/1.3.2",
     "extra_cflags": []
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80085C7C.c",
-    "symbols": [
-      "fn_80085C7C"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "off"
-    ],
-    "pool": {
-      "@35": "lbl_801A7598",
-      "@36": "lbl_801A75A0",
-      "@37": "lbl_801A75A8",
-      "@51": "lbl_801A7610",
-      "@39": "lbl_801A75B8",
-      "@38": "lbl_801A75B0",
-      "@41": "lbl_801A75C8",
-      "@40": "lbl_801A75C0",
-      "@42": "lbl_801A75D0",
-      "@46": "lbl_801A75F0",
-      "@45": "lbl_801A75E8",
-      "@44": "lbl_801A75E0",
-      "@49": "lbl_801A7608",
-      "@48": "lbl_801A7600",
-      "@43": "lbl_801A75D8",
-      "@47": "lbl_801A75F8"
-    }
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80085EF8.c",
-    "symbols": [
-      "fn_80085EF8"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "off"
-    ],
-    "pool": {
-      "@16": "lbl_801A7618",
-      "@17": "lbl_801A7620",
-      "@22": "lbl_801A7640",
-      "@19": "lbl_801A7630",
-      "@18": "lbl_801A7628",
-      "@20": "lbl_801A7638"
-    }
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_800868BC.c",
-    "symbols": [
-      "fn_800868BC"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "off"
-    ],
-    "pool": {
-      "@60": "lbl_801A7758",
-      "@61": "lbl_801A7760",
-      "@62": "lbl_801A7768",
-      "@63": "lbl_801A7770",
-      "@64": "lbl_801A7778",
-      "@66": "lbl_801A7788",
-      "@65": "lbl_801A7780",
-      "@72": "lbl_801A77A8",
-      "@67": "lbl_801A7790",
-      "@68": "lbl_801A7798",
-      "@69": "lbl_801A77A0"
-    }
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80086C5C.c",
-    "symbols": [
-      "fn_80086C5C"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "off"
-    ],
-    "pool": {
-      "@16": "lbl_801A77B0",
-      "@22": "lbl_801A77E0",
-      "@21": "lbl_801A77D8",
-      "@20": "lbl_801A77D0",
-      "@19": "lbl_801A77C8",
-      "@18": "lbl_801A77C0",
-      "@17": "lbl_801A77B8",
-      "@23": "lbl_801A77E8",
-      "@24": "lbl_801A77F0"
-    }
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80086D50.c",
-    "symbols": [
-      "fn_80086D50"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "on"
-    ],
-    "pool": {
-      "@263": "lbl_801A7830",
-      "@254": "lbl_801A77F8",
-      "@255": "lbl_801A7800",
-      "@256": "lbl_801A7808",
-      "@258": "lbl_801A7818",
-      "@257": "lbl_801A7810",
-      "@259": "lbl_801A7820",
-      "@260": "lbl_801A7828"
-    }
   },
   {
     "module": "main",
@@ -19078,88 +19029,6 @@
     "status": "matching",
     "mw_version": "GC/1.3.2",
     "extra_cflags": []
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80087F54.c",
-    "symbols": [
-      "fn_80087F54"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "off"
-    ],
-    "pool": {
-      "@44": "lbl_801A78B0",
-      "@45": "lbl_801A78B8"
-    }
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_8008809C.c",
-    "symbols": [
-      "fn_8008809C"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "off"
-    ],
-    "pool": {
-      "@11": "lbl_801A78C0"
-    }
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80088128.c",
-    "symbols": [
-      "fn_80088128"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "off"
-    ],
-    "pool": {
-      "@50": "lbl_801A78C8",
-      "@51": "lbl_801A78D0",
-      "@52": "lbl_801A78D8",
-      "@53": "lbl_801A78E0",
-      "@54": "lbl_801A78E8"
-    }
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_800882EC.c",
-    "symbols": [
-      "fn_800882EC"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "off"
-    ]
   },
   {
     "module": "main",
@@ -19273,23 +19142,6 @@
   },
   {
     "module": "main",
-    "source": "dol/fn_8008877C.c",
-    "symbols": [
-      "fn_8008877C"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
     "source": "dol/fn_80088B00.c",
     "symbols": [
       "fn_80088B00"
@@ -19297,142 +19149,6 @@
     "status": "matching",
     "mw_version": "GC/1.3.2",
     "extra_cflags": []
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80088B44.c",
-    "symbols": [
-      "fn_80088B44"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "0",
-      "-sdata2",
-      "0",
-      "-use_lmw_stmw",
-      "on"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80088C34.c",
-    "symbols": [
-      "fn_80088C34"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "on"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80088CCC.c",
-    "symbols": [
-      "fn_80088CCC"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "0",
-      "-sdata2",
-      "0",
-      "-use_lmw_stmw",
-      "on"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80088DB4.c",
-    "symbols": [
-      "fn_80088DB4"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "0",
-      "-sdata2",
-      "0",
-      "-use_lmw_stmw",
-      "on"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80088EB0.c",
-    "symbols": [
-      "fn_80088EB0"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80088F18.c",
-    "symbols": [
-      "fn_80088F18"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "0",
-      "-sdata2",
-      "0",
-      "-use_lmw_stmw",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_80089014.c",
-    "symbols": [
-      "fn_80089014"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_800890A0.c",
-    "symbols": [
-      "fn_800890A0"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "off"
-    ]
   },
   {
     "module": "main",
@@ -19629,23 +19345,6 @@
   },
   {
     "module": "main",
-    "source": "dol/fn_8008B028.c",
-    "symbols": [
-      "fn_8008B028"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "off"
-    ]
-  },
-  {
-    "module": "main",
     "source": "dol/fn_8008B0E0.c",
     "symbols": [
       "fn_8008B0E0"
@@ -19716,23 +19415,6 @@
     "status": "matching",
     "mw_version": "GC/1.3.2",
     "extra_cflags": []
-  },
-  {
-    "module": "main",
-    "source": "dol/fn_8008C5F0.c",
-    "symbols": [
-      "fn_8008C5F0"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-sdata",
-      "8",
-      "-sdata2",
-      "8",
-      "-use_lmw_stmw",
-      "off"
-    ]
   },
   {
     "module": "main",
@@ -20006,6 +19688,43 @@
   },
   {
     "module": "main",
+    "source": "dol/fopen.c",
+    "symbols": [
+      "fopen"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/frexp.c",
+    "symbols": [
+      "frexp"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ],
+    "pool": {
+      "@11": "lbl_801A78C0"
+    }
+  },
+  {
+    "module": "main",
     "source": "dol/fseek.c",
     "symbols": [
       "fseek"
@@ -20127,6 +19846,27 @@
   },
   {
     "module": "main",
+    "source": "dol/getCurrentFieldEvenOdd.c",
+    "symbols": [
+      "getCurrentFieldEvenOdd"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
     "source": "dol/getTiming.c",
     "symbols": [
       "getTiming"
@@ -20136,6 +19876,47 @@
     "extra_cflags": [],
     "pool": {
       "@19": "jumptable_801243BC"
+    }
+  },
+  {
+    "module": "main",
+    "source": "dol/is_utf8_complete.c",
+    "symbols": [
+      "is_utf8_complete"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/ldexp.c",
+    "symbols": [
+      "ldexp"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ],
+    "pool": {
+      "@50": "lbl_801A78C8",
+      "@51": "lbl_801A78D0",
+      "@52": "lbl_801A78D8",
+      "@53": "lbl_801A78E0",
+      "@54": "lbl_801A78E8"
     }
   },
   {
@@ -20158,6 +19939,23 @@
     "mw_version": null,
     "extra_cflags": [],
     "asm": true
+  },
+  {
+    "module": "main",
+    "source": "dol/mbtowc.c",
+    "symbols": [
+      "mbtowc"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ]
   },
   {
     "module": "main",
@@ -20198,6 +19996,170 @@
   },
   {
     "module": "main",
+    "source": "dol/mfCiClose.c",
+    "symbols": [
+      "mfCiClose"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "0",
+      "-sdata2",
+      "0",
+      "-use_lmw_stmw",
+      "off"
+    ],
+    "pool": {
+      "@21": "lbl_80092634"
+    }
+  },
+  {
+    "module": "main",
+    "source": "dol/mfCiGetFileSize.c",
+    "symbols": [
+      "mfCiGetFileSize"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "0",
+      "-sdata2",
+      "0",
+      "-use_lmw_stmw",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/modf.c",
+    "symbols": [
+      "modf"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/printf.c",
+    "symbols": [
+      "printf"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/qsort.c",
+    "symbols": [
+      "qsort"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "on"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/setFbbRegs.c",
+    "symbols": [
+      "setFbbRegs"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/setVerticalRegs.c",
+    "symbols": [
+      "setVerticalRegs"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/setvbuf.c",
+    "symbols": [
+      "setvbuf"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "on"
+    ]
+  },
+  {
+    "module": "main",
+    "source": "dol/sprintf.c",
+    "symbols": [
+      "sprintf"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "on"
+    ]
+  },
+  {
+    "module": "main",
     "source": "dol/stateBusy.c",
     "symbols": [
       "stateBusy"
@@ -20229,6 +20191,27 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/stateCoverClosed.c",
+    "symbols": [
+      "stateCoverClosed"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
   },
   {
     "module": "main",
@@ -20309,6 +20292,23 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/strtoul.c",
+    "symbols": [
+      "strtoul"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ]
   },
   {
     "module": "main",
@@ -39526,6 +39526,19 @@
   },
   {
     "module": "movie_module",
+    "source": "rel/movie_module/MPVCDEC_IntraBlocks.c",
+    "symbols": [
+      "MPVCDEC_IntraBlocks"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "pool": {
+      "@14": "lbl_12_rodata_760"
+    }
+  },
+  {
+    "module": "movie_module",
     "source": "rel/movie_module/MPV_GoNextDelimSj.c",
     "symbols": [
       "MPV_GoNextDelimSj"
@@ -39543,6 +39556,19 @@
     "status": "matching",
     "mw_version": "GC/1.3.2",
     "extra_cflags": []
+  },
+  {
+    "module": "movie_module",
+    "source": "rel/movie_module/MWSFCRE_ResetSfdHn.c",
+    "symbols": [
+      "MWSFCRE_ResetSfdHn"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on"
+    ]
   },
   {
     "module": "movie_module",
@@ -42784,16 +42810,6 @@
   },
   {
     "module": "movie_module",
-    "source": "rel/movie_module/fn_12_35180.c",
-    "symbols": [
-      "fn_12_35180"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": []
-  },
-  {
-    "module": "movie_module",
     "source": "rel/movie_module/fn_12_3530C.c",
     "symbols": [
       "fn_12_3530C"
@@ -43077,19 +43093,6 @@
   },
   {
     "module": "movie_module",
-    "source": "rel/movie_module/fn_12_36088.c",
-    "symbols": [
-      "fn_12_36088"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on"
-    ]
-  },
-  {
-    "module": "movie_module",
     "source": "rel/movie_module/fn_12_3630.c",
     "symbols": [
       "fn_12_3630"
@@ -43117,19 +43120,6 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
-  },
-  {
-    "module": "movie_module",
-    "source": "rel/movie_module/fn_12_3753C.c",
-    "symbols": [
-      "fn_12_3753C"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [
-      "-use_lmw_stmw",
-      "on"
-    ]
   },
   {
     "module": "movie_module",
@@ -43979,19 +43969,6 @@
   },
   {
     "module": "movie_module",
-    "source": "rel/movie_module/fn_12_73A0.c",
-    "symbols": [
-      "fn_12_73A0"
-    ],
-    "status": "matching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [],
-    "pool": {
-      "@14": "lbl_12_rodata_760"
-    }
-  },
-  {
-    "module": "movie_module",
     "source": "rel/movie_module/fn_12_740.c",
     "symbols": [
       "fn_12_740"
@@ -44425,9 +44402,32 @@
   },
   {
     "module": "movie_module",
+    "source": "rel/movie_module/mwSfdDestroy.c",
+    "symbols": [
+      "mwSfdDestroy"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on"
+    ]
+  },
+  {
+    "module": "movie_module",
     "source": "rel/movie_module/mwSfdPause.c",
     "symbols": [
       "mwSfdPause"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "movie_module",
+    "source": "rel/movie_module/mwsftag_GetAinfFromSj.c",
+    "symbols": [
+      "mwsftag_GetAinfFromSj"
     ],
     "status": "matching",
     "mw_version": "GC/1.3.2",

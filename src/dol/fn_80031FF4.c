@@ -1,7 +1,7 @@
 #include "types.h"
 
-extern u32 fn_80032014(void);
+extern u32 __GXSaveCPUFifoAux(void);
 
 u32 fn_80031FF4(void) {
-    return fn_80032014();
+    return __GXSaveCPUFifoAux();
 }

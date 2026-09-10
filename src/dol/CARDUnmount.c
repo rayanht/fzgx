@@ -5,7 +5,7 @@ BOOL OSRestoreInterrupts(BOOL level);
 
 void DoUnmount(s32 chan, s32 result);
 
-void fn_8000AF78(OSAlarm *alarm);
+void OSCancelAlarm(OSAlarm *alarm);
 
 extern CARDControl lbl_80177960[2];
 
@@ -17,7 +17,7 @@ static inline void DoUnmount(s32 chan, s32 result) {
     if (card->attached) {
         EXISetExiCallback(chan, 0);
         EXIDetach(chan);
-        fn_8000AF78(&card->alarm);
+        OSCancelAlarm(&card->alarm);
         card->attached = 0;
         card->result = result;
         card->mountStep = 0;

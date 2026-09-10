@@ -6,8 +6,8 @@ extern void cbForStateError(s32 state);
 extern void fn_80017838(void);
 extern void fn_800178CC(void);
 extern void fn_80016524(u32, u32, u32, u32);
-extern void fn_80017B14(void);
-extern void fn_800169AC(void (*callback)(void));
+extern void cbForStateGettingError(void);
+extern void DVDLowRequestError(void (*callback)(void));
 extern void OSPanic(const char *, ...);
 
 extern u32 lbl_801A6904;
@@ -47,6 +47,6 @@ void fn_80018330(u32 state) {
                     BB2_8015CE40[1],
                     (u32)fn_800178CC);
     } else {
-        fn_800169AC(fn_80017B14);
+        DVDLowRequestError(cbForStateGettingError);
     }
 }

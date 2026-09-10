@@ -1,4 +1,36 @@
 {
+  "DSPInit": {
+    "absolutes": {
+      "__DSPRegs": 3422572544
+    },
+    "bindings": {
+      "...data.0": "lbl_8012A848",
+      "DSPInit": "DSPInit",
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSRegisterVersion": "OSRegisterVersion",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "__DSPHandler": "__DSPHandler",
+      "__DSPVersion": "lbl_801A6500",
+      "__DSP_curr_task": "lbl_801A6BBC",
+      "__DSP_debug_printf": "fn_80028F50",
+      "__DSP_first_task": "lbl_801A6BB8",
+      "__DSP_init_flag": "lbl_801A6BA0",
+      "__DSP_last_task": "lbl_801A6BB4",
+      "__DSP_tmp_task": "lbl_801A6BB0",
+      "__OSSetInterruptHandler": "__OSSetInterruptHandler",
+      "__OSUnmaskInterrupts": "__OSUnmaskInterrupts"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_80028D0C",
+    "pragmas": [],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "DSPInit",
+    "size": 196,
+    "source": "src/dolphin/dsp/dsp.c",
+    "symbol": "DSPInit",
+    "variant": "aggregate-messages"
+  },
   "DSPReadMailFromDSP": {
     "absolutes": {
       "__DSPRegs": 3422572544
@@ -33,38 +65,7 @@
     "symbol": "DSPSendMailToDSP",
     "variant": "aggregate"
   },
-  "fn_80028D0C": {
-    "absolutes": {
-      "__DSPRegs": 3422572544
-    },
-    "bindings": {
-      "...data.0": "lbl_8012A848",
-      "DSPInit": "fn_80028D0C",
-      "OSDisableInterrupts": "OSDisableInterrupts",
-      "OSRegisterVersion": "OSRegisterVersion",
-      "OSRestoreInterrupts": "OSRestoreInterrupts",
-      "__DSPHandler": "fn_80028FA0",
-      "__DSPVersion": "lbl_801A6500",
-      "__DSP_curr_task": "lbl_801A6BBC",
-      "__DSP_debug_printf": "fn_80028F50",
-      "__DSP_first_task": "lbl_801A6BB8",
-      "__DSP_init_flag": "lbl_801A6BA0",
-      "__DSP_last_task": "lbl_801A6BB4",
-      "__DSP_tmp_task": "lbl_801A6BB0",
-      "__OSSetInterruptHandler": "__OSSetInterruptHandler",
-      "__OSUnmaskInterrupts": "__OSUnmaskInterrupts"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
-    "sdk": "tww",
-    "sdk_symbol": "DSPInit",
-    "size": 196,
-    "source": "src/dolphin/dsp/dsp.c",
-    "symbol": "fn_80028D0C",
-    "variant": "aggregate-messages"
-  },
-  "fn_80028FA0": {
+  "__DSPHandler": {
     "absolutes": {
       "__DSPRegs": 3422572544
     },
@@ -75,59 +76,62 @@
       "DSPSendMailToDSP": "DSPSendMailToDSP",
       "OSClearContext": "OSClearContext",
       "OSSetCurrentContext": "OSSetCurrentContext",
-      "__DSPHandler": "fn_80028FA0",
+      "__DSPHandler": "__DSPHandler",
       "__DSP_curr_task": "lbl_801A6BBC",
       "__DSP_exec_task": "__DSP_exec_task",
       "__DSP_first_task": "lbl_801A6BB8",
       "__DSP_last_task": "lbl_801A6BB4",
-      "__DSP_remove_task": "fn_80029790",
+      "__DSP_remove_task": "__DSP_remove_task",
       "__DSP_rude_task": "lbl_801A6BAC",
       "__DSP_rude_task_pending": "lbl_801A6BA8"
     },
     "mw": "GC/1.2.5n",
+    "original_symbol": "fn_80028FA0",
     "pragmas": [],
     "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
     "sdk": "mkdd",
     "sdk_symbol": "__DSPHandler",
     "size": 1060,
     "source": "libs/dolphin/dsp/dsp_task.c",
-    "symbol": "fn_80028FA0",
+    "symbol": "__DSPHandler",
     "variant": "aggregate"
   },
-  "fn_800296F0": {
+  "__DSP_insert_task": {
     "absolutes": {},
     "bindings": {
       "__DSP_curr_task": "lbl_801A6BBC",
       "__DSP_first_task": "lbl_801A6BB8",
-      "__DSP_insert_task": "fn_800296F0",
+      "__DSP_insert_task": "__DSP_insert_task",
       "__DSP_last_task": "lbl_801A6BB4"
     },
     "mw": "GC/1.2.5n",
+    "original_symbol": "fn_800296F0",
     "pragmas": [],
     "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
     "sdk": "mkdd",
     "sdk_symbol": "__DSP_insert_task",
     "size": 160,
     "source": "libs/dolphin/dsp/dsp_task.c",
-    "symbol": "fn_800296F0",
+    "symbol": "__DSP_insert_task",
     "variant": "aggregate"
   },
-  "fn_80029790": {
+  "__DSP_remove_task": {
     "absolutes": {},
     "bindings": {
       "__DSP_curr_task": "lbl_801A6BBC",
       "__DSP_first_task": "lbl_801A6BB8",
       "__DSP_last_task": "lbl_801A6BB4",
-      "__DSP_remove_task": "fn_80029790"
+      "__DSP_remove_task": "__DSP_remove_task"
     },
     "mw": "GC/1.2.5n",
+    "original_symbol": "fn_80029790",
     "pragmas": [],
     "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
     "sdk": "mkdd",
     "sdk_symbol": "__DSP_remove_task",
     "size": 148,
     "source": "libs/dolphin/dsp/dsp_task.c",
-    "symbol": "fn_80029790",
+    "symbol": "__DSP_remove_task",
     "variant": "aggregate"
   }
 }

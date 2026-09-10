@@ -8,7 +8,7 @@ typedef struct InitData {
 
 extern void fn_80088764(InitData *data, int value);
 extern u32 lbl_801A5098[6];
-extern void fn_8008877C(InitData *data);
+extern void TRKPostEvent(InitData *data);
 
 void fn_8008944C(u32 value) {
 
@@ -17,6 +17,6 @@ void fn_8008944C(u32 value) {
     fn_80088764(&data, 2);
     data.unk8 = value;
     lbl_801A5098[0] = (u32)-1;
-    fn_8008877C(&data);
+    TRKPostEvent(&data);
 }
 }

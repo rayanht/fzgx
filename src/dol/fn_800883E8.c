@@ -2,8 +2,8 @@
 
 extern const f64 lbl_801A78F0;
 extern f64 fn_80087BA4(s32, f64, f64);
-extern s32 fn_800868BC(f64 *);
-extern f64 fn_80086C5C(f64, f64);
+extern s32 __ieee754_rem_pio2(f64 *);
+extern f64 __kernel_cos(f64, f64);
 
 f64 fn_800883E8(f64 angle) {
     union {
@@ -24,15 +24,15 @@ f64 fn_800883E8(f64 angle) {
         return angle - angle;
     }
 
-    quadrant = fn_800868BC(values);
+    quadrant = __ieee754_rem_pio2(values);
     switch (quadrant & 3) {
     case 0:
         return fn_80087BA4(1, values[0], values[1]);
     case 1:
-        return fn_80086C5C(values[0], values[1]);
+        return __kernel_cos(values[0], values[1]);
     case 2:
         return -fn_80087BA4(1, values[0], values[1]);
     default:
-        return -fn_80086C5C(values[0], values[1]);
+        return -__kernel_cos(values[0], values[1]);
     }
 }

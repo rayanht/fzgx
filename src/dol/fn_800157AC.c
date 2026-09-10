@@ -1,7 +1,7 @@
 #include "types.h"
 
 extern u32 lbl_801A684C;
-extern int fn_8000A224(void);
+extern int OSGetConsoleType(void);
 extern u32 lbl_801A6848;
 extern u32 lbl_801A6840;
 extern u32 lbl_801A6844;
@@ -11,7 +11,7 @@ int fn_800157AC(void) {
         return 0;
     }
 
-    if ((fn_8000A224() & 0x10000000) == 0) {
+    if ((OSGetConsoleType() & 0x10000000) == 0) {
         lbl_801A6848 = 0;
         return 2;
     }

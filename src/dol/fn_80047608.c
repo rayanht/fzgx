@@ -5,9 +5,9 @@ struct fn_80047608_lbl_8017B158 {
 extern struct fn_80047608_lbl_8017B158 lbl_8017B158[];
 extern u32 fn_80046738(void);
 extern void fn_80046718(void);
-extern u32 fn_8004A578(void);
-extern u32 fn_80054760(void);
-extern u32 fn_8004FAA8(void);
+extern u32 ADXSTM_ExecServer(void);
+extern u32 cvFsExecServer(void);
+extern u32 ADXF_ExecServer(void);
 
 
 void fn_80047608(void) {
@@ -18,12 +18,12 @@ void fn_80047608(void) {
     }
     lbl_8017B158->unk_0 = 1;
     fn_80046718();
-    fn_8004A578();
+    ADXSTM_ExecServer();
     lbl_8017B158->unk_0 = 2;
-    fn_80054760();
+    cvFsExecServer();
     lbl_8017B158->unk_0 = 5;
-    fn_8004A578();
+    ADXSTM_ExecServer();
     lbl_8017B158->unk_0 = 6;
-    fn_8004FAA8();
+    ADXF_ExecServer();
     lbl_8017B158->unk_0 = 0;
 }

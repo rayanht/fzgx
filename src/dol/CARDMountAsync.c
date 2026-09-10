@@ -3,8 +3,8 @@
 BOOL OSDisableInterrupts(void);
 BOOL OSRestoreInterrupts(BOOL level);
 
-s32 fn_8002D8F8(s32 chan);
-void fn_8000AF78(OSAlarm *alarm);
+s32 DoMount(s32 chan);
+void OSCancelAlarm(OSAlarm *alarm);
 void fn_80029824(s32 chan, s32 result);
 
 #include "sdk_addresses.h"
@@ -46,7 +46,7 @@ s32 CARDMountAsync(s32 chan, void *workArea, CARDCallback detachCallback,
     card->mountStep = 0;
     card->attached = 1;
     EXISetExiCallback(chan, 0);
-    fn_8000AF78(&card->alarm);
+    OSCancelAlarm(&card->alarm);
     card->currentDir = 0;
     card->currentFat = 0;
     OSRestoreInterrupts(enabled);
@@ -55,5 +55,5 @@ s32 CARDMountAsync(s32 chan, void *workArea, CARDCallback detachCallback,
         return 0;
     }
     card->unlockCallback = 0;
-    return fn_8002D8F8(chan);
+    return DoMount(chan);
 }

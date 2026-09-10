@@ -17,7 +17,7 @@ struct OSThread {
     OSMutex *mutexQueueTail;
 };
 
-extern void fn_80011194(OSMutex *);
+extern void OSWakeupThread(OSMutex *);
 
 void __OSUnlockAllMutex(OSThread *thread) {
     OSMutex *mutex;
@@ -35,6 +35,6 @@ void __OSUnlockAllMutex(OSThread *thread) {
         thread->mutexQueueHead = next;
         mutex->queueTail = zero;
         mutex->queueHead = zero;
-        fn_80011194(mutex);
+        OSWakeupThread(mutex);
     }
 }

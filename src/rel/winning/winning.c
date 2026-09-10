@@ -303,7 +303,7 @@ extern u32 fn_15_38FC(u32);
 extern u32 fn_1_435C(u32);
 extern u32 fn_1_46B4(u32, u32, u32, u32);
 extern u32 fn_1_A0AA4(u32);
-extern u32 fn_8004C698(u32);
+extern u32 ADXT_Stop(u32);
 extern u32 lbl_15_data_A4;
 extern u32 lbl_801A6410;
 extern void fn_15_3B00(void);
@@ -322,8 +322,8 @@ void fn_15_236C(u32 arg0, u32 arg1, u32 arg2, u32 arg3) {
     u32 t2, t3, t4, t8;
     p_lbl_15_bss_0 = (struct fn_15_236C_lbl_15_bss_0 *)&lbl_15_bss_0;
     fn_1_469BC();
-    fn_8004C698(*(u32 *)((u8 *)lbl_1_bss_6EAD0.unk_0 + 0));
-    t2 = fn_8004C698(*(u32 *)((u8 *)lbl_1_bss_6EAD0.unk_0 + 4));
+    ADXT_Stop(*(u32 *)((u8 *)lbl_1_bss_6EAD0.unk_0 + 0));
+    t2 = ADXT_Stop(*(u32 *)((u8 *)lbl_1_bss_6EAD0.unk_0 + 4));
     t3 = fn_1_A0AA4(t2);
     t4 = fn_15_2CF0(t3);
     if ((p_lbl_15_bss_0->unk_14 & 0x80) == 0) {

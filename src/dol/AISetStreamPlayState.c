@@ -17,7 +17,7 @@ u8 AIGetStreamVolRight();
 
 vu32 __AIRegs[8] : FZGX_ADDR___AIRegs;
 
-void fn_8001E600(void);
+void __AI_SRC_INIT(void);
 
 void AISetStreamVolLeft(u8 volume);
 
@@ -36,7 +36,7 @@ void AISetStreamPlayState(u32 state) {
         AISetStreamVolRight(0);
         AISetStreamVolLeft(0);
         oldInts = OSDisableInterrupts();
-        fn_8001E600();
+        __AI_SRC_INIT();
         __AIRegs[0] = (__AIRegs[0] & ~0x20) | 0x20;
         __AIRegs[0] = (__AIRegs[0] & ~1) | 1;
         OSRestoreInterrupts(oldInts);

@@ -10,9 +10,9 @@ typedef struct MovieModuleState {
     u32 value_108;
 } MovieModuleState;
 
-extern void fn_12_35180(MovieModuleState *self);
+extern void mwsftag_GetAinfFromSj(MovieModuleState *self);
 extern void fn_12_818(void *resource, u32 value0, u32 value1);
-extern void *fn_800587A8(void *input, const f64 *constant, u8 *table, void *output);
+extern void *SJ_SearchTag(void *input, const f64 *constant, u8 *table, void *output);
 extern const f64 lbl_12_rodata_1778;
 extern u8 lbl_12_rodata_1780[64];
 
@@ -22,14 +22,14 @@ void fn_12_3530C(MovieModuleState *self) {
     void *resource;
 
     if (self->movie_data != 0) {
-        fn_12_35180(self);
+        mwsftag_GetAinfFromSj(self);
         resource = self->movie_resource;
         if (self->value_104 == 0) {
             fn_12_818(resource, 0, 0);
         } else {
             input[0] = self->value_104;
             input[1] = self->value_108;
-            if (fn_800587A8(input, &lbl_12_rodata_1778,
+            if (SJ_SearchTag(input, &lbl_12_rodata_1778,
                             lbl_12_rodata_1780, output) == 0) {
                 fn_12_818(resource, 0, 0);
             } else {

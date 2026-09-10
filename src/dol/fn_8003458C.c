@@ -6,25 +6,25 @@ struct fn_8003458C_gx_T {
 };
 
 extern struct fn_8003458C_gx_T *gx;
-extern u32 fn_80032B8C(void);
+extern u32 __GXSetVCD(void);
 extern u32 fn_80032BE0(void);
 extern u32 fn_80033650(void);
-extern u32 fn_80034918(void);
-extern u32 fn_8003666C(void);
+extern u32 __GXSetGenMode(void);
+extern u32 __GXSetSUTexRegs(void);
 extern u32 fn_80036F24(void);
 
 void fn_8003458C(void) {
     if ((gx->unk_4F4 & 0x1) != 0) {
-    fn_8003666C();
+    __GXSetSUTexRegs();
     }
     if ((gx->unk_4F4 & 0x2) != 0) {
     fn_80036F24();
     }
     if ((gx->unk_4F4 & 0x4) != 0) {
-    fn_80034918();
+    __GXSetGenMode();
     }
     if ((gx->unk_4F4 & 0x8) != 0) {
-    fn_80032B8C();
+    __GXSetVCD();
     }
     if ((gx->unk_4F4 & 0x10) != 0) {
     fn_80033650();

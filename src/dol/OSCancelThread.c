@@ -11,7 +11,7 @@ enum OS_THREAD_STATE {
     OS_THREAD_STATE_MORIBUND = 8,
 };
 
-void fn_80011194(OSThreadQueue *queue);
+void OSWakeupThread(OSThreadQueue *queue);
 
 // Hardware or OS state can change asynchronously.
 extern volatile BOOL RunQueueHint_801A67FC; // fzgx-allow: S2 SDK asynchronous state
@@ -22,7 +22,7 @@ void fn_8001036C(OSThread *thread);
 
 OSPriority __OSGetEffectivePriority(OSThread *thread);
 
-OSThread *fn_80010410(OSThread *thread, OSPriority priority);
+OSThread *SetEffectivePriority(OSThread *thread, OSPriority priority);
 
 static inline void UpdatePriority(OSThread *thread) {
     OSPriority priority;
@@ -34,7 +34,7 @@ static inline void UpdatePriority(OSThread *thread) {
         if (thread->priority == priority) {
             break;
         }
-        thread = fn_80010410(thread, priority);
+        thread = SetEffectivePriority(thread, priority);
     } while (thread);
 }
 
@@ -47,7 +47,7 @@ static inline void __OSReschedule() {
     SelectThread(0);
 }
 
-void fn_80011194(OSThreadQueue *queue);
+void OSWakeupThread(OSThreadQueue *queue);
 
 void OSCancelThread(OSThread *thread) {
     BOOL enabled;
@@ -104,7 +104,7 @@ void OSCancelThread(OSThread *thread) {
         thread->state = OS_THREAD_STATE_MORIBUND;
     }
     __OSUnlockAllMutex(thread);
-    fn_80011194(&thread->queueJoin);
+    OSWakeupThread(&thread->queueJoin);
     __OSReschedule();
     OSRestoreInterrupts(enabled);
     return;

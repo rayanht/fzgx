@@ -15,7 +15,7 @@ struct ObjectData {
     u32 callback_data;
 };
 
-extern u32 fn_8004C698(u32);
+extern u32 ADXT_Stop(u32);
 struct GlobalBlock {
     u32 value;
     u8 pad[0xfc];
@@ -42,7 +42,7 @@ void fn_80051E64(u32 arg0, u32 arg1, u32 arg2) {
     u32 v1;
     u32 v3;
 
-    fn_8004C698(arg0);
+    ADXT_Stop(arg0);
     if (lbl_8017E58C.value != 0) {
         ((void (*)(u32))lbl_8017E58C.value)(arg0);
     }

@@ -1,4 +1,47 @@
 {
+  "VIGetCurrentLine": {
+    "absolutes": {
+      "__VIRegs": 3422560256
+    },
+    "bindings": {
+      "CurrTiming": "lbl_801A6960",
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "VIGetCurrentLine": "VIGetCurrentLine"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_8001BF84",
+    "pragmas": [],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "VIGetCurrentLine",
+    "size": 152,
+    "source": "src/dolphin/vi/vi.c",
+    "symbol": "VIGetCurrentLine",
+    "variant": "aggregate"
+  },
+  "VIGetNextField": {
+    "absolutes": {
+      "__VIRegs": 3422560256
+    },
+    "bindings": {
+      "CurrTiming": "lbl_801A6960",
+      "HorVer": "lbl_8015D058",
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "VIGetNextField": "VIGetNextField"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_8001BEDC",
+    "pragmas": [],
+    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
+    "sdk": "tww",
+    "sdk_symbol": "VIGetNextField",
+    "size": 168,
+    "source": "src/dolphin/vi/vi.c",
+    "symbol": "VIGetNextField",
+    "variant": "aggregate"
+  },
   "__VIInit": {
     "absolutes": {
       "__VIRegs": 3422560256
@@ -17,101 +60,63 @@
     "symbol": "__VIInit",
     "variant": "aggregate"
   },
-  "fn_8001AFB8": {
-    "absolutes": {},
-    "bindings": {
-      "...bss.0": "lbl_8015CF68",
-      "HorVer": "(sdk_storage____bss_0->sdk_HorVer)",
-      "changed": "lbl_801A6948",
-      "regs": "(sdk_storage____bss_0->sdk_regs)",
-      "setFbbRegs": "fn_8001AFB8",
-      "shdwRegs": "(sdk_storage____bss_0->sdk_shdwRegs)"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
-    "sdk": "mkdd",
-    "sdk_symbol": "setFbbRegs",
-    "size": 724,
-    "source": "libs/dolphin/vi/vi.c",
-    "symbol": "fn_8001AFB8",
-    "variant": "aggregate"
-  },
-  "fn_8001B28C": {
-    "absolutes": {},
-    "bindings": {
-      "...bss.0": "lbl_8015CF68",
-      "changed": "lbl_801A6948",
-      "regs": "(sdk_storage____bss_0->sdk_regs)",
-      "setVerticalRegs": "fn_8001B28C"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
-    "sdk": "mkdd",
-    "sdk_symbol": "setVerticalRegs",
-    "size": 416,
-    "source": "libs/dolphin/vi/vi.c",
-    "symbol": "fn_8001B28C",
-    "variant": "aggregate"
-  },
-  "fn_8001BE74": {
+  "getCurrentFieldEvenOdd": {
     "absolutes": {
       "__VIRegs": 3422560256
     },
     "bindings": {
       "CurrTiming": "lbl_801A6960",
-      "getCurrentFieldEvenOdd": "fn_8001BE74"
+      "getCurrentFieldEvenOdd": "getCurrentFieldEvenOdd"
     },
     "mw": "GC/1.2.5n",
+    "original_symbol": "fn_8001BE74",
     "pragmas": [],
     "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
     "sdk": "mkdd",
     "sdk_symbol": "getCurrentFieldEvenOdd",
     "size": 104,
     "source": "libs/dolphin/vi/vi.c",
-    "symbol": "fn_8001BE74",
+    "symbol": "getCurrentFieldEvenOdd",
     "variant": "aggregate"
   },
-  "fn_8001BEDC": {
-    "absolutes": {
-      "__VIRegs": 3422560256
-    },
+  "setFbbRegs": {
+    "absolutes": {},
     "bindings": {
-      "CurrTiming": "lbl_801A6960",
-      "HorVer": "lbl_8015D058",
-      "OSDisableInterrupts": "OSDisableInterrupts",
-      "OSRestoreInterrupts": "OSRestoreInterrupts",
-      "VIGetNextField": "fn_8001BEDC"
+      "...bss.0": "lbl_8015CF68",
+      "HorVer": "(sdk_storage____bss_0->sdk_HorVer)",
+      "changed": "lbl_801A6948",
+      "regs": "(sdk_storage____bss_0->sdk_regs)",
+      "setFbbRegs": "setFbbRegs",
+      "shdwRegs": "(sdk_storage____bss_0->sdk_shdwRegs)"
     },
     "mw": "GC/1.2.5n",
+    "original_symbol": "fn_8001AFB8",
     "pragmas": [],
-    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
-    "sdk": "tww",
-    "sdk_symbol": "VIGetNextField",
-    "size": 168,
-    "source": "src/dolphin/vi/vi.c",
-    "symbol": "fn_8001BEDC",
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "setFbbRegs",
+    "size": 724,
+    "source": "libs/dolphin/vi/vi.c",
+    "symbol": "setFbbRegs",
     "variant": "aggregate"
   },
-  "fn_8001BF84": {
-    "absolutes": {
-      "__VIRegs": 3422560256
-    },
+  "setVerticalRegs": {
+    "absolutes": {},
     "bindings": {
-      "CurrTiming": "lbl_801A6960",
-      "OSDisableInterrupts": "OSDisableInterrupts",
-      "OSRestoreInterrupts": "OSRestoreInterrupts",
-      "VIGetCurrentLine": "fn_8001BF84"
+      "...bss.0": "lbl_8015CF68",
+      "changed": "lbl_801A6948",
+      "regs": "(sdk_storage____bss_0->sdk_regs)",
+      "setVerticalRegs": "setVerticalRegs"
     },
     "mw": "GC/1.2.5n",
+    "original_symbol": "fn_8001B28C",
     "pragmas": [],
-    "revision": "11d6aa597a6b6218a38eff2726c841a31f851a57",
-    "sdk": "tww",
-    "sdk_symbol": "VIGetCurrentLine",
-    "size": 152,
-    "source": "src/dolphin/vi/vi.c",
-    "symbol": "fn_8001BF84",
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "setVerticalRegs",
+    "size": 416,
+    "source": "libs/dolphin/vi/vi.c",
+    "symbol": "setVerticalRegs",
     "variant": "aggregate"
   }
 }

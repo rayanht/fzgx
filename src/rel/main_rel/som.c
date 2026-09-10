@@ -3,7 +3,7 @@
 #include "rel/main_rel/som.h"
 
 extern u32 lbl_1_bss_3BBC;
-extern void fn_8008069C(char *, const char *, ...);
+extern void sprintf(char *, const char *, ...);
 extern void fn_1_465D0(char *, int);
 
 /* fzgx:begin fn_1_1383C */
@@ -91,7 +91,7 @@ void fn_1_13A28(Fn1_13A28 *arg0, s32 arg1) {
 void fn_1_14D5C(char *arg0, int arg1) {
     char buffer[32];
 
-    fn_8008069C(buffer, (const char *)lbl_1_data_5194, arg0);
+    sprintf(buffer, (const char *)lbl_1_data_5194, arg0);
     if (arg1 != 0) {
         fn_1_465D0(buffer, 2);
     } else {

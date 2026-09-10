@@ -379,7 +379,7 @@
       "EXISync": "EXISync",
       "Ecb": "Ecb_8015CCB0",
       "OSDisableInterrupts": "OSDisableInterrupts",
-      "OSGetConsoleType": "fn_8000A224",
+      "OSGetConsoleType": "OSGetConsoleType",
       "OSRestoreInterrupts": "OSRestoreInterrupts",
       "__OSGetDIConfig": "__OSGetDIConfig"
     },
@@ -523,6 +523,33 @@
     "symbol": "UnlockedHandler",
     "variant": "aggregate"
   },
+  "WriteUARTN": {
+    "absolutes": {},
+    "bindings": {
+      "Chan": "lbl_801A6840",
+      "Dev": "lbl_801A6844",
+      "EXIDeselect": "EXIDeselect",
+      "EXIImm": "EXIImm",
+      "EXILock": "EXILock",
+      "EXISelect": "EXISelect",
+      "EXISync": "EXISync",
+      "EXIUnlock": "EXIUnlock",
+      "Enabled": "lbl_801A6848",
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "WriteUARTN": "WriteUARTN"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_8001581C",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "WriteUARTN",
+    "size": 540,
+    "source": "libs/dolphin/exi/EXIUart.c",
+    "symbol": "WriteUARTN",
+    "variant": "aggregate"
+  },
   "__EXIProbe": {
     "absolutes": {
       "__EXIProbeStartTime": 2147496128,
@@ -568,32 +595,6 @@
     "size": 444,
     "source": "libs/dolphin/exi/EXIUart.c",
     "symbol": "__OSEnableBarnacle",
-    "variant": "aggregate"
-  },
-  "fn_8001581C": {
-    "absolutes": {},
-    "bindings": {
-      "Chan": "lbl_801A6840",
-      "Dev": "lbl_801A6844",
-      "EXIDeselect": "EXIDeselect",
-      "EXIImm": "EXIImm",
-      "EXILock": "EXILock",
-      "EXISelect": "EXISelect",
-      "EXISync": "EXISync",
-      "EXIUnlock": "EXIUnlock",
-      "Enabled": "lbl_801A6848",
-      "OSDisableInterrupts": "OSDisableInterrupts",
-      "OSRestoreInterrupts": "OSRestoreInterrupts",
-      "WriteUARTN": "fn_8001581C"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
-    "sdk": "mkdd",
-    "sdk_symbol": "WriteUARTN",
-    "size": 540,
-    "source": "libs/dolphin/exi/EXIUart.c",
-    "symbol": "fn_8001581C",
     "variant": "aggregate"
   }
 }

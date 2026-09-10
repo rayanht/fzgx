@@ -2,7 +2,7 @@
 #include "dol/globals.h"
 
 extern void EXISetExiCallback(s32 chan, void *callback);
-extern void fn_8000AF78(void *arg);
+extern void OSCancelAlarm(void *arg);
 
 typedef void (*CardExtCallback)(s32 chan, s32 result);
 
@@ -14,7 +14,7 @@ void __CARDExtHandler(s32 chan) {
     if ((s32)card->unk_0 != 0) {
         card->unk_0 = 0;
         EXISetExiCallback(chan, 0);
-        fn_8000AF78((u8 *)card + 0xe0);
+        OSCancelAlarm((u8 *)card + 0xe0);
 
         callback = (CardExtCallback)card->unk_CC;
         if (callback != 0) {

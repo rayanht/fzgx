@@ -1,6 +1,6 @@
 #include <dolphin/card/CARDPriv.h>
 
-void fn_8000AF78(OSAlarm *alarm);
+void OSCancelAlarm(OSAlarm *alarm);
 
 s32 Retry(s32 chan);
 
@@ -12,7 +12,7 @@ void __CARDExiHandler(s32 chan, OSContext *context) {
     u8 status;
     s32 result;
     card = &lbl_80177960[chan];
-    fn_8000AF78(&card->alarm);
+    OSCancelAlarm(&card->alarm);
     if (!card->attached) {
         return;
     }

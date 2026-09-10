@@ -9,7 +9,7 @@ struct fn_800474E4_lbl_8017B030 {
 };
 
 extern struct fn_800474E4_lbl_8017B030 lbl_8017B030[];
-extern u32 fn_800595FC(u32, ...);
+extern u32 SVM_CallErr(u32, ...);
 extern void strncpy(void *, void *, int);
 
 void fn_800474E4(u32 arg0) {
@@ -21,5 +21,5 @@ void fn_800474E4(u32 arg0) {
             p_lbl_8017B030->unk_4,
             (u32)&p_lbl_8017B030->unk_28[0]);
     }
-    fn_800595FC((u32)((u8 *)p_lbl_8017B030 + 40));
+    SVM_CallErr((u32)((u8 *)p_lbl_8017B030 + 40));
 }

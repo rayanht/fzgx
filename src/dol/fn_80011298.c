@@ -12,7 +12,7 @@ typedef void *(*Sig_fn_80010828_OSThreadStartFunction)(void *);
 extern u32 RunQueueHint_801A67FC;
 extern void * OSDisableInterrupts(void);
 extern u32 __OSGetEffectivePriority(struct Sig___OSGetEffectivePriority___OSGetEffectivePriority_Arg0 *);
-extern OSThread * fn_80010410(OSThread *, OSPriority);
+extern OSThread * SetEffectivePriority(OSThread *, OSPriority);
 extern u32 SelectThread(u32);
 extern BOOL OSRestoreInterrupts(void *);
 
@@ -33,7 +33,7 @@ loop_5:
         if ((s32) (*(s32 *)((u8 *)(var_r31) + 716)) <= 0) {
             temp_r3 = __OSGetEffectivePriority((struct Sig___OSGetEffectivePriority___OSGetEffectivePriority_Arg0 *)(var_r31));
             if ((s32) (*(s32 *)((u8 *)(var_r31) + 720)) != temp_r3) {
-                var_r31 = (struct Sig___OSGetEffectivePriority___OSGetEffectivePriority_Arg0 *)(fn_80010410((OSThread *)((OSThread *) var_r31), (s32)(temp_r3)));
+                var_r31 = (struct Sig___OSGetEffectivePriority___OSGetEffectivePriority_Arg0 *)(SetEffectivePriority((OSThread *)((OSThread *) var_r31), (s32)(temp_r3)));
                 if (var_r31 != NULL) {
                     goto loop_5; /* Preserves the retail branch. */
                 }

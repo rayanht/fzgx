@@ -10,7 +10,7 @@ typedef struct FileNode {
 } FileNode;
 
 extern u8 __files[320];
-extern s32 fn_8007F8D4(FileNode *);
+extern s32 fflush(FileNode *);
 
 s32 fn_8007B028(void) {
     s32 result;
@@ -22,7 +22,7 @@ s32 fn_8007B028(void) {
         if (((*(u16 *)((u8 *)file + 4) >> 6) & 7) != 0 &&
             ((*(u8 *)((u8 *)file + 4) >> 1) & 1) != 0 &&
             (((u32)*(u8 *)((u8 *)file + 8) >> 5) & 7) == 1) {
-            if (fn_8007F8D4(file) != 0) {
+            if (fflush(file) != 0) {
                 result = -1;
             }
         }

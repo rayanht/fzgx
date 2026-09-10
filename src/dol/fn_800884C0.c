@@ -2,7 +2,7 @@
 
 extern f64 lbl_801A78F8;
 extern f64 fn_80087C44(u32, f64, f64);
-extern u32 fn_800868BC(f64, f64 *);
+extern u32 __ieee754_rem_pio2(f64, f64 *);
 
 f64 fn_800884C0(f64 value) {
     f64 temp[2];
@@ -17,7 +17,7 @@ f64 fn_800884C0(f64 value) {
     if (bits >= 0x7ff00000) {
         return value - value;
     }
-    sign = fn_800868BC(value, temp);
+    sign = __ieee754_rem_pio2(value, temp);
     sign = (sign & 1) << 1;
     return fn_80087C44(1 - sign, temp[0], temp[1]);
 }

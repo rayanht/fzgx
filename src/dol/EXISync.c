@@ -3,7 +3,7 @@
 #include "sdk_addresses.h"
 #pragma scheduling off
 
-u32 fn_8000A224();
+u32 OSGetConsoleType();
 
 vu32 __EXIRegs[16] : FZGX_ADDR___EXIRegs;
 
@@ -40,7 +40,7 @@ BOOL EXISync(s32 chan) {
             enabled = OSDisableInterrupts();
             if (exi->state & 0x04) {
                 CompleteTransfer(chan);
-                if (__OSGetDIConfig() != 0xff || ((fn_8000A224() & 0xf0000000) == 0x20000000) ||
+                if (__OSGetDIConfig() != 0xff || ((OSGetConsoleType() & 0xf0000000) == 0x20000000) ||
                     exi->immLen != 4 ||
                     ((__EXIRegs[((chan) * 5) + (0)]) & 0x00000070) != (0 << 4) ||
                     ((__EXIRegs[((chan) * 5) + (4)]) != 0x01010000 &&

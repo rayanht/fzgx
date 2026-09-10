@@ -14,14 +14,14 @@ typedef struct {
 } State;
 
 extern u32 lbl_80186630[4];
-extern void fn_8004FC38(void);
+extern void ADXT_DestroyAll(void);
 extern void *memset(void *, int, u32);
 
 void fn_8004F6B0(void) {
     State *state = (State *)&lbl_80186630;
 
     if (--state->counter == 0) {
-        fn_8004FC38();
+        ADXT_DestroyAll();
         state->field_04 = -1;
         state->field_08 = 0;
         state->field_0c = 0;

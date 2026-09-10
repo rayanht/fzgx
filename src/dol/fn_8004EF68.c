@@ -1,7 +1,7 @@
 #include "types.h"
 
-extern u32 fn_8005BCB4(void);
+extern u32 AXRNA_Finish(void);
 
 void fn_8004EF68(void) {
-    fn_8005BCB4();
+    AXRNA_Finish();
 }

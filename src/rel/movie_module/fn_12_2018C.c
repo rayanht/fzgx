@@ -24,7 +24,7 @@ typedef struct MovieModule {
     MovieRequest *request;
 } MovieModule;
 
-extern void fn_8004768C(void *, void *, void *, void *);
+extern void ADXT_InsertHdrSfa(void *, void *, void *, void *);
 extern void fn_8004BA38(void *, int);
 extern void fn_12_20A7C(void);
 
@@ -53,7 +53,7 @@ s32 fn_12_2018C(MovieModule *module) {
     if (data->ready == 0) {
         return 0;
     }
-    fn_8004768C(object, data->arg1, data->arg2, data->arg3);
+    ADXT_InsertHdrSfa(object, data->arg1, data->arg2, data->arg3);
     fn_8004BA38(object, 0);
     state->active = 1;
     state->callback = fn_12_20A7C;

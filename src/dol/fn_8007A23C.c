@@ -1,6 +1,6 @@
 #include "types.h"
 
-extern u32 fn_8007A2E8(u32, u32);
+extern u32 deallocate_from_fixed_pools(u32, u32);
 extern u32 fn_8007A710(u32, u32);
 
 void fn_8007A23C(u32 arg0, u32 arg1) {
@@ -16,7 +16,7 @@ void fn_8007A23C(u32 arg0, u32 arg1) {
     v1 -= 8;
     }
     if (v1 <= 68) {
-    fn_8007A2E8(arg0, arg1);
+    deallocate_from_fixed_pools(arg0, arg1);
     } else {
     fn_8007A710(arg0, arg1);
     }

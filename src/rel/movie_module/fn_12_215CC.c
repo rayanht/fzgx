@@ -5,8 +5,8 @@ typedef struct MovieModule {
     void *field_1b74;
 } MovieModule;
 
-extern void fn_8004BFAC(void *);
+extern void ADXT_SetOutPan(void *);
 
 void fn_12_215CC(MovieModule *movie) {
-    fn_8004BFAC(*(void **)movie->field_1b74);
+    ADXT_SetOutPan(*(void **)movie->field_1b74);
 }

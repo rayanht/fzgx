@@ -1,6 +1,6 @@
 #include "types.h"
 
-extern void fn_8004BC0C(void *arg0, int arg1);
+extern void ADXT_Pause(void *arg0, int arg1);
 extern void fn_12_309B8(void *arg0, int arg1);
 
 typedef struct MovieModule {
@@ -21,7 +21,7 @@ int fn_12_20474(MovieModule *arg0) {
     movie = *(void **)movie_data;
     *(int *)((u8 *)movie_data + 0x2c) = 0;
     if (arg0->field_0050 != 1) {
-        fn_8004BC0C(movie, 0);
+        ADXT_Pause(movie, 0);
         fn_12_309B8(movie_module, 0);
     }
     return 0;

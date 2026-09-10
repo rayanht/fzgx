@@ -1443,14 +1443,14 @@ rel/movie_module/fn_12_11A8.c:
 rel/movie_module/fn_12_38DC8.c:
 	.text       start:0x00038DC8 end:0x00038E24 align:4
 
-rel/movie_module/fn_12_35180.c:
+rel/movie_module/mwsftag_GetAinfFromSj.c:
 	.text       start:0x00035180 end:0x0003530C align:4
 
-rel/movie_module/fn_12_36088.c:
+rel/movie_module/mwSfdDestroy.c:
 	.text       start:0x00036088 end:0x00036208 align:4
 
-rel/movie_module/fn_12_3753C.c:
+rel/movie_module/MWSFCRE_ResetSfdHn.c:
 	.text       start:0x0003753C end:0x0003763C align:4
 
-rel/movie_module/fn_12_73A0.c:
+rel/movie_module/MPVCDEC_IntraBlocks.c:
 	.text       start:0x000073A0 end:0x000077F4 align:4

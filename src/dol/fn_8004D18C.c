@@ -1,7 +1,7 @@
 #include "types.h"
 
 extern u32 fn_800474E4(u32);
-extern u32 fn_8004C698(u32);
+extern u32 ADXT_Stop(u32);
 extern u32 lbl_80091068[];
 extern void fn_80083DB0(void *, void *);
 
@@ -14,7 +14,7 @@ void fn_8004D18C(u32 arg0, u32 arg1) {
     t0 = fn_800474E4((u32)v0);
     v0 = t0;
     } else {
-    t1 = fn_8004C698(v0);
+    t1 = ADXT_Stop(v0);
     v0 = t1;
     v0 = *(u32 *)((u8 *)arg0 + 172);
     fn_80083DB0((void *)v0, (void *)arg1);

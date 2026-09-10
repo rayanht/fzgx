@@ -9,8 +9,8 @@ typedef struct {
 extern u32 OSDisableInterrupts(void);
 extern u32 OSRestoreInterrupts(u32);
 extern u32 __DVDThreadQueue;
-extern u32 fn_800110A8(u32);
-extern s32 fn_800198FC(u32, void *);
+extern u32 OSSleepThread(u32);
+extern s32 DVDCancelAsync(u32, void *);
 extern void fn_80019C24(void);
 
 s32 fn_80019B78(u32 arg0) {
@@ -20,7 +20,7 @@ s32 fn_80019B78(u32 arg0) {
     DVDCommandBlock *block;
 
     block = (DVDCommandBlock *)arg0;
-    if (fn_800198FC(arg0, (void *)fn_80019C24) == 0) {
+    if (DVDCancelAsync(arg0, (void *)fn_80019C24) == 0) {
         return -1;
     }
 
@@ -36,7 +36,7 @@ s32 fn_80019B78(u32 arg0) {
                 break;
             }
         }
-        fn_800110A8((u32)&__DVDThreadQueue);
+        OSSleepThread((u32)&__DVDThreadQueue);
     }
     OSRestoreInterrupts(interrupt_state);
     return 0;

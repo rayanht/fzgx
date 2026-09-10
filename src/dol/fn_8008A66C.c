@@ -4,7 +4,7 @@ extern u32 lbl_801A50B0[];
 extern void *memset(void *dest, int value, u32 size);
 extern void fn_8008D398(void *data, u32 size);
 extern void fn_80088764(void *value, s32 arg);
-extern void fn_8008877C(void *value);
+extern void TRKPostEvent(void *value);
 
 struct fn_8008A66C_Data {
     u32 size;
@@ -25,6 +25,6 @@ s32 fn_8008A66C(void) {
     data.flag = 0;
     fn_8008D398(&data, 0x40);
     fn_80088764(value, 1);
-    fn_8008877C(value);
+    TRKPostEvent(value);
     return 0;
 }

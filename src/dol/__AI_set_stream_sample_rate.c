@@ -19,7 +19,7 @@ u8 AIGetStreamVolRight();
 
 vu32 __AIRegs[8] : FZGX_ADDR___AIRegs;
 
-void fn_8001E600(void);
+void __AI_SRC_INIT(void);
 
 static inline u32 AIGetStreamPlayState() { return __AIRegs[0] & 1; }
 
@@ -44,7 +44,7 @@ void __AI_set_stream_sample_rate(u32 rate) {
     temp_r26 = __AIRegs[0] & 0x40;
     __AIRegs[0] &= ~0x40;
     oldInts = OSDisableInterrupts();
-    fn_8001E600();
+    __AI_SRC_INIT();
     __AIRegs[0] |= temp_r26;
     __AIRegs[0] = (__AIRegs[0] & ~0x20) | 0x20;
     __AIRegs[0] = (__AIRegs[0] & ~2) | (rate * 2);

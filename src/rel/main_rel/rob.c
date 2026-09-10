@@ -8,13 +8,13 @@ extern void fn_1_41850(void *arg0);
 extern u32 lbl_1_bss_6E98C;
 extern u16 fn_1_96B14(void *base, void *arg1, s32 index);
 extern s32 fn_80083BCC(void *arg0, void *arg1);
-extern void fn_8004C698(u32 arg0);
+extern void ADXT_Stop(u32 arg0);
 extern u32 lbl_801A6410;
 extern void fn_1_46B4(u32, u32, u8 *, u32);
 extern void fn_80008BEC(void *, u32, u32);
 
 extern const char *lbl_1_data_20D1C[];
-extern void fn_8008069C(char *buffer, u8 *format, ...);
+extern void sprintf(char *buffer, u8 *format, ...);
 extern s32 fn_1_12A32C(char *buffer);
 extern s16 fn_1_98104(void);
 
@@ -245,7 +245,7 @@ s32 fn_1_97174(Fn197174Owner *owner, void *arg1, void *arg2) {
 // Loads the active resource value when the initialization check has not completed.
 void fn_1_9724C(void) {
     if (fn_1_98104() == 0) {
-        fn_8004C698(lbl_1_bss_6EAD0.unk_0->unk_4);
+        ADXT_Stop(lbl_1_bss_6EAD0.unk_0->unk_4);
     }
 }
 /* fzgx:end fn_1_9724C */
@@ -260,7 +260,7 @@ typedef struct {
 s16 fn_1_97F1C(Fn197F1CObject *object, s16 index) {
     char buffer[0x80];
 
-    fn_8008069C(buffer, lbl_1_data_27D90, lbl_1_data_20D1C[index]);
+    sprintf(buffer, lbl_1_data_27D90, lbl_1_data_20D1C[index]);
     object->unk_4A4 = fn_1_12A32C(buffer);
     return (s16)object->unk_4A4;
 }

@@ -2,7 +2,7 @@
 
 extern u8 __files[320];
 extern u32 __begin_critical_region(u32);
-extern void fn_8007FA0C(void *);
+extern void fclose(void *);
 extern void fn_8007A150(void *);
 extern u32 __end_critical_region(u32);
 
@@ -24,7 +24,7 @@ void __close_all(void) {
     __begin_critical_region(2);
     while (file != 0) {
         if (file->mode != 0) {
-            fn_8007FA0C(file);
+            fclose(file);
         }
         {
             File *current;

@@ -1,6 +1,6 @@
 #include "types.h"
 
-extern void fn_800320F0(u8 *, u8 *, u8 *, u8 *, u8 *);
+extern void GXGetGPStatus(u8 *, u8 *, u8 *, u8 *, u8 *);
 
 void fn_800700B4(void) {
     u8 v3;
@@ -9,6 +9,6 @@ void fn_800700B4(void) {
     u8 v0;
 
     do {
-        fn_800320F0(&v3, &v3, &v2, &v1, &v0);
+        GXGetGPStatus(&v3, &v3, &v2, &v1, &v0);
     } while (v2 != 1);
 }

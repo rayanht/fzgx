@@ -320,7 +320,7 @@ void fn_1_F1950(void) {
 /* fzgx:end fn_1_F1950 */
 
 /* fzgx:begin fn_1_F1960 */
-extern void fn_800205A0(void *arg0, u32 arg1, u32 arg2, u32 arg3,
+extern void ARQPostRequest(void *arg0, u32 arg1, u32 arg2, u32 arg3,
                         void *arg4, void *arg5, u32 arg6,
                         void (*callback)(void));
 
@@ -336,7 +336,7 @@ void fn_1_F1960(void *arg0, void *arg1, u32 arg2) {
     while (ARGetDMAStatus() != 0) {
     }
     DCFlushRange(arg1, arg2);
-    fn_800205A0(temp, 1, 0, 1, arg1, arg0, arg2, fn_1_F1950);
+    ARQPostRequest(temp, 1, 0, 1, arg1, arg0, arg2, fn_1_F1950);
     flag = &lbl_1_bss_7ECFC.unk_0;
     while ((s32)*flag == 0) {
     }

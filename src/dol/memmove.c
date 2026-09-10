@@ -1,9 +1,9 @@
 
 #include "types.h"
 
-extern void fn_80080458(void *destination, const void *source, size_t count);
+extern void __copy_longs_unaligned(void *destination, const void *source, size_t count);
 
-extern void fn_800803AC(void *destination, const void *source, size_t count);
+extern void __copy_longs_rev_unaligned(void *destination, const void *source, size_t count);
 
 extern void fn_800805C0(void *destination, const void *source, size_t count);
 
@@ -16,9 +16,9 @@ void *memmove(void *destination, const void *source, size_t count) {
     if (count >= 32) {
         if (((unsigned int)destination ^ (unsigned int)source) & 3) {
             if (!reverse)
-                fn_80080458(destination, source, count);
+                __copy_longs_unaligned(destination, source, count);
             else
-                fn_800803AC(destination, source, count);
+                __copy_longs_rev_unaligned(destination, source, count);
         } else if (!reverse) {
             fn_800805C0(destination, source, count);
         } else {

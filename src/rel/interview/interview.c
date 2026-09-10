@@ -72,7 +72,7 @@ typedef struct InterviewState {
 extern InterviewState *lbl_1_bss_6EAD0;
 extern u32 lbl_801A6410;
 
-extern void fn_8004C698(u32 value);
+extern void ADXT_Stop(u32 value);
 extern void fn_80051E30(u32 value);
 extern void fn_1_A0AA4(void);
 extern void fn_17_416C(void);
@@ -88,8 +88,8 @@ extern void fn_1_410A0(void);
 extern void fn_17_602C(void);
 
 void fn_17_3270(void *arg0, void *arg1) {
-    fn_8004C698(lbl_1_bss_6EAD0->first);
-    fn_8004C698(lbl_1_bss_6EAD0->second);
+    ADXT_Stop(lbl_1_bss_6EAD0->first);
+    ADXT_Stop(lbl_1_bss_6EAD0->second);
     fn_80051E30(lbl_1_bss_6EAD0->second);
     fn_1_A0AA4();
     fn_17_416C();

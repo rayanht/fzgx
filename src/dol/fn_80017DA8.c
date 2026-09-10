@@ -5,7 +5,7 @@ extern void DVDReset(void);
 extern void cbForStateError(s32 state);
 extern void fn_80017EA8(void);
 extern void fn_80017E10(void);
-extern void fn_800169AC(void (*callback)(void));
+extern void DVDLowRequestError(void (*callback)(void));
 
 typedef struct ExecutingState {
     u8 _pad[0xc];
@@ -23,6 +23,6 @@ void fn_80017DA8(u32 state) {
     } else if (state & 1) {
         fn_80017EA8();
     } else {
-        fn_800169AC(fn_80017E10);
+        DVDLowRequestError(fn_80017E10);
     }
 }

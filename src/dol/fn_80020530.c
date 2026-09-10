@@ -11,7 +11,7 @@ extern u32 lbl_801A6A18;
 extern u32 lbl_801A6A1C;
 extern u32 lbl_801A6A20;
 extern u32 lbl_801A6A24;
-extern void fn_80020464(void);
+extern void __ARQInterruptServiceRoutine(void);
 
 void fn_80020530(void) {
     if ((s32)lbl_801A6A24 != 1) {
@@ -19,7 +19,7 @@ void fn_80020530(void) {
     lbl_801A6A08 = 0;
     lbl_801A6A00 = 0;
     lbl_801A6A20 = 4096;
-    fn_8001E7E4((u32)fn_80020464);
+    fn_8001E7E4((u32)__ARQInterruptServiceRoutine);
     lbl_801A6A10 = 0;
     lbl_801A6A14 = 0;
     lbl_801A6A18 = 0;

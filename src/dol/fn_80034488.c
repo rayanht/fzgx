@@ -7,7 +7,7 @@ extern u8 lbl_801A6C18;
 extern void OSClearContext(void *);
 extern void OSSetCurrentContext(void *);
 extern u32 lbl_801A6C1C;
-extern void fn_80011194(void *);
+extern void OSWakeupThread(void *);
 
 void fn_80034488(void *unused, void *context) {
     u16 current;
@@ -25,5 +25,5 @@ void fn_80034488(void *unused, void *context) {
         OSSetCurrentContext(context);
     }
 
-    fn_80011194(&lbl_801A6C1C);
+    OSWakeupThread(&lbl_801A6C1C);
 }

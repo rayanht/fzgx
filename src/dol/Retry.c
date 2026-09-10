@@ -1,6 +1,6 @@
 #include <dolphin/card/CARDPriv.h>
 
-void fn_8000AF78(OSAlarm *alarm);
+void OSCancelAlarm(OSAlarm *alarm);
 
 s32 Retry(s32 chan);
 
@@ -15,7 +15,7 @@ u32 __OSBusClock : FZGX_ADDR___OSBusClock;
 extern CARDControl lbl_80177960[2];
 
 static inline void SetupTimeoutAlarm(CARDControl *card) {
-    fn_8000AF78(&card->alarm);
+    OSCancelAlarm(&card->alarm);
     switch (card->cmd[0]) {
     case 0xF2:
         OSSetAlarm(&card->alarm, ((100) * (((u32)__OSBusClock / 4) / 1000)), TimeoutHandler);

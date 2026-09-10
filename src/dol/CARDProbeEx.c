@@ -4,7 +4,7 @@ BOOL OSDisableInterrupts(void);
 BOOL OSRestoreInterrupts(BOOL level);
 s32 EXIProbeEx(s32 chan);
 s32 EXIGetID(s32 chan, u32 dev, u32 *id);
-BOOL fn_8002D6B0(u32 id);
+BOOL IsCard(u32 id);
 
 #include "sdk_addresses.h"
 
@@ -49,7 +49,7 @@ s32 CARDProbeEx(s32 chan, s32 *memSize, s32 *sectorSize) {
         result = -2;
     } else if (!EXIGetID(chan, 0, &id)) {
         result = -1;
-    } else if (fn_8002D6B0(id)) {
+    } else if (IsCard(id)) {
         if (memSize) {
             *memSize = (s32)(id & 0xfc);
         }

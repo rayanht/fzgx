@@ -30,7 +30,7 @@ struct fn_800410A4_lbl_80178C18 {
 extern f32 lbl_801A71D8;
 extern f32 lbl_801A71F8;
 extern struct fn_800410A4_lbl_80178C18 lbl_80178C18;
-extern u32 fn_80038A88(void *, u32);
+extern u32 GXSetProjection(void *, u32);
 extern void (*lbl_801A6C74)(void);
 
 void fn_800410A4(void) {
@@ -59,6 +59,6 @@ void fn_800410A4(void) {
     p->unk_58 = p->unk_84;
     p->unk_5C = p->unk_88;
     p->unk_68 = lbl_801A71F8;
-    fn_80038A88(&p->unk_30, 0);
+    GXSetProjection(&p->unk_30, 0);
     lbl_801A6C74();
 }

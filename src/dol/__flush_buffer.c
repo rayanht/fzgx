@@ -60,11 +60,11 @@ typedef struct FILE {
     struct FILE *next_file;
 } FILE;
 
-extern unsigned long fn_80085494(int base, int max_width, int (*read_proc)(void *, int, int),
+extern unsigned long __strtoul(int base, int max_width, int (*read_proc)(void *, int, int),
                                  void *read_context, int *chars_scanned, int *negative,
                                  int *overflow);
 
-extern unsigned long long fn_80085088(int base, int max_width, int (*read_proc)(void *, int, int),
+extern unsigned long long __strtoull(int base, int max_width, int (*read_proc)(void *, int, int),
                                       void *read_context, int *chars_scanned, int *negative,
                                       int *overflow);
 

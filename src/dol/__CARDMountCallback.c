@@ -1,7 +1,7 @@
 #include <dolphin/card/CARDPriv.h>
 
 void DoUnmount(s32 chan, s32 result);
-s32 fn_8002D8F8(s32 chan);
+s32 DoMount(s32 chan);
 
 extern CARDControl lbl_80177960[2];
 
@@ -12,7 +12,7 @@ void __CARDMountCallback(s32 chan, s32 result) {
     switch (result) {
     case 0:
         if (++card->mountStep < (5 + 2)) {
-            result = fn_8002D8F8(chan);
+            result = DoMount(chan);
             if (0 <= result) {
                 return;
             }
@@ -26,7 +26,7 @@ void __CARDMountCallback(s32 chan, s32 result) {
             return;
         }
         card->unlockCallback = 0;
-        result = fn_8002D8F8(chan);
+        result = DoMount(chan);
         if (0 <= result) {
             return;
         }

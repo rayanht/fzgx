@@ -72,7 +72,7 @@ extern void *fn_1_D358C(u8 *arg0, void *arg1);
 extern void fn_1_465D0(char *value, u32 flag);
 extern void fn_800711A8(Obj_1_bss_38458_Target *target);
 extern void fn_80071718(u32 value);
-extern void fn_8008069C(char *buffer, u32 *format, ...);
+extern void sprintf(char *buffer, u32 *format, ...);
 extern u32 strlen(const char *str);
 extern int fn_80083BCC(const char *left, const char *right);
 
@@ -815,7 +815,7 @@ void fn_1_40BD4(void) {
 /* fzgx:end fn_1_40BD4 */
 
 /* fzgx:begin fn_1_40D44 */
-extern void fn_800205A0(u8 *arg0, u32 arg1, u32 arg2, u32 arg3, u32 arg4,
+extern void ARQPostRequest(u8 *arg0, u32 arg1, u32 arg2, u32 arg3, u32 arg4,
                         u32 arg5, u32 arg6, u32 arg7);
 
 void fn_1_40D44(void) {
@@ -832,7 +832,7 @@ void fn_1_40D44(void) {
         arg = state;
     }
 
-    fn_800205A0(lbl_1_bss_38218, 0, 0, 1, arg, result,
+    ARQPostRequest(lbl_1_bss_38218, 0, 0, 1, arg, result,
                 lbl_1_bss_26C34[0], 0);
 
     lbl_1_bss_3820C = lbl_1_bss_3820C + 1;
@@ -977,9 +977,9 @@ void fn_1_41104(u32 message_index) {
 void fn_1_41134(void *unused, char *value) {
     char buffer[128];
 
-    fn_8008069C(buffer, &lbl_1_data_6700, value);
+    sprintf(buffer, &lbl_1_data_6700, value);
     fn_1_465D0(buffer, 1);
-    fn_8008069C(buffer, &lbl_1_data_6708, value);
+    sprintf(buffer, &lbl_1_data_6708, value);
     fn_1_465D0(buffer, 1);
 }
 /* fzgx:end fn_1_41134 */

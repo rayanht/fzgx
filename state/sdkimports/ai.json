@@ -1,4 +1,40 @@
 {
+  "AIInit": {
+    "absolutes": {
+      "__AIRegs": 3422579712,
+      "__OSBusClock": 2147483896
+    },
+    "bindings": {
+      "AIInit": "AIInit",
+      "AISetDSPSampleRate": "AISetDSPSampleRate",
+      "OSRegisterVersion": "OSRegisterVersion",
+      "__AIDHandler": "__AIDHandler",
+      "__AID_Callback": "lbl_801A69A4",
+      "__AISHandler": "__AISHandler",
+      "__AIS_Callback": "lbl_801A69A0",
+      "__AIVersion": "lbl_801A64D0",
+      "__AI_init_flag": "lbl_801A69B0",
+      "__AI_set_stream_sample_rate": "__AI_set_stream_sample_rate",
+      "__CallbackStack": "lbl_801A69A8",
+      "__OSSetInterruptHandler": "__OSSetInterruptHandler",
+      "__OSUnmaskInterrupts": "__OSUnmaskInterrupts",
+      "bound_32KHz": "lbl_801A69B8",
+      "bound_48KHz": "lbl_801A69C0",
+      "buffer": "lbl_801A69D8",
+      "max_wait": "lbl_801A69D0",
+      "min_wait": "lbl_801A69C8"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_8001E314",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "AIInit",
+    "size": 364,
+    "source": "libs/dolphin/ai/ai.c",
+    "symbol": "AIInit",
+    "variant": "aggregate"
+  },
   "AIInitDMA": {
     "absolutes": {
       "__DSPRegs": 3422572544
@@ -32,7 +68,7 @@
       "AISetStreamVolRight": "AISetStreamVolRight",
       "OSDisableInterrupts": "OSDisableInterrupts",
       "OSRestoreInterrupts": "OSRestoreInterrupts",
-      "__AI_SRC_INIT": "fn_8001E600"
+      "__AI_SRC_INIT": "__AI_SRC_INIT"
     },
     "mw": "GC/1.2.5n",
     "pragmas": [],
@@ -58,7 +94,7 @@
       "AISetStreamVolRight": "AISetStreamVolRight",
       "OSDisableInterrupts": "OSDisableInterrupts",
       "OSRestoreInterrupts": "OSRestoreInterrupts",
-      "__AI_SRC_INIT": "fn_8001E600"
+      "__AI_SRC_INIT": "__AI_SRC_INIT"
     },
     "mw": "GC/1.2.5n",
     "pragmas": [],
@@ -121,6 +157,77 @@
     "symbol": "AIStopDMA",
     "variant": "aggregate"
   },
+  "__AIDHandler": {
+    "absolutes": {
+      "__DSPRegs": 3422572544
+    },
+    "bindings": {
+      "OSClearContext": "OSClearContext",
+      "OSSetCurrentContext": "OSSetCurrentContext",
+      "__AICallbackStackSwitch": "__AICallbackStackSwitch",
+      "__AIDHandler": "__AIDHandler",
+      "__AID_Active": "lbl_801A69B4",
+      "__AID_Callback": "lbl_801A69A4",
+      "__CallbackStack": "lbl_801A69A8"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_8001E4FC",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "__AIDHandler",
+    "size": 172,
+    "source": "libs/dolphin/ai/ai.c",
+    "symbol": "__AIDHandler",
+    "variant": "aggregate"
+  },
+  "__AISHandler": {
+    "absolutes": {
+      "__AIRegs": 3422579712
+    },
+    "bindings": {
+      "OSClearContext": "OSClearContext",
+      "OSSetCurrentContext": "OSSetCurrentContext",
+      "__AISHandler": "__AISHandler",
+      "__AIS_Callback": "lbl_801A69A0"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_8001E480",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "__AISHandler",
+    "size": 124,
+    "source": "libs/dolphin/ai/ai.c",
+    "symbol": "__AISHandler",
+    "variant": "aggregate"
+  },
+  "__AI_SRC_INIT": {
+    "absolutes": {
+      "__AIRegs": 3422579712
+    },
+    "bindings": {
+      "OSGetTime": "OSGetTime",
+      "__AI_SRC_INIT": "__AI_SRC_INIT",
+      "bound_32KHz": "lbl_801A69B8",
+      "bound_48KHz": "lbl_801A69C0",
+      "buffer": "lbl_801A69D8",
+      "max_wait": "lbl_801A69D0",
+      "min_wait": "lbl_801A69C8"
+    },
+    "mw": "GC/1.2.5n",
+    "original_symbol": "fn_8001E600",
+    "pragmas": [
+      "#pragma peephole off"
+    ],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "__AI_SRC_INIT",
+    "size": 484,
+    "source": "libs/dolphin/ai/ai.c",
+    "symbol": "__AI_SRC_INIT",
+    "variant": "aggregate"
+  },
   "__AI_set_stream_sample_rate": {
     "absolutes": {
       "__AIRegs": 3422579712
@@ -134,7 +241,7 @@
       "AISetStreamVolRight": "AISetStreamVolRight",
       "OSDisableInterrupts": "OSDisableInterrupts",
       "OSRestoreInterrupts": "OSRestoreInterrupts",
-      "__AI_SRC_INIT": "fn_8001E600",
+      "__AI_SRC_INIT": "__AI_SRC_INIT",
       "__AI_set_stream_sample_rate": "__AI_set_stream_sample_rate"
     },
     "mw": "GC/1.2.5n",
@@ -145,109 +252,6 @@
     "size": 212,
     "source": "libs/dolphin/ai/ai.c",
     "symbol": "__AI_set_stream_sample_rate",
-    "variant": "aggregate"
-  },
-  "fn_8001E314": {
-    "absolutes": {
-      "__AIRegs": 3422579712,
-      "__OSBusClock": 2147483896
-    },
-    "bindings": {
-      "AIInit": "fn_8001E314",
-      "AISetDSPSampleRate": "AISetDSPSampleRate",
-      "OSRegisterVersion": "OSRegisterVersion",
-      "__AIDHandler": "fn_8001E4FC",
-      "__AID_Callback": "lbl_801A69A4",
-      "__AISHandler": "fn_8001E480",
-      "__AIS_Callback": "lbl_801A69A0",
-      "__AIVersion": "lbl_801A64D0",
-      "__AI_init_flag": "lbl_801A69B0",
-      "__AI_set_stream_sample_rate": "__AI_set_stream_sample_rate",
-      "__CallbackStack": "lbl_801A69A8",
-      "__OSSetInterruptHandler": "__OSSetInterruptHandler",
-      "__OSUnmaskInterrupts": "__OSUnmaskInterrupts",
-      "bound_32KHz": "lbl_801A69B8",
-      "bound_48KHz": "lbl_801A69C0",
-      "buffer": "lbl_801A69D8",
-      "max_wait": "lbl_801A69D0",
-      "min_wait": "lbl_801A69C8"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
-    "sdk": "mkdd",
-    "sdk_symbol": "AIInit",
-    "size": 364,
-    "source": "libs/dolphin/ai/ai.c",
-    "symbol": "fn_8001E314",
-    "variant": "aggregate"
-  },
-  "fn_8001E480": {
-    "absolutes": {
-      "__AIRegs": 3422579712
-    },
-    "bindings": {
-      "OSClearContext": "OSClearContext",
-      "OSSetCurrentContext": "OSSetCurrentContext",
-      "__AISHandler": "fn_8001E480",
-      "__AIS_Callback": "lbl_801A69A0"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
-    "sdk": "mkdd",
-    "sdk_symbol": "__AISHandler",
-    "size": 124,
-    "source": "libs/dolphin/ai/ai.c",
-    "symbol": "fn_8001E480",
-    "variant": "aggregate"
-  },
-  "fn_8001E4FC": {
-    "absolutes": {
-      "__DSPRegs": 3422572544
-    },
-    "bindings": {
-      "OSClearContext": "OSClearContext",
-      "OSSetCurrentContext": "OSSetCurrentContext",
-      "__AICallbackStackSwitch": "__AICallbackStackSwitch",
-      "__AIDHandler": "fn_8001E4FC",
-      "__AID_Active": "lbl_801A69B4",
-      "__AID_Callback": "lbl_801A69A4",
-      "__CallbackStack": "lbl_801A69A8"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [],
-    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
-    "sdk": "mkdd",
-    "sdk_symbol": "__AIDHandler",
-    "size": 172,
-    "source": "libs/dolphin/ai/ai.c",
-    "symbol": "fn_8001E4FC",
-    "variant": "aggregate"
-  },
-  "fn_8001E600": {
-    "absolutes": {
-      "__AIRegs": 3422579712
-    },
-    "bindings": {
-      "OSGetTime": "OSGetTime",
-      "__AI_SRC_INIT": "fn_8001E600",
-      "bound_32KHz": "lbl_801A69B8",
-      "bound_48KHz": "lbl_801A69C0",
-      "buffer": "lbl_801A69D8",
-      "max_wait": "lbl_801A69D0",
-      "min_wait": "lbl_801A69C8"
-    },
-    "mw": "GC/1.2.5n",
-    "pragmas": [
-      "#pragma peephole off"
-    ],
-    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
-    "sdk": "mkdd",
-    "sdk_symbol": "__AI_SRC_INIT",
-    "size": 484,
-    "source": "libs/dolphin/ai/ai.c",
-    "symbol": "fn_8001E600",
     "variant": "aggregate"
   }
 }

@@ -7,7 +7,7 @@ extern void fn_1_4955C(f32 value1, f32 value2);
 extern f32 lbl_1_rodata_10C0[5];
 extern f32 fn_1_4B1D4(s32 mode, s32 value);
 extern u32 strlen(const char *str);
-extern void fn_8008069C(void *arg0, void *arg1, u32 arg2, ...);
+extern void sprintf(void *arg0, void *arg1, u32 arg2, ...);
 extern f32 lbl_1_rodata_26B8[16];
 extern void fn_1_4D10C(void *data, f32 scale, f32 value);
 extern void fn_1_4D2AC(void *data, f32 scale, f32 value);
@@ -520,7 +520,7 @@ void fn_1_4B83C(void *arg0, void *arg1, u32 arg2, const char *arg3) {
 
     length = strlen(arg3);
     converted = (s32)fn_1_4B1D4(3, arg2 + length);
-    fn_8008069C(arg0, arg1, length + converted);
+    sprintf(arg0, arg1, length + converted);
 }
 /* fzgx:end fn_1_4B83C */
 
@@ -990,8 +990,8 @@ extern void fn_80072AB0(u32, u32, u32), fn_80074918(u32, u32, u32);
 extern void fn_80072C24(u32, u32, u32, u32, u32), fn_80072CC4(u32, u32, u32, u32, u32);
 extern f32 fn_1_519AC(u32);
 extern void DCFlushRange(void *, u32);
-extern void fn_80035C50(void *, void *, u16, u16, u32, u32, u32, u8);
-extern void fn_80035EC4(void *, u32, u32, f32, f32, f32, u8, u8, u32);
+extern void GXInitTexObj(void *, void *, u16, u16, u32, u32, u32, u8);
+extern void GXInitTexObjLOD(void *, u32, u32, f32, f32, f32, u8, u8, u32);
 extern void fn_80073778(void *, u32);
 extern void fn_1_4EDAC(FontDrawPacket *, f32, f32);
 extern void fn_1_159588(u32);
@@ -1042,9 +1042,9 @@ int fn_1_4F734(FontDrawPacket *input) {
                                                  ((f32)local.width * fn_1_519AC(local.format))));
                 {
                     u32 width = local.width, height = local.height;
-                    fn_80035C50(state->texture, local.pixels, width, height, local.format, 0, 0, 0);
+                    GXInitTexObj(state->texture, local.pixels, width, height, local.format, 0, 0, 0);
                 }
-                fn_80035EC4(state->texture, 0, 0, 0.0f, 0.0f, 0.0f, 0, 0, 0);
+                GXInitTexObjLOD(state->texture, 0, 0, 0.0f, 0.0f, 0.0f, 0, 0, 0);
                 fn_80073778(state->texture, 0);
                 fn_1_4EDAC(&local, (f32)local.width, (f32)local.height);
                 result = 1;

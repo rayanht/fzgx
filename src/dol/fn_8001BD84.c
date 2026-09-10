@@ -8,7 +8,7 @@ struct fn_8001BD84_lbl_8015CF68 {
 extern struct fn_8001BD84_lbl_8015CF68 lbl_8015CF68;
 extern u32 OSDisableInterrupts(u32);
 extern u32 OSRestoreInterrupts(u32);
-extern u32 fn_8001AFB8(u32, u32, u32, u32, u32);
+extern u32 setFbbRegs(u32, u32, u32, u32, u32);
 extern u32 lbl_801A6970;
 
 void fn_8001BD84(u32 arg0) {
@@ -22,6 +22,6 @@ void fn_8001BD84(u32 arg0) {
     p_lbl_8015CF68->unk_120 = v0;
     v1 = (t0 + 0);
     lbl_801A6970 = 1;
-    fn_8001AFB8((u32)((u8 *)(u32)p_lbl_8015CF68 + 240), (u32)((u8 *)(u32)p_lbl_8015CF68 + 292), (u32)((u8 *)(u32)p_lbl_8015CF68 + 296), (u32)((u8 *)(u32)p_lbl_8015CF68 + 316), (u32)((u8 *)(u32)p_lbl_8015CF68 + 320));
+    setFbbRegs((u32)((u8 *)(u32)p_lbl_8015CF68 + 240), (u32)((u8 *)(u32)p_lbl_8015CF68 + 292), (u32)((u8 *)(u32)p_lbl_8015CF68 + 296), (u32)((u8 *)(u32)p_lbl_8015CF68 + 316), (u32)((u8 *)(u32)p_lbl_8015CF68 + 320));
     OSRestoreInterrupts(v1);
 }

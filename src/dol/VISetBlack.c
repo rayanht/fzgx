@@ -14,7 +14,7 @@ struct VISetBlack_lbl_8015CF68 {
 extern struct VISetBlack_lbl_8015CF68 lbl_8015CF68;
 extern u32 OSDisableInterrupts(u32);
 extern u32 OSRestoreInterrupts(u32);
-extern void fn_8001B28C(u16, u16, u8, u16, u16, u16, u16, u16, u32);
+extern void setVerticalRegs(u16, u16, u8, u16, u16, u16, u16, u16, u32);
 
 void VISetBlack(u32 arg0) {
     struct VISetBlack_lbl_8015CF68 *p_lbl_8015CF68;
@@ -26,7 +26,7 @@ void VISetBlack(u32 arg0) {
     t0 = OSDisableInterrupts(arg0);
     p_lbl_8015CF68->unk_130 = v0;
     v0 = (t0 + 0);
-    fn_8001B28C(p_lbl_8015CF68->unk_fa, p_lbl_8015CF68->unk_f6,
+    setVerticalRegs(p_lbl_8015CF68->unk_fa, p_lbl_8015CF68->unk_f6,
                 p_lbl_8015CF68->unk_144[0],
                 *(u16 *)(p_lbl_8015CF68->unk_144 + 2),
                 *(u16 *)(p_lbl_8015CF68->unk_144 + 4),

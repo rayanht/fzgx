@@ -36,7 +36,7 @@ extern void (*lbl_1_bss_7167C)(void);
 extern void fn_1_A9420(u8 value);
 extern void fn_1_A9464(u16 arg0, u16 arg1);
 extern u32 fn_1_451C(void);
-extern void fn_8008069C(void *buffer, char *format, ...);
+extern void sprintf(void *buffer, char *format, ...);
 extern void fn_1_A5AA0(void *buffer, void *destination);
 extern u32 lbl_1_bss_71670;
 
@@ -489,7 +489,7 @@ void fn_1_A96FC(void) {
     u8 buffer[0x48];
 
     lbl_1_bss_71670 = fn_1_451C();
-    fn_8008069C(buffer, (char *)lbl_1_data_35AB8,
+    sprintf(buffer, (char *)lbl_1_data_35AB8,
                 ((u32 *)lbl_1_data_35A70)[*(s16 *)&lbl_1_bss_960]);
     fn_1_A5AA0(buffer, &lbl_1_bss_71674);
 }

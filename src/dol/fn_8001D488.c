@@ -4,7 +4,7 @@ extern u32 __PADSpec;
 extern u32 lbl_801A64C4;
 extern void SPEC0_MakeStatus(void);
 extern void SPEC1_MakeStatus(void);
-extern void fn_8001D7D0(void);
+extern void SPEC2_MakeStatus(void);
 extern u32 lbl_801A64C0;
 
 void fn_8001D488(u32 arg0, u32 arg1) {
@@ -20,7 +20,7 @@ void fn_8001D488(u32 arg0, u32 arg1) {
     case 3:
     case 4:
     case 5:
-        lbl_801A64C4 = (u32)fn_8001D7D0;
+        lbl_801A64C4 = (u32)SPEC2_MakeStatus;
         break;
     default:
         break;

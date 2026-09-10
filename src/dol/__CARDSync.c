@@ -3,7 +3,7 @@
 BOOL OSDisableInterrupts(void);
 BOOL OSRestoreInterrupts(BOOL level);
 
-void fn_800110A8(OSThreadQueue *queue);
+void OSSleepThread(OSThreadQueue *queue);
 
 extern CARDControl lbl_80177960[2];
 
@@ -23,7 +23,7 @@ s32 __CARDSync(s32 channel) {
     card = &lbl_80177960[channel];
     enabled = OSDisableInterrupts();
     while ((result = CARDGetResultCode(channel)) == -1) {
-        fn_800110A8(&card->threadQueue);
+        OSSleepThread(&card->threadQueue);
     }
     OSRestoreInterrupts(enabled);
     return result;
