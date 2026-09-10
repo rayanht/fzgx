@@ -49866,6 +49866,17 @@
   },
   {
     "module": "sel",
+    "source": "rel/sel/sel/fn_10_83C0.c",
+    "symbols": [
+      "fn_10_83C0"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "tu": "rel/sel/sel.c"
+  },
+  {
+    "module": "sel",
     "source": "rel/sel/sel/fn_10_84DC.c",
     "symbols": [
       "fn_10_84DC"
