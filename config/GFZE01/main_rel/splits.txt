@@ -5630,3 +5630,21 @@ rel/main_rel/bitmap/fn_1_47F74.c:
 
 rel/main_rel/bg_cas/fn_1_FB798.c:
 	.text       start:0x000FB798 end:0x000FB870 align:4
+
+rel/main_rel/archive/fn_1_12F028.c:
+	.text       start:0x0012F028 end:0x0012F10C align:4
+
+rel/main_rel/bg_win/fn_1_15E764.c:
+	.text       start:0x0015E764 end:0x0015E7F4 align:4
+
+rel/main_rel/live_camera/fn_1_FA84.c:
+	.text       start:0x0000FA84 end:0x0000FB50 align:4
+
+rel/main_rel/font/fn_1_5621C.c:
+	.text       start:0x0005621C end:0x00056298 align:4
+
+rel/main_rel/font/fn_1_4B090.c:
+	.text       start:0x0004B090 end:0x0004B16C align:4
+
+rel/main_rel/camera/fn_1_6514.c:
+	.text       start:0x00006514 end:0x0000660C align:4

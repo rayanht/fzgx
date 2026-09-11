@@ -475,6 +475,46 @@ s16 fn_1_12EF24(s16 row, s16 column) {
 }
 /* fzgx:end fn_1_12EF24 */
 
+/* fzgx:begin fn_1_12F028 */
+typedef struct {
+    s16 values[6];
+} Entry;
+
+typedef struct {
+    Entry entries[11];
+} EntryTable;
+
+extern EntryTable lbl_1_rodata_8338;
+extern s32 fn_1_F89E4(u8 value);
+
+s16 fn_1_12F028(s16 value) {
+    EntryTable table;
+    s16 count;
+    s16 i;
+
+    table = lbl_1_rodata_8338;
+    count = 0;
+    if (value == 5) {
+        i = 0;
+        while (i < 6) {
+            if (fn_1_F89E4((u8)i) != 0) {
+                count++;
+            }
+            i++;
+        }
+    } else {
+        i = 0;
+        while (i < 6) {
+            if (table.entries[value].values[i] != -1) {
+                count++;
+            }
+            i++;
+        }
+    }
+    return count;
+}
+/* fzgx:end fn_1_12F028 */
+
 /* fzgx:begin fn_1_12F10C */
 void fn_1_12F10C(u32 value) {
     lbl_1_bss_8B5EC = value;

@@ -119,6 +119,79 @@ void fn_1_EE04(Fn1EE04Context *context) {
 }
 /* fzgx:end fn_1_EE04 */
 
+/* fzgx:begin fn_1_FA84 noprologue */
+#include "types.h"
+
+struct fn_1_FA84_lbl_1_bss_1148 {
+    u8 pad_0[0x67C];
+    u32 unk_67C;
+    u32 unk_680;
+    u32 unk_684;
+};
+struct fn_1_FA84_lbl_1_data_43B8 {
+    u8 pad_0[0x13C];
+    u32 unk_13C;
+    u32 unk_140;
+    u32 unk_144;
+};
+
+extern struct fn_1_FA84_lbl_1_bss_1148 lbl_1_bss_1148;
+extern struct fn_1_FA84_lbl_1_data_43B8 lbl_1_data_43B8;
+extern u32 fn_1_46B4(u32, u32, u32, u32);
+extern u32 lbl_801A6410;
+
+void fn_1_FA84(void) {
+    struct fn_1_FA84_lbl_1_data_43B8 *p_lbl_1_data_43B8;
+    struct fn_1_FA84_lbl_1_bss_1148 *p_lbl_1_bss_1148;
+    u32 v0;
+    u32 v1;
+    u32 v2;
+    u32 v3;
+    u32 v4;
+    u32 v5;
+    u32 v6;
+    s32 v7;
+    u32 v8;
+    u32 t0, t1, t2;
+    p_lbl_1_data_43B8 = (struct fn_1_FA84_lbl_1_data_43B8 *)&lbl_1_data_43B8;
+    p_lbl_1_bss_1148 = (struct fn_1_FA84_lbl_1_bss_1148 *)&lbl_1_bss_1148;
+    v1 = 0;
+    v3 = 0;
+    if ((s32)p_lbl_1_data_43B8->unk_13C > 0) {
+    v0 = (u32)&lbl_801A6410;
+    p_lbl_1_data_43B8->unk_13C = -1;
+    v0 = *(u32 *)((u8 *)v0 + 0);
+    v1 = (u32)((u8 *)(u32)p_lbl_1_data_43B8 + 104);
+    v2 = p_lbl_1_bss_1148->unk_67C;
+    v3 = 1472;
+    t0 = fn_1_46B4(v0, v2, (u32)v1, v3);
+    v0 = t0;
+    }
+    v4 = v0;
+    v5 = v1;
+    v6 = v2;
+    v7 = v3;
+    if ((s32)p_lbl_1_data_43B8->unk_140 > 0) {
+    v4 = (u32)&lbl_801A6410;
+    p_lbl_1_data_43B8->unk_140 = -1;
+    v4 = *(u32 *)((u8 *)v4 + 0);
+    v5 = (u32)((u8 *)(u32)p_lbl_1_data_43B8 + 104);
+    v6 = p_lbl_1_bss_1148->unk_680;
+    v7 = 1473;
+    t1 = fn_1_46B4(v4, v6, (u32)v5, v7);
+    v4 = t1;
+    }
+    v8 = v4;
+    if ((s32)p_lbl_1_data_43B8->unk_144 > 0) {
+    v8 = (u32)&lbl_801A6410;
+    p_lbl_1_data_43B8->unk_144 = -1;
+    v8 = *(u32 *)((u8 *)v8 + 0);
+    t2 = fn_1_46B4(v8, p_lbl_1_bss_1148->unk_684, (u32)((u8 *)(u32)p_lbl_1_data_43B8 + 104), 1474);
+    v8 = t2;
+    }
+}
+/* fzgx:end fn_1_FA84 */
+
 /* fzgx:begin fn_1_10138 */
 void fn_1_10138(void) {
     Obj_1_bss_17C4_At0 *obj;

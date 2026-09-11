@@ -407,3 +407,9 @@ rel/customize/emb_memcard/fn_3_F878.c:
 
 rel/customize/customize/fn_3_BD00.c:
 	.text       start:0x0000BD00 end:0x0000BD30 align:4
+
+rel/customize/toolkit/fn_3_1AB34.c:
+	.text       start:0x0001AB34 end:0x0001ABD8 align:4
+
+rel/customize/emblem/fn_3_146C0.c:
+	.text       start:0x000146C0 end:0x00014778 align:4

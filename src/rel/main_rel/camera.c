@@ -103,6 +103,50 @@ u32 camera_get_status(void) {
 }
 /* fzgx:end camera_get_status */
 
+/* fzgx:begin fn_1_6514 noprologue */
+#include "types.h"
+#include "rel/main_rel/globals.h"
+#include "rel/main_rel/camera.h"
+
+s32 fn_1_6514(s32 value) {
+    Obj_1_bss_F68_Target *camera = lbl_1_bss_F68;
+    s8 mode;
+
+    if (camera == 0) {
+        return -1;
+    }
+    if ((camera->unk_0 & ((u32)1 << 31)) != 0) {
+        return 0;
+    }
+
+    mode = (s8)camera->unk_48;
+    switch (mode) {
+    case 9:
+        return 2;
+    case 10:
+        return (value == 0) + 1;
+    case 6:
+        return (value == 3) + 1;
+    }
+
+    switch (game_camera_entries[value].unk_A8) {
+    case 0:
+        return 1;
+    case 1:
+    case 2:
+        return 3;
+    case 3:
+        return 4;
+    case 4:
+        return 5;
+    case 5:
+        return 6;
+    default:
+        return -1;
+    }
+}
+/* fzgx:end fn_1_6514 */
+
 /* fzgx:begin camera_get_flags */
 u32 camera_get_flags(void) {
     // Reports the active camera object's top-bit flag, or zero when no object is active.

@@ -4916,3 +4916,21 @@ dol/fn_80017838.c:
 
 dol/fn_8003E284.c:
 	.text       start:0x8003E284 end:0x8003E344 align:4
+
+dol/fn_8008A91C.c:
+	.text       start:0x8008A91C end:0x8008AA04 align:4
+
+dol/fn_8004EA94.c:
+	.text       start:0x8004EA94 end:0x8004EB00 align:4
+
+dol/fn_80057378.c:
+	.text       start:0x80057378 end:0x8005741C align:4
+
+dol/fn_80015EE8.c:
+	.text       start:0x80015EE8 end:0x80015F80 align:4
+
+dol/fn_800139E8.c:
+	.text       start:0x800139E8 end:0x80013A88 align:4
+
+dol/fn_80024D84.c:
+	.text       start:0x80024D84 end:0x80024DF0 align:4

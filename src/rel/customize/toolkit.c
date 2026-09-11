@@ -388,6 +388,35 @@ void fn_3_1A264(u32 arg0) {
 }
 /* fzgx:end fn_3_1A264 */
 
+/* fzgx:begin fn_3_1AB34 */
+extern u8 lbl_3_bss_A2438[28];
+extern void fn_3_146C0(void *, s16, s16, s16, u32 *);
+
+void fn_3_1AB34(void *obj, s16 start, s16 base, u32 *items) {
+    s32 x;
+    s16 width;
+    s32 y;
+    s32 half;
+    s16 i;
+    u16 size;
+    u32 item;
+
+    size = lbl_3_bss_A2438[0xc] * 2 + 1;
+    half = size >> 1;
+    i = -half;
+    x = base + i;
+    y = start - half;
+    width = size;
+
+    while (i <= half) {
+        item = *items;
+        fn_3_146C0(obj, y, x, width, &item);
+        x++;
+        i++;
+    }
+}
+/* fzgx:end fn_3_1AB34 */
+
 /* fzgx:begin fn_3_1ABD8 */
 extern void fn_3_1B4BC(void *, s16, s16, s16, s16, u32 *);
 

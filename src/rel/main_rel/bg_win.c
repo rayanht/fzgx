@@ -169,6 +169,23 @@ void fn_1_15E5E4(s32 index, void *arg) {
 }
 /* fzgx:end fn_1_15E5E4 */
 
+/* fzgx:begin fn_1_15E764 */
+extern void *fn_1_435C(void *);
+extern void fn_1_15E220(u8 *value);
+extern void fn_1_3F8C(void *, void *, u8 *, s32);
+
+// Initializes the entry's 13-byte block, then marks it ready for reuse.
+void fn_1_15E764(s32 index, void *arg) {
+    void *value = fn_1_435C(arg);
+
+    fn_1_3F8C(lbl_1_data_4C994, fn_1_15E220,
+              &lbl_1_bss_8FDA8.unk_A + index * 0x34, 13);
+    (&lbl_1_bss_8FDA8.unk_A)[index * 0x34] = 0xff;
+    fn_1_435C(value);
+    (&lbl_1_bss_8FDA8.unk_A)[index * 0x34] = 0xff;
+}
+/* fzgx:end fn_1_15E764 */
+
 /* fzgx:begin fn_1_15F618 */
 void *fn_1_15F618(s32 index) {
     return (u8 *)&lbl_1_bss_8FDA8 + index * 0x34;
