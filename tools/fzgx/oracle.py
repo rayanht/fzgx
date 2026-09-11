@@ -57,6 +57,7 @@ class CheckResult:
     extra_cflags: Optional[str] = None  # the extra flags of that build (e.g. -use_lmw_stmw on)
     instruction_rows: int = 0
     differing_rows: int = 0
+    value_flow: List[dict] = field(default_factory=list)
 
     def to_json(self) -> dict:
         return {k: v for k, v in self.__dict__.items() if not k.startswith("_")}
@@ -291,6 +292,12 @@ def _diff(project: Project, module: str, symbol: str, unit: str, max_diff_lines:
         lrows = left_syms.get(symbol, {}).get("instructions", [])
         rrows = right_syms.get(symbol, {}).get("instructions", [])
         res._rows = (lrows, rrows)
+        if len(lrows) == len(rrows) and all(
+                re.sub(r'\b[rf]\d+\b', 'REG', l.get('instruction', {}).get('formatted', '')) ==
+                re.sub(r'\b[rf]\d+\b', 'REG', r.get('instruction', {}).get('formatted', ''))
+                for l, r in zip(lrows, rrows)):
+            from . import regflow
+            res.value_flow = regflow.analyse_rows(lrows, rrows)['value_flow']
         if symbol not in right_syms:
             res.diff = [f"(symbol {symbol} not present in our object: define it, check the name)"]
         else:

@@ -489,6 +489,10 @@ def format_check(res: Dict[str, Any]) -> str:
     if res.get('instruction_rows') and not res['matched']:
         lines.append(f"{res['differing_rows']} of {res['instruction_rows']} aligned instruction rows still differ "
                      "after accepted relocation equivalences; the displayed % is objdiff's similarity score.")
+    for conflict in res.get('value_flow', [])[:4]:
+        lines.append(f"Value-flow mismatch at row {conflict['row']}: retail stores a value from "
+                     f"{conflict['target_inputs']}; this C stores a value from {conflict['ours_inputs']}. "
+                     "Changing register names alone cannot repair this.")
     if res["matched"] and res.get("pool_map"):
         lines.append("literal pool: private constants retargeted to the shared retail symbols (" + ", ".join(res["pool"]) + ")")
     if not res["matched"] and res.get("pool_rows"):

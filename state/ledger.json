@@ -1,5 +1,5 @@
 {
- "generated": 1789093719,
+ "generated": 1789095188,
  "functions": [
   {
    "symbol": "car_colchg:_prolog",
@@ -91390,20 +91390,20 @@
   {
    "symbol": "fn_1_FC60C",
    "module": "main_rel",
-   "unit": null,
+   "unit": "rel/main_rel/bg_cas/fn_1_FC60C.c",
    "addr": 1033740,
    "size": 340,
-   "status": "unmatched",
-   "attempts": 2,
+   "status": "matched",
+   "attempts": 3,
    "best_percent": 99.82353,
    "claimed_by": null,
    "claimed_at": null,
    "claim_ttl": null,
-   "matched_commit": null,
+   "matched_commit": "09080ca",
    "blocked_issue": null,
    "blocked_reason": null,
    "prev_status": null,
-   "link_state": null
+   "link_state": "verified"
   },
   {
    "symbol": "fn_1_FC760",
@@ -127192,20 +127192,20 @@
   {
    "symbol": "fn_10_260D4",
    "module": "sel",
-   "unit": null,
+   "unit": "rel/sel/name_entry/fn_10_260D4.c",
    "addr": 155860,
    "size": 272,
-   "status": "unmatched",
-   "attempts": 3,
+   "status": "matched",
+   "attempts": 4,
    "best_percent": 99.411766,
    "claimed_by": null,
    "claimed_at": null,
    "claim_ttl": null,
-   "matched_commit": null,
+   "matched_commit": "09080ca",
    "blocked_issue": null,
    "blocked_reason": null,
    "prev_status": null,
-   "link_state": null
+   "link_state": "verified"
   },
   {
    "symbol": "fn_10_261E4",
@@ -394506,6 +394506,44 @@
    "best_body_path": "/Users/rayan/fzgx/.fzgx/attempts/fn_10_FF54.1789093600.c",
    "stale_checks": 0,
    "best_in_attempt": 86.150375
+  },
+  {
+   "id": 13841,
+   "symbol": "fn_10_260D4",
+   "agent": "near95-repair",
+   "harness": "fzgx",
+   "model": "fixup",
+   "started": 1789095087,
+   "ended": 1789095087,
+   "checks": 0,
+   "final_percent": null,
+   "tokens_in": 0,
+   "tokens_out": 0,
+   "cost_usd": 0.0,
+   "outcome": "matched",
+   "notes": "swap `s16 index = lbl_1_data_2` / `SndTable table = lbl_10_`",
+   "best_body_path": null,
+   "stale_checks": 0,
+   "best_in_attempt": 0.0
+  },
+  {
+   "id": 13842,
+   "symbol": "fn_1_FC60C",
+   "agent": "near95-repair",
+   "harness": "fzgx",
+   "model": "fixup",
+   "started": 1789095088,
+   "ended": 1789095088,
+   "checks": 0,
+   "final_percent": null,
+   "tokens_in": 0,
+   "tokens_out": 0,
+   "cost_usd": 0.0,
+   "outcome": "matched",
+   "notes": "opt_common_subs off",
+   "best_body_path": null,
+   "stale_checks": 0,
+   "best_in_attempt": 0.0
   }
  ],
  "names": [

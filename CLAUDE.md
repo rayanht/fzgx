@@ -185,6 +185,11 @@ Rules that hold for everyone:
   intervening non-carry instructions in signed power-of-two division.
   Declaration normalization must parse lines without nested repetition over arbitrary C;
   the old regex stalled real drafts such as `fn_80005738` beyond repair time budgets.
+  Register-only instruction differences are not proof of equivalent value flow.
+  The oracle reports known non-stack store-value conflicts; fix those values before
+  spending allocation searches. `tools/solve_regalloc.py` is an explicit bounded
+  compiler-response experiment, not a production replacement: see
+  `docs/REGISTER_REPAIR.md` for measured runtime and its lower closure coverage.
   Read disassembly only from the active `build/GFZE01/config.json` split units. Orphaned
   named `.s` files can retain obsolete local names after promotion and shadow current auto
   units, yielding an object match that fails the link (`SelectThread_800105D0` was one).

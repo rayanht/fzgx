@@ -1,0 +1,32 @@
+[
+  {
+    "symbol": "fn_10_260D4",
+    "source": "src/rel/sel/name_entry.c",
+    "sha256": "570ddbab8dbadf2399a1daff9bb5e83949f9b130e83165d861fce1f88b8d3784",
+    "origin_batch": "deepseek-under1k-fast-512-20260911-021006",
+    "origin_attempt": 13193,
+    "origin_sha256": "ca78b4be285ad218df284dab0a6562a1105c77abb72021e9b43e4698ed0714ed",
+    "baseline_percent": 99.411766,
+    "mw": null,
+    "flags": null,
+    "repair": "swap `s16 index = lbl_1_data_2` / `SndTable table = lbl_10_`",
+    "bytes": 272,
+    "pipeline": "tools/diagnose_batch.py --repair; fzgx submit; fzgx verify",
+    "sha256_scope": "generated standalone candidate before TU integration"
+  },
+  {
+    "symbol": "fn_1_FC60C",
+    "source": "src/rel/main_rel/bg_cas.c",
+    "sha256": "54db03c79cfd30b2913803c27764cd6c2cb75762070f0bbd31fda5a6386f2c90",
+    "origin_batch": "deepseek-under1k-fast-512-20260911-021006",
+    "origin_attempt": 13381,
+    "origin_sha256": "e0468c8ae1fdc890a57c3c2a9bbf438f90ed63274f7866694739582a39d2be04",
+    "baseline_percent": 99.82353,
+    "mw": null,
+    "flags": null,
+    "repair": "opt_common_subs off",
+    "bytes": 340,
+    "pipeline": "tools/diagnose_batch.py --repair; fzgx submit; fzgx verify",
+    "sha256_scope": "generated standalone candidate before TU integration"
+  }
+]

@@ -185,9 +185,16 @@ def analyse(p: Project, symbol: str, path: str, res: Optional[oracle.CheckResult
     # the differing rows themselves (index, target, ours): every later question is a JSON read
     diffs = [(i, _fmt(a), _fmt(b)) for i, (a, b) in enumerate(zip(lrows, rrows))
              if (a.get("diff_kind") or "DIFF_NONE") != "DIFF_NONE" or (b.get("diff_kind") or "DIFF_NONE") != "DIFF_NONE"]
+    pure = _pure(counts, lrows, rrows)
+    flow = None
+    if pure == 'regalloc':
+        from . import regflow
+        flow = regflow.analyse_rows(lrows, rrows)
+        if flow['value_flow']:
+            pure = 'value-flow'
     return {"symbol": symbol, "ok": True, "percent": res.percent, "percent_adjusted": res.percent_adjusted,
             "pool_rows": res.pool_rows, "matched_pool": res.matched_pool, "rows": (len(lrows), len(rrows)),
-            "counts": counts, "pure": _pure(counts, lrows, rrows), "diffs": diffs}
+            "counts": counts, "pure": pure, "diffs": diffs, "register_flow": flow}
 
 
 def run(p: Project, min_percent: float = 80.0, module: Optional[str] = None, workers: int = 12,
