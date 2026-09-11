@@ -85,6 +85,40 @@ s32 fn_1_A5DC4(void) {
 }
 /* fzgx:end fn_1_A5DC4 */
 
+/* fzgx:begin fn_1_A5DEC noprologue */
+#include "types.h"
+#include "dolphin/os/OSTime.h"
+
+extern u16 lbl_1_bss_9F8;
+extern u32 lbl_1_data_341B8;
+extern u32 VIGetDTVStatus(void);
+extern void fn_1_3308(void);
+extern OSTick OSGetTick(void);
+extern u32 OSGetProgressiveMode(void);
+
+extern u32 __OSBusClock : 0x800000F8; /* fzgx-allow: A1 OS globals block */
+void fn_1_A5DEC(void) {
+    u32 temp_r28;
+    u32 temp_r29;
+
+    if (VIGetDTVStatus() != 0) {
+        fn_1_3308();
+        temp_r29 = OSGetTick();
+        do {
+            temp_r28 = (__OSBusClock >> 2) / 1000;
+        } while ((u32) ((OSGetTick() / temp_r28) - (temp_r29 / temp_r28)) < 0x1F4U);
+        fn_1_3308();
+        if ((((u16) (*(u16 *)((u8 *)(&lbl_1_bss_9F8) + 0)) >> 9U) & 1) || (((u16) (*(u16 *)((u8 *)(&lbl_1_bss_9F8) + 20)) >> 9U) & 1) || (((u16) (*(u16 *)((u8 *)(&lbl_1_bss_9F8) + 40)) >> 9U) & 1) || (((u16) (*(u16 *)((u8 *)(&lbl_1_bss_9F8) + 60)) >> 9U) & 1) || (OSGetProgressiveMode() != 0)) {
+            (*(s32 *)((u8 *)((*(u32 *)((u8 *)(&lbl_1_data_341B8) + 0))) + 0)) = 1;
+            return;
+        }
+        (*(s32 *)((u8 *)((*(u32 *)((u8 *)(&lbl_1_data_341B8) + 0))) + 0)) = 0;
+        return;
+    }
+    (*(s32 *)((u8 *)((*(u32 *)((u8 *)(&lbl_1_data_341B8) + 0))) + 0)) = 0;
+}
+/* fzgx:end fn_1_A5DEC */
+
 /* fzgx:begin fn_1_A5EFC */
 void fn_1_A5EFC(void) {
     lbl_1_bss_6F5F0 = 0;

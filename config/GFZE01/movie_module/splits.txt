@@ -1610,3 +1610,6 @@ rel/movie_module/fn_12_11188.c:
 
 rel/movie_module/fn_12_121BC.c:
 	.text       start:0x000121BC end:0x00012270 align:4
+
+rel/movie_module/fn_12_2F04.c:
+	.text       start:0x00002F04 end:0x00003054 align:4

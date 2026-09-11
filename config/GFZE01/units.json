@@ -35564,6 +35564,17 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/game/fn_1_402D4.c",
+    "symbols": [
+      "fn_1_402D4"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/game.c"
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/game/fn_1_40710.c",
     "symbols": [
       "fn_1_40710"
@@ -40085,6 +40096,17 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/relocation/fn_1_A5DEC.c",
+    "symbols": [
+      "fn_1_A5DEC"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/relocation.c"
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/relocation/fn_1_A5EFC.c",
     "symbols": [
       "fn_1_A5EFC"
@@ -43526,6 +43548,17 @@
     "source": "rel/main_rel/spline/fn_1_F7E88.c",
     "symbols": [
       "fn_1_F7E88"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/spline.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/spline/fn_1_F7EDC.c",
+    "symbols": [
+      "fn_1_F7EDC"
     ],
     "status": "matching",
     "mw_version": null,
@@ -47271,6 +47304,19 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
+  },
+  {
+    "module": "movie_module",
+    "source": "rel/movie_module/fn_12_2F04.c",
+    "symbols": [
+      "fn_12_2F04"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on"
+    ]
   },
   {
     "module": "movie_module",

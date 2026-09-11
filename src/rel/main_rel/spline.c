@@ -524,6 +524,17 @@ void fn_1_F7E88(void) {
 }
 /* fzgx:end fn_1_F7E88 */
 
+/* fzgx:begin fn_1_F7EDC */
+s32 fn_1_F7EDC(s16 value) {
+    u64 result;
+    u64 mask;
+
+    result = (u64)1 << value;
+    mask = *(u64 *)&lbl_1_bss_7F0C0 | *(u64 *)&lbl_1_bss_7F0C0.unk_18;
+    return (mask & result) != 0;
+}
+/* fzgx:end fn_1_F7EDC */
+
 /* fzgx:begin fn_1_F8030 */
 // Clears the spline state counters.
 void fn_1_F8030(void) {

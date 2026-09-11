@@ -5768,3 +5768,12 @@ rel/main_rel/enemy_ctrl/fn_1_C72D4.c:
 
 rel/main_rel/car/fn_1_95120.c:
 	.text       start:0x00095120 end:0x00095158 align:4
+
+rel/main_rel/spline/fn_1_F7EDC.c:
+	.text       start:0x000F7EDC end:0x000F7F48 align:4
+
+rel/main_rel/relocation/fn_1_A5DEC.c:
+	.text       start:0x000A5DEC end:0x000A5EFC align:4
+
+rel/main_rel/game/fn_1_402D4.c:
+	.text       start:0x000402D4 end:0x00040354 align:4
