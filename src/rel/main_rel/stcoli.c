@@ -1241,6 +1241,20 @@ u32 fn_1_2C688(u32 arg0, u32 arg1, u32 arg2) {
 }
 /* fzgx:end fn_1_2C688 */
 
+/* fzgx:begin fn_1_2C768 */
+extern s16 lbl_1_bss_3C2A[3];
+
+void fn_1_2C768(u32 *arg0) {
+    if (lbl_1_bss_3C2A[0] != 0x29 || (lbl_1_bss_3C30.unk_0 & 0x800)) {
+        return;
+    }
+    if (lbl_1_bss_3C30.unk_5 == 2 && *arg0 != lbl_1_bss_3C30.unk_1474) {
+        lbl_1_bss_3C30.unk_5 = 6;
+    }
+    *arg0 += 1;
+}
+/* fzgx:end fn_1_2C768 */
+
 /* fzgx:begin fn_1_2C7C4 */
 void fn_1_2C7C4(u8 *value, const u8 *target, int step) {
     if (value[0] != target[0]) {

@@ -735,6 +735,38 @@ void fn_1_8589C(u32 value) {
 }
 /* fzgx:end fn_1_8589C */
 
+/* fzgx:begin fn_1_858A8 */
+typedef struct {
+    u8 pad_0[0xA7];
+    u8 unk_A7;
+    u8 pad_A8[0x3A];
+    u8 unk_E2[0xA0];
+} Fn858A8Data;
+
+#pragma opt_common_subs off
+s32 fn_1_858A8(s16 *a, s16 *b) {
+    Fn858A8Data *obj;
+    Obj_1_bss_6D838_Target *entry_a;
+    Obj_1_bss_6D838_Target *entry_b;
+    s16 ia = *a;
+    s16 ib = *b;
+
+    entry_a = &lbl_1_bss_6D838[ia];
+    obj = (Fn858A8Data *)lbl_1_bss_6D864;
+    entry_b = &lbl_1_bss_6D838[ib];
+
+    if (((0) != (obj)) && obj->unk_A7 != 0) {
+        u16 index = obj->unk_A7 - 1;
+        u8 *data = obj->unk_E2;
+
+        return (s32)(data + entry_b->unk_4 * 0xA0)[index] -
+               (s32)(data + entry_a->unk_4 * 0xA0)[index];
+    }
+    return (s32)(s8)entry_a->unk_474 - (s32)(s8)entry_b->unk_474;
+}
+#pragma opt_common_subs reset
+/* fzgx:end fn_1_858A8 */
+
 /* fzgx:begin fn_1_85F70 */
 void fn_1_85F70(void) {
     fn_1_23500();

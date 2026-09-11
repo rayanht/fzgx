@@ -5084,3 +5084,9 @@ dol/fn_80039020.c:
 
 dol/DVDGetTransferredSize.c:
 	.text       start:0x800176FC end:0x80017768 align:4
+
+dol/__init_cpp.c:
+	.text       start:0x800118A8 end:0x800118FC align:4
+
+dol/fn_80007CDC.c:
+	.text       start:0x80007CDC end:0x80007D58 align:4

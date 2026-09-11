@@ -1081,6 +1081,29 @@ int fn_1_402D4(void) {
 }
 /* fzgx:end fn_1_402D4 */
 
+/* fzgx:begin fn_1_40354 */
+typedef struct {
+    u8 pad_0[8];
+    u16 unk_8;
+    u8 pad_A[0xa];
+} Entry_1_bss_9F8;
+
+int fn_1_40354(void) {
+    int i;
+
+    if (lbl_1_bss_3C30.unk_8 != 0) {
+        for (i = 0; i < lbl_1_bss_3C30.unk_8; i++) {
+            if ((((Entry_1_bss_9F8 *)&lbl_1_bss_9F8)[((u8 *)&lbl_1_bss_25E98)[i]].unk_8 >> 12) & 1) {
+                return 1;
+            }
+        }
+    } else if ((lbl_1_bss_9F8.unk_8 >> 12) & 1) {
+        return 1;
+    }
+    return 0;
+}
+/* fzgx:end fn_1_40354 */
+
 /* fzgx:begin fn_1_40710 */
 typedef struct {
     u8 state;

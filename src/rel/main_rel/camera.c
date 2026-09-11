@@ -854,6 +854,33 @@ s32 camera_get_values(f32 *value0, f32 *value1) {
 }
 /* fzgx:end camera_get_values */
 
+/* fzgx:begin fn_1_8708 noprologue */
+#include "types.h"
+#include "rel/main_rel/globals.h"
+#include "rel/main_rel/camera.h"
+
+extern const f32 lbl_1_rodata_194;
+
+s32 fn_1_8708(s32 mode, f32 *value0, f32 *value1) {
+    Obj_1_bss_F68_Target **pp;
+    Obj_1_bss_F68_Target *obj;
+
+    pp = &lbl_1_bss_F68;
+    if (*pp == 0) {
+        return -1;
+    }
+    obj = *pp;
+    if ((obj->unk_0 & 0x80000000) != 0) {
+        *value0 = lbl_1_rodata_194;
+        *value1 = lbl_1_rodata_194;
+        return 1;
+    }
+    *value0 = ((f32 (*)[2])((u8 *)obj + 0x58))[mode][0];
+    *value1 = ((f32 (*)[2])((u8 *)*pp + 0x58))[mode][1];
+    return 1;
+}
+/* fzgx:end fn_1_8708 */
+
 /* fzgx:begin live_camera_set_shake */
 // Marks the camera state active, accumulates a position delta, and tracks the highest value.
 void live_camera_set_shake(s32 value, const f32 *delta) {
