@@ -196,6 +196,39 @@ void fn_1_F43F0(u8 *bits, u32 *position, u32 mask, u32 count, u32 limit) {
 }
 /* fzgx:end fn_1_F43F0 */
 
+/* fzgx:begin fn_1_F444C */
+extern void fn_80008BA8(u32 *, f32 *, int, f32);
+
+void fn_1_F444C(u8 *out, u32 *pos, u32 limit, f32 value) {
+    u32 mask;
+    f32 input;
+    u32 v;
+    u32 bit;
+    u32 index;
+    u32 m;
+    u32 count;
+
+    input = value;
+    fn_80008BA8(&mask, &input, 4, value);
+    m = mask;
+    count = 32;
+    while (count != 0) {
+        v = *pos;
+        index = v >> 3;
+        if (index >= limit) {
+            return;
+        }
+        bit = v & 7;
+        if ((m & (1u << (count - 1))) != 0) {
+            out[index] |= 1u << bit;
+        }
+        v = *pos;
+        count--;
+        *pos = v + 1;
+    }
+}
+/* fzgx:end fn_1_F444C */
+
 /* fzgx:begin fn_1_F453C */
 struct fn_1_F453C_Arg0 {
     u8 unk_0[1];

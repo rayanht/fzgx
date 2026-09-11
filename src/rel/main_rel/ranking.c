@@ -967,6 +967,34 @@ void fn_1_15B428(void) {
 }
 /* fzgx:end fn_1_15B428 */
 
+/* fzgx:begin fn_1_15B42C */
+extern u32 lbl_1_rodata_DAF8[16];
+extern void fn_1_9A508(void);
+
+typedef struct {
+    u32 unk_0;
+    u32 unk_4;
+    u32 unk_8;
+} Fn_1_15B42C_Chunk;
+
+void fn_1_15B42C(void) {
+    Fn_1_15B42C_Chunk *src = (Fn_1_15B42C_Chunk *)lbl_1_rodata_DAF8;
+    Obj_1_data_2A7E0_At3C *obj = lbl_1_data_2A7E0.unk_3C;
+    Fn_1_15B42C_Chunk *dst = (Fn_1_15B42C_Chunk *)&obj->unk_4;
+
+    dst[0] = src[0];
+    dst[1] = src[1];
+    dst[2] = src[2];
+    dst[3] = src[3];
+    dst[4] = src[4];
+    obj->unk_5D = 0;
+    obj->unk_5E = 0;
+    obj->unk_5C = 0;
+    fn_1_9A508();
+    obj->unk_0 = -1;
+}
+/* fzgx:end fn_1_15B42C */
+
 /* fzgx:begin fn_1_15B4F8 */
 // fn_1_15B4F8: empty in retail (single blr).
 void fn_1_15B4F8(void) {

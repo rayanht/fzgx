@@ -5675,3 +5675,24 @@ rel/main_rel/font/fn_1_519FC.c:
 
 rel/main_rel/bitmap/fn_1_48004.c:
 	.text       start:0x00048004 end:0x0004811C align:4
+
+rel/main_rel/replay/fn_1_F444C.c:
+	.text       start:0x000F444C end:0x000F453C align:4
+
+rel/main_rel/ranking/fn_1_15B42C.c:
+	.text       start:0x0015B42C end:0x0015B4F8 align:4
+
+rel/main_rel/car/fn_1_86854.c:
+	.text       start:0x00086854 end:0x000868C0 align:4
+
+rel/main_rel/sel_static_disp/fn_1_14F38C.c:
+	.text       start:0x0014F38C end:0x0014F46C align:4
+
+rel/main_rel/sel_static_disp/fn_1_14F270.c:
+	.text       start:0x0014F270 end:0x0014F344 align:4
+
+rel/main_rel/load/fn_1_479F0.c:
+	.text       start:0x000479F0 end:0x00047A60 align:4
+
+rel/main_rel/sound/fn_1_A5344.c:
+	.text       start:0x000A5344 end:0x000A5470 align:4

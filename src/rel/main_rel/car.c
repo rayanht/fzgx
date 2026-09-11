@@ -1056,6 +1056,37 @@ s16 fn_1_8683C(int index) {
 }
 /* fzgx:end fn_1_8683C */
 
+/* fzgx:begin fn_1_86854 noprologue */
+#include "types.h"
+
+typedef struct {
+    u8 pad_0[0x328];
+    u8 id;
+    u8 pad_329[0x117];
+} Entry;
+
+extern Entry *lbl_1_bss_6D83C;
+extern s8 lbl_1_bss_6D84A;
+
+Entry *fn_1_86854(int id) {
+    Entry *base = lbl_1_bss_6D83C;
+    s8 count = lbl_1_bss_6D84A;
+    s8 i;
+
+    for (i = 0; i < count; i++) {
+        Entry *entry = &base[i];
+
+        if (entry == 0) {
+            break;
+        }
+        if ((s8)id == (s8)entry->id) {
+            return &base[i];
+        }
+    }
+    return 0;
+}
+/* fzgx:end fn_1_86854 */
+
 /* fzgx:begin fn_1_868C0 */
 void *fn_1_868C0(s8 index) {
     if (index < (s8)lbl_1_bss_6D84A) {

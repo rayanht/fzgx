@@ -610,6 +610,41 @@ void fn_1_A5330(u8 value, s16 index) {
 }
 /* fzgx:end fn_1_A5330 */
 
+/* fzgx:begin fn_1_A5344 noprologue */
+#include "types.h"
+
+extern u8 lbl_1_bss_6EA98[];
+extern void fn_80067898(u32 value);
+
+#pragma opt_dead_assignments off
+void fn_1_A5344(u8 value, s16 index) {
+    u8 *table;
+    s32 i;
+
+    table = lbl_1_bss_6EA98 + 0x984;
+    if (table[index] > value) {
+        for (i = 0; i < (s32)(table[index] - value); i++) {
+            if ((value - i) % 10 == 0 &&
+                lbl_1_bss_6EA98[0x740] == 0 &&
+                *(u32 *)(lbl_1_bss_6EA98 + 0x744) <= 0x2d) {
+                fn_80067898(0xa9010300);
+            }
+        }
+    } else if (table[index] < value) {
+        for (i = 0; i < (s32)(value - table[index]); i++) {
+            if ((value - i) % 10 == 0 &&
+                lbl_1_bss_6EA98[0x740] == 0 &&
+                *(u32 *)(lbl_1_bss_6EA98 + 0x744) <= 0x2d) {
+                fn_80067898(0xa9010300);
+            }
+        }
+    }
+
+    table[index] = value;
+}
+#pragma opt_dead_assignments reset
+/* fzgx:end fn_1_A5344 */
+
 /* fzgx:begin fn_1_A5470 */
 // Starts the requested sound and suppresses playback when the channel limit is reached.
 void fn_1_A5470(s32 value) {

@@ -513,6 +513,24 @@ void fn_1_479B0(void) {
 }
 /* fzgx:end fn_1_479B0 */
 
+/* fzgx:begin fn_1_479F0 */
+extern void fn_1_48004(s32 value, s32 arg);
+
+void fn_1_479F0(s16 index) {
+    s32 *entry;
+    s32 i;
+
+    entry = (s32 *)&lbl_1_data_67F0.unk_0 + index * 20;
+    for (i = 0; i < 10; i++, entry += 2) {
+        if (entry[0] != -1) {
+            fn_1_48004(entry[0], entry[1]);
+        } else {
+            return;
+        }
+    }
+}
+/* fzgx:end fn_1_479F0 */
+
 /* fzgx:begin fn_1_47A60 */
 // Process the ten load entries associated with the selected index.
 void fn_1_47A60(s16 index) {

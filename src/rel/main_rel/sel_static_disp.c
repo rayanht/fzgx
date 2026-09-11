@@ -2306,6 +2306,42 @@ s16 fn_1_14F19C(s16 wanted, s16 arg, u32 mask) {
 }
 /* fzgx:end fn_1_14F19C */
 
+/* fzgx:begin fn_1_14F270 noprologue */
+#include "types.h"
+#include "rel/main_rel/globals.h"
+
+extern f32 lbl_1_rodata_99D8[75];
+extern s16 fn_1_14F090(void *arg, s16 index);
+extern s16 fn_1_14F01C(void *arg);
+
+typedef struct {
+    u32 values[75];
+} MaskTable;
+
+s16 fn_1_14F270(s16 wanted, void *arg, u32 mask) {
+    MaskTable table;
+    const MaskTable *source;
+    s16 i;
+    s16 count;
+    s16 index;
+
+    source = (const MaskTable *)(void *)lbl_1_rodata_99D8;
+    i = 0;
+    count = 0;
+    for (; i < fn_1_14F01C(arg); i++) {
+        index = fn_1_14F090(arg, i);
+        table = *source;
+        if (mask & table.values[index]) {
+            if (count == wanted) {
+                return index;
+            }
+            count++;
+        }
+    }
+    return -1;
+}
+/* fzgx:end fn_1_14F270 */
+
 /* fzgx:begin fn_1_14F344 */
 typedef struct {
     u8 unk0[2];
@@ -2324,6 +2360,54 @@ s16 fn_1_14F344(s16 index) {
     return table.entries[index].value;
 }
 /* fzgx:end fn_1_14F344 */
+
+/* fzgx:begin fn_1_14F38C */
+typedef struct {
+    u8 unk0[2];
+    s16 unk2;
+    u8 unk4[6];
+    u32 flags;
+    s16 value;
+} StaticDisp;
+
+extern s16 fn_1_14F090(s16, s16);
+extern s16 fn_1_14F01C(s16);
+
+static inline s16 find_index(s16 value, s16 table) {
+    s16 index;
+
+    for (index = 0; index < fn_1_14F01C(table); index++) {
+        if (value == fn_1_14F090(table, index)) {
+            return index;
+        }
+    }
+    return -1;
+}
+
+void fn_1_14F38C(StaticDisp *disp, u8 *table) {
+    s16 j;
+    s16 value;
+    u8 *p;
+    u8 *cur;
+    s16 i;
+
+    if (disp->unk2 > 0x28) {
+        p = table;
+        cur = (u8 *)disp;
+        for (i = 0; i < 3u; i++) {
+            *(s16 *)(cur + 0x10) = p[0x81a4];
+            value = *(s16 *)(cur + 0x10);
+            j = find_index(value, i);
+            if (j == -1) {
+                *(s16 *)(cur + 0x10) = fn_1_14F090(i, 0);
+            }
+            p += 8;
+            cur += 2;
+        }
+        disp->flags |= 0x04000000;
+    }
+}
+/* fzgx:end fn_1_14F38C */
 
 /* fzgx:begin fn_1_14FC80 */
 void fn_1_14FC80(s16 arg0, u32 arg1) {

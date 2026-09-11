@@ -89,3 +89,6 @@ rel/interview/interview/fn_17_6848.c:
 
 rel/interview/interview/fn_17_416C.c:
 	.text       start:0x0000416C end:0x00004214 align:4
+
+rel/interview/interview/fn_17_86C4.c:
+	.text       start:0x000086C4 end:0x000087C0 align:4

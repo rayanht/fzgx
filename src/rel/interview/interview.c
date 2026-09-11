@@ -795,6 +795,41 @@ void fn_17_74C0(Interview *interview) {
 }
 /* fzgx:end fn_17_74C0 */
 
+/* fzgx:begin fn_17_86C4 */
+extern f32 lbl_17_rodata_0[];
+extern u32 lbl_1_rodata_26F8[];
+
+extern int fn_1_FA638(void);
+extern void fn_1_50190(void*, f32, f32, f32, f32, f32, f32);
+
+typedef struct {
+    u32 word04;
+    f32 float08;
+    f32 float0c;
+    f32 float10;
+    u32 word14[7];
+    f32 float30;
+    u32 word34;
+    u32 word38[9];
+} InterviewParams;
+
+void fn_17_86C4(f32 a, f32 b, f32 c, f32 d) {
+    f32* rodata = lbl_17_rodata_0;
+    InterviewParams params;
+
+    if (fn_1_FA638()) {
+        params = *(InterviewParams*)lbl_1_rodata_26F8;
+        params.word04 = 0x00008c08;
+        params.float08 = a;
+        params.float0c = b;
+        params.float10 = rodata[108];
+        params.word34 = 10;
+        params.float30 = rodata[6];
+        fn_1_50190(&params, c, d, rodata[8], rodata[8], rodata[108], rodata[108]);
+    }
+}
+/* fzgx:end fn_17_86C4 */
+
 /* fzgx:begin fn_17_87C0 */
 extern f32 lbl_17_rodata_0[];
 extern u32 lbl_1_rodata_26F8[];

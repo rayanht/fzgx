@@ -4943,3 +4943,12 @@ dol/fn_8008EB8C.c:
 
 dol/GXSetMisc.c:
 	.text       start:0x80033D8C end:0x80033E20 align:4
+
+dol/fn_8006F900.c:
+	.text       start:0x8006F900 end:0x8006F9A4 align:4
+
+dol/fn_8004E7D4.c:
+	.text       start:0x8004E7D4 end:0x8004E8A0 align:4
+
+dol/fn_8007AA7C.c:
+	.text       start:0x8007AA7C end:0x8007AB58 align:4
