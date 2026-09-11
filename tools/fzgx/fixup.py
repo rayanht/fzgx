@@ -159,15 +159,27 @@ class Engine:
         body = Path(row['source']).read_text()
         name = self.project.resolve(row['symbol']).name
         families = []
+        operators = {}
         check = self.check(row)
         if check.ok:
             families.append(evidence.candidates(self.project, row['symbol'], body, check))
             targeted = [[c for c in families[0] if c[0].startswith(('bind recovered shared-pool', 'retain recovered shared-pool', 'lifetime reload'))],
                         source.address_expressions(body, name), source.pointer_lifetimes(body, name)]
+            operand_types = {'and':('&',('u32','s32')), 'or':('|',('u32','s32')),
+                             'xor':('^',('u32','s32')), 'mullw':('*',('u32','s32')),
+                             'fadd':('+',('f64',)), 'fadds':('+',('f32',)),
+                             'fmul':('*',('f64',)), 'fmuls':('*',('f32',))}
+            for order in check.operand_order:
+                kind = operand_types.get(order['target'].split()[0].rstrip('.'))
+                if kind:
+                    types = operators.setdefault(kind[0],[])
+                    types.extend(ty for ty in kind[1] if ty not in types)
+            if operators:
+                targeted.append(source.operand_lifetimes(body,name,operators))
             policies = []
             for family in targeted:
                 for label, text in family:
-                    if 'every site' in label or 'shared-pool' in label:
+                    if 'every site' in label or 'shared-pool' in label or label.startswith('lifetime operands'):
                         policies.extend((label+' with '+policy,combined) for policy,combined in evidence.optimizer_pragmas(text,name))
             targeted.append(policies)
             for i in range(max(map(len, targeted), default=0)):
@@ -223,6 +235,8 @@ class Engine:
             if helper == name:
                 continue
             variants = source.commutations(body,helper) + source.probes(body,helper,64)
+            if operators:
+                variants = source.operand_lifetimes(body,helper,operators) + variants
             variants += [(family+': '+label,text) for family,label,text in source.all_rewrites(body,helper)]
             families.insert(0, [('inline '+helper+': '+label,text) for label,text in variants])
         # Round-robin preserves access to each family within the shared budget.

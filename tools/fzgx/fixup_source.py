@@ -1419,6 +1419,54 @@ def address_expressions(body, name):
     return out
 
 
+def operand_lifetimes(body, name, operators):
+    """Give pure operands separate parameter/return webs before inlining."""
+    operations = []
+    commutations(body,name,operations)
+    span = _function_body_span(body,name)
+    if not span:
+        return []
+    insertion = body.rfind('\n',0,span[0])+1
+    helper = name+'_operand'
+    while re.search(r'\b'+helper+r'\b',body):
+        helper += '_'
+    groups = {}
+    for op in operations:
+        if op['op'] in operators:
+            groups.setdefault((op['op'],body[op['start']:op['end']]),[]).append(op)
+    work = list(groups.values())
+    # Shared subexpressions can keep the old ordering alive even when their
+    # surrounding operands differ. Rewrite disjoint uses of the operator too.
+    for operator in operators:
+        sites = []
+        for op in sorted((o for o in operations if o['op']==operator),key=lambda o:(o['start'],-o['end'])):
+            if not sites or op['start'] >= sites[-1]['end']:
+                sites.append(op)
+        if len({body[s['start']:s['end']] for s in sites})>1:
+            work.insert(0,sites)
+    out = []
+    for sites in work:
+        op = sites[0]
+        for ty in operators[op['op']]:
+            for reverse in (True,False):
+                names = ['left','right'] if not reverse else ['right','left']
+                for assign in (False,True):
+                    expression = ('left '+op['op']+'= right; return left;' if assign else 'return left '+op['op']+' right;')
+                    definition = f'static inline {ty} {helper}({ty} {names[0]}, {ty} {names[1]}) {{ {expression} }}\n'
+                    for positions in ([sites] if len(sites)==1 else [sites]+[[site] for site in sites]):
+                        text = body
+                        for site in sorted(positions,key=lambda s:s['start'],reverse=True):
+                            left,right = (body[a:b] for a,b in (site['left'],site['right']))
+                            values = [left,right] if not reverse else [right,left]
+                            replacement = helper+'('+', '.join('('+v+')' for v in values)+')'
+                            text = text[:site['start']]+replacement+text[site['end']:]
+                        text = text[:insertion]+definition+text[insertion:]
+                        where = 'every site' if len(positions)>1 else str(positions[0]['start'])
+                        label = f'lifetime operands {op["op"]} at {where} {ty} '+('right-first' if reverse else 'left-first')+(' assigned' if assign else '')
+                        out.append((label,text))
+    return out
+
+
 def pointer_lifetimes(body, name):
     """Materialize typed pointer reads at their existing evaluation point.
 

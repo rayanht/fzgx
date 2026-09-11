@@ -205,18 +205,34 @@ def optimizer_pragmas(body: str, name: str) -> List[Tuple[str, str]]:
     These passes can change otherwise correct register allocation and scheduling.
     Keep the state local to the function so a later TU merge does not inherit it.
     """
-    span = _function_span(body, name)
+    from .sdkimport import masked
+    code = masked(body)
+    span = _function_span(code, name)
     if span is None:
         return []
     start = body.rfind('\n', 0, span[0]) + 1
     out = []
     for option in ('peephole', 'opt_propagation', 'opt_common_subs', 'opt_lifetimes', 'opt_dead_assignments',
                    'opt_strength_reduction', 'opt_loop_invariants', 'opt_pointer_analysis'):
-        if re.search(rf'^\s*#pragma\s+{option}\s+off\b', body[:span[1]], re.M):
-            continue
-        text = (body[:start] + f'#pragma {option} off\n' + body[start:span[1]] +
-                f'\n#pragma {option} reset\n' + body[span[1]:])
-        out.append((f'{option} off', text))
+        stack = []
+        for pragma in re.finditer(rf'(?m)^[ \t]*#pragma\s+{option}\s+(on|off|reset)\b',code[:span[0]]):
+            if pragma[1] == 'reset':
+                if stack:
+                    stack.pop()
+            else:
+                stack.append(pragma)
+        # Source repairs can make an earlier optimizer workaround obsolete.
+        # Preserve nested pragma state while allowing either setting again.
+        if stack:
+            pragma = stack[-1]
+            value = 'on' if pragma[1] == 'off' else 'off'
+            a,b = pragma.span(1)
+            text = body[:a]+value+body[b:]
+        else:
+            value = 'off'
+            text = (body[:start] + f'#pragma {option} off\n' + body[start:span[1]] +
+                    f'\n#pragma {option} reset\n' + body[span[1]:])
+        out.append((f'{option} {value}', text))
     return out
 
 
