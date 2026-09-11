@@ -556,6 +556,7 @@ def _disk_index(p, identity, build):
     import hashlib
     import json
     import pickle
+    import io
     import os
     from .project import STATE_DIR
     from .oracle import build_lock
@@ -563,10 +564,20 @@ def _disk_index(p, identity, build):
     directory = STATE_DIR / 'signatures'
     directory.mkdir(parents=True, exist_ok=True)
     path = directory / (key + '.pickle')
+    class IndexUnpickler(pickle.Unpickler):
+        def find_class(self, module, name):
+            # CLI entry points import fzgx; repository imports use tools.fzgx.
+            # The shared cache must resolve classes in the reader's namespace.
+            for prefix in ('tools.fzgx.', 'fzgx.'):
+                if module.startswith(prefix):
+                    module = __package__ + '.' + module[len(prefix):]
+                    break
+            return super().find_class(module, name)
+
     # One producer per source revision/TU prevents a 512-worker cache stampede.
     with build_lock('signatures/' + key + '.lock'):
         try:
-            state = pickle.loads(path.read_bytes())
+            state = IndexUnpickler(io.BytesIO(path.read_bytes())).load()
         except (FileNotFoundError, EOFError, pickle.UnpicklingError, AttributeError):
             result = build()
             state = {k: v for k, v in vars(result).items() if k not in ('p', '_flows')}
