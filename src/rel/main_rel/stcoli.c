@@ -1306,6 +1306,52 @@ void fn_1_2C7C4(u8 *value, const u8 *target, int step) {
 }
 /* fzgx:end fn_1_2C7C4 */
 
+/* fzgx:begin fn_1_2C908 noprologue */
+#include "types.h"
+
+struct fn_1_2C908_lbl_1_bss_3C00 {
+    u8 pad_0[0x30];
+    u32 unk_30;
+    u8 pad_34[0x14B4];
+    u16 unk_14E8;
+    u8 pad_14EA[0x2];
+    u16 unk_14EC;
+    u8 pad_14EE[0x6];
+    u8 unk_14F4;
+    u8 pad_14F5[0x3];
+    u32 unk_14F8;
+    u16 unk_14FC;
+};
+
+extern int fn_1_4C10(void);
+extern struct fn_1_2C908_lbl_1_bss_3C00 lbl_1_bss_3C00;
+extern u32 fn_1_4060(void);
+extern void fn_1_EB080(int);
+
+#pragma opt_lifetimes off
+u32 fn_1_2C908(void) {
+    struct fn_1_2C908_lbl_1_bss_3C00 *p_lbl_1_bss_3C00;
+    u32 v0;
+    u32 v1;
+    p_lbl_1_bss_3C00 = (struct fn_1_2C908_lbl_1_bss_3C00 *)&lbl_1_bss_3C00;
+    v0 = fn_1_4C10();
+    if ((s32)v0 == 0) {
+    v0 = p_lbl_1_bss_3C00->unk_30;
+    v1 = (v0 | 4096);
+    p_lbl_1_bss_3C00->unk_14E8 = 42;
+    p_lbl_1_bss_3C00->unk_30 = v1;
+    p_lbl_1_bss_3C00->unk_14EC = 0;
+    p_lbl_1_bss_3C00->unk_14F4 = (p_lbl_1_bss_3C00->unk_14F4 | 1);
+    p_lbl_1_bss_3C00->unk_14F8 = 0;
+    p_lbl_1_bss_3C00->unk_14FC = 0;
+    fn_1_EB080(4);
+    v0 = fn_1_4060();
+    }
+    return v0;
+}
+#pragma opt_lifetimes reset
+/* fzgx:end fn_1_2C908 */
+
 /* fzgx:begin fn_1_3FCD4 */
 void fn_1_3FCD4(u32 mask) {
     if (mask == 0) {

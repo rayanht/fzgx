@@ -5021,3 +5021,12 @@ dol/fn_80079FA8.c:
 
 dol/fn_80059C0C.c:
 	.text       start:0x80059C0C end:0x80059CA4 align:4
+
+dol/fn_8005A0C0.c:
+	.text       start:0x8005A0C0 end:0x8005A1B4 align:4
+
+dol/fn_80073D60.c:
+	.text       start:0x80073D60 end:0x80073E8C align:4
+
+dol/fn_800658B4.c:
+	.text       start:0x800658B4 end:0x80065A7C align:4

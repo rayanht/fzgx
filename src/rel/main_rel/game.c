@@ -98,6 +98,90 @@ extern void fn_1_411D4(u32 index, char *message);
 extern u32 fn_800075AC(u32, u32, u32);
 extern u32 GXGetTexBufferSize(u32, u32, u32, u32, u32);
 
+/* fzgx:begin fn_1_33890 */
+extern u32 lbl_1_bss_25B84;
+extern u16 lbl_1_bss_25B98;
+
+typedef struct {
+    u8 pad_0[0x5];
+    u8 unk_5;
+    u8 pad_6[0x4];
+    u8 unk_A;
+    u8 pad_B[0x1];
+    u8 unk_C;
+    u8 unk_D;
+} Fn33890Arg;
+
+int fn_1_33890(Fn33890Arg* arg0) {
+    u8 count;
+    u8 limit;
+    u32 flags;
+
+    if ((s32)lbl_1_bss_25BA0.unk_0 != 0) {
+        return 0;
+    }
+
+    if (((flags = lbl_1_bss_3C30.unk_0) & 0x800) != 0) {
+        return 0;
+    }
+
+    switch (arg0->unk_5) {
+    case 4:
+        if (arg0->unk_D == 0 || arg0->unk_A != 1) {
+            /* Shared fallback is the irreducible default path. */
+            goto fallback;
+        }
+        return 1;
+
+    case 2:
+        if (arg0->unk_C == 0) {
+            /* Shared fallback is the irreducible default path. */
+            goto fallback;
+        }
+        return 1;
+
+    case 0:
+    case 1:
+    case 6:
+        count = arg0->unk_C;
+        if (count == 0) {
+            /* Shared fallback is the irreducible default path. */
+            goto fallback;
+        }
+        limit = arg0->unk_D;
+        if (limit <= count) {
+            if ((s32)lbl_1_bss_25B84 != 0) {
+                lbl_1_bss_3C30.unk_0 |= 0x10000;
+            }
+            return 1;
+        }
+        if (lbl_1_bss_3C30.unk_5 == 0 && (limit - count) <= 1) {
+            lbl_1_bss_25B98++;
+            return 1;
+        }
+        break;
+
+    default:
+        break;
+    }
+
+fallback:
+    if (lbl_1_bss_3C30.unk_8 != 0) {
+        if (lbl_1_bss_3C30.unk_D == 0) {
+            return -1;
+        }
+    } else if (lbl_1_bss_3C30.pad_A[0] == 0) {
+        return -1;
+    }
+
+    if ((flags & 0x04000000) == 0 && lbl_1_bss_3C30.unk_1474 > 0x57030) {
+        lbl_1_bss_3C30.unk_0 |= 0x80000;
+        return -1;
+    }
+    return 0;
+}
+/* fzgx:end fn_1_33890 */
+
 /* fzgx:begin fn_1_35124 */
 void fn_1_35124(void) {
     OSGetTick();

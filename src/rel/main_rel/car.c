@@ -4414,6 +4414,77 @@ void fn_1_933D8(CarObject *arg0, EventObject *arg1, u32 arg2) {
 }
 /* fzgx:end fn_1_933D8 */
 
+/* fzgx:begin fn_1_934CC noprologue */
+#include "types.h"
+
+typedef struct {
+    u8 pad0[0x24];
+    void *field_24;
+} EventData;
+
+typedef struct {
+    u8 pad0[0x1c];
+    void *field_1c;
+} CarObject;
+
+typedef struct {
+    u8 pad0[0x8];
+    EventData *field_8;
+    void *field_c;
+} EventObject;
+
+typedef struct {
+    u8 pad0[0x12];
+    u16 field_12;
+    u8 pad14[0x12];
+    u8 field_26;
+    void *field_28;
+    u8 pad2c[0x8];
+    void *field_34;
+    u8 pad38[0x14];
+    u8 field_4c;
+} EventNode;
+
+extern s32 fn_1_41488(void *arg0, u32 arg1);
+extern void fn_1_95158(CarObject *arg0);
+extern void *fn_1_41418(void *arg0, u32 arg1);
+extern s32 fn_1_97174(EventNode *arg0, s32 arg1, void *arg2);
+extern void fn_1_93734(CarObject *arg0, void *arg1);
+extern void fn_1_4270C(void *arg0, s32 arg1, u32 arg2);
+
+void fn_1_934CC(CarObject *arg0, EventObject *arg1, u32 arg2) {
+    s32 value;
+    EventNode *node;
+    s32 result;
+    void *target;
+
+    result = fn_1_41488(arg1->field_8->field_24, arg2);
+    if (result + 0x10000u == 0xffff) {
+        result = 0;
+    }
+    if (arg1 == (EventObject *)((u8 *)arg0 + 0x148)) {
+        node = (EventNode *)arg0->field_1c;
+        fn_1_95158(arg0);
+        if (node != 0) {
+            value = (s32)fn_1_97174(node, 0, fn_1_41418(arg1->field_8->field_24, result & 0xffff));
+            if (value < 0) {
+                value = 0;
+            }
+            node->field_12 = 0;
+            if ((s32)node->field_26 > 0) {
+                target = node->field_28;
+            } else {
+                target = (void *)((u8 *)node->field_34 + -(s32)node->field_4c * 0xc);
+            }
+            *(u16 *)((u8 *)target + 0xa) = (u16)value;
+        }
+        fn_1_93734(arg0, fn_1_41418(arg1->field_c, result & 0xffff));
+    }
+    fn_1_4270C(arg1->field_8, 0, result & 0xffff);
+    *(u16 *)arg1 = (u16)result;
+}
+/* fzgx:end fn_1_934CC */
+
 /* fzgx:begin fn_1_935E4 */
 typedef struct Fn935E4Res {
     u8 pad0[0x24];

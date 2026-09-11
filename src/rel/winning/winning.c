@@ -1,5 +1,35 @@
 #include "types.h"
 
+/* fzgx:begin _epilog */
+extern f32 lbl_15_rodata_0[25];
+extern u32 lbl_15_bss_C;
+extern u32 lbl_15_bss_10;
+extern u32 lbl_1_bss_6EAB4;
+extern u8 lbl_15_data_A4[176];
+extern u32 lbl_801A6410;
+
+extern void fn_8006CE1C(f32);
+extern void fn_1_435C(u32);
+extern void fn_1_41A8(void);
+extern void fn_1_47A60(u32);
+extern void fn_1_48140(u32);
+extern void fn_1_46B4(u32, u32, u8 *, u32);
+
+void _epilog(void) {
+    fn_8006CE1C(lbl_15_rodata_0[0]);
+    lbl_1_bss_6EAB4 &= (u32)-0x29;
+    fn_1_435C(lbl_15_bss_C);
+    fn_1_41A8();
+    fn_1_435C(lbl_15_bss_10);
+    fn_1_41A8();
+    fn_1_47A60(0xe);
+    fn_1_48140(0x8c);
+    fn_1_48140(0xbb);
+    fn_1_46B4(lbl_801A6410, lbl_15_bss_C, lbl_15_data_A4, 0x192);
+    fn_1_46B4(lbl_801A6410, lbl_15_bss_10, lbl_15_data_A4, 0x193);
+}
+/* fzgx:end _epilog */
+
 /* fzgx:begin fn_15_1F4 */
 extern s32 lbl_15_bss_14;
 extern s32 lbl_15_bss_1C;

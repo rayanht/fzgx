@@ -502,6 +502,56 @@ u32 fn_1_F1588(void) {
 }
 /* fzgx:end fn_1_F1588 */
 
+/* fzgx:begin fn_1_F1650 noprologue */
+#include "types.h"
+
+extern const f32 lbl_1_rodata_6BBC;
+extern const f32 lbl_1_rodata_6BD0;
+extern const f64 lbl_1_rodata_6C88;
+extern const f64 lbl_1_rodata_6D48;
+extern const f32 lbl_1_rodata_6D50;
+extern f64 fn_80088598(f64, f64);
+
+#pragma opt_common_subs off
+f32 fn_1_F1650(const u32 *value) {
+    s32 i;
+    u32 bits = value[0];
+    s32 sign = (s32)((bits >> 20) & 1);
+    u32 exponent = (bits >> 15) & 0x1f;
+    f32 place;
+    f32 fraction;
+
+    if ((bits >> 15) & 0x10) {
+        exponent = ~(exponent - 16);
+        exponent = exponent * -1;
+    } else {
+        exponent = exponent - 15;
+    }
+
+    {
+    f32 fraction = lbl_1_rodata_6BD0;
+    f32 place = lbl_1_rodata_6BBC;
+    u32 mantissa = bits & 0x7fff;
+
+    for (i = 0; i < 15; i++) {
+        if (mantissa & (1 << (14 - i))) {
+            fraction += place;
+        }
+        place *= lbl_1_rodata_6BBC;
+    }
+
+    fraction *= fn_80088598(lbl_1_rodata_6D48, (f64)(s32)exponent);
+
+    if (sign != 0) {
+        fraction *= lbl_1_rodata_6D50;
+    }
+
+    return fraction;
+    }
+}
+#pragma opt_common_subs reset
+/* fzgx:end fn_1_F1650 */
+
 /* fzgx:begin fn_1_F17B4 */
 #include "types.h"
 
