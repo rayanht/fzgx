@@ -96,6 +96,156 @@ void fn_1_69BBC(EffectCar *car) {
 }
 /* fzgx:end fn_1_69BBC */
 
+/* fzgx:begin fn_1_6F404 */
+struct fn_1_6F404_lbl_1_rodata_2D70 {
+    f32 unk_0;
+    u8 pad_4[0x14];
+    f32 unk_18;
+    f32 unk_1C;
+    u8 pad_20[0x8];
+    f32 unk_28;
+    u8 pad_2C[0x48];
+    f32 unk_74;
+    u8 pad_78[0x4];
+    f32 unk_7C;
+    u8 pad_80[0x10];
+    f32 unk_90;
+    u8 pad_94[0x18];
+    f32 unk_AC;
+    f32 unk_B0;
+    u8 pad_B4[0x24];
+    f32 unk_D8;
+    u8 pad_DC[0x1BC];
+    f32 unk_298;
+    u8 pad_29C[0x74];
+    u32 unk_310;
+    u32 unk_314;
+    u32 unk_318;
+    f32 unk_31C;
+    f32 unk_320;
+};
+extern struct fn_1_6F404_lbl_1_rodata_2D70 lbl_1_rodata_2D70;
+extern void * fn_1_868C0(s8);
+extern u32 fn_1_71024(void *, void *, u32, f32);
+extern u32 fn_1_7099C(void *, void *, u32, f32, f32);
+extern u32 fn_1_71768(void *, void *);
+extern u32 fn_1_702A0(void *, void *, u32, u32);
+extern u32 fn_80008C20(void *, void *, void *);
+extern u32 lbl_8006E1C0(void *, void *);
+extern u32 fn_1_584AC(void);
+extern u32 fn_1_6FD58(void *, void *, f32, f32);
+extern u32 fn_1_A33F0(u32, f32);
+extern u32 fn_1_6D7BC(void *, void *, f32);
+extern u32 fn_1_A5594(u32, void *);
+extern u32 fn_1_714A8(void *, void *, u32, f32);
+
+
+void fn_1_6F404(void *arg0, void *arg1) {
+    struct fn_1_6F404_lbl_1_rodata_2D70 *tbl;
+    u32 sp[3];
+    u16 rnd;
+    f32 var_f31;
+    f32 temp_f0;
+    f32 temp_f1;
+    void *temp_r30;
+    void *temp_r27;
+    void *unused;
+
+    unused = arg1;
+    tbl = &lbl_1_rodata_2D70;
+    temp_r30 = (void *)(*(void **)((u8 *)(arg0) + 56));
+    temp_r27 = (void *)(fn_1_868C0((s8)((s8) (*(s16 *)((u8 *)(arg0) + 24)))));
+    if ((s16) (*(s16 *)((u8 *)(arg0) + 92)) == 0xA) {
+        fn_1_71024((void *)(arg0), (void *)(arg1), (u32)(0x37U), (f32)(tbl->unk_31C));
+        fn_1_7099C((void *)(arg0), (void *)(arg1), (u32)(0U), (f32)(tbl->unk_18), (f32)(tbl->unk_320));
+    }
+    if ((s16) (*(s16 *)((u8 *)(arg0) + 92)) == 5) {
+        fn_1_71024((void *)(arg0), (void *)(arg1), (u32)(0x37U), (f32)(tbl->unk_31C));
+        fn_1_7099C((void *)(arg0), (void *)(arg1), (u32)(0U), (f32)(tbl->unk_18), (f32)(tbl->unk_320));
+        fn_1_71768((void *)(arg0), (void *)(arg1));
+        fn_1_702A0((void *)(arg0), (void *)(arg1), (u32)(0x14U), (u32)(1U));
+    }
+    if (!((*(s32 *)((u8 *)(temp_r27) + 912)) & 0x01000000) && !((*(s32 *)((u8 *)(temp_r30) + 1420)) & 0x10)) {
+        if (!((*(s32 *)((u8 *)(temp_r30) + 0)) & 2)) {
+            temp_f1 = *(f32 *)((u8 *)(temp_r30) + 380);
+            if (temp_f1 > tbl->unk_320) {
+                temp_f0 = temp_f1 / tbl->unk_298;
+                sp[0] = tbl->unk_310;
+                sp[1] = tbl->unk_314;
+                sp[2] = tbl->unk_318;
+                var_f31 = tbl->unk_0;
+                if (temp_f0 < var_f31) {
+                    var_f31 = tbl->unk_0;
+                } else if (temp_f0 > tbl->unk_74) {
+                    var_f31 = tbl->unk_74;
+                } else {
+                    var_f31 = temp_f0;
+                }
+                fn_80008C20((void *)((u8 *)(temp_r30) + 0x7C), (void *)(arg1), (void *)((u8 *)(arg0) + 0x48));
+                lbl_8006E1C0((void *)(sp), (void *)(sp));
+                rnd = (s32)(u16) fn_1_584AC();
+                if ((rnd % 6) == 0) {
+                    fn_1_6FD58((void *)(arg0), (void *)(sp), (f32)(var_f31), (f32)(tbl->unk_1C));
+                }
+                fn_1_A33F0((u32)((u32) (*(s16 *)((u8 *)(temp_r30) + 4))), (f32)(tbl->unk_1C * var_f31));
+                if (((u16) (*(u16 *)((u8 *)(temp_r30) + 1248)) < 0x32U)) {
+                    rnd = (s32) fn_1_584AC();
+                    if ((rnd % 10) == 0) {
+                        fn_1_702A0((void *)(arg0), (void *)(sp), (u32)(1U), (u32)(0U));
+                    }
+                }
+            }
+        }
+        if ((*(s32 *)((u8 *)(temp_r30) + 1420)) & 0x80) {
+            rnd = (s32) fn_1_584AC();
+            if ((rnd % 5) == 0) {
+                fn_1_7099C((void *)(arg0), (void *)(arg1), (u32)(1U), (f32)(tbl->unk_7C), (f32)(tbl->unk_28));
+            }
+            rnd = (s32) fn_1_584AC();
+            if ((rnd % 80) == 0) {
+                fn_1_6D7BC((void *)(arg0), (void *)(arg1), (f32)(tbl->unk_AC));
+                fn_1_6D7BC((void *)(arg0), (void *)(arg1), (f32)(tbl->unk_AC));
+                fn_1_7099C((void *)(arg0), (void *)(arg1), (u32)(1U), (f32)(tbl->unk_7C), (f32)(tbl->unk_28));
+                fn_1_6FD58((void *)(arg0), (void *)(arg1), (f32)(tbl->unk_D8), (f32)(tbl->unk_90));
+                if ((s8) (*(u8 *)((u8 *)(temp_r30) + 1141)) >= 0) {
+                    fn_1_A5594((u32)(0xA9092A00U), (void *)((u8 *)(arg0) + 0x3C));
+                }
+            }
+        } else if ((s8) (*(u8 *)((u8 *)(temp_r30) + 1141)) != -1) {
+            rnd = (s32) fn_1_584AC();
+            if ((rnd % 5) == 0) {
+                if ((s8) (*(u8 *)((u8 *)(temp_r30) + 1141)) >= 0) {
+                    fn_1_A5594((u32)(0xA9092A00U), (void *)((u8 *)(arg0) + 0x3C));
+                }
+                fn_1_6D7BC((void *)(arg0), (void *)(arg1), (f32)(tbl->unk_AC));
+            }
+            rnd = (s32) fn_1_584AC();
+            if ((rnd % 5) == 0) {
+                fn_1_7099C((void *)(arg0), (void *)(arg1), (u32)(1U), (f32)(tbl->unk_7C), (f32)(tbl->unk_28));
+            }
+            rnd = (s32) fn_1_584AC();
+            if ((rnd % 5) == 0) {
+                fn_1_714A8((void *)(arg0), (void *)(arg1), (u32)(0x16U), (f32)(tbl->unk_B0));
+            }
+        } else {
+            rnd = (s32) fn_1_584AC();
+            if ((rnd % 10) == 0) {
+                fn_1_6D7BC((void *)(arg0), (void *)(arg1), (f32)(tbl->unk_AC));
+                fn_1_7099C((void *)(arg0), (void *)(arg1), (u32)(1U), (f32)(tbl->unk_7C), (f32)(tbl->unk_28));
+            }
+            rnd = (s32) fn_1_584AC();
+            if ((rnd % 5) == 0) {
+                fn_1_7099C((void *)(arg0), (void *)(arg1), (u32)(1U), (f32)(tbl->unk_7C), (f32)(tbl->unk_28));
+            }
+            rnd = (s32) fn_1_584AC();
+            if ((rnd % 20) == 0) {
+                fn_1_6FD58((void *)(arg0), (void *)(arg1), (f32)(tbl->unk_D8), (f32)(tbl->unk_90));
+            }
+        }
+    }
+}
+/* fzgx:end fn_1_6F404 */
+
 /* fzgx:begin fn_1_6F8D0 */
 void fn_1_6F8D0(void *arg0, void *arg1) {
     struct EffectData {

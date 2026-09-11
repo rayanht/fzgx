@@ -6140,3 +6140,6 @@ rel/main_rel/stcoli/fn_1_20258.c:
 
 rel/main_rel/enemy_ctrl/fn_1_D19B8.c:
 	.text       start:0x000D19B8 end:0x000D1C94 align:4
+
+rel/main_rel/effect_car/fn_1_6F404.c:
+	.text       start:0x0006F404 end:0x0006F8D0 align:4

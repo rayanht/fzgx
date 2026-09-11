@@ -33877,6 +33877,17 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/effect_car/fn_1_6F404.c",
+    "symbols": [
+      "fn_1_6F404"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "tu": "rel/main_rel/effect_car.c"
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/effect_car/fn_1_6F8D0.c",
     "symbols": [
       "fn_1_6F8D0"
