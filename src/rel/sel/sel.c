@@ -1432,6 +1432,74 @@ void fn_10_FF08(void) {
 }
 /* fzgx:end fn_10_FF08 */
 
+/* fzgx:begin fn_10_10C24 */
+#include "font.h"
+
+typedef struct {
+    u8 pad_000[0x174];
+    f32 unk_174;
+    u8 pad_178[0x180];
+    f32 unk_2F8;
+    f32 unk_2FC;
+} SelFloatPool;
+
+extern FontDrawPacket lbl_1_rodata_26F8;
+extern SelFloatPool lbl_10_rodata_158;
+extern int fn_1_4F734(FontDrawPacket *);
+
+#pragma opt_propagation off
+void fn_10_10C24(void) {
+    SelFloatPool *pool = &lbl_10_rodata_158;
+    FontDrawPacket local = lbl_1_rodata_26F8;
+
+    local.image = 0x9A15;
+    local.x = pool->unk_2F8;
+    local.y = pool->unk_2FC;
+    local.z = pool->unk_174;
+    local.flags = 0xA;
+    fn_1_4F734(&local);
+}
+#pragma opt_propagation reset
+/* fzgx:end fn_10_10C24 */
+
+/* fzgx:begin fn_10_10CA8 */
+typedef struct {
+    u32 unk_00;
+    f32 unk_04;
+    f32 unk_08;
+    f32 unk_0C;
+    u8 pad_10[0x20];
+    u32 unk_30;
+    u8 pad_34[0x24];
+} SelFontPacket;
+
+typedef struct {
+    u8 pad_000[0x174];
+    f32 unk_174;
+    u8 pad_178[0x180];
+    f32 unk_2F8;
+    f32 unk_2FC;
+} SelFloatPool;
+
+extern SelFontPacket lbl_1_rodata_26F8;
+extern SelFloatPool lbl_10_rodata_158;
+extern int fn_1_4F734(SelFontPacket *);
+
+#pragma opt_propagation off
+void fn_10_10CA8(void) {
+    SelFloatPool *pool = &lbl_10_rodata_158;
+    SelFontPacket local = lbl_1_rodata_26F8;
+
+    local.unk_00 = 0x9A13;
+    local.unk_04 = pool->unk_2F8;
+    local.unk_08 = pool->unk_2FC;
+    local.unk_0C = pool->unk_174;
+    local.unk_30 = 0xA;
+    fn_1_4F734(&local);
+}
+#pragma opt_propagation reset
+/* fzgx:end fn_10_10CA8 */
+
 /* fzgx:begin fn_10_10D2C */
 typedef struct {
     u32 unk_00;
@@ -1469,6 +1537,44 @@ void fn_10_10D2C(void) {
 }
 #pragma opt_propagation reset
 /* fzgx:end fn_10_10D2C */
+
+/* fzgx:begin fn_10_10DB0 */
+typedef struct {
+    u32 unk_00;
+    f32 unk_04;
+    f32 unk_08;
+    f32 unk_0C;
+    u8 pad_10[0x20];
+    u32 unk_30;
+    u8 pad_34[0x24];
+} SelFontPacket;
+
+typedef struct {
+    u8 pad_000[0x174];
+    f32 unk_174;
+    u8 pad_178[0x180];
+    f32 unk_2F8;
+    f32 unk_2FC;
+} SelFloatPool;
+
+extern SelFontPacket lbl_1_rodata_26F8;
+extern SelFloatPool lbl_10_rodata_158;
+extern int fn_1_4F734(SelFontPacket *);
+
+#pragma opt_propagation off
+void fn_10_10DB0(void) {
+    SelFloatPool *pool = &lbl_10_rodata_158;
+    SelFontPacket local = lbl_1_rodata_26F8;
+
+    local.unk_00 = 0x9A16;
+    local.unk_04 = pool->unk_2F8;
+    local.unk_08 = pool->unk_2FC;
+    local.unk_0C = pool->unk_174;
+    local.unk_30 = 0xA;
+    fn_1_4F734(&local);
+}
+#pragma opt_propagation reset
+/* fzgx:end fn_10_10DB0 */
 
 /* fzgx:begin fn_10_13D64 */
 extern struct fn_10_13D64_lbl_10_rodata_158 lbl_10_rodata_158;

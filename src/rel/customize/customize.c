@@ -107,6 +107,21 @@ void fn_3_BC60(void) {
 }
 /* fzgx:end fn_3_BC60 */
 
+/* fzgx:begin fn_3_BD00 noprologue */
+#include "types.h"
+
+extern u16 lbl_3_bss_F0[24];
+
+void fn_3_BD00(u32 arg0, u32 arg1, u32 arg2, u32 arg3) {
+    *(u32 *)&lbl_3_bss_F0[18] = 0;
+    *(u32 *)&lbl_3_bss_F0[18] |= 0x80000000;
+    *(u32 *)&lbl_3_bss_F0[18] |= arg3;
+    *(s16 *)&lbl_3_bss_F0[20] = arg0;
+    *(s16 *)&lbl_3_bss_F0[21] = arg1;
+    *(s16 *)&lbl_3_bss_F0[22] = arg2;
+}
+/* fzgx:end fn_3_BD00 */
+
 /* fzgx:begin fn_3_BD30 noprologue */
 #include "types.h"
 

@@ -144,6 +144,59 @@ void camera_update_state(__typeof__(lbl_1_bss_F68) state) {
 }
 /* fzgx:end camera_update_state */
 
+/* fzgx:begin fn_1_681C noprologue */
+#include "types.h"
+
+struct fn_1_681C_Copy12 {
+    u32 unk_0;
+    u32 unk_4;
+    u32 unk_8;
+};
+
+struct fn_1_681C_Entry {
+    u8 pad_0[0x10];
+    struct fn_1_681C_Copy12 unk_10;
+    u8 pad_1C[0x1FC - 0x1C];
+};
+
+struct fn_1_681C_Other {
+    u8 pad_0[0x1C];
+    struct fn_1_681C_Copy12 unk_1C;
+};
+
+struct fn_1_681C_Globals {
+    u32 state;
+    struct fn_1_681C_Entry *entries;
+    struct fn_1_681C_Other *other;
+};
+
+extern struct fn_1_681C_Globals lbl_1_bss_F68;
+
+#pragma peephole off
+void fn_1_681C(u32 index, u32 *output) {
+    struct fn_1_681C_Globals *globals = &lbl_1_bss_F68;
+    u32 state = globals->state;
+    s8 mode;
+
+    if (state == 0) {
+        return;
+    }
+
+    mode = *(s8 *)((u8 *)state + 0x48);
+
+    switch (mode) {
+    case 9:
+    case 10:
+        *(struct fn_1_681C_Copy12 *)output = globals->other->unk_1C;
+        return;
+    default:
+        *(struct fn_1_681C_Copy12 *)output = globals->entries[index & 0xff].unk_10;
+        return;
+    }
+}
+#pragma peephole reset
+/* fzgx:end fn_1_681C */
+
 /* fzgx:begin fn_1_6898 noprologue */
 #include "types.h"
 

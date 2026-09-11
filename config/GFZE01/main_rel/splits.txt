@@ -5621,3 +5621,12 @@ rel/main_rel/bitmap/fn_1_47EE4.c:
 
 rel/main_rel/_prolog/fn_1_48E8.c:
 	.text       start:0x000048E8 end:0x00004928 align:4
+
+rel/main_rel/camera/fn_1_681C.c:
+	.text       start:0x0000681C end:0x00006898 align:4
+
+rel/main_rel/bitmap/fn_1_47F74.c:
+	.text       start:0x00047F74 end:0x00048004 align:4
+
+rel/main_rel/bg_cas/fn_1_FB798.c:
+	.text       start:0x000FB798 end:0x000FB870 align:4

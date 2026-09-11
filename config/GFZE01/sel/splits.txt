@@ -503,3 +503,12 @@ rel/sel/sel/fn_10_5148.c:
 
 rel/sel/sel/fn_10_CDE8.c:
 	.text       start:0x0000CDE8 end:0x0000CE5C align:4
+
+rel/sel/sel/fn_10_10CA8.c:
+	.text       start:0x00010CA8 end:0x00010D2C align:4
+
+rel/sel/sel/fn_10_10DB0.c:
+	.text       start:0x00010DB0 end:0x00010E34 align:4
+
+rel/sel/sel/fn_10_10C24.c:
+	.text       start:0x00010C24 end:0x00010CA8 align:4

@@ -36,6 +36,41 @@ extern void fn_1_9AD88(void);
 extern void fn_1_10069C(Obj_1_data_2A7E0_At3C *);
 extern void fn_1_FF038(Obj_1_data_2A7E0_At3C *);
 
+/* fzgx:begin fn_1_FB798 */
+extern void OSPanic(const char *, int, const char *, ...);
+
+int fn_1_FB798(int mode, u32 *value) {
+    Obj_1_data_2A7E0_At3C *entry = lbl_1_data_2A7E0.unk_3C;
+
+    switch (mode) {
+    case 0: {
+        u8 *cursor = (u8 *)lbl_1_bss_3BE0->unk_54;
+        entry->unk_0 = 0;
+        while (cursor != (u8 *)value) {
+            u32 count = entry->unk_0;
+            cursor += 0x40;
+            entry->unk_0 = count + 1;
+        }
+        *value |= 0x80000000;
+        break;
+    }
+
+    case 1: {
+        u8 *p = (u8 *)entry + 4;
+        ((u32 *)(p + 4))[*(u8 *)p] = (u32)value;
+        *(u8 *)p = *(u8 *)p + 1;
+        *value |= 0x80000000;
+        if (*(u8 *)p >= 0x10) {
+            OSPanic((const char *)lbl_1_data_3EF90, 0x2f2, (const char *)lbl_1_data_3EF9C);
+        }
+        break;
+    }
+    }
+
+    return 1;
+}
+/* fzgx:end fn_1_FB798 */
+
 /* fzgx:begin fn_1_FB870 */
 u8 *fn_1_FB870(void) {
     return &lbl_1_bss_84450;
