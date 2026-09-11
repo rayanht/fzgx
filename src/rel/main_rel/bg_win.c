@@ -216,6 +216,27 @@ void fn_1_15E5E4(s32 index, void *arg) {
 }
 /* fzgx:end fn_1_15E5E4 */
 
+/* fzgx:begin fn_1_15E688 */
+extern void *fn_1_435C(void *arg);
+extern void fn_1_15E1E8(u8 *arg);
+extern void fn_1_3F8C(void *arg0, void *arg1, u8 *arg2, s32 arg3);
+
+void fn_1_15E688(s32 index, u32 value, u8 state, void *arg) {
+    void *obj;
+    Obj_1_bss_8FDA8 *entry;
+
+    obj = fn_1_435C(arg);
+    fn_1_3F8C(lbl_1_data_4C980, fn_1_15E1E8,
+              &(&lbl_1_bss_8FDA8.unk_0)[index * 0x34] + 3, 13);
+    (&lbl_1_bss_8FDA8.unk_0)[index * 0x34 + 3] = 0x5a;
+    fn_1_435C(obj);
+    entry = (Obj_1_bss_8FDA8 *)((u8 *)&lbl_1_bss_8FDA8 + index * 0x34);
+    ((u32 *)&entry->unk_10)[(state - 1) % 8] = value;
+    entry->unk_4 = value;
+    entry->unk_8 = state;
+}
+/* fzgx:end fn_1_15E688 */
+
 /* fzgx:begin fn_1_15E764 */
 extern void *fn_1_435C(void *);
 extern void fn_1_15E220(u8 *value);

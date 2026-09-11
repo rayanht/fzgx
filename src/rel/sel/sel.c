@@ -1094,6 +1094,83 @@ void fn_10_BEF8(SelState *state) {
 }
 /* fzgx:end fn_10_BEF8 */
 
+/* fzgx:begin fn_10_C084 */
+#define SEL_MAX(x, y) ((x) > (y) ? (x) : (y))
+
+typedef struct SelState {
+    short value;
+    unsigned char pad_02[2];
+    short minimum;
+    short maximum;
+    short extra;
+    unsigned char pad_0A[0x8A];
+    unsigned int flags;
+} SelState;
+
+typedef struct SelGlobal {
+    unsigned char pad_0094[0x94];
+    unsigned int flags;
+} SelGlobal;
+
+extern unsigned char jumptable_10_data_8AC[48];
+extern unsigned char lbl_10_bss_4938E;
+extern SelGlobal lbl_1_bss_8B3A0;
+
+void fn_10_C084(SelState *state) {
+    int value;
+
+    switch (state->value) {
+    case 1:
+    case 11:
+        state->minimum = 1;
+        value = 30;
+        if (state->flags & 0x2) {
+            value = *(signed char *)&lbl_10_bss_4938E;
+        }
+        state->maximum = value;
+        break;
+    case 0:
+        if (lbl_1_bss_8B3A0.flags & 0x200) {
+            state->maximum = SEL_MAX(1, SEL_MAX(state->maximum, SEL_MAX(state->minimum, 1)));
+        } else {
+            state->maximum = state->minimum;
+        }
+        break;
+    case 2:
+        state->minimum = 1;
+        state->maximum = 1;
+        break;
+    case 3:
+        state->minimum = 1;
+        state->maximum = 1;
+        break;
+    case 9:
+        state->maximum = 30;
+        state->minimum = 1;
+        state->extra = 1;
+        break;
+    case 10:
+        state->minimum = 1;
+        state->maximum = 1;
+        state->extra = 1;
+        break;
+    default:
+        break;
+    }
+
+    if (state->minimum <= 1) {
+        state->flags |= 0x20000000;
+        return;
+    }
+    state->flags &= 0xDFFFFFFF;
+    if (state->minimum == 2) {
+        state->flags |= 0x00040000;
+        return;
+    }
+    state->flags &= ~0x00040000;
+}
+/* fzgx:end fn_10_C084 */
+
 /* fzgx:begin fn_10_C210 */
 typedef struct SelOwner {
     unsigned char pad_00A4[0xA4];

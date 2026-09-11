@@ -791,6 +791,59 @@ void fn_1_ABF44(Fn1ABF44Object *arg) {
 }
 /* fzgx:end fn_1_ABF44 */
 
+/* fzgx:begin fn_1_AC000 */
+typedef struct Fn1AC000Table {
+    u8 pad_00[0x48];
+    u32 value_0x48;
+} Fn1AC000Table;
+
+typedef struct Fn1AC000State {
+    u8 pad_00[0x2];
+    u16 value_0x2;
+    s32 value_0x4;
+    u8 pad_08[0x84];
+    Fn1AC000Table *table;
+} Fn1AC000State;
+
+typedef struct Fn1AC000Target {
+    u8 id;
+    u8 pad_01[0x23];
+    Fn1AC000State *state;
+    u8 pad_28[0x2];
+    u8 flags;
+    u8 pad_2b[0x5];
+    s32 start;
+    u8 pad_34[0x4];
+    f32 ratio;
+} Fn1AC000Target;
+
+extern const f64 lbl_1_rodata_4CB8;
+extern const f64 lbl_1_rodata_4CB0;
+extern u32 CARDGetResultCode(u32);
+extern u32 fn_8002C0A0(u32);
+
+void fn_1_AC000(Fn1AC000Target *target) {
+    f32 numerator;
+    f32 denominator;
+    f32 ratio;
+
+    target->state->value_0x4 = CARDGetResultCode(target->id);
+
+    ratio = (f32)(u32)((target->state->table->value_0x48 + 0x1fff) & ~0x1fff);
+    denominator = (f32)(u32)(((target->state->table->value_0x48 + 0x1fff) & ~0x1fff) + 0x4000);
+    ratio = ratio / denominator;
+
+    numerator = (f32)(s32)(fn_8002C0A0(target->id) - target->start);
+    denominator = (f32)(u32)(((target->state->table->value_0x48 + 0x1fff) & ~0x1fff) + 0x2000);
+    target->ratio = ratio * numerator / denominator;
+
+    if (target->state->value_0x4 != -1 && target->state->value_0x4 != 0) {
+        target->flags = target->flags & 0xfffffffd;
+        target->state->value_0x2 = 0;
+    }
+}
+/* fzgx:end fn_1_AC000 */
+
 /* fzgx:begin fn_1_AC12C */
 extern int fn_1_45D0(void *arg0, int arg1, Obj_1_data_3C7B8 *arg2, int arg3);
 extern void fn_1_AB45C(void);
@@ -2178,6 +2231,84 @@ void fn_1_B80F0(int index) {
     }
 }
 /* fzgx:end fn_1_B80F0 */
+
+/* fzgx:begin fn_1_B8170 noprologue */
+#include "types.h"
+#include "rel/main_rel/memcard.h"
+
+extern f32 lbl_1_rodata_4AE0[114];
+extern u8 lbl_1_data_3C7C4[216];
+extern u8 lbl_1_data_3C89C[68];
+
+extern void fn_80083DB0(void *dst, const void *src);
+extern void strcat(void *dst, const void *src);
+extern s32 CARDOpen(s32 card, void *work, void *entry);
+extern s32 CARDClose(void *entry);
+
+static inline s32 wait_card(s32 card, void *work, void *entry) {
+    s32 result;
+
+    do {
+        result = CARDOpen(card, work, entry);
+    } while (result == -1);
+    return result;
+}
+
+static inline s32 wait_write(void *entry) {
+    s32 result;
+
+    do {
+        result = CARDClose(entry);
+    } while (result == -1);
+    return result;
+}
+
+u32 fn_1_B8170(s32 card) {
+    u8 work1[0x40];
+    u8 work2[0x40];
+    const f32 *table;
+    u32 flags;
+    u8 *entry;
+
+    entry = (u8 *)&lbl_1_bss_716C8 + card * 0xa0;
+    table = lbl_1_rodata_4AE0 + 19;
+    flags = 0;
+
+    fn_80083DB0(work1, table);
+    strcat(work1, lbl_1_data_3C7C4);
+    if (wait_card(card, work1, entry + 0x10) == 0) {
+        wait_write(entry + 0x10);
+        flags |= 2;
+    } else {
+        fn_80083DB0(work2, table);
+        strcat(work2, lbl_1_data_3C89C);
+        if (wait_card(card, work2, entry + 0x10) == 0) {
+            wait_write(entry + 0x10);
+            flags |= 2;
+        } else {
+            flags &= ~2;
+        }
+    }
+
+    table = lbl_1_rodata_4AE0 + 57;
+    fn_80083DB0(work1, table);
+    strcat(work1, lbl_1_data_3C7C4);
+    if (wait_card(card, work1, entry + 0x10) == 0) {
+        wait_write(entry + 0x10);
+        flags |= 8;
+    } else {
+        fn_80083DB0(work2, table);
+        strcat(work2, lbl_1_data_3C89C);
+        if (wait_card(card, work2, entry + 0x10) == 0) {
+            wait_write(entry + 0x10);
+            flags |= 8;
+        } else {
+            flags &= ~8;
+        }
+    }
+    return flags;
+}
+/* fzgx:end fn_1_B8170 */
 
 /* fzgx:begin fn_1_B9BE0 */
 void fn_1_B9BE0(void) {

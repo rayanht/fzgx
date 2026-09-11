@@ -56,6 +56,88 @@ u8 *fn_1_14F04(void) {
 }
 /* fzgx:end fn_1_14F04 */
 
+/* fzgx:begin fn_1_17B5C */
+extern f32 lbl_1_rodata_6D0;
+
+typedef struct {
+    u8 pad_0[0x40];
+    f32 unk_40;
+    f32 unk_44;
+    u8 pad_48[0x5];
+    s8 unk_4D;
+} Fn17B5C_Record;
+
+typedef struct {
+    u32 unk_0;
+    Fn17B5C_Record *unk_4;
+    u32 unk_8;
+} Fn17B5C_Slot;
+
+int fn_1_17B5C(int a, int b, int count, f32 threshold) {
+    int end;
+    int span;
+    int j;
+    int found;
+    int result;
+    Fn17B5C_Slot *left;
+    Fn17B5C_Slot *right;
+    f32 delta;
+
+    if (a == b) {
+        return 1;
+    }
+    if (a > b) {
+        int temp = a;
+        a = b;
+        b = temp;
+    }
+
+    span = b - a;
+    {
+        int diff = count - span;
+        if (diff < span) {
+            int temp = a;
+            a = b;
+            b = temp;
+            span = diff;
+        }
+    }
+
+    left = &((Fn17B5C_Slot *)lbl_1_bss_3BE0->unk_C)[a];
+    right = &((Fn17B5C_Slot *)lbl_1_bss_3BE0->unk_C)[b];
+    if (threshold > lbl_1_rodata_6D0) {
+        delta = right->unk_4->unk_40 - left->unk_4->unk_44;
+        if (delta < lbl_1_rodata_6D0) {
+            delta += *(f32 *)lbl_1_bss_3BE0->unk_90;
+        }
+        if (delta > threshold) {
+            return 0;
+        }
+    }
+
+    b = a + 1;
+    end = count - 1;
+    found = 0;
+    for (j = 0; j < span; j++) {
+        if (b > end) {
+            b = 0;
+        }
+        if (!((Fn17B5C_Slot *)lbl_1_bss_3BE0->unk_C)[a].unk_4->unk_4D) {
+            break;
+        }
+        a = b;
+        found++;
+        b++;
+    }
+
+    result = 0;
+    if (span == 0 || found >= span) {
+        result = 1;
+    }
+    return result;
+}
+/* fzgx:end fn_1_17B5C */
+
 /* fzgx:begin fn_1_17C6C noprologue */
 #include "types.h"
 

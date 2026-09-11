@@ -495,6 +495,97 @@ void fn_1_9AD88(void) {
 }
 /* fzgx:end fn_1_9AD88 */
 
+/* fzgx:begin fn_1_9ADCC */
+typedef struct {
+    u8 pad_0[0x8];
+    u8 unk_8;
+    u8 unk_9;
+    u8 pad_A;
+    s8 unk_B;
+    s32 slots[4];
+} BurnerEntry;
+
+typedef struct {
+    u8 pad_0[0x24];
+    u32 unk_24;
+} BurnerParent;
+
+extern void fn_1_862D4(u32 arg0, void *arg1);
+extern u32 fn_1_1FB80(void *arg0, s32 arg1);
+extern u32 fn_1_41488(u32 arg0, void *arg1);
+extern void fn_1_4270C(void *arg0, u32 arg1, u32 arg2);
+
+void fn_1_9ADCC(Obj_1_data_2A7E0_At3C *arg0, s32 arg1) {
+    s32 i;
+    BurnerEntry *entry;
+    s32 *slotp;
+    s32 value;
+    u32 temp_word;
+    u8 temp[3];
+    u32 ret;
+
+    entry = (BurnerEntry *)arg0->unk_C;
+    i = 0;
+    while (i < (s32)arg0->unk_8) {
+        if ((entry->unk_9 & lbl_1_data_2A7E0.unk_48) != 0 &&
+            (arg1 == 0 || entry->unk_B >= 0)) {
+            slotp = &entry->slots[lbl_1_data_2A7E0.unk_60];
+            if (*slotp == -1) {
+                if (arg1 == 0) {
+                    if (entry->unk_B < 0) {
+                        value = 1;
+                    } else {
+                        value = 0;
+                    }
+                } else {
+                    fn_1_862D4(lbl_1_data_2A7E0.unk_5C, &temp_word);
+                    if ((1 << (entry->unk_B + 0x10)) & fn_1_1FB80(&temp_word, -65536)) {
+                        value = 1;
+                    } else {
+                        value = 0;
+                    }
+                }
+                if (value) {
+                    s32 j;
+                    BurnerEntry *scan;
+                    s32 slot;
+                    u8 c;
+
+                    scan = (BurnerEntry *)arg0->unk_C;
+                    j = 0;
+                    while (j < (s32)arg0->unk_8) {
+                        slot = lbl_1_data_2A7E0.unk_60;
+                        if (scan->slots[slot] >= 0) {
+                            if ((scan->unk_9 & 1) != 0) {
+                                scan->slots[slot] = -2;
+                            } else {
+                                scan->slots[slot] = -1;
+                            }
+                        }
+                        j++;
+                        scan = (BurnerEntry *)((u8 *)scan + 0x1c);
+                    }
+                    *slotp = 0;
+                    arg0 = (Obj_1_data_2A7E0_At3C *)arg0->unk_4;
+                    c = entry->unk_8;
+                    temp[0] = 0x4d;
+                    temp[1] = (u8)(c + 0x30);
+                    temp[2] = 0;
+                    ret = fn_1_41488(((BurnerParent *)arg0)->unk_24, temp);
+                    if (ret == 0xffffffff) {
+                        ret = 0;
+                    }
+                    fn_1_4270C(arg0, 0, ret & 0xffff);
+                    return;
+                }
+            }
+        }
+        i++;
+        entry = (BurnerEntry *)((u8 *)entry + 0x1c);
+    }
+}
+/* fzgx:end fn_1_9ADCC */
+
 /* fzgx:begin fn_1_9CC40 */
 typedef struct {
     u8 pad[0x30];

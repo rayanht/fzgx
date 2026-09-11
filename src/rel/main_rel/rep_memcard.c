@@ -205,3 +205,89 @@ void fn_1_154FD8(void) {
     fn_1_49614();
 }
 /* fzgx:end fn_1_154FD8 */
+
+/* fzgx:begin fn_1_15530C noprologue */
+#include "types.h"
+#include "rel/main_rel/rep_memcard.h"
+
+extern const f64 lbl_1_rodata_D5B0;
+extern f64 fn_80083E84(u8 *text);
+extern s32 atoi(u8 *text);
+extern void *memset(void *dest, s32 value, u32 size);
+
+u8 *fn_1_15530C(u8 *text) {
+    Obj_1_bss_8EDF0 *obj = &lbl_1_bss_8EDF0;
+
+    switch (*text) {
+    case 'l':
+    {
+        u8 *dest;
+        obj->unk_1C = 0;
+        dest = &obj->unk_34;
+        obj->unk_14 = 0;
+        text++;
+        obj->unk_18 = 0;
+        memset(dest, 0, 0xFA);
+        *dest = 0;
+        break;
+    }
+    case 'w':
+    {
+        f32 value;
+        text++;
+        value = (f32)fn_80083E84(text);
+        while ((*text >= '0' && *text <= '9') || *text == '.') {
+            text++;
+        }
+        obj->unk_4 = (s16)(*(const f32 *)(const void *)&lbl_1_rodata_D5B0 * value);
+        break;
+    }
+    case 't':
+    {
+        s32 value;
+        text++;
+        value = atoi(text);
+        while ((*text >= '0' && *text <= '9') || *text == '.') {
+            text++;
+        }
+        value = value - obj->unk_0;
+        if (value >= 0) {
+            obj->unk_4 = value;
+        } else {
+            obj->unk_4 = 0;
+        }
+        break;
+    }
+    case 'p':
+    {
+        s32 value = 0;
+        text++;
+        while ((*text >= '0') && (*text <= '9')) {
+            if (value != 0) {
+                value *= 10;
+            }
+            value = *text + value;
+            text++;
+            value -= 0x30;
+        }
+        break;
+    }
+    case 's':
+    {
+        f32 value;
+        text++;
+        value = (f32)fn_80083E84(text);
+        while ((*text >= '0' && *text <= '9') || *text == '.') {
+            text++;
+        }
+        obj->unk_28 = value;
+        break;
+    }
+    default:
+        text++;
+        break;
+    }
+
+    return text;
+}
+/* fzgx:end fn_1_15530C */

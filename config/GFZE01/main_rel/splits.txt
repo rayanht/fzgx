@@ -5804,3 +5804,21 @@ rel/main_rel/sel_static_disp/fn_1_136714.c:
 
 rel/main_rel/sel_static_disp/fn_1_14F46C.c:
 	.text       start:0x0014F46C end:0x0014F608 align:4
+
+rel/main_rel/burner/fn_1_9ADCC.c:
+	.text       start:0x0009ADCC end:0x0009AF80 align:4
+
+rel/main_rel/memcard/fn_1_AC000.c:
+	.text       start:0x000AC000 end:0x000AC12C align:4
+
+rel/main_rel/rep_memcard/fn_1_15530C.c:
+	.text       start:0x0015530C end:0x001554D0 align:4
+
+rel/main_rel/memcard/fn_1_B8170.c:
+	.text       start:0x000B8170 end:0x000B8338 align:4
+
+rel/main_rel/stcoli/fn_1_17B5C.c:
+	.text       start:0x00017B5C end:0x00017C6C align:4
+
+rel/main_rel/bg_win/fn_1_15E688.c:
+	.text       start:0x0015E688 end:0x0015E764 align:4
