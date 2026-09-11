@@ -1643,3 +1643,9 @@ rel/movie_module/fn_12_670C.c:
 
 rel/movie_module/fn_12_2ED74.c:
 	.text       start:0x0002ED74 end:0x0002EDAC align:4
+
+rel/movie_module/fn_12_266A8.c:
+	.text       start:0x000266A8 end:0x00026734 align:4
+
+rel/movie_module/fn_12_12270.c:
+	.text       start:0x00012270 end:0x00012324 align:4

@@ -200,3 +200,6 @@ rel/title/title/_prolog.c:
 
 rel/title/title/_epilog.c:
 	.text       start:0x00000AF0 end:0x00000B7C align:4
+
+rel/title/title/fn_8_1344.c:
+	.text       start:0x00001344 end:0x00001394 align:4

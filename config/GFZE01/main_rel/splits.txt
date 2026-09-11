@@ -5891,3 +5891,6 @@ rel/main_rel/sel_static_disp/fn_1_13B24C.c:
 
 rel/main_rel/spline/fn_1_F7C48.c:
 	.text       start:0x000F7C48 end:0x000F7CAC align:4
+
+rel/main_rel/car/fn_1_875B4.c:
+	.text       start:0x000875B4 end:0x000875EC align:4

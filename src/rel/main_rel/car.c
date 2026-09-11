@@ -1238,6 +1238,18 @@ void fn_1_87074(void) {
 }
 /* fzgx:end fn_1_87074 */
 
+/* fzgx:begin fn_1_875B4 noprologue */
+#include "types.h"
+
+extern f32 lbl_1_rodata_3530[22];
+
+extern void fn_1_87448(void *arg, int value_1, int value_2, u32 passes, f32 value);
+
+void fn_1_875B4(void *arg, int value_1, int value_2, f32 value) {
+    fn_1_87448(arg, value_1, value_2, value >= 1.0f, value);
+}
+/* fzgx:end fn_1_875B4 */
+
 /* fzgx:begin fn_1_875EC */
 void fn_1_875EC(void *arg0, void *arg1, void *arg2) {
     fn_1_87448(arg0, arg1, arg2, 1);

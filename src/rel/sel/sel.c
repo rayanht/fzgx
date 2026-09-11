@@ -2067,6 +2067,48 @@ int fn_10_160BC(s16 value) {
 }
 /* fzgx:end fn_10_160BC */
 
+/* fzgx:begin fn_10_1772C */
+extern u16 lbl_10_bss_51752[27];
+extern u8 lbl_10_data_6008[20];
+extern int sprintf(char *, const u8 *, ...);
+extern void fn_10_1C2D8(void *);
+
+struct SelEntry {
+    int index;
+    int value;
+    u8 pad[4];
+    int even;
+    int divisible;
+    u8 pad2[0x0e];
+    u16 width;
+    u16 height;
+    u8 pad3[0x16];
+    u8 duration;
+    u8 pad4[6];
+    char text[17];
+};
+
+void fn_10_1772C(void) {
+    int i;
+    struct SelEntry entry;
+
+    if (lbl_10_bss_51752[0] == 0) {
+        for (i = 0; i < 4; i++) {
+            entry.even = ((i % 2) == 0);
+            entry.divisible = ((i % 3) == 0);
+            entry.index = i;
+            entry.value = i;
+            entry.text[16] = 0;
+            entry.width = 999;
+            entry.height = 999;
+            entry.duration = 30;
+            sprintf(entry.text, lbl_10_data_6008);
+            fn_10_1C2D8(&entry);
+        }
+    }
+}
+/* fzgx:end fn_10_1772C */
+
 /* fzgx:begin fn_10_19290 */
 extern void fn_800736C0(int, void *);
 extern void fn_80073620(int, int);

@@ -194,6 +194,22 @@ void fn_8_1304(void) {
 }
 /* fzgx:end fn_8_1304 */
 
+/* fzgx:begin fn_8_1344 */
+struct fn_8_1344_lbl_8_bss_4 {
+    f32 unk_0;
+};
+extern struct fn_8_1344_lbl_8_bss_4 lbl_8_bss_4;
+extern u8 lbl_8_bss_242;
+extern u32 fn_1_47F74(u32);
+
+void fn_8_1344(void) {
+    lbl_8_bss_242 = 0;
+    lbl_8_bss_4.unk_0 = 0.0f;
+    fn_1_47F74(1);
+    fn_1_47F74(3);
+}
+/* fzgx:end fn_8_1344 */
+
 /* fzgx:begin fn_8_1C08 */
 // fn_8_1C08: empty in retail (single blr).
 void fn_8_1C08(void) {
