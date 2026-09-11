@@ -427,6 +427,28 @@ s32 fn_1_46C70(void) {
 }
 /* fzgx:end fn_1_46C70 */
 
+/* fzgx:begin fn_1_46DC4 */
+extern s32 fn_8000700C(s32 arg0);
+
+s32 fn_1_46DC4(s32 value) {
+    u8 *entry;
+    s32 count;
+    s32 i;
+
+    count = 0;
+    value = fn_8000700C(value);
+    entry = (u8 *)&lbl_1_bss_384D8;
+    for (i = 0; i < 1024; i++, entry += 0x10) {
+        if ((((Obj_1_bss_384D8 *)entry)->unk_0 & 0x10000000) != 0 &&
+            (s32)((Obj_1_bss_384D8 *)entry)->unk_4 == value) {
+            ((Obj_1_bss_384D8 *)entry)->unk_0 &= ~0x10000000;
+            count++;
+        }
+    }
+    return count;
+}
+/* fzgx:end fn_1_46DC4 */
+
 /* fzgx:begin fn_1_46EA8 */
 void fn_1_46EA8(u32 value) {
     lbl_1_bss_3DD28[0] = value;

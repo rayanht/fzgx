@@ -545,6 +545,22 @@ void fn_1_F82E0(void) {
 }
 /* fzgx:end fn_1_F82E0 */
 
+/* fzgx:begin fn_1_F8334 */
+extern u64 __shl2i(u64 value, s32 shift);
+
+int fn_1_F8334(s16 value) {
+    u64 mask;
+
+    if (value > 0x3f) {
+        mask = 1ULL << (s16)(value - 0x40);
+        return (*(u64 *)&lbl_1_bss_7F0C0.unk_28 & mask) != 0 ? 1 : 0;
+    }
+
+    mask = 1ULL << value;
+    return (*(u64 *)&lbl_1_bss_7F0C0.unk_20 & mask) != 0 ? 1 : 0;
+}
+/* fzgx:end fn_1_F8334 */
+
 /* fzgx:begin fn_1_F8580 */
 void fn_1_F8580(void) {
     lbl_1_bss_7F0C0.unk_5C = 0;

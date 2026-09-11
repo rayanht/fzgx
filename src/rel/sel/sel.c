@@ -1411,6 +1411,63 @@ void fn_10_CF50(void) {
 }
 /* fzgx:end fn_10_CF50 */
 
+/* fzgx:begin fn_10_CFAC */
+struct fn_10_CFAC_lbl_1_bss_8B3A0 {
+    u8 pad_0[0x140];
+    u32 unk_140;
+    u16 unk_144;
+    u16 unk_146;
+    u16 unk_148;
+};
+
+extern struct fn_10_CFAC_lbl_1_bss_8B3A0 lbl_1_bss_8B3A0;
+
+void fn_10_CFAC(u32 arg0, u32 arg1, u32 arg2, u32 arg3) {
+    lbl_1_bss_8B3A0.unk_140 = 0;
+    lbl_1_bss_8B3A0.unk_140 |= 0x80000000;
+    lbl_1_bss_8B3A0.unk_140 |= arg3;
+    lbl_1_bss_8B3A0.unk_144 = arg0;
+    lbl_1_bss_8B3A0.unk_146 = arg1;
+    lbl_1_bss_8B3A0.unk_148 = arg2;
+}
+/* fzgx:end fn_10_CFAC */
+
+/* fzgx:begin fn_10_CFDC */
+typedef struct SelState {
+    u8 _pad140[0x140];
+    u32 flags;
+    s16 step;
+    s16 value;
+    s16 limit;
+} SelState;
+
+extern SelState lbl_1_bss_8B3A0;
+
+void fn_10_CFDC(void) {
+    SelState *state = &lbl_1_bss_8B3A0;
+
+    if ((state->flags & 0x80000000u) == 0) {
+        return;
+    }
+
+    state->value += state->step;
+    do {
+        if (state->step > 0) {
+            if (state->value >= state->limit) {
+                break;
+            }
+        }
+        if (state->step >= 0) {
+            return;
+        }
+        if (state->value > lbl_1_bss_8B3A0.limit) {
+            return;
+        }
+    } while (0);
+    state->flags = 0;
+}
+/* fzgx:end fn_10_CFDC */
+
 /* fzgx:begin fn_10_FF08 */
 typedef struct SelState {
     u8 pad_0[0x94];

@@ -366,6 +366,49 @@ void fn_1_1902C(StcoliNode *root, StcoliVec *vec, void *arg3, f32 value) {
 }
 /* fzgx:end fn_1_1902C */
 
+/* fzgx:begin fn_1_20994 noprologue */
+#include "types.h"
+
+typedef struct Fn_1_20994_Object {
+    u32 unk_0;
+    u32 unk_4;
+    u32 unk_8;
+    u8 pad_0C[0x71];
+    u8 unk_7D;
+} Fn_1_20994_Object;
+
+extern const f32 lbl_1_rodata_6D0;
+extern Fn_1_20994_Object *lbl_1_bss_3BE0;
+extern int fn_1_210A8(void *, f32 *, int, int, int);
+
+int fn_1_20994(void *arg, f32 *out) {
+    f32 value;
+    int result;
+    int index;
+    Fn_1_20994_Object *object;
+
+    value = lbl_1_rodata_6D0;
+    result = 0;
+    object = lbl_1_bss_3BE0;
+    if (object != 0) {
+        if (object->unk_7D != 0) {
+            index = 0;
+        } else {
+            index = object->unk_8 - 1;
+        }
+        do {
+            result = fn_1_210A8(arg, &value, index--, 0, 0);
+        } while (result < 0 && index >= 0);
+        if (result < 0) {
+            result = 0;
+            value = lbl_1_rodata_6D0;
+        }
+    }
+    *out = value;
+    return result;
+}
+/* fzgx:end fn_1_20994 */
+
 /* fzgx:begin fn_1_21644 noprologue */
 #include "types.h"
 
@@ -672,6 +715,59 @@ int fn_1_248C0(Fn_1_248C0 *self, int arg) {
     return result;
 }
 /* fzgx:end fn_1_248C0 */
+
+/* fzgx:begin fn_1_250F8 */
+extern const f32 lbl_1_rodata_85C;
+
+typedef struct Fn_1_250F8 {
+    u32 flags;
+    u8 pad04[0x180];
+    f32 field184;
+    u8 pad188[0x88];
+    u16 field210;
+    u8 pad212[0x01];
+    u8 field213;
+    u8 pad214[0x03];
+    u8 field217;
+    u8 pad218[0x29A];
+    u8 field4b2;
+    u8 pad4b3[0xD9];
+    u32 field58c;
+} Fn_1_250F8;
+
+void fn_1_250F8(Fn_1_250F8 *self) {
+    u16 value;
+    f32 add;
+    f32 elapsed;
+    u32 delta;
+
+    if ((self->flags & 0x10000) == 0) {
+        value = self->field210;
+        add = lbl_1_rodata_85C * self->field184;
+        elapsed = (f32)value + add;
+        delta = ((u32)self->field213 * 60) / 60;
+        self->field210 = (s32)elapsed;
+        if (self->field217 == 0) {
+            self->field210 += 25;
+        }
+        if (self->field4b2 == 0) {
+            self->field210 += 25;
+        }
+        if ((self->field58c & 1) == 0) {
+            self->field210 += 40;
+        }
+        if (self->flags & 0x80) {
+            self->field210 += 25;
+        }
+        if (self->field210 > delta) {
+            self->field210 -= delta;
+        } else {
+            self->field210 = 0;
+        }
+    }
+    self->flags |= 0x10000;
+}
+/* fzgx:end fn_1_250F8 */
 
 /* fzgx:begin fn_1_25870 */
 typedef struct Fn_1_25870 {

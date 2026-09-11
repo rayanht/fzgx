@@ -512,3 +512,9 @@ rel/sel/sel/fn_10_10DB0.c:
 
 rel/sel/sel/fn_10_10C24.c:
 	.text       start:0x00010C24 end:0x00010CA8 align:4
+
+rel/sel/sel/fn_10_CFDC.c:
+	.text       start:0x0000CFDC end:0x0000D044 align:4
+
+rel/sel/sel/fn_10_CFAC.c:
+	.text       start:0x0000CFAC end:0x0000CFDC align:4

@@ -1425,6 +1425,33 @@ f32 fn_1_519AC(u32 value) {
 }
 /* fzgx:end fn_1_519AC */
 
+/* fzgx:begin fn_1_519FC */
+typedef struct {
+    f32 width;
+    u8 pad0[4];
+    f32 height;
+    u8 pad1[8];
+} FontViewport;
+
+extern void fn_80038F10(FontViewport *viewport);
+extern u16 fn_1_A5D88(void);
+extern const f32 lbl_1_rodata_2770;
+
+f32 fn_1_519FC(f32 value) {
+    FontViewport viewport;
+    f32 width;
+    f32 height;
+
+    fn_80038F10(&viewport);
+
+    width = viewport.width;
+    height = viewport.height;
+
+    return value * height / (f32)(u32)fn_1_A5D88()
+         + lbl_1_rodata_2770 * width / (f32)(u32)fn_1_A5D88();
+}
+/* fzgx:end fn_1_519FC */
+
 /* fzgx:begin fn_1_51AC0 */
 extern void fn_80038F10(void *result);
 extern u32 fn_1_A5DB0(void);

@@ -4934,3 +4934,12 @@ dol/fn_800139E8.c:
 
 dol/fn_80024D84.c:
 	.text       start:0x80024D84 end:0x80024DF0 align:4
+
+dol/fn_80015E18.c:
+	.text       start:0x80015E18 end:0x80015EE8 align:4
+
+dol/fn_8008EB8C.c:
+	.text       start:0x8008EB8C end:0x8008EBF8 align:4
+
+dol/GXSetMisc.c:
+	.text       start:0x80033D8C end:0x80033E20 align:4

@@ -312,6 +312,33 @@ void fn_1_13923C(u32 arg0, u32 arg1) {
 }
 /* fzgx:end fn_1_13923C */
 
+/* fzgx:begin fn_1_139A3C noprologue */
+#include "types.h"
+
+extern s32 lbl_1_bss_8B3A0[];
+extern s32 lbl_1_bss_8E3D0[];
+
+int fn_1_139A3C(int arg0) {
+    s32 index = (s16)arg0;
+
+    if (((u32 *)((u8 *)lbl_1_bss_8B3A0 + 0xF0))[index] == 0) {
+        lbl_1_bss_8E3D0[index] = 0;
+    }
+
+    if (((s32 *)((u8 *)lbl_1_bss_8B3A0 + 0x100))[index] == 7 &&
+        ((s32 *)((u8 *)lbl_1_bss_8B3A0 + 0x110))[index] != 0) {
+        lbl_1_bss_8E3D0[index] = 1;
+    } else if (((s32 *)((u8 *)lbl_1_bss_8B3A0 + 0x100))[index] == 8 ||
+               ((s32 *)((u8 *)lbl_1_bss_8B3A0 + 0x100))[index] == 9) {
+        if (((s32 *)((u8 *)lbl_1_bss_8B3A0 + 0x110))[index] == 0) {
+            lbl_1_bss_8E3D0[index] = 0;
+        }
+    }
+
+    return lbl_1_bss_8E3D0[index];
+}
+/* fzgx:end fn_1_139A3C */
+
 /* fzgx:begin fn_1_139AEC noprologue */
 #include "types.h"
 #include "rel/main_rel/sel_static_disp.h"
@@ -975,6 +1002,34 @@ u8 fn_1_141F94(u32 arg0) {
     return count;
 }
 /* fzgx:end fn_1_141F94 */
+
+/* fzgx:begin fn_1_142004 noprologue */
+#include "types.h"
+
+typedef struct Entry {
+    u8 pad[0x0E];
+    s16 value;
+    u8 tail[0x10];
+} Entry;
+
+extern Entry lbl_1_bss_8B3A0[4];
+
+int fn_1_142004(u8 arg0) {
+    Entry *entry = lbl_1_bss_8B3A0;
+    s32 index = -1;
+    s32 i;
+
+    for (i = 0; i < 4; i++) {
+        if (entry->value != -1) {
+            if (++index == arg0) {
+                return i;
+            }
+        }
+        entry++;
+    }
+    return 0;
+}
+/* fzgx:end fn_1_142004 */
 
 /* fzgx:begin fn_1_1420A4 */
 void fn_1_1420A4(void) {

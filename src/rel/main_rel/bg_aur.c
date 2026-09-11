@@ -251,6 +251,38 @@ s32 fn_1_1528D0(s16 x, s16 y, Cell *table, s16 unused, s16 multiplier) {
 }
 /* fzgx:end fn_1_1528D0 */
 
+/* fzgx:begin fn_1_152970 */
+typedef struct {
+    s16 key;
+    u16 pad;
+    u32 mask;
+} Fn152970Entry;
+
+s32 fn_1_152970(s16 *out_group, s16 *out_entry, s16 key, u32 mask,
+                 Fn152970Entry *entries, s16 group_count, s16 entry_count) {
+    s16 count;
+    s16 group;
+    s16 entry;
+
+    if (key == -1) {
+        return 0;
+    }
+
+    count = entry_count;
+    for (group = 0; group < group_count; group++) {
+        for (entry = 0; entry < count; entry++) {
+            if ((entries[(group * count) + entry].mask & mask) == 0 &&
+                key == entries[(group * count) + entry].key) {
+                *out_group = group;
+                *out_entry = entry;
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+/* fzgx:end fn_1_152970 */
+
 /* fzgx:begin fn_1_153988 */
 // fn_1_153988: empty in retail (single blr).
 void fn_1_153988(void) {

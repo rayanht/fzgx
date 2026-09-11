@@ -5648,3 +5648,30 @@ rel/main_rel/font/fn_1_4B090.c:
 
 rel/main_rel/camera/fn_1_6514.c:
 	.text       start:0x00006514 end:0x0000660C align:4
+
+rel/main_rel/bg_aur/fn_1_152970.c:
+	.text       start:0x00152970 end:0x00152A28 align:4
+
+rel/main_rel/sel_static_disp/fn_1_142004.c:
+	.text       start:0x00142004 end:0x001420A4 align:4
+
+rel/main_rel/load/fn_1_46DC4.c:
+	.text       start:0x00046DC4 end:0x00046EA8 align:4
+
+rel/main_rel/stcoli/fn_1_20994.c:
+	.text       start:0x00020994 end:0x00020A5C align:4
+
+rel/main_rel/spline/fn_1_F8334.c:
+	.text       start:0x000F8334 end:0x000F83F0 align:4
+
+rel/main_rel/sel_static_disp/fn_1_139A3C.c:
+	.text       start:0x00139A3C end:0x00139AEC align:4
+
+rel/main_rel/stcoli/fn_1_250F8.c:
+	.text       start:0x000250F8 end:0x000251F8 align:4
+
+rel/main_rel/font/fn_1_519FC.c:
+	.text       start:0x000519FC end:0x00051AC0 align:4
+
+rel/main_rel/bitmap/fn_1_48004.c:
+	.text       start:0x00048004 end:0x0004811C align:4
