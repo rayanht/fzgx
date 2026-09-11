@@ -429,6 +429,48 @@ void fn_1_98840(Node *node) {
 }
 /* fzgx:end fn_1_98840 */
 
+/* fzgx:begin fn_1_9885C */
+struct fn_1_9885C_Arg0 {
+    u8 pad_0[0x28];
+    u32 unk_28;
+    s32 unk_2C;
+    u8 pad_30[0x10];
+    u32 unk_40;
+    u8 pad_44[0x4];
+    u32 unk_48;
+    u8 pad_4C[0x41C];
+    u32 unk_468;
+    u32 unk_46C;
+    u32 unk_470;
+};
+
+extern u32 fn_1_584AC(void);
+extern void lbl_8006D7DC(void *);
+extern void lbl_8006DFC4(void *);
+extern void lbl_8006E1B0(void *, void *);
+
+#pragma opt_dead_assignments off
+void fn_1_9885C(struct fn_1_9885C_Arg0 *arg0) {
+    u32 v0;
+    struct { u32 value; } v1;
+    u32 v2;
+    u32 t0;
+    v0 = arg0->unk_48;
+    arg0->unk_40 = 0;
+    { u32 __reg_value_v1 = arg0->unk_28; v1.value = __reg_value_v1; }
+    v2 = arg0->unk_2C;
+    arg0->unk_468 = v1.value;
+    arg0->unk_46C = v2;
+    arg0->unk_470 = *(u32 *)((u8 *)(u32)arg0 + 48);
+    t0 = fn_1_584AC();
+    *(u32 *)((u8 *)(u32)arg0 + 68) = (t0 & 0x1);
+    lbl_8006D7DC((void *)(v0 + 124));
+    lbl_8006DFC4((void *)(v0 + 236));
+    lbl_8006E1B0((void *)((u32)arg0 + 12), (void *)((u32)arg0 + 88));
+}
+#pragma opt_dead_assignments reset
+/* fzgx:end fn_1_9885C */
+
 /* fzgx:begin fn_1_988D8 */
 // fn_1_988D8: empty in retail (single blr).
 void fn_1_988D8(void) {

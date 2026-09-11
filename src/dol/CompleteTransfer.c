@@ -12,7 +12,7 @@ struct SIBiosData {
 
 vu32 __SIRegs[64] : FZGX_ADDR___SIRegs;
 
-extern OSTime TypeTime_8015CB30[4];
+extern OSTime TypeTime[4];
 
 extern OSTime lbl_8015CB50[4];
 
@@ -63,7 +63,7 @@ u32 CompleteTransfer() {
                 sr = 0x0004;
             }
         } else {
-            TypeTime_8015CB30[(data->Si).chan] = __OSGetSystemTime();
+            TypeTime[(data->Si).chan] = __OSGetSystemTime();
             sr = 0;
         }
         (data->Si).chan = -1;

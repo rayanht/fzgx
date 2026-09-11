@@ -195,6 +195,77 @@ void fn_1_D38A4(void) {
 }
 /* fzgx:end fn_1_D38A4 */
 
+/* fzgx:begin fn_1_D38C4 noprologue */
+#include "types.h"
+
+extern int fn_1_45730(void *arg, void *path);
+extern u8 lbl_1_bss_3BC0[32];
+extern int fn_1_458A0(void *path, void *data, int size, int offset);
+extern char lbl_1_data_3DBD8[10];
+extern void *lbl_801A6410;
+extern void *fn_1_45D0(void *base, int offset, void *source, int size);
+extern int fn_1_45850(void *path);
+extern void fn_1_12860(void *data, int size);
+extern void fn_1_46B4(void *base, int offset, void *source, int size);
+extern void DCFlushRange(void *address, u32 size);
+extern void *fn_80071678(void *address, u32 size);
+
+typedef struct {
+    u8 pad[0xc];
+    u32 field_c;
+} Fn1D38C4Result;
+
+#pragma opt_propagation off
+#pragma opt_common_subs off
+void *fn_1_D38C4(void *arg) {
+    u8 path[96];
+    u32 size2;
+    u32 size;
+    void *data2;
+    void *aligned;
+    void *data;
+    Fn1D38C4Result *result;
+
+    if (fn_1_45730(arg, path) == 0) {
+        return 0;
+    }
+    if (fn_1_458A0(path, lbl_1_bss_3BC0, 0x20, 0) < 0) {
+        return 0;
+    }
+
+    size = (__lwbrx((void *)lbl_1_bss_3BC0, 0) + 0x27) & ~0x1f;
+    size2 = (__lwbrx((void *)lbl_1_bss_3BC0, 4) + 0x1f) & ~0x1f;
+
+    data = fn_1_45D0(lbl_801A6410, ((size2 + 0x1f) & ~0x1f) + 0x20,
+                     lbl_1_data_3DBD8, 0x1d6);
+    aligned = (void *)(((u32)data + 0x3f) & ~0x1f);
+    if (aligned == 0) {
+        return 0;
+    }
+    data2 = fn_1_45D0(lbl_801A6410, size, lbl_1_data_3DBD8, 0x1dc);
+    if (data2 == 0) {
+        return 0;
+    }
+    if (fn_1_458A0(path, data2, size, 0) < 0) {
+        return 0;
+    }
+    if (fn_1_45850(path) == 0) {
+        return 0;
+    }
+
+    fn_1_12860(data2, (int)aligned);
+    fn_1_46B4(lbl_801A6410, (int)data2, lbl_1_data_3DBD8, 0x1ea);
+    DCFlushRange(aligned, size2);
+
+    result = (Fn1D38C4Result *)fn_80071678(aligned, (u32)data);
+    result->field_c = 0;
+    return result;
+}
+#pragma opt_common_subs reset
+
+#pragma opt_propagation reset
+/* fzgx:end fn_1_D38C4 */
+
 /* fzgx:begin fn_1_D3A4C noprologue */
 #include "types.h"
 

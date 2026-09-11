@@ -5849,3 +5849,36 @@ rel/main_rel/spline/fn_1_F9028.c:
 
 rel/main_rel/archive/fn_1_12CB04.c:
 	.text       start:0x0012CB04 end:0x0012CCB0 align:4
+
+rel/main_rel/bg_aur/fn_1_153B24.c:
+	.text       start:0x00153B24 end:0x00153C60 align:4
+
+rel/main_rel/car/fn_1_8658C.c:
+	.text       start:0x0008658C end:0x00086624 align:4
+
+rel/main_rel/bg_win/fn_1_15BA78.c:
+	.text       start:0x0015BA78 end:0x0015BB34 align:4
+
+rel/main_rel/bg_for/fn_1_DCE60.c:
+	.text       start:0x000DCE60 end:0x000DCED0 align:4
+
+rel/main_rel/burner/fn_1_9885C.c:
+	.text       start:0x0009885C end:0x000988D8 align:4
+
+rel/main_rel/bg_san/fn_1_DC454.c:
+	.text       start:0x000DC454 end:0x000DC5E8 align:4
+
+rel/main_rel/archive/fn_1_1310B8.c:
+	.text       start:0x001310B8 end:0x001310E0 align:4
+
+rel/main_rel/mdlload/fn_1_D38C4.c:
+	.text       start:0x000D38C4 end:0x000D3A4C align:4
+
+rel/main_rel/car/fn_1_862D4.c:
+	.text       start:0x000862D4 end:0x0008636C align:4
+
+rel/main_rel/effect_car/fn_1_680F8.c:
+	.text       start:0x000680F8 end:0x00068248 align:4
+
+rel/main_rel/spline/fn_1_F5B88.c:
+	.text       start:0x000F5B88 end:0x000F5D94 align:4

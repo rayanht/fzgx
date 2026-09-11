@@ -3,7 +3,7 @@
 extern u32 OSDisableInterrupts(void);
 extern u32 OSRestoreInterrupts(u32);
 extern u64 __OSTimeToSystemTime(u64);
-extern void InsertAlarm_8000AC44(void *, u64, u32);
+extern void InsertAlarm(void *, u64, u32);
 
 struct OSSetPeriodicAlarm_Alarm {
     u32 unk_0[6];

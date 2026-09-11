@@ -841,6 +841,36 @@ u32 fn_1_862A8(u32 arg0, struct fn_1_862A8_Arg1 *arg1) {
 }
 /* fzgx:end fn_1_862A8 */
 
+/* fzgx:begin fn_1_862D4 */
+typedef struct {
+    u32 x;
+    u32 y;
+    u32 z;
+} Triple;
+
+extern Obj_1_bss_6D838_Target *lbl_1_bss_6D838;
+extern Triple lbl_1_rodata_3BE8;
+extern int fn_80007CDC(void *);
+
+#pragma opt_dead_assignments off
+void fn_1_862D4(int index, Triple *out) {
+    int offset = index * 0x620;
+    struct { u32 value; } v2;
+
+    if (fn_80007CDC((u8 *)lbl_1_bss_6D838 + offset + 0x7c) != 0) {
+        *out = lbl_1_rodata_3BE8;
+    } else {
+        u32 v0 = (u32)lbl_1_bss_6D838 + offset;
+        u32 v1 = *(u32 *)((u8 *)v0 + 0x7c);
+        v2.value = *(u32 *)((u8 *)v0 + 0x80);
+        out->x = v1;
+        out->y = v2.value;
+        out->z = *(u32 *)((u8 *)v0 + 0x84);
+    }
+}
+#pragma opt_dead_assignments reset
+/* fzgx:end fn_1_862D4 */
+
 /* fzgx:begin fn_1_8636C */
 // Dispatches the argument based on the indexed car entry's state.
 void fn_1_8636C(int index, void *arg) {
@@ -948,6 +978,31 @@ f32 fn_1_86574(int index) {
     return lbl_1_bss_6D838[index].unk_38;
 }
 /* fzgx:end fn_1_86574 */
+
+/* fzgx:begin fn_1_8658C */
+extern u32 lbl_1_rodata_3BF4[14];
+extern int fn_80007CDC(void *);
+
+typedef struct {
+    u32 x;
+    u32 y;
+    u32 z;
+} Vec3U32;
+
+#pragma opt_propagation off
+void fn_1_8658C(int index, Vec3U32 *out) {
+    int offset = index * 0x620;
+    Obj_1_bss_6D838_Target *p;
+
+    if (fn_80007CDC((u8 *)lbl_1_bss_6D838 + offset + 0x88) != 0) {
+        *out = *(Vec3U32 *)lbl_1_rodata_3BF4;
+    } else {
+        p = (Obj_1_bss_6D838_Target *)((u8 *)lbl_1_bss_6D838 + offset);
+        *out = *(Vec3U32 *)&p->unk_88;
+    }
+}
+#pragma opt_propagation reset
+/* fzgx:end fn_1_8658C */
 
 /* fzgx:begin fn_1_86624 */
 u8 fn_1_86624(void) {

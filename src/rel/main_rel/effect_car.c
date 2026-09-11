@@ -9,6 +9,64 @@ extern void fn_1_71D0C(void *arg0, void *arg1);
 extern void *lbl_801A6410;
 extern void fn_1_46B4(u32 value, void *field, u8 *data, s32 code);
 
+/* fzgx:begin fn_1_680F8 */
+extern u32 fn_1_4630(u32 value, u32 size, u8 *data, s32 code);
+extern void fn_1_862D4(s16 value, void *result);
+extern void fn_1_58E3C(void *entry);
+extern u32 fn_1_58C4(void);
+extern u8 *memset(u8 *dst, int value, u32 size);
+extern void *lbl_801A6410;
+extern s8 lbl_1_bss_6C878[];
+
+typedef struct Fn1_680F8Arg {
+    u8 pad_00[0x18];
+    s16 unk_18;
+    u16 unk_1a;
+    u8 pad_1c[0x18];
+    u32 unk_34;
+    u8 *unk_38;
+    u8 unk_3c[4];
+} Fn1_680F8Arg;
+
+typedef struct Fn1_680F8Entry {
+    u8 pad_00[0x0c];
+    u16 unk_0c;
+    u8 pad_0e[0x0a];
+    s16 unk_18;
+    u8 pad_1a[0x1e];
+    u8 *unk_38;
+    u8 pad_3c[0xac];
+} Fn1_680F8Entry;
+
+void fn_1_680F8(Fn1_680F8Arg *arg) {
+    u8 *p;
+    Fn1_680F8Entry entry;
+    u32 n;
+    s32 i;
+
+    arg->unk_1a = 0xffff;
+{
+    u8 *base;
+    base = arg->unk_38;
+    arg->unk_34 = fn_1_4630((u32)lbl_801A6410, 0x300, lbl_1_data_1D8A8, 0xc7);
+    fn_1_862D4(arg->unk_18, arg->unk_3c);
+    memset((u8 *)&entry, 0, 0xe8);
+    entry.unk_18 = arg->unk_18;
+    entry.unk_0c = 4;
+    p = base;
+}
+    for (i = 0; i < 4; i++) {
+        entry.unk_38 = p + 0x3b4;
+        fn_1_58E3C(&entry);
+        p += 0x30;
+    }
+    n = fn_1_58C4();
+    for (i = 0; i < n; i++) {
+        lbl_1_bss_6C878[i * 24] = -1;
+    }
+}
+/* fzgx:end fn_1_680F8 */
+
 /* fzgx:begin fn_1_68248 */
 typedef struct Fn1_68248Arg {
     u8 pad0[0x34];

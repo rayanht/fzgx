@@ -368,6 +368,53 @@ void fn_1_153AF8(u32 *entries) {
 }
 /* fzgx:end fn_1_153AF8 */
 
+/* fzgx:begin fn_1_153B24 noprologue */
+#include "types.h"
+
+typedef struct {
+    s32 count;
+    u8 pad_004[0x100];
+    s32 counter[64];
+    f32 timer[64];
+    f32 progress[64];
+    f32 cooldown[64];
+} Fn153B24Data;
+
+void fn_1_153B24(Fn153B24Data *data, u32 lab_unused0, u32 lab_unused1, u32 lab_unused2) {
+    f32 base;
+    f32 prod;
+    s32 i;
+
+    for (i = 0; i < data->count; i++) {
+        data->timer[i] -= 0.15f;
+        if (data->timer[i] <= -0.95f) {
+            data->counter[i]++;
+            data->timer[i] = 0.031f;
+        }
+
+        base = 0.005f;
+        prod = -0.032f * (f32)data->counter[i];
+        data->progress[i] = base + prod;
+
+        if (data->progress[i] <= -0.923f) {
+            data->timer[i] = -0.95f;
+            data->progress[i] = -0.923f;
+            data->counter[i] = (s32)((data->progress[i] - 0.005f) / -0.032f);
+        }
+
+        if (data->progress[i] == -0.923f) {
+            data->cooldown[i] -= -0.032f;
+            if (data->cooldown[i] > 1.0f) {
+                data->cooldown[i] = 0.0f;
+                data->timer[i] = 0.031f;
+                data->progress[i] = 0.005f;
+                data->counter[i] = (s32)((data->progress[i] - 0.005f) / -0.032f);
+            }
+        }
+    }
+}
+/* fzgx:end fn_1_153B24 */
+
 /* fzgx:begin fn_1_153C60 noprologue */
 #include "types.h"
 

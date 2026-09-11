@@ -61,6 +61,50 @@ void fn_1_15B970(WinObject *obj) {
 }
 /* fzgx:end fn_1_15B970 */
 
+/* fzgx:begin fn_1_15BA78 noprologue */
+#include "types.h"
+
+typedef struct {
+    u8 pad_00[0x08];
+    u32 count;
+    u32 entries_offset;
+    u32 results_offset;
+} StringTable;
+
+extern StringTable *lbl_1_bss_8F8D0;
+extern u32 strlen(const char *str);
+extern s32 fn_8006FC1C(const char *a, const char *b);
+
+#pragma opt_common_subs off
+char *fn_1_15BA78(char *name) {
+    struct { StringTable * value; } table;
+    u32 index;
+    struct { u32 value; } entry_offset;
+    struct { u32 value; } name_length;
+
+    { StringTable * __reg_value_table = lbl_1_bss_8F8D0; table.value = __reg_value_table; }
+    if (table.value == 0) {
+        return name;
+    }
+
+    name_length.value = strlen(name);
+    index = 0;
+    entry_offset.value = 0;
+    while (index < table.value->count) {
+        u8 *entry = ((((entry_offset.value)) + ((((u8 *)table.value)) + ((table.value->entries_offset)))));
+        if (name_length.value == *(u32 *)entry &&
+            fn_8006FC1C((char *)table.value + *(u32 *)(entry + 4), name) != 0) {
+            u32 result_offset = *(u32 *)((u8 *)table.value + table.value->results_offset + index * 8 + 4);
+            return (char *)table.value + result_offset;
+        }
+        entry_offset.value += 8;
+        index++;
+    }
+    return name;
+}
+#pragma opt_common_subs reset
+/* fzgx:end fn_1_15BA78 */
+
 /* fzgx:begin fn_1_15BE38 */
 typedef struct {
     u32 count;

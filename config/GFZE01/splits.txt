@@ -5030,3 +5030,33 @@ dol/fn_80073D60.c:
 
 dol/fn_800658B4.c:
 	.text       start:0x800658B4 end:0x80065A7C align:4
+
+dol/fn_8008D028.c:
+	.text       start:0x8008D028 end:0x8008D154 align:4
+
+dol/fn_80015C1C.c:
+	.text       start:0x80015C1C end:0x80015CB0 align:4
+
+dol/gdev_cc_write.c:
+	.text       start:0x8008E458 end:0x8008E518 align:4
+
+dol/ddh_cc_write.c:
+	.text       start:0x8008DEAC end:0x8008DF6C align:4
+
+dol/__OSUnhandledException.c:
+	.text       start:0x8000C7E0 end:0x8000CAC8 align:4
+
+dol/fn_80063094.c:
+	.text       start:0x80063094 end:0x800631EC align:4
+
+dol/fn_80083BCC.c:
+	.text       start:0x80083BCC end:0x80083CF4 align:4
+
+dol/fn_8003B930.c:
+	.text       start:0x8003B930 end:0x8003B9AC align:4
+
+dol/VIGetTvFormat.c:
+	.text       start:0x8001C01C end:0x8001C084 align:4
+
+dol/__fstLoad.c:
+	.text       start:0x8001A3F4 end:0x8001A55C align:4

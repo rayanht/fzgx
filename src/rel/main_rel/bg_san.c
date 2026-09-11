@@ -599,6 +599,63 @@ void fn_1_DC404(fn_1_DC404_Container *container) {
 }
 /* fzgx:end fn_1_DC404 */
 
+/* fzgx:begin fn_1_DC454 noprologue */
+#include "types.h"
+#include "rel/main_rel/globals.h"
+
+const f32 lbl_1_rodata_66D0 = 0.5f;
+
+extern u32 lbl_801A66A0;
+extern f32 lbl_8006D188(s32);
+extern void fn_1_1030D4(void *entry, void *arg);
+
+typedef struct SanEntry {
+    u8 unk00[0x08];
+    u32 unk08;
+    u8 unk0c[0x20];
+    f32 value2c;
+    f32 value30;
+    f32 value34;
+    u8 unk38[0x74];
+} SanEntry;
+
+typedef struct SanContainer {
+    s32 count;
+    SanEntry entries[1];
+} SanContainer;
+
+void fn_1_DC454(SanContainer *container, void *arg) {
+    void *saved_arg;
+    s32 count;
+    SanEntry *entry;
+
+    saved_arg = arg;
+    entry = container->entries;
+    count = container->count;
+    while (count > 0) {
+        if (((1) & ((entry->unk08 >> 28)))) {
+            entry->value2c = 0.6499999761581421f;
+            entry->value30 = 0.75f;
+            entry->value34 = 1.0f;
+        } else if ((entry->unk08 >> 29) & 1) {
+            entry->value2c = 1.0f;
+            entry->value30 = 0.0f;
+            entry->value34 = 0.0f;
+        } else {
+            entry->value2c = (f32)__fabs(lbl_8006D188(
+                (s32)(182.04444885253906f * (f32)lbl_801A66A0)));
+            entry->value30 = (f32)__fabs(lbl_8006D188(
+                (s32)(((((f32)lbl_801A66A0) * (182.04444885253906f)) * (0.5)))));
+            entry->value34 = (f32)__fabs(lbl_8006D188(
+                (s32)(2.0 * (182.04444885253906f * (f32)lbl_801A66A0))));
+        }
+        fn_1_1030D4(entry, saved_arg);
+        count--;
+        entry++;
+    }
+}
+/* fzgx:end fn_1_DC454 */
+
 /* fzgx:begin fn_1_DC5E8 */
 typedef struct fn_1_DC5E8_Entry {
     u8 unk_00[0xac];

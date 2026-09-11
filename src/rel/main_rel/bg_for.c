@@ -2,6 +2,71 @@
 #include "rel/main_rel/globals.h"
 #include "rel/main_rel/bg_for.h"
 
+/* fzgx:begin fn_1_DCE60 */
+struct fn_1_DCE60_Arg0 {
+    u32 unk_0;
+    u32 unk_4;
+    u32 unk_8;
+    u32 unk_C;
+    u32 unk_10;
+    u32 unk_14;
+    u32 unk_18;
+    u32 unk_1C;
+    u32 unk_20;
+    u32 unk_24;
+    u32 unk_28;
+    u32 unk_2C;
+    f32 unk_30;
+    f32 unk_34;
+    f32 unk_38;
+    f32 unk_3C;
+};
+struct fn_1_DCE60_Copy24 { u32 a[6]; };
+struct fn_1_DCE60_Copy12 { u32 a[3]; };
+struct fn_1_DCE60_lbl_1_rodata_6750 {
+    u32 unk_0;
+    u32 unk_4;
+    u32 unk_8;
+    u32 unk_C;
+    u32 unk_10;
+    u32 unk_14;
+    u32 unk_18;
+    u32 unk_1C;
+    u32 unk_20;
+    f32 unk_24;
+    f32 unk_28;
+    f32 unk_2C;
+};
+
+extern struct fn_1_DCE60_lbl_1_rodata_6750 lbl_1_rodata_6750;
+
+#pragma opt_propagation off
+f32 fn_1_DCE60(struct fn_1_DCE60_Arg0 *arg0, f32 arg1) {
+    u32 v0;
+    u32 v4;
+    f32 v3;
+    f32 v2;
+    f32 v1;
+
+    v4 = lbl_1_rodata_6750.unk_0;
+    v0 = lbl_1_rodata_6750.unk_4;
+    v1 = lbl_1_rodata_6750.unk_24;
+    arg0->unk_0 = v4;
+    v2 = lbl_1_rodata_6750.unk_28;
+    arg0->unk_4 = v0;
+    v3 = lbl_1_rodata_6750.unk_2C;
+    arg0->unk_8 = lbl_1_rodata_6750.unk_8;
+    *(struct fn_1_DCE60_Copy12 *)((u8 *)(u32)arg0 + 24) = *(struct fn_1_DCE60_Copy12 *)((u8 *)&lbl_1_rodata_6750 + 12);
+    *(struct fn_1_DCE60_Copy12 *)((u8 *)(u32)arg0 + 36) = *(struct fn_1_DCE60_Copy12 *)((u8 *)&lbl_1_rodata_6750 + 24);
+    arg0->unk_30 = v1;
+    arg0->unk_34 = arg1;
+    arg0->unk_38 = v2;
+    arg0->unk_3C = v3;
+    return arg1;
+}
+#pragma opt_propagation reset
+/* fzgx:end fn_1_DCE60 */
+
 /* fzgx:begin fn_1_DCED0 */
 extern void lbl_8006DAEC(void);
 extern void lbl_8006DD14(void *, void *);

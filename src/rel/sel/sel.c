@@ -2515,6 +2515,57 @@ void fn_10_2228C(void) {
 }
 /* fzgx:end fn_10_2228C */
 
+/* fzgx:begin fn_10_2287C */
+extern u8 lbl_10_bss_55CE0;
+extern u8 lbl_1_bss_718E0[];
+
+typedef struct {
+    u32 value;
+    u8 pad[0x1a - 4];
+    u8 type;
+    u8 pad1b;
+    u8 field_1c;
+    u8 field_1d;
+    u8 field_1e;
+    u8 field_1f;
+} SelObject;
+
+extern SelObject *fn_1_156198(u8 enabled);
+extern u64 fn_1_15AC10(void);
+extern s16 fn_1_14F118(u8 value, int index);
+extern void fn_1_1598C4(int value, u8 type, u8 a, u8 b, u8 c, u8 d, u8 e,
+                         u8 *table, u64 pair, u32 zero);
+extern void fn_1_159AE0(void);
+extern void fn_10_22998(SelObject *object);
+
+void fn_10_2287C(void) {
+    SelObject *object;
+    u64 pair;
+    u8 a;
+    u8 b;
+    u8 c;
+
+    object = fn_1_156198(lbl_10_bss_55CE0);
+    pair = fn_1_15AC10();
+    if (object == 0) {
+        fn_10_22998(object);
+    } else {
+        if (object->type >= 0x29) {
+            a = fn_1_14F118(object->field_1d, 0);
+            b = fn_1_14F118(object->field_1e, 1);
+            c = fn_1_14F118(object->field_1f, 2);
+        } else {
+            a = b = c = 0;
+        }
+        fn_1_1598C4((((object->value & 0xfff)) + ((((object->value >> 12) & 0xff) * 1000) + (((object->value >> 20) & 0xff) * 60000))),
+                    object->type, a, b, c, object->field_1c,
+                    lbl_10_bss_55CE0, lbl_1_bss_718E0 + 0x5522, pair, 0);
+        fn_1_159AE0();
+        fn_10_22998(object);
+    }
+}
+/* fzgx:end fn_10_2287C */
+
 /* fzgx:begin fn_10_2323C */
 extern u8 lbl_10_bss_55680;
 

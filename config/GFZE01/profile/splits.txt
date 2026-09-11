@@ -104,3 +104,9 @@ rel/profile/data/lbl_16_data_83500.c:
 
 rel/profile/data/lbl_16_rodata_0.c:
 	.rodata     start:0x00000000 end:0x0000023C align:8
+
+rel/profile/fn_16_23A8.c:
+	.text       start:0x000023A8 end:0x000024A4 align:4
+
+rel/profile/fn_16_1F1C.c:
+	.text       start:0x00001F1C end:0x00002054 align:4

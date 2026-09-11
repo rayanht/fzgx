@@ -255,6 +255,79 @@ void fn_1_F5B84(void) {
 }
 /* fzgx:end fn_1_F5B84 */
 
+/* fzgx:begin fn_1_F5B88 */
+extern s32 fn_1_58C4(void);
+extern u32 lbl_801A63C0;
+
+typedef struct {
+    f32 x, y, z;
+} Vec3f;
+
+typedef struct {
+    Vec3f unk_0;
+    Vec3f unk_C;
+    f32 unk_18;
+    f32 unk_1C;
+    f32 unk_20;
+    f32 unk_24;
+    f32 unk_28;
+    f32 unk_2C;
+    s32 unk_30;
+} SplineNode;
+
+typedef struct {
+    u8 pad[0x24];
+    u32 unk_24;
+} NodeTarget;
+
+typedef struct {
+    u8 pad[0xA0];
+    NodeTarget *unk_A0;
+} NodeContainer;
+
+static inline int rand_next(void) {
+    lbl_801A63C0 = lbl_801A63C0 * 0x676A4B6B + 0x33CB;
+    return (lbl_801A63C0 >> 16) & 0x7FFF;
+}
+
+#pragma opt_lifetimes off
+void fn_1_F5B88(Obj_1_data_2A7E0_At3C *arg0) {
+    s32 i;
+    SplineNode *node;
+    NodeContainer *c;
+    NodeTarget *target;
+
+    if ((u32)fn_1_58C4() < 2) {
+        arg0->unk_10 = 1;
+    } else {
+        arg0->unk_10 = 0;
+        return;
+    }
+
+    *(f32 *)&arg0->unk_C = 0.0f;
+    node = (SplineNode *)&arg0->unk_14;
+    c = (NodeContainer *)lbl_1_bss_38458->unk_8;
+    target = c->unk_A0;
+    arg0->unk_0 = target->unk_24;
+    arg0->unk_4 = target->unk_24;
+
+    for (i = 0; i < 36; i++, node++) {
+        node->unk_0.x = 6.0f * ((f32)rand_next() / 32767.0f);
+        node->unk_0.y = 6.0f * ((f32)rand_next() / 32767.0f);
+        node->unk_0.z = 6.0f * ((f32)rand_next() / 32767.0f);
+        node->unk_C = node->unk_0;
+        node->unk_18 = 0.0f;
+        node->unk_1C = 0.0f;
+        node->unk_20 = 0.0f;
+        node->unk_24 = 0.0f;
+        node->unk_2C = 0.019999999552965164f * (((f32)rand_next() / 32767.0f) + 1.0f);
+        node->unk_28 = node->unk_2C;
+        node->unk_30 = (s32)(15.0f * ((f32)rand_next() / 32767.0f));
+    }
+}
+#pragma opt_lifetimes reset
+/* fzgx:end fn_1_F5B88 */
+
 /* fzgx:begin fn_1_F70C0 */
 // fn_1_F70C0: returns a constant.
 int fn_1_F70C0(void) {

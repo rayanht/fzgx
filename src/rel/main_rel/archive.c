@@ -851,6 +851,36 @@ void fn_1_131084(u32 arg0, u32 arg1) {
 }
 /* fzgx:end fn_1_131084 */
 
+/* fzgx:begin fn_1_1310B8 noprologue */
+#include "types.h"
+
+struct State {
+    u32 unk_0;
+    u32 unk_4;
+    u32 unk_8;
+    u8 pad_C[0x20];
+    u32 unk_2C;
+};
+
+extern struct State lbl_1_bss_8CA40;
+
+#pragma peephole off
+void fn_1_1310B8(void) {
+    struct State *state;
+    u32 status;
+
+    state = &lbl_1_bss_8CA40;
+    status = state->unk_0;
+    if ((s32)status != -1) {
+        return;
+    }
+    state->unk_4 = 0;
+    state->unk_8 = 0;
+    state->unk_2C = 0;
+}
+#pragma peephole reset
+/* fzgx:end fn_1_1310B8 */
+
 /* fzgx:begin fn_1_1310E0 */
 s32 fn_1_1310E0(void) {
     return lbl_1_bss_8CA40 != -1;
