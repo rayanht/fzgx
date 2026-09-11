@@ -1468,6 +1468,76 @@ int fn_1_13FB24(u32 arg0) {
 }
 /* fzgx:end fn_1_13FB24 */
 
+/* fzgx:begin fn_1_14108C noprologue */
+#include "types.h"
+#include "font.h"
+
+typedef struct {
+    u32 words[11];
+} U32x11;
+
+typedef struct {
+    u32 unk0;      // 0x00
+    f32 x;         // 0x04
+    f32 y;         // 0x08
+    f32 z;         // 0x0c
+    f32 unk10;     // 0x10
+    f32 unk14;     // 0x14
+    u32 unk18[6];  // 0x18
+    u32 unk30;     // 0x30
+    u32 unk34[9];  // 0x34
+} Packet;
+
+extern u32 lbl_1_rodata_91C0[11];
+extern f32 lbl_1_rodata_26F8[22];
+extern const f64 lbl_1_rodata_8600;
+extern const f32 lbl_1_rodata_91EC;
+extern const f32 lbl_1_rodata_85E8;
+extern const f32 lbl_1_rodata_8674;
+extern const f32 lbl_1_rodata_91F0;
+extern const f32 lbl_1_rodata_8B30;
+extern int fn_1_4F734(FontDrawPacket *);
+extern void fn_1_141338(u8, u32, u32, u32, f32);
+
+void fn_1_14108C(s16 arg0, s32 arg1, s32 arg2) {
+    U32x11 ids;
+    Packet packet;
+    f32 v;
+
+    ids = *(U32x11 *)lbl_1_rodata_91C0;
+
+    packet = *(Packet *)lbl_1_rodata_26F8;
+    packet.unk0 = ids.words[arg0];
+    packet.x = (f32)arg1;
+    packet.y = (f32)arg2;
+    packet.z = lbl_1_rodata_85E8;
+    packet.unk10 = packet.unk10 * lbl_1_rodata_91EC;
+    packet.unk14 = packet.unk14 * lbl_1_rodata_91EC;
+    packet.unk30 = 10;
+    fn_1_4F734((FontDrawPacket *)&packet);
+
+    v = lbl_1_rodata_8674 - (f32)arg1;
+    packet.x = v;
+    fn_1_4F734((FontDrawPacket *)&packet);
+
+    packet = *(Packet *)lbl_1_rodata_26F8;
+    packet.unk0 = 0x10000 - 0x5EF7;
+    packet.x = (f32)arg1;
+    packet.y = (f32)arg2;
+    packet.z = lbl_1_rodata_8B30;
+    packet.unk10 = packet.unk10 * lbl_1_rodata_91F0;
+    packet.unk14 = packet.unk14 * lbl_1_rodata_91EC;
+    packet.unk30 = 10;
+    fn_1_4F734((FontDrawPacket *)&packet);
+
+    packet.x = v;
+    fn_1_4F734((FontDrawPacket *)&packet);
+
+    fn_1_141338(arg0, (u32)arg1, (u32)arg2, 0x2D, lbl_1_rodata_91EC);
+    fn_1_141338(arg0, (u32)(s32)v, (u32)arg2, 0x2D, lbl_1_rodata_91EC);
+}
+/* fzgx:end fn_1_14108C */
+
 /* fzgx:begin fn_1_141338 */
 extern const f32 lbl_1_rodata_863C;
 extern u32 fn_1_141360(u32, u32, u32, u32, f32, f32);

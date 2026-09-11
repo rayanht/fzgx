@@ -33790,6 +33790,20 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/enemy_ctrl/fn_1_CC280.c",
+    "symbols": [
+      "fn_1_CC280"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "tu": "rel/main_rel/enemy_ctrl.c",
+    "pool": {
+      "@21": "lbl_1_rodata_5C00"
+    }
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/enemy_ctrl/fn_1_CC8E4.c",
     "symbols": [
       "fn_1_CC8E4"
@@ -40516,6 +40530,22 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/prog/fn_1_A6870.c",
+    "symbols": [
+      "fn_1_A6870"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "tu": "rel/main_rel/prog.c",
+    "pool": {
+      "@35": "lbl_1_rodata_49E0",
+      "@32": "lbl_1_rodata_49D8",
+      "@33": "lbl_1_rodata_49DC"
+    }
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/prog/fn_1_A6F10.c",
     "symbols": [
       "fn_1_A6F10"
@@ -43165,6 +43195,20 @@
     "tu": "rel/main_rel/sel_static_disp.c",
     "pool": {
       "@13": "jumptable_1_data_41EA8"
+    }
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/sel_static_disp/fn_1_14108C.c",
+    "symbols": [
+      "fn_1_14108C"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "tu": "rel/main_rel/sel_static_disp.c",
+    "pool": {
+      "@14": "lbl_1_rodata_8600"
     }
   },
   {

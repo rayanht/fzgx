@@ -8,6 +8,196 @@ extern s8 fn_1_A5DC4(void);
 extern const f32 lbl_1_rodata_49F8;
 extern f32 lbl_1_rodata_49FC[11];
 
+/* fzgx:begin fn_1_A6870 */
+typedef enum {
+    Sig_GXAdjustForOverscan_VI_TVMODE_NTSC_INT = ((((0)) << 2) + ((0))),
+    Sig_GXAdjustForOverscan_VI_TVMODE_NTSC_DS = ((((0)) << 2) + ((1))),
+    Sig_GXAdjustForOverscan_VI_TVMODE_NTSC_PROG = ((((0)) << 2) + ((2))),
+    Sig_GXAdjustForOverscan_VI_TVMODE_NTSC_3D = ((((0)) << 2) + ((3))),
+    Sig_GXAdjustForOverscan_VI_TVMODE_PAL_INT = ((((1)) << 2) + ((0))),
+    Sig_GXAdjustForOverscan_VI_TVMODE_PAL_DS = ((((1)) << 2) + ((1))),
+    Sig_GXAdjustForOverscan_VI_TVMODE_MPAL_INT = ((((2)) << 2) + ((0))),
+    Sig_GXAdjustForOverscan_VI_TVMODE_MPAL_DS = ((((2)) << 2) + ((1))),
+    Sig_GXAdjustForOverscan_VI_TVMODE_DEBUG_INT = ((((3)) << 2) + ((0))),
+    Sig_GXAdjustForOverscan_VI_TVMODE_DEBUG_PAL_INT = ((((4)) << 2) + ((0))),
+    Sig_GXAdjustForOverscan_VI_TVMODE_DEBUG_PAL_DS = ((((4)) << 2) + ((1))),
+    Sig_GXAdjustForOverscan_VI_TVMODE_EURGB60_INT = ((((5)) << 2) + ((0))),
+    Sig_GXAdjustForOverscan_VI_TVMODE_EURGB60_DS = ((((5)) << 2) + ((1))),
+    Sig_GXAdjustForOverscan_VI_TVMODE_GCA_INT = ((((6)) << 2) + ((0))),
+    Sig_GXAdjustForOverscan_VI_TVMODE_GCA_DS = ((((6)) << 2) + ((1))),
+    Sig_GXAdjustForOverscan_VI_TVMODE_GCA_PROG = ((((6)) << 2) + ((2))),
+} Sig_GXAdjustForOverscan_VITVMode;
+typedef enum {
+    Sig_GXAdjustForOverscan_VI_XFBMODE_SF = 0,
+    Sig_GXAdjustForOverscan_VI_XFBMODE_DF = 1,
+} Sig_GXAdjustForOverscan_VIXFBMode;
+typedef struct Sig_GXAdjustForOverscan__GXRenderModeObj {
+    Sig_GXAdjustForOverscan_VITVMode viTVmode;
+    u16 fbWidth;
+    u16 efbHeight;
+    u16 xfbHeight;
+    u16 viXOrigin;
+    u16 viYOrigin;
+    u16 viWidth;
+    u16 viHeight;
+    Sig_GXAdjustForOverscan_VIXFBMode xFBmode;
+    u8 field_rendering;
+    u8 aa;
+    u8 sample_pattern[12][2];
+    u8 vfilter[7];
+} Sig_GXAdjustForOverscan_GXRenderModeObj;
+typedef u8 Sig_fn_80035110_GXBool;
+typedef u8 Sig_fn_80034ECC_GXBool;
+
+extern Sig_GXAdjustForOverscan_GXRenderModeObj *lbl_801A6CF4;
+extern Sig_GXAdjustForOverscan_GXRenderModeObj lbl_8012B030;
+extern Sig_GXAdjustForOverscan_GXRenderModeObj lbl_8012AFB8;
+extern Sig_GXAdjustForOverscan_GXRenderModeObj lbl_8012B0A8;
+extern Sig_GXAdjustForOverscan_GXRenderModeObj lbl_8012B06C;
+extern Sig_GXAdjustForOverscan_GXRenderModeObj lbl_8019E150;
+
+struct fn_1_A6870_lbl_801A6D30_obj {
+    u32 unk_0;
+    u32 unk_4;
+    u32 unk_8;
+};
+struct fn_1_A6870_lbl_801A6D30 {
+    struct fn_1_A6870_lbl_801A6D30_obj *unk_0;
+};
+extern struct fn_1_A6870_lbl_801A6D30 lbl_801A6D30;
+
+extern const f32 lbl_1_rodata_49D8;
+extern const f32 lbl_1_rodata_49DC;
+extern const f64 lbl_1_rodata_49E0;
+
+extern void fn_1_54DCC(u8 *);
+extern f32 fn_1_A6FE8(void);
+extern void fn_1_549F4(void *, void *, f32, f32, f32, f32);
+extern void fn_1_A714C(f32 *, f32 *, f32 *, f32 *);
+extern void fn_1_A7024(f32, f32, f32, f32);
+extern u32 VIGetTvFormat(void);
+extern u32 OSGetProgressiveMode(void);
+extern void OSPanic(const char *, int, const char *, ...);
+extern void GXAdjustForOverscan(Sig_GXAdjustForOverscan_GXRenderModeObj *, Sig_GXAdjustForOverscan_GXRenderModeObj *, u16, u16);
+extern s32 fn_8001B42C(u32);
+extern void fn_8001AF64(void);
+extern void fn_8001BC54(void);
+extern void fn_8007423C(u32, u32, u32, u32);
+extern void fn_800743C4(s32, u32);
+extern void fn_80035110(void *, Sig_fn_80035110_GXBool);
+extern u32 fn_80038EEC(f32, f32, f32, f32, f32, f32);
+extern void fn_80074188(u32, u32, u32, u32);
+extern void fn_80034ECC(Sig_fn_80034ECC_GXBool, void *, Sig_fn_80034ECC_GXBool, void *);
+extern u32 lbl_1_data_3431C;
+extern u8 lbl_1_data_34324[0x20];
+extern u32 lbl_1_bss_6F5F0;
+extern u8 lbl_801A66B0[];
+
+void fn_1_A6870(u32 *arg0) {
+    Sig_GXAdjustForOverscan_GXRenderModeObj *rmode;
+    s32 tv;
+    s8 flag;
+    struct {
+        u8 unk_0[0x6c];
+        f32 unk_6c[6];
+    } loc_18;
+    f32 loc_14;
+    f32 loc_10;
+    f32 loc_C;
+    f32 loc_8;
+
+    switch (VIGetTvFormat()) {
+    case 0:
+        if (OSGetProgressiveMode() != 0) {
+            *lbl_801A6CF4 = lbl_8012B030;
+        } else {
+            *lbl_801A6CF4 = lbl_8012AFB8;
+        }
+        break;
+    case 1:
+        *lbl_801A6CF4 = lbl_8012B0A8;
+        break;
+    case 2:
+        *lbl_801A6CF4 = lbl_8012B06C;
+        break;
+    default:
+        OSPanic((const char *)&lbl_1_data_3431C, 557, (const char *)&lbl_1_data_34324);
+        break;
+    }
+
+    switch (*arg0) {
+    case 0:
+        GXAdjustForOverscan(lbl_801A6CF4, &lbl_8019E150, 0, 16);
+        lbl_801A6CF4 = &lbl_8019E150;
+        fn_8001B42C((u32)&lbl_8019E150);
+        fn_8001AF64();
+        fn_8001AF64();
+        fn_8001BC54();
+        *arg0 = 0;
+        break;
+    case 1:
+        GXAdjustForOverscan(lbl_801A6CF4, &lbl_8019E150, 0, 16);
+        lbl_801A6CF4 = &lbl_8019E150;
+        fn_8001B42C((u32)&lbl_8019E150);
+        fn_8001AF64();
+        fn_8001AF64();
+        fn_8001BC54();
+        *arg0 = 1;
+        break;
+    case 2:
+        lbl_801A6CF4->xfbHeight = 360;
+        lbl_801A6CF4->viHeight = 360;
+        lbl_801A6CF4->viXOrigin = 40;
+        lbl_801A6CF4->viYOrigin = 60;
+        GXAdjustForOverscan(lbl_801A6CF4, &lbl_8019E150, 0, 12);
+        lbl_801A6CF4 = &lbl_8019E150;
+        fn_8001B42C((u32)&lbl_8019E150);
+        fn_8001AF64();
+        fn_8001AF64();
+        fn_8001BC54();
+        *arg0 = 2;
+        break;
+    case 3:
+        GXAdjustForOverscan(lbl_801A6CF4, &lbl_8019E150, 0, 0);
+        lbl_801A6CF4 = &lbl_8019E150;
+        fn_8001B42C((u32)&lbl_8019E150);
+        fn_8001AF64();
+        fn_8001AF64();
+        fn_8001BC54();
+        *arg0 = 3;
+        break;
+    }
+
+    fn_8007423C(0, 0, lbl_801A6CF4->fbWidth, lbl_801A6CF4->efbHeight);
+    fn_800743C4(lbl_801A6CF4->fbWidth, lbl_801A6CF4->xfbHeight);
+    fn_80035110((void *)lbl_801A6D30.unk_0->unk_4, 1);
+    fn_80035110((void *)lbl_801A6D30.unk_0->unk_8, 0);
+    fn_80035110((void *)lbl_801A6D30.unk_0->unk_4, 0);
+
+    fn_1_54DCC(loc_18.unk_0);
+    fn_1_549F4(loc_18.unk_0, loc_18.unk_6c, loc_18.unk_6c[2], fn_1_A6FE8(), loc_18.unk_6c[4], loc_18.unk_6c[5]);
+    fn_1_A714C(&loc_14, &loc_10, &loc_C, &loc_8);
+    fn_1_A7024(loc_14, fn_1_A6FE8(), loc_C, loc_8);
+
+    rmode = lbl_801A6CF4;
+    fn_80038EEC(0.0f, 0.0f, (f32)rmode->fbWidth, (f32)rmode->efbHeight, 0.0f, 1.0f);
+    fn_80074188(0, 0, lbl_801A6CF4->fbWidth, lbl_801A6CF4->efbHeight);
+    fn_80034ECC(lbl_801A6CF4->aa, lbl_801A6CF4->sample_pattern, 1, lbl_801A6CF4->vfilter);
+
+    tv = lbl_1_bss_6F5F0;
+    if (tv == 1 || tv == 2) {
+        flag = 1;
+    } else {
+        flag = 0;
+    }
+    if (flag) {
+        lbl_801A66B0[3] = 1;
+    } else {
+        lbl_801A66B0[3] = 0;
+    }
+}
+/* fzgx:end fn_1_A6870 */
+
 /* fzgx:begin fn_1_A6F10 */
 u32 *fn_1_A6F10(void) {
     return &lbl_1_bss_6F5F0;

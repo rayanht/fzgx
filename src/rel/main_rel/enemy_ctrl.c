@@ -537,6 +537,116 @@ void fn_1_CC27C(void) {
 }
 /* fzgx:end fn_1_CC27C */
 
+/* fzgx:begin fn_1_CC280 noprologue */
+#include "types.h"
+#include "font.h"
+
+struct fn_1_CC280_Copy88 { u32 a[22]; };
+struct fn_1_CC280_lbl_1_rodata_5EC0 {
+    u32 unk_0[10];
+};
+struct fn_1_CC280_lbl_1_data_3D544 {
+    u32 unk_0[1];
+};
+struct fn_1_CC280_lbl_1_rodata_5C00 {
+    f64 unk_0;
+};
+
+extern f32 lbl_1_rodata_5CFC;
+extern f32 lbl_1_rodata_5DC8;
+extern f32 lbl_1_rodata_5E0C;
+extern int fn_1_4F734(FontDrawPacket *);
+extern struct fn_1_CC280_lbl_1_data_3D544 lbl_1_data_3D544;
+extern struct fn_1_CC280_lbl_1_rodata_5C00 lbl_1_rodata_5C00;
+extern struct fn_1_CC280_lbl_1_rodata_5EC0 lbl_1_rodata_5EC0;
+extern u32 fn_1_51E60(void *);
+extern FontDrawPacket lbl_1_rodata_26F8;
+extern u32 fn_1_5910(void);
+
+void fn_1_CC280(s32 arg0, s32 arg1, s32 arg2, s32 arg3, f32 arg4) {
+    s32 i;
+    struct fn_1_CC280_lbl_1_rodata_5EC0 loc_8;
+    FontDrawPacket loc_30;
+    s32 v;
+
+    loc_8 = lbl_1_rodata_5EC0;
+    i = fn_1_5910();
+    if (((lbl_1_data_3D544.unk_0[i] >> 26) & 1) != 0) {
+        if (arg3 < 10) {
+            loc_30 = lbl_1_rodata_26F8;
+            v = (arg2 % 10);
+            loc_30.image = loc_8.unk_0[v];
+            loc_30.x = (f32)arg0;
+            loc_30.y = (f32)arg1;
+            fn_1_51E60(&loc_30);
+            loc_30.image = 0x10000 - 27600;
+            loc_30.z = loc_30.z + lbl_1_rodata_5DC8;
+            fn_1_4F734(&loc_30);
+            loc_30.image = 0x10000 - 27618;
+            loc_30.x = (f32)(arg0 + 22);
+            loc_30.y = (f32)arg1;
+            fn_1_51E60(&loc_30);
+            v = (arg3 % 10);
+            loc_30.image = loc_8.unk_0[v];
+            loc_30.x = (f32)(arg0 + 34);
+            loc_30.y = (f32)arg1;
+            fn_1_51E60(&loc_30);
+            loc_30.image = 0x10000 - 27600;
+            loc_30.z = loc_30.z + lbl_1_rodata_5DC8;
+            fn_1_4F734(&loc_30);
+            loc_30.image = 0x10000 - 27646;
+            loc_30.x = (f32)(arg0 + 30);
+            loc_30.y = (f32)(arg1 + 26);
+            fn_1_51E60(&loc_30);
+        } else {
+            loc_30 = lbl_1_rodata_26F8;
+            v = (arg2 / 10);
+            loc_30.image = loc_8.unk_0[v];
+            loc_30.x = (f32)(arg0 - 16);
+            loc_30.y = (f32)arg1;
+            loc_30.scale_x = loc_30.scale_x * lbl_1_rodata_5E0C;
+            fn_1_51E60(&loc_30);
+            loc_30.image = 0x10000 - 27600;
+            loc_30.z = loc_30.z + lbl_1_rodata_5DC8;
+            fn_1_4F734(&loc_30);
+            v = (arg2 % 10);
+            loc_30.image = loc_8.unk_0[v];
+            loc_30.x = (f32)(arg0 + 1);
+            loc_30.y = (f32)arg1;
+            fn_1_51E60(&loc_30);
+            loc_30.image = 0x10000 - 27600;
+            loc_30.z = loc_30.z + lbl_1_rodata_5DC8;
+            fn_1_4F734(&loc_30);
+            loc_30.image = 0x10000 - 27618;
+            loc_30.x = (f32)(arg0 + 20);
+            loc_30.y = (f32)arg1;
+            fn_1_51E60(&loc_30);
+            v = (arg3 / 10);
+            loc_30.image = loc_8.unk_0[v];
+            loc_30.x = (f32)(arg0 + 31);
+            loc_30.y = (f32)arg1;
+            fn_1_51E60(&loc_30);
+            loc_30.image = 0x10000 - 27600;
+            loc_30.z = loc_30.z + lbl_1_rodata_5DC8;
+            fn_1_4F734(&loc_30);
+            v = (arg3 % 10);
+            loc_30.image = loc_8.unk_0[v];
+            loc_30.x = (f32)(arg0 + 48);
+            loc_30.y = (f32)arg1;
+            fn_1_51E60(&loc_30);
+            loc_30.image = 0x10000 - 27600;
+            loc_30.z = loc_30.z + lbl_1_rodata_5DC8;
+            fn_1_4F734(&loc_30);
+            loc_30.image = 0x10000 - 27646;
+            loc_30.x = (f32)(arg0 + 41);
+            loc_30.y = (f32)(arg1 + 26);
+            loc_30.scale_x = lbl_1_rodata_5CFC;
+            fn_1_51E60(&loc_30);
+        }
+    }
+}
+/* fzgx:end fn_1_CC280 */
+
 /* fzgx:begin fn_1_CC8E4 noprologue */
 #include "types.h"
 #include "font.h"
