@@ -24844,6 +24844,17 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/archive/fn_1_12CB04.c",
+    "symbols": [
+      "fn_1_12CB04"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "tu": "rel/main_rel/archive.c"
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/archive/fn_1_12D254.c",
     "symbols": [
       "fn_1_12D254"
@@ -44300,6 +44311,17 @@
     ],
     "status": "matching",
     "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/spline.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/spline/fn_1_F9028.c",
+    "symbols": [
+      "fn_1_F9028"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
     "extra_cflags": [],
     "tu": "rel/main_rel/spline.c"
   },

@@ -393,6 +393,64 @@ s16 fn_1_12C7B8(s16 arg) {
 }
 /* fzgx:end fn_1_12C7B8 */
 
+/* fzgx:begin fn_1_12CB04 */
+typedef struct {
+    u8 pad0[5];
+    u8 id;
+    u8 pad6[0x819a];
+    u8 value;
+    u8 pad_a1[0x1f];
+} FnEntry;
+
+extern FnEntry *fn_1_12F118(void);
+extern FnEntry *fn_1_36AD0(void);
+
+static inline s16 fn_1_12CB04_inline(s16 arg) {
+    FnEntry *table;
+    s16 i;
+
+    if (arg < 0x29) {
+        return arg;
+    }
+
+    table = fn_1_12F118();
+    if (table == 0) {
+        return 6;
+    }
+
+    if (table != fn_1_36AD0()) {
+        for (i = 0; i < 9; i++) {
+            if (table[i].id == arg) {
+                return table[i].value;
+            }
+        }
+    } else if (arg >= 0x32 && arg <= 0x35) {
+        return table[arg - 0x32].value;
+    } else if (arg >= 0x36 && arg <= 0x39) {
+        return table[arg - 0x36].value;
+    } else {
+        for (i = 0; i < 4; i++) {
+            if (table[i].id == arg) {
+                return table[i].value;
+            }
+        }
+    }
+
+    return 6;
+}
+
+s32 fn_1_12CB04(s16 arg) {
+    switch (fn_1_12CB04_inline(arg)) {
+    case 0x15:
+        return 1;
+    case 0x21:
+        return 2;
+    }
+
+    return 0;
+}
+/* fzgx:end fn_1_12CB04 */
+
 /* fzgx:begin fn_1_12D254 noprologue */
 #include "types.h"
 

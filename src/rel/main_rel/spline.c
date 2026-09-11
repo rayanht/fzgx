@@ -885,6 +885,92 @@ void fn_1_F8DC4(s16 index0, s16 index1, void *arg0) {
 }
 /* fzgx:end fn_1_F8DC4 */
 
+/* fzgx:begin fn_1_F9028 */
+typedef struct {
+    s16 unk_0;
+    s16 unk_2;
+    s16 unk_4;
+    s16 unk_6;
+    s16 unk_8;
+} Element;
+
+typedef struct {
+    Element elements[44];
+} Table;
+
+extern Table lbl_1_rodata_6E38;
+extern void fn_80008BA8(void *dst, const void *src, u32 size);
+extern s32 fn_1_F9CA0(s32, u8);
+extern s32 fn_1_F21B8(s16);
+
+static inline void get_element(Element *dst, s16 index) {
+    Table table;
+    table = lbl_1_rodata_6E38;
+    fn_80008BA8(dst, &table.elements[index], 10);
+}
+
+static inline s16 find_element_by_unk2(s16 unk_2, s16 nth) {
+    Element elem;
+    s16 i;
+    s16 count;
+
+    i = 0;
+    count = 0;
+    for (; i < 44; i++) {
+        get_element(&elem, i);
+        if (elem.unk_2 == unk_2) {
+            if (count == nth) {
+                return i;
+            }
+            count++;
+        }
+    }
+    return -1;
+}
+
+static inline s16 get_element_index_in_unk2_group(s16 index) {
+    Element elem;
+    s16 i;
+
+    get_element(&elem, index);
+    for (i = 0; ; i++) {
+        if (find_element_by_unk2(elem.unk_2, i) == index) {
+            return i;
+        }
+    }
+}
+
+static inline s32 check_case2(s16 arg) {
+    return fn_1_F21B8(arg) != 0;
+}
+
+s32 fn_1_F9028(s16 arg0) {
+    s32 ret = 0;
+    Element elem;
+    s16 group_idx;
+
+    get_element(&elem, arg0);
+    group_idx = get_element_index_in_unk2_group(arg0);
+
+    switch (elem.unk_2) {
+    case 0:
+        ret = fn_1_F9CA0(0, group_idx);
+        break;
+    case 1:
+        ret = __rlwnm(((u32 *)&lbl_1_bss_7F0C0)[4672], ((u8)group_idx + 1) & 0x1F, 31, 31) != 0;
+        break;
+    case 2:
+        ret = check_case2(elem.unk_8);
+        break;
+    case 3:
+        ret = (u8)__rlwnm(((u32 *)&lbl_1_bss_7F0C0)[4677], (32 - group_idx) & 0x1F, 31, 31) != 0;
+        break;
+    }
+
+    return ret;
+}
+/* fzgx:end fn_1_F9028 */
+
 /* fzgx:begin fn_1_F9C6C */
 void fn_1_F9C6C(void) {
     fn_1_F9D04(0);
