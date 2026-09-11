@@ -123,7 +123,9 @@ def verify(p: Project, message: Optional[str] = None) -> Dict[str, object]:
                 d = p.module_config_dir(mod)
                 files += [str(d / "splits.txt"), str(d / "symbols.txt")]
             files.extend(dependencies)
-            files = sorted(set(files))
+            files = sorted(path for path in set(files) if Path(path).exists() or
+                           subprocess.run(['git', 'ls-files', '--error-unmatch', path],
+                                          cwd=ROOT, capture_output=True).returncode == 0)
             subprocess.run(["git", "add", '--', *files], cwd=ROOT, capture_output=True, check=True)
             msg = message or f"match: {len(good)} functions link-verified"
             names = ", ".join(p.key(p.resolve(k)) for k in good[:8]) + (" ..." if len(good) > 8 else "")

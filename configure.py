@@ -15,6 +15,8 @@
 import argparse
 import json
 import re
+import shlex
+import subprocess
 import sys
 from pathlib import Path
 from typing import Any, Dict, List
@@ -406,6 +408,9 @@ def add_pool_rules() -> None:
         m = pat.search(text)
         if m:
             poolmap = ",".join(f"{k}={v}" for k, v in sorted(mapping.items()))
+            # MWCC local-static symbols contain '$': preserve it through both
+            # Ninja expansion and the platform shell.
+            poolmap = (subprocess.list2cmdline([poolmap]) if is_windows() else shlex.quote(poolmap)).replace('$', '$$')
             text = text[:m.start()] + m.group(1) + "mwcc_pool" + m.group(2) + text[m.end():]
             i = m.start()
             j = text.index("  mw_version = ", i)

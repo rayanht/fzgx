@@ -423,7 +423,7 @@ class Project:
                    if (sym := self.symbols(module).get(name)) and sym.scope == 'global'}
         if not mapping:
             return []
-        pattern = re.compile(r'\b(?:' + '|'.join(map(re.escape, mapping)) + r')\b')
+        pattern = re.compile(r'(?<![\w.$@])(?:' + '|'.join(map(re.escape, mapping)) + r')(?![\w.$@])')
         paths = {(ROOT / 'src' / (u.get('tu') or u['source'])).with_suffix('.s' if u.get('asm') else '.c') for u in self.load_units()
                  if module == 'main' or u['module'] == module}
         headers = ROOT / 'include' if module == 'main' else ROOT / 'include/rel' / module
@@ -437,6 +437,23 @@ class Project:
             if rewritten != body:
                 path.write_text(rewritten)
                 changed.append(str(path.relative_to(ROOT)))
+        # Pool targets are linker references too. Keeping an old local suffix
+        # here breaks already integrated callers when another unit exports it.
+        from . import oracle
+        with oracle.build_lock('units.lock'):
+            units = self.load_units()
+            updated = False
+            for unit in units:
+                pool = unit.get('pool')
+                if not isinstance(pool, dict) or (module != 'main' and unit['module'] != module):
+                    continue
+                renamed = {mapping.get(private, private): mapping.get(target, target) for private, target in pool.items()}
+                if renamed != pool:
+                    unit['pool'] = renamed
+                    updated = True
+            if updated:
+                self.save_units(units)
+                changed.append(str(self.units_path.relative_to(ROOT)))
         if changed:
             # A promoted function can rename callers outside its own new unit.
             # Those dependencies must land in the same hash-verified commit.
