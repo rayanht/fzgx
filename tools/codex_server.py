@@ -10,6 +10,7 @@ import contextlib
 import json
 import os
 import signal
+import ssl
 import sys
 import time
 from datetime import datetime, timezone
@@ -85,9 +86,81 @@ class ToolSlots:
             self.wake()
 
 
+class DeepSeekTransport:
+    """Keep Codex's OpenAI-only routing header out of DeepSeek requests.
+
+    DeepSeek enables thinking whenever x-codex-turn-metadata is present, even
+    when reasoning.effort is none. Relay bytes unchanged except this header,
+    Host and connection lifetime; no JSON/SSE translation or response buffering.
+    """
+    def __init__(self):
+        self.tls = ssl.create_default_context()
+        self.tasks = set()
+
+    async def start(self):
+        self.listener = await asyncio.start_server(self.forward, '127.0.0.1', 0, limit=256 * 1024)
+        return f'http://127.0.0.1:{self.listener.sockets[0].getsockname()[1]}'
+
+    async def forward(self, reader, writer):
+        task = asyncio.current_task()
+        self.tasks.add(task)
+        upstream = None
+        pending = []
+        try:
+            head = await reader.readuntil(b'\r\n\r\n')
+            lines = head.split(b'\r\n')
+            if lines[0].split()[:2] != [b'POST', b'/responses']:
+                writer.write(b'HTTP/1.1 404 Not Found\r\nContent-Length: 0\r\nConnection: close\r\n\r\n')
+                await writer.drain()
+                return
+            headers = [line for line in lines[1:] if line]
+            length = next((int(line.split(b':', 1)[1]) for line in headers
+                           if line.lower().startswith(b'content-length:')), None)
+            if length is None:
+                raise ValueError('Codex request is missing Content-Length')
+            body = await reader.readexactly(length)
+            remote, upstream = await asyncio.open_connection('api.deepseek.com', 443, ssl=self.tls)
+            headers = [line for line in headers if line.split(b':', 1)[0].lower()
+                       not in (b'x-codex-turn-metadata', b'host', b'connection')]
+            upstream.write(b'\r\n'.join([lines[0], *headers, b'Host: api.deepseek.com',
+                                             b'Connection: close', b'', b'']) + body)
+            await upstream.drain()
+
+            async def stream():
+                while chunk := await remote.read(64 * 1024):
+                    writer.write(chunk)
+                    await writer.drain()
+
+            # Disconnects must cancel the provider request, including interrupts
+            # immediately after a successful tool call.
+            pending = [asyncio.create_task(stream()), asyncio.create_task(reader.read(1))]
+            done, _ = await asyncio.wait(pending, return_when=asyncio.FIRST_COMPLETED)
+            for result in done:
+                result.result()
+        except (ConnectionError, asyncio.IncompleteReadError, ssl.SSLError):
+            pass
+        finally:
+            for job in pending:
+                job.cancel()
+            if pending:
+                await asyncio.gather(*pending, return_exceptions=True)
+            if upstream:
+                upstream.close()
+            writer.close()
+            self.tasks.discard(task)
+
+    async def close(self):
+        self.listener.close()
+        await self.listener.wait_closed()
+        for task in list(self.tasks):
+            task.cancel()
+        await asyncio.gather(*list(self.tasks), return_exceptions=True)
+
+
 class AppServer:
-    def __init__(self, command, directory):
+    def __init__(self, command, directory, provider=None):
         self.command, self.directory = command, directory
+        self.transport = DeepSeekTransport() if provider == "deepseek" else None
         self.pending, self.sessions, self.jobs = {}, {}, set()
         self.serial = 0
         self.write_lock = asyncio.Lock()
@@ -103,6 +176,9 @@ class AppServer:
 
     async def start(self):
         self.directory.mkdir(parents=True, exist_ok=True)
+        if self.transport:
+            url = await self.transport.start()
+            self.command = [*self.command, '-c', 'model_providers.deepseek.base_url=' + json.dumps(url)]
         self.errors = (self.directory / 'app-server.stderr.log').open('w')
         self.events = (self.directory / 'app-server.jsonl').open('w', buffering=1)
         self.process = await asyncio.create_subprocess_exec(
@@ -223,6 +299,8 @@ class AppServer:
         await self.reader
         self.errors.close()
         self.events.close()
+        if self.transport:
+            await self.transport.close()
 
 
 def utcnow():
@@ -266,6 +344,10 @@ class Matcher:
     def event(self, message):
         self.log.write(json.dumps(dict(timestamp=utcnow(), **message)) + '\n')
         params, method = message.get('params', {}), message.get('method')
+        if (getattr(self, 'effort', None) == 'none' and method == 'item/started'
+                and params.get('item', {}).get('type') == 'reasoning'):
+            self.error = 'Provider emitted reasoning despite requested effort none; stopping batch'
+            self.server.stopping.set()
         if method == 'turn/started':
             self.turn = params['turn']['id']
         elif method == 'thread/tokenUsage/updated':
@@ -394,6 +476,7 @@ class Matcher:
                 await self.server.send(dict(id=rid, result=response))
 
     async def run(self, options, revise=False):
+        self.effort = options.effort
         started = time.monotonic()
         setup_secs, outcome = 0.0, 'incomplete'
         try:
@@ -496,7 +579,7 @@ class Matcher:
 
 async def fan_out(p, options, model, symbols, batch, revise, command, price):
     directory = STATE_DIR / 'runs' / batch
-    server = AppServer(command, directory)
+    server = AppServer(command, directory, provider=options.provider)
     slots = ToolSlots(options.tool_parallel)
     queue = iter(enumerate(symbols, 1))
     results, spent = [], 0.0

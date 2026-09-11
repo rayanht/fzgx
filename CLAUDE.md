@@ -306,7 +306,9 @@ Rules that hold for everyone:
   compiler settings through the unified fixup engine, and retain the best current word score
   (full oracle matches take precedence). No size, SDK or prior-attempt exclusions apply.
   The manifest retains fresh lifts alongside selected bodies. DeepSeek `--effort none` disables
-  reasoning; the repository model catalog and runner overrides support it without personal config edits.
+  reasoning through the runner's DeepSeek transport, which removes the incompatible
+  `x-codex-turn-metadata` header. Verify actual streamed items, not just thread settings;
+  the runner stops a `none` batch if reasoning appears. Personal config is never edited.
 - Fresh-function batches use `uv run tools/seeds/untouched.py --max-size 511 --output PATH`.
   It excludes prior matcher candidates/successful checks, known SDK signatures,
   prepared imports and ranked donor candidates, and freezes `lift_total` output

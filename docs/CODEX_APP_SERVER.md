@@ -179,6 +179,17 @@ feature. The original local HTTP capture of Codex 0.153.4 confirmed exactly the
 then-four dynamic matcher tools and `reasoning.effort=low`; disabling shell alone left a built-in
 patch tool available.
 
+DeepSeek requests pass through an asyncio byte relay owned by the runner. It removes
+`x-codex-turn-metadata`: measured provider responses emitted reasoning whenever this
+OpenAI-specific header was present, even with `reasoning.effort="none"`. Removing it
+preserved the requested mode. The relay keeps the JSON and streaming response unchanged,
+verifies upstream TLS, and cancels upstream connections when Codex disconnects. It binds
+only to loopback and modifies no personal configuration. A real `fn_8004BDD8` prompt
+reached its first tool call in 2.70 seconds with no reasoning item after this change.
+A `none` batch stops if any matcher receives a reasoning item; thread configuration alone
+is not proof that the provider honored the setting. Missing usage events remain unknown,
+not evidence of zero reasoning or zero cost.
+
 Assignments, prompts, completed reasoning/messages, tool calls/results, usage,
 terminal records, and result rows live under `.fzgx/runs/BATCH/`. Token deltas are
 discarded because completed items contain the full text. Usage events drive cost
