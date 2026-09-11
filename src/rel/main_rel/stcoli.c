@@ -916,6 +916,71 @@ int fn_1_248C0(Fn_1_248C0 *self, int arg) {
 }
 /* fzgx:end fn_1_248C0 */
 
+/* fzgx:begin fn_1_25004 */
+extern void *fn_1_868C0(s8 value);
+extern void fn_1_F7338(s8 value, int arg2, int arg3);
+extern f32 lbl_1_rodata_84C[2];
+
+typedef struct Fn_1_25004_Obj {
+    u32 flags00;
+    s16 field04;
+    u8 pad06[0x8e];
+    f32 field94;
+    f32 field98;
+    f32 field9c;
+    f32 fielda0;
+    f32 fielda4;
+    f32 fielda8;
+    u8 padac[0xd0];
+    f32 field17c;
+    u8 pad180[0x4];
+    f32 field184;
+    u8 pad188[0x9c];
+    f32 field224;
+    u8 pad228[0x24c];
+    u8 field474;
+    u8 pad475[0x117];
+    u32 flags58c;
+} Fn_1_25004_Obj;
+
+typedef struct Fn_1_25004_Result {
+    u8 pad390[0x390];
+    u32 flags390;
+} Fn_1_25004_Result;
+
+#pragma opt_strength_reduction off
+void fn_1_25004(Fn_1_25004_Obj *self) {
+    Fn_1_25004_Result *result;
+    f32 zero;
+
+    result = (Fn_1_25004_Result *)fn_1_868C0((s8)self->field04);
+    if ((self->flags58c & 0x10) == 0) {
+        if ((s8)self->field474 != -1) {
+            fn_1_F7338((s8)self->field474, 2, 0x1e);
+        }
+        zero = (0.0f);
+        self->flags00 |= 0x800;
+        self->flags00 |= 0x80;
+        self->flags00 |= 0x800000;
+        self->flags00 |= 0x40000000;
+        self->flags58c |= 0x10;
+        self->field184 = zero;
+        self->field224 = zero;
+        self->field94 = zero;
+        self->field98 = zero;
+        self->field9c = zero;
+        self->fielda0 = zero;
+        self->fielda4 = zero;
+        self->fielda8 = zero;
+        self->field17c = zero;
+        self->flags58c &= ~0x80;
+        result->flags390 &= ~0x200000;
+        result->flags390 |= 0x1000000;
+    }
+}
+#pragma opt_strength_reduction reset
+/* fzgx:end fn_1_25004 */
+
 /* fzgx:begin fn_1_250F8 */
 extern const f32 lbl_1_rodata_85C;
 

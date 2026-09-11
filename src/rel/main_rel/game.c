@@ -823,6 +823,20 @@ u32 fn_1_3FC9C(void) {
 }
 /* fzgx:end fn_1_3FC9C */
 
+/* fzgx:begin fn_1_3FCB0 */
+extern u32 lbl_1_bss_3C08[2];
+
+static inline u32 fn_1_3FCB0_operand(u32 left, u32 right) { left &= right; return left; }
+#pragma opt_propagation off
+void fn_1_3FCB0(s32 value) {
+    s32 mask = -value;
+    mask |= value;
+    mask >>= 31;
+    lbl_1_bss_3C08[0] = fn_1_3FCB0_operand(((lbl_1_bss_3C08[0] | (u32)value)), ((u32)mask));
+}
+#pragma opt_propagation reset
+/* fzgx:end fn_1_3FCB0 */
+
 /* fzgx:begin fn_1_3FCF8 noprologue */
 #include "types.h"
 

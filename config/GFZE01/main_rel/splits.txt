@@ -6122,3 +6122,12 @@ rel/main_rel/screen_effect/fn_1_79C88.c:
 
 rel/main_rel/memcard/fn_1_AECCC.c:
 	.text       start:0x000AECCC end:0x000B03A8 align:4
+
+rel/main_rel/car/fn_1_9550C.c:
+	.text       start:0x0009550C end:0x000956B8 align:4
+
+rel/main_rel/stcoli/fn_1_25004.c:
+	.text       start:0x00025004 end:0x000250F8 align:4
+
+rel/main_rel/game/fn_1_3FCB0.c:
+	.text       start:0x0003FCB0 end:0x0003FCD4 align:4

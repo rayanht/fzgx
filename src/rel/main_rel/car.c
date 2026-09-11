@@ -4822,6 +4822,122 @@ void fn_1_95210(void *arg0) {
 }
 /* fzgx:end fn_1_95210 */
 
+/* fzgx:begin fn_1_9550C noprologue */
+#include "types.h"
+
+typedef struct {
+    u8 pad0[0x24];
+    void *field_24;
+    f32 field_28;
+    f32 field_2c;
+} OutData;
+
+typedef struct {
+    u8 pad0[0x12];
+    u16 field_12;
+    u8 pad14[0x12];
+    u8 field_26;
+    void *field_28;
+    u8 pad2c[8];
+    void *field_34;
+    u8 pad38[0x14];
+    u8 field_4c;
+} Node;
+
+typedef struct {
+    u8 pad0[0x1c];
+    Node *field_1c;
+    u8 pad20[0x128];
+    u16 field_148;
+    u8 pad14a[6];
+    OutData *field_150;
+    void *field_154;
+} Owner;
+
+typedef struct {
+    u8 count;
+    u8 current;
+    u16 ids[9];
+    f32 field_14[11];
+    f32 field_40[10];
+    f32 value;
+} Config;
+
+extern const f32 lbl_1_rodata_3F6C;
+extern f32 lbl_1_rodata_4010[60];
+
+extern void *fn_1_41418(void *arg0, u32 arg1);
+extern s32 fn_1_97174(Node *arg0, s32 arg1, void *arg2);
+extern void fn_1_943F8(Owner *arg0, void *arg1, f32 arg2);
+extern void fn_1_42AD0(OutData *arg0, s32 arg1, u16 arg2, s32 arg3, u16 arg4);
+
+#pragma opt_common_subs off
+#pragma opt_dead_assignments off
+void fn_1_9550C(Owner *owner, Config *config) {
+    s32 tmp_ra2;
+    f32 value;
+    s32 tmp_ra1;
+    u16 flags;
+    u16 id;
+
+    value = config->value;
+    {
+        u32 i;
+        for (i = 0; i < config->count; i++) {
+            Node *state;
+            f32 current_value;
+
+            value -= config->field_40[i];
+            if (value < (0.0f)) {
+                tmp_ra1 = config->current;
+
+                if (tmp_ra1 == i) {
+                    break;
+                }
+                if (i != 0) {
+                    owner->field_150->field_28 = (0.0f);
+                    owner->field_150->field_2c = config->field_14[i];
+                }
+                state = owner->field_1c;
+                current_value = owner->field_150->field_2c;
+                id = config->ids[i];
+                flags = 0;
+                if (state != 0) {
+                    void *target;
+                    s32 result;
+
+                    result = (s32)fn_1_97174(state, 0, fn_1_41418(owner->field_150->field_24, id));
+                    if (result < 0) {
+                        result = 0;
+                    }
+                    state->field_12 = 0;
+                    tmp_ra2 = state->field_26;
+                    if (tmp_ra2 > 0) {
+                        target = state->field_28;
+                    } else {
+                        target = (void *)((u8 *)state->field_34 + -(s32)state->field_4c * 0xc);
+                    }
+                    *(u16 *)((u8 *)target + 0xa) = (u16)result;
+                }
+                fn_1_943F8(owner, fn_1_41418(owner->field_154, id), current_value);
+                if (current_value > (50.0f)) {
+                    flags |= 0xc0;
+                } else {
+                    flags |= 0x60;
+                }
+                fn_1_42AD0(owner->field_150, 0, id, (s32)current_value, flags);
+                owner->field_148 = id;
+                config->current = i;
+                break;
+            }
+        }
+    }
+}
+#pragma opt_dead_assignments reset
+
+#pragma opt_common_subs reset
+/* fzgx:end fn_1_9550C */
+
 /* fzgx:begin fn_1_956B8 */
 typedef struct Fn1956B8Data Fn1956B8Data;
 

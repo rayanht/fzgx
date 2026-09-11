@@ -13401,6 +13401,16 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_8001A55C.c",
+    "symbols": [
+      "fn_8001A55C"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
     "source": "dol/fn_8001A78C.c",
     "symbols": [
       "fn_8001A78C"
@@ -13428,6 +13438,57 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_8001BC54.c",
+    "symbols": [
+      "fn_8001BC54"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-pragma",
+      "'cats",
+      "off'",
+      "-pragma",
+      "'warn_notinlined",
+      "off'",
+      "-use_lmw_stmw",
+      "on",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-multibyte",
+      "-DMATCHING=1",
+      "-inline",
+      "auto",
+      "-lang=c",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-str",
+      "reuse",
+      "-common",
+      "off",
+      "-O4,p"
+    ]
   },
   {
     "module": "main",
@@ -31684,6 +31745,21 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/car/fn_1_9550C.c",
+    "symbols": [
+      "fn_1_9550C"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "tu": "rel/main_rel/car.c",
+    "pool": {
+      "@28": "lbl_1_rodata_3F6C",
+      "@29": "lbl_1_rodata_4010"
+    }
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/car/fn_1_956B8.c",
     "symbols": [
       "fn_1_956B8"
@@ -37008,6 +37084,17 @@
     ],
     "status": "matching",
     "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/game.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/game/fn_1_3FCB0.c",
+    "symbols": [
+      "fn_1_3FCB0"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
     "extra_cflags": [],
     "tu": "rel/main_rel/game.c"
   },
@@ -46927,6 +47014,20 @@
     "mw_version": null,
     "extra_cflags": [],
     "tu": "rel/main_rel/stcoli.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/stcoli/fn_1_25004.c",
+    "symbols": [
+      "fn_1_25004"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "tu": "rel/main_rel/stcoli.c",
+    "pool": {
+      "@10": "lbl_1_rodata_84C"
+    }
   },
   {
     "module": "main_rel",
