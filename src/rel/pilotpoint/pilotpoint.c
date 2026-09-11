@@ -248,6 +248,69 @@ void fn_14_315C(u32 arg0) {
 }
 /* fzgx:end fn_14_315C */
 
+/* fzgx:begin fn_14_316C */
+struct fn_14_316C_Arg0 {
+    u16 unk_0;
+};
+struct fn_14_316C_Arg1 {
+    u16 unk_0;
+};
+struct fn_14_316C_Arg2 {
+    u16 unk_0;
+};
+struct fn_14_316C_Ent {
+    u32 raw[2];
+};
+
+extern struct fn_14_316C_Ent lbl_14_bss_110[10];
+extern s16 lbl_14_bss_160[16];
+
+#pragma opt_common_subs off
+void fn_14_316C(struct fn_14_316C_Arg0 *arg0, struct fn_14_316C_Arg1 *arg1, struct fn_14_316C_Arg2 *arg2) {
+    s16 v8;
+    s16 v5;
+    s32 v7;
+    s16 t;
+    u32 flags;
+    s16 i;
+    s32 v1;
+    s16 v0;
+
+    v1 = 0;
+    v0 = ((s16 *)lbl_14_bss_110)[2];
+    i = 0;
+    arg2->unk_0 = 0;
+    arg1->unk_0 = 0;
+    arg0->unk_0 = 0;
+
+    while ((u32)i < 8) {
+        flags = ((u32 *)&lbl_14_bss_110[i])[3];
+        if ((flags & 0x8) != 0) {
+            if ((flags & 0x40) != 0 || i == v0) {
+                t = v1;
+                v7 = t / lbl_14_bss_160[0];
+                v8 = v7;
+                v5 = t % lbl_14_bss_160[0] + 1;
+                switch (v8) {
+                case 0:
+                    arg0->unk_0 = v5;
+                    break;
+                case 1:
+                    arg1->unk_0 = v5;
+                    break;
+                case 2:
+                    arg2->unk_0 = v5;
+                    break;
+                }
+            }
+            v1++;
+        }
+        i++;
+    }
+}
+#pragma opt_common_subs reset
+/* fzgx:end fn_14_316C */
+
 /* fzgx:begin fn_14_3230 */
 struct PilotPointEntry {
     u32 raw[2];

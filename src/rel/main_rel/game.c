@@ -1219,6 +1219,40 @@ u8 *fn_1_40B14(void) {
 }
 /* fzgx:end fn_1_40B14 */
 
+/* fzgx:begin fn_1_40B20 */
+s32 fn_1_40B20(void) {
+    s32 i;
+    u8 *q;
+    s32 n;
+    u8 a7;
+    u8 min;
+    u8 v;
+
+    if (lbl_1_bss_3C30.unk_5 == 5) {
+        return *(s8 *)((u8 *)&lbl_1_bss_9C + 6);
+    }
+    if (lbl_1_bss_3C30.unk_5 != 1) {
+        return -1;
+    }
+    a7 = lbl_1_bss_3C30.unk_A7;
+    if (a7 == 0) {
+        return -1;
+    }
+    n = lbl_1_bss_3C30.unk_9;
+    q = (u8 *)&lbl_1_bss_3C30 + a7;
+    min = lbl_1_bss_3C30.unk_8;
+    for (i = 0; i < n; i++) {
+        v = *(u8 *)((u8 *)&lbl_1_bss_3C30 + i + 0x1394);
+        if ((s32)v >= (s32)min) {
+            if (q[v * 160 + 226] != 254) {
+                return v;
+            }
+        }
+    }
+    return -1;
+}
+/* fzgx:end fn_1_40B20 */
+
 /* fzgx:begin fn_1_40BB4 */
 u8 fn_1_40BB4(void) {
     return (s8)lbl_1_bss_5104.unk_0 != -1;

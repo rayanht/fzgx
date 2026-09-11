@@ -5102,3 +5102,12 @@ dol/fn_80057774.c:
 
 dol/__init_data.c:
 	.init       start:0x80003340 end:0x80003400 align:4
+
+dol/fn_8005ACF0.c:
+	.text       start:0x8005ACF0 end:0x8005ADBC align:4
+
+dol/fn_80083DB0.c:
+	.text       start:0x80083DB0 end:0x80083E68 align:4
+
+dol/fn_8005ADBC.c:
+	.text       start:0x8005ADBC end:0x8005AE98 align:4

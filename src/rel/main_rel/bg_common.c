@@ -187,6 +187,54 @@ void fn_1_106B68(void) {
 }
 /* fzgx:end fn_1_106B68 */
 
+/* fzgx:begin fn_1_106DB4 */
+extern u8 jumptable_1_data_3F408[28];
+extern u32 lbl_1_bss_85288[2];
+
+s32 fn_1_106DB4(u32 arg0, u32 arg1) {
+    volatile u32 *counter;  /* fzgx: count is re-read after each store in the retail loop */
+    u8 *entry;
+
+    switch (arg0) {
+    case 0:
+        *(u32 *)arg1 |= 0x08000000;
+        break;
+    case 1:
+        lbl_1_bss_854B8.unk_0 = arg1;
+        break;
+    case 2:
+        lbl_1_bss_854B8.unk_4 = (Obj_1_bss_854B8_At4 *)arg1;
+        break;
+    case 3:
+        lbl_1_bss_854B8.unk_8 = (Obj_1_bss_854B8_At8 *)arg1;
+        ((Obj_1_bss_3BE0_Target *)arg1)->unk_3C = 0;
+        *(u32 *)arg1 &= 0x7FFFFFFF;
+        break;
+    case 4:
+        counter = &lbl_1_bss_85288[0];
+        entry = (u8 *)lbl_1_bss_3BE0->unk_54;
+        *counter = 0;
+        while ((u32)entry != arg1) {
+            entry += 0x40;
+            *counter = *counter + 1;
+        }
+        break;
+    case 5:
+        counter = &lbl_1_bss_85288[1];
+        entry = (u8 *)lbl_1_bss_3BE0->unk_54;
+        *counter = 0;
+        while ((u32)entry != arg1) {
+            entry += 0x40;
+            *counter = *counter + 1;
+        }
+        break;
+    case 6:
+        break;
+    }
+    return 1;
+}
+/* fzgx:end fn_1_106DB4 */
+
 /* fzgx:begin fn_1_106EA4 */
 void fn_1_106EA4(f32 arg0) {
     lbl_1_bss_85290 = arg0;

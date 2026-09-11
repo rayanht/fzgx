@@ -130,6 +130,30 @@ u32 *fn_1_156198(u32 arg0) {
 }
 /* fzgx:end fn_1_156198 */
 
+/* fzgx:begin fn_1_1563E8 */
+u16 fn_1_1563E8(u8 *data, s32 len) {
+    u16 table[256];
+    u32 i;
+    u32 j;
+    u16 crc;
+
+    for (i = 0; i <= 0xff; i++) {
+        crc = i;
+        for (j = 0; j < 8; j++) {
+            crc = (crc & 1) ? ((crc >> 1) ^ 0x8408) : (crc >> 1);
+        }
+        table[i] = crc;
+    }
+
+    crc = 0xFFFF;
+    while (--len >= 0) {
+        crc = (crc >> 8) ^ table[(crc & 0xff) ^ *data++];
+    }
+
+    return (crc ^ 0xFFFF) & 0xFFFF;
+}
+/* fzgx:end fn_1_1563E8 */
+
 /* fzgx:begin fn_1_1564D0 */
 void fn_1_1564D0(void) {
     fn_1_451C();

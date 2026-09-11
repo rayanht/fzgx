@@ -2130,6 +2130,17 @@
   },
   {
     "module": "interview",
+    "source": "rel/interview/interview/fn_17_66C0.c",
+    "symbols": [
+      "fn_17_66C0"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "tu": "rel/interview/interview.c"
+  },
+  {
+    "module": "interview",
     "source": "rel/interview/interview/fn_17_67C4.c",
     "symbols": [
       "fn_17_67C4"
@@ -19443,6 +19454,29 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_8005ACF0.c",
+    "symbols": [
+      "fn_8005ACF0"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_8005ADBC.c",
+    "symbols": [
+      "fn_8005ADBC"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on"
+    ]
+  },
+  {
+    "module": "main",
     "source": "dol/fn_8005B010.c",
     "symbols": [
       "fn_8005B010"
@@ -22061,6 +22095,16 @@
     ],
     "status": "matching",
     "mw_version": null,
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_80083DB0.c",
+    "symbols": [
+      "fn_80083DB0"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3",
     "extra_cflags": []
   },
   {
@@ -24984,6 +25028,17 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/archive/fn_1_12A9BC.c",
+    "symbols": [
+      "fn_1_12A9BC"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "tu": "rel/main_rel/archive.c"
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/archive/fn_1_12AAC8.c",
     "symbols": [
       "fn_1_12AAC8"
@@ -26462,6 +26517,20 @@
     "mw_version": "GC/1.3.2",
     "extra_cflags": [],
     "tu": "rel/main_rel/bg_common.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/bg_common/fn_1_106DB4.c",
+    "symbols": [
+      "fn_1_106DB4"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "tu": "rel/main_rel/bg_common.c",
+    "pool": {
+      "@23": "jumptable_1_data_3F408"
+    }
   },
   {
     "module": "main_rel",
@@ -34193,6 +34262,17 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/font/fn_1_4AF64.c",
+    "symbols": [
+      "fn_1_4AF64"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "tu": "rel/main_rel/font.c"
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/font/fn_1_4B040.c",
     "symbols": [
       "fn_1_4B040"
@@ -36311,6 +36391,17 @@
     ],
     "status": "matching",
     "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/game.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/game/fn_1_40B20.c",
+    "symbols": [
+      "fn_1_40B20"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
     "extra_cflags": [],
     "tu": "rel/main_rel/game.c"
   },
@@ -40157,6 +40248,17 @@
     ],
     "status": "matching",
     "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/ranking.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/ranking/fn_1_1563E8.c",
+    "symbols": [
+      "fn_1_1563E8"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
     "extra_cflags": [],
     "tu": "rel/main_rel/ranking.c"
   },
@@ -50550,6 +50652,16 @@
   },
   {
     "module": "movie_module",
+    "source": "rel/movie_module/fn_12_3AB00.c",
+    "symbols": [
+      "fn_12_3AB00"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "movie_module",
     "source": "rel/movie_module/fn_12_3ABE0.c",
     "symbols": [
       "fn_12_3ABE0"
@@ -52290,6 +52402,17 @@
     ],
     "status": "matching",
     "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/pilotpoint/pilotpoint.c"
+  },
+  {
+    "module": "pilotpoint",
+    "source": "rel/pilotpoint/pilotpoint/fn_14_316C.c",
+    "symbols": [
+      "fn_14_316C"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
     "extra_cflags": [],
     "tu": "rel/pilotpoint/pilotpoint.c"
   },

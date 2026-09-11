@@ -5921,3 +5921,18 @@ rel/main_rel/spline/fn_1_F809C.c:
 
 rel/main_rel/spline/fn_1_F8158.c:
 	.text       start:0x000F8158 end:0x000F8214 align:4
+
+rel/main_rel/bg_common/fn_1_106DB4.c:
+	.text       start:0x00106DB4 end:0x00106EA4 align:4
+
+rel/main_rel/font/fn_1_4AF64.c:
+	.text       start:0x0004AF64 end:0x0004B040 align:4
+
+rel/main_rel/game/fn_1_40B20.c:
+	.text       start:0x00040B20 end:0x00040BB4 align:4
+
+rel/main_rel/archive/fn_1_12A9BC.c:
+	.text       start:0x0012A9BC end:0x0012AAC8 align:4
+
+rel/main_rel/ranking/fn_1_1563E8.c:
+	.text       start:0x001563E8 end:0x001564D0 align:4

@@ -104,3 +104,6 @@ rel/interview/interview/fn_17_38C4.c:
 
 rel/interview/interview/_epilog.c:
 	.text       start:0x000001DC end:0x0000023C align:4
+
+rel/interview/interview/fn_17_66C0.c:
+	.text       start:0x000066C0 end:0x000067C4 align:4

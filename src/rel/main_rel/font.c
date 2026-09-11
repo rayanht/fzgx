@@ -555,6 +555,32 @@ u32 fn_1_4AEC0(u32 value) {
 }
 /* fzgx:end fn_1_4AEC0 */
 
+/* fzgx:begin fn_1_4AF64 */
+typedef struct {
+    u32 gpr_offset;
+    void *overflow_arg_area;
+    void *reg_save_area;
+} va_list;
+
+extern f32 lbl_1_rodata_10C0[5];
+extern void fn_8008077C(char *buffer, const char *format, va_list *args);
+extern void fn_1_4A0D8(char *text);
+
+void fn_1_4AF64(const char *format, ...) {
+    va_list args;
+    char buffer[512];
+    u32 previous = lbl_1_bss_3E058;
+
+    __builtin_va_info(&args);
+    fn_8008077C(buffer, format, &args);
+
+    lbl_1_bss_3E058 = 1;
+    lbl_1_bss_3E05C = lbl_1_rodata_10C0[0];
+    fn_1_4A0D8(buffer);
+    lbl_1_bss_3E058 = previous;
+}
+/* fzgx:end fn_1_4AF64 */
+
 /* fzgx:begin fn_1_4B040 */
 void fn_1_4B040(s32 value) {
     fn_1_4B1D4(0, value);
