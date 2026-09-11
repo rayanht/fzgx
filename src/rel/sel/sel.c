@@ -1682,6 +1682,93 @@ void fn_10_CFDC(void) {
 }
 /* fzgx:end fn_10_CFDC */
 
+/* fzgx:begin fn_10_E45C */
+typedef struct SelState {
+    u8 pad_00[0x94];
+    u32 flags;
+    u32 bits;
+    u8 pad_9c[8];
+    u8 *items;
+} SelState;
+
+extern f32 lbl_10_rodata_158[19];
+extern s16 lbl_1_bss_962;
+extern SelState lbl_1_bss_8B3A0;
+extern u8 lbl_1_bss_9C8[];
+extern u8 lbl_1_bss_9F8[];
+extern s32 lbl_801A66B4;
+extern u32 lbl_80000000;
+
+extern void fn_1_134AD4(void);
+extern void fn_10_13ECC(void);
+extern void fn_10_10C24(void);
+extern void fn_10_21C20(s32, s16);
+extern void fn_1_1380F0(void);
+extern void fn_1_133DBC(s32);
+extern s16 fn_10_91E8(void);
+extern void fn_1_13ABA8(u32);
+extern void fn_1_49410(void);
+extern void fn_1_4955C(f32, f32);
+extern void fn_1_495B0(u32);
+extern void fn_1_495C8(s32);
+extern void fn_1_496FC(f32, f32);
+extern void fn_1_4AE0C(...);
+
+void fn_10_E45C(void) {
+    f32 *pool;
+    u8 *item;
+    struct { u8 * value; } check;
+    struct { u8 * value; } enabled;
+    s16 i;
+    s16 index;
+    s32 found;
+
+    pool = lbl_10_rodata_158;
+    item = lbl_1_bss_8B3A0.items +
+        ((s32)lbl_1_bss_962 - 0xe) * 0x94;
+    fn_1_134AD4();
+    fn_10_13ECC();
+    fn_10_10C24();
+    fn_10_21C20(4, (s16)lbl_801A66B4);
+    fn_1_1380F0();
+    fn_1_133DBC(1);
+
+    if ((lbl_1_bss_8B3A0.flags & 0x200) == 0) {
+        check.value = lbl_1_bss_9C8;
+        enabled.value = lbl_1_bss_9F8;
+        found = 0;
+        for (i = 0; i < 4; i++) {
+            if ((s8)check.value[0xa] != -1 &&
+                __rlwnm(lbl_1_bss_8B3A0.bits, (i + 1) & 31, 31, 31) &&
+                (*(u16 *)enabled.value >> 8) & 1) {
+                found = 1;
+                break;
+            }
+            check.value += 0xc;
+            enabled.value += 0x14;
+        }
+
+        index = *(s16 *)(item + 0x14);
+        if (*(s16 *)(item + index * 4) == 0 &&
+            fn_10_91E8() < 2 &&
+            found == 1) {
+            fn_1_13ABA8(0);
+            fn_1_49410();
+            fn_1_4955C(pool[70], pool[70]);
+            fn_1_495B0((u32)1 << 31);
+            fn_1_495C8(1);
+            fn_1_496FC(pool[22], pool[71]);
+            fn_10_21C20(0x18, (s16)lbl_801A66B4);
+            fn_1_4AE0C();
+        } else {
+            fn_1_13ABA8(0x28000000);
+        }
+    } else {
+        fn_1_13ABA8(0x28000000);
+    }
+}
+/* fzgx:end fn_10_E45C */
+
 /* fzgx:begin fn_10_FF08 */
 typedef struct SelState {
     u8 pad_0[0x94];

@@ -5825,3 +5825,9 @@ rel/main_rel/bg_win/fn_1_15E688.c:
 
 rel/main_rel/bg_cas/fn_1_FC60C.c:
 	.text       start:0x000FC60C end:0x000FC760 align:4
+
+rel/main_rel/mdlload/fn_1_D35D4.c:
+	.text       start:0x000D35D4 end:0x000D3768 align:4
+
+rel/main_rel/ghost/fn_1_EF4F8.c:
+	.text       start:0x000EF4F8 end:0x000EF5DC align:4

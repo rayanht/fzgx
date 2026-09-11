@@ -79,6 +79,67 @@ extern void fn_1_D3BE8(void);
 extern void fn_1_D3BE8(void);
 extern int fn_1_D3B6C(void);
 
+/* fzgx:begin fn_1_D35D4 noprologue */
+#include "types.h"
+
+extern int fn_1_45730(void *arg0, void *arg1);
+extern u8 lbl_1_bss_3BC0[32];
+extern int fn_1_458A0(void *arg0, void *arg1, u32 arg2, u32 arg3);
+extern char lbl_1_data_3DBD8[10];
+extern void *lbl_801A6410[1];
+extern void *fn_1_45D0(void *arg0, u32 arg1, void *arg2, u32 arg3);
+extern int fn_1_45850(void *arg);
+extern void fn_1_12860(void *arg0, void *arg1);
+extern void fn_1_46B4(void *arg0, void *arg1, void *arg2, u32 arg3);
+extern void *fn_80071100(void *arg0, void *arg1, void *arg2);
+extern int fn_1_D3B6C(void);
+extern void DCFlushRange(void *address, u32 length);
+
+int fn_1_D35D4(void *unused, void *arg) {
+    u8 local[0x58];
+    u32 size1;
+    u32 size0;
+    struct { void * value; } buffer1;
+    u8 *data;
+    void *buffer0;
+    void *object;
+
+    if (fn_1_45730(unused, local) == 0) {
+        return 0;
+    }
+    if (fn_1_458A0(local, lbl_1_bss_3BC0, 32, 0) < 0) {
+        return 0;
+    }
+
+    size0 = (__lwbrx((u32 *)lbl_1_bss_3BC0, 0) + 39) & ~31;
+    size1 = (__lwbrx((u32 *)lbl_1_bss_3BC0, 4) + 31) & ~31;
+
+    buffer0 = fn_1_45D0(lbl_801A6410[0], ((size1 + 31) & ~31) + 32,
+                         lbl_1_data_3DBD8, 0x7a);
+    data = (u8 *)buffer0 + 32;
+    if (data == 0) {
+        return 0;
+    }
+    buffer1.value = fn_1_45D0(lbl_801A6410[0], size0,
+                         lbl_1_data_3DBD8, 0x80);
+    if (buffer1.value == 0) {
+        return 0;
+    }
+    if (fn_1_458A0(local, buffer1.value, size0, 0) < 0) {
+        return 0;
+    }
+    if (fn_1_45850(local) == 0) {
+        return 0;
+    }
+    fn_1_12860(buffer1.value, (u8 *)buffer0 + 32);
+    fn_1_46B4(lbl_801A6410[0], buffer1.value, lbl_1_data_3DBD8, 0x8e);
+    DCFlushRange((u8 *)buffer0 + 32, size1);
+    object = fn_80071100((u8 *)buffer0 + 32, buffer0, arg);
+    *(u32 *)((u8 *)object + 0x10) &= ~1;
+    return fn_1_D3B6C();
+}
+/* fzgx:end fn_1_D35D4 */
+
 /* fzgx:begin fn_1_D3768 */
 typedef struct {
     u8 _pad[0x10];

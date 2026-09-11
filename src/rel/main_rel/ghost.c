@@ -213,6 +213,83 @@ void fn_1_EF4F4(void) {
 }
 /* fzgx:end fn_1_EF4F4 */
 
+/* fzgx:begin fn_1_EF4F8 noprologue */
+#include "types.h"
+
+typedef struct {
+    u8 pad_000[0x1D4];
+    s32 state;
+    u8 pad_1D8[0x08];
+    s32 saved_state;
+    u8 work[0x100];
+} MainRelData;
+
+typedef struct {
+    u32 unk_0;
+    u8 pad_4[0x2C0];
+} Obj_1_bss_7C584;
+
+typedef struct {
+    u32 unk_0;
+    u8 unk_4;
+    u8 pad_5[0xF];
+    u8 unk_14;
+    u8 pad_15[0x33];
+} Obj_1_bss_7ECB4;
+
+extern MainRelData lbl_1_data_3E358;
+extern Obj_1_bss_7ECB4 lbl_1_bss_7ECB4;
+extern Obj_1_bss_7C584 lbl_1_bss_7C584;
+extern u32 lbl_801A6410;
+
+extern void fn_1_EE530(void);
+extern s32 fn_1_BA144(Obj_1_bss_7ECB4 *);
+extern void fn_1_BC310(Obj_1_bss_7ECB4 *);
+extern void fn_1_BC29C(Obj_1_bss_7ECB4 *);
+extern void fn_1_B9C0C(void);
+extern void fn_1_46B4(u32, u32, u8 *, s32);
+extern void fn_1_1596DC(s32);
+extern void fn_1_484CC(s32);
+
+void fn_1_EF4F8(void) {
+    struct { u32 * value; } entries;
+    s32 i;
+    MainRelData *data;
+    u32 *global;
+    s32 zero;
+    s32 status;
+
+    data = &lbl_1_data_3E358;
+    fn_1_EE530();
+    status = (s8)fn_1_BA144(&lbl_1_bss_7ECB4);
+    if (status == 2) {
+        fn_1_BC310(&lbl_1_bss_7ECB4);
+        return;
+    }
+    if (status == 0) {
+        data->state = 5;
+        return;
+    }
+
+    fn_1_BC29C(&lbl_1_bss_7ECB4);
+    fn_1_B9C0C();
+    entries.value = (u32 *)&lbl_1_bss_7C584;
+    global = &lbl_801A6410;
+    i = 0;
+    zero = 0;
+    for (; i < 0x7F; i++) {
+        if (*entries.value != 0) {
+            fn_1_46B4(*global, *entries.value, &data->work[0xF0], 0xEBA);
+            *entries.value = zero;
+        }
+        entries.value++;
+    }
+    data->state = data->saved_state;
+    fn_1_1596DC(2);
+    fn_1_484CC(2);
+}
+/* fzgx:end fn_1_EF4F8 */
+
 /* fzgx:begin fn_1_EF5DC */
 // fn_1_EF5DC: empty in retail (single blr).
 void fn_1_EF5DC(void) {
