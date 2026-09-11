@@ -15947,6 +15947,20 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_8003910C.c",
+    "symbols": [
+      "fn_8003910C"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [],
+    "pool": {
+      "@279": "jumptable_8012B45C",
+      "@280": "jumptable_8012B400"
+    }
+  },
+  {
+    "module": "main",
     "source": "dol/fn_80039AFC.c",
     "symbols": [
       "fn_80039AFC"
