@@ -438,6 +438,63 @@ void fn_1_13923C(u32 arg0, u32 arg1) {
 }
 /* fzgx:end fn_1_13923C */
 
+/* fzgx:begin fn_1_1392E0 */
+extern const f64 lbl_1_rodata_8608;
+extern const f32 lbl_1_rodata_85F4;
+extern u8 fn_1_D6698(void);
+extern void fn_1_D66F8(int arg0, s8 *arg1, s8 *arg2);
+extern void fn_1_139440(f32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4,
+                        s16 arg5, s16 arg6);
+
+typedef struct {
+    u8 pad_0[0x54];
+    f32 unk_54;
+} Fn1392E0Arg0;
+
+typedef struct {
+    f32 unk_0;
+    f32 unk_4;
+    u8 pad_8[0x1C];
+    f32 unk_24;
+    f32 unk_28;
+} Fn1392E0Arg1;
+
+typedef struct {
+    u8 pad_0[0xE];
+    s16 unk_E;
+    u8 pad_10[0x10];
+} Fn1392E0Elem;
+
+void fn_1_1392E0(Fn1392E0Arg0 *arg0, Fn1392E0Arg1 *arg1) {
+    Obj_1_bss_8B3A0 *base;
+    u8 *ptr;
+    s32 index;
+    s32 offset;
+    f32 value;
+
+    index = (s32)arg0->unk_54;
+    base = &lbl_1_bss_8B3A0;
+    ptr = (u8 *)base + 0x9F;
+    value = (f32)(u8)ptr[index] / lbl_1_rodata_85F4;
+    offset = ((Fn1392E0Elem *)((u8 *)base))[index].unk_E;
+
+    if (base->unk_94 & 0x40000000) {
+        if (fn_1_D6698() == 0) {
+            s8 a;
+            s8 b;
+
+            fn_1_D66F8(0, &a, &b);
+            offset = a;
+            value = (f32)(u8)ptr[0] / lbl_1_rodata_85F4;
+        }
+    }
+
+    fn_1_139440(value, (s32)arg1->unk_0, (s32)arg1->unk_4,
+                (s32)(arg1->unk_24 - arg1->unk_0),
+                (s32)(arg1->unk_28 - arg1->unk_4), offset, index);
+}
+/* fzgx:end fn_1_1392E0 */
+
 /* fzgx:begin fn_1_139A3C noprologue */
 #include "types.h"
 
@@ -1311,6 +1368,47 @@ void fn_1_144EE8(void) {
     }
 }
 /* fzgx:end fn_1_144EE8 */
+
+/* fzgx:begin fn_1_146B5C noprologue */
+#include "types.h"
+#include "font.h"
+
+extern void fn_1_51564(u16, u16, u16, u16, u16, u16);
+extern f32 lbl_1_rodata_92C0[22];
+extern const f64 lbl_1_rodata_93E8;
+extern f32 lbl_1_rodata_970C[71];
+extern void fn_1_5158C(FontDrawPacket *, u32, s16, s16);
+extern int fn_1_4F734(FontDrawPacket *);
+
+#pragma opt_propagation off
+void fn_1_146B5C(u32 unused, u8 *arg1) {
+    s32 pos;
+    s32 c;
+    s32 b;
+    s32 a;
+    s32 v;
+    FontDrawPacket pkt;
+
+    fn_1_51564(0, 0, 0x24, 0x28, 0xa, 4);
+
+    pkt = *(FontDrawPacket *)lbl_1_rodata_92C0;
+
+    v = *(s32 *)(arg1 + 0x20);
+    a = *(s32 *)(arg1 + 0x68);
+    b = *(s32 *)(arg1 + 0x70);
+    c = *(s32 *)(arg1 + 0x64);
+    pos = a + b;
+
+    pkt.image = 0x973E;
+    pkt.x = (f32)(pos + 0x37);
+    pkt.y = (f32)(c + 4);
+    pkt.z = lbl_1_rodata_970C[0];
+
+    fn_1_5158C(&pkt, 0x973E, (s16)(v % 10), (s16)(v / 10));
+    fn_1_4F734(&pkt);
+}
+#pragma opt_propagation reset
+/* fzgx:end fn_1_146B5C */
 
 /* fzgx:begin fn_1_149B24 */
 extern const f32 lbl_1_rodata_946C;
@@ -2367,6 +2465,60 @@ void fn_1_14E9E4(int arg0, void *arg1) {
     fn_80008BA8(arg1, &buf.entries[(s16)arg0], 16);
 }
 /* fzgx:end fn_1_14E9E4 */
+
+/* fzgx:begin fn_1_14EA74 noprologue */
+#include "types.h"
+#include "rel/main_rel/globals.h"
+
+extern u8 lbl_1_rodata_A18C[1800];
+extern char lbl_1_data_43E78[10];
+
+typedef struct {
+    u8 bytes[0x708];
+} Fn1_14EA74Blob;
+
+extern s16 fn_1_14FE48(const void *entry, const char *table);
+extern void *fn_1_14FDAC(const void *entry, const char *table, s16 mode, char *out);
+extern s16 fn_1_14F344(s16 value);
+extern void sprintf(char *out, const char *format, ...);
+
+#pragma opt_propagation off
+#pragma opt_lifetimes off
+char *fn_1_14EA74(s16 arg0, char *arg1, s16 arg2) {
+    char first[0x40];
+    u8 second[0x40];
+    Fn1_14EA74Blob local;
+    const char *data;
+    u8 *base;
+    s32 index;
+
+    data = lbl_1_data_43E78;
+    local = *(const Fn1_14EA74Blob *)lbl_1_rodata_A18C;
+    base = local.bytes;
+    index = (s32)(s16)arg0 * 0x18 + (s32)(s16)arg2 * 4;
+    if (fn_1_14FE48(*(void **)(base + index), data + 0x2428) < 2) {
+        sprintf(arg1, data + 0x242c,
+                fn_1_14FDAC(*(void **)(base + index), data + 0x2428, 0, first));
+    } else {
+        if (fn_1_14F344(arg0) == 0) {
+            fn_1_14FDAC(*(void **)(base + index), data + 0x2428, 0, first);
+            fn_1_14FDAC(*(void **)(base + index), data + 0x2428, 1, (char *)second);
+            if (second[0] == 0x2d) {
+                sprintf(arg1, data + 0x2430, first, (char *)second);
+            } else {
+                sprintf(arg1, data + 0x2438, first, (char *)second);
+            }
+        }
+        sprintf(arg1, data + 0x2438,
+                fn_1_14FDAC(*(void **)(base + index), data + 0x2428, 0, first),
+                fn_1_14FDAC(*(void **)(base + index), data + 0x2428, 1, (char *)second));
+    }
+    return arg1;
+}
+#pragma opt_lifetimes reset
+
+#pragma opt_propagation reset
+/* fzgx:end fn_1_14EA74 */
 
 /* fzgx:begin fn_1_14ED00 */
 typedef struct {

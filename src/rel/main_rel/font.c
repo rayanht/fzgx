@@ -709,6 +709,71 @@ void fn_1_4CE48(Obj_1_bss_4B9CC *obj, f32 limit) {
 }
 /* fzgx:end fn_1_4CE48 */
 
+/* fzgx:begin fn_1_4CF3C noprologue */
+#include "types.h"
+
+typedef struct {
+    unsigned char Sig_parse_format_justification_options;
+    unsigned char Sig_parse_format_sign_options;
+    unsigned char precision_specified;
+    unsigned char alternate_form;
+    unsigned char Sig_parse_format_argument_options;
+    unsigned char conversion_char;
+    int field_width;
+    int precision;
+} Sig_parse_format_print_format;
+typedef struct Sig_parse_format_MkVaListState {
+    signed char gpr;
+    signed char fpr;
+    unsigned short reserved;
+    char *input_arg_area;
+    char *reg_save_area;
+} Sig_parse_format___va_list[1];
+typedef Sig_parse_format___va_list Sig_parse_format_va_list;
+
+struct fn_1_4CF3C_lbl_1_bss_4B9CC {
+    u8 pad_0[0x1C];
+    f32 unk_1C;
+    u8 pad_20[0x1C];
+    f32 unk_3C;
+};
+
+extern f32 fn_1_4B1D4(u32, u32);
+extern f64 lbl_1_rodata_10F8;
+extern s32 fn_8008077C(u32, const char *, Sig_parse_format_va_list *);
+extern struct fn_1_4CF3C_lbl_1_bss_4B9CC lbl_1_bss_4B9CC;
+extern void fn_1_4A0D8(const char *);
+
+#pragma opt_common_subs off
+void fn_1_4CF3C(const char *format, f32 x, ...) {
+    struct fn_1_4CF3C_lbl_1_bss_4B9CC *p_lbl_1_bss_4B9CC;
+    char buffer[512];
+    Sig_parse_format_va_list list;
+    f32 saved;
+    f32 first;
+    f32 adjusted;
+    s32 count;
+
+    __builtin_va_info(&list);
+
+    fn_8008077C((u32)buffer, format, (Sig_parse_format_va_list *)&list);
+
+    p_lbl_1_bss_4B9CC = &lbl_1_bss_4B9CC;
+    saved = p_lbl_1_bss_4B9CC->unk_1C;
+    first = fn_1_4B1D4(1, (u32)buffer);
+    count = (s32)fn_1_4B1D4(3, (u32)buffer);
+    count = count - 1;
+    adjusted = p_lbl_1_bss_4B9CC->unk_3C * (f32)count;
+    adjusted = first + adjusted;
+    if (adjusted > x) {
+        p_lbl_1_bss_4B9CC->unk_1C = p_lbl_1_bss_4B9CC->unk_1C * (x / adjusted);
+    }
+    fn_1_4A0D8((const char *)buffer);
+    p_lbl_1_bss_4B9CC->unk_1C = saved;
+}
+#pragma opt_common_subs reset
+/* fzgx:end fn_1_4CF3C */
+
 /* fzgx:begin fn_1_4D0A0 */
 extern u8 lbl_1_rodata_FD0[];
 

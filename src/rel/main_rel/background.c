@@ -19,6 +19,90 @@ extern void GXPeekZ(u32, u32, void *);
 extern void fn_80034200(u32);
 extern void fn_8003432C(u32, u32, u32 *);
 
+/* fzgx:begin fn_1_9CF78 */
+extern s32 fn_8006FC1C(const char *, const char *);
+extern s32 fn_8006FC5C(const char *, const char *, s32);
+extern s32 strlen(const char *);
+
+typedef u32 (*FilterCallback)(u32, void *);
+
+typedef struct {
+    s32 type;
+    const char *str;
+} TblEntry;
+
+typedef struct {
+    s32 count;
+    u32 unk4;
+    TblEntry *entries;
+} TblGroup;
+
+void fn_1_9CF78(void *arg0, FilterCallback arg1) {
+    s32 n;
+    u32 idx;
+    TblEntry *e;
+    TblGroup ***p;
+    s32 slen;
+    TblEntry *q;
+    const char *s;
+    s32 ok;
+    TblGroup *g;
+    s32 res;
+
+    p = (TblGroup ***)&lbl_1_data_2CC30;
+    ok = 1;
+    while (*p != 0) {
+        g = **p;
+        if (g == 0) {
+            p++;
+            continue;
+        }
+        e = g->entries;
+        n = g->count;
+        for (; n > 0; n--, e++) {
+            s = e->str;
+            slen = strlen(s);
+            q = (TblEntry *)arg0;
+            for (idx = 0; q->str != 0; idx++, q++) {
+                switch (q->type) {
+                case 0:
+                    res = fn_8006FC5C(s, q->str, strlen(q->str));
+                    break;
+                case 1:
+                    res = fn_8006FC1C(s, q->str);
+                    break;
+                case 2: {
+                    s32 len = strlen(q->str);
+                    if (len > slen) {
+                        res = 0;
+                    } else {
+                        res = fn_8006FC5C(s + (slen - len), q->str, len);
+                    }
+                    break;
+                }
+                default:
+                    res = 0;
+                    break;
+                }
+                if (res != 0) {
+                    ok = arg1(idx, e);
+                }
+                if (ok == 0) {
+                    break;
+                }
+            }
+            if (ok == 0) {
+                break;
+            }
+        }
+        if (ok == 0) {
+            break;
+        }
+        p++;
+    }
+}
+/* fzgx:end fn_1_9CF78 */
+
 /* fzgx:begin fn_1_9D77C */
 typedef struct {
     u32 flags;

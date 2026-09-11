@@ -699,6 +699,112 @@ void fn_1_156B18(fn_1_156B18_State *state) {
 }
 /* fzgx:end fn_1_156B18 */
 
+/* fzgx:begin fn_1_157358 */
+extern f32 lbl_1_rodata_D8C8[18];
+extern void fn_8006B7B4(void *);
+extern s32 fn_8006B55C(void *, void *, void *);
+extern s32 fn_8006B628(void *, void *);
+extern s32 fn_8006B6F8(void *);
+
+typedef struct {
+    u32 flags;
+    void *field04;
+    u8 _pad08[0x18];
+    void *data;
+    u8 _pad24[0x0c];
+    u8 value30;
+    u8 _pad31[0x0f];
+    f32 value40;
+    u8 _pad44[8];
+    u8 enabled4c;
+} RankingState;
+
+typedef struct {
+    u8 type;
+    u8 _pad01[3];
+    s32 value04;
+    s32 value08;
+    u8 value0c;
+    u8 _pad0d;
+    s16 width;
+    s16 height;
+    s16 x;
+    s16 y;
+    s32 value18;
+    s32 value1c;
+    u8 value20;
+    u8 value21;
+} Packet;
+
+#pragma opt_propagation off
+#pragma opt_common_subs off
+void fn_1_157358(RankingState *state) {
+    f32 *table = lbl_1_rodata_D8C8;
+    f32 value;
+    Packet packet;
+    s32 success;
+    void *data;
+    void *node;
+
+    if (state->enabled4c & 0x20) {
+        value = state->value40 / table[20];
+        if (value > table[11]) {
+            value = table[11];
+        }
+        value *= table[21];
+
+        if (state->flags & 0x40) {
+            u8 converted = (u8)(s32)value;
+            if (converted == state->value30) {
+                return;
+            }
+        }
+        state->value30 = (u8)(s32)value;
+    } else {
+        if (!(state->flags & 0x40)) {
+            return;
+        }
+        fn_8006B7B4(state->data);
+        state->flags &= ~0x40;
+        return;
+    }
+
+    success = 0;
+    packet.type = 2;
+    packet.value04 = -1;
+    packet.value08 = success;
+    packet.value0c = state->value30;
+    packet.width = 0x5a;
+    packet.height = 0x28;
+    packet.x = success;
+    packet.y = success;
+    packet.value18 = success;
+    packet.value1c = success;
+    packet.value20 = success;
+    packet.value21 = success;
+
+    data = state->data;
+    node = state->field04;
+    if (data == (void *)-1) {
+        if (fn_8006B55C(node, &state->data, &packet) >= 0) {
+            success = 1;
+        }
+    } else {
+        if (fn_8006B628(data, &packet) >= 0) {
+            success = 1;
+        }
+    }
+    if (success && !(state->flags & 0x40)) {
+        if (fn_8006B6F8(state->data) >= 0) {
+            state->flags |= 0x40;
+        }
+    }
+}
+#pragma opt_common_subs reset
+
+#pragma opt_propagation reset
+/* fzgx:end fn_1_157358 */
+
 /* fzgx:begin fn_1_1574E0 noprologue */
 #include "types.h"
 

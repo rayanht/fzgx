@@ -575,6 +575,76 @@ void fn_3_240DC(void *arg0, void *arg1) {
 }
 /* fzgx:end fn_3_240DC */
 
+/* fzgx:begin fn_3_268D0 */
+extern f32 lbl_3_rodata_768[38];
+extern void fn_80008BA8(u32 *, void *, s32);
+extern u8 fn_1_151E20(u32, s32);
+extern void fn_1_A9868(void);
+extern s8 fn_1_A5DC4(void);
+extern void fn_1_AA188(s32, s32, s32, s32, void *, void *, void *, void *);
+extern void fn_1_AA538(void);
+extern void fn_1_4E0F4(void);
+
+typedef struct CustomizeObject {
+    u8 pad000[4];
+    f32 x;
+    f32 y;
+    u8 pad00c[0x2c];
+    u32 resource;
+    u8 pad03c[0x18];
+    u8 pad054[0];
+} CustomizeObject;
+
+typedef union Color {
+    u8 bytes[4];
+    u32 word;
+} Color;
+
+void fn_3_268D0(CustomizeObject *self) {
+    f32 *table = lbl_3_rodata_768;
+    Color color;
+    u32 value;
+    s32 x0;
+    s32 y0;
+
+    fn_80008BA8(&value, &self->pad054, 4);
+    color.bytes[0] = fn_1_151E20(value, 0);
+    color.bytes[1] = fn_1_151E20(value, 1);
+    color.bytes[2] = fn_1_151E20(value, 2);
+    color.bytes[3] = 0xff;
+
+    if (fn_1_A9868(), fn_1_A5DC4()) {
+        u32 a;
+        u32 b;
+        u32 c;
+        u32 d;
+
+        f32 fx = self->x - table[317];
+        f32 fy = self->y - table[29];
+        d = self->resource;
+        c = color.word;
+        b = c;
+        a = d;
+        fn_1_AA188((s32)fx, (s32)fy, 0x81, 0xb, &a, &b, &c, &d);
+    } else {
+        u32 a;
+        u32 b;
+        u32 c;
+        u32 d;
+
+        f32 fx = self->x - table[338];
+        f32 fy = self->y - table[29];
+        d = self->resource;
+        c = color.word;
+        b = c;
+        a = d;
+        fn_1_AA188((s32)fx, (s32)fy, 0xaa, 0xb, &a, &b, &c, &d);
+    }
+    fn_1_AA538();
+    fn_1_4E0F4();
+}
+/* fzgx:end fn_3_268D0 */
+
 /* fzgx:begin fn_3_2B750 */
 u32 fn_3_2B750(s16 arg0, s16 arg1) {
     return *(u32 *)(lbl_3_data_4648 + arg0 * 0x18 + arg1 * 4);

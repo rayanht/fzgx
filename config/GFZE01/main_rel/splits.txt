@@ -5966,3 +5966,24 @@ rel/main_rel/live_camera/fn_1_10268.c:
 
 rel/main_rel/sel_static_disp/fn_1_13DC54.c:
 	.text       start:0x0013DC54 end:0x0013DDB8 align:4
+
+rel/main_rel/car_test/fn_1_7E7A4.c:
+	.text       start:0x0007E7A4 end:0x0007E8F4 align:4
+
+rel/main_rel/sel_static_disp/fn_1_1392E0.c:
+	.text       start:0x001392E0 end:0x00139440 align:4
+
+rel/main_rel/sel_static_disp/fn_1_146B5C.c:
+	.text       start:0x00146B5C end:0x00146C88 align:4
+
+rel/main_rel/font/fn_1_4CF3C.c:
+	.text       start:0x0004CF3C end:0x0004D0A0 align:4
+
+rel/main_rel/ranking/fn_1_157358.c:
+	.text       start:0x00157358 end:0x001574E0 align:4
+
+rel/main_rel/sel_static_disp/fn_1_14EA74.c:
+	.text       start:0x0014EA74 end:0x0014EBF8 align:4
+
+rel/main_rel/background/fn_1_9CF78.c:
+	.text       start:0x0009CF78 end:0x0009D0EC align:4

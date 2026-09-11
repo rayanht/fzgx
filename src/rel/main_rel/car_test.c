@@ -105,6 +105,54 @@ void fn_1_7D694(Object *obj) {
 }
 /* fzgx:end fn_1_7D694 */
 
+/* fzgx:begin fn_1_7E7A4 */
+extern u8 lbl_1_data_1EF5C[128];
+extern void fn_1_46B4(void *arg0, void *arg1, u8 *arg2, s32 arg3);
+extern void fn_1_7F954(void *arg0, s32 arg1);
+extern void fn_1_49614(void);
+extern const f32 lbl_1_rodata_33A8;
+extern void *lbl_801A6410;
+
+typedef struct Fn1_7E7A4Data {
+    void *field_0;
+    u8 pad_4[8];
+    void *field_c;
+    u8 pad_10[8];
+    void *field_18;
+    void *field_1c;
+} Fn1_7E7A4Data;
+
+void fn_1_7E7A4(Fn1_7E7A4Data *arg0) {
+    s8 i;
+    u32 offset;
+
+    for (i = 0, offset = 0; i < 0x29; offset += 0x440, i++) {
+        fn_1_46B4(
+            lbl_801A6410,
+            *(void **)(((((((0x32c) + ((u8 *)arg0->field_0)))) + ((offset))))),
+            lbl_1_data_1EF5C,
+            0x313);
+    }
+
+    fn_1_7F954(arg0->field_0, 0x29);
+
+    for (i = 0; i < 2; i++) {
+        fn_1_46B4(
+            lbl_801A6410,
+            *(void **)((u8 *)arg0->field_1c + i * 0xc),
+            lbl_1_data_1EF5C,
+            0x321);
+    }
+
+    fn_1_46B4(lbl_801A6410, arg0->field_18, lbl_1_data_1EF5C, 0x324);
+    fn_1_46B4(lbl_801A6410, arg0->field_c, lbl_1_data_1EF5C, 0x325);
+    fn_1_46B4(lbl_801A6410, arg0, lbl_1_data_1EF5C, 0x326);
+    fn_1_49614();
+    fn_80074D68(lbl_1_rodata_33A8, lbl_1_rodata_33A8, lbl_1_rodata_33A8);
+    fn_80074D78(1);
+}
+/* fzgx:end fn_1_7E7A4 */
+
 /* fzgx:begin fn_1_7EAE8 */
 // fn_1_7EAE8: main_rel .text:0x0007EAE8 size 0x24
 // Wrapper that calls fn_1_5634C with argument 0.
