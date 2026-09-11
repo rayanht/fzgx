@@ -650,6 +650,53 @@ void fn_1_12F30C(void *arg0, Fn1_12F30CState *state) {
 }
 /* fzgx:end fn_1_12F30C */
 
+/* fzgx:begin fn_1_130EE8 noprologue */
+#include "types.h"
+
+struct fn_1_130EE8_lbl_1_bss_8CA40 {
+    u32 unk_0;
+    u32 unk_4;
+    u32 unk_8;
+    u32 unk_C;
+    u32 unk_10;
+    u32 unk_14;
+    u32 unk_18;
+    u32 unk_1C;
+    u32 unk_20;
+    u32 unk_24;
+    u32 unk_28;
+};
+
+extern s32 fn_1_3F8C(u32, u32, u32, u32);
+extern struct fn_1_130EE8_lbl_1_bss_8CA40 lbl_1_bss_8CA40;
+extern u32 fn_1_435C(u32);
+extern u32 lbl_1_data_40E7C;
+extern u32 lbl_1_data_40E90;
+extern void fn_1_130F98(void);
+extern void fn_1_131000(void);
+
+void fn_1_130EE8(u32 arg0, u32 arg1) {
+    struct fn_1_130EE8_lbl_1_bss_8CA40 *p_lbl_1_bss_8CA40;
+    u32 t1, t3;
+    p_lbl_1_bss_8CA40 = (struct fn_1_130EE8_lbl_1_bss_8CA40 *)&lbl_1_bss_8CA40;
+    p_lbl_1_bss_8CA40->unk_0 = -1;
+    p_lbl_1_bss_8CA40->unk_4 = -1;
+    p_lbl_1_bss_8CA40->unk_8 = -1;
+    p_lbl_1_bss_8CA40->unk_C = 0;
+    p_lbl_1_bss_8CA40->unk_10 = 0;
+    p_lbl_1_bss_8CA40->unk_14 = 0;
+    p_lbl_1_bss_8CA40->unk_18 = 0;
+    p_lbl_1_bss_8CA40->unk_1C = arg0;
+    p_lbl_1_bss_8CA40->unk_20 = arg1;
+    fn_1_435C(arg0);
+    t1 = fn_1_3F8C((u32)&lbl_1_data_40E7C, (u32)fn_1_130F98, 0, 8);
+    p_lbl_1_bss_8CA40->unk_24 = t1;
+    fn_1_435C(arg1);
+    t3 = fn_1_3F8C((u32)&lbl_1_data_40E90, (u32)fn_1_131000, 0, 8);
+    p_lbl_1_bss_8CA40->unk_28 = t3;
+}
+/* fzgx:end fn_1_130EE8 */
+
 /* fzgx:begin fn_1_130F98 */
 // Promote a pending archive operation, then invoke its selected handler.
 void fn_1_130F98(void) {

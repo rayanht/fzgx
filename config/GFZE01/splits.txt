@@ -4952,3 +4952,21 @@ dol/fn_8004E7D4.c:
 
 dol/fn_8007AA7C.c:
 	.text       start:0x8007AA7C end:0x8007AB58 align:4
+
+dol/fn_80020D58.c:
+	.text       start:0x80020D58 end:0x80020E3C align:4
+
+dol/fn_80057B9C.c:
+	.text       start:0x80057B9C end:0x80057CC4 align:4
+
+dol/fn_8000740C.c:
+	.text       start:0x8000740C end:0x800074C4 align:4
+
+dol/fn_8008D7CC.c:
+	.text       start:0x8008D7CC end:0x8008D8A8 align:4
+
+dol/fn_80032EB8.c:
+	.text       start:0x80032EB8 end:0x80032F48 align:4
+
+dol/fn_80032BE0.c:
+	.text       start:0x80032BE0 end:0x80032D04 align:4

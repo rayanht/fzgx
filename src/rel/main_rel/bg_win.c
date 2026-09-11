@@ -14,6 +14,53 @@ extern void fn_1_3F8C(void *, void *, u8 *, s32);
 extern u32 lbl_1_bss_8FEA0;
 extern u8 lbl_1_bss_8FE7C;
 
+/* fzgx:begin fn_1_15B970 */
+typedef struct {
+    u8 pad_0[0x8];
+    u32 unk_8;
+    u32 unk_C;
+    u32 unk_10;
+    u32 unk_14;
+    u32 unk_18;
+} WinObject;
+
+static inline u32 swap32(u32 value) {
+    u32 temp;
+
+    temp = value;
+    return __lwbrx(&temp, 0);
+}
+
+void fn_1_15B970(WinObject *obj) {
+    u32 offset;
+    u32 count;
+
+    lbl_1_bss_8F8D0.unk_0 = (u32)obj;
+    if (obj != 0) {
+        obj->unk_8 = swap32(obj->unk_8);
+        obj->unk_C = swap32(obj->unk_C);
+        obj->unk_10 = swap32(obj->unk_10);
+        obj->unk_14 = swap32(obj->unk_14);
+        obj->unk_18 = swap32(obj->unk_18);
+
+        count = 0;
+        offset = 0;
+        while (count < obj->unk_8) {
+            u32 *a = (u32 *)((u8 *)obj + obj->unk_C + offset);
+            u32 *b = (u32 *)((u8 *)obj + obj->unk_10 + offset);
+
+            a[1] = swap32(a[1]);
+            a[0] = swap32(a[0]);
+            b[1] = swap32(b[1]);
+            b[0] = swap32(b[0]);
+
+            offset += 8;
+            count++;
+        }
+    }
+}
+/* fzgx:end fn_1_15B970 */
+
 /* fzgx:begin fn_1_15BE38 */
 typedef struct {
     u32 count;

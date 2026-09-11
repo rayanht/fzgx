@@ -1091,6 +1091,60 @@ s32 fn_1_4E724(FontParams *arg) {
 }
 /* fzgx:end fn_1_4E724 */
 
+/* fzgx:begin fn_1_4EB74 */
+extern void fn_1_159588(u32);
+extern void fn_80073778(void *, s32);
+extern void fn_1_4EDAC(void *, f32, f32);
+
+typedef struct FontObject {
+    u32 unk_0;
+    u8 pad_4[0x2c];
+    u32 unk_30;
+} FontObject;
+
+/* lbl_1_data_FCD4 is indexed as an array of 0x28-byte records; the header's
+   Obj_1_data_FCD4 spans the whole blob, so index through this record view. */
+typedef struct TableEntry {
+    s32 unk_0;
+    u32 unk_4;
+    u8 pad_8[0x18];
+    Obj_1_data_FCD4_At20 *unk_20;
+    u32 unk_24;
+} TableEntry;
+
+s32 fn_1_4EB74(FontObject *self) {
+    TableEntry *table;
+    Obj_1_data_FCD4_At20 *data;
+    u32 value;
+    u32 index;
+    u16 *row;
+    f32 x;
+    f32 y;
+
+    if (self->unk_30 & 0x02000000) {
+        return 0;
+    }
+
+    value = self->unk_0;
+    fn_1_159588(value);
+    value = self->unk_0;
+
+    index = (value >> 8) & 0xffff;
+    table = (TableEntry *)&lbl_1_data_FCD4;
+    if (table[index].unk_0 == 0) {
+        return 0;
+    }
+
+    data = table[index].unk_20;
+    row = (u16 *)((u8 *)data->unk_4 + ((value & 0xff) << 4));
+    x = (f32)(u32)row[4];
+    y = (f32)(u32)row[5];
+    fn_80073778((void *)((u8 *)data->unk_C + ((value & 0xff) << 5)), 0);
+    fn_1_4EDAC(self, x, y);
+    return 1;
+}
+/* fzgx:end fn_1_4EB74 */
+
 /* fzgx:begin fn_1_4F724 */
 // Clear the font state value before the next initialization.
 void fn_1_4F724(void) {

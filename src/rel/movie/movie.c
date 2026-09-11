@@ -9,6 +9,54 @@ void fn_5_3E54(u32 arg0) {
 }
 /* fzgx:end fn_5_3E54 */
 
+/* fzgx:begin fn_5_3E74 */
+struct fn_5_3E74_Arg0 {
+    s32 unk_0;
+    u8 pad_4[0xc];
+    u8 unk_10[0x100];
+};
+
+extern s32 fn_80082928(char *, const char *, ...);
+extern u32 lbl_5_bss_B90;
+extern char lbl_5_data_1784[];
+extern char *strchr(const char *, int);
+extern s8 lbl_5_bss_5D;
+
+u32 fn_5_3E74(struct fn_5_3E74_Arg0 *arg0) {
+    u32 v1;
+    s32 v3;
+    s16 i;
+    u8 c;
+
+    v1 = 0;
+    v3 = 0;
+    fn_80082928((char *)lbl_5_bss_B90, lbl_5_data_1784, arg0, (u8 *)arg0 + 4,
+                (u8 *)arg0 + 8, (u8 *)arg0 + 12, (u8 *)arg0 + 16);
+    if (arg0->unk_0 == -1) {
+        lbl_5_bss_B90 = 0;
+    } else {
+        i = 0;
+        while ((c = arg0->unk_10[i]) != '*' && i < 255) {
+            if (c == '[') {
+                v3 = 1;
+            } else if (c == ']') {
+                v3 = 0;
+            }
+            i++;
+            if (v3 == 0) {
+                v1++;
+            }
+        }
+        arg0->unk_10[i] = 0;
+        lbl_5_bss_B90 = (u32)strchr((const char *)lbl_5_bss_B90, '\n') + 1;
+    }
+    if (lbl_5_bss_5D == 5) {
+        v1 = (v1 >> 1) & 0x7f;
+    }
+    return v1;
+}
+/* fzgx:end fn_5_3E74 */
+
 /* fzgx:begin fn_5_3F94 */
 typedef u32 (*fn_5_3F94_Fn0)(void);
 typedef u32 (*fn_5_3F94_Fn1)(u32, u32);

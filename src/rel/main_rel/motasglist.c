@@ -185,6 +185,68 @@ void *fn_1_41BDC(MotasglistData *data, s32 index) {
 }
 /* fzgx:end fn_1_41BDC */
 
+/* fzgx:begin fn_1_41E34 */
+extern const f64 lbl_1_rodata_F40;
+extern const f32 lbl_1_rodata_F34;
+extern const f32 lbl_1_rodata_F30;
+extern const f64 lbl_1_rodata_F48;
+extern const f32 lbl_1_rodata_F38;
+
+typedef struct MotasglistEntry {
+    u16 value;
+    u16 frame;
+    s16 offset;
+    u8 pad6[2];
+    u32 id;
+    u8 padC[4];
+} MotasglistEntry;
+
+typedef struct MotasglistObject {
+    u8 pad0[0x4c];
+    f32 value;
+} MotasglistObject;
+
+typedef struct MotasglistData {
+    u8 pad0[8];
+    MotasglistObject *object;
+    u8 padC[0x20];
+    MotasglistEntry *entries_a;
+    MotasglistEntry *entries_b;
+} MotasglistData;
+
+typedef struct MotasglistResult {
+    u16 first;
+    u16 second;
+    f32 value;
+    u16 third;
+} MotasglistResult;
+
+void fn_1_41E34(MotasglistData *data, u32 index, MotasglistResult *result) {
+    MotasglistEntry *entry_a = &data->entries_a[index];
+    MotasglistEntry *entry_b = &data->entries_b[index];
+    f32 delta;
+    f32 start;
+    f32 end;
+    f32 value;
+
+    result->first = entry_a->id;
+    result->second = entry_b->id;
+    delta = (f32)(entry_b->frame - entry_a->frame);
+    if (lbl_1_rodata_F34 == delta) {
+        delta = lbl_1_rodata_F30;
+    }
+    result->value = (data->object->value - (f32)entry_a->frame) / delta;
+    if (result->first == result->second) {
+        start = (f32)entry_a->offset;
+        end = (f32)entry_b->offset;
+        value = result->value * (end - start);
+        result->value = start + value;
+        result->value = result->value / lbl_1_rodata_F38;
+    }
+    result->third = entry_b->value;
+}
+/* fzgx:end fn_1_41E34 */
+
 /* fzgx:begin fn_1_41F58 */
 typedef u16 (*Fn41F58Callback)(void *arg, void *entry);
 

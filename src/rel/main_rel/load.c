@@ -22,6 +22,63 @@ extern u8 lbl_1_bss_3E024[52];
 extern char lbl_1_data_1A3AC[5];
 extern void fn_80083DB0(void *arg0, void *arg1);
 
+/* fzgx:begin fn_1_45730 noprologue */
+#include "types.h"
+#include "rel/main_rel/load.h"
+
+extern int fn_1_45E98(void *arg0, void **result);
+extern int fn_8000700C(void *arg0);
+extern int fn_80006C2C(int status, void *arg0);
+
+typedef struct {
+    u32 flags;
+    s32 unk_4;
+    u32 unk_8;
+    u32 unk_C;
+} LoadEntry;
+
+typedef struct {
+    u32 unk_0;
+    u8 pad_4[0x48];
+    LoadEntry entry;
+} LoadResult;
+
+int fn_1_45730(void *arg0, LoadResult *result) {
+    LoadEntry *entry;
+    int status;
+    int i;
+
+    status = fn_1_45E98(arg0, (void **)&entry);
+    if (status >= 0) {
+        result->unk_0 = 1;
+        result->entry = *entry;
+        return 1;
+    }
+
+    if (status < 0) {
+        status = fn_8000700C(arg0);
+    }
+    if (status < 0) {
+        return 0;
+    }
+
+    entry = (LoadEntry *)&lbl_1_bss_384D8;
+    for (i = 0; i < 0x400; i++) {
+        if ((entry->flags & 0x40000000) != 0 &&
+            (entry->flags & 0x08000000) == 0 &&
+            entry->unk_4 == status) {
+            result->unk_0 = 1;
+            result->entry = *entry;
+            return 1;
+        }
+        entry++;
+    }
+
+    result->unk_0 = 0;
+    return fn_80006C2C(status, (u8 *)result + 4);
+}
+/* fzgx:end fn_1_45730 */
+
 /* fzgx:begin fn_1_45850 */
 struct fn_1_45850_Arg0 {
     u32 unk_0;

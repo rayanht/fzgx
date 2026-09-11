@@ -53,6 +53,41 @@ extern void fn_1_12EF80(s16 arg, s16 *out_a, s16 *out_b);
 extern f64 lbl_1_rodata_6C88;
 extern void fn_80008BA8(u32 *out, const void *value, s32 size);
 
+/* fzgx:begin fn_1_EB85C */
+extern u8 fn_1_B7C00(void);
+extern int fn_1_F21B8(s16 value);
+
+typedef struct {
+    u8 pad_0[0x1];
+    u8 unk_1;
+    u8 pad_2[0x26];
+} GhostEntry;
+
+int fn_1_EB85C(void) {
+    int result;
+    GhostEntry *entry;
+    int i;
+
+    if (fn_1_B7C00() != 0) {
+        return 0;
+    }
+
+    if ((s32)lbl_1_bss_7B1A4 == 0) {
+        return 0;
+    }
+
+    result = fn_1_F21B8(lbl_1_bss_8B3A0.unk_90) != 0;
+    entry = (GhostEntry *)&lbl_1_bss_7B1AC;
+    for (i = 0; i < 0x7f; i++) {
+        if (lbl_1_bss_8B3A0.unk_90 == entry[i].unk_1) {
+            result++;
+        }
+    }
+
+    return result;
+}
+/* fzgx:end fn_1_EB85C */
+
 /* fzgx:begin fn_1_EC900 */
 // Return the current ghost state value.
 u32 fn_1_EC900(void) {

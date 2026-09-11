@@ -69,6 +69,64 @@ void fn_1_57720(u32 value_1, u32 value_2, u32 value_3, u32 value_4) {
 }
 /* fzgx:end fn_1_57720 */
 
+/* fzgx:begin fn_1_57BBC */
+typedef struct {
+    u32 unk_0;
+    u32 unk_4;
+    u32 unk_8;
+    u32 unk_C;
+} Fn1_57BBC_ArgBlock;
+
+typedef struct {
+    u32 unk_0;
+    void (*unk_4)(void);
+    u8 pad_8[0x30];
+    u32 unk_38;
+    u16 unk_3C;
+    u8 pad_3E[0x2];
+    void *unk_40;
+    Obj_1_data_1C670 unk_44;
+} Fn1_57BBC_Object;
+
+typedef struct {
+    Fn1_57BBC_ArgBlock unk_0;
+    Fn1_57BBC_ArgBlock unk_10;
+} Fn1_57BBC_Data;
+
+extern void *fn_1_548AC(u32 size);
+extern void *fn_1_5448C(void *arg);
+extern void fn_1_57E84(void);
+extern void fn_1_5489C(void *arg0, void *arg1);
+extern void lbl_8006DB74(void *arg);
+
+void fn_1_57BBC(Fn1_57BBC_ArgBlock *arg0, Fn1_57BBC_ArgBlock *arg1) {
+    Fn1_57BBC_Object *object;
+    Fn1_57BBC_Data *data;
+    void *value;
+
+    object = fn_1_548AC(0x60);
+    if (object == 0) {
+        return;
+    }
+
+    data = fn_1_548AC(0x20);
+    if (data == 0) {
+        return;
+    }
+
+    value = fn_1_5448C(arg0);
+    object->unk_4 = fn_1_57E84;
+    object->unk_38 = 0xA8;
+    object->unk_3C = 2;
+    object->unk_44 = lbl_1_data_1C670;
+    data->unk_0 = *arg0;
+    data->unk_10 = *arg1;
+    object->unk_40 = data;
+    lbl_8006DB74(object->pad_8);
+    fn_1_5489C(value, object);
+}
+/* fzgx:end fn_1_57BBC */
+
 /* fzgx:begin fn_1_57DC0 */
 void fn_1_57DC0(void) {
     fn_800746A8(lbl_1_data_1C670.unk_0, lbl_1_data_1C670.unk_14);

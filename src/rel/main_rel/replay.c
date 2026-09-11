@@ -365,3 +365,74 @@ u32 fn_1_F47AC(void) {
     return tick;
 }
 /* fzgx:end fn_1_F47AC */
+
+/* fzgx:begin fn_1_F4E3C */
+extern const f32 lbl_1_rodata_6D6C;
+extern const f32 lbl_1_rodata_6D68;
+
+f32 fn_1_F4E3C(s32 count, f32 *x, f32 *z, f32 *y, f32 value) {
+    s32 lo;
+    s32 hi;
+    s32 mid;
+    f32 x0;
+    f32 y0;
+    f32 y1;
+    f32 x1;
+    f32 z0;
+    f32 z1;
+    f32 t;
+    f32 two;
+    f32 dy;
+    f32 dx;
+    f32 thr;
+    f32 tdy;
+    f32 dz;
+    f32 u;
+    f32 s;
+    f32 v;
+    f32 w;
+    f32 s2;
+    f32 w2;
+    f32 r;
+    f32 sum;
+
+    hi = count - 1;
+    lo = 0;
+    while (lo < hi) {
+        mid = (lo + hi) / 2;
+        if (x[mid] < value) {
+            lo = mid + 1;
+        } else {
+            hi = mid;
+        }
+    }
+    if (lo > 0) {
+        lo--;
+    }
+
+    x0 = x[lo];
+    y0 = y[lo];
+    y1 = y[lo + 1];
+    x1 = x[lo + 1];
+    z0 = z[lo];
+    z1 = z[lo + 1];
+
+    t = value - x0;
+    two = lbl_1_rodata_6D6C * y0;
+    dy = y1 - y0;
+    dx = x1 - x0;
+    tdy = t * dy;
+    thr = lbl_1_rodata_6D68 * y0;
+    dz = z1 - z0;
+    u = tdy / dx;
+    s = two + y1;
+    v = dz / dx;
+    w = thr + u;
+    s2 = dx * s;
+    w2 = t * w;
+    r = v - s2;
+    sum = w2 + r;
+    sum = t * sum;
+    return z0 + sum;
+}
+/* fzgx:end fn_1_F4E3C */

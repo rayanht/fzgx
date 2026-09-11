@@ -5696,3 +5696,27 @@ rel/main_rel/load/fn_1_479F0.c:
 
 rel/main_rel/sound/fn_1_A5344.c:
 	.text       start:0x000A5344 end:0x000A5470 align:4
+
+rel/main_rel/shadowmap/fn_1_57BBC.c:
+	.text       start:0x00057BBC end:0x00057CD0 align:4
+
+rel/main_rel/load/fn_1_45730.c:
+	.text       start:0x00045730 end:0x00045850 align:4
+
+rel/main_rel/ghost/fn_1_EB85C.c:
+	.text       start:0x000EB85C end:0x000EB8F4 align:4
+
+rel/main_rel/motasglist/fn_1_41E34.c:
+	.text       start:0x00041E34 end:0x00041F58 align:4
+
+rel/main_rel/replay/fn_1_F4E3C.c:
+	.text       start:0x000F4E3C end:0x000F4F08 align:4
+
+rel/main_rel/font/fn_1_4EB74.c:
+	.text       start:0x0004EB74 end:0x0004EC74 align:4
+
+rel/main_rel/archive/fn_1_130EE8.c:
+	.text       start:0x00130EE8 end:0x00130F98 align:4
+
+rel/main_rel/bg_win/fn_1_15B970.c:
+	.text       start:0x0015B970 end:0x0015BA78 align:4
