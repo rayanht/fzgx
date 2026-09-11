@@ -247,6 +247,42 @@ void fn_1_FC51C(void) {
 #pragma opt_common_subs reset
 /* fzgx:end fn_1_FC51C */
 
+/* fzgx:begin fn_1_FC60C */
+extern u8 lbl_1_bss_850E0[256];
+extern f32 lbl_1_rodata_760C[2];
+extern u32 GXGetTexBufferSize(u16, u16, u32, u8, u8);
+extern void GXInitTexObj(void *, void *, u16, u16, u32, u32, u32, u8);
+extern void GXInitTexObjLOD(void *, u32, u32, f32, f32, f32, u8, u8, u32);
+extern void DCFlushRange(void *, u32);
+
+#pragma opt_common_subs off
+void fn_1_FC60C(void) {
+    u8 *tex;
+    u8 *buf;
+    u32 size;
+    u32 i;
+
+    size = GXGetTexBufferSize(0x10, 0x10, 1, 0, 0);
+    tex = lbl_1_bss_85224;
+    buf = lbl_1_bss_850E0;
+
+    for (i = 0; i < 0x100; i++) {
+        int idx = ((i & 0x80) >> 2) + ((i >> 4) & 7) + ((i & 0xC) << 4) + ((i & 3) << 3);
+        if (i >= 0xA) {
+            buf[idx] = (u8)i - 0xA;
+        } else {
+            buf[idx] = 0;
+        }
+    }
+
+    GXInitTexObj(tex, buf, 0x10, 0x10, 1, 0, 1, 0);
+    GXInitTexObjLOD(tex, 0, 0, lbl_1_rodata_760C[0], lbl_1_rodata_760C[0],
+                    lbl_1_rodata_760C[0], 0, 0, 0);
+    DCFlushRange(buf, size);
+}
+#pragma opt_common_subs reset
+/* fzgx:end fn_1_FC60C */
+
 /* fzgx:begin fn_1_FCF50 */
 int fn_1_FCF50(void) {
     fn_1_FCA10();

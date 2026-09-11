@@ -90,6 +90,52 @@ u8 fn_10_26000(void) {
 }
 /* fzgx:end fn_10_26000 */
 
+/* fzgx:begin fn_10_260D4 noprologue */
+#include "types.h"
+
+typedef struct {
+    u8 pad[0x8c];
+    s16 value;
+} NameEntryState;
+
+typedef struct {
+    s16 v[14];
+} SndTable;
+
+extern NameEntryState lbl_1_bss_8B3A0;
+extern SndTable lbl_10_rodata_1D8C;
+extern u8 lbl_1_data_2B0D4[];
+extern u8 lbl_1_data_2B144[];
+
+extern s16 fn_1_12EF24(s16, s16);
+extern void fn_1_48140(int);
+extern void fn_1_15555C(void);
+extern void fn_1_14BD74(void);
+
+void fn_10_260D4(void) {
+    NameEntryState *state = &lbl_1_bss_8B3A0;
+    s32 i;
+
+    for (i = 5; i >= 0; i--) {
+        s16 result = fn_1_12EF24(state->value, i);
+        if (result != -1) {
+            u8 key = lbl_1_data_2B0D4[result];
+            SndTable table = lbl_10_rodata_1D8C;
+            s16 index = lbl_1_data_2B144[key] - 1;
+
+            if ((((u32)index > 13) ? 0 : (index >= 0)) && table.v[index] != -1) {
+                fn_1_48140(table.v[index]);
+            }
+        }
+    }
+    fn_1_48140(0x99);
+    fn_1_48140(0x97);
+    fn_1_48140(0x91);
+    fn_1_15555C();
+    fn_1_14BD74();
+}
+/* fzgx:end fn_10_260D4 */
+
 /* fzgx:begin fn_10_26424 */
 void fn_10_26424(void) {
     lbl_10_bss_55CE2 = 1;

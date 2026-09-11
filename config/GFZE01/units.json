@@ -25754,6 +25754,17 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/bg_cas/fn_1_FC60C.c",
+    "symbols": [
+      "fn_1_FC60C"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/bg_cas.c"
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/bg_cas/fn_1_FCF50.c",
     "symbols": [
       "fn_1_FCF50"
@@ -53449,6 +53460,17 @@
     "source": "rel/sel/name_entry/fn_10_26000.c",
     "symbols": [
       "fn_10_26000"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/sel/name_entry.c"
+  },
+  {
+    "module": "sel",
+    "source": "rel/sel/name_entry/fn_10_260D4.c",
+    "symbols": [
+      "fn_10_260D4"
     ],
     "status": "matching",
     "mw_version": null,
