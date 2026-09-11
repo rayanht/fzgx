@@ -31,6 +31,69 @@ extern void lbl_8006DCA4(void *data);
 extern void fn_1_DB53C(void);
 extern void fn_1_103264(void *, void *);
 
+/* fzgx:begin fn_1_D8FC4 */
+extern void OSPanic(const char *, int, const char *, ...);
+
+typedef struct {
+    u32 unk_0;
+    u8 pad_4[0x4];
+    u32 unk_8;
+    u8 pad_C[0xA0];
+} fn_1_D8FC4_Entry;
+
+typedef struct {
+    u8 pad_0[0x6D4];
+    s32 unk_6D4;
+    fn_1_D8FC4_Entry unk_6D8[1];
+} fn_1_D8FC4_Container;
+
+s32 fn_1_D8FC4(s32 arg0, s32 arg1) {
+    fn_1_D8FC4_Container *base = (fn_1_D8FC4_Container *)lbl_1_data_2A7E0.unk_3C;
+
+    switch (arg0) {
+    case 0:
+        base->unk_6D8[base->unk_6D4].unk_8 |= 0x40000000;
+        base->unk_6D8[base->unk_6D4].unk_8 |= 0x10000000;
+        base->unk_6D8[base->unk_6D4].unk_0 = arg1;
+        base->unk_6D4 += 1;
+        if (base->unk_6D4 >= 0x20) {
+            OSPanic((const char *)lbl_1_data_3DC50, 0x4E7, (const char *)lbl_1_data_3DC5C);
+        }
+        break;
+    case 1:
+        base->unk_6D8[base->unk_6D4].unk_8 |= 0x40000000;
+        base->unk_6D8[base->unk_6D4].unk_8 |= 0x20000000;
+        base->unk_6D8[base->unk_6D4].unk_0 = arg1;
+        base->unk_6D4 += 1;
+        if (base->unk_6D4 >= 0x20) {
+            OSPanic((const char *)lbl_1_data_3DC50, 0x4EE, (const char *)lbl_1_data_3DC5C);
+        }
+        break;
+    case 2:
+        base->unk_6D8[base->unk_6D4].unk_8 |= 0x40000000;
+        base->unk_6D8[base->unk_6D4].unk_8 |= 0x10000000;
+        base->unk_6D8[base->unk_6D4].unk_8 |= 0x08000000;
+        base->unk_6D8[base->unk_6D4].unk_0 = arg1;
+        base->unk_6D4 += 1;
+        if (base->unk_6D4 >= 0x20) {
+            OSPanic((const char *)lbl_1_data_3DC50, 0x4F6, (const char *)lbl_1_data_3DC5C);
+        }
+        break;
+    case 3:
+        base->unk_6D8[base->unk_6D4].unk_8 |= 0x40000000;
+        base->unk_6D8[base->unk_6D4].unk_8 |= 0x20000000;
+        base->unk_6D8[base->unk_6D4].unk_8 |= 0x08000000;
+        base->unk_6D8[base->unk_6D4].unk_0 = arg1;
+        base->unk_6D4 += 1;
+        if (base->unk_6D4 >= 0x20) {
+            OSPanic((const char *)lbl_1_data_3DC50, 0x4FE, (const char *)lbl_1_data_3DC5C);
+        }
+        break;
+    }
+    return 1;
+}
+/* fzgx:end fn_1_D8FC4 */
+
 /* fzgx:begin fn_1_DA6A8 noprologue */
 #include "types.h"
 

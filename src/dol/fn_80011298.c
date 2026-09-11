@@ -9,7 +9,7 @@ struct Sig___OSGetEffectivePriority___OSGetEffectivePriority_Arg0 {
 
 typedef void *(*Sig_fn_80010828_OSThreadStartFunction)(void *);
 
-extern u32 RunQueueHint_801A67FC;
+extern u32 RunQueueHint;
 extern void * OSDisableInterrupts(void);
 extern u32 __OSGetEffectivePriority(struct Sig___OSGetEffectivePriority___OSGetEffectivePriority_Arg0 *);
 extern OSThread * SetEffectivePriority(OSThread *, OSPriority);
@@ -39,7 +39,7 @@ loop_5:
                 }
             }
         }
-        if ((s32) (*(u32 *)((u8 *)(&RunQueueHint_801A67FC) + 0)) != 0) {
+        if ((s32) (*(u32 *)((u8 *)(&RunQueueHint) + 0)) != 0) {
             SelectThread((u32)(0U));
         }
     }

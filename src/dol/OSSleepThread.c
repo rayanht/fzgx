@@ -14,7 +14,7 @@ enum OS_THREAD_STATE {
 OSThread *OSGetCurrentThread();
 
 // Hardware or OS state can change asynchronously.
-extern volatile BOOL RunQueueHint_801A67FC; // fzgx-allow: S2 SDK asynchronous state
+extern volatile BOOL RunQueueHint; // fzgx-allow: S2 SDK asynchronous state
 
 OSThread *__OSCurrentThread : FZGX_ADDR___OSCurrentThread;
 
@@ -23,7 +23,7 @@ static inline OSThread *OSGetCurrentThread() { return __OSCurrentThread; }
 OSThread *SelectThread(BOOL yield);
 
 static inline void __OSReschedule() {
-    if (!RunQueueHint_801A67FC) {
+    if (!RunQueueHint) {
         return;
     }
     SelectThread(0);
@@ -64,7 +64,7 @@ void OSSleepThread(OSThreadQueue *queue) {
                 prev->link.next = (currentThread);
         }
     } while (0);
-    RunQueueHint_801A67FC = 1;
+    RunQueueHint = 1;
     __OSReschedule();
     OSRestoreInterrupts(enabled);
 }

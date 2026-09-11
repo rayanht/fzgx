@@ -25,9 +25,9 @@ struct SDK_OSThread____bss_0 {
 
 void OSInitThreadQueue(OSThreadQueue *queue);
 
-extern vu32 RunQueueBits_801A67F8;
+extern vu32 RunQueueBits;
 
-extern volatile BOOL RunQueueHint_801A67FC; // fzgx-allow: S2 SDK asynchronous state
+extern volatile BOOL RunQueueHint; // fzgx-allow: S2 SDK asynchronous state
 
 extern vs32 Reschedule_801A6800;
 
@@ -44,7 +44,7 @@ extern u8 _stack_addr[];
 
 extern u8 _stack_end[];
 
-extern struct SDK_OSThread____bss_0 RunQueue_8015C018;
+extern struct SDK_OSThread____bss_0 RunQueue;
 
 static inline void OSInitMutexQueue(OSMutexQueue *queue) {
     queue->head = queue->tail = ((void *)0);
@@ -58,7 +58,7 @@ static inline void OSSetCurrentThread(OSThread *thread) {
 void OSInitThreadQueue(OSThreadQueue *queue);
 
 void __OSThreadInit() {
-    struct SDK_OSThread____bss_0 *sdk_storage____bss_0 = &RunQueue_8015C018;
+    struct SDK_OSThread____bss_0 *sdk_storage____bss_0 = &RunQueue;
 
     OSThread *thread = &(sdk_storage____bss_0->sdk_DefaultThread);
     int prio;
@@ -69,17 +69,17 @@ void __OSThreadInit() {
     thread->val = (void *)-1;
     thread->mutex = ((void *)0);
     OSInitThreadQueue(&thread->queueJoin);
-    OSInitMutexQueue(&RunQueue_8015C018.sdk_DefaultThread.queueMutex);
+    OSInitMutexQueue(&RunQueue.sdk_DefaultThread.queueMutex);
     __OSFPUContext = &thread->context;
     OSClearContext(&thread->context);
     OSSetCurrentContext(&thread->context);
-    RunQueue_8015C018.sdk_DefaultThread.stackBase = (void *)_stack_addr;
-    RunQueue_8015C018.sdk_DefaultThread.stackEnd = (void *)_stack_end;
-    *(RunQueue_8015C018.sdk_DefaultThread.stackEnd) = 0xDEADBABE;
+    RunQueue.sdk_DefaultThread.stackBase = (void *)_stack_addr;
+    RunQueue.sdk_DefaultThread.stackEnd = (void *)_stack_end;
+    *(RunQueue.sdk_DefaultThread.stackEnd) = 0xDEADBABE;
     OSSetCurrentThread(thread);
     OSClearStack(0);
-    RunQueueBits_801A67F8 = 0;
-    RunQueueHint_801A67FC = 0;
+    RunQueueBits = 0;
+    RunQueueHint = 0;
     for (prio = 0; prio <= 31; ++prio) {
         OSInitThreadQueue(&(sdk_storage____bss_0->sdk_RunQueue)[prio]);
     }

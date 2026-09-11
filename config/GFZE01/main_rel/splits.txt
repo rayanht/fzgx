@@ -6008,3 +6008,42 @@ rel/main_rel/bg_san/fn_1_DA7E4.c:
 
 rel/main_rel/sel_static_disp/fn_1_139D60.c:
 	.text       start:0x00139D60 end:0x00139F18 align:4
+
+rel/main_rel/live_camera/fn_1_12620.c:
+	.text       start:0x00012620 end:0x00012850 align:4
+
+rel/main_rel/bg_san/fn_1_D8FC4.c:
+	.text       start:0x000D8FC4 end:0x000D9224 align:4
+
+rel/main_rel/_prolog/fn_1_1DF0.c:
+	.text       start:0x00001DF0 end:0x00001FE8 align:4
+
+rel/main_rel/screen_effect/fn_1_76218.c:
+	.text       start:0x00076218 end:0x00076448 align:4
+
+rel/main_rel/font/fn_1_4E92C.c:
+	.text       start:0x0004E92C end:0x0004EB74 align:4
+
+rel/main_rel/stcoli/fn_1_17D5C.c:
+	.text       start:0x00017D5C end:0x00017FCC align:4
+
+rel/main_rel/shadowmap/fn_1_571E8.c:
+	.text       start:0x000571E8 end:0x0005745C align:4
+
+rel/main_rel/memcard/fn_1_ACA78.c:
+	.text       start:0x000ACA78 end:0x000ACD00 align:4
+
+rel/main_rel/bg_for/fn_1_DCBF4.c:
+	.text       start:0x000DCBF4 end:0x000DCE60 align:4
+
+rel/main_rel/sel_static_disp/fn_1_13B328.c:
+	.text       start:0x0013B328 end:0x0013B548 align:4
+
+rel/main_rel/enemy_ctrl/fn_1_D01B0.c:
+	.text       start:0x000D01B0 end:0x000D0428 align:4
+
+rel/main_rel/sel_static_disp/fn_1_13354C.c:
+	.text       start:0x0013354C end:0x00133748 align:4
+
+rel/main_rel/archive/fn_1_12B120.c:
+	.text       start:0x0012B120 end:0x0012B3BC align:4

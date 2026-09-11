@@ -89,3 +89,9 @@ rel/winning/winning/_epilog.c:
 
 rel/winning/winning/_prolog.c:
 	.text       start:0x00000000 end:0x00000124 align:4
+
+rel/winning/winning/fn_15_B90.c:
+	.text       start:0x00000B90 end:0x00000DD8 align:4
+
+rel/winning/winning/fn_15_FCC.c:
+	.text       start:0x00000FCC end:0x000011DC align:4

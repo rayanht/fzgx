@@ -1,6 +1,6 @@
 #include "types.h"
 
-extern u32 RunQueueBits_801A67F8;
+extern u32 RunQueueBits;
 
 struct fn_8001036C_Arg0 {
     u8 pad_0[0x2D0];
@@ -31,7 +31,7 @@ void fn_8001036C(struct fn_8001036C_Arg0 *arg0) {
     }
     if (*(u32 *)((u8 *)v1 + 0) == 0) {
     v3 = arg0->unk_2D0;
-    RunQueueBits_801A67F8 = (RunQueueBits_801A67F8 & ~(1 << (31 - v3)));
+    RunQueueBits = (RunQueueBits & ~(1 << (31 - v3)));
     }
     arg0->unk_2DC = 0;
 }

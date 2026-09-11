@@ -213,6 +213,124 @@ int fn_1_17C6C(int current, int next, int limit) {
 }
 /* fzgx:end fn_1_17C6C */
 
+/* fzgx:begin fn_1_17D5C */
+typedef struct Node {
+    u32 unk_0;
+    u8 pad_4[0x8];
+    s32 count;
+    struct Node *children;
+    u8 pad_14[0x50 - 0x14];
+} Node;
+
+void fn_1_17D5C(Node *node, u32 *acc);
+
+void fn_1_17D5C(Node *node, u32 *acc) {
+    Node *root;
+    s32 i1;
+    Node *p1;
+    Node *p2;
+    s32 i2;
+    Node *p3;
+    s32 i3;
+    Node *p4;
+    s32 i4;
+    Node *p5;
+    s32 i5;
+    Node *p6;
+    s32 i6;
+    Node *p7;
+    s32 i7;
+    Node *p8;
+    s32 i8;
+    Node *p9;
+    s32 i9;
+
+    root = node;
+    *acc |= root->unk_0;
+    if (root->count > 0) {
+        i1 = 0;
+        p1 = root->children;
+        while (i1 < root->count) {
+            *acc |= p1->unk_0;
+            if (p1->count > 0) {
+                p2 = p1->children;
+                i2 = 0;
+                while (i2 < p1->count) {
+                    *acc |= p2->unk_0;
+                    if (p2->count > 0) {
+                        p3 = p2->children;
+                        i3 = 0;
+                        while (i3 < p2->count) {
+                            *acc |= p3->unk_0;
+                            if (p3->count > 0) {
+                                p4 = p3->children;
+                                i4 = 0;
+                                while (i4 < p3->count) {
+                                    *acc |= p4->unk_0;
+                                    if (p4->count > 0) {
+                                        p5 = p4->children;
+                                        i5 = 0;
+                                        while (i5 < p4->count) {
+                                            *acc |= p5->unk_0;
+                                            if (p5->count > 0) {
+                                                p6 = p5->children;
+                                                i6 = 0;
+                                                while (i6 < p5->count) {
+                                                    *acc |= p6->unk_0;
+                                                    if (p6->count > 0) {
+                                                        p7 = p6->children;
+                                                        i7 = 0;
+                                                        while (i7 < p6->count) {
+                                                            *acc |= p7->unk_0;
+                                                            if (p7->count > 0) {
+                                                                p8 = p7->children;
+                                                                i8 = 0;
+                                                                while (i8 < p7->count) {
+                                                                    *acc |= p8->unk_0;
+                                                                    if (p8->count > 0) {
+                                                                        p9 = p8->children;
+                                                                        i9 = 0;
+                                                                        while (i9 < p8->count) {
+                                                                            fn_1_17D5C(p9, acc);
+                                                                            i9++;
+                                                                            p9++;
+                                                                        }
+                                                                    }
+                                                                    i8++;
+                                                                    p8++;
+                                                                }
+                                                            }
+                                                            i7++;
+                                                            p7++;
+                                                        }
+                                                    }
+                                                    i6++;
+                                                    p6++;
+                                                }
+                                            }
+                                            i5++;
+                                            p5++;
+                                        }
+                                    }
+                                    i4++;
+                                    p4++;
+                                }
+                            }
+                            i3++;
+                            p3++;
+                        }
+                    }
+                    i2++;
+                    p2++;
+                }
+            }
+            i1++;
+            p1++;
+        }
+    }
+}
+/* fzgx:end fn_1_17D5C */
+
 /* fzgx:begin fn_1_17FCC */
 typedef struct {
     u8 pad_0[0x8];

@@ -334,6 +334,80 @@ void fn_1_10268(Camera_1_10268 *arg) {
 }
 /* fzgx:end fn_1_10268 */
 
+/* fzgx:begin fn_1_12620 */
+extern void OSPanic(u8 *file, int line, u8 *message, ...);
+extern u32 fn_80008E30(u32);
+extern u8 lbl_1_bss_17B4[12];
+extern void fn_80083DB0(Obj_1_bss_3B30 *, void *);
+extern u32 *fn_1_1304C(Obj_1_bss_3B30 *, u32);
+extern u8 lbl_1_bss_1810[8984];
+extern void fn_8000659C(void);
+extern u32 OSIsThreadTerminated(u8 *);
+
+extern void fn_1_6DD0(void *);
+extern u32 *fn_1_1289C(u32 *);
+
+extern int sprintf(char *, const char *, ...);
+
+// Prints the live-camera status text for the current camera event.
+#pragma opt_common_subs off
+void fn_1_12620(s32 arg0) {
+    u8 *base = lbl_1_data_43B8;
+    char buf[0x74];
+
+    fn_80006E10((u32)(base + 0x280));
+    if (*(s16 *)&lbl_1_bss_960 == 0xA) {
+        sprintf(buf, (const char *)(base + 0x284), arg0);
+        if (fn_1_465D0((s32)buf, 1) == -1) {
+            sprintf(buf, (const char *)(base + 0x2A0));
+            fn_1_465D0((s32)buf, 1);
+        }
+    } else if (*(s16 *)&lbl_1_bss_960 == 0xE) {
+        if (lbl_1_bss_525C.unk_191 & 2) {
+            switch (lbl_1_bss_525C.unk_192) {
+            case 4:
+                sprintf(buf, (const char *)(base + 0x2BC));
+                break;
+            case 3:
+                sprintf(buf, (const char *)(base + 0x2D4));
+                break;
+            case 2:
+                sprintf(buf, (const char *)(base + 0x2EC));
+                break;
+            default:
+                sprintf(buf, (const char *)(base + 0x2EC));
+                break;
+            }
+        } else {
+            sprintf(buf, (const char *)(base + 0x304));
+        }
+        fn_1_465D0((s32)buf, 1);
+    } else {
+        sprintf(buf, (const char *)(base + 0x324), arg0);
+        if (fn_1_465D0((s32)buf, 1) == -1) {
+            sprintf(buf, (const char *)(base + 0x33C));
+            fn_1_465D0((s32)buf, 1);
+        }
+    }
+    if (arg0 == 0x32) {
+        fn_80006E10((u32)(base + 0x350));
+        return;
+    }
+    sprintf(buf, (const char *)(base + 0x354), arg0);
+    if (fn_1_465D0((s32)buf, 1) == -1) {
+        sprintf(buf, (const char *)(base + 0x364));
+        fn_1_465D0((s32)buf, 1);
+    }
+    sprintf(buf, (const char *)(base + 0x374), arg0);
+    if (fn_1_465D0((s32)buf, 1) == -1) {
+        sprintf(buf, (const char *)(base + 0x388));
+        fn_1_465D0((s32)buf, 1);
+    }
+    fn_80006E10((u32)(base + 0x350));
+}
+#pragma opt_common_subs reset
+/* fzgx:end fn_1_12620 */
+
 /* fzgx:begin fn_1_12850 */
 u8 fn_1_12850(void) {
     return lbl_1_bss_17B4[0];

@@ -1182,6 +1182,114 @@ s32 fn_1_4E724(FontParams *arg) {
 }
 /* fzgx:end fn_1_4E724 */
 
+/* fzgx:begin fn_1_4E92C noprologue */
+#include "types.h"
+#include "font.h"
+
+typedef struct Sig_fn_1_4EC74_FontParams {
+    u8 unk_00[0x30];
+    u32 unk_30;
+    f32 unk_34;
+    u8 unk_38[0x58 - 0x38];
+} Sig_fn_1_4EC74_FontParams;
+
+typedef struct Sig_fn_1_4EB74_FontParams {
+    u8 unk_00[0x30];
+    u32 unk_30;
+    f32 unk_34;
+    u8 unk_38[0x58 - 0x38];
+} Sig_fn_1_4EB74_FontParams;
+
+struct fn_1_4E92C_Copy88 { u32 a[22]; };
+struct fn_1_4E92C_lbl_1_bss_4E6AC {
+    s32 unk_0;
+};
+struct fn_1_4E92C_lbl_1_rodata_2778 {
+    f64 unk_0;
+};
+struct fn_1_4E92C_lbl_801A6D00 {
+    u32 unk_0;
+};
+extern struct fn_1_4E92C_lbl_1_bss_4E6AC lbl_1_bss_4E6AC;
+extern struct fn_1_4E92C_lbl_1_rodata_2778 lbl_1_rodata_2778;
+extern struct fn_1_4E92C_lbl_801A6D00 lbl_801A6D00;
+extern u32 lbl_1_bss_4E6A8;
+extern void fn_1_A71CC(void);
+extern void fn_800724C8(void);
+extern void fn_8007245C(u32);
+extern void fn_80074788(u32);
+extern void fn_80074660(u32);
+extern void fn_80073678(u32);
+extern void fn_80073898(u32);
+extern void fn_80073C6C(s32);
+extern void fn_800745A4(u32, s32, s32, u32, u32, u32);
+extern void fn_800734A8(u32, u32, u32, u32);
+extern void fn_80072AB0(s32, s32, s32);
+extern void fn_80072C24(s32, s32, s32, s32, s32);
+extern void fn_80072D64(u32, u32, u32, u32, u32, u32);
+extern void fn_80072CC4(u32, u32, u32, u32, u32);
+extern void fn_80072E20(s32, s32, s32, s32, u8, s32);
+extern void fn_80074918(u8, s32, u8);
+extern void fn_800728A8(s32, s32, s32, s32);
+extern u32 fn_800720B0(u32);
+extern void fn_80072864(u32);
+extern void lbl_8006D758(void);
+extern void fn_80072558(void);
+extern s32 fn_1_4EC74(FontDrawPacket *);
+extern s32 fn_1_4EB74(FontDrawPacket *);
+extern void fn_1_A722C(void);
+
+struct FzgxCopy_88 { u32 words[22]; };
+s32 fn_1_4E92C(s32 arg0, u32 arg1, s16 arg2, s16 arg3, u32 arg4) {
+    struct FzgxCopy_88 loc_60;
+    struct FzgxCopy_88 loc_8;
+    s32 sp4;
+    s32 var_r31;
+
+    loc_60 = *(const struct FzgxCopy_88 *)((arg0 - 4 + 4));
+    loc_60.words[0x10] = arg1;
+    loc_60.words[0xC] |= 0x800000;
+    (*(s16 *)((u8 *)(&loc_60) + 68)) = arg2;
+    (*(s16 *)((u8 *)(&loc_60) + 70)) = arg3;
+    loc_60.words[0x12] = arg4;
+    loc_8 = *(const struct FzgxCopy_88 *)((((s32)(&loc_8.words[0x15])) + 4));
+    fn_1_A71CC();
+    fn_800724C8();
+    fn_8007245C((u32)(0x2200U));
+    fn_80074788((u32)(0U));
+    fn_80074660((u32)(1U));
+    fn_80073678((u32)(1U));
+    fn_80073898((u32)(0U));
+    fn_80073C6C((s32)(0));
+    fn_800745A4((u32)(0U), (s32)(1), (s32)(4), (u32)(0x3CU), (u32)(0U), (u32)(0x7DU));
+    fn_800734A8((u32)(0U), (u32)(0U), (u32)(0U), (u32)(0xFFU));
+    fn_80072AB0((s32)(0), (s32)(0), (s32)(0));
+    fn_80072C24((s32)(0), (s32)(0xF), (s32)(2), (s32)(8), (s32)(4));
+    fn_80072D64((u32)(0U), (u32)(0U), (u32)(0U), (u32)(0U), (u32)(1U), (u32)(0U));
+    fn_80072CC4((u32)(0U), (u32)(7U), (u32)(1U), (u32)(4U), (u32)(2U));
+    fn_80072E20((s32)(0), (s32)(0), (s32)(0), (s32)(0), (u8)(1U), (s32)(0));
+    fn_80074918((u8)(1U), (s32)(7), (u8)(0U));
+    fn_800728A8((s32)(1), (s32)(4), (s32)(5), (s32)(0));
+    fn_800720B0((u32)(0U));
+    fn_80072864((u32)(2U));
+    lbl_8006D758();
+    fn_80072558();
+    if ((s32) (*(u32 *)((u8 *)(&lbl_1_bss_4E6A8) + 0)) != 0) {
+        loc_8.words[0xC] |= 0x08000000;
+        (*(f32 *)((u8 *)(&loc_8) + 52)) = (f32) lbl_1_bss_4E6AC.unk_0;
+    }
+    (*(u8 *)((u8 *)(lbl_801A6D00.unk_0) + 407)) = 0xFF;
+    if (loc_8.words[0xC] & 0x800000) {
+        var_r31 = fn_1_4EC74((FontDrawPacket *)((FontDrawPacket *) &loc_8));
+    } else {
+        var_r31 = fn_1_4EB74((FontDrawPacket *)((FontDrawPacket *) &loc_8));
+    }
+    fn_1_A722C();
+    fn_80074918((u8)(1U), (s32)(3), (u8)(1U));
+    return var_r31;
+}
+/* fzgx:end fn_1_4E92C */
+
 /* fzgx:begin fn_1_4EB74 */
 extern void fn_1_159588(u32);
 extern void fn_80073778(void *, s32);

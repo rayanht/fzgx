@@ -29,9 +29,9 @@ OSContext *fn_8000BE5C();
 
 OSThread *OSGetCurrentThread();
 
-extern vu32 RunQueueBits_801A67F8;
+extern vu32 RunQueueBits;
 
-extern volatile BOOL RunQueueHint_801A67FC; // fzgx-allow: S2 SDK asynchronous state
+extern volatile BOOL RunQueueHint; // fzgx-allow: S2 SDK asynchronous state
 
 extern vs32 Reschedule_801A6800;
 
@@ -39,7 +39,7 @@ extern OSSwitchThreadCallback SwitchThreadCallback_801A6440;
 
 OSThread *__OSCurrentThread : FZGX_ADDR___OSCurrentThread;
 
-extern struct SDK_OSThread____bss_0 RunQueue_8015C018;
+extern struct SDK_OSThread____bss_0 RunQueue;
 
 static inline void OSSetCurrentThread(OSThread *thread) {
     SwitchThreadCallback_801A6440(__OSCurrentThread, thread);
@@ -55,7 +55,7 @@ static inline void __OSSwitchThread(OSThread *nextThread) {
 }
 
 OSThread *SelectThread(BOOL yield) {
-    struct SDK_OSThread____bss_0 *sdk_storage____bss_0 = &RunQueue_8015C018;
+    struct SDK_OSThread____bss_0 *sdk_storage____bss_0 = &RunQueue;
 
     OSContext *currentContext;
     OSThread *currentThread;
@@ -73,7 +73,7 @@ OSThread *SelectThread(BOOL yield) {
     if (currentThread) {
         if (currentThread->state == OS_THREAD_STATE_RUNNING) {
             if (!yield) {
-                priority = __cntlzw(RunQueueBits_801A67F8);
+                priority = __cntlzw(RunQueueBits);
                 if (currentThread->priority <= priority) {
                     return 0;
                 }
@@ -91,27 +91,27 @@ OSThread *SelectThread(BOOL yield) {
                 (currentThread)->link.next = ((void *)0);
                 (currentThread->queue)->tail = (currentThread);
             } while (0);
-            RunQueueBits_801A67F8 |= 1u << (31 - currentThread->priority);
-            RunQueueHint_801A67FC = 1;
+            RunQueueBits |= 1u << (31 - currentThread->priority);
+            RunQueueHint = 1;
         }
         if (!(currentThread->context.state & 0x02u) && OSSaveContext(&currentThread->context)) {
             return 0;
         }
     }
-    if (RunQueueBits_801A67F8 == 0) {
+    if (RunQueueBits == 0) {
         SwitchThreadCallback_801A6440(__OSCurrentThread, 0);
         __OSCurrentThread = 0;
         OSSetCurrentContext(&(sdk_storage____bss_0->sdk_IdleContext));
         do {
             OSEnableInterrupts();
-            while (RunQueueBits_801A67F8 == 0)
+            while (RunQueueBits == 0)
                 ;
             OSDisableInterrupts();
-        } while (RunQueueBits_801A67F8 == 0);
+        } while (RunQueueBits == 0);
         OSClearContext(&(sdk_storage____bss_0->sdk_IdleContext));
     }
-    RunQueueHint_801A67FC = 0;
-    priority = __cntlzw(RunQueueBits_801A67F8);
+    RunQueueHint = 0;
+    priority = __cntlzw(RunQueueBits);
     queue = &(sdk_storage____bss_0->sdk_RunQueue)[priority];
     do {
         OSThread *__next;
@@ -124,7 +124,7 @@ OSThread *SelectThread(BOOL yield) {
         (queue)->head = __next;
     } while (0);
     if (queue->head == 0) {
-        RunQueueBits_801A67F8 &= ~(1u << (31 - priority));
+        RunQueueBits &= ~(1u << (31 - priority));
     }
     nextThread->queue = ((void *)0);
     nextThread->state = OS_THREAD_STATE_RUNNING;

@@ -252,6 +252,110 @@ u32 fn_1_12AF64(void) {
 }
 /* fzgx:end fn_1_12AF64 */
 
+/* fzgx:begin fn_1_12B120 noprologue */
+#include "types.h"
+
+typedef struct {
+    u16 unk0;
+    u32 unk4;
+    u8 unk8;
+    u8 pad9[3];
+    u32 unkC;
+    u32 unk10;
+    u32 unk14;
+    u32 unk18;
+} Sig_fn_1_12C0EC_FnData;
+
+struct fn_1_12B120_lbl_1_bss_8B3A0 {
+    u8 pad_0[0x94];
+    u32 unk_94;
+    u8 pad_98[0x91];
+    u8 unk_129;
+};
+struct fn_1_12B120_lbl_1_rodata_8178 {
+    f64 unk_0;
+};
+extern f32 lbl_1_rodata_8170;
+extern struct fn_1_12B120_lbl_1_bss_8B3A0 lbl_1_bss_8B3A0;
+extern struct fn_1_12B120_lbl_1_rodata_8178 lbl_1_rodata_8178;
+extern u32 lbl_1_data_407BC;
+extern u32 lbl_1_data_40A7C;
+extern void fn_1_12C0EC(Sig_fn_1_12C0EC_FnData *);
+extern u32 __cvt_fp2unsigned(f64);
+extern u16 fn_1_A5D88(void);
+extern void fn_1_12BF7C(void *, s16, u32, u32);
+extern u32 fn_1_12C110(u32, u32, u32);
+extern void * fn_1_12F118(void);
+extern void fn_1_12C47C(void *, void *, s32);
+extern u32 fn_1_12D404(u32, u32, u32, void *, u32, u32, void *, u32, u32, u32 *, u32);
+extern void * fn_1_435C(void *);
+extern s32 fn_1_3F8C(u32, u32, u8 *, void *);
+extern void fn_1_12F1E8(s32);
+
+
+extern s32 fn_1_132488;
+
+void fn_1_12B120(u8 *arg0, void *arg1, void *arg2, s32 *arg3, void *arg4, s32 *arg5, s32 arg_sp0) {
+    s32 sp10;
+    u32 *spC;
+    s32 sp8;
+    s32 *var_r31;
+    s16 var_r31_2;
+    u32 temp_r24;
+    void *var_r23;
+    s32 var_r22;
+    s16 var_r21;
+
+    var_r31 = (s32 *)(arg3);
+    var_r23 = (void *)(arg4);
+    var_r21 = 0;
+    var_r22 = 0;
+    while (var_r21 < 4) {
+        (*(s32 *)((u8 *)(var_r31) + 0)) = -1;
+        (*(s32 *)((u8 *)(var_r23) + 0)) = -1;
+        (*(s32 *)((u8 *)(var_r23) + 4)) = -1;
+        fn_1_12C0EC((Sig_fn_1_12C0EC_FnData *)((*(s32 *)((u8 *)(arg0) + 28)) + var_r22));
+        var_r31 = (s32 *)((u8 *)(var_r31) + 4);
+        var_r23 = (void *)((u8 *)(var_r23) + 8);
+        var_r22 += 0x1C;
+        var_r21 += 1;
+            }
+    if (!(lbl_1_bss_8B3A0.unk_94 & 0x80000000)) {
+        var_r31_2 = 4;
+        if (lbl_1_bss_8B3A0.unk_94 & 0x20000000) {
+            var_r31_2 = 1;
+        } else if (lbl_1_bss_8B3A0.unk_94 & 0x40000) {
+            var_r31_2 = 2;
+        }
+        if (lbl_1_bss_8B3A0.unk_94 & 0x40000000) {
+            temp_r24 = (u32) ((*(f32 *)((u8 *)(&lbl_1_rodata_8170) + 0)) / (f32) var_r31_2);
+            fn_1_12BF7C((void *)(*(void **)((u8 *)(arg0) + 32)), var_r31_2, (u32) ((s32) fn_1_A5D88() / var_r31_2), temp_r24);
+            fn_1_12BF7C((void *)((u8 *)((*(void **)((u8 *)(arg0) + 32))) + 0x64), 3, (fn_1_A5D88() >> 2U) & 0x3FFF, 0x78U);
+        } else if (var_r31_2 == 4) {
+            fn_1_12BF7C((void *)(*(void **)((u8 *)(arg0) + 32)), var_r31_2, 0xA0U, 0x78U);
+        } else if (var_r31_2 == 2) {
+            fn_1_12BF7C((void *)(*(void **)((u8 *)(arg0) + 32)), var_r31_2, 0x1A0U, 0xC0U);
+        } else {
+            fn_1_12BF7C((void *)(*(void **)((u8 *)(arg0) + 32)), var_r31_2, 0x230U, 0x190U);
+        }
+        if (var_r31_2 == 4) {
+            fn_1_12BF7C((void *)(*(void **)((u8 *)(arg0) + 36)), var_r31_2, 0xA0U, 0x8CU);
+        } else if (var_r31_2 == 2) {
+            fn_1_12BF7C((void *)(*(void **)((u8 *)(arg0) + 36)), var_r31_2, 0x1A0U, 0xC0U);
+        } else {
+            fn_1_12BF7C((void *)(*(void **)((u8 *)(arg0) + 36)), var_r31_2, 0x280U, 0x18CU);
+        }
+        fn_1_12C110(*(u32 *)((u8 *)(arg0) + 12), (u32) (*(s16 *)((u8 *)(arg0) + 22)), (u32) (*(s16 *)((u8 *)(arg0) + 20)));
+        fn_1_12C47C((void *)(*(void **)((u8 *)(arg0) + 16)), (void *)(fn_1_12F118()), (s32) (*(s16 *)((u8 *)(arg0) + 20)));
+        fn_1_12D404(*(u32 *)((u8 *)(arg0) + 4), *(u32 *)((u8 *)(arg0) + 8), *(u32 *)((u8 *)(arg0) + 24), (void *)(arg1), (u32)(arg3), (u32)(arg4), (void *)(*(void **)((u8 *)(arg0) + 40)), *(u32 *)((u8 *)(arg0) + 48), *(u32 *)((u8 *)(arg0) + 52), (u32 *)(&lbl_1_data_407BC), 3U);
+    }
+    fn_1_435C((void *)(arg2));
+    (*(s32 *)((u8 *)(arg5) + 0)) = fn_1_3F8C((u32)(&lbl_1_data_40A7C), (u32)(&fn_1_132488), (u8 *)(arg0), (void *)(*(void **)((u8 *)(arg0) + 44)));
+    fn_1_12F1E8(0x1E0);
+    lbl_1_bss_8B3A0.unk_129 = 1;
+}
+/* fzgx:end fn_1_12B120 */
+
 /* fzgx:begin fn_1_12B3BC */
 typedef struct {
     u8 pad_0[0x4];

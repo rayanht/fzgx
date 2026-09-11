@@ -14,7 +14,7 @@ enum OS_THREAD_STATE {
 void OSWakeupThread(OSThreadQueue *queue);
 
 // Hardware or OS state can change asynchronously.
-extern volatile BOOL RunQueueHint_801A67FC; // fzgx-allow: S2 SDK asynchronous state
+extern volatile BOOL RunQueueHint; // fzgx-allow: S2 SDK asynchronous state
 
 OSThread *__OSCurrentThread : FZGX_ADDR___OSCurrentThread;
 
@@ -51,8 +51,8 @@ void OSExitThread(void *val) {
     }
     __OSUnlockAllMutex(thread);
     OSWakeupThread(&thread->queueJoin);
-    RunQueueHint_801A67FC = 1;
-    if (RunQueueHint_801A67FC != 0) {
+    RunQueueHint = 1;
+    if (RunQueueHint != 0) {
         SelectThread(0);
     }
     OSRestoreInterrupts(enable);

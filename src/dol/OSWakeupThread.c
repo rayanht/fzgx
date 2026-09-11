@@ -11,15 +11,15 @@ enum OS_THREAD_STATE {
     OS_THREAD_STATE_MORIBUND = 8,
 };
 
-extern vu32 RunQueueBits_801A67F8;
+extern vu32 RunQueueBits;
 
 // Hardware or OS state can change asynchronously.
-extern volatile BOOL RunQueueHint_801A67FC; // fzgx-allow: S2 SDK asynchronous state
+extern volatile BOOL RunQueueHint; // fzgx-allow: S2 SDK asynchronous state
 
-extern OSThreadQueue RunQueue_8015C018[32];
+extern OSThreadQueue RunQueue[32];
 
 static inline void SetRun(OSThread *thread) {
-    thread->queue = &RunQueue_8015C018[thread->priority];
+    thread->queue = &RunQueue[thread->priority];
     do {
         OSThread *prev;
         prev = (thread->queue)->tail;
@@ -31,14 +31,14 @@ static inline void SetRun(OSThread *thread) {
         (thread)->link.next = ((void *)0);
         (thread->queue)->tail = (thread);
     } while (0);
-    RunQueueBits_801A67F8 |= 1u << (31 - thread->priority);
-    RunQueueHint_801A67FC = 1;
+    RunQueueBits |= 1u << (31 - thread->priority);
+    RunQueueHint = 1;
 }
 
 OSThread *SelectThread(BOOL yield);
 
 static inline void __OSReschedule() {
-    if (!RunQueueHint_801A67FC) {
+    if (!RunQueueHint) {
         return;
     }
     SelectThread(0);

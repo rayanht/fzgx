@@ -2,6 +2,82 @@
 #include "rel/main_rel/globals.h"
 #include "rel/main_rel/bg_for.h"
 
+/* fzgx:begin fn_1_DCBF4 */
+extern void OSPanic(const char *, int, const char *, ...);
+
+#pragma opt_dead_assignments off
+s32 fn_1_DCBF4(s32 value, s32 data) {
+    Obj_1_data_2A7E0_At3C *obj;
+    Obj_1_data_2A7E0_At3C *entry;
+    u32 n;
+
+    obj = lbl_1_data_2A7E0.unk_3C;
+    switch (value) {
+    case 0:
+        obj->unk_1588 = data;
+        break;
+    case 1:
+        entry = (Obj_1_data_2A7E0_At3C *)((u8 *)obj + obj->unk_0 * 0xAC);
+        entry->unk_C |= 0x40000000;
+        entry = (Obj_1_data_2A7E0_At3C *)((u8 *)obj + obj->unk_0 * 0xAC);
+        entry->unk_C |= 0x10000000;
+        n = obj->unk_0;
+        entry = (Obj_1_data_2A7E0_At3C *)((u8 *)obj + n * 0xAC);
+        entry->unk_4 = data;
+        obj->unk_0 = obj->unk_0 + 1;
+        if ((s32)obj->unk_0 >= 0x20) {
+            OSPanic((const char *)lbl_1_data_3DC78, 0x21D, (const char *)&lbl_1_data_3DC84);
+        }
+        break;
+    case 2:
+        entry = (Obj_1_data_2A7E0_At3C *)((u8 *)obj + obj->unk_0 * 0xAC);
+        entry->unk_C |= 0x40000000;
+        entry = (Obj_1_data_2A7E0_At3C *)((u8 *)obj + obj->unk_0 * 0xAC);
+        entry->unk_C |= 0x20000000;
+        n = obj->unk_0;
+        entry = (Obj_1_data_2A7E0_At3C *)((u8 *)obj + n * 0xAC);
+        entry->unk_4 = data;
+        obj->unk_0 = obj->unk_0 + 1;
+        if ((s32)obj->unk_0 >= 0x20) {
+            OSPanic((const char *)lbl_1_data_3DC78, 0x224, (const char *)&lbl_1_data_3DC84);
+        }
+        break;
+    case 3:
+        entry = (Obj_1_data_2A7E0_At3C *)((u8 *)obj + obj->unk_0 * 0xAC);
+        entry->unk_C |= 0x40000000;
+        entry = (Obj_1_data_2A7E0_At3C *)((u8 *)obj + obj->unk_0 * 0xAC);
+        entry->unk_C |= 0x10000000;
+        entry = (Obj_1_data_2A7E0_At3C *)((u8 *)obj + obj->unk_0 * 0xAC);
+        entry->unk_C |= 0x08000000;
+        n = obj->unk_0;
+        entry = (Obj_1_data_2A7E0_At3C *)((u8 *)obj + n * 0xAC);
+        entry->unk_4 = data;
+        obj->unk_0 = obj->unk_0 + 1;
+        if ((s32)obj->unk_0 >= 0x20) {
+            OSPanic((const char *)lbl_1_data_3DC78, 0x22C, (const char *)&lbl_1_data_3DC84);
+        }
+        break;
+    case 4:
+        entry = (Obj_1_data_2A7E0_At3C *)((u8 *)obj + obj->unk_0 * 0xAC);
+        entry->unk_C |= 0x40000000;
+        entry = (Obj_1_data_2A7E0_At3C *)((u8 *)obj + obj->unk_0 * 0xAC);
+        entry->unk_C |= 0x20000000;
+        entry = (Obj_1_data_2A7E0_At3C *)((u8 *)obj + obj->unk_0 * 0xAC);
+        entry->unk_C |= 0x08000000;
+        n = obj->unk_0;
+        entry = (Obj_1_data_2A7E0_At3C *)((u8 *)obj + n * 0xAC);
+        entry->unk_4 = data;
+        obj->unk_0 = obj->unk_0 + 1;
+        if ((s32)obj->unk_0 >= 0x20) {
+            OSPanic((const char *)lbl_1_data_3DC78, 0x234, (const char *)&lbl_1_data_3DC84);
+        }
+        break;
+    }
+    return 1;
+}
+#pragma opt_dead_assignments reset
+/* fzgx:end fn_1_DCBF4 */
+
 /* fzgx:begin fn_1_DCE60 */
 struct fn_1_DCE60_Arg0 {
     u32 unk_0;

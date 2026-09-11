@@ -125,3 +125,6 @@ rel/option/_prolog/fn_4_800.c:
 
 rel/option/_prolog/_epilog.c:
 	.text       start:0x000008DC end:0x000009B0 align:4
+
+rel/option/_prolog/fn_4_8720.c:
+	.text       start:0x00008720 end:0x0000898C align:4

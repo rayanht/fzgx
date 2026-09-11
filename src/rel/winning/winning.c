@@ -216,6 +216,128 @@ void fn_15_B8C(void) {
 }
 /* fzgx:end fn_15_B8C */
 
+/* fzgx:begin fn_15_B90 */
+struct fn_15_B90_Copy160 { u32 a[40]; };
+struct fn_15_B90_lbl_15_bss_0 {
+    u8 pad_0[0x10];
+    u32 unk_10;
+    u32 unk_14;
+    u32 unk_18;
+    u8 pad_1C[0x10];
+    u32 unk_2C;
+    u8 pad_30[0xE];
+    u8 unk_3E;
+    u8 pad_3F[0x1];
+    u16 unk_40;
+};
+struct fn_15_B90_lbl_15_rodata_0 {
+    u8 pad_0[0x10];
+    u32 unk_10;
+    u32 unk_14;
+    u32 unk_18;
+    u32 unk_1C;
+    u32 unk_20;
+    u32 unk_24;
+    u32 unk_28;
+    u32 unk_2C;
+    u32 unk_30;
+    u32 unk_34;
+    u32 unk_38;
+    u32 unk_3C;
+    u32 unk_40;
+    u32 unk_44;
+    u32 unk_48;
+    u32 unk_4C;
+    u32 unk_50;
+    u32 unk_54;
+};
+
+extern struct fn_15_B90_lbl_15_rodata_0 lbl_15_rodata_0;
+extern struct fn_15_B90_lbl_15_bss_0 lbl_15_bss_0;
+extern u32 lbl_1_bss_6EAB4;
+extern u16 lbl_1_bss_968;
+extern u16 lbl_1_bss_96A;
+extern u32 lbl_15_data_90[5];
+extern u32 fn_1_4A00(u32, u32, u32);
+extern u32 fn_1_5370(u32, u32);
+extern void fn_1_DCF54(void *, void *, void *);
+extern void camera_disable_flags(void);
+
+void fn_15_B90(void) {
+    struct fn_15_B90_lbl_15_rodata_0 *p_lbl_15_rodata_0;
+    struct fn_15_B90_lbl_15_bss_0 *p_lbl_15_bss_0;
+    struct fn_15_B90_Copy160 loc_50;
+    u32 loc_44[3];
+    u32 loc_38[3];
+    u32 loc_2C[3];
+    u32 loc_20[3];
+    u32 loc_14[3];
+    u32 loc_8[3];
+    u32 v0;
+    u32 v3;
+
+    p_lbl_15_rodata_0 = (struct fn_15_B90_lbl_15_rodata_0 *)&lbl_15_rodata_0;
+    p_lbl_15_bss_0 = (struct fn_15_B90_lbl_15_bss_0 *)&lbl_15_bss_0;
+    v0 = p_lbl_15_bss_0->unk_14;
+    lbl_1_bss_6EAB4 = lbl_1_bss_6EAB4 & 0xFFFFFFD7u;
+    if ((v0 & 0x20000000) == 0) {
+        if ((v0 & 0x80) != 0) {
+            lbl_1_bss_968 = *(u8 *)((u8 *)p_lbl_15_bss_0->unk_2C + 0x190);
+        } else {
+            v3 = p_lbl_15_bss_0->unk_2C;
+            loc_50 = *(struct fn_15_B90_Copy160 *)((u8 *)v3 + 0xF0);
+            if (((u8 *)&loc_50)[8] == 0 && p_lbl_15_bss_0->unk_3E == 0) {
+                lbl_1_bss_968 = 0x10;
+            } else {
+                if (p_lbl_15_bss_0->unk_40 < 1) {
+                    p_lbl_15_bss_0->unk_40 = 1;
+                    p_lbl_15_bss_0->unk_18 = lbl_15_data_90[1];
+                    camera_disable_flags();
+                    fn_1_5370(3, 0);
+                    loc_44[0] = p_lbl_15_rodata_0->unk_10;
+                    loc_44[1] = p_lbl_15_rodata_0->unk_14;
+                    loc_44[2] = p_lbl_15_rodata_0->unk_18;
+                    loc_38[0] = p_lbl_15_rodata_0->unk_1C;
+                    loc_38[1] = p_lbl_15_rodata_0->unk_20;
+                    loc_38[2] = p_lbl_15_rodata_0->unk_24;
+                    loc_2C[0] = p_lbl_15_rodata_0->unk_28;
+                    loc_2C[1] = p_lbl_15_rodata_0->unk_2C;
+                    loc_2C[2] = p_lbl_15_rodata_0->unk_30;
+                    fn_1_DCF54(loc_44, loc_38, loc_2C);
+                    fn_1_4A00(1, 30, p_lbl_15_bss_0->unk_10);
+                } else {
+                    lbl_1_bss_968 = *(u8 *)((u8 *)v3 + 0x190);
+                }
+            }
+        }
+    } else {
+        if ((v0 & 0x80) != 0) {
+            lbl_1_bss_96A = 183;
+        } else {
+            if (p_lbl_15_bss_0->unk_40 < 1) {
+                p_lbl_15_bss_0->unk_40 = 1;
+                p_lbl_15_bss_0->unk_18 = lbl_15_data_90[1];
+                camera_disable_flags();
+                fn_1_5370(3, 0);
+                loc_20[0] = p_lbl_15_rodata_0->unk_34;
+                loc_20[1] = p_lbl_15_rodata_0->unk_38;
+                loc_20[2] = p_lbl_15_rodata_0->unk_3C;
+                loc_14[0] = p_lbl_15_rodata_0->unk_40;
+                loc_14[1] = p_lbl_15_rodata_0->unk_44;
+                loc_14[2] = p_lbl_15_rodata_0->unk_48;
+                loc_8[0] = p_lbl_15_rodata_0->unk_4C;
+                loc_8[1] = p_lbl_15_rodata_0->unk_50;
+                loc_8[2] = p_lbl_15_rodata_0->unk_54;
+                fn_1_DCF54(loc_20, loc_14, loc_8);
+                fn_1_4A00(1, 30, p_lbl_15_bss_0->unk_10);
+            } else {
+                lbl_1_bss_96A = 183;
+            }
+        }
+    }
+}
+/* fzgx:end fn_15_B90 */
+
 /* fzgx:begin fn_15_DD8 */
 struct fn_15_DD8_Copy160 { u32 a[40]; };
 
@@ -298,6 +420,151 @@ void fn_15_DD8(void) {
     }
 }
 /* fzgx:end fn_15_DD8 */
+
+/* fzgx:begin fn_15_FCC */
+typedef struct Sig_fn_1_22E8C_Fn_1_22E8CInput {
+    u8 pad[0xB4];
+} Sig_fn_1_22E8C_Fn_1_22E8CInput;
+
+typedef struct Sig_fn_1_22E8C_Fn_1_22E8COutput {
+    u32 flags;
+    u8 pad04[0x8];
+    f32 field0c;
+    u8 pad10[0xCC];
+    f32 fielddc;
+    u8 pade0[0x120];
+    f32 field200;
+    u8 pad204[0x280];
+    void *field484;
+} Sig_fn_1_22E8C_Fn_1_22E8COutput;
+
+struct fn_15_FCC_lbl_15_rodata_0 {
+    f32 unk_0;
+    u8 pad_4[0x54];
+    f32 unk_58;
+    f32 unk_5C;
+};
+struct fn_15_FCC_lbl_15_bss_0 {
+    u8 pad_0[0xC];
+    u32 unk_C;
+    u32 unk_10;
+    u32 unk_14;
+    u32 unk_18;
+    u8 pad_1C[0x1E];
+    s16 unk_3A;
+    u8 pad_3C[0x4];
+    u16 unk_40;
+    u8 pad_42[0x2];
+    f32 unk_44;
+    f32 unk_48;
+    u32 unk_4C;
+    u32 unk_50;
+    u32 unk_54;
+    u32 unk_58;
+    u32 unk_5C;
+};
+
+typedef struct Obj_1_bss_6EAD0_At0 {
+    void *unk_0;
+} Obj_1_bss_6EAD0_At0;
+
+typedef struct Obj_1_bss_6EAD0 {
+    Obj_1_bss_6EAD0_At0 *unk_0;
+    u8 pad_4[0x704];
+} Obj_1_bss_6EAD0;
+
+extern struct fn_15_FCC_lbl_15_bss_0 lbl_15_bss_0;
+extern struct fn_15_FCC_lbl_15_rodata_0 lbl_15_rodata_0;
+extern Obj_1_bss_6EAD0 lbl_1_bss_6EAD0;
+extern u32 lbl_15_data_154;
+extern u32 lbl_15_data_164;
+extern u8 lbl_1_data_28060[];
+extern void camera_enable_flags(void);
+extern void fn_80008BA8(void *, void *, u32);
+extern void fn_1_22E8C(Sig_fn_1_22E8C_Fn_1_22E8COutput *, Sig_fn_1_22E8C_Fn_1_22E8CInput *);
+extern f32 fn_1_1577D0(u32, u32, f32);
+extern u32 fn_1_435C(u32);
+extern s32 fn_1_3F8C(u32, u32, void *, u32);
+extern s32 fn_1_5370(s32, s32);
+extern void fn_15_4568(void);
+extern void fn_1_15B610(void);
+extern void ADXT_Pause(void *, s32);
+extern s32 fn_80067898(u32);
+
+extern s32 fn_1_157820;
+extern s32 fn_1_1578C4;
+
+void fn_15_FCC(void) {
+    Sig_fn_1_22E8C_Fn_1_22E8CInput sp8;
+    u8 *p_src;
+    s16 i;
+    Sig_fn_1_22E8C_Fn_1_22E8COutput *p_obj;
+    struct fn_15_FCC_lbl_15_rodata_0 *p_rodata;
+    struct fn_15_FCC_lbl_15_bss_0 *p_bss;
+    f32 val0;
+    f32 val200;
+    u32 temp_r0;
+    u32 v;
+    u8 *p_aux;
+
+    p_rodata = &lbl_15_rodata_0;
+    p_bss = (struct fn_15_FCC_lbl_15_bss_0 *)&lbl_15_bss_0;
+    p_bss->unk_18 = 0;
+    p_bss->unk_40 = 0;
+    p_bss->unk_44 = p_rodata->unk_0;
+    p_bss->unk_48 = p_rodata->unk_0;
+    camera_enable_flags();
+    temp_r0 = p_bss->unk_14;
+    if (temp_r0 & 6) {
+        p_obj = (Sig_fn_1_22E8C_Fn_1_22E8COutput *)p_bss->unk_4C;
+        val200 = p_rodata->unk_58;
+        val0 = p_rodata->unk_0;
+        p_src = lbl_1_data_28060 + 0x438;
+        i = 0;
+        while ((s32)i < p_bss->unk_3A) {
+            fn_80008BA8(&sp8, p_src, 0xB4U);
+            fn_1_22E8C(p_obj, &sp8);
+            p_aux = (u8 *)p_obj->field484;
+            i += 1;
+            p_obj->field0c = val200;
+            p_obj->field200 = val0;
+            *(f32 *)(p_aux + 0xC) = val0;
+            p_obj->fielddc = val0;
+            p_obj->flags = p_obj->flags | 0x100000 | 0x8001;
+            p_obj = (Sig_fn_1_22E8C_Fn_1_22E8COutput *)((u8 *)p_obj + 0x620);
+        }
+    }
+    if (p_bss->unk_14 & 2) {
+        fn_1_1577D0(1U, 1U, p_rodata->unk_5C);
+        fn_1_435C(p_bss->unk_C);
+        fn_1_3F8C((u32)&lbl_15_data_154, (u32)&fn_1_157820, 0, 2U);
+        fn_1_435C(p_bss->unk_10);
+        fn_1_3F8C((u32)&lbl_15_data_164, (u32)&fn_1_1578C4, 0, 2U);
+    }
+    v = p_bss->unk_14;
+    p_bss->unk_50 = 0;
+    p_bss->unk_54 = 0;
+    p_bss->unk_58 = 0;
+    p_bss->unk_5C = 0;
+    if (v & 0x78) {
+        temp_r0 = p_bss->unk_14 & 0xFBFFFFFF;
+        p_bss->unk_14 = temp_r0;
+        p_bss->unk_14 = temp_r0 | 0x40000000;
+        fn_1_5370(0, 0);
+    } else if (v & 0x80) {
+        p_bss->unk_14 = v | 0x04000000;
+        fn_1_5370(4, 0);
+    } else {
+        p_bss->unk_14 = v & 0xBBFFFFFF;
+        fn_1_5370(0, 0);
+    }
+    fn_15_4568();
+    fn_1_15B610();
+    ADXT_Pause(lbl_1_bss_6EAD0.unk_0->unk_0, 0);
+    fn_80067898(0xA91A0000U);
+    fn_80067898(0xA91A0200U);
+}
+/* fzgx:end fn_15_FCC */
 
 /* fzgx:begin fn_15_1D7C */
 extern struct fn_15_1D7C_lbl_15_bss_0 lbl_15_bss_0;

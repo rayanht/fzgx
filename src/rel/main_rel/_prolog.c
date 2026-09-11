@@ -378,6 +378,91 @@ void fn_1_1C00(const u8 *values, u32 flags, u16 *result) {
 }
 /* fzgx:end fn_1_1C00 */
 
+/* fzgx:begin fn_1_1DF0 */
+u32 fn_1_1DF0(u16 *state, s8 *values, u32 flags) {
+    u32 result;
+    u32 selected;
+
+    if (flags >> 31) {
+        return 0;
+    }
+    if ((*state & flags & 0xf7f) != 0) {
+        return 100;
+    }
+    selected = flags & 0x00fff000;
+    if (selected == 0) {
+        return 0;
+    }
+
+    result = 0;
+    if ((selected >> 12) & 1) {
+        if (values[0] < 0 && (u8)result < -values[0]) {
+            result = (u8)-values[0];
+        }
+    }
+    if ((selected >> 13) & 1) {
+        if (values[0] > 0 && (u8)result < values[0]) {
+            result = (u8)values[0];
+        }
+    }
+    if ((selected >> 14) & 1) {
+        if (values[1] < 0 && (u8)result < -values[1]) {
+            result = (u8)-values[1];
+        }
+    }
+    if ((selected >> 15) & 1) {
+        if (values[1] > 0 && (u8)result < values[1]) {
+            result = (u8)values[1];
+        }
+    }
+    if ((selected >> 16) & 1) {
+        if (values[2] < 0 && (u8)result < -values[2]) {
+            result = (u8)-values[2];
+        }
+    }
+    if ((selected >> 17) & 1) {
+        if (values[2] > 0 && (u8)result < values[2]) {
+            result = (u8)values[2];
+        }
+    }
+    if ((selected >> 18) & 1) {
+        if (values[3] < 0 && (u8)result < -values[3]) {
+            result = (u8)-values[3];
+        }
+    }
+    if ((selected >> 19) & 1) {
+        if (values[3] > 0 && (u8)result < values[3]) {
+            result = (u8)values[3];
+        }
+    }
+    if ((selected >> 20) & 1) {
+        u32 value = (u8)values[4];
+        if ((u32)(u8)result < value) {
+            result = value;
+        }
+    }
+    if ((selected >> 21) & 1) {
+        u32 value = (u8)values[5];
+        if ((u32)(u8)result < value) {
+            result = value;
+        }
+    }
+    if ((selected >> 22) & 1) {
+        u32 value = (u8)values[6];
+        if ((u32)(u8)result < value) {
+            result = value;
+        }
+    }
+    if ((selected >> 23) & 1) {
+        u32 value = (u8)values[7];
+        if ((u32)(u8)result < value) {
+            result = value;
+        }
+    }
+    return result;
+}
+/* fzgx:end fn_1_1DF0 */
+
 /* fzgx:begin fn_1_3238 */
 void fn_1_3238(void) {
     u8 *p_lbl_1_bss_978;

@@ -221,6 +221,162 @@ void fn_1_761B8(struct fn_1_761B8_Arg0 *arg0, u32 arg1) {
 }
 /* fzgx:end fn_1_761B8 */
 
+/* fzgx:begin fn_1_76218 noprologue */
+#include "types.h"
+
+struct Sig_fn_8004E278_fn_8004E278_Arg0 {
+    u32 unk_0;
+};
+
+struct Sig_fn_1_76448_fn_1_76448_Arg0 {
+    u8 pad_0[0xA0];
+    u32 unk_A0[1];
+    u8 pad_A4[0x38];
+    u32 unk_DC;
+    u8 pad_E0[0x18];
+    s16 unk_F8;
+};
+
+typedef struct {
+    u8 pad_0[0xa0];
+    u32 unk_a0[5];
+    u32 unk_b4[5];
+    s32 unk_c8[5];
+    u32 unk_dc;
+    u32 unk_e0;
+    f32 unk_e4;
+    u16 unk_e8;
+    u16 unk_ea;
+    u16 unk_ec;
+    u16 unk_ee;
+    u16 unk_f0;
+    u16 unk_f2;
+    u32 unk_f4;
+    u16 unk_f8;
+    u16 unk_fa;
+    u16 unk_fc;
+    u16 unk_fe;
+    u16 unk_100;
+    u16 unk_102;
+    u32 unk_104;
+    u8 unk_108;
+} Sig_fn_1_76C60_FnScreenEffect;
+
+struct fn_1_76218_jumptable_1_data_1DBC0 {
+    u32 unk_0[1];
+};
+extern struct fn_1_76218_jumptable_1_data_1DBC0 jumptable_1_data_1DBC0;
+extern u8 lbl_1_bss_6C8EC[];
+extern void DCInvalidateRange(struct Sig_fn_8004E278_fn_8004E278_Arg0 *, u32);
+extern void fn_1_76448(struct Sig_fn_1_76448_fn_1_76448_Arg0 *, u32);
+extern void fn_1_76C60(Sig_fn_1_76C60_FnScreenEffect *);
+extern u32 fn_1_7880C(void);
+extern u32 fn_1_788B0(void);
+extern void GXInvalidateTexAll(void);
+
+
+void fn_1_76218(s32 arg0) {
+    s32 temp_r4;
+    s32 var_r5;
+    u8 var_r29;
+    u8 var_r29_2;
+    struct Sig_fn_1_76448_fn_1_76448_Arg0 *temp_r28;
+    struct Sig_fn_1_76448_fn_1_76448_Arg0 *temp_r28_2;
+
+    var_r5 = 0;
+    if (arg0 != 0) {
+        var_r29 = 0;
+        while (var_r29 < 8U) {
+            temp_r28 = (struct Sig_fn_1_76448_fn_1_76448_Arg0 *)((u8 *)(lbl_1_bss_6C8EC) + (var_r29 * 0x10C));
+            if ((s32) temp_r28->unk_DC == 0x25) {
+                DCInvalidateRange((struct Sig_fn_8004E278_fn_8004E278_Arg0 *)(*(struct Sig_fn_8004E278_fn_8004E278_Arg0 **)((u8 *)(temp_r28) + 160)), (u32)(*(u32 *)((u8 *)(temp_r28) + 180)));
+                fn_1_76448((struct Sig_fn_1_76448_fn_1_76448_Arg0 *)(temp_r28), (u32)(0U));
+                fn_1_76C60((Sig_fn_1_76C60_FnScreenEffect *)((Sig_fn_1_76C60_FnScreenEffect *) temp_r28));
+                var_r5 = 1;
+            }
+            var_r29 += 1;
+                    }
+    }
+    var_r29_2 = 0;
+    while (var_r29_2 < 8U) {
+        temp_r28_2 = (struct Sig_fn_1_76448_fn_1_76448_Arg0 *)((u8 *)(lbl_1_bss_6C8EC) + (var_r29_2 * 0x10C));
+        temp_r4 = temp_r28_2->unk_DC;
+        if ((temp_r4 != 0) && ((u8) (*(u8 *)((u8 *)(temp_r28_2) + 264)) == 0)) {
+            if (arg0 != 0) {
+                switch (temp_r4) {
+                case 0xE:
+                    fn_1_76448((struct Sig_fn_1_76448_fn_1_76448_Arg0 *)(temp_r28_2), (u32)(2U));
+                    break;
+                case 0x17:
+                case 0x18:
+                    fn_1_76448((struct Sig_fn_1_76448_fn_1_76448_Arg0 *)(temp_r28_2), (u32)(0U));
+                    fn_1_76448((struct Sig_fn_1_76448_fn_1_76448_Arg0 *)(temp_r28_2), (u32)(1U));
+                    break;
+                }
+            } else {
+                switch (temp_r4) {
+                case 16:
+                case 25:
+                case 26:
+                case 27:
+                case 28:
+                case 29:
+                case 33:
+                case 35:
+                    fn_1_76448((struct Sig_fn_1_76448_fn_1_76448_Arg0 *)(temp_r28_2), (u32)(0U));
+                    break;
+                case 14:
+                case 30:
+                    fn_1_76448((struct Sig_fn_1_76448_fn_1_76448_Arg0 *)(temp_r28_2), (u32)(0U));
+                    fn_1_76448((struct Sig_fn_1_76448_fn_1_76448_Arg0 *)(temp_r28_2), (u32)(1U));
+                    break;
+                case 12:
+                case 13:
+                case 15:
+                case 36:
+                    fn_1_76448((struct Sig_fn_1_76448_fn_1_76448_Arg0 *)(temp_r28_2), (u32)(0U));
+                    fn_1_76448((struct Sig_fn_1_76448_fn_1_76448_Arg0 *)(temp_r28_2), (u32)(1U));
+                    fn_1_76448((struct Sig_fn_1_76448_fn_1_76448_Arg0 *)(temp_r28_2), (u32)(2U));
+                    break;
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                case 5:
+                case 6:
+                case 7:
+                    if ((s32) (*(s32 *)((u8 *)(temp_r28_2) + 224)) == 0) {
+                        fn_1_76448((struct Sig_fn_1_76448_fn_1_76448_Arg0 *)(temp_r28_2), (u32)(0U));
+                    }
+                    break;
+                case 8:
+                case 9:
+                case 10:
+                case 11:
+                    if ((s32) (*(s32 *)((u8 *)(temp_r28_2) + 224)) == 0) {
+                        fn_1_76448((struct Sig_fn_1_76448_fn_1_76448_Arg0 *)(temp_r28_2), (u32)(0U));
+                    }
+                    fn_1_76448((struct Sig_fn_1_76448_fn_1_76448_Arg0 *)(temp_r28_2), (u32)(1U));
+                    break;
+                case 34:
+                    fn_1_76448((struct Sig_fn_1_76448_fn_1_76448_Arg0 *)(temp_r28_2), (u32)(2U));
+                    fn_1_7880C();
+                    fn_1_76448((struct Sig_fn_1_76448_fn_1_76448_Arg0 *)(temp_r28_2), (u32)(0U));
+                    fn_1_788B0();
+                    fn_1_76448((struct Sig_fn_1_76448_fn_1_76448_Arg0 *)(temp_r28_2), (u32)(1U));
+                    break;
+                }
+            }
+            var_r5 = 1;
+        }
+        var_r29_2 += 1;
+            }
+    if (var_r5 != 0) {
+        GXInvalidateTexAll();
+    }
+}
+/* fzgx:end fn_1_76218 */
+
 /* fzgx:begin fn_1_76448 */
 #include "types.h"
 

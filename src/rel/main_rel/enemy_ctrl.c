@@ -750,6 +750,85 @@ void fn_1_CFA4C(u32 arg0, u32 arg1) {
 }
 /* fzgx:end fn_1_CFA4C */
 
+/* fzgx:begin fn_1_D01B0 noprologue */
+#include "types.h"
+#include "font.h"
+#include "rel/main_rel/enemy_ctrl.h"
+
+extern u32 lbl_1_rodata_26F8[22];
+extern u32 lbl_1_rodata_6058;
+extern const f32 lbl_1_rodata_5CD4;
+extern const f32 lbl_1_rodata_5D3C;
+extern const f32 lbl_1_rodata_5DCC;
+extern const f32 lbl_1_rodata_6004;
+extern const f32 lbl_1_rodata_6050;
+extern const f32 lbl_1_rodata_605C;
+extern const f32 lbl_1_rodata_6060;
+extern const f32 lbl_1_rodata_6064;
+extern const f32 lbl_1_rodata_6068;
+extern s32 fn_1_156218(u32, void *, void *, void *);
+extern u16 fn_1_486C4(u32);
+extern u16 fn_1_48690(u32);
+extern void fn_1_51564(s16, s16, s16, s16, s16, s16);
+extern u32 fn_1_5158C(FontDrawPacket *, u32, u32, u32);
+extern int fn_1_4F734(FontDrawPacket *);
+extern void fn_1_49410(void);
+extern void fn_1_494DC(s16);
+extern void fn_1_495B0(u32);
+extern void fn_1_4955C(f32, f32);
+extern void fn_1_496FC(f32, f32);
+extern void fn_1_4954C(f32);
+extern void fn_1_495A0(f32);
+extern void fn_1_49514(u32 *);
+extern void fn_1_495FC(void);
+extern void fn_1_4AE0C(const char *, ...);
+
+void fn_1_D01B0(f32 farg0) {
+    FontDrawPacket loc_B8;
+    u32 sp80[14];
+    u32 sp48[14];
+    u32 sp10[14];
+    u32 sp8[2];
+    u32 flags;
+    s16 temp_r30;
+    s16 temp_r30_2;
+
+    fn_1_156218((u32) lbl_1_bss_3C30.unk_6, (void *) sp80, (void *) sp48, (void *) sp10);
+    flags = sp80[0];
+    loc_B8 = *(const FontDrawPacket *) lbl_1_rodata_26F8;
+    loc_B8.image = 0xBB03;
+    temp_r30 = (s16) (fn_1_486C4(0xBB03U) / 3);
+    fn_1_51564(0, 0, fn_1_48690(loc_B8.image), temp_r30, 1, 3);
+    fn_1_5158C(&loc_B8, loc_B8.image, 0U, 0U);
+    loc_B8.alpha = farg0;
+    loc_B8.x = lbl_1_rodata_6004;
+    loc_B8.y = lbl_1_rodata_605C;
+    loc_B8.z = lbl_1_rodata_5CD4;
+    fn_1_4F734(&loc_B8);
+    loc_B8 = *(const FontDrawPacket *) lbl_1_rodata_26F8;
+    loc_B8.image = 0xBB03;
+    temp_r30_2 = (s16) (fn_1_486C4(0xBB03U) / 3);
+    fn_1_51564(0, 0, fn_1_48690(loc_B8.image), temp_r30_2, 1, 3);
+    fn_1_5158C(&loc_B8, loc_B8.image, 0U, 2U);
+    loc_B8.alpha = farg0;
+    loc_B8.x = lbl_1_rodata_6060;
+    loc_B8.y = lbl_1_rodata_605C;
+    loc_B8.z = lbl_1_rodata_6050;
+    fn_1_4F734(&loc_B8);
+    fn_1_49410();
+    fn_1_494DC(0x29);
+    fn_1_495B0(0x80000000U);
+    fn_1_4955C(lbl_1_rodata_5D3C, lbl_1_rodata_5D3C);
+    fn_1_496FC(lbl_1_rodata_6064, lbl_1_rodata_6068);
+    fn_1_4954C(lbl_1_rodata_5DCC);
+    fn_1_495A0(farg0);
+    sp8[0] = lbl_1_rodata_6058;
+    fn_1_49514(sp8);
+    fn_1_495FC();
+    fn_1_4AE0C((const char *) lbl_1_data_3D634, (u8) (flags >> 0x14U), (u8) (flags >> 0xCU), flags & 0xFFF);
+}
+/* fzgx:end fn_1_D01B0 */
+
 /* fzgx:begin fn_1_D0728 */
 #pragma opt_propagation off
 void fn_1_D0728(u32 arg0, u32 arg1) {

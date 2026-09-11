@@ -11,7 +11,7 @@ enum OS_THREAD_STATE {
 };
 
 // Hardware or OS state can change asynchronously.
-extern volatile BOOL RunQueueHint_801A67FC; // fzgx-allow: S2 SDK asynchronous state
+extern volatile BOOL RunQueueHint; // fzgx-allow: S2 SDK asynchronous state
 
 void fn_8001036C(OSThread *thread);
 
@@ -36,7 +36,7 @@ static inline void UpdatePriority(OSThread *thread) {
 OSThread *SelectThread(BOOL yield);
 
 static inline void __OSReschedule() {
-    if (!RunQueueHint_801A67FC) {
+    if (!RunQueueHint) {
         return;
     }
     SelectThread(0);
@@ -50,7 +50,7 @@ s32 OSSuspendThread(OSThread *thread) {
     if (suspendCount == 0) {
         switch (thread->state) {
         case OS_THREAD_STATE_RUNNING:
-            RunQueueHint_801A67FC = 1;
+            RunQueueHint = 1;
             thread->state = OS_THREAD_STATE_READY;
             break;
         case OS_THREAD_STATE_READY:
