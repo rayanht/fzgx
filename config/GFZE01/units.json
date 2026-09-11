@@ -39549,6 +39549,21 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/memcard/fn_1_AECCC.c",
+    "symbols": [
+      "fn_1_AECCC"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "tu": "rel/main_rel/memcard.c",
+    "pool": {
+      "@454": "jumptable_1_data_3CA18",
+      "@455": "jumptable_1_data_3C980"
+    }
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/memcard/fn_1_B03A8.c",
     "symbols": [
       "fn_1_B03A8"

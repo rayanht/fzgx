@@ -6119,3 +6119,6 @@ rel/main_rel/archive/fn_1_12ECA8.c:
 
 rel/main_rel/screen_effect/fn_1_79C88.c:
 	.text       start:0x00079C88 end:0x00079E54 align:4
+
+rel/main_rel/memcard/fn_1_AECCC.c:
+	.text       start:0x000AECCC end:0x000B03A8 align:4

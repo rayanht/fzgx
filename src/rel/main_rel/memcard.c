@@ -2056,6 +2056,1033 @@ void fn_1_AEC34(Fn1AEC34A *request, Fn1AEC34B *operation) {
 }
 /* fzgx:end fn_1_AEC34 */
 
+/* fzgx:begin fn_1_AECCC noprologue */
+#include "types.h"
+
+typedef struct MemcardHeader {
+    u8 pad_0[0x20];
+    u8 name[0x20];
+} MemcardHeader;
+
+typedef struct MemcardCard {
+    u8 unk_0;
+    u8 unk_1;
+    u8 pad_2[2];
+    s32 unk_4;
+    u32 unk_8;
+    u32 unk_C;
+    u32 unk_10;
+    s32 unk_14;
+    u32 unk_18;
+    u32 unk_1C;
+    u8 pad_20[0x20];
+    u32 unk_40;
+    u8 pad_44[0xA];
+    u8 unk_4E;
+    u8 pad_4F;
+    u32 unk_50;
+    u16 unk_54;
+    u16 unk_56;
+    u32 unk_58;
+    u8 pad_5C[0x30];
+    MemcardHeader *unk_8C;
+    u8 pad_90[4];
+    u32 unk_94;
+    u8 pad_98[0x48];
+    u32 unk_E0;
+    u32 unk_E4;
+} MemcardCard;
+
+typedef struct MemcardObj {
+    u8 unk_0;
+    s8 unk_1;
+    u8 unk_2;
+    u8 unk_3;
+    u8 unk_4;
+    u8 unk_5;
+    u8 unk_6;
+    u8 unk_7;
+    s16 unk_8;
+    s16 unk_A;
+    u32 unk_C;
+    u8 pad_10[0x14];
+    MemcardCard *unk_24;
+    s8 unk_28;
+    u8 pad_29;
+    u8 unk_2A;
+    u8 pad_2B[5];
+    u32 unk_30;
+    f32 unk_34;
+    f32 unk_38;
+} MemcardObj;
+
+typedef struct MemcardWork {
+    u8 pad_0[0x1F4];
+    /* polled by the state machine while the async card path writes it */
+    volatile u32 unk_1F4;
+    u8 unk_1F8;
+    u8 pad_1F9[0x5A0F];
+    u8 unk_5C08;
+    u8 pad_5C09[0x40];
+    u8 unk_5C49;
+    u8 pad_5C4A[2];
+    u32 unk_5C4C;
+    s32 unk_5C50;
+} MemcardWork;
+
+typedef struct MemcardDvdState {
+    u16 unk_0;
+    u16 unk_2;
+    u8 pad_4[4];
+    u16 unk_8;
+    u16 unk_A;
+    u8 pad_C[4];
+    u16 unk_10;
+    u16 unk_12;
+    u8 pad_14[0x3C];
+} MemcardDvdState;
+
+typedef struct MemcardDvdFileInfo {
+    u8 pad_0[0x3C];
+} MemcardDvdFileInfo;
+
+typedef struct MemcardPathBuf {
+    u32 w[0x13];
+} MemcardPathBuf;
+
+extern u32 lbl_1_data_35AC8;
+extern MemcardWork lbl_1_bss_716C0;
+extern MemcardDvdState lbl_1_bss_9F8;
+extern const f32 lbl_1_rodata_4CA8;
+extern void *lbl_801A6410;
+extern s32 lbl_801A66B4;
+
+extern void OSReport(const char *fmt, ...);
+extern void OSPanic(const char *file, int line, const char *fmt, ...);
+extern s32 CARDUnmount(s32);
+extern s32 DVDOpen(const char *, MemcardDvdFileInfo *);
+extern s32 DVDClose(MemcardDvdFileInfo *);
+extern s32 fn_80006354(MemcardDvdFileInfo *, void *, u32, u32);
+extern u32 fn_80083DB0(char *, const char *);
+extern s32 fn_80083BCC(const char *, const char *);
+extern char *strncpy(char *, const char *, u32);
+extern char *strcat(char *, const char *);
+extern void *fn_1_45D0(void *, int, const char *, int);
+extern void fn_1_46B4(void *, void *, const char *, int);
+extern void fn_80008BA8(void *, void *, int);
+extern u32 fn_1_1563E8(u32, u32);
+
+#pragma opt_common_subs off
+void fn_1_AECCC(MemcardObj *arg0, u32 unused) {
+    u8 *str = (u8 *)&lbl_1_data_35AC8;
+    MemcardWork *work = &lbl_1_bss_716C0;
+    s32 delayed;
+    s32 res;
+
+    if (arg0->unk_4 != 0xFF) {
+        if (work->unk_5C50 != 0) {
+            switch (arg0->unk_4) {
+            default:
+                OSReport((const char *)(str + 0x6DDC));
+                OSReport((const char *)(str + 0x6DF0), arg0->unk_3);
+                OSPanic((const char *)(str + 0x6CF0), 3575, (const char *)(str + 0x6E04));
+                break;
+
+            case 0:
+                arg0->unk_24->unk_8 &= ~0x200;
+                if (arg0->unk_24->unk_8 & 0x8000) {
+                    arg0->unk_3 = 0x15;
+                } else {
+                    MemcardDvdState *dvd = &lbl_1_bss_9F8;
+                    if (((dvd->unk_8 >> 8) & 1) && (arg0->unk_24->unk_8 & 0x800)) {
+                        arg0->unk_3 = 0xC;
+                        arg0->unk_24->unk_8 &= ~0x800;
+                        arg0->unk_24->unk_8 &= ~0x2;
+                        arg0->unk_24->unk_8 |= 0x200;
+                        arg0->unk_2A &= ~0x4;
+                        arg0->unk_8 = -1;
+                        arg0->unk_A = -1;
+                    } else if ((dvd->unk_8 >> 8) & 1) {
+                        if ((dvd->unk_8 >> 8) & 1)
+                            arg0->unk_3 = 0x15;
+                        else
+                            arg0->unk_3 = 0x20;
+                    } else if (((dvd->unk_8 >> 11) & 1) && (arg0->unk_24->unk_8 & 2) == 0) {
+                        if (arg0->unk_5 == 3 && arg0->unk_C != 0) {
+                            do {
+                                res = CARDUnmount(arg0->unk_0);
+                            } while (res == -1);
+                            fn_1_46B4(lbl_801A6410, (void *)arg0->unk_C, (const char *)(str + 0x6CF0), 3613);
+                            arg0->unk_7 = 0;
+                            arg0->unk_C = 0;
+                            {
+                                MemcardCard *card = arg0->unk_24;
+                                card->unk_1C = 0;
+                                card->unk_18 = 0;
+                            }
+                        }
+                        if (arg0->unk_6 != 0xFF) {
+                            arg0->unk_3 = arg0->unk_6;
+                            arg0->unk_6 = 0xFF;
+                        } else {
+                            arg0->unk_3 = arg0->unk_5;
+                        }
+                        arg0->unk_8 = -1;
+                        arg0->unk_A = -1;
+                        arg0->unk_2A &= ~0x4;
+                    } else if (((dvd->unk_8 >> 10) & 1) && (arg0->unk_24->unk_8 & 0x400)) {
+                        arg0->unk_3 = 5;
+                        arg0->unk_24->unk_8 &= ~0x400;
+                        arg0->unk_24->unk_8 |= 0x200;
+                        arg0->unk_2A &= ~0x4;
+                        arg0->unk_2A |= 0x10;
+                    }
+                }
+                work->unk_5C49 = 0;
+                break;
+
+            case 1:
+                if (arg0->unk_24->unk_8 & 0x8000)
+                    arg0->unk_2 = 0xFE;
+                else if ((lbl_1_bss_9F8.unk_8 >> 8) & 1)
+                    arg0->unk_2 = 0xFE;
+                break;
+
+            case 2:
+                arg0->unk_2 = 0xFE;
+                break;
+
+            case 3: {
+                s8 cmd = arg0->unk_1;
+                if (cmd == -127) {
+                    arg0->unk_24->unk_4 = cmd;
+                    arg0->unk_3 = 1;
+                } else {
+                    MemcardCard *card = arg0->unk_24;
+                    switch (card->unk_4) {
+                    case -5:
+                        card->unk_8 |= 2;
+                    case -128:
+                    case -3:
+                    case -2:
+                        arg0->unk_3 = 1;
+                        break;
+                    case -13:
+                        if (card->unk_8 & 0x8000) {
+                            arg0->unk_2A |= 4;
+                            arg0->unk_2 = 0xFE;
+                        } else if (lbl_801A66B4 == 5) {
+                            arg0->unk_3 = 5;
+                        } else {
+                            card->unk_8 |= 0x400;
+                            arg0->unk_3 = 1;
+                        }
+                        break;
+                    case -6:
+                    case 0:
+                        arg0->unk_3 = 4;
+                        break;
+                    case -1:
+                        break;
+                    default:
+                        arg0->unk_3 = 0;
+                        break;
+                    }
+                }
+                break;
+            }
+
+            case 4:
+                arg0->unk_3 = 3;
+                break;
+
+            case 5: {
+                MemcardCard *card = arg0->unk_24;
+                switch (card->unk_4) {
+                case -5:
+                    card->unk_8 |= 2;
+                case -128:
+                case -3:
+                    arg0->unk_3 = 1;
+                    break;
+                case -6:
+                    if (card->unk_8 & 0x8000) {
+                        arg0->unk_2A |= 4;
+                        arg0->unk_2 = 0xFE;
+                    } else {
+                        arg0->unk_3 = 5;
+                    }
+                    break;
+                case -13:
+                    if (card->unk_8 & 0x8000) {
+                        arg0->unk_2A |= 4;
+                        arg0->unk_2 = 0xFE;
+                    } else if (lbl_801A66B4 == 5) {
+                        arg0->unk_3 = 5;
+                    } else {
+                        card->unk_8 |= 0x400;
+                        arg0->unk_3 = 1;
+                    }
+                    break;
+                case -1:
+                    break;
+                case 0:
+                    arg0->unk_3 = 7;
+                    break;
+                default:
+                    arg0->unk_3 = 0;
+                    break;
+                }
+                break;
+            }
+
+            case 6:
+                if (arg0->unk_24->unk_4 == 0)
+                    break;
+                if ((arg0->unk_2A & 1) == 0) {
+                    arg0->unk_28 = 12;
+                    arg0->unk_2A |= 1;
+                    delayed = 0;
+                } else if (arg0->unk_28 > 0) {
+                    arg0->unk_28 -= 1;
+                    delayed = 0;
+                } else {
+                    delayed = 1;
+                }
+                if (delayed == 0)
+                    break;
+                {
+                    MemcardCard *card = arg0->unk_24;
+                    if (card->unk_4 == 2 || card->unk_1 == 1) {
+                        card->unk_4 = -126;
+                        arg0->unk_3 = 1;
+                    } else {
+                        arg0->unk_3 = 6;
+                        arg0->unk_24->unk_8 |= 0x200;
+                    }
+                }
+                break;
+
+            case 7: {
+                MemcardCard *card = arg0->unk_24;
+                switch (card->unk_4) {
+                case -5:
+                    card->unk_8 |= 2;
+                case -128:
+                case -3:
+                    arg0->unk_3 = 1;
+                    break;
+                case -1:
+                    break;
+                case 0:
+                    arg0->unk_3 = 0x16;
+                    arg0->unk_24->unk_8 &= ~0x200;
+                    break;
+                default:
+                    arg0->unk_3 = 0;
+                    break;
+                }
+                break;
+            }
+
+            case 8:
+                if ((lbl_1_bss_9F8.unk_8 >> 8) & 1) {
+                    arg0->unk_3 = 0x15;
+                    arg0->unk_24->unk_4 = -0x79;
+                }
+                break;
+
+            case 9: {
+                MemcardCard *card = arg0->unk_24;
+                switch (card->unk_4) {
+                case -128:
+                case -3:
+                    arg0->unk_3 = 1;
+                    break;
+                case -1:
+                    break;
+                case 0:
+                    arg0->unk_3 = 0xA;
+                    break;
+                case -2:
+                default:
+                    arg0->unk_3 = 0;
+                    break;
+                }
+                break;
+            }
+
+            case 0xA: {
+                MemcardCard *card = arg0->unk_24;
+                switch (card->unk_4) {
+                case -128:
+                case -10:
+                case -6:
+                case -3:
+                    arg0->unk_3 = 1;
+                    break;
+                case -4:
+                    arg0->unk_3 = 0x12;
+                    break;
+                case 0:
+                    arg0->unk_3 = 0xE;
+                    break;
+                case -5:
+                default:
+                    arg0->unk_3 = 0;
+                    break;
+                case -1:
+                    break;
+                }
+                break;
+            }
+
+            case 0xB: {
+                MemcardCard *card = arg0->unk_24;
+                switch (card->unk_4) {
+                case -5:
+                    card->unk_8 |= 2;
+                case -128:
+                case -12:
+                case -10:
+                case -7:
+                case -3:
+                    arg0->unk_3 = 1;
+                    break;
+                case -4:
+                    if (card->unk_8 & 0x100)
+                        arg0->unk_3 = 0x1F;
+                    else
+                        arg0->unk_3 = 1;
+                    break;
+                case 0:
+                    arg0->unk_3 = 0xA;
+                    break;
+                case -6:
+                case -11:
+                case -9:
+                case -8:
+                case -2:
+                default:
+                    arg0->unk_3 = 0;
+                    break;
+                case -1:
+                    break;
+                }
+                break;
+            }
+
+            case 0xC: {
+                MemcardCard *card = arg0->unk_24;
+                switch (card->unk_4) {
+                case -128:
+                case -6:
+                case -3:
+                    arg0->unk_3 = 1;
+                    break;
+                case 0:
+                    if (card->unk_14 == 0) {
+                        card->unk_4 = -8;
+                        arg0->unk_3 = 1;
+                    } else if (card->unk_10 < card->unk_C) {
+                        card->unk_4 = -9;
+                        arg0->unk_3 = 1;
+                    } else {
+                        card->unk_4 = -4;
+                        arg0->unk_3 = 1;
+                    }
+                    break;
+                case -1:
+                    break;
+                default:
+                    arg0->unk_3 = 0;
+                    break;
+                }
+                break;
+            }
+
+            case 0xD: {
+                MemcardCard *card = arg0->unk_24;
+                switch (card->unk_4) {
+                case -128:
+                case -10:
+                case -4:
+                case -3:
+                    arg0->unk_3 = 1;
+                    break;
+                case -1:
+                    break;
+                case 0:
+                    if (work->unk_5C4C == 0) {
+                        u32 p = (u32)fn_1_45D0(lbl_801A6410, card->unk_E4, (const char *)(str + 0x6CF0), 4000);
+                        work->unk_5C4C = p;
+                        fn_80008BA8((void *)p, (void *)(arg0->unk_24->unk_94 + 0x2060), arg0->unk_24->unk_E4);
+                    }
+                    if (arg0->unk_24->unk_40 < arg0->unk_24->unk_C) {
+                        work->unk_1F4 = arg0->unk_24->unk_4;
+                        arg0->unk_7 = 0;
+                        arg0->unk_8 = -1;
+                        arg0->unk_A = -1;
+                        arg0->unk_30 = 0;
+                        arg0->unk_34 = lbl_1_rodata_4CA8;
+                        arg0->unk_38 = lbl_1_rodata_4CA8;
+                        work->unk_1F8 = 1;
+                        arg0->unk_3 = 8;
+                        work->unk_5C50 = 0;
+                    } else {
+                        arg0->unk_3 = 0x17;
+                    }
+                    break;
+                case -2:
+                default:
+                    arg0->unk_3 = 0;
+                    break;
+                }
+                break;
+            }
+
+            case 0xE: {
+                MemcardCard *card = arg0->unk_24;
+                switch (card->unk_4) {
+                case -128:
+                case -14:
+                case -11:
+                case -10:
+                case -4:
+                case -3:
+                    arg0->unk_3 = 1;
+                    break;
+                case -1:
+                    break;
+                case 0: {
+                    u16 sum = fn_1_1563E8(card->unk_94 + 2, card->unk_C - 2);
+                    MemcardCard *card2 = arg0->unk_24;
+                    if (*(u16 *)card2->unk_94 != sum) {
+                        card2->unk_4 = -0x7C;
+                        arg0->unk_24->unk_8 |= 2;
+                        arg0->unk_24->unk_8 |= 0x800;
+                        arg0->unk_3 = 1;
+                    } else if (*(u8 *)(card2->unk_94 + 3) != card2->unk_8C->name[0x1E]) {
+                        work->unk_1F4 = card2->unk_4;
+                        arg0->unk_7 = 0;
+                        arg0->unk_8 = -1;
+                        arg0->unk_A = -1;
+                        arg0->unk_30 = 0;
+                        arg0->unk_34 = lbl_1_rodata_4CA8;
+                        arg0->unk_38 = lbl_1_rodata_4CA8;
+                        work->unk_1F8 = 1;
+                        arg0->unk_3 = 8;
+                        work->unk_5C50 = 0;
+                    } else {
+                        if ((card2->unk_8 & 0x20) == 0) {
+                            if (work->unk_5C4C != 0) {
+                                fn_80008BA8((void *)(card2->unk_94 + card2->unk_E0), (void *)work->unk_5C4C, card2->unk_E4);
+                            }
+                        }
+                        arg0->unk_3 = 8;
+                    }
+                    break;
+                }
+                default:
+                    arg0->unk_3 = 0;
+                    break;
+                }
+                if (arg0->unk_24->unk_4 != -1 && work->unk_5C4C != 0) {
+                    fn_1_46B4(lbl_801A6410, (void *)work->unk_5C4C, (const char *)(str + 0x6CF0), 4095);
+                    work->unk_5C4C = 0;
+                }
+                break;
+            }
+
+            case 0xF: {
+                MemcardCard *card = arg0->unk_24;
+                switch (card->unk_4) {
+                case -5:
+                    card->unk_8 |= 2;
+                case -128:
+                case -10:
+                case -3:
+                    arg0->unk_3 = 1;
+                    break;
+                case -4:
+                case 0:
+                    arg0->unk_3 = 9;
+                    break;
+                case -1:
+                    break;
+                case -2:
+                default:
+                    arg0->unk_3 = 0;
+                    break;
+                }
+                break;
+            }
+
+            case 0x10: {
+                MemcardCard *card = arg0->unk_24;
+                switch (card->unk_4) {
+                case -5:
+                    card->unk_8 |= 2;
+                case -128:
+                case -10:
+                case -4:
+                case -3:
+                    arg0->unk_3 = 1;
+                    break;
+                case -1:
+                    break;
+                case 0:
+                    card->unk_4 = -4;
+                    arg0->unk_3 = 1;
+                    break;
+                default:
+                    arg0->unk_3 = 0;
+                    break;
+                }
+                break;
+            }
+
+            case 0x11: {
+                MemcardCard *card = arg0->unk_24;
+                switch (card->unk_4) {
+                case -128:
+                case -6:
+                case -3:
+                    arg0->unk_3 = 1;
+                    break;
+                case -1:
+                    break;
+                case 0:
+                    work->unk_1F4 = card->unk_4;
+                    arg0->unk_7 = 0;
+                    arg0->unk_8 = -1;
+                    arg0->unk_A = -1;
+                    arg0->unk_30 = 0;
+                    arg0->unk_34 = lbl_1_rodata_4CA8;
+                    arg0->unk_38 = lbl_1_rodata_4CA8;
+                    work->unk_1F8 = 1;
+                    arg0->unk_3 = 8;
+                    work->unk_5C50 = 0;
+                    break;
+                default:
+                    arg0->unk_3 = 0;
+                    break;
+                }
+                break;
+            }
+
+            case 18:
+            case 19:
+            case 20:
+            case 21:
+            case 22:
+            case 23:
+            case 24:
+            case 25:
+            case 26:
+            case 27:
+            case 28:
+            case 29:
+            case 30:
+            case 31:
+            case 32:
+            case 33:
+            case 34:
+            case 35:
+            case 36:
+            case 37:
+            case 38:
+                break;
+            }
+        } else {
+            switch (arg0->unk_4) {
+            default:
+                OSReport((const char *)(str + 0x6DDC));
+                OSReport((const char *)(str + 0x6DF0), arg0->unk_3);
+                OSPanic((const char *)(str + 0x6CF0), 4203, (const char *)(str + 0x6E04));
+                break;
+
+            case 0:
+                arg0->unk_24->unk_8 &= ~0x200;
+                if (arg0->unk_24->unk_8 & 0x8000) {
+                    arg0->unk_3 = 2;
+                } else {
+                    MemcardDvdState *dvd = &lbl_1_bss_9F8;
+                    if ((dvd->unk_8 >> 8) & 1) {
+                        arg0->unk_3 = 2;
+                    } else if (((dvd->unk_8 >> 11) & 1) && (arg0->unk_24->unk_8 & 2) == 0) {
+                        if (arg0->unk_5 == 3 && arg0->unk_C != 0) {
+                            do {
+                                res = CARDUnmount(arg0->unk_0);
+                            } while (res == -1);
+                            fn_1_46B4(lbl_801A6410, (void *)arg0->unk_C, (const char *)(str + 0x6CF0), 4221);
+                            arg0->unk_7 = 0;
+                            arg0->unk_C = 0;
+                            {
+                                MemcardCard *card = arg0->unk_24;
+                                card->unk_1C = 0;
+                                card->unk_18 = 0;
+                            }
+                        }
+                        if (arg0->unk_6 != 0xFF) {
+                            arg0->unk_3 = arg0->unk_6;
+                            arg0->unk_6 = 0xFF;
+                        } else {
+                            arg0->unk_3 = arg0->unk_5;
+                        }
+                        arg0->unk_8 = -1;
+                        arg0->unk_A = -1;
+                        arg0->unk_2A &= ~0x4;
+                    } else if (((dvd->unk_8 >> 10) & 1) && (arg0->unk_24->unk_8 & 0x400)) {
+                        arg0->unk_3 = 5;
+                        arg0->unk_24->unk_8 &= ~0x400;
+                        arg0->unk_24->unk_8 |= 0x200;
+                        arg0->unk_2A &= ~0x4;
+                        arg0->unk_2A |= 0x10;
+                    }
+                }
+                work->unk_5C49 = 0;
+                break;
+
+            case 1:
+                if (arg0->unk_24->unk_8 & 0x8000)
+                    arg0->unk_2 = 0xFE;
+                else if ((lbl_1_bss_9F8.unk_8 >> 8) & 1)
+                    arg0->unk_2 = 0xFE;
+                break;
+
+            case 2: {
+                MemcardCard *card = arg0->unk_24;
+                switch (card->unk_4) {
+                case -5:
+                    card->unk_8 |= 2;
+                case -128:
+                case -10:
+                case -3:
+                    arg0->unk_3 = 1;
+                    break;
+                case -4:
+                case 0:
+                    arg0->unk_3 = 9;
+                    break;
+                case -1:
+                    break;
+                case -2:
+                default:
+                    arg0->unk_3 = 0;
+                    break;
+                }
+                break;
+            }
+
+            case 3: {
+                MemcardCard *card = arg0->unk_24;
+                switch (card->unk_4) {
+                case -128:
+                case -6:
+                case -3:
+                    arg0->unk_3 = 1;
+                    break;
+                case -1:
+                    break;
+                case 0: {
+                    MemcardHeader *hdr;
+                    MemcardDvdFileInfo fileInfo;
+                    MemcardPathBuf path;
+
+                    if ((card->unk_8 & 4) || (card->unk_8 & 0x4000)) {
+                        arg0->unk_3 = 0xE;
+                        hdr = arg0->unk_24->unk_8C;
+                        *(u8 *)(arg0->unk_24->unk_94 + 2) = arg0->unk_24->unk_0;
+                        *(u8 *)(arg0->unk_24->unk_94 + 3) = hdr->name[0x1E];
+                        strncpy((char *)(arg0->unk_24->unk_94 + 4), (const char *)(str + 0x6D04), 0x20);
+                        fn_80083DB0((char *)path.w, (const char *)(str + 0x6D10));
+                        if (lbl_801A66B4 != 5 && fn_80083BCC((const char *)hdr->name, (const char *)(str + 0x6D1C)) == 0) {
+                            strcat((char *)path.w, (const char *)(str + 0x6D24));
+                        } else {
+                            strcat((char *)path.w, (const char *)hdr->name);
+                        }
+                        if (!DVDOpen((char *)path.w, &fileInfo)) {
+                            OSPanic((const char *)(str + 0x6CF0), 1290, (const char *)(str + 0x6D30));
+                        }
+                        if (arg0->unk_24->unk_8 & 0x20) {
+                            if (!fn_80006354(&fileInfo, (void *)(arg0->unk_24->unk_94 + 0x1860), 0x800, 0x1800)) {
+                                OSPanic((const char *)(str + 0x6CF0), 1295, (const char *)(str + 0x6D48));
+                            }
+                        } else {
+                            if (!fn_80006354(&fileInfo, (void *)(arg0->unk_24->unk_94 + 0x60), 0x2000, 0)) {
+                                OSPanic((const char *)(str + 0x6CF0), 1299, (const char *)(str + 0x6D48));
+                            }
+                        }
+                        DVDClose(&fileInfo);
+                        arg0->unk_24->unk_8 |= 0x200;
+                    } else {
+                        arg0->unk_3 = 0xB;
+                    }
+                    break;
+                }
+                default:
+                    arg0->unk_3 = 0;
+                    break;
+                }
+                break;
+            }
+
+            case 4:
+                if (arg0->unk_24->unk_4 == 0)
+                    break;
+                if ((arg0->unk_2A & 1) == 0) {
+                    arg0->unk_28 = 12;
+                    arg0->unk_2A |= 1;
+                    delayed = 0;
+                } else if (arg0->unk_28 > 0) {
+                    arg0->unk_28 -= 1;
+                    delayed = 0;
+                } else {
+                    delayed = 1;
+                }
+                if (delayed == 0)
+                    break;
+                {
+                    MemcardCard *card = arg0->unk_24;
+                    if (card->unk_4 == 2 || card->unk_1 == 1) {
+                        card->unk_4 = -125;
+                        arg0->unk_3 = 1;
+                    } else {
+                        arg0->unk_3 = 0xE;
+                    }
+                }
+                break;
+
+            case 5: {
+                MemcardCard *card = arg0->unk_24;
+                switch (card->unk_4) {
+                case -128:
+                case -10:
+                case -4:
+                case -3:
+                    arg0->unk_3 = 1;
+                    break;
+                case -1:
+                    break;
+                case 0: {
+                    u8 *p = (u8 *)arg0->unk_24->unk_94;
+                    arg0->unk_24->unk_58 = (u32)(p + 4) - (u32)p;
+                }
+                    arg0->unk_24->unk_4E = (arg0->unk_24->unk_4E & ~3) | 2;
+                    arg0->unk_24->unk_50 = (u32)((u8 *)arg0->unk_24->unk_94 + 0x60) - (u32)arg0->unk_24->unk_94;
+                    arg0->unk_24->unk_54 = (arg0->unk_24->unk_54 & ~3) | 2;
+                    arg0->unk_24->unk_56 = (arg0->unk_24->unk_56 & ~3) | 3;
+                    arg0->unk_24->unk_56 &= ~0xC;
+                    arg0->unk_24->unk_4E &= ~0x4;
+                    *(u16 *)arg0->unk_24->unk_94 = fn_1_1563E8(arg0->unk_24->unk_94 + 2, arg0->unk_24->unk_C - 2);
+                    arg0->unk_3 = 0x24;
+                    break;
+                case -2:
+                default:
+                    arg0->unk_3 = 0;
+                    break;
+                }
+                break;
+            }
+
+            case 6: {
+                MemcardCard *card = arg0->unk_24;
+                switch (card->unk_4) {
+                case -5:
+                    card->unk_8 |= 2;
+                case -128:
+                case -14:
+                case -11:
+                case -10:
+                case -4:
+                case -3:
+                    arg0->unk_3 = 1;
+                    break;
+                case 0:
+                    arg0->unk_3 = 0x25;
+                    break;
+                case -9:
+                case -8:
+                case -7:
+                case -6:
+                case -2:
+                default:
+                    arg0->unk_3 = 0;
+                    break;
+                case -1:
+                    break;
+                }
+                break;
+            }
+
+            case 7: {
+                MemcardCard *card = arg0->unk_24;
+                switch (card->unk_4) {
+                case -5:
+                    card->unk_8 |= 2;
+                case -128:
+                case -14:
+                case -11:
+                case -10:
+                case -4:
+                case -3:
+                    arg0->unk_3 = 1;
+                    break;
+                case 0:
+                    arg0->unk_3 = 0x10;
+                    break;
+                case -9:
+                case -8:
+                case -7:
+                case -6:
+                case -2:
+                default:
+                    arg0->unk_3 = 0;
+                    break;
+                case -1:
+                    break;
+                }
+                break;
+            }
+
+            case 8: {
+                MemcardCard *card = arg0->unk_24;
+                switch (card->unk_4) {
+                case -5:
+                    card->unk_8 |= 2;
+                case -128:
+                case -10:
+                case -4:
+                case -3:
+                    arg0->unk_3 = 1;
+                    break;
+                case -1:
+                    break;
+                case 0:
+                    arg0->unk_3 = 0x13;
+                    arg0->unk_24->unk_8 &= ~0x200;
+                    break;
+                case -2:
+                default:
+                    arg0->unk_3 = 0;
+                    break;
+                }
+                break;
+            }
+
+            case 9: {
+                MemcardCard *card = arg0->unk_24;
+                switch (card->unk_4) {
+                case -128:
+                case -6:
+                case -3:
+                    arg0->unk_3 = 1;
+                    break;
+                case -1:
+                    break;
+                case 0:
+                    arg0->unk_3 = 0x14;
+                    break;
+                default:
+                    arg0->unk_3 = 0;
+                    break;
+                }
+                break;
+            }
+
+            case 10:
+                if (arg0->unk_24->unk_8 & 4) {
+                    if ((arg0->unk_24->unk_8 & 8) == 0) {
+                        arg0->unk_28 = 0x2D;
+                        arg0->unk_24->unk_8 |= 8;
+                        delayed = 0;
+                    } else if (arg0->unk_28 > 0) {
+                        arg0->unk_28 -= 1;
+                        delayed = 0;
+                    } else {
+                        delayed = 1;
+                    }
+                    if (delayed == 0)
+                        break;
+                    work->unk_1F4 = arg0->unk_24->unk_4;
+                    /* volatile view: the unload path can clear the pointer behind us */
+                    fn_1_46B4(lbl_801A6410, *(MemcardCard *volatile *)((u8 *)arg0 + 0x24), (const char *)(str + 0x6CF0), 1004);
+                    arg0->unk_24 = 0;
+                    arg0->unk_2 = 0xFF;
+                    arg0->unk_3 = 0xFF;
+                    arg0->unk_4 = 0xFF;
+                    arg0->unk_5 = 0xFF;
+                    arg0->unk_6 = 0xFF;
+                    arg0->unk_7 = 0;
+                    arg0->unk_8 = -1;
+                    arg0->unk_A = -1;
+                    arg0->unk_30 = 0;
+                    arg0->unk_34 = lbl_1_rodata_4CA8;
+                    arg0->unk_38 = lbl_1_rodata_4CA8;
+                    arg0->unk_2A &= ~0x4;
+                    work->unk_5C08 = 0;
+                    work->unk_1F8 = 1;
+                } else if ((lbl_1_bss_9F8.unk_8 >> 8) & 1) {
+                    work->unk_1F4 = arg0->unk_24->unk_4;
+                    /* volatile view: the unload path can clear the pointer behind us */
+                    fn_1_46B4(lbl_801A6410, *(MemcardCard *volatile *)((u8 *)arg0 + 0x24), (const char *)(str + 0x6CF0), 1004);
+                    arg0->unk_24 = 0;
+                    arg0->unk_2 = 0xFF;
+                    arg0->unk_3 = 0xFF;
+                    arg0->unk_4 = 0xFF;
+                    arg0->unk_5 = 0xFF;
+                    arg0->unk_6 = 0xFF;
+                    arg0->unk_7 = 0;
+                    arg0->unk_8 = -1;
+                    arg0->unk_A = -1;
+                    arg0->unk_30 = 0;
+                    arg0->unk_34 = lbl_1_rodata_4CA8;
+                    arg0->unk_38 = lbl_1_rodata_4CA8;
+                    arg0->unk_2A &= ~0x4;
+                    work->unk_5C08 = 0;
+                    work->unk_1F8 = 1;
+                }
+                break;
+
+            case 11:
+            case 12:
+            case 13:
+            case 14:
+            case 15:
+            case 16:
+            case 17:
+            case 18:
+            case 19:
+            case 20:
+            case 21:
+            case 22:
+            case 23:
+            case 24:
+            case 25:
+            case 26:
+            case 27:
+            case 28:
+            case 29:
+            case 30:
+            case 31:
+            case 32:
+            case 33:
+            case 34:
+            case 35:
+            case 36:
+            case 37:
+                break;
+            }
+        }
+
+        if (arg0->unk_24 != 0)
+            work->unk_1F4 = arg0->unk_24->unk_4;
+    }
+}
+#pragma opt_common_subs reset
+/* fzgx:end fn_1_AECCC */
+
 /* fzgx:begin fn_1_B03A8 */
 void fn_1_B03A8(void *arg0, void *arg1) {
     void *child = *(void **)((u8 *)arg1 + 0x24);
