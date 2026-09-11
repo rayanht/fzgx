@@ -7681,6 +7681,31 @@
   },
   {
     "module": "main",
+    "source": "dol/SIGetType.c",
+    "symbols": [
+      "SIGetType"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ],
+    "pool": {
+      "TypeTime_8015CB30": "TypeTime",
+      "cmdTypeAndStatus$1": "cmdTypeAndStatus$371"
+    }
+  },
+  {
+    "module": "main",
     "source": "dol/SIGetTypeAsync.c",
     "symbols": [
       "SIGetTypeAsync"

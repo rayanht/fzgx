@@ -5060,3 +5060,6 @@ dol/VIGetTvFormat.c:
 
 dol/__fstLoad.c:
 	.text       start:0x8001A3F4 end:0x8001A55C align:4
+
+dol/SIGetType.c:
+	.text       start:0x80012D0C end:0x80012ED0 align:4
