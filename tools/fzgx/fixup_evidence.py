@@ -590,6 +590,48 @@ def native_pool_literals(p, symbol, body, check):
     return [('recover native shared-pool literals',text)]
 
 
+def bitmask_arguments(p, symbol, body):
+    """Spell scalar flag masks as bits when the retail callee proves their use."""
+    from .fixup_source import call_sites
+    from .lint import RANGES
+    from .sdkimport import masked
+    code=masked(body);sym=p.resolve(symbol);span=_function_span(code,sym.name)
+    if not span:
+        return []
+    edits=[];proven={}
+    for callee,start,end,args in call_sites(code):
+        if not span[0]<=start<end<=span[1] or not args:
+            continue
+        a,b=args[0];literal=code[a:b].strip()
+        if not re.fullmatch(r'0[xX][0-9a-fA-F]{8}[uUlL]*',literal):
+            continue
+        value=int(literal.rstrip('uUlL'),16)
+        if not any(lo<=value<=hi for lo,hi in RANGES):
+            continue
+        if callee not in proven:
+            target=p.find_symbol(callee,sym.module)
+            fn=p.callable_asm(target) if target and target.kind=='function' and target.size<=128 else None
+            instructions=[line.split(': ',1)[-1] for line in fn.asm] if fn else []
+            uses=[text for text in instructions if re.search(r'\br3\b',text)]
+            # A straight-line setter must consume its first argument only as a
+            # bitwise input. In particular, no address, call or returned pointer
+            # can be hidden behind an integer prototype in a saved candidate.
+            proven[callee]=bool(instructions and instructions[-1]=='blr' and uses and
+                all(re.fullmatch(r'(?:or|and|xor|andc) r(?!3\b)\d+, r\d+, r3',text) or
+                    re.fullmatch(r'(?:or|and|xor) r(?!3\b)\d+, r3, r\d+',text) for text in uses) and
+                all(text.split()[0] in ('lis','addi','lwz','stw','or','and','xor','andc','blr') for text in instructions) and
+                not any(text=='blr' for text in instructions[:-1]))
+        if proven[callee]:
+            shift=(value&-value).bit_length()-1
+            edits.append((a,b,f'(0x{value>>shift:X}u << {shift})'))
+    if not edits:
+        return []
+    text=body
+    for a,b,value in reversed(edits):
+        text=text[:a]+value+text[b:]
+    return [('retail scalar flag masks',text)]
+
+
 def format_arguments(p, symbol, body):
     """Recover omitted variadic arguments from owned prototypes and retail text."""
     from .fixup_source import call_sites, declared_types, member_type, record_layouts
@@ -611,6 +653,17 @@ def format_arguments(p, symbol, body):
             continue
         if re.search(r'\bchar\s*\*',code[args[-2][0]:args[-2][1]]):
             formats[name]=len(args)-2
+    # Formatter callbacks often use a generic void* format parameter. Their
+    # typedef still proves the variadic boundary; retail text proves the format.
+    for pointer in re.finditer(r'(?m)^[ \t]*(typedef\s+)?[^;{}\n]+?\(\s*\*\s*(\w+)\s*\)\s*\(([^;{}]*)\)\s*;',code[:span[0]]):
+        pointer_params=[arg.strip() for arg in pointer[3].split(',')]
+        if len(pointer_params)<2 or pointer_params[-1]!='...' or not re.search(r'\b(?:char|void)\s*\*',pointer_params[-2]):
+            continue
+        if pointer[1]:
+            formats.update({name:len(pointer_params)-2 for name,ty in variables.items()
+                            if re.sub(r'\b(?:const|volatile|register)\b','',ty).strip()==pointer[2]})
+        else:
+            formats[pointer[2]]=len(pointer_params)-2
     aliases={}
     for match in re.finditer(r'\b(\w+)\s*=\s*([^;{}]+);',code[:span[1]]):
         if len(re.findall(r'\b'+re.escape(match[1])+r'\s*=(?!=)',code[:span[1]]))==1:
@@ -718,6 +771,137 @@ def format_arguments(p, symbol, body):
                 break
         for expression in candidates:
             out.append((f'retail format argument {callee} slot {supplied+1}: {expression}',body[:end-1]+', '+expression+body[end-1:]))
+    return out
+
+
+def missing_call_copies(check):
+    """Live argument copies present only in retail, without intervening writes."""
+    rows=[(stuck._fmt(t),stuck._fmt(o)) for t,o in zip(*check._rows)]
+    copies=set()
+    for i,(target,ours) in enumerate(rows):
+        move=re.fullmatch(r'(?:mr|fmr) ([rf]\d+), ([rf]\d+)',target)
+        if not move or ours:
+            continue
+        for text,_ in rows[i+1:i+10]:
+            call=re.fullmatch(r'bl (\w+)',text)
+            if call:
+                copies.add((call[1],move[2],move[1]));break
+            if text.startswith('b') or re.match(r'\w+[.]?\s+(?:'+re.escape(move[1])+'|'+re.escape(move[2])+r'),',text):
+                break
+    return copies
+
+
+def call_arguments(p, symbol, body, check):
+    """Recover argument order, narrow types and missing live ABI copies."""
+    from .fixup_source import call_sites, declared_types, argument_lifetimes
+    from .sdkimport import masked
+    from .signatures import recovered, parameter, Signature
+    code=masked(body);span=_function_span(code,p.resolve(symbol).name)
+    copies=missing_call_copies(check)
+    call_order=set()
+    rows=[(stuck._fmt(t),stuck._fmt(o)) for t,o in zip(*check._rows)]
+    for i,(target,ours) in enumerate(rows):
+        if target==ours or i in getattr(check,'_accepted_rows',()) or not re.match(r'(?:addi|add|li|lis|mr|fmr|extsh|extsb|clrlwi) (?:r[3-9]|r10|f[1-8]),',target):
+            continue
+        for instruction,_ in rows[i+1:i+12]:
+            called=re.fullmatch(r'bl (\w+)',instruction)
+            if called:
+                call_order.add(called[1]);break
+            if instruction.startswith('b'):
+                break
+    out=[('retail argument order: '+label,text) for label,text in argument_lifetimes(body,p.resolve(symbol).name,call_order)] if call_order else []
+    out.sort(key=lambda candidate:'at every site' not in candidate[0])
+    narrows={}
+    for i,(target,ours) in enumerate(rows):
+        cast=re.fullmatch(r'(extsh|extsb) (r\d+), r\d+',target)
+        if not cast or target==ours:
+            continue
+        for instruction,_ in rows[i+1:i+12]:
+            called=re.fullmatch(r'bl (\w+)',instruction)
+            if called:
+                narrows.setdefault(called[1],{})[cast[2]]='s16' if cast[1]=='extsh' else 's8'
+                break
+            if instruction.startswith('b') or re.match(r'\w+[.]?\s+'+re.escape(cast[2])+',',instruction):
+                break
+    if not span or not (copies or narrows):
+        return out
+    index=recovered(p);calls=call_sites(body)
+    types=dict(index.types);types.update(declared_types(code,span[0])[0])
+    for callee,registers in narrows.items():
+        prototypes=[call for call in calls if call[0]==callee and call[1]<span[0]]
+        if len(prototypes)!=1:
+            continue
+        _,start,end,args=prototypes[0]
+        params=[parameter(code[a:b],types) for a,b in args]
+        if not params or None in params or '...' in params:
+            continue
+        slots=index.registers(Signature('void',tuple(params)))
+        if not slots or len(slots)!=len(params):
+            continue
+        edits=[(args[i][0],args[i][1],registers[reg]) for i,(reg,ty) in enumerate(slots)
+               if reg in registers and ty in ('u32','s32','int','unsigned int')]
+        for changes in ([edits]+[[edit] for edit in edits] if edits else []):
+            text=body
+            for a,b,ty in reversed(changes):
+                text=text[:a]+ty+text[b:]
+            out.append((f'retail call parameter {callee} '+','.join(ty for _,_,ty in changes),text))
+    for callee,source,dest in sorted(copies):
+        prototypes=[call for call in calls if call[0]==callee and call[1]<span[0]]
+        if len(prototypes)!=1:
+            continue
+        _,start,end,args=prototypes[0]
+        params=[parameter(code[a:b],types) for a,b in args]
+        if not params or None in params or '...' in params or params==['void']:
+            continue
+        slots=index.registers(Signature('void',tuple(params)))
+        if not slots or len(slots)!=len(params) or source not in dict(slots) or dest in dict(slots):
+            continue
+        position=next(i for i,(reg,_) in enumerate(slots) if reg==source)
+        extended=index.registers(Signature('void',tuple(params+[params[position]])))
+        if not extended or extended[-1][0]!=dest:
+            continue
+        uses=[call for call in calls if call[0]==callee and span[0]<=call[1]<span[1]]
+        if not uses or any(len(arguments)!=len(params) for _,_,_,arguments in uses):
+            continue
+        edits=[]
+        for _,_,stop,arguments in uses:
+            a,b=arguments[position];value=body[a:b].strip()
+            if call_sites(value) or re.search(r'\+\+|--|(?<![=!<>])=(?!=)',value):
+                break
+            edits.append((stop-1,stop-1,', '+value))
+        else:
+            edits.append((end-1,end-1,', '+params[position]))
+            text=body
+            for a,b,value in sorted(edits,reverse=True):
+                text=text[:a]+value+text[b:]
+            out.append((f'retail call argument {callee} {source}->{dest}',text))
+    return out
+
+
+def float_conditions(body, name, diffs):
+    """Recover which clamp arm receives unordered floating comparisons."""
+    if not any(t.startswith('cror ') or o.startswith('cror ') for t,o in diffs):
+        return []
+    from .fixup_source import call_sites, declared_types, member_type
+    from .sdkimport import masked
+    code=masked(body);span=_function_span(code,name)
+    if not span:
+        return []
+    fields,variables=declared_types(code,span[0]);out=[]
+    opposite={'<':'>=','<=':'>','>':'<=','>=':'<'}
+    for callee,start,end,args in call_sites(code):
+        if callee!='if' or len(args)!=1 or not span[0]<=start<end<=span[1]:
+            continue
+        a,b=args[0];comparison=re.fullmatch(r'\s*(.+?)\s+(<=|>=|<|>)\s+(.+?)\s*',code[a:b])
+        arms=re.match(r'(\s*\{)([^{}]*)(\}\s*else\s*\{)([^{}]*)(\})',code[end:span[1]])
+        if not comparison or not arms:
+            continue
+        if not any(member_type(comparison[i],fields,variables) in ('f32','float','f64','double') for i in (1,3)):
+            continue
+        condition=body[a:a+comparison.start(2)]+opposite[comparison[2]]+body[a+comparison.end(2):b]
+        text=(body[:a]+condition+body[b:end+arms.start(2)]+body[end+arms.start(4):end+arms.end(4)]
+              +body[end+arms.end(2):end+arms.start(4)]+body[end+arms.start(2):end+arms.end(2)]+body[end+arms.end(4):])
+        out.append((f'retail float branch {comparison[2]}->{opposite[comparison[2]]} at {a}',text))
     return out
 
 
@@ -1308,7 +1492,10 @@ def candidates(p: Project, symbol: str, body: str, base: oracle.CheckResult):
     diffs = [(stuck._fmt(a), stuck._fmt(b)) for a, b in zip(lrows, rrows) if (a.get("diff_kind") or "DIFF_NONE") != "DIFF_NONE"]
     span = _function_span(body, sym.name)
     candidates: List[Tuple[str, str]] = store_values(body, sym.name, base)
+    candidates += bitmask_arguments(p,symbol,body)
     candidates += format_arguments(p,symbol,body)
+    candidates += call_arguments(p,symbol,body,base)
+    candidates += float_conditions(body,sym.name,diffs)
     missing_globals = []
     if any(not ours and re.fullmatch(r'(?:lwz|lhz|lha|lbz|lfs|lfd) [rf]\d+, 0x0\(r\d+\)',target) for target,ours in diffs):
         from .evidence import memory_loads, object_jump_tables

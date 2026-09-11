@@ -282,6 +282,74 @@ def normalise(body: str) -> str:
 
 FLIP = {"s32": "u32", "u32": "s32", "s16": "u16", "u16": "s16", "s8": "u8", "u8": "s8", "f32": "f64", "f64": "f32", "int": "u32"}
 
+def argument_lifetimes(body, name, callees=None):
+    """Materialize typed call arguments, optionally selected by retail evidence."""
+    from .sdkimport import masked
+    code=masked(body);span=_function_body_span(code,name)
+    if not span:
+        return []
+    locs=_locals(body,span);out=[];groups={};calls=call_sites(code)
+    prototypes={callee:args for callee,start,end,args in calls if start<span[0] and re.match(r'\s*;',code[end:])}
+    for callee,start,end,args in calls:
+        if not span[1]<=start<end<=span[2] or (callees is not None and callee not in callees):
+            continue
+        lo=code.rfind('\n',span[1],start)+1
+        prefix=re.fullmatch(r'([ \t]*)((?:[A-Za-z_][\w>.\-\[\]]*\s*=\s*)?)',code[lo:start])
+        suffix=re.match(r'[ \t]*;[ \t]*\n',code[end:])
+        if not prefix or not suffix:
+            continue
+        indent,lhs=prefix.groups();hi=end+suffix.end()
+        parts=[body[a:b].strip() for a,b in args]
+        parameter_types = []
+        if callee in prototypes:
+            for a,b in prototypes[callee]:
+                parameter = code[a:b].strip()
+                typed = re.fullmatch('('+TYPE+r')(?:\s+\w+)?', parameter)
+                parameter_types.append(typed[1] if typed else None)
+        for k, a in enumerate(parts):
+            known_type = parameter_types[k] if k < len(parameter_types) else None
+            if not known_type and re.fullmatch(r"[A-Za-z_]\w*|-?\d+|0x[0-9A-Fa-f]+|&[A-Za-z_]\w*|\d+\.\d*f?", a):
+                continue
+            tname = f"lab_t{k}"
+            while re.search(r'\b'+tname+r'\b',body):
+                tname += '_'
+            newparts = list(parts); newparts[k] = tname
+            replacement=f"{indent}{tname} = {a};\n{indent}{lhs}{callee}({', '.join(newparts)});\n"
+            text = body[:lo] + replacement + body[hi:]
+            # The call's conversion belongs in the temporary too. In particular,
+            # pointer arguments are not integers and narrow counts truncate here.
+            cast = re.match(r'\(('+TYPE+r')\)',a)
+            ty = known_type or (cast[1] if cast else None) or ("f32" if re.search(r"\d\.\d|f32|unk_\w*f\b", a) else "u32")
+            ins_at = locs[-1][1] if locs else span[1] + 1
+            text = text[:ins_at] + f"    {ty} {tname};\n" + text[ins_at:]
+            out.append((f"hoist arg {k} of {callee}", text))
+            groups.setdefault((callee,k,ty,tname),[]).append((lo,hi,replacement))
+        result=re.search(r'(?m)^[ \t]*(?:extern\s+)?('+TYPE+r')\s*'+re.escape(callee)+r'\s*\(',body[:span[0]])
+        if callees is not None and result and len(parameter_types)==len(parts) and all(ty and ty!='...' for ty in parameter_types):
+            helper=name+'_call_'+callee
+            while re.search(r'\b'+re.escape(helper)+r'\b',body):
+                helper+='_'
+            for order in (list(range(len(parts))),list(reversed(range(len(parts))))):
+                params=', '.join(parameter_types[i]+' a'+str(i) for i in order)
+                call=callee+'('+', '.join('a'+str(i) for i in range(len(parts)))+');'
+                definition='static inline '+result[1]+' '+helper+'('+params+') { '+('' if result[1].strip()=='void' else 'return ')+call+' }\n'
+                a,b=start,end
+                text=body[:a]+helper+'('+', '.join(parts[i] for i in order)+')'+body[b:]
+                at=body.rfind('\n',0,span[0])+1
+                text=text[:at]+definition+text[at:]
+                out.append((f'call parameter order {callee} '+','.join(map(str,order))+f' at {a}',text))
+    for (callee,k,ty,tname),edits in groups.items():
+        if len(edits)<2:
+            continue
+        text=body
+        for a,b,value in reversed(edits):
+            text=text[:a]+value+text[b:]
+        at=locs[-1][1] if locs else span[1]+1
+        text=text[:at]+f'    {ty} {tname};\n'+text[at:]
+        out.append((f'hoist arg {k} of {callee} at every site',text))
+    return out
+
+
 def perturbations(body: str, name: str) -> List[Tuple[str, str, str]]:
     """(family, label, text) for every single rewrite."""
     out: List[Tuple[str, str, str]] = []
@@ -329,34 +397,7 @@ def perturbations(body: str, name: str) -> List[Tuple[str, str, str]]:
         if len(uses) == 1 and not re.search(rf"\b{re.escape(v)}\s*=", rest):
             new_rest = rest[:uses[0].start()] + f"({expr})" + rest[uses[0].end():]
             out.append(("inline-temp", f"inline {v}", body[:span[1] + m.start()] + body[span[1] + m.end():span[1] + m.end()] + new_rest.join(["", ""]) if False else body[:span[1] + m.start()] + new_rest + body[span[2]:]))
-    # 5. hoist a call argument into a temp right before the call
-    for m in re.finditer(r"^(\s*)((?:[A-Za-z_][\w>.\-\[\]]* = )?)([A-Za-z_]\w*)\(([^;]*)\);\n", body[span[1]:span[2]], re.M):
-        indent, lhs, callee, args = m.groups()
-        parts = [a.strip() for a in re.split(r",(?![^()]*\))", args)] if args.strip() else []
-        prototype = re.search(r'\b'+re.escape(callee)+r'\s*\(([^;{}]*)\)\s*;', body[:span[0]])
-        parameter_types = []
-        if prototype:
-            for parameter in prototype[1].split(','):
-                parameter = parameter.strip()
-                typed = re.fullmatch('('+TYPE+r')(?:\s+\w+)?', parameter)
-                parameter_types.append(typed[1] if typed else None)
-        for k, a in enumerate(parts):
-            known_type = parameter_types[k] if k < len(parameter_types) else None
-            if not known_type and re.fullmatch(r"[A-Za-z_]\w*|-?\d+|0x[0-9A-Fa-f]+|&[A-Za-z_]\w*|\d+\.\d*f?", a):
-                continue
-            tname = f"lab_t{k}"
-            while re.search(r'\b'+tname+r'\b',body):
-                tname += '_'
-            newparts = list(parts); newparts[k] = tname
-            stmt = f"{indent}u32 {tname};\n" if False else ""
-            text = body[:span[1] + m.start()] + f"{indent}{tname} = {a};\n{indent}{lhs}{callee}({', '.join(newparts)});\n" + body[span[1] + m.end():]
-            # The call's conversion belongs in the temporary too. In particular,
-            # pointer arguments are not integers and narrow counts truncate here.
-            cast = re.match(r'\(('+TYPE+r')\)',a)
-            ty = known_type or (cast[1] if cast else None) or ("f32" if re.search(r"\d\.\d|f32|unk_\w*f\b", a) else "u32")
-            ins_at = locs[-1][1] if locs else span[1] + 1
-            text = text[:ins_at] + f"    {ty} {tname};\n" + text[ins_at:]
-            out.append(("hoist-arg", f"hoist arg {k} of {callee}", text))
+    out.extend(("hoist-arg",label,text) for label,text in argument_lifetimes(body,name))
     # 6. increment forms
     for m in re.finditer(r"^(\s*)(\S[^=\n]*?) = \2 \+ 1;\n", body, re.M):
         out.append(("increment", "x = x + 1 -> x++", body[:m.start()] + f"{m.group(1)}{m.group(2)}++;\n" + body[m.end():]))

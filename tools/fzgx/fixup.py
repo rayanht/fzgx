@@ -163,7 +163,7 @@ class Engine:
         check = self.check(row)
         if check.ok:
             families.append(evidence.candidates(self.project, row['symbol'], body, check))
-            targeted = [[c for c in families[0] if c[0].startswith(('retail format argument', 'bind recovered shared-pool', 'retain recovered shared-pool', 'recover native shared-pool', 'lifetime reload', 'lifetime ordered'))],
+            targeted = [[c for c in families[0] if c[0].startswith(('retail scalar flag masks', 'retail format argument', 'retail call argument', 'retail call parameter', 'retail argument order:', 'retail float branch', 'bind recovered shared-pool', 'retain recovered shared-pool', 'recover native shared-pool', 'lifetime reload', 'lifetime ordered'))],
                         source.address_expressions(body, name), source.pointer_lifetimes(body, name), source.through_local(body, name)]
             operand_types = {'and':('&',('u32','s32')), 'or':('|',('u32','s32')),
                              'xor':('^',('u32','s32')), 'mullw':('*',('u32','s32')),
@@ -188,7 +188,7 @@ class Engine:
                         yield family[i]
             # Concrete stores/frame fixes precede generic declaration and flag
             # probes. They used to be buried beyond a session's candidate cap.
-            yield from [c for c in families[0] if c[0].startswith(('retail store-value', 'retail format argument', 'pack stack', 'imm ', 'swap fields', 'recover aggregate', 'recover member', 'interior ', 'bind hardware'))]
+            yield from [c for c in families[0] if c[0].startswith(('retail store-value', 'retail format argument', 'retail call argument', 'pack stack', 'imm ', 'swap fields', 'recover aggregate', 'recover member', 'interior ', 'bind hardware'))]
             # Layout/type repairs can increase register differences while fixing
             # the actual memory access or extension. Probe their optimizer
             # interactions before the word-score frontier discards them.
@@ -285,7 +285,7 @@ class Engine:
                 if row.get('pool_layout_fixed') and (row['symbol'] not in pool_bridges or
                         (row['pool_coverage'],row['score']) > (pool_bridges[row['symbol']]['pool_coverage'],pool_bridges[row['symbol']]['score'])):
                     pool_bridges[row['symbol']] = row
-            for row in sorted(history,key=lambda r:(not r.get('value_flow_fixed',False),
+            for row in sorted(history,key=lambda r:(not (r.get('value_flow_fixed',False) or r.get('argument_flow_fixed',False)),
                     pool_bridges.get(r['symbol'],{}).get('id') != r['id'],
                     -r['score'],-r.get('binding_score',0),r['bit_errors'],r['id'])):
                 symbol=row['symbol']; words=self.words.get(row['id'])
@@ -321,6 +321,10 @@ class Engine:
             # discarding it in favor of the semantically wrong high-score seed.
             from . import regflow
             for row in pending:
+                if row['label'].startswith('retail call argument') and row.get('object'):
+                    before=evidence.missing_call_copies(self.check(parents[row['parent']]))
+                    after=evidence.missing_call_copies(self.check(row))
+                    row['argument_flow_fixed']=bool(before-after) and after<=before
                 if row['label'].startswith(('bind recovered shared-pool', 'retain recovered shared-pool')) and row.get('object'):
                     parent = parents[row['parent']]
                     if 'pool_coverage' not in parent:

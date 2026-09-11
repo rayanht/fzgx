@@ -405,7 +405,15 @@ def _equivalent_reloc_rows(project, module, obj, left, right, lrows, rrows):
     for i, (l, r) in enumerate(zip(lrows, rrows)):
         li, ri = l.get('instruction', {}), r.get('instruction', {})
         lr, rr = li.get('relocation'), ri.get('relocation')
-        if not lr or not rr or lr.get('type') != rr.get('type'):
+        # DTK emits R_PPC_NONE references on some structure displacements.
+        # They perform no relocation; retain every decoded instruction operand.
+        if (any(rel and rel.get('type_name') == 'R_PPC_NONE' for rel in (lr,rr))
+                and all(not rel or rel.get('type_name') == 'R_PPC_NONE' for rel in (lr,rr))
+                and li.get('parts') and li.get('parts') == ri.get('parts')
+                and li.get('formatted') == ri.get('formatted')):
+            rows.add(i)
+            continue
+        if not lr or not rr or lr.get('type_name') != rr.get('type_name'):
             continue
         if [x for x in li.get('parts', []) if 'reloc' not in json.dumps(x)] != [x for x in ri.get('parts', []) if 'reloc' not in json.dumps(x)]:
             continue
@@ -430,7 +438,7 @@ def _bss_base_rows(project, module, obj, left, right, lrows, rrows, function_nam
     for i, (l, r) in enumerate(zip(lrows, rrows)):
         li, ri = l.get('instruction', {}), r.get('instruction', {})
         lr, rr = li.get('relocation'), ri.get('relocation')
-        if not lr or not rr or lr.get('type') != rr.get('type') or int(lr.get('addend') or 0) != int(rr.get('addend') or 0):
+        if not lr or not rr or lr.get('type_name') != rr.get('type_name') or int(lr.get('addend') or 0) != int(rr.get('addend') or 0):
             continue
         if [x for x in li.get('parts', []) if 'reloc' not in json.dumps(x)] != [x for x in ri.get('parts', []) if 'reloc' not in json.dumps(x)]:
             continue
@@ -487,7 +495,7 @@ def _data_pool_rows(project, module, obj, left, right, lrows, rrows, section_nam
     for i, (l, r) in enumerate(zip(lrows, rrows)):
         li, ri = l.get('instruction', {}), r.get('instruction', {})
         lr, rr = li.get('relocation'), ri.get('relocation')
-        if not lr or not rr or lr.get('type') != rr.get('type'):
+        if not lr or not rr or lr.get('type_name') != rr.get('type_name'):
             continue
         if [x for x in li.get('parts', []) if 'reloc' not in json.dumps(x)] != [x for x in ri.get('parts', []) if 'reloc' not in json.dumps(x)]:
             continue
@@ -630,7 +638,7 @@ def _pool_rows(project: Project, module: str, left: dict, right: dict,
             continue
         li, ri = l.get("instruction", {}), r.get("instruction", {})
         lrel, rrel = li.get("relocation"), ri.get("relocation")
-        if not lrel or not rrel or lrel.get("type") != rrel.get("type"):
+        if not lrel or not rrel or lrel.get("type_name") != rrel.get("type_name"):
             continue
         lp = [x for x in li.get("parts", []) if "reloc" not in json.dumps(x)]
         rp = [x for x in ri.get("parts", []) if "reloc" not in json.dumps(x)]
