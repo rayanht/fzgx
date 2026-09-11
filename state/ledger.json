@@ -1,5 +1,5 @@
 {
- "generated": 1789169458,
+ "generated": 1789170837,
  "functions": [
   {
    "symbol": "car_colchg:_prolog",
@@ -66644,8 +66644,8 @@
    "addr": 469496,
    "size": 13196,
    "status": "unmatched",
-   "attempts": 8,
-   "best_percent": 94.71,
+   "attempts": 9,
+   "best_percent": 97.83,
    "claimed_by": null,
    "claimed_at": null,
    "claim_ttl": null,
@@ -129104,7 +129104,7 @@
    "addr": 9824,
    "size": 10284,
    "status": "unmatched",
-   "attempts": 8,
+   "attempts": 9,
    "best_percent": 94.02,
    "claimed_by": null,
    "claimed_at": null,
@@ -463514,6 +463514,44 @@
    "best_body_path": "/Users/rayan/fzgx/.fzgx/attempts/fn_3_1D338.1789169093.c",
    "stale_checks": 5,
    "best_in_attempt": 98.40075
+  },
+  {
+   "id": 17473,
+   "symbol": "fn_8_2660",
+   "agent": "deepseek-largest2-max32-20260911-193401-codex-2",
+   "harness": "codex",
+   "model": "deepseek-flash",
+   "started": 1789169641,
+   "ended": 1789170836,
+   "checks": 24,
+   "final_percent": 94.02,
+   "tokens_in": 5558564,
+   "tokens_out": 255901,
+   "cost_usd": 0.192255,
+   "outcome": "released",
+   "notes": "Remaining 154 rows are two compiler-behavior mismatches that no source shape changes: (1) ~146 rows are a pure r3/r4 temp-allocation swap in every `poolTable[lbl_801A66B4]` read - retail allocates the table base to r3 and the index to r4, while this GC/1.3 per-unit build always allocates the index to r3 and the base to r4 (verified identical instruction order/opcodes); only the inlined identity accessor reproduces retail's `slwi`+`lwzx` addressing mode, and it always yields index-in-r3 (plain subscript, casts, address-of, byte pointer arithmetic, explicit pointer value, two-arg inlined accessor, block/function locals and parameter-type conversions all either fold the displacement or keep the swap); (2) ~8 rows are the int->float builtin's 2^52 constant, which this build materializes from the unit's private literal pool (`lis/addi; lfd f3,0(r3)`) instead of the shared pool base (`lfd f3,0x98(r31)`); referencing the pool struct gives the correct load but MWCC then emits `fsub`+`frsp` instead of the builtin's `fsubs`, and the builtin cannot be pointed at a source symbol.",
+   "best_body_path": "/Users/rayan/fzgx/.fzgx/attempts/fn_8_2660.1789170836.c",
+   "stale_checks": 23,
+   "best_in_attempt": 94.02
+  },
+  {
+   "id": 17474,
+   "symbol": "fn_1_729F8",
+   "agent": "deepseek-largest2-max32-20260911-193401-codex-1",
+   "harness": "codex",
+   "model": "deepseek-flash",
+   "started": 1789169641,
+   "ended": 1789170785,
+   "checks": 21,
+   "final_percent": 97.83,
+   "tokens_in": 8890743,
+   "tokens_out": 236684,
+   "cost_usd": 0.197169,
+   "outcome": "released",
+   "notes": "Exact match still blocked by the compiler's hole not folding local rodata-const accesses: our unit must define the shared rodata word table locally to keep the literal-pool offsets identical (an extern declaration shifts every float displacement, verified), so the compiler emits an extra `addi rX, r30, ...@l` per access in the prologue and all five case-32 colour loads that retail folds; remaining rows are allocator artifacts from the same local-pool anchor (prologue colour words in r9/r0 vs retail r10/r5 and ec/ee in r10/r11 vs r9/r0, the same swap at case 6 `neg r0, r9`/0x1fc/0x1ec and cases 10/12-13, case 12/13's 0x4330 in r5 vs r6 with the alpha store scheduled late, and case 24's missing per-byte `addi r5/r6/r7, r4, 0x150` address rematerialisation).",
+   "best_body_path": "/Users/rayan/fzgx/.fzgx/attempts/fn_1_729F8.1789170785.c",
+   "stale_checks": 6,
+   "best_in_attempt": 97.83
   }
  ],
  "names": [
