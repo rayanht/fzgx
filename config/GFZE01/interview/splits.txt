@@ -98,3 +98,6 @@ rel/interview/interview/fn_17_334C.c:
 
 rel/interview/interview/fn_17_69EC.c:
 	.text       start:0x000069EC end:0x00006B2C align:4
+
+rel/interview/interview/fn_17_38C4.c:
+	.text       start:0x000038C4 end:0x00003A28 align:4

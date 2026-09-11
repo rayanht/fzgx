@@ -521,3 +521,9 @@ rel/sel/sel/fn_10_CFAC.c:
 
 rel/sel/sel/fn_10_3DE0.c:
 	.text       start:0x00003DE0 end:0x00003F54 align:4
+
+rel/sel/sel/fn_10_948C.c:
+	.text       start:0x0000948C end:0x000095A0 align:4
+
+rel/sel/sel/fn_10_21C44.c:
+	.text       start:0x00021C44 end:0x00021DA8 align:4

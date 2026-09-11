@@ -482,6 +482,75 @@ void fn_3_1ACE4(void *data, s32 first_a, s32 second_a, s32 first_b, s32 second_b
 }
 /* fzgx:end fn_3_1ACE4 */
 
+/* fzgx:begin fn_3_1F81C */
+extern const f32 lbl_3_rodata_8F0[28];
+extern const f32 lbl_3_rodata_990[297];
+extern u32 lbl_801A66A0;
+
+typedef struct CustomizeObject CustomizeObject;
+
+typedef struct {
+    u32 flags;
+    u8 pad[0x1c];
+} CustomizeEntry;
+
+struct CustomizeObject {
+    u8 pad0[0x18];
+    u16 count;
+    u8 pad1[0x26];
+    CustomizeEntry entries[1];
+    u8 pad2[0xc];
+    f32 value;
+};
+
+typedef struct {
+    CustomizeObject *object;
+} CustomizeSlot;
+
+typedef struct {
+    u8 pad0[8];
+    CustomizeSlot *slot;
+} CustomizeManager;
+
+typedef struct {
+    u8 pad0[0xc];
+    CustomizeManager *manager;
+} CustomizeRoot;
+
+extern CustomizeRoot lbl_1_bss_38460;
+extern CustomizeObject *lbl_801A6D00;
+
+extern void fn_1_56018(s32);
+extern void lbl_8006D784(void *);
+extern f32 lbl_8006D188(s16);
+extern void fn_1_560F0(s32, void *);
+extern void fn_80072558(void);
+extern void fn_1_55210(CustomizeObject *);
+
+void fn_3_1F81C(void) {
+    s16 i;
+    CustomizeObject *obj;
+    CustomizeEntry *entry;
+    u32 n;
+
+    i = 0;
+    obj = lbl_1_bss_38460.manager->slot->object;
+    entry = obj->entries;
+    for (; i < obj->count; i++, entry++) {
+        if (entry->flags & 0x20000) {
+            fn_1_56018(1);
+            lbl_8006D784(&lbl_801A6D00->pad2[0]);
+            n = lbl_801A66A0;
+            lbl_801A6D00->value = lbl_3_rodata_8F0[0] -
+                lbl_8006D188((s16)((s32)(lbl_3_rodata_990[0] * (f32)(n % 180)) + 0x4000));
+            fn_1_560F0(0, &lbl_801A6D00->pad2[0]);
+        }
+    }
+    fn_80072558();
+    fn_1_55210(obj);
+}
+/* fzgx:end fn_3_1F81C */
+
 /* fzgx:begin fn_3_2406C */
 void fn_3_2406C(void) {
     fn_80074188(lbl_3_bss_A2460[0], lbl_3_bss_A2460[1],

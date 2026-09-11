@@ -711,6 +711,54 @@ int fn_10_91E8(void) {
 }
 /* fzgx:end fn_10_91E8 */
 
+/* fzgx:begin fn_10_948C */
+typedef struct {
+    u32 flags;
+    u8 pad[0x81bc];
+} SelEntry;
+
+extern u32 lbl_1_bss_8B3A0[];
+extern SelEntry lbl_10_bss_3C0[];
+extern s16 lbl_10_data_456;
+
+extern void fn_1_14DB48(SelEntry *entry, void *context, u32 mask);
+extern u8 *fn_1_36AD0(void);
+
+void fn_10_948C(void *context, void *arg) {
+    SelEntry *entry;
+    s16 i;
+    u32 one;
+
+    if (*(u32 *)((u8 *)lbl_1_bss_8B3A0 + 0x94) & ((u32)1 << 31)) {
+        return;
+    }
+
+    i = 0;
+    one = 1;
+    while (i < 9U) {
+        entry = &lbl_10_bss_3C0[i];
+        if ((entry->flags & ((u32)1 << 31)) &&
+            (entry->flags & ((u32)1 << 30))) {
+            fn_1_14DB48(entry, (u8 *)context + i * 0xa20, one << lbl_10_data_456);
+        }
+        i++;
+    }
+
+    if (arg != 0) {
+        i = 0;
+        one = 1;
+        while (i < 4) {
+            entry = &((SelEntry *)fn_1_36AD0())[i];
+            if ((entry->flags & ((u32)1 << 31)) &&
+                (entry->flags & ((u32)1 << 30))) {
+                fn_1_14DB48(entry, (u8 *)arg + i * 0xa20, one << lbl_10_data_456);
+            }
+            i++;
+        }
+    }
+}
+/* fzgx:end fn_10_948C */
+
 /* fzgx:begin fn_10_95A0 */
 extern u32 lbl_10_data_564[];
 extern void fn_1_12A2B8(s32 value);
@@ -2174,6 +2222,62 @@ u32 fn_10_21C20(s16 row, s16 column) {
     return ((u32 (*)[6])lbl_10_data_1E80)[row][column];
 }
 /* fzgx:end fn_10_21C20 */
+
+/* fzgx:begin fn_10_21C44 */
+extern f32 lbl_10_rodata_158[];
+extern u32 lbl_1_rodata_26F8[];
+extern u8 *fn_1_12F118(void);
+extern void fn_10_12E34(void);
+extern void fn_1_4F734(void *arg0);
+
+typedef struct {
+    u32 w[41];
+} WordTable;
+
+typedef struct {
+    u32 w[22];
+} PacketInit;
+
+typedef struct {
+    u32 field0;
+    u8 pad_04[0x81a0 - 4];
+    u8 field81A0;
+    u8 pad_81A1[0x1f];
+} BigRecord;
+
+void fn_10_21C44(s32 value) {
+    u8 data[0x58];
+    u32 words[41];
+    f32 *constants;
+    BigRecord *table;
+
+    constants = lbl_10_rodata_158;
+    *(WordTable *)words = *(WordTable *)((u8 *)constants + 0x129c);
+    *(PacketInit *)data = *(PacketInit *)lbl_1_rodata_26F8;
+
+    if ((u16)(value - 0x2d) <= 2 || (s16)value == 0x30) {
+        table = (BigRecord *)fn_1_12F118();
+        if (table[(s16)value - 0x29].field0 & 0x40000000) {
+            *(u32 *)data = 0x900;
+        } else {
+            *(u32 *)data = words[table[(s16)value - 0x29].field81A0];
+        }
+    } else if ((s16)value >= 0x29) {
+        *(u32 *)data = 0x900;
+    } else {
+        *(u32 *)data = words[(s16)value];
+    }
+
+    *(f32 *)(data + 4) = constants[83];
+    *(f32 *)(data + 8) = constants[1233];
+    *(f32 *)(data + 0xc) = constants[163];
+    *(u32 *)(data + 0x38) = *(u32 *)((u8 *)constants + 0x1340);
+    *(u32 *)(data + 0x30) = 0x4000000;
+    *(u32 *)(data + 0x50) = (u32)fn_10_12E34;
+    *(f32 *)(data + 0x54) = constants[17];
+    fn_1_4F734(data);
+}
+/* fzgx:end fn_10_21C44 */
 
 /* fzgx:begin fn_10_21DA8 */
 extern f32 lbl_10_rodata_158[];

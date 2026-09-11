@@ -164,6 +164,93 @@ void fn_17_334C(void) {
 }
 /* fzgx:end fn_17_334C */
 
+/* fzgx:begin fn_17_38C4 */
+typedef struct {
+    u8 initialized;
+    u8 pad_01[0x13];
+    f32 value_14;
+    f32 value_18;
+    s16 angle_1c;
+    s16 angle_1e;
+    s16 angle_20;
+    s16 angle_22;
+    s16 angle_24;
+    s16 angle_26;
+} InterviewState;
+
+extern InterviewState lbl_17_bss_170;
+extern f32 lbl_17_rodata_0[];
+extern u8 lbl_1_data_2A7E0[];
+
+extern void fn_1_56000(int, int, int);
+extern void fn_1_A71CC(void);
+extern f32 fn_1_A6FE8(void);
+extern void fn_1_A7024(f32, f32, f32, f32);
+extern void lbl_8006D758(void);
+extern void lbl_8006E0A4(void *);
+extern void lbl_8006E14C(f32);
+extern void fn_1_55FC4(f32);
+extern void mathutil_mtxA_rotate_y(s16);
+extern void mathutil_mtxA_rotate_z(s16);
+extern void fn_80072558(void);
+extern void fn_1_55FF0(f32);
+extern void fn_1_556B8(void *);
+extern void fn_1_A722C(void);
+
+void fn_17_38C4(void) {
+    f32 *rodata = lbl_17_rodata_0;
+    void *object;
+    s16 i;
+    u8 *base;
+
+    if (!lbl_17_bss_170.initialized)
+        return;
+
+    base = *(u8 **)(lbl_1_data_2A7E0 + 0x3c);
+
+    fn_1_56000(1, 7, 1);
+    fn_1_A71CC();
+    fn_1_A7024(rodata[0x30], fn_1_A6FE8(), rodata[0x64], rodata[0x65]);
+
+    i = 0;
+    while (i < 5) {
+        object = *(void **)(base + 0x114 + i * 4);
+        if (object != 0) {
+            lbl_8006D758();
+            lbl_8006E0A4((u8 *)&lbl_17_bss_170 + 8);
+            lbl_8006E14C(lbl_17_bss_170.value_14);
+            fn_1_55FC4(lbl_17_bss_170.value_14);
+
+            switch (i) {
+            case 2:
+                mathutil_mtxA_rotate_y(lbl_17_bss_170.angle_1e);
+                break;
+            case 3:
+                mathutil_mtxA_rotate_y(lbl_17_bss_170.angle_20);
+                mathutil_mtxA_rotate_z(lbl_17_bss_170.angle_22);
+                break;
+            case 4:
+                mathutil_mtxA_rotate_y(lbl_17_bss_170.angle_24);
+                mathutil_mtxA_rotate_z(lbl_17_bss_170.angle_26);
+                break;
+            case 0:
+            case 1:
+                mathutil_mtxA_rotate_y(lbl_17_bss_170.angle_1c);
+                break;
+            }
+
+            fn_80072558();
+            fn_1_55FF0(lbl_17_bss_170.value_18);
+            fn_1_556B8(object);
+        }
+        i++;
+    }
+
+    fn_1_A722C();
+    fn_1_56000(1, 3, 1);
+}
+/* fzgx:end fn_17_38C4 */
+
 /* fzgx:begin fn_17_416C */
 extern u32 lbl_17_bss_34[8];
 extern u32 lbl_17_bss_D8[8];

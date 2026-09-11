@@ -344,6 +344,82 @@ void fn_1_A2E24(u32 arg0, u32 arg1, s32 arg2) {
 }
 /* fzgx:end fn_1_A2E24 */
 
+/* fzgx:begin fn_1_A2E5C noprologue */
+#include "types.h"
+
+typedef struct {
+    u8 unk_0[0x740];
+    u8 unk_740;
+    u8 unk_741[3];
+    u32 unk_744;
+    u8 unk_748[4];
+    u8 unk_74C[0xE0];
+    u8 unk_82C;
+} SoundState;
+
+typedef struct {
+    u8 unk_0[0x3A0];
+    void *unk_3A0;
+} SoundObject;
+
+typedef struct {
+    u8 unk_0[0x6C0];
+    s16 unk_6C0;
+} SoundData;
+
+extern SoundState lbl_1_bss_6EA98;
+
+extern s32 fn_1_3F864(void);
+extern s8 fn_1_86690(s8 arg0);
+extern SoundObject *fn_1_86854(s8 arg0);
+extern void fn_1_14E9E4(s16 arg0, void *arg1);
+extern void fn_80067344(u32 arg0, u32 arg1, u32 arg2, u32 arg3);
+extern void fn_80067898(u32 arg0);
+
+extern u32 lbl_1_rodata_451C[5];
+extern u32 lbl_1_rodata_4478[41];
+
+void fn_1_A2E5C(s32 arg0, s32 arg1) {
+    SoundState *state = &lbl_1_bss_6EA98;
+    s16 local[8];
+    u8 *entry;
+    s8 i;
+
+    if (fn_1_3F864() != 0) {
+        entry = &state->unk_74C[0];
+        i = 0;
+        while (i < (s8)state->unk_82C) {
+            if (arg0 == entry[1] && entry[2] != 0) {
+                fn_80067344(1, 0x10, 0xB0270000, entry[2]);
+                if (arg1 != 0) {
+                    if (state->unk_740 == 0 && state->unk_744 <= 0x2D) {
+                        fn_80067898(0xA9090B00);
+                    }
+                } else if (fn_1_86690(arg0) > 0x28) {
+                    SoundData *data;
+                    u32 snd;
+                    s16 half;
+                    data = (SoundData *)fn_1_86854(fn_1_86690(arg0))->unk_3A0;
+                    fn_1_14E9E4(data->unk_6C0, local);
+                    half = (s16)(local[4] >> 1);
+                    snd = lbl_1_rodata_451C[half];
+                    if (state->unk_740 == 0 && state->unk_744 <= 0x2D) {
+                        fn_80067898(snd);
+                    }
+                } else {
+                    u32 snd = lbl_1_rodata_4478[fn_1_86690(arg0)];
+                    if (state->unk_740 == 0 && state->unk_744 <= 0x2D) {
+                        fn_80067898(snd);
+                    }
+                }
+            }
+            entry += 0x14;
+            i++;
+        }
+    }
+}
+/* fzgx:end fn_1_A2E5C */
+
 /* fzgx:begin fn_1_A4BC8 noprologue */
 #include "types.h"
 

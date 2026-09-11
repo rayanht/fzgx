@@ -1797,6 +1797,20 @@
   },
   {
     "module": "customize",
+    "source": "rel/customize/toolkit/fn_3_1F81C.c",
+    "symbols": [
+      "fn_3_1F81C"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/customize/toolkit.c",
+    "pool": {
+      "@13": "lbl_3_rodata_960"
+    }
+  },
+  {
+    "module": "customize",
     "source": "rel/customize/toolkit/fn_3_2406C.c",
     "symbols": [
       "fn_3_2406C"
@@ -1921,6 +1935,17 @@
     "source": "rel/interview/interview/fn_17_334C.c",
     "symbols": [
       "fn_17_334C"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/interview/interview.c"
+  },
+  {
+    "module": "interview",
+    "source": "rel/interview/interview/fn_17_38C4.c",
+    "symbols": [
+      "fn_17_38C4"
     ],
     "status": "matching",
     "mw_version": null,
@@ -12592,6 +12617,16 @@
     ],
     "status": "matching",
     "mw_version": null,
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_8001317C.c",
+    "symbols": [
+      "fn_8001317C"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
     "extra_cflags": []
   },
   {
@@ -43040,6 +43075,17 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/sound/fn_1_A2E5C.c",
+    "symbols": [
+      "fn_1_A2E5C"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/sound.c"
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/sound/fn_1_A4BC8.c",
     "symbols": [
       "fn_1_A4BC8"
@@ -53435,6 +53481,17 @@
   },
   {
     "module": "sel",
+    "source": "rel/sel/sel/fn_10_21C44.c",
+    "symbols": [
+      "fn_10_21C44"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/sel/sel.c"
+  },
+  {
+    "module": "sel",
     "source": "rel/sel/sel/fn_10_21DA8.c",
     "symbols": [
       "fn_10_21DA8"
@@ -53716,6 +53773,17 @@
     ],
     "status": "matching",
     "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/sel/sel.c"
+  },
+  {
+    "module": "sel",
+    "source": "rel/sel/sel/fn_10_948C.c",
+    "symbols": [
+      "fn_10_948C"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
     "extra_cflags": [],
     "tu": "rel/sel/sel.c"
   },
