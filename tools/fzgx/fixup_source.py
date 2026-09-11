@@ -626,6 +626,158 @@ def _pair_proto(text: str, callee: str, idx: int) -> Optional[str]:
     return text[:m.start(2)] + ", ".join(ps) + text[m.end(2):]
 
 
+def returned_regions(body, name):
+    """Recover a context-free inlined getter from both arms of a value join."""
+    from .sdkimport import masked
+    code=masked(body);span=_function_body_span(code,name)
+    if not span:return []
+    _,variables=declared_types(code,span[0]);locals_=set()
+    for line in code[span[1]:span[2]].splitlines():
+        declaration=DECL_RE.match(line)
+        if declaration and declaration[1] not in ('return','break','goto'):locals_.add(declaration[2])
+    signature=code[span[0]:span[1]]
+    for part in signature[signature.index('(')+1:signature.rfind(')')].split(','):
+        match=re.search(r'\b(\w+)\s*$',part)
+        if match:locals_.add(match[1])
+    closing={};stack=[]
+    for token in re.finditer(r'[{}]',code[span[1]-1:span[2]+1]):
+        at=span[1]-1+token.start()
+        if token[0]=='{':stack.append(at)
+        elif stack:closing[stack.pop()]=at
+    out=[]
+    for callee,start,end,args in call_sites(code):
+        if callee!='if' or not span[1]<=start<end<span[2]:continue
+        left=re.match(r'\s*\{',code[end:])
+        if not left:continue
+        a=end+left.end()-1;b=closing.get(a)
+        if b is None:continue
+        right=re.match(r'\s*else\s*\{',code[b+1:])
+        if not right:continue
+        c=b+right.end();d=closing.get(c)
+        if d is None:continue
+        assignments=[]
+        for lo,hi in ((a+1,b),(c+1,d)):
+            matches=list(re.finditer(r'\b(\w+)\s*=\s*([^;{}]+);\s*$',code[lo:hi]))
+            if not matches:break
+            match=matches[-1];assignments.append((lo+match.start(),lo+match.end(),match[1],body[lo+match.start(2):lo+match.end(2)]))
+        if len(assignments)!=2 or assignments[0][2]!=assignments[1][2]:continue
+        var=assignments[0][2];ty=variables.get(var,'')
+        if var not in locals_ or not ty or '*' in ty or any(q in ty for q in ('volatile','const')):continue
+        region=body[start:d+1]
+        for lo,hi,_,value in reversed(assignments):region=region[:lo-start]+'return '+value+';\n'+region[hi-start:]
+        identifiers=[];previous=None
+        for token in TOKEN.finditer(masked(region)):
+            if token[0] in locals_ and previous not in ('.','->'):identifiers.append(token[0])
+            previous=token[0]
+        if identifiers or re.search(r'\b(?:goto|continue|return)\b',code[start:d+1]):continue
+        helper=name+'_value_region'
+        while re.search(r'\b'+helper+r'\b',code):helper+='_'
+        first=body[start:b+1];last=body[c+1:d]
+        lo,hi,_,value=assignments[0];first=first[:lo-start]+'return '+value+';\n'+first[hi-start:]
+        lo,hi,_,value=assignments[1];last=last[:lo-c-1]+'return '+value+';\n'+last[hi-c-1:]
+        for label,contents in (('',region),(' early return',first+'\n'+last)):
+            definition='static inline '+ty+' '+helper+'(void) {\n'+contents+'\n}\n'
+            text=body[:start]+var+' = '+helper+'();'+body[d+1:]
+            pos=body.rfind('\n',0,span[0])+1
+            text=text[:pos]+definition+text[pos:]
+            out.append((f'lifetime returned region {var} at {start}'+label,text))
+            tail=code[d+1:span[2]]
+            consumer=re.match(r'\s*if\s*\(\s*('+re.escape(var)+r')\s*(?:==|!=|<=|>=|<|>)\s*\w+\s*\)',tail)
+            if consumer and len(re.findall(r'\b'+re.escape(var)+r'\b',tail))==1:
+                x,y=d+1+consumer.start(1),d+1+consumer.end(1)
+                text=body[:start]+body[d+1:x]+helper+'()'+body[y:]
+                text=text[:pos]+definition+text[pos:]
+                out.append((f'lifetime returned region {var} at {start}'+label+' into condition',text))
+    return out
+
+
+def promoted_locals(body, name):
+    """Keep narrow conversions explicit while using a full-width local home."""
+    from .sdkimport import masked
+    code=masked(body);span=_function_body_span(code,name)
+    if not span:
+        return []
+    stack=[];scopes=[]
+    for token in re.finditer(r'[{}]',code[span[1]-1:span[2]+1]):
+        at=span[1]-1+token.start()
+        if token[0]=='{':stack.append(at)
+        elif stack:scopes.append((stack.pop(),at))
+    out=[];groups={}
+    for decl in re.finditer(r'(?m)^[ \t]*(s8|u8|s16|u16|short|unsigned short|signed char|unsigned char)\s+(\w+)\s*;',code[span[1]:span[2]]):
+        a,b=span[1]+decl.start(),span[1]+decl.end();ty,var=decl[1],decl[2]
+        enclosing=[(lo,hi) for lo,hi in scopes if lo<a<b<=hi]
+        if not enclosing:continue
+        end=min(enclosing,key=lambda s:s[1]-s[0])[1];region=code[b:end]
+        ident=r'(?<![.>\w])'+re.escape(var)+r'\b'
+        if re.search(r'&\s*'+ident,region) or re.search(ident+r'\s*(?:\+\+|--|[+*/&|^%-]=)|(?:\+\+|--)\s*'+ident,region):continue
+        if re.search(TYPE+r'\s+'+re.escape(var)+r'\s*[;=]',region):continue
+        assignments=list(re.finditer(ident+r'\s*=(?!=)\s*([^;{}]+);',region))
+        if not assignments:continue
+        new='s32' if ty in ('s8','s16','short','signed char') else 'u32'
+        changes=[(span[1]+decl.start(1),span[1]+decl.end(1),new)]
+        changes.extend((b+m.start(1),b+m.end(1),'('+ty+')('+body[b+m.start(1):b+m.end(1)]+')') for m in assignments)
+        text=body
+        for x,y,value in sorted(changes,reverse=True):text=text[:x]+value+text[y:]
+        out.append((f'lifetime promoted {var} {ty}->{new} at {a}',text))
+        groups.setdefault((var,ty,new),[]).extend(changes)
+    for (var,ty,new),changes in groups.items():
+        if sum(value==new for _,_,value in changes)<2:continue
+        text=body
+        for a,b,value in sorted(changes,reverse=True):text=text[:a]+value+text[b:]
+        out.insert(0,(f'lifetime promoted {var} {ty}->{new} at every site',text))
+    return out
+
+
+def wide_member_values(body, name):
+    """Recover 64-bit values split across adjacent, explicitly typed members."""
+    from .sdkimport import masked
+    code=masked(body);span=_function_body_span(code,name)
+    if not span:
+        return []
+    fields,variables=declared_types(code,span[0]);layouts=record_layouts(code,span[0],variables)
+    member=r'\w+(?:(?:->|\.)\w+)+'
+    def pair(high,low):
+        h=re.fullmatch(r'(.+)(->|\.)(\w+)',high);l=re.fullmatch(r'(.+)(->|\.)(\w+)',low)
+        if not h or not l or h.groups()[:2]!=l.groups()[:2]:
+            return None
+        owner=member_type(h[1],fields,variables)
+        tag=re.sub(r'\b(?:extern|static|struct|const|volatile)\b|\*','',owner).strip()
+        layout=layouts.get(tag,{})
+        a,b=layout.get(h[3]),layout.get(l[3])
+        if not a or not b or b[0]!=a[0]+4 or a[2] or b[2] or a[1] not in ('u32','unsigned int') or b[1] not in ('u32','unsigned int'):
+            return None
+        if 'volatile' in owner or any('volatile' in member_type(x,fields,variables) for x in (high,low)):
+            return None
+        return '(*(const u64 *)&'+high+')'
+    edits=[]
+    shifted=re.compile(r'\(\s*('+member+r')\s*<<\s*(\d+)\s*\)\s*\|\s*\(\s*('+member+r')\s*>>\s*(\d+)\s*\)')
+    for m in shifted.finditer(code,span[1],span[2]):
+        value=pair(m[1],m[3]);left,right=int(m[2]),int(m[4])
+        if value and 0<left<32 and left+right==32:
+            edits.append((m.start(),m.end(),f'((u32)({value} >> {right}))','shift'))
+    compared=re.compile(r'\(\s*('+member+r')\s*\^\s*('+member+r')\s*\)\s*\|\s*\(\s*('+member+r')\s*\^\s*('+member+r')\s*\)')
+    conditions=[args[0] for callee,start,end,args in call_sites(code) if callee in ('if','while') and len(args)==1 and span[1]<=start<end<=span[2]]
+    for m in compared.finditer(code,span[1],span[2]):
+        left,right=pair(m[1],m[3]),pair(m[2],m[4])
+        if not left or not right:
+            continue
+        for a,b in conditions:
+            if not a<=m.start()<m.end()<=b or not re.fullmatch(r'\s*\(*\s*',code[a:m.start()]):
+                continue
+            suffix=re.fullmatch(r'\s*\)*\s*(==|!=)\s*0\s*\)*\s*',code[m.end():b])
+            if suffix:
+                edits.append((a,b,f'{left} {suffix[1]} {right}','comparison'))
+    out=[]
+    for a,b,value,kind in edits:
+        out.append((f'recover wide member {kind} at {a}',body[:a]+value+body[b:]))
+    if len(edits)>1:
+        text=body
+        for a,b,value,_ in sorted(edits,reverse=True):
+            text=text[:a]+value+text[b:]
+        out.insert(0,('recover wide members at every site',text))
+    return out
+
+
 def _u64_family(body: str, name: str, span, inner: str) -> List[Tuple[str, str, str]]:
     out: List[Tuple[str, str, str]] = []
     protos = set(re.findall(r"^extern [\w ]+?\*? ([A-Za-z_]\w*)\([^)]*\);$", body, re.M))
@@ -1411,12 +1563,15 @@ def address_expressions(body, name):
     identities = [m[2] for m in re.finditer(r'\bstatic\s+inline\s+('+TYPE+r')\s*(?:(?<=\*)|\s)(\w+)\(\s*('+TYPE+r')\s*(?:(?<=\*)|\s)(\w+)\s*\)\s*\{\s*return\s+\4\s*;\s*\}',code)
                   if '*' in m[1] and m[1].strip()==m[3].strip()]
     wrapper = r'(?:\b(?:'+'|'.join(map(re.escape,identities))+r')\(\s*)?' if identities else ''
-    pattern = re.compile(wrapper+r'\b(\w+(?:(?:->|\.)\w+)+)\s*'+(r'\)?' if identities else '')+r'\[([^\[\]\n;]+)\]')
+    pattern = re.compile(wrapper+r'\b(\w+(?:(?:->|\.)\w+)*)\s*'+(r'\)?' if identities else '')+r'\[([^\[\]\n;]+)\]')
     sites = [m for m in pattern.finditer(code)
              if (span[1] <= m.start() < span[2] or body[body.rfind('\n', 0, m.start())+1:m.start()].rstrip().endswith('=')
                  or '\\' in body[m.end():body.find('\n', m.end())])
              and (')' not in code[m.end(1):m.start(2)] or
-                  any(re.match(re.escape(helper)+r'\s*\(',m[0]) for helper in identities))]
+                  any(re.match(re.escape(helper)+r'\s*\(',m[0]) for helper in identities))
+             and not re.fullmatch(r'\s*(?!return\b)'+TYPE+r'\s+',code[code.rfind('\n',0,m.start())+1:m.start()])
+             and not re.match(r'\s*(?:=(?!=)|[+*/&|^-]=|\+\+|--)',code[m.end():])
+             and not re.search(r'&\s*$',code[max(span[1],m.start()-3):m.start()])]
     out = []
     # Inlining preserves the array parameter's address web before lowering.
     # Resolve macro parameters from their actual member arguments, so a pointer
@@ -1433,6 +1588,7 @@ def address_expressions(body, name):
         actual = aliases.get(root,root)+site[1][len(root):]
         resolved = member_type(actual,fields,variables)
         resolved = re.sub(r'\s*\*\s*$', '', resolved) if resolved.rstrip().endswith('*') else ''
+        resolved = re.sub(r'\b(?:extern|static|register)\s+','',resolved)
         types = {resolved} if resolved else members.get(member,set())
         if not types:
             definitions = list(re.finditer(r'(?m)^#define\s+(\w+)\(([^)]*)\)',code[:site.start()]))
@@ -1580,6 +1736,8 @@ def declared_types(code, end):
             instances[record['alias']]='struct '+record['key']
     variables = {}
     for decl in re.finditer(r'('+TYPE+r')\s*(?:(?<=\*)|\s)(\w+)\s*(?=[,;=)\[])', code):
+        if re.search(r'\b(?:return|else|case|default|break|continue|goto|if|for|switch|while|do|sizeof)\b',decl[1]):
+            continue
         variables[decl[2]] = decl[1]+(' *' if code[decl.end():].startswith('[') else '')
     variables.update(instances)
     return fields, variables

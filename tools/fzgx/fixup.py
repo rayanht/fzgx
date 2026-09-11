@@ -109,6 +109,13 @@ class Engine:
         self.cache_path.write_text(json.dumps(self.cache))
         for row in rows:
             row.update({k:v for k,v in unique[row['id']].items() if k in ('object','score','bit_errors','matched','binding_score')})
+            row.pop('frame_layout_only',None)
+            target=self.targets[row['symbol']][1];words=self.words.get(row['id'])
+            if words and len(words)==len(target) and row['score']<100:
+                changed=[(t,o) for t,o in zip(target,words) if t!=o]
+                if (changed and any(t>>26==37 and (t>>21)&31==1 for t,_ in changed) and
+                        all((t^o)&0xffff0000==0 and (t>>16)&31==1 and t>>26 in (14,32,36,37,46,47,50,54) for t,o in changed)):
+                    row['frame_layout_only']=evidence.frame_layout_only(self.check(row))
             # An exact function diff ignores other emitted functions. REL links
             # retain static helper copies, shifting text and dependent modules.
             sym = self.project.resolve(row['symbol'])
@@ -163,8 +170,9 @@ class Engine:
         check = self.check(row)
         if check.ok:
             families.append(evidence.candidates(self.project, row['symbol'], body, check))
-            targeted = [[c for c in families[0] if c[0].startswith(('retail scalar flag masks', 'retail format argument', 'retail call argument', 'retail call parameter', 'retail argument order:', 'retail float branch', 'bind recovered shared-pool', 'retain recovered shared-pool', 'recover native shared-pool', 'lifetime reload', 'lifetime ordered'))],
-                        source.address_expressions(body, name), source.pointer_lifetimes(body, name), source.through_local(body, name)]
+            targeted = [[c for c in families[0] if c[0].startswith(('retail scalar flag masks', 'retail format argument', 'retail call argument', 'retail call parameter', 'retail argument order:', 'retail float branch', 'retail zero comparison', 'bind recovered shared-pool', 'retain recovered shared-pool', 'recover native shared-pool', 'lifetime reload', 'lifetime ordered'))],
+                        source.address_expressions(body, name), source.pointer_lifetimes(body, name), source.through_local(body, name),
+                        source.wide_member_values(body,name),source.promoted_locals(body,name),source.returned_regions(body,name)]
             operand_types = {'and':('&',('u32','s32')), 'or':('|',('u32','s32')),
                              'xor':('^',('u32','s32')), 'mullw':('*',('u32','s32')),
                              'fadd':('+',('f64',)), 'fadds':('+',('f32',)),
@@ -285,7 +293,7 @@ class Engine:
                 if row.get('pool_layout_fixed') and (row['symbol'] not in pool_bridges or
                         (row['pool_coverage'],row['score']) > (pool_bridges[row['symbol']]['pool_coverage'],pool_bridges[row['symbol']]['score'])):
                     pool_bridges[row['symbol']] = row
-            for row in sorted(history,key=lambda r:(not (r.get('value_flow_fixed',False) or r.get('argument_flow_fixed',False)),
+            for row in sorted(history,key=lambda r:(not (r.get('value_flow_fixed',False) or r.get('argument_flow_fixed',False) or r.get('frame_layout_only',False)),
                     pool_bridges.get(r['symbol'],{}).get('id') != r['id'],
                     -r['score'],-r.get('binding_score',0),r['bit_errors'],r['id'])):
                 symbol=row['symbol']; words=self.words.get(row['id'])

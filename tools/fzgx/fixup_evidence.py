@@ -878,6 +878,57 @@ def call_arguments(p, symbol, body, check):
     return out
 
 
+def frame_layout_only(check):
+    """A uniform ABI frame-size change with identical non-frame instructions."""
+    rows=[(stuck._fmt(t),stuck._fmt(o)) for t,o in zip(*check._rows)]
+    frame=None;allowed=set()
+    for i,(target,ours) in enumerate(rows[:16]):
+        t=re.fullmatch(r'stwu r1, -(0x[\da-f]+)\(r1\)',target)
+        o=re.fullmatch(r'stwu r1, -(0x[\da-f]+)\(r1\)',ours)
+        if t and o and t[1]!=o[1]:frame=(int(t[1],0),int(o[1],0));frame_at=i;allowed.add(i);break
+    if not frame:return False
+    saved={}
+    for i,(target,ours) in enumerate(rows):
+        t=re.fullmatch(r'(stw|lwz|stfd|lfd|stmw|lmw) ([rf]\d+), (0x[\da-f]+)\(r1\)',target)
+        o=re.fullmatch(r'(stw|lwz|stfd|lfd|stmw|lmw) ([rf]\d+), (0x[\da-f]+)\(r1\)',ours)
+        if t and o and t.groups()[:2]==o.groups()[:2]:
+            target_offset=int(t[3],0)+(frame[0] if i<frame_at else 0)
+            our_offset=int(o[3],0)+(frame[1] if i<frame_at else 0)
+            if our_offset-target_offset!=frame[1]-frame[0]:continue
+            register=int(t[2][1:])
+            if not (t[2]=='r0' or register>=14):continue
+            key=(t[2],target_offset,our_offset)
+            if i<16 and t[1].startswith('st'):saved[key]=i
+            elif i>=len(rows)-16 and t[1].startswith('l') and key in saved:allowed.update((saved[key],i))
+        if i>=len(rows)-16 and target==f'addi r1, r1, 0x{frame[0]:x}' and ours==f'addi r1, r1, 0x{frame[1]:x}':allowed.add(i)
+    return all(t==o or i in allowed or i in getattr(check,'_accepted_rows',()) for i,(t,o) in enumerate(rows))
+
+
+def zero_conditions(body, name, diffs):
+    """Match signedness at a zero test without changing the value's home type."""
+    from .fixup_source import call_sites,declared_types,member_type
+    from .sdkimport import masked
+    types=set()
+    for target,ours in diffs:
+        t=re.fullmatch(r'(cmpwi|cmplwi) r\d+, 0x0',target)
+        o=re.fullmatch(r'(cmpwi|cmplwi) r\d+, 0x0',ours)
+        if t and o and t[1]!=o[1]:types.add('u32' if t[1]=='cmplwi' else 's32')
+    code=masked(body);span=_function_span(code,name)
+    if not types or not span:return []
+    fields,variables=declared_types(code,span[0]);out=[]
+    for callee,start,end,args in call_sites(code):
+        if callee not in ('if','while') or len(args)!=1 or not span[0]<=start<end<=span[1]:continue
+        a,b=args[0];value=code[a:b].strip()
+        if not re.fullmatch(r'\w+(?:(?:->|\.)\w+)*',value):continue
+        ty=re.sub(r'\b(?:extern|static|register|const|volatile)\b','',member_type(value,fields,variables)).strip()
+        if ty not in INT_TYPES:continue
+        for target in sorted(types):
+            out.append((f'retail zero comparison {value} as {target} at {a}',body[:a]+'('+target+')('+body[a:b]+')'+body[b:]))
+            literal='0U' if target=='u32' else '0'
+            out.append((f'retail zero comparison {value} != {literal} at {a}',body[:a]+body[a:b]+' != '+literal+body[b:]))
+    return out
+
+
 def float_conditions(body, name, diffs):
     """Recover which clamp arm receives unordered floating comparisons."""
     if not any(t.startswith('cror ') or o.startswith('cror ') for t,o in diffs):
@@ -1496,6 +1547,7 @@ def candidates(p: Project, symbol: str, body: str, base: oracle.CheckResult):
     candidates += format_arguments(p,symbol,body)
     candidates += call_arguments(p,symbol,body,base)
     candidates += float_conditions(body,sym.name,diffs)
+    candidates += zero_conditions(body,sym.name,diffs)
     missing_globals = []
     if any(not ours and re.fullmatch(r'(?:lwz|lhz|lha|lbz|lfs|lfd) [rf]\d+, 0x0\(r\d+\)',target) for target,ours in diffs):
         from .evidence import memory_loads, object_jump_tables
