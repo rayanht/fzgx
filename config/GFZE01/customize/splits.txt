@@ -425,3 +425,6 @@ rel/customize/customize/fn_3_ACF4.c:
 
 rel/customize/toolkit/fn_3_1F81C.c:
 	.text       start:0x0001F81C end:0x0001F958 align:4
+
+rel/customize/_prolog/fn_3_5E88.c:
+	.text       start:0x00005E88 end:0x00005F28 align:4

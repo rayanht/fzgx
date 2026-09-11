@@ -5063,3 +5063,6 @@ dol/__fstLoad.c:
 
 dol/SIGetType.c:
 	.text       start:0x80012D0C end:0x80012ED0 align:4
+
+dol/fn_8004BDD8.c:
+	.text       start:0x8004BDD8 end:0x8004BE90 align:4

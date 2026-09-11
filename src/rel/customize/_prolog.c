@@ -698,6 +698,39 @@ void fn_3_5CE4(u32 arg0, u32 arg1) {
 }
 /* fzgx:end fn_3_5CE4 */
 
+/* fzgx:begin fn_3_5E88 */
+typedef struct {
+    u8 pad[0x324];
+    s32 value;
+    u8 tail[0x118];
+} CustomizeEntry;
+
+extern CustomizeEntry lbl_3_bss_20860[4];
+extern u8 lbl_3_bss_21960[10368];
+extern u32 lbl_1_bss_6D82C;
+
+extern void fn_1_80F1C(s32, CustomizeEntry *);
+extern void fn_1_14DBCC(void *);
+extern void fn_80071718(u32);
+
+void fn_3_5E88(s16 arg0) {
+    s32 index;
+
+    index = arg0;
+    if (lbl_3_bss_20860[index].value != -1) {
+        fn_1_80F1C((s16)lbl_3_bss_20860[index].value, &lbl_3_bss_20860[index]);
+        lbl_3_bss_20860[index].value = -1;
+    }
+
+    fn_1_14DBCC((u8 *)lbl_3_bss_21960 + index * 0xa20);
+
+    if (lbl_1_bss_6D82C != 0) {
+        fn_80071718(lbl_1_bss_6D82C);
+        lbl_1_bss_6D82C = 0;
+    }
+}
+/* fzgx:end fn_3_5E88 */
+
 /* fzgx:begin fn_3_60C8 */
 struct fn_3_60C8_lbl_3_data_11D4 {
     u32 unk_0;

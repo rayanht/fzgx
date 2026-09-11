@@ -485,6 +485,17 @@
   },
   {
     "module": "customize",
+    "source": "rel/customize/_prolog/fn_3_5E88.c",
+    "symbols": [
+      "fn_3_5E88"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "tu": "rel/customize/_prolog.c"
+  },
+  {
+    "module": "customize",
     "source": "rel/customize/_prolog/fn_3_60C8.c",
     "symbols": [
       "fn_3_60C8"
@@ -17361,6 +17372,16 @@
     "source": "dol/fn_8004BD9C.c",
     "symbols": [
       "fn_8004BD9C"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_8004BDD8.c",
+    "symbols": [
+      "fn_8004BDD8"
     ],
     "status": "matching",
     "mw_version": "GC/1.3.2",
@@ -40227,6 +40248,17 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/ranking/fn_1_1568C4.c",
+    "symbols": [
+      "fn_1_1568C4"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "tu": "rel/main_rel/ranking.c"
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/ranking/fn_1_1569A0.c",
     "symbols": [
       "fn_1_1569A0"
@@ -41966,6 +41998,20 @@
     "tu": "rel/main_rel/sel_static_disp.c",
     "pool": {
       "@17": "lbl_1_rodata_8600"
+    }
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/sel_static_disp/fn_1_13B24C.c",
+    "symbols": [
+      "fn_1_13B24C"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "tu": "rel/main_rel/sel_static_disp.c",
+    "pool": {
+      "@9": "lbl_1_rodata_8600"
     }
   },
   {
@@ -50613,6 +50659,19 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
+  },
+  {
+    "module": "movie_module",
+    "source": "rel/movie_module/fn_12_670C.c",
+    "symbols": [
+      "fn_12_670C"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "pool": {
+      "@17": "jumptable_12_data_30"
+    }
   },
   {
     "module": "movie_module",

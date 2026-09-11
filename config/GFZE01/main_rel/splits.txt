@@ -5882,3 +5882,9 @@ rel/main_rel/effect_car/fn_1_680F8.c:
 
 rel/main_rel/spline/fn_1_F5B88.c:
 	.text       start:0x000F5B88 end:0x000F5D94 align:4
+
+rel/main_rel/ranking/fn_1_1568C4.c:
+	.text       start:0x001568C4 end:0x001569A0 align:4
+
+rel/main_rel/sel_static_disp/fn_1_13B24C.c:
+	.text       start:0x0013B24C end:0x0013B328 align:4

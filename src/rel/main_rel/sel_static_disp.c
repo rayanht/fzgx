@@ -710,6 +710,29 @@ void fn_1_13A9B8(f32 arg7, f32 arg8, s16 arg0, s16 arg1, int arg2, void* arg3,
 }
 /* fzgx:end fn_1_13A9B8 */
 
+/* fzgx:begin fn_1_13B24C noprologue */
+#include "types.h"
+
+extern const f32 lbl_1_rodata_85FC;
+extern const f64 lbl_1_rodata_8600;
+extern void fn_1_4955C(f32, f32);
+extern void fn_1_496FC(f32, f32);
+extern void fn_1_4A0D8(const char*);
+extern f32 fn_1_4B068(const char*);
+
+s32 fn_1_13B24C(s32 arg0, s32 arg1, s32 arg2, s32 arg3, const char* arg4) {
+    f32 temp;
+
+    temp = (f32)arg3 / lbl_1_rodata_85FC;
+    fn_1_4955C(temp, temp);
+    if (arg0 != 0) {
+        fn_1_496FC((f32)arg1, (f32)arg2);
+        fn_1_4A0D8(arg4);
+    }
+    return (s32)fn_1_4B068(arg4);
+}
+/* fzgx:end fn_1_13B24C */
+
 /* fzgx:begin fn_1_13C134 */
 void fn_1_13C134(void) {
     fn_1_5621C(lbl_1_rodata_861C, lbl_1_rodata_861C,

@@ -458,6 +458,72 @@ void fn_1_156884(s32 index) {
 }
 /* fzgx:end fn_1_156884 */
 
+/* fzgx:begin fn_1_1568C4 noprologue */
+#include "types.h"
+#include "rel/main_rel/globals.h"
+
+typedef struct {
+    u32 flags;
+    u32 value;
+    u32 key;
+} RankingState;
+
+typedef struct {
+    u8 field8;
+    u8 _pad9[3];
+    s32 fieldC;
+    s32 field10;
+    u8 field14;
+    u8 field15;
+    u8 field16;
+    u8 field17;
+    u16 field18;
+    u16 field1A;
+    u8 _pad1C[0x14];
+} RankingConfig;
+
+extern s32 fn_8006B55C(u32, u32 *, RankingConfig *);
+extern s32 fn_8006B628(u32, RankingConfig *);
+extern s32 fn_8006B6F8(u32);
+
+#pragma opt_propagation off
+void fn_1_1568C4(RankingState *state) {
+    u32 value;
+    s32 success = 0;
+    RankingConfig config;
+    u32 key;
+
+    key = 7;
+    config.field8 = key;
+    config.fieldC = -1;
+    config.field10 = success;
+    config.field14 = success;
+    config.field15 = success;
+    config.field17 = 0x55;
+    config.field16 = 0x55;
+    config.field1A = 0x55;
+    config.field18 = 0x55;
+
+    value = state->value;
+    key = state->key;
+    if (((0x10000) + (key)) == 0xffff) {
+        if (fn_8006B55C(value, &state->key, &config) >= 0) {
+            success = 1;
+        }
+    } else {
+        if (fn_8006B628(key, &config) >= 0) {
+            success = 1;
+        }
+    }
+
+    if (success != 0 && (state->flags & 1) == 0 &&
+        fn_8006B6F8(state->key) >= 0) {
+        state->flags |= 1;
+    }
+}
+#pragma opt_propagation reset
+/* fzgx:end fn_1_1568C4 */
+
 /* fzgx:begin fn_1_1569A0 */
 typedef struct {
     u32 flags;
