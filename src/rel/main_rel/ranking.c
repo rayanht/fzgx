@@ -1248,6 +1248,70 @@ int fn_1_159588(int arg) {
 }
 /* fzgx:end fn_1_159588 */
 
+/* fzgx:begin fn_1_1598C4 noprologue */
+#include "types.h"
+
+struct fn_1_1598C4_lbl_1_bss_8F878 {
+    u8 pad_0[0x34];
+    u32 unk_34;
+    u8 pad_38[0x1];
+    u8 unk_39;
+    u8 unk_3A;
+    u8 unk_3B;
+    u8 unk_3C;
+    u8 unk_3D;
+    u8 unk_3E;
+};
+extern f32 lbl_1_rodata_DAE8;
+extern f64 lbl_1_rodata_DAF0;
+extern struct fn_1_1598C4_lbl_1_bss_8F878 lbl_1_bss_8F878;
+extern void fn_80008BA8(u32, u32, u32);
+extern s16 fn_1_14F01C(s16);
+
+void fn_1_1598C4(s32 arg0, u8 arg1, u8 arg2, u8 arg3, u8 arg4, u8 arg5, u8 arg6, u32 arg7, u64 arg8, u8 arg10) {
+    s32 i;
+
+    fn_80008BA8((u32)(&lbl_1_bss_8F878), arg7, 0x10U);
+
+    for (i = 0; i < 0x10; i += 2) {
+        if (*(u8 *)((u8 *)(&lbl_1_bss_8F878) + i) == 0) {
+            s32 j;
+            s32 t = i + 1;
+            for (j = t; j < 0x10; j++) {
+                *(u8 *)((u8 *)(&lbl_1_bss_8F878) + j) = 0;
+            }
+            break;
+        }
+    }
+
+    lbl_1_bss_8F878.pad_38[0] = arg10;
+    *(s32 *)((u8 *)(&lbl_1_bss_8F878) + 20) = (s32)arg8;
+    *(s32 *)((u8 *)(&lbl_1_bss_8F878) + 16) = (s32)(arg8 >> 32);
+    lbl_1_bss_8F878.unk_34 = arg0 & 0x3FFFF;
+    lbl_1_bss_8F878.unk_39 = arg1;
+    lbl_1_bss_8F878.unk_3D = arg6;
+    lbl_1_bss_8F878.unk_3E = (u8)(s32)((*(f32 *)((u8 *)(&lbl_1_rodata_DAE8) + 0)) * (f32)arg5);
+
+    if (arg1 >= 0x29U) {
+        if ((s32)arg2 < fn_1_14F01C(0)) {
+            lbl_1_bss_8F878.unk_3A = arg2;
+        } else {
+            lbl_1_bss_8F878.unk_3A = 0;
+        }
+        if ((s32)arg3 < fn_1_14F01C(1)) {
+            lbl_1_bss_8F878.unk_3B = arg3;
+        } else {
+            lbl_1_bss_8F878.unk_3B = 0;
+        }
+        if ((s32)arg4 < fn_1_14F01C(2)) {
+            lbl_1_bss_8F878.unk_3C = arg4;
+            return;
+        }
+        lbl_1_bss_8F878.unk_3C = 0;
+    }
+}
+/* fzgx:end fn_1_1598C4 */
+
 /* fzgx:begin fn_1_15AC00 */
 // Return the address of the ranking state byte at offset 0x3f.
 u8 *fn_1_15AC00(void) {

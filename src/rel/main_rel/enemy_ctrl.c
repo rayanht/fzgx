@@ -537,6 +537,130 @@ void fn_1_CC27C(void) {
 }
 /* fzgx:end fn_1_CC27C */
 
+/* fzgx:begin fn_1_CC8E4 noprologue */
+#include "types.h"
+#include "font.h"
+
+extern u32 lbl_1_rodata_26F8[22];
+extern u32 lbl_1_rodata_5EE8[10];
+extern const f64 lbl_1_rodata_5C00;
+extern const f64 lbl_1_rodata_5CE8;
+extern const f32 lbl_1_rodata_5CF8;
+extern const f32 lbl_1_rodata_5C48;
+extern const f32 lbl_1_rodata_5DC8;
+extern const f32 lbl_1_rodata_5F10;
+extern u32 lbl_1_data_3D544[1];
+extern void *fn_1_8627C(s32);
+extern u32 fn_1_3F114(void);
+extern u32 fn_1_5910(void);
+extern u16 fn_1_48690(u32);
+extern u16 fn_1_486C4(u32);
+extern int fn_1_4F734(FontDrawPacket *);
+
+void fn_1_CC8E4(s32 arg0, s32 arg1, s32 arg2) {
+    FontDrawPacket sp30;
+    u32 sp8[10];
+    s32 val1;
+    u8 val2;
+
+    sp8[0] = lbl_1_rodata_5EE8[0];
+    sp8[1] = lbl_1_rodata_5EE8[1];
+    sp8[2] = lbl_1_rodata_5EE8[2];
+    sp8[3] = lbl_1_rodata_5EE8[3];
+    sp8[4] = lbl_1_rodata_5EE8[4];
+    sp8[5] = lbl_1_rodata_5EE8[5];
+    sp8[6] = lbl_1_rodata_5EE8[6];
+    sp8[7] = lbl_1_rodata_5EE8[7];
+    sp8[8] = lbl_1_rodata_5EE8[8];
+    sp8[9] = lbl_1_rodata_5EE8[9];
+    val1 = *(s32 *)((u8 *)fn_1_8627C(arg0) + 280) + 1;
+    val2 = fn_1_3F114();
+    if ((lbl_1_data_3D544[fn_1_5910()] >> 26) & 1) {
+        if ((s32)val2 < 0xA) {
+            sp30 = *(const FontDrawPacket *)(((u8 *)lbl_1_rodata_26F8) + 0);
+            sp30.image = sp8[val1 % 10];
+            sp30.x = (f32)(arg1 + 3);
+            sp30.y = (f32)arg2;
+            sp30.scale_x *= lbl_1_rodata_5CF8 / (f32)fn_1_48690(sp30.image);
+            sp30.scale_y *= lbl_1_rodata_5F10 / (f32)fn_1_486C4(sp30.image);
+            fn_1_4F734(&sp30);
+            sp30.image = 0x9430;
+            sp30.z += lbl_1_rodata_5DC8;
+            fn_1_4F734(&sp30);
+            sp30 = *(const FontDrawPacket *)(((u8 *)lbl_1_rodata_26F8) + 0);
+            sp30.image = 0x941E;
+            sp30.x = (f32)(arg1 + 0x12);
+            sp30.y = (f32)arg2;
+            sp30.scale_x *= lbl_1_rodata_5C48 / (f32)fn_1_48690(0x941E);
+            sp30.scale_y *= lbl_1_rodata_5F10 / (f32)fn_1_486C4(sp30.image);
+            fn_1_4F734(&sp30);
+            sp30 = *(const FontDrawPacket *)(((u8 *)lbl_1_rodata_26F8) + 0);
+            sp30.image = sp8[val2 % 10];
+            sp30.x = (f32)(arg1 + 0x1C);
+            sp30.y = (f32)arg2;
+            sp30.scale_x *= lbl_1_rodata_5CF8 / (f32)fn_1_48690(sp30.image);
+            sp30.scale_y *= lbl_1_rodata_5F10 / (f32)fn_1_486C4(sp30.image);
+            fn_1_4F734(&sp30);
+            sp30.image = 0x9430;
+            sp30.z += lbl_1_rodata_5DC8;
+            fn_1_4F734(&sp30);
+            sp30 = *(const FontDrawPacket *)(((u8 *)lbl_1_rodata_26F8) + 0);
+            sp30.image = 0x9402;
+            sp30.x = (f32)(arg1 + 0x2D);
+            sp30.y = (f32)(arg2 + 9);
+            fn_1_4F734(&sp30);
+            return;
+        }
+        sp30 = *(const FontDrawPacket *)(((u8 *)lbl_1_rodata_26F8) + 0);
+        sp30.image = sp8[val1 / 10];
+        sp30.x = (f32)(arg1 - 0x1D);
+        sp30.y = (f32)arg2;
+        sp30.scale_x *= lbl_1_rodata_5CF8 / (f32)fn_1_48690(sp30.image);
+        sp30.scale_y *= lbl_1_rodata_5F10 / (f32)fn_1_486C4(sp30.image);
+        fn_1_4F734(&sp30);
+        sp30.image = 0x9430;
+        sp30.z += lbl_1_rodata_5DC8;
+        fn_1_4F734(&sp30);
+        sp30.image = sp8[val1 % 10];
+        sp30.x = (f32)(arg1 - 0xD);
+        sp30.y = (f32)arg2;
+        fn_1_4F734(&sp30);
+        sp30.image = 0x9430;
+        sp30.z += lbl_1_rodata_5DC8;
+        fn_1_4F734(&sp30);
+        sp30 = *(const FontDrawPacket *)(((u8 *)lbl_1_rodata_26F8) + 0);
+        sp30.image = 0x941E;
+        sp30.x = (f32)(arg1 + 2);
+        sp30.y = (f32)arg2;
+        sp30.scale_x *= lbl_1_rodata_5C48 / (f32)fn_1_48690(0x941E);
+        sp30.scale_y *= lbl_1_rodata_5F10 / (f32)fn_1_486C4(sp30.image);
+        fn_1_4F734(&sp30);
+        sp30 = *(const FontDrawPacket *)(((u8 *)lbl_1_rodata_26F8) + 0);
+        sp30.image = sp8[val2 / 10];
+        sp30.x = (f32)(arg1 + 0xC);
+        sp30.y = (f32)arg2;
+        sp30.scale_x *= lbl_1_rodata_5CF8 / (f32)fn_1_48690(sp30.image);
+        sp30.scale_y *= lbl_1_rodata_5F10 / (f32)fn_1_486C4(sp30.image);
+        fn_1_4F734(&sp30);
+        sp30.image = 0x9430;
+        sp30.z += lbl_1_rodata_5DC8;
+        fn_1_4F734(&sp30);
+        sp30.image = sp8[val2 % 10];
+        sp30.x = (f32)(arg1 + 0x1C);
+        sp30.y = (f32)arg2;
+        fn_1_4F734(&sp30);
+        sp30.image = 0x9430;
+        sp30.z += lbl_1_rodata_5DC8;
+        fn_1_4F734(&sp30);
+        sp30 = *(const FontDrawPacket *)(((u8 *)lbl_1_rodata_26F8) + 0);
+        sp30.image = 0x9402;
+        sp30.x = (f32)(arg1 + 0x2D);
+        sp30.y = (f32)(arg2 + 9);
+        fn_1_4F734(&sp30);
+    }
+}
+/* fzgx:end fn_1_CC8E4 */
+
 /* fzgx:begin fn_1_CD51C */
 extern u32 fn_1_5910(void *object);
 extern void *fn_1_8627C(void *object);

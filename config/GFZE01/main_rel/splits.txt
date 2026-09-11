@@ -6062,3 +6062,9 @@ rel/main_rel/enemy_ctrl/fn_1_CF5B0.c:
 
 rel/main_rel/font/fn_1_52BF8.c:
 	.text       start:0x00052BF8 end:0x000530C8 align:4
+
+rel/main_rel/enemy_ctrl/fn_1_CC8E4.c:
+	.text       start:0x000CC8E4 end:0x000CD36C align:4
+
+rel/main_rel/ranking/fn_1_1598C4.c:
+	.text       start:0x001598C4 end:0x00159AE0 align:4

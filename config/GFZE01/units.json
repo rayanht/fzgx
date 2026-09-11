@@ -33790,6 +33790,21 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/enemy_ctrl/fn_1_CC8E4.c",
+    "symbols": [
+      "fn_1_CC8E4"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "tu": "rel/main_rel/enemy_ctrl.c",
+    "pool": {
+      "@21": "lbl_1_rodata_5C00",
+      "@24": "lbl_1_rodata_5CE8"
+    }
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/enemy_ctrl/fn_1_CD51C.c",
     "symbols": [
       "fn_1_CD51C"
@@ -41323,6 +41338,20 @@
     "mw_version": null,
     "extra_cflags": [],
     "tu": "rel/main_rel/ranking.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/ranking/fn_1_1598C4.c",
+    "symbols": [
+      "fn_1_1598C4"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "tu": "rel/main_rel/ranking.c",
+    "pool": {
+      "@30": "lbl_1_rodata_DAF0"
+    }
   },
   {
     "module": "main_rel",
