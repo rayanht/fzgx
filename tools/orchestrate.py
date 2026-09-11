@@ -415,7 +415,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     ap.add_argument("--no-trivial", action="store_true", help="skip the mechanical blr/li pass first")
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--fast", action="store_true", help="codex: service_tier=fast (2x price, faster generation)")
-    ap.add_argument("--effort", choices=["minimal", "low", "medium", "high", "xhigh", "max"], help="codex: model_reasoning_effort")
+    ap.add_argument("--effort", choices=["none", "minimal", "low", "medium", "high", "xhigh", "max"], help="codex: model_reasoning_effort")
     ap.add_argument("--shadow", action="store_true",
                     help="A/B trial: run on already-matched functions without relinking or committing")
     ap.add_argument("--finish", action="store_true", help="after the batch: TU-finish pass, revise round on its queue, pass again")
@@ -434,8 +434,8 @@ def main(argv: Optional[List[str]] = None) -> int:
             ap.error("--provider deepseek requires --harness codex")
         if a.fast:
             ap.error("DeepSeek does not support Codex's OpenAI --fast service tier")
-        if a.effort and a.effort not in ("low", "high", "max"):
-            ap.error("DeepSeek supports --effort low, high, or max")
+        if a.effort and a.effort not in ("none", "low", "high", "max"):
+            ap.error("DeepSeek supports --effort none, low, high, or max")
         if a.model and a.model not in DEEPSEEK_PRICES:
             ap.error("use --model deepseek-flash for DeepSeek-V4.1-Flash")
         a.model = a.model or "deepseek-flash"

@@ -301,6 +301,12 @@ Rules that hold for everyone:
   Provider/catalog reference: [DeepSeek's Codex integration](https://api-docs.deepseek.com/quick_start/agent_integrations/codex/).
   Example: `uv run tools/orchestrate.py --harness codex --provider deepseek
   --api-key-file ~/.config/fzgx/deepseek.key --seeds PATH --parallel 1 --no-trivial`.
+- Whole-project seed batches use `uv run tools/seeds/small.py --max-size 0 --fresh-lift --output NEW_DIRECTORY`.
+  Freeze a full-size deterministic lift for every unmatched function, compare the best saved C with its
+  compiler settings through the unified fixup engine, and retain the best current word score
+  (full oracle matches take precedence). No size, SDK or prior-attempt exclusions apply.
+  The manifest retains fresh lifts alongside selected bodies. DeepSeek `--effort none` disables
+  reasoning; the repository model catalog and runner overrides support it without personal config edits.
 - Fresh-function batches use `uv run tools/seeds/untouched.py --max-size 511 --output PATH`.
   It excludes prior matcher candidates/successful checks, known SDK signatures,
   prepared imports and ranked donor candidates, and freezes `lift_total` output

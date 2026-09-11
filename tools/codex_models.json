@@ -34,6 +34,10 @@
       "default_reasoning_level": "high",
       "supported_reasoning_levels": [
         {
+          "effort": "none",
+          "description": "Respond without reasoning"
+        },
+        {
           "effort": "low",
           "description": "Fast responses with lighter reasoning"
         },

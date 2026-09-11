@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import re
+from contextlib import contextmanager
 from collections import defaultdict
 from dataclasses import dataclass
 
@@ -425,7 +426,23 @@ def _disk_index(p, identity, build):
         return result
 
 
+@contextmanager
+def frozen(p):
+    """Reuse one signature revision while the caller holds the build lock."""
+    previous = getattr(p, '_frozen_signatures', None)
+    p._frozen_signatures = previous or recovered(p)
+    try:
+        yield p._frozen_signatures
+    finally:
+        if previous is None:
+            del p._frozen_signatures
+        else:
+            p._frozen_signatures = previous
+
+
 def recovered(p):
+    if getattr(p, '_frozen_signatures', None) is not None:
+        return p._frozen_signatures
     # Invalidate after a submitted source or recovered header changes, including in long-lived MCP sessions.
     paths = (sorted((ROOT / 'include').rglob('*.h')) + sorted((ROOT / 'src').rglob('*.c'))
              + sorted((ROOT / 'tools/fzgx').glob('*.py')) + [p.units_path]
