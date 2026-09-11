@@ -173,6 +173,62 @@ void fn_1_F37F4(void) {
 }
 /* fzgx:end fn_1_F37F4 */
 
+/* fzgx:begin fn_1_F3AB0 */
+extern s32 fn_1_F45CC(u16 value, void *out);
+extern void fn_1_862D4(s32 value, f32 *out);
+
+typedef struct {
+    u16 unk_0;
+    u8 pad_2[0xA];
+    f32 unk_C;
+    f32 unk_10;
+    f32 unk_14;
+} ReplayEntry_F3AB0;
+
+void fn_1_F3AB0(Obj_1_bss_7EFD8 *obj) {
+    f32 values[3];
+    // The retail routine reserves this volatile scratch area for replay records.
+    volatile u8 data[0xf80];
+    ReplayEntry_F3AB0 *entry;
+    s32 count;
+    s32 i;
+    u8 flags;
+    s32 ok;
+
+    flags = lbl_1_bss_7EFD4;
+    if ((flags & 1) == 0) {
+        ok = 0;
+    } else if (((flags >> 2) & 1) == 0) {
+        ok = 0;
+    } else if (((flags >> 3) & 1) != 0) {
+        ok = 0;
+    } else {
+        ok = 1;
+    }
+    if (ok == 0) {
+        return;
+    }
+
+    obj->unk_4++;
+    count = fn_1_F45CC((u16)obj->unk_4, (void *)data);
+    if (count <= 0) {
+        return;
+    }
+
+    fn_1_862D4(0, values);
+    entry = (ReplayEntry_F3AB0 *)data;
+    for (i = 0; i < count; i++) {
+        if (obj->unk_4 == entry->unk_0 &&
+            (values[0] != entry->unk_C ||
+             values[1] != entry->unk_10 ||
+             values[2] != entry->unk_14)) {
+            lbl_1_bss_7EFD8.unk_1B = 1;
+        }
+        entry = (ReplayEntry_F3AB0 *)((u8 *)entry + 0x84);
+    }
+}
+/* fzgx:end fn_1_F3AB0 */
+
 /* fzgx:begin fn_1_F43F0 */
 void fn_1_F43F0(u8 *bits, u32 *position, u32 mask, u32 count, u32 limit) {
     u32 value;

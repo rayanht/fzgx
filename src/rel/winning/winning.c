@@ -246,6 +246,64 @@ u32 fn_15_1D7C(u32 arg0, u32 arg1, u32 arg2) {
 }
 /* fzgx:end fn_15_1D7C */
 
+/* fzgx:begin fn_15_1DF4 */
+extern struct fn_15_1DF4_lbl_15_bss_0 lbl_15_bss_0;
+extern u8 lbl_1_bss_25E98;
+extern u8 lbl_1_bss_9F8;
+extern struct fn_15_1DF4_lbl_1_bss_5138 lbl_1_bss_5138;
+extern void fn_15_11DC(void);
+extern u32 fn_1_B7C00(void);
+extern void fn_15_DD8(void);
+
+struct fn_15_1DF4_lbl_15_bss_0 {
+    u8 pad_0[0x14];
+    u32 unk_14;
+    u8 pad_18[0x8];
+    u8 unk_20;
+    u8 unk_21;
+    u8 unk_22;
+};
+
+struct fn_15_1DF4_lbl_1_bss_5138 {
+    u8 pad_0[0xE0];
+    u8 unk_E0;
+    u8 unk_E1;
+    u8 unk_E2;
+};
+
+void fn_15_1DF4(void) {
+    struct fn_15_1DF4_lbl_15_bss_0 *p;
+    struct fn_15_1DF4_lbl_1_bss_5138 *q;
+    u8 *table;
+    u32 idx;
+    u16 val;
+    s32 e2;
+    s32 bit;
+
+    p = (struct fn_15_1DF4_lbl_15_bss_0 *)&lbl_15_bss_0;
+    if ((p->unk_14 & 0x1) != 0) {
+        fn_15_11DC();
+    }
+
+    table = (u8 *)&lbl_1_bss_9F8 + 0x8;
+    idx = (u32)lbl_1_bss_25E98 * 0x14;
+    val = *(u16 *)(table + idx);
+    if ((((val >> 8) & 1) != 0 || ((val >> 12) & 1) != 0) &&
+        (fn_1_B7C00() & 0xFF) == 0 && p->unk_20 != 0 || p->unk_22 != 0) {
+        fn_15_DD8();
+    }
+
+    q = (struct fn_15_1DF4_lbl_1_bss_5138 *)&lbl_1_bss_5138;
+    e2 = q->unk_E2;
+    if (e2 != 0) {
+        bit = (*(u16 *)(table + (u32)lbl_1_bss_25E98 * 0x14) >> 8) & 1;
+        if (q->unk_E2 != 0 && bit != 0 && q->unk_E0 >= 0xF && q->unk_E0 <= 0x78) {
+            q->unk_E0 = 0x78;
+        }
+    }
+}
+/* fzgx:end fn_15_1DF4 */
+
 /* fzgx:begin fn_15_1EE0 */
 extern struct fn_15_1EE0_lbl_15_bss_0 lbl_15_bss_0;
 extern u32 camera_enable_flags(u32);

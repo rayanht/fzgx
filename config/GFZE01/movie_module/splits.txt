@@ -1604,3 +1604,6 @@ rel/movie_module/fn_12_2FA90.c:
 
 rel/movie_module/fn_12_67A4.c:
 	.text       start:0x000067A4 end:0x0000683C align:4
+
+rel/movie_module/fn_12_11188.c:
+	.text       start:0x00011188 end:0x00011204 align:4

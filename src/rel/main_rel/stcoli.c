@@ -959,6 +959,48 @@ void fn_1_2A2A4(Fn1_2A2A4Object *self) {
 }
 /* fzgx:end fn_1_2A2A4 */
 
+/* fzgx:begin fn_1_2A318 */
+extern f64 lbl_1_rodata_860[22];
+extern f32 lbl_1_rodata_B74[25];
+
+typedef struct Fn_1_2A318 {
+    unsigned char pad000[0x184];
+    f32 field184;
+    unsigned char pad188[0x02];
+    unsigned char field18a;
+    unsigned char pad18b[0x85];
+    u16 field210;
+    unsigned char field212;
+    unsigned char pad213[0x26f];
+    unsigned char field482;
+    unsigned char pad483[0x10f];
+    unsigned char field592;
+    unsigned char pad593[0x47];
+    u16 field5da;
+} Fn_1_2A318;
+
+void fn_1_2A318(Fn_1_2A318 *self) {
+    u16 value;
+    f32 progress;
+
+    self->field482++;
+    self->field212++;
+    self->field210 += self->field212 * (self->field18a ? 15 : 10);
+    if (self->field592 == 0) {
+        self->field592 = 1;
+    }
+    value = self->field5da;
+    progress = self->field184;
+    if (progress < value) {
+        progress += lbl_1_rodata_B74[0];
+        self->field184 = progress;
+        if (progress > value) {
+            self->field184 = self->field5da;
+        }
+    }
+}
+/* fzgx:end fn_1_2A318 */
+
 /* fzgx:begin fn_1_2A3E4 */
 typedef struct Fn_1_2A3E4 {
     u32 flags;

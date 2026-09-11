@@ -111,6 +111,59 @@ void fn_17_3270(void *arg0, void *arg1) {
 }
 /* fzgx:end fn_17_3270 */
 
+/* fzgx:begin fn_17_334C */
+typedef struct {
+    f32 x;
+    f32 y;
+    u32 z;
+} Trio;
+
+typedef struct {
+    u8 pad_000[0x108];
+    Trio trio;
+    f32 f_114;
+    f32 f_118;
+    f32 f_11c;
+    f32 f_120;
+    f32 f_124;
+} Pool;
+
+typedef struct {
+    u8 pad_00[8];
+    Trio trio;
+    f32 f_14;
+    u8 pad_18[6];
+    s16 s_1e;
+} InterviewData;
+
+extern f32 lbl_17_rodata_0[80];
+extern u16 lbl_17_bss_170[20];
+extern f32 lbl_8006D21C(u32);
+extern void *memset(void *, int, u32);
+
+void fn_17_334C(void) {
+    Pool *pool = (Pool *)lbl_17_rodata_0;
+    f32 scale;
+    f32 value;
+    Trio v;
+    InterviewData *data;
+
+    scale = pool->f_118 / lbl_8006D21C(0x71c);
+    value = pool->f_114 / scale;
+
+    memset(lbl_17_bss_170, 0, 0x28);
+
+    v = pool->trio;
+    v.x = pool->f_11c * value;
+    v.y = pool->f_120 * value;
+
+    data = (InterviewData *)lbl_17_bss_170;
+    data->trio = v;
+    data->f_14 = pool->f_124;
+    data->s_1e = -0x8000;
+}
+/* fzgx:end fn_17_334C */
+
 /* fzgx:begin fn_17_416C */
 extern u32 lbl_17_bss_34[8];
 extern u32 lbl_17_bss_D8[8];

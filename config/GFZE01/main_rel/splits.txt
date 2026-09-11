@@ -5738,3 +5738,12 @@ rel/main_rel/shadowmap/fn_1_57CD0.c:
 
 rel/main_rel/phys/fn_1_E5770.c:
 	.text       start:0x000E5770 end:0x000E57A4 align:4
+
+rel/main_rel/replay/fn_1_F3AB0.c:
+	.text       start:0x000F3AB0 end:0x000F3BC0 align:4
+
+rel/main_rel/stcoli/fn_1_2A318.c:
+	.text       start:0x0002A318 end:0x0002A3E4 align:4
+
+rel/main_rel/sel_static_disp/fn_1_14A1AC.c:
+	.text       start:0x0014A1AC end:0x0014A278 align:4

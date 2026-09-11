@@ -1907,6 +1907,17 @@
   },
   {
     "module": "interview",
+    "source": "rel/interview/interview/fn_17_334C.c",
+    "symbols": [
+      "fn_17_334C"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/interview/interview.c"
+  },
+  {
+    "module": "interview",
     "source": "rel/interview/interview/fn_17_394.c",
     "symbols": [
       "fn_17_394"
@@ -11462,6 +11473,19 @@
   },
   {
     "module": "main",
+    "source": "dol/ddh_cc_read.c",
+    "symbols": [
+      "ddh_cc_read"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on"
+    ]
+  },
+  {
+    "module": "main",
     "source": "dol/ddh_cc_shutdown.c",
     "symbols": [
       "ddh_cc_shutdown"
@@ -15168,6 +15192,16 @@
     ],
     "status": "matching",
     "mw_version": null,
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_80035960.c",
+    "symbols": [
+      "fn_80035960"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
     "extra_cflags": []
   },
   {
@@ -40230,6 +40264,17 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/replay/fn_1_F3AB0.c",
+    "symbols": [
+      "fn_1_F3AB0"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/replay.c"
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/replay/fn_1_F43F0.c",
     "symbols": [
       "fn_1_F43F0"
@@ -41580,6 +41625,17 @@
     "source": "rel/main_rel/sel_static_disp/fn_1_14A17C.c",
     "symbols": [
       "fn_1_14A17C"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/sel_static_disp.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/sel_static_disp/fn_1_14A1AC.c",
+    "symbols": [
+      "fn_1_14A1AC"
     ],
     "status": "matching",
     "mw_version": null,
@@ -44539,6 +44595,20 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/stcoli/fn_1_2A318.c",
+    "symbols": [
+      "fn_1_2A318"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/stcoli.c",
+    "pool": {
+      "@16": "lbl_1_rodata_860"
+    }
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/stcoli/fn_1_2A3E4.c",
     "symbols": [
       "fn_1_2A3E4"
@@ -44922,6 +44992,16 @@
     ],
     "status": "matching",
     "mw_version": null,
+    "extra_cflags": []
+  },
+  {
+    "module": "movie_module",
+    "source": "rel/movie_module/fn_12_11188.c",
+    "symbols": [
+      "fn_12_11188"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
     "extra_cflags": []
   },
   {
@@ -54959,6 +55039,17 @@
     "source": "rel/winning/winning/fn_15_1D7C.c",
     "symbols": [
       "fn_15_1D7C"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/winning/winning.c"
+  },
+  {
+    "module": "winning",
+    "source": "rel/winning/winning/fn_15_1DF4.c",
+    "symbols": [
+      "fn_15_1DF4"
     ],
     "status": "matching",
     "mw_version": null,

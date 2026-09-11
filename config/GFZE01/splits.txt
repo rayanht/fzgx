@@ -4982,3 +4982,9 @@ dol/fn_80034834.c:
 
 dol/fn_8007A9A4.c:
 	.text       start:0x8007A9A4 end:0x8007AA7C align:4
+
+dol/fn_80035960.c:
+	.text       start:0x80035960 end:0x80035A2C align:4
+
+dol/ddh_cc_read.c:
+	.text       start:0x8008DF6C end:0x8008E058 align:4

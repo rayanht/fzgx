@@ -1298,6 +1298,44 @@ void fn_1_14A17C(void) {
 }
 /* fzgx:end fn_1_14A17C */
 
+/* fzgx:begin fn_1_14A1AC noprologue */
+#include "types.h"
+
+extern s16 lbl_1_bss_960;
+extern u8 lbl_1_bss_8E548;
+
+typedef struct {
+    u8 pad_0[0x8];
+    u8 unk_8;
+    u8 unk_9;
+} Obj_1_bss_3C30;
+
+extern Obj_1_bss_3C30 lbl_1_bss_3C30;
+
+void fn_1_14A1AC(u8 arg) {
+    if (lbl_1_bss_960 == 1) {
+        lbl_1_bss_8E548 = 4;
+        return;
+    }
+
+    switch (arg) {
+    case 5:
+    case 6:
+        lbl_1_bss_8E548 = 4;
+        return;
+    case 3:
+        lbl_1_bss_8E548 = lbl_1_bss_3C30.unk_9 < 6 ? lbl_1_bss_3C30.unk_9 : 6;
+        return;
+    case 4:
+        lbl_1_bss_8E548 = lbl_1_bss_3C30.unk_8 < 6 ? lbl_1_bss_3C30.unk_8 : 6;
+        return;
+    default:
+        lbl_1_bss_8E548 = lbl_1_bss_3C30.unk_9 < 6 ? lbl_1_bss_3C30.unk_9 : 6;
+        return;
+    }
+}
+/* fzgx:end fn_1_14A1AC */
+
 /* fzgx:begin fn_1_14A278 */
 // fn_1_14A278: empty in retail (single blr).
 void fn_1_14A278(void) {
