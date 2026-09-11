@@ -116,3 +116,6 @@ rel/profile/fn_16_CAC.c:
 
 rel/profile/_epilog.c:
 	.text       start:0x000006E4 end:0x00000910 align:4
+
+rel/profile/fn_16_6B24.c:
+	.text       start:0x00006B24 end:0x00006CD8 align:4

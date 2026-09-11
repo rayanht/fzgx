@@ -113,3 +113,65 @@ u32 fn_3_11FD0(u32 index, u32 value) {
     return ((u32 *)(lbl_3_data_2F78 + (__cntlzw(value) * 24)))[index];
 }
 /* fzgx:end fn_3_11FD0 */
+
+/* fzgx:begin fn_3_12E4C */
+extern u8 lbl_3_data_246C[2400];
+extern u32 lbl_3_data_1EEC[352];
+
+typedef struct { u32 x; u32 y; u32 z; } Vec3;
+typedef struct { u32 unused0; u32 unused1; Vec3 first; Vec3 second; } Data;
+typedef struct { u8 pad_000[0x508]; Vec3 first; Vec3 second; } SpecialData;
+typedef struct {
+    u8 pad_000[0x328];
+    s8 state;
+    u8 pad_329[0x67];
+    u32 flags;
+    u8 pad_394[0xc];
+    s16 *indices;
+} Customize;
+
+#pragma opt_strength_reduction off
+#pragma opt_common_subs off
+void fn_3_12E4C(Customize *self, u8 index, Vec3 *first, Vec3 *second) {
+    Data *data;
+    SpecialData *special;
+    u8 state;
+
+    if (self->flags & 0x04000000) {
+        data = (Data *)lbl_3_data_246C;
+        data = (Data *)((u8 *)data +
+                        ((u8)((self->indices)[(u32)index * 0x1b0]) << 5));
+        *first = data->first;
+        *second = data->second;
+        return;
+    }
+
+    state = self->state;
+    if (state == 4) {
+        if (index != 0) {
+            data = (Data *)((u8 *)lbl_3_data_1EEC + 0x560);
+            *first = data->first;
+            *second = data->second;
+            return;
+        }
+        data = (Data *)((u8 *)lbl_3_data_1EEC + ((u8)state << 5));
+        *first = data->first;
+        *second = data->second;
+        return;
+    }
+
+    if ((u8)state == 0x28) {
+        special = (SpecialData *)((u8 *)lbl_3_data_1EEC + ((u8)index << 5));
+        *first = special->first;
+        *second = special->second;
+        return;
+    }
+
+    data = (Data *)((u8 *)lbl_3_data_1EEC + ((u8)state << 5));
+    *first = data->first;
+    *second = data->second;
+}
+#pragma opt_common_subs reset
+
+#pragma opt_strength_reduction reset
+/* fzgx:end fn_3_12E4C */
