@@ -613,6 +613,27 @@ void fn_3_5A50(void) {
 }
 /* fzgx:end fn_3_5A50 */
 
+/* fzgx:begin fn_3_5B9C */
+extern u8 lbl_3_bss_140[132868];
+extern u32 lbl_3_bss_6DD70;
+extern s16 lbl_3_bss_F0[24];
+extern u8 lbl_3_bss_2437C[44];
+extern void fn_80008BEC(u8 *, int, int);
+extern void fn_3_11FB4(u8, u8, u8 *);
+
+void fn_3_5B9C(void) {
+    s16 i;
+
+    for (i = 0; i < 4; i++) {
+        if (lbl_3_bss_6DD70 & (1 << i)) {
+            fn_80008BEC(&lbl_3_bss_140[i * 0x81c0], 0, 0x81c0);
+        }
+    }
+
+    fn_3_11FB4(lbl_3_bss_2437C[0], lbl_3_bss_F0[4], lbl_3_bss_140);
+}
+/* fzgx:end fn_3_5B9C */
+
 /* fzgx:begin fn_3_5C4C */
 extern u8 lbl_1_bss_970[];
 extern u32 lbl_3_bss_20850;

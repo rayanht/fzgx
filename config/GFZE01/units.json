@@ -419,6 +419,17 @@
   },
   {
     "module": "customize",
+    "source": "rel/customize/_prolog/fn_3_5B9C.c",
+    "symbols": [
+      "fn_3_5B9C"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "tu": "rel/customize/_prolog.c"
+  },
+  {
+    "module": "customize",
     "source": "rel/customize/_prolog/fn_3_5C4C.c",
     "symbols": [
       "fn_3_5C4C"
@@ -1140,6 +1151,17 @@
     "source": "rel/customize/emblem/fn_3_1349C.c",
     "symbols": [
       "fn_3_1349C"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/customize/emblem.c"
+  },
+  {
+    "module": "customize",
+    "source": "rel/customize/emblem/fn_3_13D98.c",
+    "symbols": [
+      "fn_3_13D98"
     ],
     "status": "matching",
     "mw_version": null,
@@ -11650,6 +11672,16 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_8000591C.c",
+    "symbols": [
+      "fn_8000591C"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
     "source": "dol/fn_80005A08.c",
     "symbols": [
       "fn_80005A08"
@@ -21269,6 +21301,16 @@
     "source": "dol/fn_8007E914.c",
     "symbols": [
       "fn_8007E914"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_8007E96C.c",
+    "symbols": [
+      "fn_8007E96C"
     ],
     "status": "matching",
     "mw_version": "GC/1.3.2",
@@ -32480,6 +32522,17 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/enemy_ctrl/fn_1_CFA0C.c",
+    "symbols": [
+      "fn_1_CFA0C"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/enemy_ctrl.c"
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/enemy_ctrl/fn_1_CFA4C.c",
     "symbols": [
       "fn_1_CFA4C"
@@ -34330,6 +34383,17 @@
     ],
     "status": "matching",
     "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/font.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/font/fn_1_54E34.c",
+    "symbols": [
+      "fn_1_54E34"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
     "extra_cflags": [],
     "tu": "rel/main_rel/font.c"
   },
@@ -40831,6 +40895,20 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/sel_static_disp/fn_1_133968.c",
+    "symbols": [
+      "fn_1_133968"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/sel_static_disp.c",
+    "pool": {
+      "@15": "lbl_1_rodata_8600"
+    }
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/sel_static_disp/fn_1_133BD8.c",
     "symbols": [
       "fn_1_133BD8"
@@ -43735,6 +43813,17 @@
     "source": "rel/main_rel/spline/fn_1_F9EE4.c",
     "symbols": [
       "fn_1_F9EE4"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/spline.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/spline/fn_1_F9F2C.c",
+    "symbols": [
+      "fn_1_F9F2C"
     ],
     "status": "matching",
     "mw_version": null,

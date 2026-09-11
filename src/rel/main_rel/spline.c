@@ -966,6 +966,32 @@ void fn_1_F9EE4(s32 arg0) {
 }
 /* fzgx:end fn_1_F9EE4 */
 
+/* fzgx:begin fn_1_F9F2C noprologue */
+#include "types.h"
+
+extern u8 lbl_1_bss_7F0C0[];
+
+void fn_1_F9F2C(u8 a, u8 b, u8 c, u8 d) {
+    s32 index;
+
+    if (a >= 0x29) {
+        return;
+    }
+    if (b >= 4) {
+        return;
+    }
+    if (c >= 5) {
+        return;
+    }
+    if (d >= 5) {
+        return;
+    }
+
+    index = b * 20 + a * 100 + c * 4 + d;
+    lbl_1_bss_7F0C0[0x4956 + index / 8] |= 1 << (index % 8);
+}
+/* fzgx:end fn_1_F9F2C */
+
 /* fzgx:begin fn_1_F9FB4 */
 void fn_1_F9FB4(void) {
     u32 ptr = lbl_1_bss_84420;

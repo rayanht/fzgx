@@ -113,6 +113,39 @@ extern u32 fn_1_141360(u32, u32, u32, u32, f32, f32);
 extern struct fn_1_149C64_lbl_1_bss_8E43C lbl_1_bss_8E43C;
 extern struct fn_1_149C64_lbl_1_bss_8E440 lbl_1_bss_8E440;
 
+/* fzgx:begin fn_1_133968 noprologue */
+#include "types.h"
+#include "font.h"
+
+typedef struct {
+    s16 v[9];
+} IdTable;
+
+extern u16 lbl_1_rodata_8754[10];
+extern const f64 lbl_1_rodata_8600;
+extern const f32 lbl_1_rodata_8768;
+extern const f32 lbl_1_rodata_876C;
+extern u32 lbl_1_rodata_26F8;
+extern int fn_1_4F734(FontDrawPacket *);
+
+void fn_1_133968(void) {
+    IdTable ids;
+    FontDrawPacket packet;
+    u32 i;
+
+    ids = *(IdTable *)lbl_1_rodata_8754;
+
+    for (i = 0; i < 9; i++) {
+        packet = *(FontDrawPacket *)&lbl_1_rodata_26F8;
+        packet.image = (0x10000 - 26096);
+        packet.x = (f32)ids.v[i];
+        packet.y = lbl_1_rodata_8768;
+        packet.z = lbl_1_rodata_876C;
+        fn_1_4F734(&packet);
+    }
+}
+/* fzgx:end fn_1_133968 */
+
 /* fzgx:begin fn_1_133BD8 */
 extern f32 lbl_1_rodata_26F8[22];
 extern s32 fn_1_486C4(s32 arg0);

@@ -2219,6 +2219,62 @@ void fn_1_54E00(void *value) {
 }
 /* fzgx:end fn_1_54E00 */
 
+/* fzgx:begin fn_1_54E34 noprologue */
+#include "types.h"
+#include "rel/main_rel/globals.h"
+
+typedef struct {
+    u8 pad0[0x8c];
+    f32 plane0[3];
+    f32 plane1[3];
+    f32 plane2[3];
+    f32 plane3[3];
+} Fn154E34Data;
+
+typedef struct {
+    f32 x;
+    f32 y;
+    f32 z;
+} Vector;
+
+extern void *lbl_801A66CC;
+extern void lbl_8006E1B0(void *arg0, f32 *out, f32 val);
+
+s32 fn_1_54E34(void *arg0, f32 arg1) {
+    Vector vector;
+    Fn154E34Data *data;
+    f32 *p;
+    f32 x;
+    f32 y;
+    f32 z;
+    f32 m0;
+    f32 m1;
+    f32 m2;
+    s32 i;
+
+    lbl_8006E1B0(arg0, (f32 *)&vector, arg1);
+    z = vector.z;
+    x = vector.x;
+    y = vector.y;
+    if (z > arg1) {
+        return 0;
+    }
+    arg1 = -arg1;
+    data = (Fn154E34Data *)lbl_801A66CC;
+    p = data->plane0;
+    for (i = 0; i < 4; i++) {
+        m0 = x * p[0];
+        m1 = y * p[1];
+        m2 = z * p[2];
+        if (m0 + m1 + m2 < arg1) {
+            return 0;
+        }
+        p += 3;
+    }
+    return 1;
+}
+/* fzgx:end fn_1_54E34 */
+
 /* fzgx:begin fn_1_54F5C noprologue */
 #include "types.h"
 #include "rel/main_rel/globals.h"

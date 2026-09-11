@@ -30,6 +30,50 @@ void fn_3_1349C(void) {
 }
 /* fzgx:end fn_3_1349C */
 
+/* fzgx:begin fn_3_13D98 noprologue */
+#include "types.h"
+
+extern u8 lbl_3_data_3574[60];
+extern void *lbl_801A6410;
+extern u32 *lbl_3_bss_A176C;
+
+extern int fn_1_45730(void *arg, void *buffer);
+extern u32 fn_1_45B2C(void *buffer);
+extern void *fn_1_45D0(void *source, u32 size, void *data, u32 format);
+extern void fn_80008BEC(void *buffer, u32 offset, u32 size);
+extern void fn_1_458A0(void *buffer, void *output, u32 size, u32 alignment);
+extern void fn_80008BA8(void *texture, void *buffer, u32 size);
+extern void fn_1_45850(void *buffer);
+
+u32 fn_3_13D98(void *arg) {
+    u8 header[0x60];
+    u8 buffer[0x2000] __attribute__((aligned(32)));
+    u8 i;
+    u32 count;
+    u32 size;
+
+    if (fn_1_45730(arg, header) != 0) {
+        size = fn_1_45B2C(header);
+        count = size >> 13;
+        if (count >= 0xc2) {
+            count = 0xc2;
+        }
+        if (size != 0) {
+            for (i = 0; i < count; i++) {
+                lbl_3_bss_A176C[(u8)i] = (u32)fn_1_45D0(lbl_801A6410, 0x2000,
+                                                          lbl_3_data_3574, 0x236);
+                fn_80008BEC((void *)lbl_3_bss_A176C[(u8)i], 0, 0x2000);
+                fn_1_458A0(header, buffer, 0x2000,
+                           ((i << 13) + 0x1f) & ~0x1f);
+                fn_80008BA8((void *)lbl_3_bss_A176C[(u8)i], buffer, 0x2000);
+            }
+            fn_1_45850(header);
+        }
+    }
+    return count;
+}
+/* fzgx:end fn_3_13D98 */
+
 /* fzgx:begin fn_3_13EA4 noprologue */
 #include "types.h"
 

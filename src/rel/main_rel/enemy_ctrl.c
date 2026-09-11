@@ -628,6 +628,18 @@ void fn_1_CD6C0(fn_1_CD6C0_object *object) {
 #pragma opt_propagation reset
 /* fzgx:end fn_1_CD6C0 */
 
+/* fzgx:begin fn_1_CFA0C noprologue */
+#include "types.h"
+#include "rel/main_rel/enemy_ctrl.h"
+
+extern u32 fn_1_5910(void);
+
+u32 fn_1_CFA0C(void) {
+    u32 bit = (((u32 *)&lbl_1_data_3D544)[fn_1_5910()] >> 16) & 1;
+    return bit ? 0 : 0;
+}
+/* fzgx:end fn_1_CFA0C */
+
 /* fzgx:begin fn_1_CFA4C noprologue */
 #include "types.h"
 #include "font.h"
