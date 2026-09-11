@@ -193,7 +193,10 @@ project instruction concatenation and automatic skill instructions are disabled.
 Codex 0.153.4 still initializes inherited MCP servers with the global orchestrator
 MCP switch disabled. The runner reads effective server names and explicitly
 disables each in thread-local configuration. Unexpected MCP initialization fails
-the transport before a matcher can use it. Worker hooks, shell snapshots, plugins,
+the transport before a matcher can use it. The runner also sets `notify=[]`: legacy turn-end notification commands are
+independent of the hooks feature and otherwise inherit personal sound alerts.
+This override applies only to newly started worker app servers.
+Worker hooks, shell snapshots, plugins,
 and unrelated tools are disabled in the runner. Shell snapshots were launching
 login shells despite matchers having no shell tools.
 Disable the request-user-input tool through its worker-local setting and clear

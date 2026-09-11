@@ -91,6 +91,7 @@ def codex_server_cmd(model: str, provider: str, effort: Optional[str], fast: boo
     overrides = {
         'model': model, 'model_provider': provider, 'approval_policy': 'never',
         'sandbox_mode': 'read-only', 'skills.include_instructions': False,
+        'notify': [],  # Legacy turn-end notification commands are separate from hooks.
         'project_doc_max_bytes': 0, 'web_search': 'disabled',
         'tools.web_search': False, 'model_reasoning_summary': 'none',
         'tools.experimental_request_user_input.enabled': False,
