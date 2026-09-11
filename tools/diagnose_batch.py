@@ -117,8 +117,9 @@ def mine_transcripts(batch, output):
     for row in results:
         symbol = row['symbol']
         attempt = ledger.db.execute('SELECT * FROM attempts WHERE id=?', (row['attempt_id'],)).fetchone()
-        notes = attempt['notes'] or ''
-        reason = ('stale_limit' if notes.startswith('plateau:') else 'check_limit' if notes.startswith('budget exhausted:')
+        notes = (attempt['notes'] or '') if attempt else ''
+        reason = ('interrupted' if row['outcome'].startswith('interrupted') else
+                  'stale_limit' if notes.startswith('plateau:') else 'check_limit' if notes.startswith('budget exhausted:')
                   else 'model_ended' if notes.startswith('model ended') else 'matched' if row['outcome'] == 'matched' else 'voluntary_release')
         events = [json.loads(line) for line in (directory / f'{symbol}.log').read_text().splitlines()]
         errors, samples = Counter(), {}
@@ -129,7 +130,7 @@ def mine_transcripts(batch, output):
             params, method = event.get('params', {}), event.get('method')
             if method == 'error':
                 error = params.get('error', {})
-                detail = error.get('additionalDetails', error.get('message', 'unknown'))
+                detail = error.get('additionalDetails') or error.get('message') or 'unknown'
                 kind = ('output_token_limit' if 'max_output_tokens' in detail else 'stream_timeout' if 'timeout' in detail
                         else 'stream_network' if 'network error' in detail else 'transport_other')
                 errors[kind] += 1

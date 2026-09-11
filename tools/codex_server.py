@@ -242,6 +242,7 @@ class Matcher:
         self.log = (directory / f'{symbol}.log').open('w', buffering=1)
         self.done, self.lock = asyncio.Event(), asyncio.Lock()
         self.thread = self.turn = None
+        self.interruption = None
         self.error = None
         self.total, self.samples = {}, []
         self.model_started = False
@@ -326,8 +327,24 @@ class Matcher:
 
     async def interrupt(self):
         if self.turn and not self.done.is_set() and not self.server.closed:
-            await self.server.request('turn/interrupt', dict(threadId=self.thread, turnId=self.turn))
-            await asyncio.wait_for(self.done.wait(), 30)
+            if self.interruption is None:
+                self.interruption = asyncio.create_task(self._interrupt())
+            await asyncio.shield(self.interruption)
+
+    async def _interrupt(self):
+        request = asyncio.create_task(self.server.request('turn/interrupt', dict(threadId=self.thread, turnId=self.turn)))
+        completed = asyncio.create_task(self.done.wait())
+        try:
+            await asyncio.wait((request, completed), return_when=asyncio.FIRST_COMPLETED)
+            # The terminal event proves completion even if the RPC acknowledgement
+            # is late. Tool completion and shutdown share this one interrupt.
+            if not completed.done():
+                await request
+                await asyncio.wait_for(completed, 30)
+        finally:
+            request.cancel()
+            completed.cancel()
+            await asyncio.gather(request, completed, return_exceptions=True)
 
     async def call(self, message):
         params, rid = message['params'], message['id']
