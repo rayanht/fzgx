@@ -1,6 +1,17 @@
 [
   {
     "module": "car_colchg",
+    "source": "rel/car_colchg/_prolog/_prolog.c",
+    "symbols": [
+      "_prolog"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "tu": "rel/car_colchg/_prolog.c"
+  },
+  {
+    "module": "car_colchg",
     "source": "rel/car_colchg/_prolog/fn_9_298.c",
     "symbols": [
       "fn_9_298"
