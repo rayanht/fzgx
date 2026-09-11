@@ -25,7 +25,7 @@ def digest(value):
 class Engine:
     def __init__(self, project, output, verbose=False):
         self.project, self.output, self.verbose = project, output, verbose
-        self.generator_sha256 = digest(Path(__file__).read_bytes() + Path(source.__file__).read_bytes() + Path(evidence.__file__).read_bytes() + Path(mwgraph.__file__).read_bytes())
+        self.generator_sha256 = digest(Path(__file__).read_bytes() + Path(source.__file__).read_bytes() + Path(evidence.__file__).read_bytes() + Path(mwgraph.__file__).read_bytes() + (ROOT/'tools/fzgx/signatures.py').read_bytes())
         output.mkdir(parents=True, exist_ok=True)
         self.headers = mwgraph.header_fingerprint(ROOT, project.version)
         self.environment = digest(('aligned-word-distance-v1' + self.headers + ''.join(digest((ROOT/'tools/fzgx'/f).read_bytes()) for f in
@@ -170,7 +170,7 @@ class Engine:
         check = self.check(row)
         if check.ok:
             families.append(evidence.candidates(self.project, row['symbol'], body, check))
-            targeted = [[c for c in families[0] if c[0].startswith(('retail scalar flag masks', 'retail format argument', 'retail call argument', 'retail call parameter', 'retail argument order:', 'retail float branch', 'retail zero comparison', 'bind recovered shared-pool', 'retain recovered shared-pool', 'recover native shared-pool', 'lifetime reload', 'lifetime ordered'))],
+            targeted = [[c for c in families[0] if c[0].startswith(('retail scalar flag masks', 'retail format argument', 'retail call argument', 'retail call parameter', 'retail argument order:', 'retail float branch', 'retail zero comparison', 'bind recovered shared-pool', 'retain recovered shared-pool', 'recover native shared-pool', 'lifetime reload', 'lifetime ordered', 'lifetime shared-pool'))],
                         source.address_expressions(body, name), source.pointer_lifetimes(body, name), source.through_local(body, name),
                         source.wide_member_values(body,name),source.promoted_locals(body,name),source.returned_regions(body,name)]
             operand_types = {'and':('&',('u32','s32')), 'or':('|',('u32','s32')),

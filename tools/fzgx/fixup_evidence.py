@@ -508,7 +508,7 @@ def native_pool_literals(p, symbol, body, check):
     bytes; leave dynamic reads and pointer-bearing data alone.
     """
     from .sdkimport import masked, integer_expression
-    from .fixup_source import declared_types, record_layouts
+    from .fixup_source import declared_types, record_layouts, member_layout, TYPE
     from .dataimport import BASIC, number
     from .evidence import memory_loads, object_jump_tables, retail_bytes
     sym = p.resolve(symbol)
@@ -542,25 +542,29 @@ def native_pool_literals(p, symbol, body, check):
             ranges.append((macro,position)); macro = None
     edits = []
     for name,(anchor,ty) in roots.items():
-        tag = re.sub(r'\b(?:extern|static|struct|const|volatile)\b|\*','',ty).strip()
-        pattern = r'\b'+re.escape(name)+r'(?:(?:->|\.)(\w+))?(?:\s*\[([^]\n]+)\])?'
+        pattern = r'\b'+re.escape(name)+r'((?:(?:->|\.)\w+)*)(?:\s*\[([^]\n]+)\])?'
         for use in re.finditer(pattern,code):
             start,end = use.span()
             if not any(a<=start and end<=b for a,b in ranges):
                 continue
-            if re.match(r'\s*(?:=(?!=)|[+*/&|^-]=|\+\+|--|\[|->|\.)',code[end:]) or code[:start].rstrip().endswith('&'):
+            prefix = code[code.rfind('\n',0,start)+1:start]
+            if (re.match(r'\s*\)*\s*(?:=(?!=)|[+*/&|^-]=|\+\+|--|\[|->|\.)',code[end:])
+                    or re.search(r'(?:&|\+\+|--)\s*\(*\s*$',code[:start])
+                    or re.fullmatch(r'\s*(?!return\b)'+TYPE+r'\s+',prefix)
+                    or re.search(r'#\s*define\s+$',prefix)):
                 continue
             if use[1]:
-                field = layouts.get(tag,{}).get(use[1])
-                if not field:
+                field = member_layout(name+use[1],layouts,variables)
+                if not field or field[0]!=name:
                     continue
-                offset,element,count = field
+                _,offset,element,count = field
                 if (count is not None) != (use[2] is not None):
                     continue
             else:
-                offset,element,count = 0,tag,None
+                offset,element,count = 0,re.sub(r'\b(?:extern|static|const|volatile)\b|\*','',ty).strip(),None
                 if '*' in ty and use[2] is None:
                     continue
+            element = re.sub(r'\b(?:const|volatile)\b','',element).strip()
             if element not in ('f32','float','f64','double'):
                 continue
             width = BASIC[element][0]
@@ -587,7 +591,33 @@ def native_pool_literals(p, symbol, body, check):
     text = body
     for start,end,value in sorted(set(edits),reverse=True):
         text = text[:start]+'('+value+')'+text[end:]
-    return [('recover native shared-pool literals',text)]
+    out = [('recover native shared-pool literals',text)]
+    # A readonly pool load can move past unrelated stores. Keep its address
+    # expression, so shortening the scalar's lifetime does not split the pool.
+    reads = {(a,b) for a,b,_ in edits}
+    local = re.compile(r'\b(?:f32|float|f64|double)\s+(\w+)\s*;')
+    locals_ = {m[1] for m in local.finditer(code,span[0],span[1])}
+    for assignment in re.finditer(r'(?m)^([ \t]*)(\w+)\s*=\s*([^;{}\n]+);',code[span[0]:span[1]]):
+        var = assignment[2]
+        a,b = span[0]+assignment.start(),span[0]+assignment.end()
+        lo,hi = span[0]+assignment.start(3),span[0]+assignment.end(3)
+        while code[hi-1:hi].isspace():
+            hi -= 1
+        if (var not in locals_ or (lo,hi) not in reads
+                or re.search(r'&\s*\(*\s*'+re.escape(var)+r'\b',code[span[0]:span[1]])):
+            continue
+        cursor, count = b, 0
+        for following in re.finditer(r'\s*([^;{}]+);',code[b:span[1]]):
+            if b+following.start()!=cursor:
+                break
+            statement = following[1]
+            if (re.search(r'\b(?:if|else|while|for|do|switch|case|return|goto|break|continue)\b|\b'+re.escape(var)+r'\b',statement)
+                    or ':' in statement or statement.count('(')!=statement.count(')')):
+                break
+            cursor = b+following.end(); count += 1
+            moved = body[:a]+body[b:cursor]+'\n'+body[a:b]+body[cursor:]
+            out.append((f'lifetime shared-pool read {var} after {count} statements',moved))
+    return out
 
 
 def bitmask_arguments(p, symbol, body):
@@ -634,7 +664,7 @@ def bitmask_arguments(p, symbol, body):
 
 def format_arguments(p, symbol, body):
     """Recover omitted variadic arguments from owned prototypes and retail text."""
-    from .fixup_source import call_sites, declared_types, member_type, record_layouts
+    from .fixup_source import call_sites, declared_types, member_type, record_layouts, member_layout
     from .sdkimport import masked, integer_expression
     from .evidence import retail_bytes
     from .dataimport import BASIC
@@ -691,15 +721,13 @@ def format_arguments(p, symbol, body):
                     expression=expression[1:-1].strip()
             if expression==previous:
                 break
-        member=re.fullmatch(r'&?\s*(\w+)(?:->|\.)(\w+)',expression)
+        member=re.fullmatch(r'&?\s*(\w+(?:(?:->|\.)\w+)+)',expression)
         if member:
-            root,field=member[1],member[2]
-            tag=re.sub(r'\b(?:const|volatile|struct)\b|\*','',variables.get(root,'')).strip()
-            layout=layouts.get(tag,{}).get(field)
-            if not layout or layout[1] not in ('char','u8','s8','unsigned char','signed char') or layout[2] is None:
+            layout=member_layout(member[1],layouts,variables)
+            if not layout or layout[2] not in ('char','u8','s8','unsigned char','signed char') or layout[3] is None:
                 return None
-            value=address(root,seen)
-            return (value[0],value[1]+layout[0]) if value else None
+            value=address(layout[0],seen)
+            return (value[0],value[1]+layout[1]) if value else None
         match=re.fullmatch(r'&?\s*(\w+)\s*(?:\[([^]]+)\]|\+\s*(.+))?',expression)
         if not match or match[1] in seen:
             return None
@@ -708,7 +736,7 @@ def format_arguments(p, symbol, body):
         if value is None:
             return None
         if match[2] or match[3]:
-            ty=re.sub(r'\b(?:const|volatile|struct)\b|\*','',variables.get(root,'')).strip()
+            ty=re.sub(r'\b(?:const|volatile|struct|union)\b|\*','',variables.get(root,'')).strip()
             if ty not in BASIC:
                 return None
             try:
@@ -1367,7 +1395,7 @@ def hardware_lvalues(body):
 
 def reload_lvalues(body, name, diffs, missing_globals=()):
     """Shorten a cached load's lifetime where retail explicitly loads again."""
-    from .fixup_source import declared_types, member_type, record_layouts, DECL_RE
+    from .fixup_source import declared_types, member_type, record_layouts, member_layout, declarator, DECL_RE
     from .sdkimport import masked
     code = masked(body)
     span = _function_span(code,name)
@@ -1383,19 +1411,15 @@ def reload_lvalues(body, name, diffs, missing_globals=()):
     out, pointers = [], {}
     for offset in sorted(offsets,key=lambda n:(n==0,n)):
         field = re.compile(r'\b(unk_?0*'+format(offset,'x')+r')\b',re.I)
-        names = {m[1] for m in field.finditer(code[:span[0]])}
-        names.update(member for layout in layouts.values() for member,(at,_,count) in layout.items()
-                     if at==offset and count is None)
+        expressions = list(re.finditer(r'\b\w+(?:(?:->|\.)\w+)+',code[span[0]:span[1]]))
+        names = {re.split(r'->|\.',m[0])[-1] for m in expressions}
         for member in sorted(names):
-            matches = list(re.finditer(r'\b\w+(?:(?:->|\.)\w+)*(?:->|\.)'+re.escape(member)+r'\b',code[span[0]:span[1]]))
+            matches = [m for m in expressions if re.split(r'->|\.',m[0])[-1]==member]
             groups = {}
             for match in matches:
                 a,b = span[0]+match.start(),span[0]+match.end()
-                owner=re.split(r'->|\.',match[0])[:-1]
-                owner_type=member_type('->'.join(owner),fields,variables)
-                tag=re.sub(r'\b(?:extern|static|struct|const|volatile)\b|\*','',owner_type).strip()
-                layout=layouts.get(tag,{}).get(member)
-                if (layout and (layout[0]!=offset or layout[2] is not None)) or (not layout and not field.fullmatch(member)):
+                layout=member_layout(match[0],layouts,variables)
+                if (layout and (layout[1]!=offset or layout[3] is not None)) or (not layout and not field.fullmatch(member)):
                     continue
                 if not layout and re.search(r'\b'+re.escape(member)+r'\s*\[',code[:span[0]]):
                     continue
@@ -1414,7 +1438,7 @@ def reload_lvalues(body, name, diffs, missing_globals=()):
                     pointers.setdefault(offset,set()).add((expression,ty))
                 # Qualify the loaded object, including a pointer itself, rather
                 # than its pointee; otherwise MWCC can still reuse the pointer.
-                replacement = f'(*({ty} volatile *)&({expression})) /* Retail reloads this field. */'
+                replacement = '(*('+declarator(ty, 'volatile *')+')&('+expression+')) /* Retail reloads this field. */'
                 for positions in [sites]+[[site] for site in sites]:
                     text = body
                     for a,b in reversed(positions):

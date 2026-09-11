@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import re
+import hashlib
 from contextlib import contextmanager
 from collections import defaultdict
 from dataclasses import dataclass
@@ -19,6 +20,157 @@ def split_params(text):
         if ch == ',' and depth == 0:
             result.append(text[start:i].strip()); start = i + 1
     return result + [text[start:].strip()]
+
+
+def declarator(typ, name):
+    """Name an abstract C type, including pointers to functions and arrays."""
+    pointer = re.search(r'\(\s*(\*+(?:\s+(?:const|volatile))*)\s*\)', typ)
+    if pointer:
+        return typ[:pointer.start()] + '(' + pointer[1] + ' ' + name + ')' + typ[pointer.end():]
+    array = typ.find('[')
+    if array >= 0:
+        return typ[:array].rstrip() + ' ' + name + typ[array:]
+    return typ + ' ' + name
+
+
+def record_tag(typ):
+    return re.sub(r'\b(?:extern|static|register|struct|union|const|volatile)\b|\*', '', typ).strip()
+
+
+def records(code, end):
+    """Declared records in dependency order, retaining anonymous member owners."""
+    closing, stack = {}, []
+    for token in re.finditer(r'[{}]', code[:end]):
+        if token[0] == '{':
+            stack.append(token.start())
+        elif stack:
+            closing[stack.pop()] = token.start()
+    found = []
+    namespace = hashlib.sha256(code[:end].encode()).hexdigest()[:12]
+    for match in re.finditer(r'(?P<td>typedef\s+)?(?P<kind>struct|union)\s*(?P<tag>\w+)?\s*\{', code[:end]):
+        close = closing.get(match.end() - 1)
+        if close is None:
+            continue
+        tail = re.match(r'\s*(\w+)?', code[close + 1:end])
+        alias = tail[1] if tail else None
+        key = match['tag'] or (alias if match['td'] else None) or '__fzgx_record_' + namespace + '_' + str(match.start())
+        parent = next((r['key'] for r in reversed(found) if r['opening'] <= match.start() < r['end']), None)
+        found.append(dict(start=match.start(), opening=match.end(), end=close + 1, key=key,
+                          kind=match['kind'], tag=match['tag'], td=bool(match['td']), alias=alias, parent=parent))
+    for record in sorted(found, key=lambda r:r['end']):
+        text = code[record['opening']:record['end'] - 1]
+        for child in reversed([r for r in found if r['parent'] == record['key']]):
+            a, b = child['start'] - record['opening'], child['end'] - record['opening']
+            text = text[:a] + child['kind'] + ' ' + child['key'] + text[b:]
+        yield dict(record, body=text)
+
+
+def member_declarations(text):
+    """Flat field declarators; nested records are replaced by records()."""
+    fields = []
+    for part in text.split(';'):
+        if not part.strip():
+            continue
+        common = None
+        for value in split_params(part):
+            callback = re.fullmatch(r'(.*?)\(\s*(\*+(?:\s+(?:const|volatile))*)\s*(\w+)\s*((?:\[[^]]*\])*)\s*\)\s*(\(.*\))', value, re.S)
+            if callback:
+                prefix, stars, name, array, args = callback.groups()
+                common = prefix.strip() or common
+                if not common:
+                    return None
+                fields.append((name, common + ' (' + stars + ')' + args, re.findall(r'\[([^]]*)\]', array)))
+                continue
+            if common is None:
+                first = re.fullmatch(r'([\w\s]+?)(\s+\w+(?:\s*\[[^]]*\])*|\s*\*[^;]+)', value)
+                if not first:
+                    return None
+                common, value = first.groups()
+                common = common.strip()
+            field = re.fullmatch(r'((?:\*\s*(?:(?:const|volatile)\s+)*)*)(\w+)\s*((?:\[[^]]*\])*)', value.strip())
+            if not field:
+                return None
+            stars, name, array = field.groups()
+            fields.append((name, common + (' ' + stars.strip() if stars else ''), re.findall(r'\[([^]]*)\]', array)))
+    return fields
+
+
+def record_layouts(code, end):
+    """Natural PowerPC ABI sizes and offsets, with overlapping union views."""
+    from .sdkimport import integer_expression
+    if re.search(r'#pragma\s+(?:pack|options\s+align)\b', code[:end]):
+        return {}, {}
+    widths = {'u8':1, 's8':1, 'char':1, 'u16':2, 's16':2, 'short':2,
+              'u32':4, 's32':4, 'int':4, 'long':4, 'BOOL':4, 'size_t':4,
+              'f32':4, 'float':4, 'u64':8, 's64':8, 'long long':8, 'f64':8, 'double':8}
+    aliases = {}
+    for match in re.finditer(r'\btypedef\s+([^;{}]+);', code[:end]):
+        for name, typ, dims in member_declarations(match[1]) or []:
+            aliases[name] = (typ, dims)
+    layouts, sizes = {}, {}
+
+    def size(typ, seen=()):
+        typ = re.sub(r'\b(?:const|volatile|register)\b', '', typ).strip()
+        if '*' in typ:
+            return 4, 4
+        tag = record_tag(typ)
+        if tag in sizes:
+            return sizes[tag]
+        if tag in aliases and tag not in seen:
+            base, dims = aliases[tag]
+            result = size(base, (*seen, tag))
+            if result:
+                return result[0] * count(dims), result[1]
+        scalar = re.sub(r'\b(?:signed|unsigned)\s*', '', typ).strip() or 'int'
+        scalar = re.sub(r'\s+int$', '', scalar)
+        width = 4 if typ.startswith('enum ') else widths.get(scalar)
+        return (width, min(width, 8)) if width else None
+
+    def count(dims, flexible=False):
+        result = 1
+        for i,dim in enumerate(dims):
+            value = 0 if not dim and flexible and i==0 else integer_expression(dim)
+            if value <= 0 and not (not dim and flexible and i==0):
+                raise ValueError('nonpositive array extent')
+            result *= value
+        return result
+
+    pending = list(records(code, end))
+    while pending:
+        unresolved = []
+        for record in pending:
+            members = member_declarations(record['body'])
+            if not members:
+                continue
+            fields, cursor, alignment = [], 0, 1
+            try:
+                for index, (name, typ, dims) in enumerate(members):
+                    result = size(typ)
+                    if not result:
+                        break
+                    width, align = result
+                    offset = 0 if record['kind'] == 'union' else (cursor + align - 1) // align * align
+                    flexible = index==len(members)-1 and record['kind']=='struct'
+                    extent = count(dims,flexible)
+                    fields.append((name, typ, offset, width, tuple(integer_expression(d) if d else 0 for d in dims)))
+                    cursor = max(cursor, offset + width * extent)
+                    alignment = max(alignment, align)
+                else:
+                    layout_size = ((cursor + alignment - 1) // alignment * alignment, alignment)
+                    for key in (record['key'], record['alias'] if record['td'] else None):
+                        if key:
+                            layouts[key], sizes[key] = fields, layout_size
+                    continue
+            except (ValueError, SyntaxError):
+                pass
+            unresolved.append(record)
+        if len(unresolved) == len(pending):
+            break
+        pending = unresolved
+    for name, (typ, dims) in aliases.items():
+        if not dims and '*' not in typ and record_tag(typ) in layouts:
+            layouts[name], sizes[name] = layouts[record_tag(typ)], sizes[record_tag(typ)]
+    return layouts, sizes
 
 
 def parameter(text, types):
@@ -267,15 +419,22 @@ class Index:
         t = re.sub(r'\b(const|volatile|register)\s*', '', typ).strip()
         if t in ('f32', 'f64', 'float', 'double'):
             return 'float'
-        if t in ('u64', 's64', 'long long', 'unsigned long long'):
+        if t in ('u64', 's64', 'long long', 'signed long long', 'unsigned long long',
+                 'long long int', 'signed long long int', 'unsigned long long int'):
             return 'wide'
         if t == 'void':
             return 'void'
-        if t in BASIC:
+        if t in BASIC or t.startswith('enum ') or t and set(t.split()) <= {'signed', 'unsigned', 'char', 'short', 'int', 'long'}:
             return 'integer'
         if t in seen:
             return 'aggregate'
         definition = self.types.get(t, '')
+        if '{' in definition:
+            # Stars inside fields do not make the containing typedef a pointer.
+            tail = definition[definition.rfind('}') + 1:]
+            if re.search(r'\*+\s*' + re.escape(t) + r'\b', tail):
+                return 'pointer'
+            return 'integer' if re.match(r'\s*typedef\s+enum\b', definition) else 'aggregate'
         alias = re.fullmatch(r'typedef\s+(.+?)\s+' + re.escape(t) + r'\s*(\[[^;]+)?;', definition, re.S)
         if alias:
             if alias[2]:
@@ -310,55 +469,36 @@ class Index:
         return out
 
     def layout(self, pointer):
-        """Flat MWCC fields, including grouped declarators and callback pointers."""
+        """MWCC fields, including nested records, unions and callbacks."""
+        from .sdkimport import masked
         base = re.sub(r'\b(const|volatile)\s*', '', pointer).strip()
         if not base.endswith('*'):
             return None
-        base = re.sub(r'^struct\s+', '', base[:-1].strip())
-        definition = self.types.get(base, '')
-        if '{' not in definition or re.search(r'\bunion\b', definition):
-            return None
-        body = definition[definition.index('{') + 1:definition.rfind('}')]
-        body = re.sub(r'//[^\n]*|/\*.*?\*/', '', body, flags=re.S)
-        parts, start, depth = [], 0, 0
-        for i, ch in enumerate(body):
-            depth += (ch == '{') - (ch == '}')
-            if ch == ';' and depth == 0:
-                parts.append(body[start:i].strip()); start = i + 1
-        cursor, alignment, out = 0, 1, []
-        widths = {'u8': 1, 's8': 1, 'char': 1, 'u16': 2, 's16': 2, 'short': 2,
-                  'u32': 4, 's32': 4, 'int': 4, 'BOOL': 4, 'f32': 4, 'float': 4,
-                  'u64': 8, 's64': 8, 'f64': 8, 'double': 8}
-        for part in parts:
-            callback = re.fullmatch(r'(.+?)\(\s*\*\s*(\w+)\s*\)\s*(\(.*\))', part, re.S)
-            anonymous = re.search(r'}\s*\*\s*(\w+)$', part)
-            if callback:
-                fields = [(callback[2], callback[1].strip() + ' (*)' + callback[3], 1, False)]
-            elif anonymous:
-                fields = [(anonymous[1], 'void *', 1, False)]
-            else:
-                fields, common = [], None
-                for declarator in split_params(part):
-                    if common is None:
-                        first = re.fullmatch(r'([\w\s]+?)(\s+\w+(?:\s*\[[^]]+\])?|\s*\*+\s*\w+(?:\s*\[[^]]+\])?)', declarator)
-                        if not first:
-                            return None
-                        common, declarator = first.groups()
-                    field = re.fullmatch(r'(\**)(\w+)\s*(\[(0x[0-9a-fA-F]+|\d+)\])?', re.sub(r'\s*\*\s*', '*', declarator).strip())
-                    if not field:
-                        return None
-                    stars, name, array, count = field.groups()
-                    fields.append((name, common.strip() + (' ' + stars if stars else ''), int(count, 0) if count else 1, bool(array)))
-            for name, typ, count, array in fields:
-                width = 4 if self.category(typ) == 'pointer' else widths.get(typ)
-                if width is None:
-                    return None
-                align = min(width, 8)
-                alignment = max(alignment, align)
-                cursor = (cursor + align - 1) // align * align
-                out.append((name, typ, cursor, width, count, array))
-                cursor += width * count
-        return out, (cursor + alignment - 1) // alignment * alignment
+        base = record_tag(base[:-1])
+        cache = self.__dict__.setdefault('_layouts', {})
+        if base not in cache:
+            pending, seen, pieces = [base], set(), []
+            while pending:
+                name = pending.pop()
+                if name in seen:
+                    continue
+                seen.add(name)
+                definition = self.types.get(name, '')
+                if definition:
+                    pieces.append(definition)
+                    pending.extend(n for n in re.findall(r'\b\w+\b', definition) if n in self.types and n not in seen)
+            code = masked('\n'.join(dict.fromkeys(pieces)))
+            layouts, sizes = record_layouts(code, len(code))
+            for tag, fields in layouts.items():
+                out = []
+                for name, typ, offset, width, dims in fields:
+                    for dim in dims[1:]:
+                        width *= dim
+                        typ += '['+str(dim)+']'
+                    out.append((name, typ, offset, width, dims[0] if dims else 1, bool(dims)))
+                cache[tag] = out, sizes[tag][0]
+            cache.setdefault(base, None)
+        return cache[base]
 
     def member(self, pointer, offset, access):
         layout = self.layout(pointer)
@@ -366,12 +506,26 @@ class Index:
             return None
         widths = {'u8': 1, 's8': 1, 'u16': 2, 's16': 2, 'u32': 4, 's32': 4, 'f32': 4, 'f64': 8}
         for name, typ, cursor, width, count, array in layout[0]:
-            if (cursor <= offset < cursor + width * count and (offset - cursor) % width == 0
-                    and width == widths.get(access)
+            if not (cursor <= offset and (count==0 or offset < cursor + width * count)):
+                continue
+            inner = offset - cursor
+            suffix = f'[{inner // width}]' if array else ''
+            inner %= width
+            # Peel array dimensions without enumerating a large table's rows.
+            while (dimension := re.search(r'\[(\d+)\]', typ)) is not None:
+                count = int(dimension[1])
+                typ = typ[:dimension.start()] + typ[dimension.end():]
+                width //= count
+                suffix += f'[{inner // width}]'
+                inner %= width
+            if (not inner and width == widths.get(access) and self.category(typ) != 'aggregate'
                     and (self.category(typ) == "float") == (self.category(access) == "float")):
                 # A word copy of a color array must remain a word access, not one byte.
-                suffix = f'[{(offset - cursor) // width}]' if array else ''
                 return name + suffix, typ
+            if self.category(typ) == 'aggregate':
+                child = self.member(typ + ' *', inner, access)
+                if child:
+                    return name + suffix + '.' + child[0], child[1]
         return None
 
     def preamble(self, signatures):

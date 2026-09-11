@@ -13,6 +13,7 @@ from typing import Dict, List, Optional, Tuple
 from capstone import Cs, CS_ARCH_PPC, CS_MODE_32, CS_MODE_BIG_ENDIAN
 from Levenshtein import distance
 from . import oracle, mwgraph, mwconstraints
+from .signatures import records, record_tag, declarator
 
 TYPE = (r'(?:(?:register|const|volatile)\s+){0,3}'
         r'(?:(?:unsigned|signed)\s+)?'
@@ -43,14 +44,40 @@ def _locals(body: str, span) -> List[Tuple[int, int, str, str, str]]:
     with initializers count (their text keeps the initializer)."""
     out = []
     from .sdkimport import masked
-    for m in re.finditer(r"[^\n]*\n", masked(body)[span[1]:span[2]]):
+    code = masked(body)
+    aggregates = None
+    consumed = span[1]
+    for m in re.finditer(r"[^\n]*\n", code[span[1]:span[2]]):
         line = m.group(0)
         s0 = span[1] + m.start()
+        if s0 < consumed:
+            continue
         if not line.strip():
             continue
         dm = DECL_RE.match(line.rstrip("\n"))
         if not dm:
-            break
+            # Inline record declarations used to hide every subsequent local
+            # from declaration-order and lifetime repairs.
+            if not re.match(r'\s*(?:struct|union)\b',line):
+                break
+            if aggregates is None:
+                aggregates = list(records(code,span[2]))
+            start = s0+len(line)-len(line.lstrip())
+            record = next((r for r in aggregates if r['start']==start),None)
+            if not record:
+                break
+            end = code.find(';',record['end'],span[2])
+            if end<0 or '=' in code[record['end']:end]:
+                break
+            tail = DECL_RE.fullmatch(record['kind']+' '+record['key']+code[record['end']:end+1])
+            if not tail:
+                break
+            consumed = end+1
+            if code[consumed:consumed+1]=='\n':
+                consumed += 1
+            typ = body[start:record['end']]+tail[1][len(record['kind']+' '+record['key']):]
+            out.append((s0,consumed,typ,tail[2],tail[3]))
+            continue
         out.append((s0, s0 + len(line), dm.group(1), dm.group(2), dm.group(3)))
     return out
 
@@ -1692,48 +1719,23 @@ def operand_lifetimes(body, name, operators):
     return out
 
 
-def records(code, end):
-    """Declared records in dependency order, retaining anonymous member owners."""
-    closing,stack={},[]
-    for token in re.finditer(r'[{}]',code[:end]):
-        if token[0]=='{':
-            stack.append(token.start())
-        elif stack:
-            closing[stack.pop()]=token.start()
-    found=[]
-    for match in re.finditer(r'(?P<td>typedef\s+)?struct\s*(?P<tag>\w+)?\s*\{',code[:end]):
-        close=closing.get(match.end()-1)
-        if close is None:
-            continue
-        tail=re.match(r'\s*(\w+)?',code[close+1:end])
-        alias=tail[1] if tail else None
-        key=match['tag'] or (alias if match['td'] else None) or '__fzgx_record_'+str(match.start())
-        found.append(dict(start=match.start(),opening=match.end(),end=close+1,key=key,
-                          tag=match['tag'],td=bool(match['td']),alias=alias))
-    for record in sorted(found,key=lambda r:r['end']):
-        text=code[record['opening']:record['end']-1];children=[]
-        for child in found:
-            if record['opening']<=child['start']<child['end']<record['end'] and not any(a<=child['start']<b for a,b,_ in children):
-                children.append((child['start'],child['end'],'struct '+child['key']))
-        for a,b,value in reversed(children):
-            text=text[:a-record['opening']]+value+text[b-record['opening']:]
-        yield dict(record,body=text)
-
-
 def declared_types(code, end):
     """Resolve fields by their owning record, never by a shared member name."""
+    from .signatures import member_declarations, declarator
     fields, instances = {}, {}
     for record in records(code,end):
         members = {}
-        for line in record['body'].split(';'):
-            decl = DECL_RE.match(line.strip()+';')
-            if decl:
-                members[decl[2]] = decl[1]+(' *' if decl[3] else '')
+        for name, typ, dims in (field for part in record['body'].split(';')
+                               for field in member_declarations(part) or []):
+            if dims:
+                typ = (declarator(typ, '(*)'+''.join('['+d+']' for d in dims[1:])) if len(dims)>1
+                       else declarator(typ, '*').strip())
+            members[name] = typ
         fields[record['key']] = members
         if record['td'] and record['alias']:
             fields[record['alias']] = members
-        elif record['alias']:
-            instances[record['alias']]='struct '+record['key']
+        elif record['alias'] and record['parent'] is None:
+            instances[record['alias']] = record['kind']+' '+record['key']
     variables = {}
     for decl in re.finditer(r'('+TYPE+r')\s*(?:(?<=\*)|\s)(\w+)\s*(?=[,;=)\[])', code):
         if re.search(r'\b(?:return|else|case|default|break|continue|goto|if|for|switch|while|do|sizeof)\b',decl[1]):
@@ -1745,65 +1747,59 @@ def declared_types(code, end):
 
 def record_layouts(code, end, variables):
     """Byte offsets of explicitly declared PowerPC records and their members."""
-    from .sdkimport import integer_expression
-    from .dataimport import BASIC
-    if re.search(r'#pragma\s+(?:pack|options\s+align)\b',code[:end]):
-        return {}
-    layouts, sizes = {}, {}
-    for record in records(code,end):
-        fields, offset, alignment = {}, 0, 1
-        for declaration in record['body'].split(';'):
-            if not declaration.strip():
-                continue
-            field = DECL_RE.fullmatch(declaration.strip()+';')
-            ty = re.sub(r'\b(?:const|volatile)\s+', '', field[1]).strip() if field else ''
-            tag = re.sub(r'^struct\s+', '', ty)
-            if not field or not (ty in BASIC or '*' in ty or tag in sizes) or field[4]:
-                fields = {}; break
-            width, align = (4,4) if '*' in ty else (BASIC[ty][0],BASIC[ty][0]) if ty in BASIC else sizes[tag]
-            try:
-                dims = [integer_expression(n) for n in re.findall(r'\[([^]]+)\]',field[3])]
-            except (ValueError, SyntaxError):
-                fields = {}; break
-            if len(dims)>1 or any(n<=0 for n in dims):
-                fields = {}; break
-            offset = (offset+align-1)//align*align
-            alignment = max(alignment,align)
-            fields[field[2]] = (offset,ty,dims[0] if dims else None)
-            offset += width*(dims[0] if dims else 1)
-        if fields:
-            layouts[record['key']] = fields
-            sizes[record['key']] = ((offset+alignment-1)//alignment*alignment,alignment)
-            if record['td'] and record['alias']:
-                layouts[record['alias']] = fields
-                sizes[record['alias']] = ((offset+alignment-1)//alignment*alignment,alignment)
-            elif record['alias'] and record['tag']:
-                variables[record['alias']] = 'struct '+record['tag']
-    return layouts
+    from .signatures import record_layouts as layouts
+    parsed, _ = layouts(code, end)
+    return {tag:{name:(offset,ty+''.join('['+str(n)+']' for n in dims[1:]),dims[0] if dims else None)
+                 for name,ty,offset,width,dims in fields} for tag,fields in parsed.items()}
 
 
 def member_type(expression, fields, variables):
     parts = re.split(r'->|\.', expression)
     ty = variables.get(parts[0], '')
     for member in parts[1:]:
-        tag = re.sub(r'\b(?:extern|static|struct|const|volatile)\b|\*', '', ty).strip()
+        tag = record_tag(ty)
         ty = fields.get(tag, {}).get(member, '')
     return ty
 
 
+def member_layout(expression, layouts, variables):
+    """Address base and displacement through inline records and pointer loads."""
+    root = re.match(r'\w+', expression)
+    if not root:
+        return None
+    base, typ, offset, count = root[0], variables.get(root[0], ''), 0, None
+    for member in re.finditer(r'(->|\.)(\w+)', expression[root.end():]):
+        at = root.end() + member.start()
+        if member[1] == '->' and at > root.end():
+            base, offset = expression[:at], 0
+        field = layouts.get(record_tag(typ), {}).get(member[2])
+        if not field:
+            return None
+        delta, typ, count = field
+        offset += delta
+    return base, offset, typ, count
+
+
 def pointer_lifetimes(body, name):
-    """Materialize typed pointer reads at their existing evaluation point.
+    """Materialize pointer and floating-point reads at their evaluation point.
 
     A repeated member chain often conceals two live values from the allocator.
     Bind before a complete statement, never inside one of its unsequenced
     operands. Function-wide carriers let separate reads share a live range.
     """
     from .sdkimport import masked
+    from .signatures import member_declarations
     code = masked(body)
     span = _function_body_span(code, name)
     if not span:
         return []
     fields, variables = declared_types(code, span[0])
+    aliases = {}
+    for declaration in re.finditer(r'\btypedef\s+([^;{}]+);', code[:span[0]]):
+        aliases.update({name:typ for name,typ,dims in member_declarations(declaration[1]) or [] if not dims})
+    pointers = {name for name,typ in aliases.items() if '*' in typ}
+    while more := {name for name,typ in aliases.items() if typ in pointers} - pointers:
+        pointers.update(more)
     out = []
     declarations = {}
     for line in re.finditer(r'(?m)^[ \t]*[^\n]+;[ \t]*$',code[span[1]:span[2]]):
@@ -1826,14 +1822,19 @@ def pointer_lifetimes(body, name):
     sites = {}
     pattern = re.compile(r'\b(\w+)((?:(?:->|\.)\w+)+)')
     for m in pattern.finditer(code, span[1], span[2]):
+        if (code[:m.start()].rstrip().endswith(('.', '->'))
+                or re.search(r'(?:&|\+\+|--)\s*\(*\s*$',code[:m.start()])):
+            continue
         ty = variables.get(m[1], '')
         for member in re.finditer(r'(->|\.)(\w+)', m[2]):
-            tag = re.sub(r'\b(?:struct|const|volatile)\b|\*', '', ty).strip()
+            tag = record_tag(ty)
             ty = fields.get(tag, {}).get(member[2], '')
             end = m.start(2)+member.end()
-            destination = end == m.end() and re.match(r'\s*(?:=(?!=)|[+*/&|^-]=|\+\+|--)',code[end:])
-            if '*' in ty and not destination:
-                sites.setdefault((body[m.start():end], ty), []).append((m.start(),end))
+            destination = end == m.end() and re.match(r'\s*\)*\s*(?:=(?!=)|[+*/&|^-]=|\+\+|--)',code[end:])
+            scalar = re.sub(r'\b(?:const|volatile)\b', '', ty).strip()
+            if ('*' in ty or scalar in pointers or scalar in ('f32','float','f64','double')) and not destination:
+                value_type = ty if '*' in ty else scalar
+                sites.setdefault((body[m.start():end], value_type), []).append((m.start(),end))
     for (expression, ty), uses in sites.items():
         var = 'fzgx_live'
         while re.search(r'\b'+var+r'\b', code):
@@ -1856,7 +1857,7 @@ def pointer_lifetimes(body, name):
                 continue
             text = body[lo:end]
             text = re.sub(r'\b'+re.escape(expression)+r'\b', var, text)
-            replacement = '{\n    '+ty+' '+var+' = '+expression+';\n'+text+'\n}'
+            replacement = '{\n    '+declarator(ty,var)+' = '+expression+';\n'+text+'\n}'
             out.insert(0, (f'lifetime switch pointer {expression} at {lo}', body[:lo]+replacement+body[end:]))
         edits = []
         for line, positions in grouped.items():
@@ -1864,7 +1865,10 @@ def pointer_lifetimes(body, name):
             # short-circuit or control-flow boundary between repeated reads.
             end = code.find('\n', positions[-1][1])
             statement = code[line:end]
-            if any(x in statement for x in ('&&','||','?', 'if ', 'if(', 'while', 'for ')) or not statement.rstrip().endswith(';'):
+            previous = code[span[1]-1:line].rstrip()
+            if (any(x in statement for x in ('&&','||','?', 'if ', 'if(', 'while', 'for '))
+                    or not statement.rstrip().endswith(';') or not previous.endswith((';','{','}',':'))
+                    or statement.count('(')!=statement.count(')') or DECL_RE.fullmatch(statement)):
                 continue
             changes = [(a,b,var) for a,b in positions]
             indent = re.match(r'[ \t]*', body[line:])[0]
@@ -1872,14 +1876,14 @@ def pointer_lifetimes(body, name):
             text = body
             for a,b,value in reversed(changes):
                 text = text[:a]+value+text[b:]
-            text = text[:span[1]]+'\n    '+ty+' '+var+';'+text[span[1]:]
+            text = text[:span[1]]+'\n    '+declarator(ty,var)+';'+text[span[1]:]
             out.append((f'lifetime pointer {expression} at {line}', text))
             edits.extend(changes)
         if edits:
             text = body
             for a,b,value in sorted(edits, reverse=True):
                 text = text[:a]+value+text[b:]
-            text = text[:span[1]]+'\n    '+ty+' '+var+';'+text[span[1]:]
+            text = text[:span[1]]+'\n    '+declarator(ty,var)+';'+text[span[1]:]
             out.insert(0, ('lifetime pointer '+expression+' at every site', text))
         # An inlined accessor has its own parameter/return webs before inlining.
         # This can separate a pointer lifetime without forcing a stack spill.
@@ -1890,7 +1894,7 @@ def pointer_lifetimes(body, name):
             while re.search(r'\b'+helper+r'\b', code):
                 helper += '_'
             expression_in_helper = 'owner'+expression[len(root):]
-            definition = f'static inline {ty} {helper}({root_type} owner) {{ return {expression_in_helper}; }}\n'
+            definition = 'static inline '+declarator(ty, helper+'('+declarator(root_type, 'owner')+')')+' { return '+expression_in_helper+'; }\n'
             insertion = body.rfind('\n', 0, span[0])+1
             for positions in [uses]+[[use] for use in uses]:
                 text = body
@@ -1906,16 +1910,16 @@ def pointer_lifetimes(body, name):
         tokens = re.split(r'->|\.', lhs)
         ty = variables.get(tokens[0], '')
         for member in tokens[1:]:
-            tag = re.sub(r'\b(?:struct|const|volatile)\b|\*', '', ty).strip()
+            tag = record_tag(ty)
             ty = fields.get(tag, {}).get(member, '')
-        if not ty or 'volatile' in ty:
+        if not ty or 'volatile' in ty or '__fzgx_record_' in ty:
             continue
         var = 'fzgx_value'
         while re.search(r'\b'+var+r'\b', code):
             var += '_'
         rhs = body[assignment.start(3):assignment.end(3)]
         for address in (False, True):
-            declaration = ty+(' *' if address else ' ')+var+';'
+            declaration = declarator(ty, ('*' if address else '')+var)+';'
             first = '&('+lhs+')' if address else rhs
             second = '*'+var+' = '+rhs if address else lhs+' = '+var
             replacement = assignment[1]+var+' = '+first+';\n'+assignment[1]+second+';'
