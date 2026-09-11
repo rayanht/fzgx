@@ -426,6 +426,69 @@ void fn_1_CA690(void *self, s32 arg1, s32 arg2) {
 }
 /* fzgx:end fn_1_CA690 */
 
+/* fzgx:begin fn_1_CA8FC noprologue */
+#include "types.h"
+#include "rel/main_rel/globals.h"
+#include "rel/main_rel/enemy_ctrl.h"
+
+typedef struct {
+    u32 words[22];
+} fn_1_CA8FC_Copy88;
+
+extern f32 lbl_1_rodata_26F8[22];
+extern const f32 lbl_1_rodata_5D18;
+extern const f32 lbl_1_rodata_5DBC;
+extern const f32 lbl_1_rodata_5DC8;
+extern const f64 lbl_1_rodata_5C00;
+extern const f64 lbl_1_rodata_5DC0;
+extern u32 lbl_1_rodata_5D94[10];
+extern s32 fn_1_3F1D4(void);
+extern u32 fn_1_5910(void);
+extern void fn_1_51E60(void *);
+extern f64 fn_80088598(f64, f64);
+
+void fn_1_CA8FC(void) {
+    fn_1_CA8FC_Copy88 pat;
+    u32 tbl[10];
+    s32 id;
+    s32 off;
+    s32 i;
+
+    id = fn_1_3F1D4();
+    if (id == -1) {
+        return;
+    }
+    if (((((u32 *)&lbl_1_data_3D544)[fn_1_5910()] >> 0x1CU) & 1) == 0) {
+        return;
+    }
+    pat = *(fn_1_CA8FC_Copy88 *)lbl_1_rodata_26F8;
+    pat.words[0] = 0x942D;
+    ((f32 *)pat.words)[1] = lbl_1_rodata_5D18;
+    ((f32 *)pat.words)[2] = lbl_1_rodata_5DBC;
+    fn_1_51E60(&pat);
+    tbl[0] = lbl_1_rodata_5D94[0];
+    tbl[1] = lbl_1_rodata_5D94[1];
+    tbl[2] = lbl_1_rodata_5D94[2];
+    tbl[3] = lbl_1_rodata_5D94[3];
+    tbl[4] = lbl_1_rodata_5D94[4];
+    tbl[5] = lbl_1_rodata_5D94[5];
+    tbl[6] = lbl_1_rodata_5D94[6];
+    tbl[7] = lbl_1_rodata_5D94[7];
+    tbl[8] = lbl_1_rodata_5D94[8];
+    tbl[9] = lbl_1_rodata_5D94[9];
+    pat = *(fn_1_CA8FC_Copy88 *)lbl_1_rodata_26F8;
+    ((f32 *)pat.words)[2] = lbl_1_rodata_5DBC;
+    for (i = 0, off = 0; i <= 1; i++, off += 0x16) {
+        pat.words[0] = tbl[id / (s32)fn_80088598(lbl_1_rodata_5DC0, (f64)i) % 10];
+        ((f32 *)pat.words)[1] = (f32)(0x40 - off);
+        fn_1_51E60(&pat);
+        pat.words[0] = 0x9430;
+        ((f32 *)pat.words)[3] = ((f32 *)pat.words)[3] + lbl_1_rodata_5DC8;
+        fn_1_51E60(&pat);
+    }
+}
+/* fzgx:end fn_1_CA8FC */
+
 /* fzgx:begin fn_1_CADC4 noprologue */
 #include "types.h"
 

@@ -6077,3 +6077,6 @@ rel/main_rel/enemy_ctrl/fn_1_CC280.c:
 
 rel/main_rel/sel_static_disp/fn_1_14108C.c:
 	.text       start:0x0014108C end:0x00141338 align:4
+
+rel/main_rel/enemy_ctrl/fn_1_CA8FC.c:
+	.text       start:0x000CA8FC end:0x000CAB38 align:4
