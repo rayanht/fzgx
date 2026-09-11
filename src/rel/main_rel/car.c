@@ -4523,6 +4523,32 @@ s32 fn_1_950E8(Fn1950E8Data *data) {
 }
 /* fzgx:end fn_1_950E8 */
 
+/* fzgx:begin fn_1_95120 */
+typedef struct Fn195120Data Fn195120Data;
+typedef struct Fn195120Owner Fn195120Owner;
+
+struct Fn195120Data {
+    u8 unk_00[0x4C];
+    f32 value_50;
+    f32 value_4C;
+};
+
+struct Fn195120Owner {
+    u8 unk_00[0x08];
+    Fn195120Data *data;
+};
+
+s32 fn_1_95120(Fn195120Owner *owner) {
+    if (owner == 0) {
+        return 0;
+    } else if (owner->data->value_50 >= owner->data->value_4C) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+/* fzgx:end fn_1_95120 */
+
 /* fzgx:begin fn_1_95158 */
 typedef struct Fn195158Car Fn195158Car;
 typedef struct Fn195158Data Fn195158Data;

@@ -2083,6 +2083,17 @@
   },
   {
     "module": "interview",
+    "source": "rel/interview/interview/fn_17_69EC.c",
+    "symbols": [
+      "fn_17_69EC"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/interview/interview.c"
+  },
+  {
+    "module": "interview",
     "source": "rel/interview/interview/fn_17_7020.c",
     "symbols": [
       "fn_17_7020"
@@ -15246,6 +15257,20 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_8003610C.c",
+    "symbols": [
+      "fn_8003610C"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [],
+    "pool": {
+      "@3": "lbl_801A70C0",
+      "@6": "lbl_801A70E8"
+    }
+  },
+  {
+    "module": "main",
     "source": "dol/fn_800361F0.c",
     "symbols": [
       "fn_800361F0"
@@ -19244,6 +19269,16 @@
     "source": "dol/fn_800647B8.c",
     "symbols": [
       "fn_800647B8"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/fn_8006496C.c",
+    "symbols": [
+      "fn_8006496C"
     ],
     "status": "matching",
     "mw_version": "GC/1.3.2",
@@ -30347,6 +30382,17 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/car/fn_1_95120.c",
+    "symbols": [
+      "fn_1_95120"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5",
+    "extra_cflags": [],
+    "tu": "rel/main_rel/car.c"
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/car/fn_1_95158.c",
     "symbols": [
       "fn_1_95158"
@@ -32502,6 +32548,17 @@
     "source": "rel/main_rel/enemy_ctrl/fn_1_C7224.c",
     "symbols": [
       "fn_1_C7224"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/enemy_ctrl.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/enemy_ctrl/fn_1_C72D4.c",
+    "symbols": [
+      "fn_1_C72D4"
     ],
     "status": "matching",
     "mw_version": null,
@@ -45125,6 +45182,16 @@
     "source": "rel/movie_module/fn_12_120E4.c",
     "symbols": [
       "fn_12_120E4"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "movie_module",
+    "source": "rel/movie_module/fn_12_121BC.c",
+    "symbols": [
+      "fn_12_121BC"
     ],
     "status": "matching",
     "mw_version": "GC/1.3.2",

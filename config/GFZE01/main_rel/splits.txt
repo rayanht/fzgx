@@ -5762,3 +5762,9 @@ rel/main_rel/background/fn_1_9E514.c:
 
 rel/main_rel/bg_cas/fn_1_FBEA8.c:
 	.text       start:0x000FBEA8 end:0x000FBFE4 align:4
+
+rel/main_rel/enemy_ctrl/fn_1_C72D4.c:
+	.text       start:0x000C72D4 end:0x000C742C align:4
+
+rel/main_rel/car/fn_1_95120.c:
+	.text       start:0x00095120 end:0x00095158 align:4

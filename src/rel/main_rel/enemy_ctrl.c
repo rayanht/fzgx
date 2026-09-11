@@ -157,6 +157,80 @@ void fn_1_C7224(void) {
 }
 /* fzgx:end fn_1_C7224 */
 
+/* fzgx:begin fn_1_C72D4 noprologue */
+#include "types.h"
+
+typedef struct EnemyCtrl {
+    unsigned char pad_000[0x118];
+    int field_118;
+    unsigned char pad_11c[0xd0];
+    unsigned char field_1ec;
+    unsigned char field_1ed;
+    unsigned short field_1ee;
+} EnemyCtrl;
+
+extern s16 camera_get_mode(void);
+extern EnemyCtrl *fn_1_8627C(int mode);
+extern u32 fn_1_58C4(void);
+extern void fn_1_52070(int value);
+extern void fn_1_CA8FC(int mode);
+extern void fn_1_52088(void);
+extern void fn_1_CA2A4(int mode);
+extern void fn_1_CD51C(int mode);
+extern void fn_1_CDC8C(void);
+extern void fn_1_CEB38(void);
+extern void fn_1_C8DC0(int mode);
+extern void fn_1_CADC4(int mode);
+extern u32 fn_1_3F114(void);
+extern void fn_1_CC280(int, int, int, int);
+extern u8 fn_1_CFA0C(int, int);
+extern int fn_1_CBC24(int, int, u8, u8, u16);
+extern int fn_1_5910(void);
+extern void fn_1_CB424(int, int, int);
+extern void fn_1_CB028(int, int);
+extern void fn_1_CAB38(int, int, int);
+
+void fn_1_C72D4(void) {
+    int mode;
+    EnemyCtrl *enemy;
+    int offset;
+
+    mode = camera_get_mode();
+    if (mode == -1 || mode < 0) {
+        return;
+    }
+    enemy = fn_1_8627C(mode);
+    if (enemy != 0) {
+        if (fn_1_58C4() == 1)
+            fn_1_52070(0x60);
+        fn_1_CA8FC(mode);
+        fn_1_52088();
+        if (fn_1_58C4() == 1)
+            fn_1_52070(0x140);
+        fn_1_CA2A4(mode);
+        fn_1_CD51C(mode);
+        fn_1_CDC8C();
+        fn_1_CEB38();
+        fn_1_52088();
+        if (fn_1_58C4() == 1)
+            fn_1_52070(0x220);
+        offset = 0;
+        fn_1_C8DC0(mode);
+        fn_1_CADC4(mode);
+        fn_1_CC280(0x19a, 0x18, enemy->field_118 + 1,
+            fn_1_3F114() & 0xff);
+        if (fn_1_CFA0C(0x268, 0x43) != 0)
+            offset = 0x25;
+        fn_1_CBC24(0x1bc, offset + 0x43, enemy->field_1ec,
+            enemy->field_1ed, enemy->field_1ee);
+        fn_1_CB424(0x269, offset + 0x6e, fn_1_5910());
+        fn_1_CB028(0x269, offset + 0x96);
+        fn_1_CAB38(mode, 0x268, offset);
+        fn_1_52088();
+    }
+}
+/* fzgx:end fn_1_C72D4 */
+
 /* fzgx:begin fn_1_C771C noprologue */
 #include "types.h"
 

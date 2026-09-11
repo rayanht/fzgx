@@ -730,6 +730,70 @@ void fn_17_6848(void *arg0, u8 arg1, f32 arg2) {
 }
 /* fzgx:end fn_17_6848 */
 
+/* fzgx:begin fn_17_69EC */
+typedef struct Sig_fn_1_935E4_Fn935E4Slot {
+    u8 pad0[0xa];
+    u16 field_a;
+} Sig_fn_1_935E4_Fn935E4Slot;
+
+typedef struct Sig_fn_1_935E4_Fn935E4Node {
+    u8 pad0[0xa];
+    u16 field_a;
+    u8 pad_c[6];
+    u16 field_12;
+    u8 pad14[0x12];
+    u8 field_26;
+    u8 pad27[1];
+    Sig_fn_1_935E4_Fn935E4Slot *field_28;
+    u8 pad2c[8];
+    Sig_fn_1_935E4_Fn935E4Slot *field_34;
+    u8 pad38[0x14];
+    u8 field_4c;
+} Sig_fn_1_935E4_Fn935E4Node;
+
+typedef struct Sig_fn_1_935E4_Fn935E4Car {
+    u8 pad0[0x1c];
+    Sig_fn_1_935E4_Fn935E4Node *field_1c;
+} Sig_fn_1_935E4_Fn935E4Car;
+
+struct fn_17_69EC_lbl_17_bss_D8 {
+    u32 unk_0;
+};
+extern f32 lbl_17_rodata_1C;
+extern struct fn_17_69EC_lbl_17_bss_D8 lbl_17_bss_D8;
+extern u8 lbl_17_bss_1;
+extern s16 fn_1_12C710(int);
+extern s32 fn_1_12CB04(s16);
+extern void fn_1_935E4(Sig_fn_1_935E4_Fn935E4Car *, void *, void *, f32);
+
+void fn_17_69EC(void *arg0, f32 farg0) {
+    u32 base;
+    u32 temp_r31;
+    void *temp_r4;
+
+    base = lbl_17_bss_D8.unk_0;
+    temp_r4 = (void *)(*(void **)((u8 *)base + 336));
+    temp_r31 = base;
+    if ((*(f32 *)((u8 *)(temp_r4) + 76)) == (*(f32 *)((u8 *)(temp_r4) + 80))) {
+        switch ((s16)fn_1_12CB04(fn_1_12C710(*(u32 *)((u8 *)base + 136)))) {  /* irregular */
+        case 2:
+            fn_1_935E4((Sig_fn_1_935E4_Fn935E4Car *)((Sig_fn_1_935E4_Fn935E4Car *)(temp_r31)), (void *)(temp_r31 + 0x148), (void *)(arg0), *(f32 *)((u8 *)(&lbl_17_rodata_1C) + 0));
+            fn_1_935E4((Sig_fn_1_935E4_Fn935E4Car *)(*(Sig_fn_1_935E4_Fn935E4Car **)((u8 *)(&lbl_17_bss_D8) + 8)), (void *)((u8 *)((*(Sig_fn_1_935E4_Fn935E4Car **)((u8 *)(&lbl_17_bss_D8) + 8))) + 0x148), (void *)(arg0), farg0);
+            fn_1_935E4((Sig_fn_1_935E4_Fn935E4Car *)(*(Sig_fn_1_935E4_Fn935E4Car **)((u8 *)(&lbl_17_bss_D8) + 12)), (void *)((u8 *)((*(Sig_fn_1_935E4_Fn935E4Car **)((u8 *)(&lbl_17_bss_D8) + 12))) + 0x148), (void *)(arg0), farg0);
+            break;
+        case 1:
+            fn_1_935E4((Sig_fn_1_935E4_Fn935E4Car *)((Sig_fn_1_935E4_Fn935E4Car *)(temp_r31)), (void *)(temp_r31 + 0x148), (void *)(arg0), *(f32 *)((u8 *)(&lbl_17_rodata_1C) + 0));
+            fn_1_935E4((Sig_fn_1_935E4_Fn935E4Car *)(*(Sig_fn_1_935E4_Fn935E4Car **)((u8 *)(&lbl_17_bss_D8) + 8)), (void *)((u8 *)((*(Sig_fn_1_935E4_Fn935E4Car **)((u8 *)(&lbl_17_bss_D8) + 8))) + 0x148), (void *)(arg0), farg0);
+            break;
+        case 0:
+            fn_1_935E4((Sig_fn_1_935E4_Fn935E4Car *)((Sig_fn_1_935E4_Fn935E4Car *)(temp_r31)), (void *)(temp_r31 + 0x148), (void *)(arg0), farg0);
+            break;
+        }
+        (*(u8 *)((u8 *)(&lbl_17_bss_1) + 0)) = 0;
+    }
+}
+/* fzgx:end fn_17_69EC */
+
 /* fzgx:begin fn_17_7020 */
 typedef struct InterviewObject {
     u8 pad0[0x14];
