@@ -196,6 +196,68 @@ void fn_1_151E74(u32 *value, s16 index, int byte) {
 }
 /* fzgx:end fn_1_151E74 */
 
+/* fzgx:begin fn_1_151EF8 */
+typedef struct {
+    s16 unk_0;
+    u8 pad_2[0x2];
+    u32 unk_4;
+} Entry_151EF8;
+
+extern int fn_1_8D690(s16 value);
+extern int fn_1_8D72C(s16 value);
+
+void fn_1_151EF8(s16 *values, s16 value_count, Entry_151EF8 *entries,
+                 s16 group_count, s16 group_size) {
+    s16 i;
+    s16 j;
+    s16 group_index;
+    s16 local_index;
+    Entry_151EF8 *entry;
+
+    for (i = 0; i < group_count; i++) {
+        for (j = 0; j < group_size; j++) {
+            entries[i * group_size + j].unk_4 |= (1u << 30);
+            entries[i * group_size + j].unk_0 = -1;
+        }
+    }
+
+    for (i = 0; i < value_count; i++) {
+
+        if (values[i] == -1) {
+            continue;
+        }
+
+        group_index = i / group_size;
+        local_index = i % group_size;
+
+        entries[group_index * group_size + local_index].unk_0 = values[i];
+        entries[group_index * group_size + local_index].unk_4 = 0;
+
+        if (entries[group_index * group_size + local_index].unk_0 >= 0x29) {
+            entries[group_index * group_size + local_index].unk_4 |= (1u << 29);
+            entries[group_index * group_size + local_index].unk_4 |= (1u << 30);
+            continue;
+        }
+
+        if (!fn_1_8D690(entries[group_index * group_size + local_index].unk_0)) {
+            entries[group_index * group_size + local_index].unk_4 |= (1u << 31);
+        }
+        if (!fn_1_8D72C(entries[group_index * group_size + local_index].unk_0)) {
+            entries[group_index * group_size + local_index].unk_4 |= (1u << 30);
+        }
+        if ((lbl_1_bss_8B3A0.unk_94 & 0x40000000) != 0 &&
+            !fn_1_8D690(entries[group_index * group_size + local_index].unk_0)) {
+            entries[group_index * group_size + local_index].unk_4 |= (1u << 30);
+        }
+        if ((lbl_1_bss_8B3A0.unk_94 & 0x02000000) != 0 &&
+            entries[group_index * group_size + local_index].unk_0 != 6 &&
+            (entries[group_index * group_size + local_index].unk_4 & 0x80000000) == 0) {
+            entries[group_index * group_size + local_index].unk_4 |= (1u << 31);
+        }
+    }
+}
+/* fzgx:end fn_1_151EF8 */
+
 /* fzgx:begin fn_1_152840 */
 typedef struct Entry {
     s16 id;

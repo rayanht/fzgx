@@ -2592,6 +2592,89 @@ void fn_10_1E67C(u32 arg0) {
 }
 /* fzgx:end fn_10_1E67C */
 
+/* fzgx:begin fn_10_1E6F4 */
+extern s32 lbl_801A66B4;
+extern u32 lbl_10_data_5C1C[114];
+extern u8 lbl_10_data_1038[4];
+extern void fn_80008BEC(void *arg0, int arg1, u32 arg2);
+
+typedef struct {
+    u32 f0;
+    u32 f4;
+    u8 pad8[8];
+    u32 f10;
+    u32 f14;
+    u32 f18;
+    u32 f1C;
+    u32 f20;
+    u32 f24;
+    u32 f28;
+    u8 pad2C[0xC];
+    u32 f38;
+    u32 f3C;
+    u32 f40;
+    u8 pad44[8];
+    u32 f4C;
+} Obj;
+
+s32 fn_10_1E6F4(s32 arg0, Obj *arg1) {
+    fn_80008BEC(arg1, 0, 0x50);
+    if (((u32)(arg0 - 0x64) <= 1) || ((u32)(arg0 - 1) <= 2) || ((u32)(arg0 - 5) <= 1) || (arg0 == 7)) {
+        switch (arg0) {
+        case 1:
+        case 0x64:
+        case 0x65:
+            arg1->f4 = lbl_10_data_5C1C[6 + lbl_801A66B4];
+            arg1->f14 = lbl_10_data_5C1C[0xc + lbl_801A66B4];
+            arg1->f38 = lbl_10_data_5C1C[0x12 + lbl_801A66B4];
+            arg1->f18 = (u32)lbl_10_data_1038;
+            arg1->f3C = (u32)lbl_10_data_1038;
+            arg1->f1C = 6;
+            arg1->f40 = 7;
+            if (arg0 == 1) {
+                arg1->f0 = 1;
+            } else if (arg0 == 0x64) {
+                arg1->f28 = 1;
+                arg1->f4C = 2;
+            } else if (arg0 == 0x65) {
+                arg1->f0 = 2;
+                arg1->f28 = 2;
+                arg1->f4C = 1;
+            }
+            break;
+        case 2:
+            arg1->f18 = lbl_10_data_5C1C[0x18 + lbl_801A66B4];
+            arg1->f1C = 10;
+            break;
+        case 3:
+            arg1->f4 = lbl_10_data_5C1C[0x1e + lbl_801A66B4];
+            arg1->f18 = lbl_10_data_5C1C[0x24 + lbl_801A66B4];
+            arg1->f1C = 10;
+            break;
+        case 5:
+            arg1->f4 = lbl_10_data_5C1C[0x1e + lbl_801A66B4];
+            arg1->f18 = lbl_10_data_5C1C[0x2a + lbl_801A66B4];
+            arg1->f1C = 10;
+            break;
+        case 6:
+            arg1->f4 = lbl_10_data_5C1C[0x1e + lbl_801A66B4];
+            arg1->f18 = lbl_10_data_5C1C[0x30 + lbl_801A66B4];
+            arg1->f1C = 10;
+            break;
+        case 7:
+            arg1->f0 = 1;
+            arg1->f4 = lbl_10_data_5C1C[0x36 + lbl_801A66B4];
+            arg1->f38 = lbl_10_data_5C1C[0x3c + lbl_801A66B4];
+            arg1->f3C = (u32)lbl_10_data_1038;
+            arg1->f40 = 7;
+            break;
+        }
+        return 1;
+    }
+    return 0;
+}
+/* fzgx:end fn_10_1E6F4 */
+
 /* fzgx:begin fn_10_1FEF4 */
 extern f32 lbl_10_rodata_158[19];
 extern u8 jumptable_10_data_67E0[28];

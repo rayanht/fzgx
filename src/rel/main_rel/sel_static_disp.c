@@ -113,6 +113,70 @@ extern u32 fn_1_141360(u32, u32, u32, u32, f32, f32);
 extern struct fn_1_149C64_lbl_1_bss_8E43C lbl_1_bss_8E43C;
 extern struct fn_1_149C64_lbl_1_bss_8E440 lbl_1_bss_8E440;
 
+/* fzgx:begin fn_1_1332FC noprologue */
+#include "types.h"
+#include "font.h"
+
+typedef struct {
+    u32 v[8];
+} Word8;
+
+typedef struct {
+    u32 v[8];
+} Word32;
+
+extern Word8 lbl_1_rodata_86D8;
+extern const f64 lbl_1_rodata_8600;
+extern const f32 lbl_1_rodata_86F8;
+extern const f32 lbl_1_rodata_86FC;
+extern u32 lbl_1_rodata_26F8;
+extern u8 lbl_1_data_419E0[];
+extern u8 lbl_1_data_419F4[];
+extern void OSPanic(const char *, int, const char *, ...);
+extern void fn_1_51678(FontDrawPacket *, u32, s16, s16, s16, s16);
+extern int fn_1_4F734(FontDrawPacket *);
+
+void fn_1_1332FC(s32 left, s32 top, u8 page) {
+    Word32 table;
+    FontDrawPacket packet;
+    u32 image;
+    s32 y;
+    s32 j;
+    s32 i;
+    s32 *entry;
+
+    table = *(Word32 *)&lbl_1_rodata_86D8;
+    if (page >= 2U) {
+        OSPanic((const char *)lbl_1_data_419E0, 0x3E9, (const char *)lbl_1_data_419F4);
+    }
+
+    image = 0x10000 - 0x62FD;
+    y = top;
+    for (i = 0; i < 5; i++) {
+        packet = *(FontDrawPacket *)&lbl_1_rodata_26F8;
+        packet.image = image;
+        fn_1_51678(&packet, packet.image, 0, 0, 8, 0x60);
+        packet.x = (f32)left;
+        packet.y = (f32)y;
+        packet.z = lbl_1_rodata_86F8;
+        fn_1_4F734(&packet);
+        y += 0x60;
+    }
+
+    entry = (s32 *)((u8 *)&table + page * 0x10);
+    for (j = 0; j < 4; j++) {
+        packet = *(FontDrawPacket *)&lbl_1_rodata_26F8;
+        packet.image = image;
+        fn_1_51678(&packet, packet.image, 0, 0x60, 8, 0xC);
+        packet.x = (f32)left;
+        packet.y = (f32)(top + *entry);
+        packet.z = lbl_1_rodata_86FC;
+        fn_1_4F734(&packet);
+        entry++;
+    }
+}
+/* fzgx:end fn_1_1332FC */
+
 /* fzgx:begin fn_1_13354C noprologue */
 #include "types.h"
 #include "font.h"

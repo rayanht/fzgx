@@ -695,6 +695,166 @@ void fn_15_1EE0(void) {
 }
 /* fzgx:end fn_15_1EE0 */
 
+/* fzgx:begin fn_15_1F28 */
+struct fn_15_1F28_bss {
+    u8 pad_0[0x8];
+    void *unk_8;
+    u8 pad_C[0x8];
+    u32 unk_14;
+    u8 pad_18[0x26];
+    u8 unk_3E;
+    u8 pad_3F[0x25];
+    u32 unk_64;
+    u32 unk_68;
+    u32 unk_6C;
+    u32 unk_70;
+    u32 unk_74;
+    u32 unk_78;
+    u32 unk_7C;
+    u32 unk_80;
+    u32 unk_84;
+    u32 unk_88;
+    u32 unk_8C;
+    u32 unk_90;
+    s16 unk_94;
+    s16 unk_96;
+    u16 unk_98;
+};
+
+struct fn_15_1F28_ro3 {
+    u32 unk_0;
+    u32 unk_4;
+    u32 unk_8;
+};
+
+struct fn_15_1F28_snd {
+    u32 unk_0;
+    u32 unk_4;
+    u8 pad_8[0x8];
+    u8 unk_10[0x4A248];
+    u8 unk_4A258[0x4A248];
+    u8 unk_944A0[0x3000];
+};
+
+struct fn_15_1F28_bss6EAD0 {
+    struct fn_15_1F28_snd *unk_0;
+};
+
+struct fn_15_1F28_6410 {
+    u32 unk_0;
+};
+
+extern struct fn_15_1F28_bss lbl_15_bss_0;
+extern struct fn_15_1F28_ro3 lbl_15_rodata_98;
+extern struct fn_15_1F28_bss6EAD0 lbl_1_bss_6EAD0;
+extern struct fn_15_1F28_6410 lbl_801A6410;
+extern f32 lbl_15_rodata_A4[];
+extern u8 lbl_15_data_0[];
+
+extern u32 fn_1_A0680(void);
+extern void fn_1_41048(void);
+extern u32 fn_15_2AE4(void);
+extern u32 fn_15_2E8C(void);
+extern u32 fn_1_7BA08(u32, u32, u32);
+extern u32 fn_1_45D0(u32, u32, u32, u32);
+extern void *fn_1_435C(void *);
+extern s32 fn_1_3F8C(u32, u32, void *, u32);
+extern u32 fn_1_7BA48(u32);
+extern void fn_15_3A14(void);
+extern void lbl_8006D758(void);
+extern void mathutil_mtxA_rotate_y(u32);
+extern void mathutil_mtxA_rotate_x(u32);
+extern void lbl_8006E1B0(void *, void *);
+extern void fn_80074CF4(f32, f32, f32);
+extern u32 fn_8004CD70(u32, u32, u32);
+extern void fn_80051E64(void *, void *, u32);
+extern u32 fn_1_A1588(void *, u32);
+extern void ADXT_Pause(void *, s32);
+extern u32 fn_8004BF0C(void *, u32);
+extern void camera_set_state_flag(u8);
+extern void fn_1_5124(void *, void *);
+extern u32 fn_1_5370(u32, u32);
+extern void fn_1_9A578(void);
+extern u32 fn_15_3B24(void);
+
+extern s32 fn_15_2228;
+extern s32 fn_15_2274;
+extern s32 fn_15_537C;
+extern s32 fn_15_545C;
+extern s32 fn_1_7BAF8;
+
+void fn_15_1F28(u32 arg0, u32 arg1) {
+    u8 *d;
+    struct fn_15_1F28_bss *p;
+    f32 f0;
+    u32 buf;
+
+    d = (u8 *)&lbl_15_data_0;
+    p = (struct fn_15_1F28_bss *)&lbl_15_bss_0;
+
+    p->unk_64 = 0;
+    p->unk_68 = 0;
+    p->unk_6C = 0;
+    p->unk_70 = 0;
+    p->unk_3E = 0;
+    fn_1_A0680();
+    fn_1_41048();
+    p->unk_74 = arg0;
+    p->unk_78 = arg1;
+    fn_15_2AE4();
+    if (!(p->unk_14 & 0x80)) {
+        fn_15_2E8C();
+    }
+    p->unk_8 = (void *)fn_1_45D0(lbl_801A6410.unk_0, fn_1_7BA08(0x20U, 0x20U, 0x40U), (u32)(d + 0xa4), 0x647U);
+    fn_1_435C((void *)arg0);
+    fn_1_3F8C((u32)(d + 0x174), (u32)(&fn_15_2228), NULL, 5U);
+    fn_1_435C((void *)arg1);
+    fn_1_7BA48((u32)p->unk_8);
+    fn_1_3F8C((u32)(d + 0x180), (u32)(&fn_1_7BAF8), (void *)(p->unk_8), 3U);
+    fn_1_3F8C((u32)(d + 0x18C), (u32)(&fn_15_537C), NULL, 5U);
+    fn_1_3F8C((u32)(d + 0x19C), (u32)(&fn_15_2274), NULL, 0xAU);
+    fn_1_3F8C((u32)(d + 0x1A8), (u32)(&fn_15_545C), NULL, 0xBU);
+    fn_15_3A14();
+
+    p->unk_88 = lbl_15_rodata_98.unk_0;
+    p->unk_8C = lbl_15_rodata_98.unk_4;
+    p->unk_90 = lbl_15_rodata_98.unk_8;
+    p->unk_7C = lbl_15_rodata_98.unk_0;
+    p->unk_80 = lbl_15_rodata_98.unk_4;
+    p->unk_84 = lbl_15_rodata_98.unk_8;
+    p->unk_94 = -0x2000;
+    p->unk_96 = 0x2000;
+    lbl_8006D758();
+    mathutil_mtxA_rotate_y((u32)p->unk_96);
+    mathutil_mtxA_rotate_x((u32)p->unk_94);
+    lbl_8006E1B0(&p->unk_7C, &p->unk_88);
+    f0 = lbl_15_rodata_A4[0];
+    fn_80074CF4(f0, f0, f0);
+
+    if (lbl_1_bss_6EAD0.unk_0->unk_0 == 0) {
+        lbl_1_bss_6EAD0.unk_0->unk_0 = fn_8004CD70(2U, (u32)((u8 *)lbl_1_bss_6EAD0.unk_0 + 0x10), 0x4A248U);
+    }
+    if (lbl_1_bss_6EAD0.unk_0->unk_4 == 0) {
+        lbl_1_bss_6EAD0.unk_0->unk_4 = fn_8004CD70(2U, (u32)((u8 *)lbl_1_bss_6EAD0.unk_0 + 0x4A258), 0x4A248U);
+    }
+    fn_80051E64((void *)lbl_1_bss_6EAD0.unk_0->unk_4, (void *)((u8 *)lbl_1_bss_6EAD0.unk_0 + 0x944A0), 0x3000U);
+    fn_1_A1588((void *)lbl_1_bss_6EAD0.unk_0->unk_0, 0x35U);
+    ADXT_Pause((void *)lbl_1_bss_6EAD0.unk_0->unk_0, 1);
+    p->unk_98 = 0;
+    fn_8004BF0C((void *)lbl_1_bss_6EAD0.unk_0->unk_0, -0x50U);
+    fn_8004BF0C((void *)lbl_1_bss_6EAD0.unk_0->unk_4, -0x50U);
+    camera_set_state_flag(1U);
+    fn_1_5124((void *)arg0, (void *)arg1);
+    if (!(p->unk_14 & 1)) {
+        fn_1_5370(4U, 0U);
+    }
+    fn_1_9A578();
+    if (!(p->unk_14 & 0x80)) {
+        fn_15_3B24();
+    }
+}
+/* fzgx:end fn_15_1F28 */
+
 /* fzgx:begin fn_15_2228 */
 extern u32 fn_15_2CEC(void);
 extern u32 fn_15_3AFC(void);
