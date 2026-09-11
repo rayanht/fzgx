@@ -434,6 +434,112 @@ void fn_8_8C80(void) {
 }
 /* fzgx:end fn_8_8C80 */
 
+/* fzgx:begin fn_8_988C */
+extern int sprintf(char *, const char *, ...);
+
+struct fn_8_988C_ctx {
+    u8 pad_0[0x8];
+    u32 unk_8;
+    u8 pad_C[0x130];
+    u32 unk_13C[9];
+    u32 unk_160[9];
+    u32 unk_184[9];
+    u32 unk_1A8[9];
+    u32 unk_1CC[9][4];
+    u32 unk_25C[9];
+};
+
+struct fn_8_988C_lbl_801A6410 {
+    u32 unk_0;
+};
+
+extern struct fn_8_988C_ctx lbl_8_bss_2A8;
+extern struct fn_8_988C_lbl_801A6410 lbl_801A6410;
+extern u8 lbl_8_data_7E50[];
+extern u32 lbl_1_bss_970;
+extern const f32 lbl_8_rodata_194;
+
+extern s32 fn_1_45730(const char *, void *);
+extern u32 fn_1_45B2C(void *);
+extern u32 fn_1_4630(u32, u32, const char *, int);
+extern void DCFlushRange(void *, u32);
+extern void fn_1_458A0(void *, u32, u32, u32);
+extern void fn_1_45850(void *);
+extern void fn_80008BA8(u32, u32, u32);
+extern void fn_1_A8F78(void);
+extern void fn_1_4BB0(void);
+extern void fn_8006CE1C(f32);
+
+void fn_8_988C(void) {
+    u32 data;
+    u32 ctx;
+    u32 *src;
+    u32 *v25C;
+    u32 *v13C;
+    u32 *v160;
+    u32 *v184;
+    u32 *v1A8;
+    u32 *v1CC;
+    u8 res[0x5c];
+    u8 buf[0xfc];
+    s32 i;
+    u32 base;
+    s32 j;
+    u32 dest;
+
+    data = (u32)lbl_8_data_7E50;
+    ctx = (u32)&lbl_8_bss_2A8;
+    fn_1_A8F78();
+    fn_1_4BB0();
+    fn_8006CE1C(lbl_8_rodata_194);
+    lbl_1_bss_970 = 1200;
+    src = (u32 *)(data + 0xe14);
+    v25C = (u32 *)(ctx + 0x25c);
+    v13C = (u32 *)(ctx + 0x13c);
+    v160 = (u32 *)(ctx + 0x160);
+    v184 = (u32 *)(ctx + 0x184);
+    v1A8 = (u32 *)(ctx + 0x1a8);
+    v1CC = (u32 *)(ctx + 0x1cc);
+    for (i = 0; i < 9; i++) {
+        sprintf((char *)buf, (const char *)(data + 0xe78), src[0]);
+        if (fn_1_45730((const char *)buf, res) != 0) {
+            v25C[0] = fn_1_45B2C(res);
+            v13C[0] = fn_1_4630(lbl_801A6410.unk_0, v25C[0], (const char *)(data + 0xc84), 2454);
+            DCFlushRange((void *)v13C[0], v25C[0] + 32);
+            fn_1_458A0(res, v13C[0], (v25C[0] + 31) & ~31, 0);
+            fn_1_45850(res);
+        }
+        sprintf((char *)buf, (const char *)(data + 0xe90), src[0]);
+        if (fn_1_45730((const char *)buf, res) != 0) {
+            v160[0] = fn_1_4630(lbl_801A6410.unk_0, 0x620, (const char *)(data + 0xc84), 2472);
+            v184[0] = fn_1_4630(lbl_801A6410.unk_0, 0x1fc, (const char *)(data + 0xc84), 2473);
+            v1A8[0] = fn_1_4630(lbl_801A6410.unk_0, 0x194, (const char *)(data + 0xc84), 2474);
+            for (j = 0; j < 4; j++) {
+                v1CC[j] = fn_1_4630(lbl_801A6410.unk_0, 0xc0, (const char *)(data + 0xc84), 2476);
+            }
+            fn_1_458A0(res, *(u32 *)(ctx + 0x8), (fn_1_45B2C(res) + 31) & ~31, 0);
+            fn_1_45850(res);
+            base = *(u32 *)(ctx + 0x8);
+            fn_80008BA8(v160[0], base, 0x5a0);
+            fn_80008BA8(v184[0], base + 0x5a0, 0x1fc);
+            dest = base + 0x79c;
+            for (j = 0; j < 4; j++) {
+                fn_80008BA8(v1CC[j], dest, 0xc0);
+                dest += 0xc0;
+            }
+            fn_80008BA8(v1A8[0], dest, 0x194);
+        }
+        src += 2;
+        v25C++;
+        v13C++;
+        v160++;
+        v184++;
+        v1A8++;
+        v1CC += 4;
+    }
+}
+/* fzgx:end fn_8_988C */
+
 /* fzgx:begin fn_8_9B04 */
 extern struct fn_8_9B04_lbl_8_bss_2A8 lbl_8_bss_2A8;
 extern u32 fn_80008BA8(u32, u32, u32);
