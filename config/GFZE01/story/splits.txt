@@ -152,3 +152,6 @@ rel/story/story_mode/fn_7_D20.c:
 
 rel/story/story_mode/_epilog.c:
 	.text       start:0x00000318 end:0x00000388 align:4
+
+rel/story/story_mode/fn_7_23A8.c:
+	.text       start:0x000023A8 end:0x000024D8 align:4

@@ -5957,3 +5957,12 @@ rel/main_rel/ranking/fn_1_1555B0.c:
 
 rel/main_rel/font/fn_1_56018.c:
 	.text       start:0x00056018 end:0x000560F0 align:4
+
+rel/main_rel/burner/fn_1_986A4.c:
+	.text       start:0x000986A4 end:0x000987D0 align:4
+
+rel/main_rel/live_camera/fn_1_10268.c:
+	.text       start:0x00010268 end:0x000103B0 align:4
+
+rel/main_rel/sel_static_disp/fn_1_13DC54.c:
+	.text       start:0x0013DC54 end:0x0013DDB8 align:4

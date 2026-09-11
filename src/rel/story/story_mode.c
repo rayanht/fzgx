@@ -866,6 +866,76 @@ s32 fn_7_2384(struct fn_7_2384_Arg0 *arg0) {
 }
 /* fzgx:end fn_7_2384 */
 
+/* fzgx:begin fn_7_23A8 */
+struct fn_7_23A8_bss_0 {
+    u8 pad_0[0x8];
+    s32 unk_8;
+    u8 pad_C[0x4];
+    u8 *unk_10;
+    u8 pad_14[0x8];
+    u32 unk_1C;
+};
+
+extern u32 lbl_7_bss_0[];
+extern u32 lbl_7_data_12E70[2];
+extern u8 lbl_7_data_13EEC[52];
+extern u8 lbl_1_bss_9F8[];
+
+extern u8 * fn_1_40B14(void);
+extern void * fn_1_435C(void *);
+extern u32 fn_7_3AB0(void);
+extern s32 fn_1_3F8C(u32, u32, u32, u32);
+extern u32 fn_1_426C(u32);
+
+#pragma opt_propagation off
+#pragma opt_lifetimes off
+s32 fn_7_23A8(void) {
+    struct fn_7_23A8_bss_0 *p;
+    u8 *t0;
+    u8 v0;
+    u16 v1;
+    u32 v2;
+
+    p = (struct fn_7_23A8_bss_0 *)&lbl_7_bss_0;
+    t0 = fn_1_40B14();
+    v0 = t0[0];
+    switch (v0) {
+    case 1: {
+        s32 res;
+        fn_1_435C((void *)p->unk_1C);
+        res = fn_1_3F8C((u32)lbl_7_data_13EEC, (u32)fn_7_3AB0, (u32)&p->unk_8, 5);
+        p->unk_8 = 10;
+        lbl_7_data_12E70[0] = res;
+        t0[0] = 2;
+        return 4;
+    }
+    case 2: {
+        u8 *tbl;
+        tbl = (u8 *)lbl_1_bss_9F8 + 8;
+        v2 = (s8)p->unk_10[2] * 20;
+        v1 = *(u16 *)(tbl + v2);
+        if (((v1 >> 9) & 1) || ((v1 >> 8) & 1) || ((v1 >> 12) & 1)) {
+            t0[0] = 3;
+            p->unk_8 = 10;
+        }
+        return 4;
+    }
+    case 3:
+        if (p->unk_8 != 0) {
+            return 4;
+        }
+        fn_1_435C((void *)p->unk_1C);
+        fn_1_426C(lbl_7_data_12E70[0]);
+        t0[0] = 0;
+        break;
+    }
+    return 0;
+}
+#pragma opt_lifetimes reset
+
+#pragma opt_propagation reset
+/* fzgx:end fn_7_23A8 */
+
 /* fzgx:begin fn_7_24D8 */
 struct fn_7_24D8_lbl_7_bss_29C {
     u32 unk_0;

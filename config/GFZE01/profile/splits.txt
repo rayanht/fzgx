@@ -110,3 +110,6 @@ rel/profile/fn_16_23A8.c:
 
 rel/profile/fn_16_1F1C.c:
 	.text       start:0x00001F1C end:0x00002054 align:4
+
+rel/profile/fn_16_CAC.c:
+	.text       start:0x00000CAC end:0x00000DC8 align:4

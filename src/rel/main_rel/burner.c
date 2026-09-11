@@ -376,6 +376,50 @@ void fn_1_98640(Obj_1_data_27DE0 *obj) {
 }
 /* fzgx:end fn_1_98640 */
 
+/* fzgx:begin fn_1_986A4 noprologue */
+#include "types.h"
+
+extern u32 lbl_1_bss_6EA04;
+
+void *fn_1_986A4(void) {
+    u8 *q;
+    s8 *p = (s8 *)lbl_1_bss_6EA04 + 8;
+    s32 n = 120;
+    s32 i;
+
+    for (i = 12; i != 0; i--) {
+        if (p[0] == 0) break;
+        n--; p++;
+        if (p[0] == 0) break;
+        n--; p++;
+        if (p[0] == 0) break;
+        n--; p++;
+        if (p[0] == 0) break;
+        n--; p++;
+        if (p[0] == 0) break;
+        n--; p++;
+        if (p[0] == 0) break;
+        n--; p++;
+        if (p[0] == 0) break;
+        n--; p++;
+        if (p[0] == 0) break;
+        n--; p++;
+        if (p[0] == 0) break;
+        n--; p++;
+        if (p[0] == 0) break;
+        n--; p++;
+    }
+    if (n == 0) {
+        return 0;
+    }
+    *p = 1;
+    q = (u8 *)lbl_1_bss_6EA04 + (120 - n) * 0x4ac + 0x80;
+    *(u32 *)(q + 0) = 0;
+    *(u32 *)(q + 4) = 0;
+    return q;
+}
+/* fzgx:end fn_1_986A4 */
+
 /* fzgx:begin fn_1_987D0 */
 void fn_1_987D0(u32 address) {
     Obj_1_bss_6EA04_Target *object;

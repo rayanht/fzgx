@@ -256,6 +256,84 @@ void fn_1_101D0(Fn_1_101D0_State *self) {
 }
 /* fzgx:end fn_1_101D0 */
 
+/* fzgx:begin fn_1_10268 */
+extern u32 fn_80008E30(u32);
+extern f32 lbl_1_rodata_4E0[5];
+extern f32 lbl_1_rodata_4F4[19];
+extern const f64 lbl_1_rodata_548[2];
+
+typedef struct {
+    f32 unk_0;
+    f32 unk_4;
+    f32 unk_8;
+    f32 unk_C;
+    f32 unk_10;
+    f32 unk_14;
+} Bss_1_17D0;
+
+typedef struct {
+    u32 unk_0;
+    u32 unk_4;
+    u32 unk_8;
+    u32 unk_C;
+    u32 unk_10;
+    u32 unk_14;
+    u32 unk_18;
+    f32 unk_1C;
+    s16 unk_20;
+} Copy_1_10268;
+
+typedef struct {
+    u8 pad_0[4];
+    s16 unk_4;
+    u8 pad_6[0x16];
+    u32 unk_1C;
+    u32 unk_20;
+    u32 unk_24;
+    u8 pad_28[0x24];
+    u32 unk_4C;
+    u32 unk_50;
+    u32 unk_54;
+    f32 unk_58;
+    s16 unk_5C;
+    u8 pad_5E[0x6];
+    s16 unk_64;
+} Camera_1_10268;
+
+void fn_1_10268(Camera_1_10268 *arg) {
+    Obj_1_bss_17C4_At0 *e;
+    Copy_1_10268 t;
+    u32 n;
+    u32 m;
+    f32 a;
+    f32 b;
+
+    e = &lbl_1_bss_17C4.unk_0[arg->unk_4];
+    t = *(Copy_1_10268 *)((u8 *)e + 8);
+
+    n = fn_80008E30(e->unk_0);
+
+    ((Bss_1_17D0 *)&lbl_1_bss_17D0)->unk_0 = lbl_1_rodata_4F4[0];
+    ((Bss_1_17D0 *)&lbl_1_bss_17D0)->unk_4 = lbl_1_rodata_4E0[0];
+    ((Bss_1_17D0 *)&lbl_1_bss_17D0)->unk_10 = lbl_1_rodata_4F4[0];
+    ((Bss_1_17D0 *)&lbl_1_bss_17D0)->unk_14 = lbl_1_rodata_4E0[0] / (f32)((n * n) >> 2);
+    a = (f32)n;
+    ((Bss_1_17D0 *)&lbl_1_bss_17D0)->unk_C = a;
+    ((Bss_1_17D0 *)&lbl_1_bss_17D0)->unk_8 = a;
+
+    arg->unk_64 = fn_80008E30(e->unk_0);
+
+    arg->unk_1C = t.unk_4;
+    arg->unk_20 = t.unk_8;
+    arg->unk_24 = t.unk_C;
+    arg->unk_4C = t.unk_10;
+    arg->unk_50 = t.unk_14;
+    arg->unk_54 = t.unk_18;
+    arg->unk_5C = t.unk_20;
+    arg->unk_58 = t.unk_1C;
+}
+/* fzgx:end fn_1_10268 */
+
 /* fzgx:begin fn_1_12850 */
 u8 fn_1_12850(void) {
     return lbl_1_bss_17B4[0];

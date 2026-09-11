@@ -5123,3 +5123,6 @@ dol/fn_80057DB8.c:
 
 dol/fn_80007B68.c:
 	.text       start:0x80007B68 end:0x80007C2C align:4
+
+dol/fn_8003DFF8.c:
+	.text       start:0x8003DFF8 end:0x8003E13C align:4
