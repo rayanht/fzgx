@@ -15450,6 +15450,27 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_80038F48.c",
+    "symbols": [
+      "fn_80038F48"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
     "source": "dol/fn_80039AFC.c",
     "symbols": [
       "fn_80039AFC"
@@ -21193,6 +21214,16 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_80078C28.c",
+    "symbols": [
+      "fn_80078C28"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
     "source": "dol/fn_80078CDC.c",
     "symbols": [
       "fn_80078CDC"
@@ -25068,6 +25099,17 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/background/fn_1_9E514.c",
+    "symbols": [
+      "fn_1_9E514"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/background.c"
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/background/fn_1_9E598.c",
     "symbols": [
       "fn_1_9E598"
@@ -25525,6 +25567,17 @@
     "source": "rel/main_rel/bg_cas/fn_1_FB9DC.c",
     "symbols": [
       "fn_1_FB9DC"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/bg_cas.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/bg_cas/fn_1_FBEA8.c",
+    "symbols": [
+      "fn_1_FBEA8"
     ],
     "status": "matching",
     "mw_version": null,
@@ -42552,6 +42605,17 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/shadowmap/fn_1_5672C.c",
+    "symbols": [
+      "fn_1_5672C"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/shadowmap.c"
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/shadowmap/fn_1_56858.c",
     "symbols": [
       "fn_1_56858"
@@ -43339,6 +43403,17 @@
     "source": "rel/main_rel/spline/fn_1_F7B80.c",
     "symbols": [
       "fn_1_F7B80"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/spline.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/spline/fn_1_F7CAC.c",
+    "symbols": [
+      "fn_1_F7CAC"
     ],
     "status": "matching",
     "mw_version": null,

@@ -18,6 +18,55 @@ extern void fn_80074788(u32);
 extern void *lbl_801A6410;
 extern void fn_1_46B4(void *, void *, unsigned char *, int);
 
+/* fzgx:begin fn_1_5672C noprologue */
+#include "types.h"
+
+extern f32 lbl_1_rodata_28B4[16];
+extern char lbl_1_data_1C660[12];
+extern void *lbl_801A6410;
+
+extern void *GXGetTexBufferSize(int, int, int, int, int);
+extern void *fn_1_45D0(void *, int, char *, int);
+extern void GXInitTexObj(void *, void *, int, int, int, int, int, int);
+extern void GXInitTexObjLOD(void *, int, int, f32, f32, f32, int, int, int);
+
+typedef struct ShadowMapEntry {
+    int field_00;
+    int field_04;
+    f32 field_08;
+    char unk_0c[0x30];
+    void *field_3c;
+    void *field_40;
+    int field_44;
+    int field_48;
+} ShadowMapEntry;
+
+void fn_1_5672C(ShadowMapEntry *entries, int count) {
+    void *buffer;
+    int i;
+    ShadowMapEntry *entry;
+    f32 zero = lbl_1_rodata_28B4[0];
+
+    entry = entries;
+    i = 0;
+    while (i < count) {
+        buffer = GXGetTexBufferSize(0x40, 0x40, 0, 0, 0);
+        entry->field_00 = 0;
+        entry->field_04 = 0;
+        entry->field_08 = zero;
+        entry->field_3c = fn_1_45D0(lbl_801A6410, 0x20, lbl_1_data_1C660, 0x67);
+        entry->field_40 = fn_1_45D0(lbl_801A6410, (int)buffer, lbl_1_data_1C660, 0x68);
+        entry->field_44 = 0;
+        entry->field_48 = 0;
+        GXInitTexObj(entry->field_3c, entry->field_40, 0x40, 0x40, 0, 0, 0, 0);
+        GXInitTexObjLOD(entry->field_3c, 1, 1, lbl_1_rodata_28B4[0],
+                        lbl_1_rodata_28B4[0], lbl_1_rodata_28B4[0], 0, 0, 0);
+        i++;
+        entry++;
+    }
+}
+/* fzgx:end fn_1_5672C */
+
 /* fzgx:begin fn_1_56858 */
 typedef struct ShadowMapEntry {
     char pad_00[0x3c];

@@ -446,6 +446,17 @@ s16 fn_1_F7B80(void) {
 }
 /* fzgx:end fn_1_F7B80 */
 
+/* fzgx:begin fn_1_F7CAC */
+extern u64 __shl2i(u32, u32, s32);
+
+void fn_1_F7CAC(s16 value) {
+    u64 mask = (u64)1 << value;
+
+    *(u64 *)&lbl_1_bss_7F0C0.unk_0 |= mask;
+    *(u64 *)&lbl_1_bss_7F0C0.unk_48 &= ~mask;
+}
+/* fzgx:end fn_1_F7CAC */
+
 /* fzgx:begin fn_1_F7D18 */
 void fn_1_F7D18(void) {
     s16 i;

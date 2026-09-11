@@ -207,6 +207,35 @@ void fn_1_9E1D0(void) {
 }
 /* fzgx:end fn_1_9E1D0 */
 
+/* fzgx:begin fn_1_9E514 */
+extern f32 lbl_1_rodata_42C0[4];
+extern void fn_80038BFC(f32 *);
+extern u32 __cvt_fp2unsigned(f32);
+
+typedef struct {
+    u8 unk_00[0x14];
+    f32 unk_14;
+    f32 unk_18;
+} Fn_1_9E514_Data;
+
+s32 fn_1_9E514(f32 arg0) {
+    Fn_1_9E514_Data data;
+    f32 *table = (f32 *)&lbl_1_rodata_42C0;
+    f32 prod;
+    f32 value;
+
+    fn_80038BFC((f32 *)&data);
+    prod = data.unk_14 * arg0;
+    value = data.unk_18 + prod;
+    value /= arg0;
+    value = (table[1] - value) * table[3];
+    if (value < table[2]) {
+        return 0;
+    }
+    return __cvt_fp2unsigned(value);
+}
+/* fzgx:end fn_1_9E514 */
+
 /* fzgx:begin fn_1_9E598 */
 typedef struct Node Node;
 struct Node {

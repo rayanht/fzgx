@@ -145,6 +145,49 @@ void fn_1_FB9DC(int index) {
 }
 /* fzgx:end fn_1_FB9DC */
 
+/* fzgx:begin fn_1_FBEA8 */
+extern void lbl_8006D758(void);
+extern void lbl_8006E13C(void *);
+extern void lbl_8006E0A4(void *);
+extern void lbl_8006DB74(void *);
+
+void fn_1_FBEA8(void) {
+    Obj_1_bss_84454 *base;
+    Obj_1_bss_84454 *entry;
+    u8 i;
+    s32 j;
+
+    base = &lbl_1_bss_84454;
+    for (i = 0; i < 5; i++) {
+        Obj_1_bss_84454 *slot =
+            (Obj_1_bss_84454 *)((u8 *)base + i * 0x270);
+        if ((s32)slot->unk_0 != 0) {
+            for (j = 0, entry = slot; j < 3;
+                 j++, entry = (Obj_1_bss_84454 *)((u8 *)entry + 0x60)) {
+                if ((s32)entry->unk_14 != 0) {
+                    entry->unk_18 += entry->unk_24;
+                    entry->unk_1C += entry->unk_28;
+                    entry->unk_20 += entry->unk_2C;
+                    lbl_8006D758();
+                    lbl_8006E13C(&entry->unk_30);
+                    lbl_8006E0A4(&entry->unk_18);
+                    lbl_8006DB74(entry->pad_3C);
+                }
+                if ((s32)entry->unk_134 != 0) {
+                    entry->unk_138 += entry->unk_144;
+                    entry->unk_13C += entry->unk_148;
+                    entry->unk_140 += entry->unk_14C;
+                    lbl_8006D758();
+                    lbl_8006E13C(&entry->unk_150);
+                    lbl_8006E0A4(&entry->unk_138);
+                    lbl_8006DB74(&entry->pad_158[4]);
+                }
+            }
+        }
+    }
+}
+/* fzgx:end fn_1_FBEA8 */
+
 /* fzgx:begin fn_1_FC40C */
 // fn_1_FC40C: empty in retail (single blr).
 void fn_1_FC40C(void) {
