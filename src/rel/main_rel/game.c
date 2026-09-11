@@ -514,6 +514,58 @@ s32 fn_1_3F440(u8 index) {
 }
 /* fzgx:end fn_1_3F440 */
 
+/* fzgx:begin fn_1_3F4FC noprologue */
+#include "types.h"
+#include "rel/main_rel/game.h"
+
+typedef struct {
+    u8 pad_0[2];
+    s16 unk_2;
+    u8 pad_4[8];
+    u32 unk_C;
+    u8 pad_10[0x10];
+} Obj_1_bss_25E9C;
+
+extern Obj_1_bss_25E9C lbl_1_bss_25E9C[30];
+extern void fn_1_12AB38(void *arg);
+extern void fn_1_465D0(void *arg, s32 value);
+extern s32 fn_1_7F518(s16 value, void *arg, s32 mode);
+extern int sprintf(char *buffer, const char *format, ...);
+
+void fn_1_3F4FC(void) {
+    u8 *dp;
+    s16 i;
+    s32 mode;
+    u32 flags;
+    char buffer[0x20];
+    char temp[0x20];
+
+    dp = (u8 *)&lbl_1_data_5730;
+    fn_1_12AB38(dp + 0xce4);
+    fn_1_465D0(dp + 0xcf0, 1);
+
+    i = 0;
+    while (i < lbl_1_bss_3C30.unk_9) {
+        flags = lbl_1_bss_25E9C[i].unk_C;
+        mode = 0;
+        if (flags & 0x100000) {
+            mode = 1;
+        }
+
+        if (flags & 0xf0000000) {
+            sprintf(buffer, (const char *)(dp + 0xd00), fn_1_7F518(lbl_1_bss_25E9C[i].unk_2, temp, mode));
+        } else {
+            sprintf(buffer, (const char *)(dp + 0xd0c), fn_1_7F518(lbl_1_bss_25E9C[i].unk_2, temp, mode));
+        }
+
+        fn_1_465D0(buffer, 1);
+        i++;
+    }
+
+    fn_1_12AB38(dp + 0xd18);
+}
+/* fzgx:end fn_1_3F4FC */
+
 /* fzgx:begin fn_1_3F75C */
 void fn_1_3F75C(void) {
     while (fn_1_467F4() || fn_1_13018()) {

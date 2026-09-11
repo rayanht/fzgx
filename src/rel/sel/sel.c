@@ -83,6 +83,95 @@ s16 fn_10_3D64(void) {
 }
 /* fzgx:end fn_10_3D64 */
 
+/* fzgx:begin fn_10_3DE0 */
+typedef struct SelEntry {
+    u32 flags;                  /* 0x0 */
+    u8 pad04;                   /* 0x4 */
+    u8 value5;                  /* 0x5 */
+    u8 pad06;                   /* 0x6 */
+    u8 type7;                   /* 0x7 */
+    u8 pad08[0x81a0 - 0x8];
+    u8 source_index;            /* 0x81a0 */
+    u8 pad81a1[0x81c0 - 0x81a1];
+} SelEntry;
+
+typedef struct SelObject {
+    u8 pad000[0x390];
+    u32 flags390;               /* 0x390 */
+    u8 pad394[0xc];
+    void *data3a0;              /* 0x3a0 */
+    u32 result3a4;              /* 0x3a4 */
+    u8 pad3a8[0x12];
+    s16 slot3ba;                /* 0x3ba */
+} SelObject;
+
+typedef struct SelResult {
+    SelObject *object;          /* 0x0 */
+    u8 kind4;                   /* 0x4 */
+    u8 pad05[0x10420 - 0x5];
+    u32 zero10420;              /* 0x10420 */
+    void (*cb10424)(void);      /* 0x10424 */
+    void (*cb10428)(void);      /* 0x10428 */
+    void (*cb1042c)(void);      /* 0x1042c */
+} SelResult;
+
+typedef struct CopyData {
+    u32 words[0x110];           /* 0x440 bytes */
+} CopyData;
+
+extern u8 lbl_10_bss_493A0[23328];
+extern u32 lbl_10_bss_49380;
+
+extern void fn_1_13F848(u32);
+extern void fn_1_13F974(u32);
+extern SelResult *fn_1_13F8B0(u32);
+extern SelObject *fn_1_13F9DC(u32);
+extern u32 fn_1_7F254(SelEntry *, s16);
+extern void fn_1_FD324(void);
+extern void fn_1_FDC00(void);
+extern void fn_1_FD27C(void);
+extern u32 fn_1_FD844(SelEntry *, void *);
+
+void fn_10_3DE0(u32 index, SelEntry *entries, s16 slot) {
+    u32 i = index & 0xff;
+    SelEntry *entry = (SelEntry *)((u8 *)entries + i * 0x81c0);
+    SelObject *object;
+    SelResult *result;
+    u8 old_value;
+    u8 value;
+
+    if ((entry->flags & ((u32)1 << 31)) != 0 && entry->type7 <= 4 &&
+        entry->type7 != 0) {
+        fn_1_13F848(index);
+        fn_1_13F974(index);
+        result = fn_1_13F8B0(index);
+        object = fn_1_13F9DC(index);
+        old_value = entry->value5;
+        value = entry->source_index;
+
+        if (entry->flags & 0x40000000) {
+            object->flags390 |= 0x04000000;
+            object->data3a0 = &lbl_10_bss_493A0[i * 0xa20];
+        } else {
+            entry->value5 = value;
+            *(CopyData *)object =
+                *(CopyData *)((u8 *)lbl_10_bss_49380 + value * 0x440);
+        }
+
+        object->slot3ba = slot;
+        object->result3a4 = fn_1_7F254(entry, (s16)(1 << object->slot3ba));
+        result->object = object;
+        result->kind4 = 4;
+        result->cb10424 = fn_1_FD324;
+        result->cb10428 = fn_1_FDC00;
+        result->cb1042c = fn_1_FD27C;
+        result->zero10420 = 0;
+        fn_1_FD844(entry, result);
+        entry->value5 = old_value;
+    }
+}
+/* fzgx:end fn_10_3DE0 */
+
 /* fzgx:begin fn_10_4600 */
 extern s32 lbl_10_bss_14;
 extern s16 lbl_10_bss_4938C;

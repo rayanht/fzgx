@@ -592,6 +592,31 @@ void fn_1_F8580(void) {
 }
 /* fzgx:end fn_1_F8580 */
 
+/* fzgx:begin fn_1_F8918 */
+extern u32 lbl_801A63C0;
+
+void fn_1_F8918(u8 *src, u8 *dst) {
+    u8 *hdr = src + 0x60;
+    u32 seed = *(u32 *)hdr ^ 0xcae87fb5;
+    s32 value;
+    u32 i;
+
+    lbl_801A63C0 = seed;
+    for (i = 0; i < 0x5360; i++) {
+        if (src < hdr || hdr + 4 <= src) {
+            seed = lbl_801A63C0 * 0x676a4b6b + 0x33cb;
+            lbl_801A63C0 = seed;
+            value = (seed >> 16) & 0x7fff;
+            *dst = *src ^ (value % 255 + 1);
+        } else {
+            *dst = *src;
+        }
+        src++;
+        dst++;
+    }
+}
+/* fzgx:end fn_1_F8918 */
+
 /* fzgx:begin fn_1_F89C0 */
 void fn_1_F89C0(void) {
     fn_1_F8A04();

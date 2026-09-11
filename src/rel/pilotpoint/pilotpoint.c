@@ -206,6 +206,46 @@ void fn_14_315C(u32 arg0) {
 }
 /* fzgx:end fn_14_315C */
 
+/* fzgx:begin fn_14_3230 */
+struct PilotPointEntry {
+    u32 raw[2];
+};
+
+extern struct PilotPointEntry lbl_14_bss_110[10];
+extern s16 lbl_14_bss_160[16];
+
+void fn_14_3230(u16 *arg0, u16 *arg1, u16 *arg2) {
+    s16 count;
+    s16 index;
+
+    index = 0;
+    count = 0;
+
+    *arg2 = 15;
+    *arg1 = 15;
+    *arg0 = 15;
+
+    while ((u32)(s16)count < 8) {
+        if ((((u32 *)&lbl_14_bss_110[count])[3] & 0x8) &&
+            (((u32 *)&lbl_14_bss_110[count])[3] & 0x40)) {
+            s16 quotient = index / lbl_14_bss_160[0];
+            switch (quotient) {
+            case 0:
+                *arg0 = 0;
+                break;
+            case 1:
+                *arg1 = 0;
+                break;
+            case 2:
+                *arg2 = 0;
+                break;
+            }
+        }
+        index++, count++;
+    }
+}
+/* fzgx:end fn_14_3230 */
+
 /* fzgx:begin fn_14_32DC */
 struct PilotPointEntry {
     u32 raw[2];

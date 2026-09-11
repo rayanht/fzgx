@@ -5003,3 +5003,6 @@ dol/fn_8006496C.c:
 
 dol/fn_800647F0.c:
 	.text       start:0x800647F0 end:0x8006496C align:4
+
+dol/fn_8008C730.c:
+	.text       start:0x8008C730 end:0x8008C87C align:4
