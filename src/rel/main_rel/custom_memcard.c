@@ -257,6 +257,126 @@ void fn_1_132488(void *arg0) {
 }
 /* fzgx:end fn_1_132488 */
 
+/* fzgx:begin fn_1_132FB4 */
+#include "font.h"
+
+extern u32 lbl_1_rodata_8694[4];
+extern u32 lbl_1_rodata_86A4[4];
+extern const f64 lbl_1_rodata_8600;
+extern const f32 lbl_1_rodata_85F0;
+extern const f32 lbl_1_rodata_8658;
+extern const f32 lbl_1_rodata_86B4;
+extern const f32 lbl_1_rodata_86B8;
+extern const f32 lbl_1_rodata_86BC;
+extern const f32 lbl_1_rodata_86C0;
+extern const f32 lbl_1_rodata_86C4;
+extern const f32 lbl_1_rodata_86C8;
+extern const f32 lbl_1_rodata_86CC;
+extern const f32 lbl_1_rodata_86D0;
+extern const f32 lbl_1_rodata_86D4;
+extern f32 lbl_1_rodata_26F8[22];
+
+extern u8 fn_1_D66B0(void);
+extern u8 fn_1_D6740(u8);
+extern void fn_80008BEC(void *, int, u32);
+extern void fn_1_51564(u16, u16, u16, u16, u16, u16);
+extern u32 fn_1_5158C(FontDrawPacket *, u32, u32, u32);
+extern int fn_1_4F734(FontDrawPacket *);
+extern char *strncpy(char *, const char *, size_t);
+extern void fn_1_50164(f32, f32, f32, f32, void *);
+extern void fn_1_49410(void);
+extern void fn_1_496FC(f32, f32);
+extern void fn_1_495C8(s32);
+extern void fn_1_4955C(f32, f32);
+extern void fn_1_49590(f32);
+extern void fn_1_4965C(s32);
+extern void fn_1_495B0(s32);
+extern void fn_1_4CE48(Obj_1_bss_4B9CC *, f32);
+
+#pragma opt_common_subs off
+#pragma opt_propagation off
+void fn_1_132FB4(void) {
+    FontDrawPacket packet;
+    char buf[17];
+    u32 tblA[4];
+    u32 tblB[4];
+    s32 var_r31;
+    s32 var_r30;
+    s32 var_r29;
+    s32 var_r28;
+    char *pbuf;
+    f32 lab_t0;
+    u32 var_r26;
+    f32 lab_t1;
+
+    var_r29 = 0;
+    var_r28 = 0;
+    var_r26 = 0;
+    var_r31 = 0x18;
+    var_r30 = 0x43;
+
+    tblA[0] = lbl_1_rodata_8694[0];
+    tblA[1] = lbl_1_rodata_8694[1];
+    tblA[2] = lbl_1_rodata_8694[2];
+    tblA[3] = lbl_1_rodata_8694[3];
+    tblB[0] = lbl_1_rodata_86A4[0];
+    tblB[1] = lbl_1_rodata_86A4[1];
+    tblB[2] = lbl_1_rodata_86A4[2];
+    tblB[3] = lbl_1_rodata_86A4[3];
+
+    pbuf = buf;
+
+    do {
+        if (var_r29 == fn_1_D66B0()) {
+            var_r28 += 1;
+            var_r26 += 4;
+        } else if (fn_1_D6740(var_r29) != 0) {
+            fn_80008BEC(pbuf, 0, 0x11);
+            packet = *(FontDrawPacket *)lbl_1_rodata_26F8;
+            packet.image = 0x10000 - 0x61EC;
+            fn_1_51564(0, 0, 0x18, 0x14, 2, 2);
+            fn_1_5158C(&packet, packet.image, (s16)(var_r28 % 2), (s16)(var_r28 / 2));
+            packet.x = (f32)var_r31;
+            packet.y = lbl_1_rodata_86B4;
+            fn_1_4F734(&packet);
+            strncpy(pbuf, (const char *)(*(u32 *)((u8 *)tblA + var_r26)), 0x10);
+            packet = *(FontDrawPacket *)lbl_1_rodata_26F8;
+            packet.image = 12;
+            *(u32 *)((u8 *)&packet + 0x30) = 5;
+            packet.x = (f32)var_r31;
+            packet.y = lbl_1_rodata_86B8;
+            fn_1_50164(lbl_1_rodata_86BC, lbl_1_rodata_86C0, lbl_1_rodata_86C4, lbl_1_rodata_86C4, &packet);
+            fn_1_49410();
+            fn_1_496FC((f32)var_r30, lbl_1_rodata_86C8);
+            fn_1_495C8(1);
+            fn_1_4955C(lbl_1_rodata_86CC, lbl_1_rodata_86CC);
+            fn_1_49590(lbl_1_rodata_85F0);
+            fn_1_4965C(2);
+            fn_1_495B0((0x3u << 30));
+            fn_1_4CE48((Obj_1_bss_4B9CC *)pbuf, lbl_1_rodata_86D0);
+            fn_1_49410();
+            lab_t0 = (f32)var_r30;
+            fn_1_496FC(lab_t0, lbl_1_rodata_8658);
+            fn_1_495C8(1);
+            fn_1_4955C(lbl_1_rodata_86D4, lbl_1_rodata_86D4);
+            fn_1_49590(lbl_1_rodata_85F0);
+            fn_1_4965C(2);
+            fn_1_495B0((0x3u << 30));
+            lab_t1 = lbl_1_rodata_86D0;
+            fn_1_4CE48((Obj_1_bss_4B9CC *)(*(u32 *)((u8 *)tblB + var_r26)), lab_t1);
+            var_r31 += 0x57;
+            var_r30 += 0x57;
+            var_r28 += 1;
+            var_r26 += 4;
+        }
+        var_r29 += 1;
+    } while (var_r29 < 4);
+}
+#pragma opt_propagation reset
+
+#pragma opt_common_subs reset
+/* fzgx:end fn_1_132FB4 */
+
 /* fzgx:begin fn_1_137364 */
 // Writes the indexed three-byte value, or the fallback value when the index is out of range.
 void fn_1_137364(s16 arg0, u8* arg1, u8* arg2, u8* arg3) {
