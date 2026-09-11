@@ -128,6 +128,93 @@ u32 fn_1_15BE38(void) {
 }
 /* fzgx:end fn_1_15BE38 */
 
+/* fzgx:begin fn_1_15BEBC */
+typedef struct {
+    u8 unk_0;
+    u8 unk_1;
+    u8 unk_2;
+    u8 unk_3;
+    u16 unk_4;
+    u16 unk_6;
+} Entry;
+
+void fn_1_15BEBC(u16 mask, Obj_1_bss_8F8E0 *state) {
+    Entry *p;
+    u32 max;
+    u32 sel;
+    u32 cnt;
+    Entry *first;
+    u32 i;
+
+    p = (Entry *)&lbl_1_bss_8F8E0;
+    max = 0;
+    sel = 0;
+    cnt = 0;
+    first = 0;
+    for (i = 0; i < 4; i++) {
+        if ((1 << i) & mask) {
+            if (first == 0) {
+                first = p;
+            }
+            if (p->unk_4 == 0) {
+                cnt++;
+            } else {
+                if (sel == 0) {
+                    sel = p->unk_4;
+                } else if (sel != p->unk_4) {
+                    sel = 0x8000;
+                    break;
+                }
+                if (max < p->unk_1) {
+                    max = p->unk_1;
+                }
+            }
+        }
+        p++;
+    }
+
+    if (sel != 0x8000) {
+        if (sel == 0) {
+            state->pad_3[0] = 0;
+        } else if (cnt != 0) {
+            u32 cur = state->pad_3[0];
+            if (cur < 10) {
+                sel = 0;
+            } else {
+                sel = 0x8000;
+            }
+            if (cur == 0) {
+                state->pad_3[0] = 1;
+            } else {
+                state->pad_3[0] = cur + ((cur - 0x78) >> 31);
+            }
+        } else if (max < 10) {
+            state->pad_3[0] = 0;
+        } else {
+            if (state->unk_4 == 0x8000) {
+                sel = 0x8000;
+            }
+            if (state->pad_3[0] != 0) {
+                u32 v = state->pad_3[0];
+                state->pad_3[0] = v + ((v - 0x78) >> 31);
+            }
+        }
+    }
+
+    if (sel != state->unk_4) {
+        state->unk_6 = state->unk_4;
+        state->unk_4 = sel;
+        state->unk_1 = 0;
+        state->unk_2 = 0;
+    } else {
+        u32 t = state->unk_1;
+        state->unk_1 = t + 1;
+        t = state->unk_2;
+        state->unk_2 = t + 1;
+    }
+}
+/* fzgx:end fn_1_15BEBC */
+
 /* fzgx:begin fn_1_15C35C */
 s32 fn_1_15C35C(s32 a, s32 b, s32 c, s32 d) {
     return a * b - c + d;

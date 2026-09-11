@@ -661,6 +661,134 @@ void fn_1_A983C(void) {
 }
 /* fzgx:end fn_1_A983C */
 
+/* fzgx:begin fn_1_A9868 noprologue */
+#include "types.h"
+
+typedef struct Sig_fn_80015EE8_Fn80015EE8Out {
+    f32 f0;
+    f32 f1;
+    f32 f2;
+    f32 f3;
+    f32 f4;
+    f32 f5;
+    f32 f6;
+    f32 f7;
+    f32 f8;
+    f32 f9;
+    f32 f10;
+    f32 f11;
+    f32 f12;
+    f32 f13;
+    f32 f14;
+    f32 f15;
+} Sig_fn_80015EE8_Fn80015EE8Out;
+struct Sig_fn_800737E4_fn_800737E4_Arg0 {
+    f32 unk_0;
+    u8 pad_4[0x4];
+    f32 unk_8;
+    f32 unk_C;
+    u8 pad_10[0x4];
+    f32 unk_14;
+    f32 unk_18;
+    f32 unk_1C;
+    u8 pad_20[0x8];
+    f32 unk_28;
+    f32 unk_2C;
+};
+
+struct fn_1_A9868_lbl_1_bss_71690 {
+    u32 unk_0;
+};
+struct fn_1_A9868_lbl_1_rodata_4AA0 {
+    u32 unk_0;
+    u32 unk_4;
+    u32 unk_8;
+    u32 unk_C;
+    u32 unk_10;
+    u32 unk_14;
+    u32 unk_18;
+    u32 unk_1C;
+    u32 unk_20;
+    f32 unk_24;
+    f32 unk_28;
+    f32 unk_2C;
+    f32 unk_30;
+};
+struct fn_1_A9868_lbl_801A6D00 {
+    u32 unk_0;
+};
+
+extern struct fn_1_A9868_lbl_1_bss_71690 lbl_1_bss_71690;
+extern struct fn_1_A9868_lbl_1_rodata_4AA0 lbl_1_rodata_4AA0;
+extern struct fn_1_A9868_lbl_801A6D00 lbl_801A6D00;
+extern u32 GXLoadPosMtxImm(u32, u32);
+extern u32 fn_800720B0(u32);
+extern u32 fn_80072EDC(u32, u32);
+extern void fn_1_A714C(f32 *, f32 *, f32 *, f32 *);
+extern f32 fn_80015EE8(Sig_fn_80015EE8_Fn80015EE8Out *, f32, f32, f32, f32, f32, f32);
+extern void fn_80038CFC(u32);
+extern void fn_8006F1F0(void *, void *, void *);
+extern void fn_8007245C(u32);
+extern void fn_8007264C(u32, s32, s32, s32, u8);
+extern void fn_800734A8(u32, s32, s32, s32);
+extern void fn_80073678(u32);
+extern void fn_80073898(u32);
+extern void fn_80073C6C(s32);
+extern void fn_80074660(u32);
+extern void fn_800746A8(u8, s32);
+extern void fn_80074718(u8, s32);
+extern void fn_80074788(u32);
+extern void fn_800747D0(u32, u32, s32, s32, u32, s32, s32);
+extern void fn_80074918(u8, s32, u8);
+extern void fn_800737E4(struct Sig_fn_800737E4_fn_800737E4_Arg0 *, s32, f32);
+extern void lbl_8006DAEC(void);
+extern void lbl_8006DB30(void);
+
+void fn_1_A9868(u32 arg0, u32 arg1, u32 arg2, f32 arg3) {
+    struct fn_1_A9868_lbl_1_rodata_4AA0 *p_lbl_1_rodata_4AA0;
+    struct fn_1_A9868_lbl_1_bss_71690 *p_lbl_1_bss_71690;
+    Sig_fn_80015EE8_Fn80015EE8Out loc_2C;
+    u32 loc_20[3];
+    u32 loc_14[3];
+    u32 loc_8[3];
+    f32 zero;
+    p_lbl_1_rodata_4AA0 = (struct fn_1_A9868_lbl_1_rodata_4AA0 *)&lbl_1_rodata_4AA0;
+    p_lbl_1_bss_71690 = (struct fn_1_A9868_lbl_1_bss_71690 *)&lbl_1_bss_71690;
+    fn_1_A714C((f32 *)((u8 *)(u32)p_lbl_1_bss_71690 + 4), (f32 *)((u8 *)(u32)p_lbl_1_bss_71690 + 8), (f32 *)((u8 *)(u32)p_lbl_1_bss_71690 + 12), (f32 *)((u8 *)(u32)p_lbl_1_bss_71690 + 16));
+    fn_8007245C(2560);
+    fn_800720B0(0);
+    fn_800747D0(4, 0, 1, 1, 0, 2, 1);
+    fn_800734A8(0, 255, 255, 4);
+    fn_80072EDC(0, 4);
+    fn_80073C6C(0);
+    fn_8007264C(0, 9, 1, 4, 8);
+    fn_80074718(6, 0);
+    fn_800746A8(6, 0);
+    fn_80073678(1);
+    fn_80074660(0);
+    fn_80073898(0);
+    fn_80074788(1);
+    lbl_8006DAEC();
+    loc_20[0] = p_lbl_1_rodata_4AA0->unk_0;
+    loc_20[1] = p_lbl_1_rodata_4AA0->unk_4;
+    loc_20[2] = p_lbl_1_rodata_4AA0->unk_8;
+    loc_14[0] = p_lbl_1_rodata_4AA0->unk_C;
+    loc_14[1] = p_lbl_1_rodata_4AA0->unk_10;
+    loc_14[2] = p_lbl_1_rodata_4AA0->unk_14;
+    loc_8[0] = p_lbl_1_rodata_4AA0->unk_18;
+    loc_8[1] = p_lbl_1_rodata_4AA0->unk_1C;
+    loc_8[2] = p_lbl_1_rodata_4AA0->unk_20;
+    fn_8006F1F0((void *)loc_20, (void *)loc_14, (void *)loc_8);
+    fn_80038CFC(0);
+    GXLoadPosMtxImm(lbl_801A6D00.unk_0, 0);
+    lbl_8006DB30();
+    zero = fn_80015EE8((Sig_fn_80015EE8_Fn80015EE8Out *)&loc_2C, p_lbl_1_rodata_4AA0->unk_24, p_lbl_1_rodata_4AA0->unk_28, p_lbl_1_rodata_4AA0->unk_24, p_lbl_1_rodata_4AA0->unk_2C, p_lbl_1_rodata_4AA0->unk_24, p_lbl_1_rodata_4AA0->unk_30);
+    fn_800737E4((struct Sig_fn_800737E4_fn_800737E4_Arg0 *)&loc_2C, 1, zero);
+    fn_80074918(1, 7, 0);
+    p_lbl_1_bss_71690->unk_0 = 1;
+}
+/* fzgx:end fn_1_A9868 */
+
 /* fzgx:begin fn_1_AA538 */
 // Initialize the shared rendering state and submit the associated configuration.
 void fn_1_AA538(void) {

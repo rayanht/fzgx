@@ -19798,6 +19798,16 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_80067344.c",
+    "symbols": [
+      "fn_80067344"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
     "source": "dol/fn_80067898.c",
     "symbols": [
       "fn_80067898"
@@ -27590,6 +27600,17 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/bg_win/fn_1_15BEBC.c",
+    "symbols": [
+      "fn_1_15BEBC"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "tu": "rel/main_rel/bg_win.c"
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/bg_win/fn_1_15C35C.c",
     "symbols": [
       "fn_1_15C35C"
@@ -32187,6 +32208,17 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/driver/fn_1_A9868.c",
+    "symbols": [
+      "fn_1_A9868"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "tu": "rel/main_rel/driver.c"
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/driver/fn_1_AA538.c",
     "symbols": [
       "fn_1_AA538"
@@ -34958,6 +34990,21 @@
     "mw_version": null,
     "extra_cflags": [],
     "tu": "rel/main_rel/font.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/font/fn_1_508C4.c",
+    "symbols": [
+      "fn_1_508C4"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "tu": "rel/main_rel/font.c",
+    "pool": {
+      "@35": "lbl_1_rodata_2758",
+      "@39": "lbl_1_rodata_2778"
+    }
   },
   {
     "module": "main_rel",
@@ -55784,6 +55831,17 @@
     ],
     "status": "matching",
     "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/sel/sel.c"
+  },
+  {
+    "module": "sel",
+    "source": "rel/sel/sel/fn_10_E294.c",
+    "symbols": [
+      "fn_10_E294"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
     "extra_cflags": [],
     "tu": "rel/sel/sel.c"
   },

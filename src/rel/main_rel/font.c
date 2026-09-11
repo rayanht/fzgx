@@ -1448,6 +1448,67 @@ void fn_1_50164(f32 a, f32 b, f32 c, f32 d) {
 }
 /* fzgx:end fn_1_50164 */
 
+/* fzgx:begin fn_1_508C4 */
+#include "font.h"
+
+typedef struct FontObject {
+    u32 unk0;
+    f32 start_x;
+    f32 start_y;
+    f32 pos_x;
+    f32 scale_x;
+    f32 scale_y;
+    u8 data[0x40];
+} FontObject;
+
+extern u16 fn_1_48690(u32);
+extern u16 fn_1_486C4(u32);
+extern void fn_1_51678(FontDrawPacket *, u32, s16, s16, s16, s16);
+extern int fn_1_4F734(FontDrawPacket *);
+
+#pragma opt_dead_assignments off
+#pragma opt_propagation off
+void fn_1_508C4(FontObject *obj, f32 dx, f32 dy) {
+    FontObject work;
+    s32 x;
+    s32 y;
+    s32 x_start;
+    s32 x_end;
+    s32 y_end;
+    s32 width;
+    s32 height;
+    s32 y_start;
+
+    x_start = (s32)obj->start_x;
+    x_end = (s32)(obj->start_x + dx);
+    y_start = (s32)obj->start_y;
+    y_end = (s32)(obj->start_y + dy);
+
+    width = (s32)(obj->scale_x * (f32)fn_1_48690(obj->unk0));
+    height = (s32)(obj->scale_y * (f32)fn_1_486C4(obj->unk0));
+
+    for (y = y_start; y < y_end; y += height) {
+        for (x = x_start; x < x_end; x += width) {
+            s32 h;
+            s32 w;
+
+            work = *obj;
+            h = y_end - y;
+            h = h < height ? h : height;
+            w = x_end - x;
+            w = w < width ? w : width;
+            fn_1_51678((FontDrawPacket *)&work, obj->unk0, 0, 0, (s16)w, (s16)h);
+            work.start_x = (f32)x;
+            work.start_y = (f32)y;
+            fn_1_4F734((FontDrawPacket *)&work);
+        }
+    }
+}
+#pragma opt_propagation reset
+
+#pragma opt_dead_assignments reset
+/* fzgx:end fn_1_508C4 */
+
 /* fzgx:begin fn_1_51564 */
 // Update the six halfwords that define the active font state.
 void fn_1_51564(u16 first, u16 second, u16 third, u16 fourth, u16 fifth, u16 sixth) {

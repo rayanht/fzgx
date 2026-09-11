@@ -1682,6 +1682,110 @@ void fn_10_CFDC(void) {
 }
 /* fzgx:end fn_10_CFDC */
 
+/* fzgx:begin fn_10_E294 */
+extern const f32 lbl_10_rodata_158[70];
+
+typedef struct SelState {
+    s16 mode;
+    u8 pad_02[0x92];
+    u32 flags_94;
+    u8 pad_98[0xa8];
+    u32 options_140;
+} SelState;
+
+extern volatile s16 lbl_1_bss_8B3A0; /* state mutated by callbacks during this function */
+#define SEL ((SelState *)&lbl_1_bss_8B3A0)
+
+extern void fn_1_496FC(f32, f32);
+extern void fn_1_4955C(f32, f32);
+extern s32 fn_1_F9FEC(void);
+extern void fn_1_14083C(s32, s32, f32, f32, s32, s32, s32);
+extern void fn_10_E034(SelState *);
+extern void fn_10_E600(void);
+extern void fn_10_D044(void);
+extern void fn_10_D5D4(void);
+extern void fn_10_DAF8(void);
+extern void fn_10_E45C(void);
+
+#pragma opt_propagation off
+void fn_10_E294(void) {
+    const f32 *data;
+    s32 active;
+    s32 random;
+    s16 mode;
+    s32 arg4;
+    s32 arg6;
+    u32 flags;
+    u32 hi;
+
+    data = lbl_10_rodata_158;
+    fn_1_496FC(data[26], data[31]);
+    fn_1_4955C(data[18], data[68]);
+    fn_10_E034((SelState *)&lbl_1_bss_8B3A0);
+
+    if (SEL->flags_94 & 0x40000000u) {
+        fn_10_E600();
+    } else {
+        active = 0;
+        random = (fn_1_F9FEC() != 0);
+        mode = SEL->mode;
+        if (mode == 0 || mode == -1) {
+            fn_10_D044();
+        }
+        mode = SEL->mode;
+        if (mode == 1 || mode == 11 || mode == -1) {
+            fn_10_D5D4();
+        }
+        mode = SEL->mode;
+        if (mode == 2 || mode == -1) {
+            fn_10_DAF8();
+        }
+
+        arg6 = 0x9e;
+        arg4 = 0xf0;
+        mode = SEL->mode;
+        switch (mode) {
+        case 1:
+        case 11:
+            if (random == 1) {
+                arg6 = 0xc0;
+                arg4 = 0x101;
+            }
+            active = 1;
+            break;
+        case 2:
+            arg6 = 0x78;
+            active = 1;
+            break;
+        case 0:
+            active = 1;
+            break;
+        default:
+            if (mode == -1) {
+                flags = SEL->options_140;
+                hi = flags & 0x80000000u;
+                if (hi && (flags & 4)) {
+                    if (random == 1) {
+                        arg6 = 0xc0;
+                        arg4 = 0x101;
+                    }
+                } else if ((hi != 0) && (flags & 0x10)) {
+                    arg6 = 0x78;
+                }
+                active = 1;
+            }
+            break;
+        }
+
+        if (active == 1) {
+            fn_1_14083C(0x140, arg4, data[69], data[17], 0x136, arg6, 0xa);
+        }
+        fn_10_E45C();
+    }
+}
+#pragma opt_propagation reset
+/* fzgx:end fn_10_E294 */
+
 /* fzgx:begin fn_10_E45C */
 typedef struct SelState {
     u8 pad_00[0x94];

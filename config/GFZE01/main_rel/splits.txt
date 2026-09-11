@@ -5987,3 +5987,12 @@ rel/main_rel/sel_static_disp/fn_1_14EA74.c:
 
 rel/main_rel/background/fn_1_9CF78.c:
 	.text       start:0x0009CF78 end:0x0009D0EC align:4
+
+rel/main_rel/driver/fn_1_A9868.c:
+	.text       start:0x000A9868 end:0x000A9A28 align:4
+
+rel/main_rel/font/fn_1_508C4.c:
+	.text       start:0x000508C4 end:0x00050A90 align:4
+
+rel/main_rel/bg_win/fn_1_15BEBC.c:
+	.text       start:0x0015BEBC end:0x0015C0AC align:4
