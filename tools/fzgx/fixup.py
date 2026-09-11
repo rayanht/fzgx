@@ -163,7 +163,7 @@ class Engine:
         check = self.check(row)
         if check.ok:
             families.append(evidence.candidates(self.project, row['symbol'], body, check))
-            targeted = [[c for c in families[0] if c[0].startswith(('bind recovered shared-pool', 'retain recovered shared-pool', 'lifetime reload'))],
+            targeted = [[c for c in families[0] if c[0].startswith(('bind recovered shared-pool', 'retain recovered shared-pool', 'recover native shared-pool', 'lifetime reload'))],
                         source.address_expressions(body, name), source.pointer_lifetimes(body, name)]
             operand_types = {'and':('&',('u32','s32')), 'or':('|',('u32','s32')),
                              'xor':('^',('u32','s32')), 'mullw':('*',('u32','s32')),

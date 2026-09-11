@@ -17,7 +17,7 @@ from . import oracle, mwgraph, mwconstraints
 TYPE = (r'(?:(?:register|const|volatile)\s+){0,3}'
         r'(?:(?:unsigned|signed)\s+)?'
         r'(?:(?:long\s+long|long|short)(?:\s+int)?|(?:struct|union|enum)\s+\w+|[A-Za-z_]\w*)'
-        r'(?:\s*\*+)?')
+        r'(?:\s*\*)*')
 DECL_RE = re.compile(r'^\s*(' + TYPE + r')(?:(?<=\*)\s*|\s+)([A-Za-z_]\w*)'
                      r'((?:\[[^\]]*\])*)\s*(?:=\s*([^;]+))?;\s*(?:(?:/\*.*?\*/|//[^\n]*)\s*)?$')
 
@@ -1350,10 +1350,15 @@ def address_expressions(body, name):
     span = _function_body_span(code, name)
     if not span:
         return []
-    pattern = re.compile(r'\b(\w+(?:(?:->|\.)\w+)+)\[([^\[\]\n;]+)\]')
+    identities = [m[2] for m in re.finditer(r'\bstatic\s+inline\s+('+TYPE+r')\s*(?:(?<=\*)|\s)(\w+)\(\s*('+TYPE+r')\s*(?:(?<=\*)|\s)(\w+)\s*\)\s*\{\s*return\s+\4\s*;\s*\}',code)
+                  if '*' in m[1] and m[1].strip()==m[3].strip()]
+    wrapper = r'(?:\b(?:'+'|'.join(map(re.escape,identities))+r')\(\s*)?' if identities else ''
+    pattern = re.compile(wrapper+r'\b(\w+(?:(?:->|\.)\w+)+)\s*'+(r'\)?' if identities else '')+r'\[([^\[\]\n;]+)\]')
     sites = [m for m in pattern.finditer(code)
-             if m.start() >= span[1] or body[body.rfind('\n', 0, m.start())+1:m.start()].rstrip().endswith('=')
-             or '\\' in body[m.end():body.find('\n', m.end())]]
+             if (span[1] <= m.start() < span[2] or body[body.rfind('\n', 0, m.start())+1:m.start()].rstrip().endswith('=')
+                 or '\\' in body[m.end():body.find('\n', m.end())])
+             and (')' not in code[m.end(1):m.start(2)] or
+                  any(re.match(re.escape(helper)+r'\s*\(',m[0]) for helper in identities))]
     out = []
     # Inlining preserves the array parameter's address web before lowering.
     # Resolve macro parameters from their actual member arguments, so a pointer
@@ -1361,10 +1366,16 @@ def address_expressions(body, name):
     members = {}
     for declaration in re.finditer(r'('+TYPE+r')\s*(?:(?<=\*)|\s)(\w+)\s*\[[^\]]+\]\s*;', code[:span[0]]):
         members.setdefault(declaration[2], set()).add(declaration[1].strip())
+    fields, variables = declared_types(code,span[0])
+    aliases = dict(re.findall(r'(?m)^#define\s+(\w+)\s+(\w+)\s*$',code))
     typed = {}
     for site in sites:
         member = re.split(r'->|\.',site[1])[-1]
-        types = members.get(member,set())
+        root = re.match(r'\w+',site[1])[0]
+        actual = aliases.get(root,root)+site[1][len(root):]
+        resolved = member_type(actual,fields,variables)
+        resolved = re.sub(r'\s*\*\s*$', '', resolved) if resolved.rstrip().endswith('*') else ''
+        types = {resolved} if resolved else members.get(member,set())
         if not types:
             definitions = list(re.finditer(r'(?m)^#define\s+(\w+)\(([^)]*)\)',code[:site.start()]))
             if definitions:
@@ -1467,6 +1478,34 @@ def operand_lifetimes(body, name, operators):
     return out
 
 
+def declared_types(code, end):
+    """Resolve fields by their owning record, never by a shared member name."""
+    fields = {}
+    for struct in re.finditer(r'(?:typedef\s+)?struct\s*(\w+)?\s*\{([^{}]*)\}\s*(\w+)?', code[:end]):
+        members = {}
+        for line in struct[2].split(';'):
+            decl = DECL_RE.match(line.strip()+';')
+            if decl:
+                members[decl[2]] = decl[1]+(' *' if decl[3] else '')
+        if struct[1]:
+            fields[struct[1]] = members
+        if struct[3]:
+            fields[struct[3]] = members
+    variables = {}
+    for decl in re.finditer(r'('+TYPE+r')\s*(?:(?<=\*)|\s)(\w+)\s*(?=[,;=)\[])', code):
+        variables[decl[2]] = decl[1]+(' *' if code[decl.end():].startswith('[') else '')
+    return fields, variables
+
+
+def member_type(expression, fields, variables):
+    parts = re.split(r'->|\.', expression)
+    ty = variables.get(parts[0], '')
+    for member in parts[1:]:
+        tag = re.sub(r'\b(?:extern|static|struct|const|volatile)\b|\*', '', ty).strip()
+        ty = fields.get(tag, {}).get(member, '')
+    return ty
+
+
 def pointer_lifetimes(body, name):
     """Materialize typed pointer reads at their existing evaluation point.
 
@@ -1479,20 +1518,7 @@ def pointer_lifetimes(body, name):
     span = _function_body_span(code, name)
     if not span:
         return []
-    fields = {}
-    for struct in re.finditer(r'(?:typedef\s+)?struct\s*(\w+)?\s*\{([^{}]*)\}\s*(\w+)?', code[:span[0]]):
-        members = {}
-        for line in struct[2].split(';'):
-            decl = DECL_RE.match(line.strip()+';')
-            if decl:
-                members[decl[2]] = decl[1]
-        if struct[1]:
-            fields[struct[1]] = members
-        if struct[3]:
-            fields[struct[3]] = members
-    variables = {}
-    for decl in re.finditer(r'('+TYPE+r')\s*(?:(?<=\*)|\s)(\w+)\s*(?=[,;=)])', code):
-        variables[decl[2]] = decl[1]
+    fields, variables = declared_types(code, span[0])
     out = []
     declarations = {}
     for line in re.finditer(r'(?m)^[ \t]*[^\n]+;[ \t]*$',code[span[1]:span[2]]):
@@ -1589,7 +1615,7 @@ def pointer_lifetimes(body, name):
                 out.append((f'lifetime accessor {expression} at '+('every site' if positions is uses else str(positions[0][0])), text))
     # A store's address and computed value have independent lifetimes. Expose
     # either side while retaining the recovered field type and conversion.
-    assignments = re.compile(r'(?m)^([ \t]*)(\w+(?:(?:->|\.)\w+){2,})\s*=\s*([^;\n]+);')
+    assignments = re.compile(r'(?m)^([ \t]*)(\w+(?:(?:->|\.)\w+)+)\s*=\s*([^;\n]+);')
     for assignment in assignments.finditer(code, span[1], span[2]):
         lhs = assignment[2]
         tokens = re.split(r'->|\.', lhs)
