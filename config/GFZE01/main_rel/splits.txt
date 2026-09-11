@@ -6137,3 +6137,6 @@ rel/main_rel/memcard/fn_1_B03CC.c:
 
 rel/main_rel/stcoli/fn_1_20258.c:
 	.text       start:0x00020258 end:0x000203E4 align:4
+
+rel/main_rel/enemy_ctrl/fn_1_D19B8.c:
+	.text       start:0x000D19B8 end:0x000D1C94 align:4
