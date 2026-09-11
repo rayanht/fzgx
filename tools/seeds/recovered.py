@@ -102,6 +102,14 @@ class SavedCandidates:
                 record.update(json.loads(metadata.read_text()))
             self.add(row['symbol'], record, f'ledger:attempt/{row["id"]}')
 
+        # The unified fixup report is the canonical store for improved bodies.
+        # Its best rows carry relocation-aware percentages and exact settings.
+        for path in sorted((STATE_DIR / 'fixup').rglob('report.json')):
+            data = json.loads(path.read_text())
+            for symbol, record in data.get('best', {}).items():
+                if 'percent' in record:
+                    self.add(symbol, {**record, 'path': record['source']}, str(path.relative_to(ROOT)))
+
         # Only compile-result stores: donor discovery/fuzzy scores measure opcode
         # similarity, not how closely an owned C reconstruction compiles.
         paths = set()

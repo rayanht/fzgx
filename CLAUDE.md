@@ -77,7 +77,7 @@ Rules that hold for everyone:
   *pool match*: accepted and spliced, retail object still linked (`link_state=pool`).
   REL pool reads must use the relocation target's section: offsets overlap across
   `.text`, `.rodata` and `.data`. DOL strings use address-based segment lookup.
-  `fzgx sweep` re-checks every saved body after oracle/header changes (and searches the rest).
+  `fzgx fixup` re-checks every saved body after oracle/header changes (and searches the rest).
 - Matchers edit only their own unit, and only through `write_unit`. Headers,
   names and splits belong to the librarian.
 - No hardcoded addresses (`fzgx lint`), no inline asm in `src/`.
@@ -109,14 +109,14 @@ Rules that hold for everyone:
   DOL section until 2026-09-09: no DOL pool match could land).
   `fzgx uncarve --stubs` removes any unit without matched code (verify uncarves what it rejects).
 - Plateaus are data, not agent work. `fzgx stuck` classifies every saved best body at 80%+ by
-  failure mode from the object diff (`.fzgx/stuck.json`, rows included). `fzgx sweep` is the one
-  search pass over every saved body (the agents' best attempts, or the lifter's drafts with
-  `--drafts`), three stages: re-check against today's oracle and headers (submits outright and
-  pool matches), the deterministic fixup (`tools/fzgx/fixup.py`: edits the diff rows name, with a
-  short register-allocation search), then the spelling search (`tools/fzgx/spell.py`: a beam over
-  every rewrite family, lockstep across the remaining bodies, from the fixup's improved body).
-  Stages are memoised by body + headers + tooling; `fzgx sweep SYMBOL` runs the same stages on one
-  body. `release` runs the fixup on an agent's best body and submits a match in the agent's name.
+  failure mode from the object diff (`.fzgx/stuck.json`, rows included). `fzgx fixup`
+  is the sole deterministic repair command. All saved variants, source rewrites,
+  byte-derived fixes, allocator evidence and compiler-response combinations share
+  one engine, content-addressed compile cache and verification path. Session release
+  and lifter repair call that same engine. `--apply` submits exact results and
+  verifies all 16 hashes; without it, output remains in the repair corpus.
+  `--capture --corpus PATH --output PATH` captures allocator/PCode evidence;
+  `--captures PATH` consumes it. Do not add standalone repair/search runners.
   A unit may carry its own `mw_version`/`extra_cflags` (an `-O` override replaces the module's);
   `check`/`submit` honour them before the carve. The decomp-permuter was dropped: over the whole
   project it closed one function and cost minutes per try.
@@ -187,9 +187,8 @@ Rules that hold for everyone:
   the old regex stalled real drafts such as `fn_80005738` beyond repair time budgets.
   Register-only instruction differences are not proof of equivalent value flow.
   The oracle reports known non-stack store-value conflicts; fix those values before
-  spending allocation searches. `tools/solve_regalloc.py` is an explicit bounded
-  compiler-response experiment, not a production replacement: see
-  `docs/REGISTER_REPAIR.md` for measured runtime and its lower closure coverage.
+  spending allocation searches. Compiler-response composition and source repairs
+  now run together in `fzgx fixup`; see `docs/REGISTER_REPAIR.md` for measurements.
   Read disassembly only from the active `build/GFZE01/config.json` split units. Orphaned
   named `.s` files can retain obsolete local names after promotion and shadow current auto
   units, yielding an object match that fails the link (`SelectThread_800105D0` was one).
@@ -219,7 +218,7 @@ Rules that hold for everyone:
   insufficient. Imported callback names must follow local-to-global promotion. A C function
   can also own a retail entry label: `carve.retain_entry_labels` keeps that name as a symbolic
   linker alias. Link failures are retained in `.fzgx/verify_last_failure.log`.
-  Functions **under 256 bytes** (`--max-size 255`) are a repair corpus, not a prerequisite. `fzgx stuck --max-size 255` classifies the saved attempts; `fzgx sweep --max-size 255`
+  Functions **under 256 bytes** (`--max-size 255`) are a repair corpus, not a prerequisite. `fzgx stuck --max-size 255` classifies the saved attempts; `fzgx fixup --max-size 255`
   searches them. `fzgx reuse --max-size 255` rebinds verified C when retail instruction
   shapes agree, retaining registers, immediates, relocation kinds/addends and branch targets;
   all candidates pass the oracle and `fzgx verify`. Use 48 headless Luna workers only for

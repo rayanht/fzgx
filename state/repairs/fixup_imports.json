@@ -1,0 +1,266 @@
+{
+  "fn_1_934CC": {
+    "seed_symbol": "fn_1_934CC",
+    "generator": "fzgx fixup",
+    "transform": "decl-order: order value,node,result,target",
+    "seed": "#include \"types.h\"\n\ntypedef struct {\n    u8 pad0[0x24];\n    void *field_24;\n} EventData;\n\ntypedef struct {\n    u8 pad0[0x1c];\n    void *field_1c;\n} CarObject;\n\ntypedef struct {\n    u8 pad0[0x8];\n    EventData *field_8;\n    void *field_c;\n} EventObject;\n\ntypedef struct {\n    u8 pad0[0x12];\n    u16 field_12;\n    u8 pad14[0x12];\n    u8 field_26;\n    void *field_28;\n    u8 pad2c[0x8];\n    void *field_34;\n    u8 pad38[0x14];\n    u8 field_4c;\n} EventNode;\n\nextern s32 fn_1_41488(void *arg0, u32 arg1);\nextern void fn_1_95158(CarObject *arg0);\nextern void *fn_1_41418(void *arg0, u32 arg1);\nextern s32 fn_1_97174(EventNode *arg0, s32 arg1, void *arg2);\nextern void fn_1_93734(CarObject *arg0, void *arg1);\nextern void fn_1_4270C(void *arg0, s32 arg1, u32 arg2);\n\nvoid fn_1_934CC(CarObject *arg0, EventObject *arg1, u32 arg2) {\n    s32 result;\n    EventNode *node;\n    s32 value;\n    void *target;\n\n    result = fn_1_41488(arg1->field_8->field_24, arg2);\n    if (result + 0x10000u == 0xffff) {\n        result = 0;\n    }\n    if (arg1 == (EventObject *)((u8 *)arg0 + 0x148)) {\n        node = (EventNode *)arg0->field_1c;\n        fn_1_95158(arg0);\n        if (node != 0) {\n            value = (s32)fn_1_97174(node, 0, fn_1_41418(arg1->field_8->field_24, result & 0xffff));\n            if (value < 0) {\n                value = 0;\n            }\n            node->field_12 = 0;\n            if ((s32)node->field_26 > 0) {\n                target = node->field_28;\n            } else {\n                target = (void *)((u8 *)node->field_34 + -(s32)node->field_4c * 0xc);\n            }\n            *(u16 *)((u8 *)target + 0xa) = (u16)value;\n        }\n        fn_1_93734(arg0, fn_1_41418(arg1->field_c, result & 0xffff));\n    }\n    fn_1_4270C(arg1->field_8, 0, result & 0xffff);\n    *(u16 *)arg1 = (u16)result;\n}\n",
+    "seed_sha256": "c695f8a12069c89a2ee2772927fd36cdb30bcff3efe25db82554c0f4d0366b1a",
+    "generated_sha256": "253c3ee8d51aff0447446e3a0afb03f53ad6a6d0ced2517bb0bbaa6c7accfd53",
+    "generated_source": "#include \"types.h\"\n\ntypedef struct {\n    u8 pad0[0x24];\n    void *field_24;\n} EventData;\n\ntypedef struct {\n    u8 pad0[0x1c];\n    void *field_1c;\n} CarObject;\n\ntypedef struct {\n    u8 pad0[0x8];\n    EventData *field_8;\n    void *field_c;\n} EventObject;\n\ntypedef struct {\n    u8 pad0[0x12];\n    u16 field_12;\n    u8 pad14[0x12];\n    u8 field_26;\n    void *field_28;\n    u8 pad2c[0x8];\n    void *field_34;\n    u8 pad38[0x14];\n    u8 field_4c;\n} EventNode;\n\nextern s32 fn_1_41488(void *arg0, u32 arg1);\nextern void fn_1_95158(CarObject *arg0);\nextern void *fn_1_41418(void *arg0, u32 arg1);\nextern s32 fn_1_97174(EventNode *arg0, s32 arg1, void *arg2);\nextern void fn_1_93734(CarObject *arg0, void *arg1);\nextern void fn_1_4270C(void *arg0, s32 arg1, u32 arg2);\n\nvoid fn_1_934CC(CarObject *arg0, EventObject *arg1, u32 arg2) {\n    s32 value;\n    EventNode *node;\n    s32 result;\n    void *target;\n\n    result = fn_1_41488(arg1->field_8->field_24, arg2);\n    if (result + 0x10000u == 0xffff) {\n        result = 0;\n    }\n    if (arg1 == (EventObject *)((u8 *)arg0 + 0x148)) {\n        node = (EventNode *)arg0->field_1c;\n        fn_1_95158(arg0);\n        if (node != 0) {\n            value = (s32)fn_1_97174(node, 0, fn_1_41418(arg1->field_8->field_24, result & 0xffff));\n            if (value < 0) {\n                value = 0;\n            }\n            node->field_12 = 0;\n            if ((s32)node->field_26 > 0) {\n                target = node->field_28;\n            } else {\n                target = (void *)((u8 *)node->field_34 + -(s32)node->field_4c * 0xc);\n            }\n            *(u16 *)((u8 *)target + 0xa) = (u16)value;\n        }\n        fn_1_93734(arg0, fn_1_41418(arg1->field_c, result & 0xffff));\n    }\n    fn_1_4270C(arg1->field_8, 0, result & 0xffff);\n    *(u16 *)arg1 = (u16)result;\n}\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "rel/main_rel/car/fn_1_934CC.c",
+    "bytes": 280,
+    "recipe": [
+      {
+        "label": "decl-order: order value,node,result,target",
+        "input_sha256": "c695f8a12069c89a2ee2772927fd36cdb30bcff3efe25db82554c0f4d0366b1a",
+        "output_sha256": "253c3ee8d51aff0447446e3a0afb03f53ad6a6d0ced2517bb0bbaa6c7accfd53"
+      }
+    ],
+    "link": "verified",
+    "commit": "cdaa4f7",
+    "headers_sha256": "5b186aefa208edbe30c8744eda7a7f872eff23759166e772101edeaed7c317c4",
+    "oracle_sha256": "d40ebff4cf1b44b18780c1b0f2a36356a3e41dc07e55c7cbb18dd7813f19eff0"
+  },
+  "fn_8005A0C0": {
+    "seed_symbol": "fn_8005A0C0",
+    "generator": "fzgx fixup",
+    "transform": "opt_common_subs off",
+    "seed": "#include \"types.h\"\n\ntypedef u32 (*fn_8005A0C0_Fn0)(u32, u32, u32);\n\nextern u32 fn_80059AB4(void);\nextern u32 fn_80059B44(void);\nextern u32 lbl_800926F8[];\nextern u32 lbl_80190178[];\nextern u32 lbl_8019017C[];\n\nu32 fn_8005A0C0(u32 arg0, u32 arg1, u32 arg2) {\n    u32 v0;\n    u32 v1;\n    u32 v2;\n    u32 v3;\n    u32 t0, t1, t2;\n    v0 = arg0;\n    if (arg0 == 0) {\n        v1 = arg1;\n        v2 = arg2;\n        if (lbl_80190178[0] != 0) {\n            v2 = (u32)&lbl_8019017C;\n            v1 = (u32)&lbl_800926F8;\n            v0 = *(u32 *)((u8 *)v2 + 0);\n            v2 = 0;\n            t0 = ((fn_8005A0C0_Fn0)lbl_80190178[0])(v0, (u32)v1, v2);\n            v0 = t0;\n        }\n        v0 = 0;\n    } else {\n        t1 = fn_80059B44();\n        v0 = t1;\n        if ((s32)arg2 == 0) {\n            *(u32 *)((u8 *)arg0 + 16) = arg1;\n        } else {\n            if ((s32)arg2 == 2) {\n                *(u32 *)((u8 *)arg0 + 16) = (*(u32 *)((u8 *)arg0 + 12) + arg1);\n            } else {\n                if ((s32)arg2 == 1) {\n                    *(u32 *)((u8 *)arg0 + 16) = (*(u32 *)((u8 *)arg0 + 16) + arg1);\n                }\n            }\n        }\n        v3 = *(u32 *)((u8 *)arg0 + 12);\n        v0 = *(u32 *)((u8 *)arg0 + 16);\n        if ((s32)v0 < (s32)v3) {\n            v3 = v0;\n        }\n        *(u32 *)((u8 *)arg0 + 16) = v3;\n        *(u32 *)((u8 *)arg0 + 16) = (s32)*(u32 *)((u8 *)arg0 + 16) > 0 ? *(u32 *)((u8 *)arg0 + 16) : 0;\n        t2 = fn_80059AB4();\n        v0 = t2;\n        v0 = *(u32 *)((u8 *)arg0 + 16);\n    }\n    return v0;\n}\n",
+    "seed_sha256": "0a6fce4d767de7d6da44cb6b109493136686655402ad8af575a93d2567edf111",
+    "generated_sha256": "181474b6692aaccf30397ebaad66c46f4798cd206f3d82e1830f314eec364f0a",
+    "generated_source": "#include \"types.h\"\n\ntypedef u32 (*fn_8005A0C0_Fn0)(u32, u32, u32);\n\nextern u32 fn_80059AB4(void);\nextern u32 fn_80059B44(void);\nextern u32 lbl_800926F8[];\nextern u32 lbl_80190178[];\nextern u32 lbl_8019017C[];\n\n#pragma opt_common_subs off\nu32 fn_8005A0C0(u32 arg0, u32 arg1, u32 arg2) {\n    u32 v0;\n    u32 v1;\n    u32 v2;\n    u32 v3;\n    u32 t0, t1, t2;\n    v0 = arg0;\n    if (arg0 == 0) {\n        v1 = arg1;\n        v2 = arg2;\n        if (lbl_80190178[0] != 0) {\n            v2 = (u32)&lbl_8019017C;\n            v1 = (u32)&lbl_800926F8;\n            v0 = *(u32 *)((u8 *)v2 + 0);\n            v2 = 0;\n            t0 = ((fn_8005A0C0_Fn0)lbl_80190178[0])(v0, (u32)v1, v2);\n            v0 = t0;\n        }\n        v0 = 0;\n    } else {\n        t1 = fn_80059B44();\n        v0 = t1;\n        if ((s32)arg2 == 0) {\n            *(u32 *)((u8 *)arg0 + 16) = arg1;\n        } else {\n            if ((s32)arg2 == 2) {\n                *(u32 *)((u8 *)arg0 + 16) = (*(u32 *)((u8 *)arg0 + 12) + arg1);\n            } else {\n                if ((s32)arg2 == 1) {\n                    *(u32 *)((u8 *)arg0 + 16) = (*(u32 *)((u8 *)arg0 + 16) + arg1);\n                }\n            }\n        }\n        v3 = *(u32 *)((u8 *)arg0 + 12);\n        v0 = *(u32 *)((u8 *)arg0 + 16);\n        if ((s32)v0 < (s32)v3) {\n            v3 = v0;\n        }\n        *(u32 *)((u8 *)arg0 + 16) = v3;\n        *(u32 *)((u8 *)arg0 + 16) = (s32)*(u32 *)((u8 *)arg0 + 16) > 0 ? *(u32 *)((u8 *)arg0 + 16) : 0;\n        t2 = fn_80059AB4();\n        v0 = t2;\n        v0 = *(u32 *)((u8 *)arg0 + 16);\n    }\n    return v0;\n}\n#pragma opt_common_subs reset\n\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "dol/fn_8005A0C0.c",
+    "bytes": 244,
+    "recipe": [
+      {
+        "label": "opt_common_subs off",
+        "input_sha256": "0a6fce4d767de7d6da44cb6b109493136686655402ad8af575a93d2567edf111",
+        "output_sha256": "181474b6692aaccf30397ebaad66c46f4798cd206f3d82e1830f314eec364f0a"
+      }
+    ],
+    "link": "verified",
+    "commit": "cdaa4f7",
+    "headers_sha256": "5b186aefa208edbe30c8744eda7a7f872eff23759166e772101edeaed7c317c4",
+    "oracle_sha256": "d40ebff4cf1b44b18780c1b0f2a36356a3e41dc07e55c7cbb18dd7813f19eff0"
+  },
+  "fn_1_33890": {
+    "seed_symbol": "fn_1_33890",
+    "generator": "fzgx fixup",
+    "transform": "missing-value flags from lbl_1_bss_3C30.unk_0 at 390",
+    "seed": "#include \"rel/main_rel/game.h\"\n\nextern u32 lbl_1_bss_25B84;\nextern u16 lbl_1_bss_25B98;\n\ntypedef struct {\n    u8 pad_0[0x5];\n    u8 unk_5;\n    u8 pad_6[0x4];\n    u8 unk_A;\n    u8 pad_B[0x1];\n    u8 unk_C;\n    u8 unk_D;\n} Fn33890Arg;\n\nint fn_1_33890(Fn33890Arg* arg0) {\n    u8 count;\n    u8 limit;\n    u32 flags;\n\n    if ((s32)lbl_1_bss_25BA0.unk_0 != 0) {\n        return 0;\n    }\n\n    if ((lbl_1_bss_3C30.unk_0 & 0x800) != 0) {\n        return 0;\n    }\n\n    switch (arg0->unk_5) {\n    case 4:\n        if (arg0->unk_D == 0 || arg0->unk_A != 1) {\n            /* Shared fallback is the irreducible default path. */\n            goto fallback;\n        }\n        return 1;\n\n    case 2:\n        if (arg0->unk_C == 0) {\n            /* Shared fallback is the irreducible default path. */\n            goto fallback;\n        }\n        return 1;\n\n    case 0:\n    case 1:\n    case 6:\n        count = arg0->unk_C;\n        if (count == 0) {\n            /* Shared fallback is the irreducible default path. */\n            goto fallback;\n        }\n        limit = arg0->unk_D;\n        if (limit <= count) {\n            if ((s32)lbl_1_bss_25B84 != 0) {\n                lbl_1_bss_3C30.unk_0 |= 0x10000;\n            }\n            return 1;\n        }\n        if (lbl_1_bss_3C30.unk_5 == 0 && (limit - count) <= 1) {\n            lbl_1_bss_25B98++;\n            return 1;\n        }\n        break;\n\n    default:\n        break;\n    }\n\nfallback:\n    if (lbl_1_bss_3C30.unk_8 != 0) {\n        if (lbl_1_bss_3C30.unk_D == 0) {\n            return -1;\n        }\n    } else if (lbl_1_bss_3C30.pad_A[0] == 0) {\n        return -1;\n    }\n\n    if ((flags & 0x04000000) == 0 && lbl_1_bss_3C30.unk_1474 > 0x57030) {\n        lbl_1_bss_3C30.unk_0 |= 0x80000;\n        return -1;\n    }\n    return 0;\n}\n",
+    "seed_sha256": "ec4128a52ce58336f6267bd24432da88bd76de74de90fb1566663d3eef047cc4",
+    "generated_sha256": "f8fe9ae6cd537bd52cf1f1d7ca930aaa79bdd1eba9ef7561b67e287489f44c24",
+    "generated_source": "#include \"rel/main_rel/game.h\"\n\nextern u32 lbl_1_bss_25B84;\nextern u16 lbl_1_bss_25B98;\n\ntypedef struct {\n    u8 pad_0[0x5];\n    u8 unk_5;\n    u8 pad_6[0x4];\n    u8 unk_A;\n    u8 pad_B[0x1];\n    u8 unk_C;\n    u8 unk_D;\n} Fn33890Arg;\n\nint fn_1_33890(Fn33890Arg* arg0) {\n    u8 count;\n    u8 limit;\n    u32 flags;\n\n    if ((s32)lbl_1_bss_25BA0.unk_0 != 0) {\n        return 0;\n    }\n\n    if (((flags = lbl_1_bss_3C30.unk_0) & 0x800) != 0) {\n        return 0;\n    }\n\n    switch (arg0->unk_5) {\n    case 4:\n        if (arg0->unk_D == 0 || arg0->unk_A != 1) {\n            /* Shared fallback is the irreducible default path. */\n            goto fallback;\n        }\n        return 1;\n\n    case 2:\n        if (arg0->unk_C == 0) {\n            /* Shared fallback is the irreducible default path. */\n            goto fallback;\n        }\n        return 1;\n\n    case 0:\n    case 1:\n    case 6:\n        count = arg0->unk_C;\n        if (count == 0) {\n            /* Shared fallback is the irreducible default path. */\n            goto fallback;\n        }\n        limit = arg0->unk_D;\n        if (limit <= count) {\n            if ((s32)lbl_1_bss_25B84 != 0) {\n                lbl_1_bss_3C30.unk_0 |= 0x10000;\n            }\n            return 1;\n        }\n        if (lbl_1_bss_3C30.unk_5 == 0 && (limit - count) <= 1) {\n            lbl_1_bss_25B98++;\n            return 1;\n        }\n        break;\n\n    default:\n        break;\n    }\n\nfallback:\n    if (lbl_1_bss_3C30.unk_8 != 0) {\n        if (lbl_1_bss_3C30.unk_D == 0) {\n            return -1;\n        }\n    } else if (lbl_1_bss_3C30.pad_A[0] == 0) {\n        return -1;\n    }\n\n    if ((flags & 0x04000000) == 0 && lbl_1_bss_3C30.unk_1474 > 0x57030) {\n        lbl_1_bss_3C30.unk_0 |= 0x80000;\n        return -1;\n    }\n    return 0;\n}\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "rel/main_rel/game/fn_1_33890.c",
+    "bytes": 400,
+    "recipe": [
+      {
+        "label": "missing-value flags from lbl_1_bss_3C30.unk_0 at 390",
+        "input_sha256": "ec4128a52ce58336f6267bd24432da88bd76de74de90fb1566663d3eef047cc4",
+        "output_sha256": "f8fe9ae6cd537bd52cf1f1d7ca930aaa79bdd1eba9ef7561b67e287489f44c24"
+      }
+    ],
+    "link": "verified",
+    "commit": "cdaa4f7",
+    "headers_sha256": "5b186aefa208edbe30c8744eda7a7f872eff23759166e772101edeaed7c317c4",
+    "oracle_sha256": "d40ebff4cf1b44b18780c1b0f2a36356a3e41dc07e55c7cbb18dd7813f19eff0"
+  },
+  "fn_1_12CB04": {
+    "seed_symbol": "fn_1_12CB04",
+    "generator": "fzgx fixup",
+    "transform": "inline helper at 209",
+    "seed": "#include \"types.h\"\n\ntypedef struct {\n    u8 pad0[5];\n    u8 id;\n    u8 pad6[0x819a];\n    u8 value;\n    u8 pad_a1[0x1f];\n} FnEntry;\n\nextern FnEntry *fn_1_12F118(void);\nextern FnEntry *fn_1_36AD0(void);\n\nstatic s16 fn_1_12CB04_inline(s16 arg) {\n    FnEntry *table;\n    s16 i;\n\n    if (arg < 0x29) {\n        return arg;\n    }\n\n    table = fn_1_12F118();\n    if (table == 0) {\n        return 6;\n    }\n\n    if (table != fn_1_36AD0()) {\n        for (i = 0; i < 9; i++) {\n            if (table[i].id == arg) {\n                return table[i].value;\n            }\n        }\n    } else if (arg >= 0x32 && arg <= 0x35) {\n        return table[arg - 0x32].value;\n    } else if (arg >= 0x36 && arg <= 0x39) {\n        return table[arg - 0x36].value;\n    } else {\n        for (i = 0; i < 4; i++) {\n            if (table[i].id == arg) {\n                return table[i].value;\n            }\n        }\n    }\n\n    return 6;\n}\n\ns32 fn_1_12CB04(s16 arg) {\n    switch (fn_1_12CB04_inline(arg)) {\n    case 0x15:\n        return 1;\n    case 0x21:\n        return 2;\n    }\n\n    return 0;\n}\n",
+    "seed_sha256": "56a221b50f434e9de47fddc67bf8874bdc2b42cfc387a29d1259045d921d72cd",
+    "generated_sha256": "fae277d35735cc8efdae44f23f6c6708111c43a8d3663d56bde1a9cb9a8c5f2d",
+    "generated_source": "#include \"types.h\"\n\ntypedef struct {\n    u8 pad0[5];\n    u8 id;\n    u8 pad6[0x819a];\n    u8 value;\n    u8 pad_a1[0x1f];\n} FnEntry;\n\nextern FnEntry *fn_1_12F118(void);\nextern FnEntry *fn_1_36AD0(void);\n\nstatic inline s16 fn_1_12CB04_inline(s16 arg) {\n    FnEntry *table;\n    s16 i;\n\n    if (arg < 0x29) {\n        return arg;\n    }\n\n    table = fn_1_12F118();\n    if (table == 0) {\n        return 6;\n    }\n\n    if (table != fn_1_36AD0()) {\n        for (i = 0; i < 9; i++) {\n            if (table[i].id == arg) {\n                return table[i].value;\n            }\n        }\n    } else if (arg >= 0x32 && arg <= 0x35) {\n        return table[arg - 0x32].value;\n    } else if (arg >= 0x36 && arg <= 0x39) {\n        return table[arg - 0x36].value;\n    } else {\n        for (i = 0; i < 4; i++) {\n            if (table[i].id == arg) {\n                return table[i].value;\n            }\n        }\n    }\n\n    return 6;\n}\n\ns32 fn_1_12CB04(s16 arg) {\n    switch (fn_1_12CB04_inline(arg)) {\n    case 0x15:\n        return 1;\n    case 0x21:\n        return 2;\n    }\n\n    return 0;\n}\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "rel/main_rel/archive/fn_1_12CB04.c",
+    "bytes": 428,
+    "headers_sha256": "5b186aefa208edbe30c8744eda7a7f872eff23759166e772101edeaed7c317c4",
+    "oracle_sha256": "d40ebff4cf1b44b18780c1b0f2a36356a3e41dc07e55c7cbb18dd7813f19eff0",
+    "recipe": [
+      {
+        "label": "inline helper at 209",
+        "input_sha256": "56a221b50f434e9de47fddc67bf8874bdc2b42cfc387a29d1259045d921d72cd",
+        "output_sha256": "fae277d35735cc8efdae44f23f6c6708111c43a8d3663d56bde1a9cb9a8c5f2d"
+      }
+    ],
+    "link": "verified",
+    "commit": "d9eae00"
+  },
+  "fn_1_F1650": {
+    "seed_symbol": "fn_1_F1650",
+    "generator": "fzgx fixup",
+    "transform": "response equations: opt_common_subs off + block declarations place, fraction",
+    "seed": "#include \"types.h\"\n\nextern const f32 lbl_1_rodata_6BBC;\nextern const f32 lbl_1_rodata_6BD0;\nextern const f64 lbl_1_rodata_6C88;\nextern const f64 lbl_1_rodata_6D48;\nextern const f32 lbl_1_rodata_6D50;\nextern f64 fn_80088598(f64, f64);\n\nf32 fn_1_F1650(const u32 *value) {\n    s32 i;\n    u32 bits = value[0];\n    s32 sign = (s32)((bits >> 20) & 1);\n    u32 exponent = (bits >> 15) & 0x1f;\n    f32 place;\n    f32 fraction;\n\n    if ((bits >> 15) & 0x10) {\n        exponent = ~(exponent - 16);\n        exponent = exponent * -1;\n    } else {\n        exponent = exponent - 15;\n    }\n\n    {\n    f32 place = lbl_1_rodata_6BBC;\n    f32 fraction = lbl_1_rodata_6BD0;\n    u32 mantissa = bits & 0x7fff;\n\n    for (i = 0; i < 15; i++) {\n        if (mantissa & (1 << (14 - i))) {\n            fraction += place;\n        }\n        place *= lbl_1_rodata_6BBC;\n    }\n\n    fraction *= fn_80088598(lbl_1_rodata_6D48, (f64)(s32)exponent);\n\n    if (sign != 0) {\n        fraction *= lbl_1_rodata_6D50;\n    }\n\n    return fraction;\n    }\n}\n",
+    "seed_sha256": "34e2783c53f15f9abbe70806b2344c7981c8bd64e66e76c569cef051724a7c6c",
+    "generated_sha256": "2729aeab739b918f41a89129f0504c595adcca4cf02ce61774e654da8c7a662e",
+    "generated_source": "#include \"types.h\"\n\nextern const f32 lbl_1_rodata_6BBC;\nextern const f32 lbl_1_rodata_6BD0;\nextern const f64 lbl_1_rodata_6C88;\nextern const f64 lbl_1_rodata_6D48;\nextern const f32 lbl_1_rodata_6D50;\nextern f64 fn_80088598(f64, f64);\n\n#pragma opt_common_subs off\nf32 fn_1_F1650(const u32 *value) {\n    s32 i;\n    u32 bits = value[0];\n    s32 sign = (s32)((bits >> 20) & 1);\n    u32 exponent = (bits >> 15) & 0x1f;\n    f32 place;\n    f32 fraction;\n\n    if ((bits >> 15) & 0x10) {\n        exponent = ~(exponent - 16);\n        exponent = exponent * -1;\n    } else {\n        exponent = exponent - 15;\n    }\n\n    {\n    f32 fraction = lbl_1_rodata_6BD0;\n    f32 place = lbl_1_rodata_6BBC;\n    u32 mantissa = bits & 0x7fff;\n\n    for (i = 0; i < 15; i++) {\n        if (mantissa & (1 << (14 - i))) {\n            fraction += place;\n        }\n        place *= lbl_1_rodata_6BBC;\n    }\n\n    fraction *= fn_80088598(lbl_1_rodata_6D48, (f64)(s32)exponent);\n\n    if (sign != 0) {\n        fraction *= lbl_1_rodata_6D50;\n    }\n\n    return fraction;\n    }\n}\n#pragma opt_common_subs reset\n\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "rel/main_rel/ghost/fn_1_F1650.c",
+    "bytes": 356,
+    "recipe": [
+      {
+        "label": "response equations: opt_common_subs off + block declarations place, fraction",
+        "input_sha256": "34e2783c53f15f9abbe70806b2344c7981c8bd64e66e76c569cef051724a7c6c",
+        "output_sha256": "2729aeab739b918f41a89129f0504c595adcca4cf02ce61774e654da8c7a662e"
+      }
+    ],
+    "link": "verified",
+    "commit": "cdaa4f7",
+    "headers_sha256": "5b186aefa208edbe30c8744eda7a7f872eff23759166e772101edeaed7c317c4",
+    "oracle_sha256": "d40ebff4cf1b44b18780c1b0f2a36356a3e41dc07e55c7cbb18dd7813f19eff0"
+  },
+  "winning:_epilog": {
+    "seed_symbol": "winning:_epilog",
+    "generator": "fzgx fixup",
+    "transform": "symbol lbl_15_bss_6EAB4 -> lbl_1_bss_6EAB4",
+    "seed": "#include \"types.h\"\n\nextern f32 lbl_15_rodata_0[25];\nextern u32 lbl_15_bss_C;\nextern u32 lbl_15_bss_10;\nextern u32 lbl_15_bss_6EAB4;\nextern u8 lbl_15_data_A4[176];\nextern u32 lbl_801A6410;\n\nextern void fn_8006CE1C(f32);\nextern void fn_1_435C(u32);\nextern void fn_1_41A8(void);\nextern void fn_1_47A60(u32);\nextern void fn_1_48140(u32);\nextern void fn_1_46B4(u32, u32, u8 *, u32);\n\nvoid _epilog(void) {\n    fn_8006CE1C(lbl_15_rodata_0[0]);\n    lbl_15_bss_6EAB4 &= (u32)-0x29;\n    fn_1_435C(lbl_15_bss_C);\n    fn_1_41A8();\n    fn_1_435C(lbl_15_bss_10);\n    fn_1_41A8();\n    fn_1_47A60(0xe);\n    fn_1_48140(0x8c);\n    fn_1_48140(0xbb);\n    fn_1_46B4(lbl_801A6410, lbl_15_bss_C, lbl_15_data_A4, 0x192);\n    fn_1_46B4(lbl_801A6410, lbl_15_bss_10, lbl_15_data_A4, 0x193);\n}\n",
+    "seed_sha256": "130464ace7ce9481df6d055876aed0b50e2fe7d586ecdca33bef6c0765c4b012",
+    "generated_sha256": "4f4cb1f8bca211557daf4ee0478e167492a9bf30ab1be9c671e901811609551e",
+    "generated_source": "#include \"types.h\"\n\nextern f32 lbl_15_rodata_0[25];\nextern u32 lbl_15_bss_C;\nextern u32 lbl_15_bss_10;\nextern u32 lbl_1_bss_6EAB4;\nextern u8 lbl_15_data_A4[176];\nextern u32 lbl_801A6410;\n\nextern void fn_8006CE1C(f32);\nextern void fn_1_435C(u32);\nextern void fn_1_41A8(void);\nextern void fn_1_47A60(u32);\nextern void fn_1_48140(u32);\nextern void fn_1_46B4(u32, u32, u8 *, u32);\n\nvoid _epilog(void) {\n    fn_8006CE1C(lbl_15_rodata_0[0]);\n    lbl_1_bss_6EAB4 &= (u32)-0x29;\n    fn_1_435C(lbl_15_bss_C);\n    fn_1_41A8();\n    fn_1_435C(lbl_15_bss_10);\n    fn_1_41A8();\n    fn_1_47A60(0xe);\n    fn_1_48140(0x8c);\n    fn_1_48140(0xbb);\n    fn_1_46B4(lbl_801A6410, lbl_15_bss_C, lbl_15_data_A4, 0x192);\n    fn_1_46B4(lbl_801A6410, lbl_15_bss_10, lbl_15_data_A4, 0x193);\n}\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "rel/winning/winning/_epilog.c",
+    "bytes": 208,
+    "recipe": [
+      {
+        "label": "symbol lbl_15_bss_6EAB4 -> lbl_1_bss_6EAB4",
+        "input_sha256": "130464ace7ce9481df6d055876aed0b50e2fe7d586ecdca33bef6c0765c4b012",
+        "output_sha256": "4f4cb1f8bca211557daf4ee0478e167492a9bf30ab1be9c671e901811609551e"
+      }
+    ],
+    "link": "verified",
+    "commit": "cdaa4f7",
+    "headers_sha256": "5b186aefa208edbe30c8744eda7a7f872eff23759166e772101edeaed7c317c4",
+    "oracle_sha256": "d40ebff4cf1b44b18780c1b0f2a36356a3e41dc07e55c7cbb18dd7813f19eff0"
+  },
+  "fn_12_A0D8": {
+    "seed_symbol": "fn_12_A0D8",
+    "generator": "fzgx fixup",
+    "transform": "opt_common_subs off",
+    "seed": "#include \"types.h\"\n\nextern u32 fn_12_A2C4(const u8 *data);\n\nu8 *fn_12_A0D8(u8 *data, s32 size, u32 mask) {\n    u8 *end = data + size;\n    u8 c;\n    s32 state = 0;\n\n    while (data < end) {\n        c = *data++;\n        switch (state) {\n        case 0:\n            if ((s8)c == 0) {\n                state = 1;\n            }\n            break;\n        case 1:\n            if ((s8)c == 0) {\n                state = 2;\n            } else {\n                state = 0;\n            }\n            break;\n        case 2:\n            if ((s8)c == 1) {\n                state = 3;\n            } else if ((s8)c != 0) {\n                state = 0;\n            }\n            break;\n        case 3:\n            if (fn_12_A2C4(data - 4) & mask) {\n                return data - 4;\n            }\n            state = 0;\n            break;\n        default:\n            break;\n        }\n    }\n    return 0;\n}\n",
+    "seed_sha256": "ceea28a6a9c74926b2198b6cef08244b44bda7942483b974d0f2d9b5788a95b6",
+    "generated_sha256": "41430c76972802d765b25c7624a6f8d9ee9fbf498a8c22cf565471fa1ec2ee0e",
+    "generated_source": "#include \"types.h\"\n\nextern u32 fn_12_A2C4(const u8 *data);\n\n#pragma opt_common_subs off\nu8 *fn_12_A0D8(u8 *data, s32 size, u32 mask) {\n    u8 *end = data + size;\n    u8 c;\n    s32 state = 0;\n\n    while (data < end) {\n        c = *data++;\n        switch (state) {\n        case 0:\n            if ((s8)c == 0) {\n                state = 1;\n            }\n            break;\n        case 1:\n            if ((s8)c == 0) {\n                state = 2;\n            } else {\n                state = 0;\n            }\n            break;\n        case 2:\n            if ((s8)c == 1) {\n                state = 3;\n            } else if ((s8)c != 0) {\n                state = 0;\n            }\n            break;\n        case 3:\n            if (fn_12_A2C4(data - 4) & mask) {\n                return data - 4;\n            }\n            state = 0;\n            break;\n        default:\n            break;\n        }\n    }\n    return 0;\n}\n#pragma opt_common_subs reset\n\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "rel/movie_module/fn_12_A0D8.c",
+    "bytes": 236,
+    "recipe": [
+      {
+        "label": "opt_common_subs off",
+        "input_sha256": "ceea28a6a9c74926b2198b6cef08244b44bda7942483b974d0f2d9b5788a95b6",
+        "output_sha256": "41430c76972802d765b25c7624a6f8d9ee9fbf498a8c22cf565471fa1ec2ee0e"
+      }
+    ],
+    "link": "verified",
+    "commit": "cdaa4f7",
+    "headers_sha256": "5b186aefa208edbe30c8744eda7a7f872eff23759166e772101edeaed7c317c4",
+    "oracle_sha256": "d40ebff4cf1b44b18780c1b0f2a36356a3e41dc07e55c7cbb18dd7813f19eff0"
+  },
+  "fn_80073D60": {
+    "seed_symbol": "fn_80073D60",
+    "generator": "fzgx fixup",
+    "transform": "opt_propagation off",
+    "seed": "#include \"types.h\"\n#include \"dol/globals.h\"\n\ntypedef struct {\n    s32 unk_00;\n    s32 unk_04;\n    s32 unk_08;\n    s32 unk_0C;\n    s32 unk_10;\n    s32 unk_14;\n    u8 unk_18;\n    u8 unk_19;\n    u8 _pad_1A[2];\n    s32 unk_1C;\n} Entry;\n\nextern void GXSetTevIndirect(s32, s32, s32, s32, s32, s32, s32, s32, s32, s32);\n\nvoid fn_80073D60(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {\n    Entry *entry;\n    s32 v1;\n    s32 v0;\n    s32 t;\n\n    t = 0;\n    if (arg3 & 0xFF) {\n        t = 6;\n    }\n    v0 = t;\n    t = 0;\n    if (arg2 & 0xFF) {\n        t = 7;\n    }\n    v1 = t;\n\n    entry = (Entry *)(lbl_801A6D38 + (arg0 << 5) + 0x8E8);\n    if (entry->unk_00 != arg1 ||\n        entry->unk_04 != 0 ||\n        entry->unk_08 != v1 ||\n        entry->unk_0C != arg4 ||\n        entry->unk_10 != v0 ||\n        entry->unk_14 != v0 ||\n        entry->unk_18 != 0 ||\n        entry->unk_19 != 0 ||\n        entry->unk_1C != 0) {\n        GXSetTevIndirect(arg0, arg1, 0, v1, arg4, v0, v0, 0, 0, 0);\n        entry->unk_00 = arg1;\n        entry->unk_04 = 0;\n        entry->unk_08 = v1;\n        entry->unk_0C = arg4;\n        entry->unk_10 = v0;\n        entry->unk_14 = v0;\n        entry->unk_18 = 0;\n        entry->unk_19 = 0;\n        entry->unk_1C = 0;\n    }\n}\n",
+    "seed_sha256": "ed51dcf32a6ba88835ae2b1b84258c7f0465e2174ba7112d599ed48147d5a18f",
+    "generated_sha256": "b23f67b4c25580ee11881b4ac2aca4b24cb033553393c6b7d403738eb90597b2",
+    "generated_source": "#include \"types.h\"\n#include \"dol/globals.h\"\n\ntypedef struct {\n    s32 unk_00;\n    s32 unk_04;\n    s32 unk_08;\n    s32 unk_0C;\n    s32 unk_10;\n    s32 unk_14;\n    u8 unk_18;\n    u8 unk_19;\n    u8 _pad_1A[2];\n    s32 unk_1C;\n} Entry;\n\nextern void GXSetTevIndirect(s32, s32, s32, s32, s32, s32, s32, s32, s32, s32);\n\n#pragma opt_propagation off\nvoid fn_80073D60(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {\n    Entry *entry;\n    s32 v1;\n    s32 v0;\n    s32 t;\n\n    t = 0;\n    if (arg3 & 0xFF) {\n        t = 6;\n    }\n    v0 = t;\n    t = 0;\n    if (arg2 & 0xFF) {\n        t = 7;\n    }\n    v1 = t;\n\n    entry = (Entry *)(lbl_801A6D38 + (arg0 << 5) + 0x8E8);\n    if (entry->unk_00 != arg1 ||\n        entry->unk_04 != 0 ||\n        entry->unk_08 != v1 ||\n        entry->unk_0C != arg4 ||\n        entry->unk_10 != v0 ||\n        entry->unk_14 != v0 ||\n        entry->unk_18 != 0 ||\n        entry->unk_19 != 0 ||\n        entry->unk_1C != 0) {\n        GXSetTevIndirect(arg0, arg1, 0, v1, arg4, v0, v0, 0, 0, 0);\n        entry->unk_00 = arg1;\n        entry->unk_04 = 0;\n        entry->unk_08 = v1;\n        entry->unk_0C = arg4;\n        entry->unk_10 = v0;\n        entry->unk_14 = v0;\n        entry->unk_18 = 0;\n        entry->unk_19 = 0;\n        entry->unk_1C = 0;\n    }\n}\n#pragma opt_propagation reset\n\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "dol/fn_80073D60.c",
+    "bytes": 300,
+    "recipe": [
+      {
+        "label": "opt_propagation off",
+        "input_sha256": "ed51dcf32a6ba88835ae2b1b84258c7f0465e2174ba7112d599ed48147d5a18f",
+        "output_sha256": "b23f67b4c25580ee11881b4ac2aca4b24cb033553393c6b7d403738eb90597b2"
+      }
+    ],
+    "link": "verified",
+    "commit": "cdaa4f7",
+    "headers_sha256": "5b186aefa208edbe30c8744eda7a7f872eff23759166e772101edeaed7c317c4",
+    "oracle_sha256": "d40ebff4cf1b44b18780c1b0f2a36356a3e41dc07e55c7cbb18dd7813f19eff0"
+  },
+  "fn_800658B4": {
+    "seed_symbol": "fn_800658B4",
+    "generator": "fzgx fixup",
+    "transform": "hoist-arg: hoist arg 0 of fn_800658B4_push",
+    "seed": "#include \"types.h\"\n\nstruct fn_800658B4_lbl_801A6C80_T {\n    u8 pad_0[0x240];\n    u32 unk_240[64];\n    u8 pad_340[0x101];\n    u8 unk_441;\n    u8 pad_442[0x1];\n    u8 unk_443;\n    u8 pad_444[0x20];\n    s8 unk_464;\n};\n\nextern BOOL OSDisableInterrupts(void);\nextern BOOL OSRestoreInterrupts(BOOL);\nextern struct fn_800658B4_lbl_801A6C80_T *lbl_801A6C80;\nextern u32 lbl_801A6C78;\n\nstatic inline s32 fn_800658B4_push(u32 value) {\n    s32 status = 0;\n    if ((s8)lbl_801A6C80->unk_464 != 0) {\n        status = -3;\n    } else {\n        lbl_801A6C80->unk_464 = -1;\n        if ((value & 0x80000000) == 0) {\n            status = -2;\n        } else {\n            BOOL enabled;\n            enabled = OSDisableInterrupts();\n            lbl_801A6C78 = enabled;\n            if (lbl_801A6C80->unk_441 < 64 && lbl_801A6C80->unk_240[lbl_801A6C80->unk_443] == 0) {\n                lbl_801A6C80->unk_240[lbl_801A6C80->unk_443] = value;\n                lbl_801A6C80->unk_443 = (lbl_801A6C80->unk_443 + 1) & 0x3F;\n                lbl_801A6C80->unk_441 = lbl_801A6C80->unk_441 + 1;\n            } else {\n                status = -1;\n            }\n            OSRestoreInterrupts(lbl_801A6C78);\n        }\n        lbl_801A6C80->unk_464 = 0;\n    }\n    return status;\n}\n\ns32 fn_800658B4(s32 arg0, u32 arg1) {\n    s32 status;\n    switch (arg0) {\n    case 0xA4000000:\n        status = fn_800658B4_push((arg1 & 0x7F00) - 0x5B900000);\n        if (status != 0) {\n            return status;\n        }\n        arg1 = ((arg1 & 0x7F) << 8) - 0x5C000000;\n        break;\n    default:\n        return -2;\n    }\n    return fn_800658B4_push(arg1);\n}\n",
+    "seed_sha256": "59041b104bfc18279d5064170d55d25d89de1614b9d019557f1b9fe193315b64",
+    "generated_sha256": "c772e37ad49a8613241ef326d8f8decc5905220fa19831affd3661605f4a2a2c",
+    "generated_source": "#include \"types.h\"\n\nstruct fn_800658B4_lbl_801A6C80_T {\n    u8 pad_0[0x240];\n    u32 unk_240[64];\n    u8 pad_340[0x101];\n    u8 unk_441;\n    u8 pad_442[0x1];\n    u8 unk_443;\n    u8 pad_444[0x20];\n    s8 unk_464;\n};\n\nextern BOOL OSDisableInterrupts(void);\nextern BOOL OSRestoreInterrupts(BOOL);\nextern struct fn_800658B4_lbl_801A6C80_T *lbl_801A6C80;\nextern u32 lbl_801A6C78;\n\nstatic inline s32 fn_800658B4_push(u32 value) {\n    s32 status = 0;\n    if ((s8)lbl_801A6C80->unk_464 != 0) {\n        status = -3;\n    } else {\n        lbl_801A6C80->unk_464 = -1;\n        if ((value & 0x80000000) == 0) {\n            status = -2;\n        } else {\n            BOOL enabled;\n            enabled = OSDisableInterrupts();\n            lbl_801A6C78 = enabled;\n            if (lbl_801A6C80->unk_441 < 64 && lbl_801A6C80->unk_240[lbl_801A6C80->unk_443] == 0) {\n                lbl_801A6C80->unk_240[lbl_801A6C80->unk_443] = value;\n                lbl_801A6C80->unk_443 = (lbl_801A6C80->unk_443 + 1) & 0x3F;\n                lbl_801A6C80->unk_441 = lbl_801A6C80->unk_441 + 1;\n            } else {\n                status = -1;\n            }\n            OSRestoreInterrupts(lbl_801A6C78);\n        }\n        lbl_801A6C80->unk_464 = 0;\n    }\n    return status;\n}\n\ns32 fn_800658B4(s32 arg0, u32 arg1) {\n    s32 status;\n    u32 lab_t0;\n    switch (arg0) {\n    case 0xA4000000:\n        lab_t0 = (arg1 & 0x7F00) - 0x5B900000;\n        status = fn_800658B4_push(lab_t0);\n        if (status != 0) {\n            return status;\n        }\n        arg1 = ((arg1 & 0x7F) << 8) - 0x5C000000;\n        break;\n    default:\n        return -2;\n    }\n    return fn_800658B4_push(arg1);\n}\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "dol/fn_800658B4.c",
+    "bytes": 456,
+    "recipe": [
+      {
+        "label": "hoist-arg: hoist arg 0 of fn_800658B4_push",
+        "input_sha256": "59041b104bfc18279d5064170d55d25d89de1614b9d019557f1b9fe193315b64",
+        "output_sha256": "c772e37ad49a8613241ef326d8f8decc5905220fa19831affd3661605f4a2a2c"
+      }
+    ],
+    "link": "verified",
+    "commit": "cdaa4f7",
+    "headers_sha256": "5b186aefa208edbe30c8744eda7a7f872eff23759166e772101edeaed7c317c4",
+    "oracle_sha256": "d40ebff4cf1b44b18780c1b0f2a36356a3e41dc07e55c7cbb18dd7813f19eff0"
+  },
+  "fn_1_2C908": {
+    "seed_symbol": "fn_1_2C908",
+    "generator": "fzgx fixup",
+    "transform": "opt_lifetimes off",
+    "seed": "#include \"types.h\"\n\nstruct fn_1_2C908_lbl_1_bss_3C00 {\n    u8 pad_0[0x30];\n    u32 unk_30;\n    u8 pad_34[0x14B4];\n    u16 unk_14E8;\n    u8 pad_14EA[0x2];\n    u16 unk_14EC;\n    u8 pad_14EE[0x6];\n    u8 unk_14F4;\n    u8 pad_14F5[0x3];\n    u32 unk_14F8;\n    u16 unk_14FC;\n};\n\nextern int fn_1_4C10(void);\nextern struct fn_1_2C908_lbl_1_bss_3C00 lbl_1_bss_3C00;\nextern u32 fn_1_4060(void);\nextern void fn_1_EB080(int);\n\nu32 fn_1_2C908(void) {\n    struct fn_1_2C908_lbl_1_bss_3C00 *p_lbl_1_bss_3C00;\n    u32 v0;\n    u32 v1;\n    p_lbl_1_bss_3C00 = (struct fn_1_2C908_lbl_1_bss_3C00 *)&lbl_1_bss_3C00;\n    v0 = fn_1_4C10();\n    if ((s32)v0 == 0) {\n    v0 = p_lbl_1_bss_3C00->unk_30;\n    v1 = (v0 | 4096);\n    p_lbl_1_bss_3C00->unk_14E8 = 42;\n    p_lbl_1_bss_3C00->unk_30 = v1;\n    p_lbl_1_bss_3C00->unk_14EC = 0;\n    p_lbl_1_bss_3C00->unk_14F4 = (p_lbl_1_bss_3C00->unk_14F4 | 1);\n    p_lbl_1_bss_3C00->unk_14F8 = 0;\n    p_lbl_1_bss_3C00->unk_14FC = 0;\n    fn_1_EB080(4);\n    v0 = fn_1_4060();\n    }\n    return v0;\n}\n",
+    "seed_sha256": "ca7362d1cbf86364afef61b2d81290f4161bbf92ada48b6d724baa0b3fd9b256",
+    "generated_sha256": "abd35ae6d051da58a5e0edc0f1004c15608037dbbf54399c33f964540e46205a",
+    "generated_source": "#include \"types.h\"\n\nstruct fn_1_2C908_lbl_1_bss_3C00 {\n    u8 pad_0[0x30];\n    u32 unk_30;\n    u8 pad_34[0x14B4];\n    u16 unk_14E8;\n    u8 pad_14EA[0x2];\n    u16 unk_14EC;\n    u8 pad_14EE[0x6];\n    u8 unk_14F4;\n    u8 pad_14F5[0x3];\n    u32 unk_14F8;\n    u16 unk_14FC;\n};\n\nextern int fn_1_4C10(void);\nextern struct fn_1_2C908_lbl_1_bss_3C00 lbl_1_bss_3C00;\nextern u32 fn_1_4060(void);\nextern void fn_1_EB080(int);\n\n#pragma opt_lifetimes off\nu32 fn_1_2C908(void) {\n    struct fn_1_2C908_lbl_1_bss_3C00 *p_lbl_1_bss_3C00;\n    u32 v0;\n    u32 v1;\n    p_lbl_1_bss_3C00 = (struct fn_1_2C908_lbl_1_bss_3C00 *)&lbl_1_bss_3C00;\n    v0 = fn_1_4C10();\n    if ((s32)v0 == 0) {\n    v0 = p_lbl_1_bss_3C00->unk_30;\n    v1 = (v0 | 4096);\n    p_lbl_1_bss_3C00->unk_14E8 = 42;\n    p_lbl_1_bss_3C00->unk_30 = v1;\n    p_lbl_1_bss_3C00->unk_14EC = 0;\n    p_lbl_1_bss_3C00->unk_14F4 = (p_lbl_1_bss_3C00->unk_14F4 | 1);\n    p_lbl_1_bss_3C00->unk_14F8 = 0;\n    p_lbl_1_bss_3C00->unk_14FC = 0;\n    fn_1_EB080(4);\n    v0 = fn_1_4060();\n    }\n    return v0;\n}\n#pragma opt_lifetimes reset\n\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "rel/main_rel/stcoli/fn_1_2C908.c",
+    "bytes": 116,
+    "recipe": [
+      {
+        "label": "opt_lifetimes off",
+        "input_sha256": "ca7362d1cbf86364afef61b2d81290f4161bbf92ada48b6d724baa0b3fd9b256",
+        "output_sha256": "abd35ae6d051da58a5e0edc0f1004c15608037dbbf54399c33f964540e46205a"
+      }
+    ],
+    "link": "verified",
+    "commit": "cdaa4f7",
+    "headers_sha256": "5b186aefa208edbe30c8744eda7a7f872eff23759166e772101edeaed7c317c4",
+    "oracle_sha256": "d40ebff4cf1b44b18780c1b0f2a36356a3e41dc07e55c7cbb18dd7813f19eff0"
+  },
+  "fn_1_F9028": {
+    "seed_symbol": "fn_1_F9028",
+    "generator": "fzgx fixup",
+    "transform": "inline all static helpers",
+    "seed": "#include \"types.h\"\n#include \"rel/main_rel/globals.h\"\n#include \"rel/main_rel/spline.h\"\n\ntypedef struct {\n    s16 unk_0;\n    s16 unk_2;\n    s16 unk_4;\n    s16 unk_6;\n    s16 unk_8;\n} Element;\n\ntypedef struct {\n    Element elements[44];\n} Table;\n\nextern Table lbl_1_rodata_6E38;\nextern void fn_80008BA8(void *dst, const void *src, u32 size);\nextern s32 fn_1_F9CA0(s32, u8);\nextern s32 fn_1_F21B8(s16);\n\nstatic void get_element(Element *dst, s16 index) {\n    Table table;\n    table = lbl_1_rodata_6E38;\n    fn_80008BA8(dst, &table.elements[index], 10);\n}\n\nstatic s16 find_element_by_unk2(s16 unk_2, s16 nth) {\n    Element elem;\n    s16 i;\n    s16 count;\n\n    i = 0;\n    count = 0;\n    for (; i < 44; i++) {\n        get_element(&elem, i);\n        if (elem.unk_2 == unk_2) {\n            if (count == nth) {\n                return i;\n            }\n            count++;\n        }\n    }\n    return -1;\n}\n\nstatic s16 get_element_index_in_unk2_group(s16 index) {\n    Element elem;\n    s16 i;\n\n    get_element(&elem, index);\n    for (i = 0; ; i++) {\n        if (find_element_by_unk2(elem.unk_2, i) == index) {\n            return i;\n        }\n    }\n}\n\nstatic s32 check_case2(s16 arg) {\n    return fn_1_F21B8(arg) != 0;\n}\n\ns32 fn_1_F9028(s16 arg0) {\n    s32 ret = 0;\n    Element elem;\n    s16 group_idx;\n\n    get_element(&elem, arg0);\n    group_idx = get_element_index_in_unk2_group(arg0);\n\n    switch (elem.unk_2) {\n    case 0:\n        ret = fn_1_F9CA0(0, group_idx);\n        break;\n    case 1:\n        ret = __rlwnm(((u32 *)&lbl_1_bss_7F0C0)[4672], ((u8)group_idx + 1) & 0x1F, 31, 31) != 0;\n        break;\n    case 2:\n        ret = check_case2(elem.unk_8);\n        break;\n    case 3:\n        ret = (u8)__rlwnm(((u32 *)&lbl_1_bss_7F0C0)[4677], (32 - group_idx) & 0x1F, 31, 31) != 0;\n        break;\n    }\n\n    return ret;\n}\n",
+    "seed_sha256": "ab51632cfa419937aa8e8a0fec081ef01761a8bed559ee4bc0c01c4e6386311a",
+    "generated_sha256": "ec4e615540e2be12cc00de3291eb6c952a65a4d2a1c50d4b8a1434c784d38221",
+    "generated_source": "#include \"types.h\"\n#include \"rel/main_rel/globals.h\"\n#include \"rel/main_rel/spline.h\"\n\ntypedef struct {\n    s16 unk_0;\n    s16 unk_2;\n    s16 unk_4;\n    s16 unk_6;\n    s16 unk_8;\n} Element;\n\ntypedef struct {\n    Element elements[44];\n} Table;\n\nextern Table lbl_1_rodata_6E38;\nextern void fn_80008BA8(void *dst, const void *src, u32 size);\nextern s32 fn_1_F9CA0(s32, u8);\nextern s32 fn_1_F21B8(s16);\n\nstatic inline void get_element(Element *dst, s16 index) {\n    Table table;\n    table = lbl_1_rodata_6E38;\n    fn_80008BA8(dst, &table.elements[index], 10);\n}\n\nstatic inline s16 find_element_by_unk2(s16 unk_2, s16 nth) {\n    Element elem;\n    s16 i;\n    s16 count;\n\n    i = 0;\n    count = 0;\n    for (; i < 44; i++) {\n        get_element(&elem, i);\n        if (elem.unk_2 == unk_2) {\n            if (count == nth) {\n                return i;\n            }\n            count++;\n        }\n    }\n    return -1;\n}\n\nstatic inline s16 get_element_index_in_unk2_group(s16 index) {\n    Element elem;\n    s16 i;\n\n    get_element(&elem, index);\n    for (i = 0; ; i++) {\n        if (find_element_by_unk2(elem.unk_2, i) == index) {\n            return i;\n        }\n    }\n}\n\nstatic inline s32 check_case2(s16 arg) {\n    return fn_1_F21B8(arg) != 0;\n}\n\ns32 fn_1_F9028(s16 arg0) {\n    s32 ret = 0;\n    Element elem;\n    s16 group_idx;\n\n    get_element(&elem, arg0);\n    group_idx = get_element_index_in_unk2_group(arg0);\n\n    switch (elem.unk_2) {\n    case 0:\n        ret = fn_1_F9CA0(0, group_idx);\n        break;\n    case 1:\n        ret = __rlwnm(((u32 *)&lbl_1_bss_7F0C0)[4672], ((u8)group_idx + 1) & 0x1F, 31, 31) != 0;\n        break;\n    case 2:\n        ret = check_case2(elem.unk_8);\n        break;\n    case 3:\n        ret = (u8)__rlwnm(((u32 *)&lbl_1_bss_7F0C0)[4677], (32 - group_idx) & 0x1F, 31, 31) != 0;\n        break;\n    }\n\n    return ret;\n}\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "rel/main_rel/spline/fn_1_F9028.c",
+    "bytes": 540,
+    "headers_sha256": "5b186aefa208edbe30c8744eda7a7f872eff23759166e772101edeaed7c317c4",
+    "oracle_sha256": "d40ebff4cf1b44b18780c1b0f2a36356a3e41dc07e55c7cbb18dd7813f19eff0",
+    "recipe": [
+      {
+        "label": "inline all static helpers",
+        "input_sha256": "ab51632cfa419937aa8e8a0fec081ef01761a8bed559ee4bc0c01c4e6386311a",
+        "output_sha256": "ec4e615540e2be12cc00de3291eb6c952a65a4d2a1c50d4b8a1434c784d38221"
+      }
+    ],
+    "link": "verified",
+    "commit": "d9eae00"
+  }
+}

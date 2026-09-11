@@ -1,4 +1,4 @@
-"""LLDB callbacks for capture_mwgraph.py; loaded only by the debugger."""
+"""LLDB callbacks for fzgx fixup --capture; loaded only by the debugger."""
 from __future__ import annotations
 
 import hashlib

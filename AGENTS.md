@@ -64,14 +64,16 @@ and a row in `state/blocked.md`.
 
 Prioritize deterministic SDK C imports (CARD, then OS, EXI, SI) regardless of
 function size. Under-256-byte functions (`--max-size 255`) remain useful repair
-corpora, not a gate on identified larger functions. Prefer deterministic work: `fzgx trivial`, `fzgx reuse`, and size-filtered `fzgx sweep`/`fzgx stuck`;
+corpora, not a gate on identified larger functions. Prefer deterministic work: `fzgx trivial`, `fzgx reuse`, and size-filtered `fzgx fixup`/`fzgx stuck`;
 fix recurring failure modes in the tooling before spending agents on them.
 Register-field similarity is not proof of an allocation problem: inspect value-flow
-and operand-order diagnostics first. `tools/capture_mwgraph.py` captures/replays
+and operand-order diagnostics first. `fzgx fixup --capture` captures/replays
 the stock allocator; selection-order witnesses require a source-realizability
 check and a stock-compiler oracle result before integration.
-`tools/repair_mwgraph.py` projects captured PCode constraints into generated C;
-recapture after changing source, headers or compiler settings. Target-object
+`fzgx fixup --captures PATH` projects captured PCode constraints into generated C;
+recapture after changing source, headers or compiler settings. All deterministic
+fixups use this engine, including release and lifter callers. Add candidate
+generators to it; never add another standalone repair/search runner. Target-object
 indexes and normalized-object caches must retain module identity, including REL
 entrypoints. Reject stale frozen targets before accepting their scores.
 Picks remaining work with `fzgx --json inventory --status unmatched --max-size N`

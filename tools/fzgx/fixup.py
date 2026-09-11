@@ -1,856 +1,496 @@
-"""Deterministic last-resort repairs of a plateaued body, cheap enough to run inside an
-agent's session before it releases (seconds, not minutes).
+"""One deterministic repair engine for sessions, lifters and whole saved corpora.
 
-The object diff says what kind of difference is left (stuck.classify_rows); each kind has a
-small, enumerable search over the source that the oracle verifies:
-
-  signedness / sign-extension rows   flip the signedness or width of one integer declaration
-  (cmpw/cmplw, extsh, extsb, clrlwi,   at a time (params, locals, block-private struct fields)
-   wrong int-to-double constant)
-
-Every candidate is one compile plus one objdiff (~0.4 s). The first body that matches wins;
-otherwise the best percentage seen is reported, never applied.
+All generators share content-addressed compilation, scoring, search budgets and
+verification. Source/evidence helpers never compile, search or submit independently.
 """
-
 from __future__ import annotations
 
-import ast
+from collections import defaultdict
+import gzip
+import hashlib
 import json
-import math
-import re
-import struct
-import time
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+import shlex
+import time
 
-from . import oracle, stuck
-from .project import STATE_DIR, Project
-
-BRANCH_INV = {("beq", "bne"), ("bne", "beq"), ("blt", "bge"), ("bge", "blt"), ("bgt", "ble"), ("ble", "bgt")}
-FLOAT_PAIRS = {"fsubs", "fsub", "fadds", "fadd", "fmuls", "fmul", "fdivs", "fdiv", "fmadds", "fmadd", "fmsubs", "fmsub", "frsp"}
-
-INT_TYPES = ["s8", "u8", "s16", "u16", "s32", "u32", "int", "unsigned int", "unsigned", "char", "unsigned char",
-             "short", "unsigned short", "long", "unsigned long", "signed char"]
-FLIP = {"s8": "u8", "u8": "s8", "s16": "u16", "u16": "s16", "s32": "u32", "u32": "s32",
-        "int": "u32", "unsigned int": "s32", "unsigned": "s32", "char": "u8", "unsigned char": "s8", "signed char": "u8",
-        "short": "u16", "unsigned short": "s16", "long": "u32", "unsigned long": "s32"}
-WIDEN = {"s8": ["s16", "s32"], "u8": ["u16", "u32"], "s16": ["s8", "s32"], "u16": ["u8", "u32"],
-         "s32": ["s16", "s8"], "u32": ["u16", "u8"], "int": ["s16", "s8"], "char": ["s16", "s32"], "short": ["s8", "s32"]}
-TYPE_RE = "|".join(re.escape(t) for t in sorted(INT_TYPES, key=len, reverse=True))
-# Pointee signedness matters too: loading through char* versus u8* changes sign
-# extension even when the pointer itself occupies the same register.
-DECL_RE = re.compile(rf"(?<![\w.>])(?:const\s+)?({TYPE_RE})(?:\s+(?:\*\s*)*|\s*\*+\s*)([A-Za-z_]\w*(?:\s*\[[^\]]*\])?)(?=\s*[;,=()\[])")
+from . import fixup_evidence as evidence, fixup_source as source, mwgraph, oracle
+from .project import ROOT, STATE_DIR, Project
 
 
-def _kinds(res: oracle.CheckResult) -> Dict[str, int]:
-    lrows, rrows = getattr(res, "_rows", ([], []))
-    return stuck.classify_rows(lrows, rrows)
+def digest(value):
+    return hashlib.sha256(value).hexdigest()
 
 
-def _wants_type_flip(counts: Dict[str, int], diffs: List[Tuple[str, str]]) -> bool:
-    if any(k.startswith("op:cmp") for k in counts) or counts.get("ins:ext"):
-        return True
-    text = " ".join(t + " " + o for t, o in diffs)
-    return bool(re.search(r"\b(extsh|extsb|clrlwi|cmplw|cmpw|cmplwi|cmpwi|rlwinm)\b", text)) or "@" in text
+class Engine:
+    def __init__(self, project, output, verbose=False):
+        self.project, self.output, self.verbose = project, output, verbose
+        output.mkdir(parents=True, exist_ok=True)
+        self.headers = mwgraph.header_fingerprint(ROOT, project.version)
+        self.environment = digest((self.headers + ''.join(digest((ROOT/'tools/fzgx'/f).read_bytes()) for f in
+            ('oracle.py', 'poolfix.py', 'project.py'))).encode())
+        self.cache_path = output / 'cache.json'
+        self.cache = json.loads(self.cache_path.read_text()) if self.cache_path.exists() else {}
+        self.targets, self.words, self.checks, self.compilers = {}, {}, {}, {}
+        provenance = ROOT/'state/repairs/fixup_imports.json'
+        self.rejected = json.loads(provenance.read_text()) if provenance.exists() else {}
+        self.compiled = self.cached = 0
+        self.compile_seconds = 0.0
 
+    def emit(self, value):
+        if self.verbose:
+            print(json.dumps(value), flush=True)
 
-def _decl_sites(body: str, fn_span: Tuple[int, int]) -> List[Tuple[int, int, str, str]]:
-    """Integer locals, fields, globals and called functions' return types affect codegen."""
-    out = []
-    for m in DECL_RE.finditer(body):
-        if m.start() > fn_span[1]:
-            break
-        typ, name = m.group(1), m.group(2).split("[")[0].strip()
-        # must be used inside the function to matter
-        if re.search(rf"\b{re.escape(name)}\b", body[fn_span[0]:fn_span[1]]):
-            out.append((m.start(1), m.end(1), typ, name))
-    return out
+    def record(self, symbol, body, mw=None, flags=None, **metadata):
+        sym = self.project.resolve(symbol)
+        if sym is None:
+            raise ValueError(f'unknown or ambiguous symbol: {symbol}')
+        symbol = self.project.key(sym)
+        mw = mw or oracle.module_flags(self.project, sym.module)[1]
+        flags = flags or ''
+        if mw not in self.compilers:
+            self.compilers[mw] = digest((ROOT/'build/compilers'/mw/'mwcceppc.exe').read_bytes())
+        if symbol not in self.targets:
+            path = self.project.target_object_for(sym)
+            if path is None:
+                raise ValueError(f'{symbol}: missing retail object')
+            self.targets[symbol] = (path, oracle.words(path, sym.name), digest(path.read_bytes()))
+        target, words, target_hash = self.targets[symbol]
+        if not words or len(words)*4 != sym.size:
+            raise ValueError(f'{symbol}: invalid retail target size')
+        sha = digest(body.encode())
+        identity = digest(json.dumps([self.environment, symbol, sha, mw, flags, oracle.module_flags(self.project, sym.module)[0], self.compilers[mw], target_hash]).encode())
+        path = self.output / 'sources' / (identity[:24]+'.c')
+        path.parent.mkdir(exist_ok=True)
+        if not path.exists():
+            path.write_text(body)
+        elif digest(path.read_bytes()) != sha:
+            raise ValueError(f'changed content-addressed source: {path}')
+        return dict(metadata, symbol=symbol, source=str(path), sha256=sha, mw=mw, flags=flags,
+                    target=str(target), id=identity)
 
-
-def _function_span(text: str, name: str) -> Optional[Tuple[int, int]]:
-    m = re.search(rf"\b{re.escape(name)}\s*\([^;{{]*\)\s*\{{", text)
-    if not m:
-        return None
-    depth, i = 0, m.end() - 1
-    while i < len(text):
-        if text[i] == "{":
-            depth += 1
-        elif text[i] == "}":
-            depth -= 1
-            if depth == 0:
-                return m.start(), i + 1
-        i += 1
-    return None
-
-
-def _tu_of(p: Project, sym) -> Optional[str]:
-    """The TU file that holds this function per tus.json, carved or not."""
-    try:
-        for t in p.tu_map(sym.module).values() if isinstance(p.tu_map(sym.module), dict) else []:
-            pass
-    except Exception:
-        pass
-    import json
-    path = p.module_config_dir(sym.module) / "tus.json"
-    if not path.exists():
-        return None
-    try:
-        d = json.loads(path.read_text())
-    except ValueError:
-        return None
-    for t in d.get("tus", []):
-        if sym.name in t.get("functions", []):
-            return f"{p.module_src_prefix(sym.module)}/{t['file']}"
-    return None
-
-
-def string_literals(p: Project, module: str, body: str, base: oracle.CheckResult) -> List[Tuple[str, str]]:
-    """Correct private string literals using the relocation's retail object.
-
-    Identical instructions do not prove the strings agree. Read both strings
-    before proposing an edit, then let the ordinary oracle verify its binding.
-    """
-    from .poolfix import Elf
-    obj = getattr(base, '_object', None)
-    if obj is None:
-        return []
-    elf = Elf(obj.read_bytes())
-    own = {s['name']: s for s in elf.symbols()}
-    syms = p.symbols(module)
-    targets = dict(syms)
-    targets.update({f'{s.name}_{s.addr:08X}': s for s in syms.values()})
-    pattern = r'([A-Za-z_.$@][\w.$@]*)@(?:ha|l|sda21)\b'
-    pairs, references = set(), set()
-    for left, right in zip(*getattr(base, '_rows', ([], []))):
-        lt, rt = re.search(pattern, stuck._fmt(left)), re.search(pattern, stuck._fmt(right))
-        if not lt or not rt:
-            continue
-        target, source = targets.get(lt[1]), own.get(rt[1])
-        if not target or not source:
-            continue
-        expected = p.string_at(module, target.name)
-        if expected is not None and source['shndx'] == 0 and re.fullmatch(r'[A-Za-z_]\w*', source['name']):
-            references.add((source['name'], expected))
-        if not source['name'].startswith('@') or not 0 < source['shndx'] < len(elf.sections):
-            continue
-        section = elf.sections[source['shndx']]
-        start = section['offset'] + source['value']
-        raw = bytes(elf.data[start:start + source['size']])
-        if expected is None or not raw.endswith(b'\0') or b'\0' in raw[:-1]:
-            continue
-        current = raw[:-1].decode('latin1')
-        if current != expected:
-            pairs.add((current, expected))
-    out = []
-    for name, expected in sorted(references):
-        for token in re.finditer(rf'\b{re.escape(name)}\b', body):
-            line = body[body.rfind('\n', 0, token.start()) + 1:token.start()]
-            if line.lstrip().startswith('extern '):
+    def evaluate(self, rows):
+        groups = defaultdict(list)
+        unique = {r['id']: r for r in rows}
+        for row in unique.values():
+            cached = self.cache.get(row['id'])
+            if cached and (not cached.get('object') or Path(cached['object']).exists()):
+                row.update(cached); self.cached += 1
+                if row.get('object'):
+                    self.words[row['id']] = oracle.words(Path(row['object']), self.project.resolve(row['symbol']).name)
                 continue
-            out.append((f'retail string for {name}', body[:token.start()] + json.dumps(expected) + body[token.end():]))
-    for current, expected in sorted(pairs):
-        for token in re.finditer(r'"(?:\\.|[^"\\])*"', body):
-            try:
-                value = ast.literal_eval(token[0])
-            except (ValueError, SyntaxError):
-                continue
-            if value == current:
-                out.append((f'retail string {expected!r}', body[:token.start()] + json.dumps(expected) + body[token.end():]))
-    return out
+            sym = self.project.resolve(row['symbol'])
+            groups[sym.module, row['mw'], row['flags']].append(row)
+        tick = time.monotonic()
+        progress = time.monotonic()
+        for (module, mw, flags), pending in groups.items():
+            group = digest(json.dumps([module,mw,flags]).encode())[:16]
+            objects = oracle.compile_many(self.project, module, [Path(r['source']) for r in pending], self.output/'objects'/group, mw, flags)
+            self.compiled += len(pending)
+            for row in pending:
+                obj = objects.get(Path(row['source']))
+                words = oracle.words(obj, self.project.resolve(row['symbol']).name) if obj else None
+                target = self.targets[row['symbol']][1]
+                self.words[row['id']] = words
+                row.update(object=str(obj) if obj else None, score=oracle.word_score(target, words)[0] if words else -1,
+                           bit_errors=(sum((a^b).bit_count() for a,b in zip(target,words))+32*abs(len(target)-len(words))) if words else 10**9)
+                if row['score'] == 100:
+                    check = self.check(row)
+                    row['matched'] = bool(check.matched or check.matched_pool)
+                self.cache[row['id']] = {k:row[k] for k in ('object','score','bit_errors','matched') if k in row}
+            if time.monotonic()-progress >= 10:
+                self.cache_path.write_text(json.dumps(self.cache))
+                self.emit({'stage': 'compile', 'compiled': self.compiled, 'cached': self.cached})
+                progress = time.monotonic()
+        self.compile_seconds += time.monotonic()-tick
+        self.cache_path.write_text(json.dumps(self.cache))
+        for row in rows:
+            row.update({k:v for k,v in unique[row['id']].items() if k in ('object','score','bit_errors','matched')})
+            # An exact function diff ignores other emitted functions. REL links
+            # retain static helper copies, shifting text and dependent modules.
+            sym = self.project.resolve(row['symbol'])
+            if row.get('matched') and sym.module != 'main' and row.get('object'):
+                from .poolfix import Elf
+                elf = Elf(Path(row['object']).read_bytes())
+                extras = [s['name'] for s in elf.symbols() if s['info'] & 15 == 2 and s['shndx'] and s['size'] and s['name'] != sym.name]
+                if extras:
+                    row.update(matched=False, object_matched=True, extra_helpers=extras)
+            failed = self.rejected.get(row['symbol'], {})
+            if (failed.get('link') == 'rejected' and failed.get('generated_sha256') == row['sha256']
+                    and failed.get('compiler') == row['mw'] and (failed.get('flags') or '') == row['flags']
+                    and failed.get('headers_sha256') == self.headers
+                    and failed.get('oracle_sha256') == digest(Path(oracle.__file__).read_bytes())):
+                row.update(matched=False, link_rejected=True)
 
+    def check(self, row):
+        if row['id'] not in self.checks:
+            sym = self.project.resolve(row['symbol'])
+            self.checks[row['id']] = oracle._diff(self.project, sym.module, sym.name, '', 0,
+                                                target=self.targets[row['symbol']][0], base=Path(row['object']))
+        return self.checks[row['id']]
 
-def optimizer_pragmas(body: str, name: str) -> List[Tuple[str, str]]:
-    """Recover optimizer state lost when a function is extracted from its TU.
+    def proposals(self, row, capture=None, max_orders=50000):
+        body = Path(row['source']).read_text()
+        name = self.project.resolve(row['symbol']).name
+        families = []
+        check = self.check(row)
+        if check.ok:
+            families.append(evidence.candidates(self.project, row['symbol'], body, check))
+        if row.get('score') == 100:
+            families.insert(0, list(source.inline_helpers(body,name)))
+        if capture:
+            constraints = source.web_constraints(capture, self.targets[row['symbol']][1], self.words[row['id']])
+            decls, _ = source.declaration_candidates(body, name, capture, constraints, max_orders)
+            families.append([('graph declaration-order',t) for t in decls]+source.carrier_candidates(body,name,capture,constraints))
+        families.extend([source.missing_values(body,name), source.expression_trees(body,name),
+                         source.commutations(body,name), source.probes(body,name,64),
+                         [(family+': '+label,text) for family,label,text in source.all_rewrites(body,name)]])
+        # Round-robin preserves access to each family within the shared budget.
+        for i in range(max(map(len,families),default=0)):
+            for family in families:
+                if i < len(family):
+                    yield family[i]
 
-    These passes can change otherwise correct register allocation and scheduling.
-    Keep the state local to the function so a later TU merge does not inherit it.
-    """
-    span = _function_span(body, name)
-    if span is None:
-        return []
-    start = body.rfind('\n', 0, span[0]) + 1
-    out = []
-    for option in ('peephole', 'opt_propagation', 'opt_common_subs', 'opt_lifetimes', 'opt_dead_assignments'):
-        if re.search(rf'^\s*#pragma\s+{option}\s+off\b', body[:span[1]], re.M):
-            continue
-        text = (body[:start] + f'#pragma {option} off\n' + body[start:span[1]] +
-                f'\n#pragma {option} reset\n' + body[span[1]:])
-        out.append((f'{option} off', text))
-    return out
-
-
-def float_literals(p: Project, symbol: str, body: str, base: oracle.CheckResult) -> List[Tuple[str, str]]:
-    """Recover incorrect floating literals from the retail relocation's bytes.
-
-    Match the emitted literal's exact bits before replacing C tokens. Try each
-    occurrence and all equal occurrences together: changing only one can split
-    a shared constant load and obscure an otherwise exact repair.
-    """
-    from .poolfix import Elf
-    sym = p.resolve(symbol)
-    span = _function_span(body, sym.name)
-    if span is None or getattr(base, '_object', None) is None:
-        return []
-    elf = Elf(base._object.read_bytes())
-    own = {s['name']: s for s in elf.symbols()}
-    symbols = p.symbols(sym.module)
-    targets = dict(symbols)
-    targets.update({f'{s.name}_{s.addr:08X}': s for s in symbols.values()})
-    reloc = re.compile(r'([A-Za-z_.$@][\w.$@]*?)([+-]0x[0-9a-f]+)?@(?:ha|h|l|sda21)\b')
-    floats = set()
-    for left, right in zip(*base._rows):
-        if (left.get('diff_kind') or 'DIFF_NONE') == 'DIFF_NONE':
-            continue
-        lt, rt = reloc.search(stuck._fmt(left)), reloc.search(stuck._fmt(right))
-        if not lt or not rt:
-            continue
-        target = targets.get(lt[1])
-        offset = int(lt[2], 0) if lt[2] else 0
-        old_offset = int(rt[2], 0) if rt[2] else 0
-        private = own.get(rt[1])
-        width = {'lfs': 4, 'lfd': 8}.get(stuck._mn(left))
-        if not target or not private or not width or not private['name'].startswith('@'):
-            continue
-        raw = p.bytes_at(sym.module, target.name)
-        if raw is None or offset < 0 or offset + width > len(raw):
-            continue
-        if (not 0 < private['shndx'] < len(elf.sections) or old_offset < 0
-                or private['size'] < old_offset + width):
-            continue
-        pos = elf.sections[private['shndx']]['offset'] + private['value'] + old_offset
-        current = bytes(elf.data[pos:pos + width])
-        expected = raw[offset:offset + width]
-        if current != expected:
-            floats.add((width, current, expected))
-    # A whole-TU pool often has only one lis/addi relocation: its later loads
-    # carry ordinary offsets. Follow both objects' bases rather than expecting
-    # a relocation on every lfs/lfd. Conflicting alignments are not evidence.
-    from .evidence import memory_loads, retail_bytes
-    inferred, locations = {}, {}
-    left_loads, right_loads = (memory_loads(rows) for rows in base._rows)
-    for i, target in left_loads.items():
-        private = right_loads.get(i)
-        if not private or target['op'] not in ('lfs', 'lfd') or target['op'] != private['op']:
-            continue
-        anchor = own.get(private['symbol'])
-        if not anchor or not private['symbol'].startswith(('@', '...rodata')):
-            continue
-        if not 0 < anchor['shndx'] < len(elf.sections):
-            continue
-        section = elf.sections[anchor['shndx']]
-        offset, width = anchor['value'] + private['offset'], private['width']
-        if offset < 0 or offset + width > section['size']:
-            continue
-        if any(r['type'] == 4 and r['info'] == anchor['shndx'] and
-               any(offset <= struct.unpack_from('>I', elf.data, pos)[0] < offset + width
-                   for pos in range(r['offset'], r['offset'] + r['size'], 12)) for r in elf.sections):
-            continue
-        current = bytes(elf.data[section['offset'] + offset:section['offset'] + offset + width])
-        expected = retail_bytes(p, sym.module, target['symbol'], target['offset'], width)
-        if expected is not None:
-            inferred.setdefault((width, current), set()).add(expected)
-            locations.setdefault((width, current), set()).add((target['symbol'], target['offset']))
-    floats.update((width, current, next(iter(expected))) for (width, current), expected in inferred.items()
-                  if len(expected) == 1 and current != next(iter(expected)))
-    from .sdkimport import masked
-    code = masked(body)
-    out, all_edits, bound_edits = [], {}, {}
-    ambiguous = set()
-    for width, current, expected in sorted(floats):
-        fmt = '>f' if width == 4 else '>d'
-        value = struct.unpack(fmt, expected)[0]
-        if not math.isfinite(value):
-            continue
-        replacement = repr(value) + ('f' if width == 4 else '')
-        edits = []
-        for token in re.finditer(r'(?<![\w.])-?\d+\.\d*(?:[eE][+-]?\d+)?[fF]?(?![\w.])', code):
-            if (width == 4) != token[0].lower().endswith('f'):
-                continue
-            try:
-                actual = struct.pack(fmt, float(token[0].rstrip('fF')))
-            except (OverflowError, ValueError):
-                continue
-            if actual == current:
-                start, end = token.span()
-                edits.append((start, end))
-                out.append((f'retail float {token[0]} -> {replacement}', body[:start] + replacement + body[end:]))
-                if (start, end) in all_edits and all_edits[start, end] != replacement:
-                    ambiguous.add((start, end))
-                all_edits[start, end] = replacement
-                refs = locations.get((width, current), set())
-                if len(refs) == 1:
-                    anchor, offset = next(iter(refs))
-                    if offset >= 0 and not re.search(r'\b' + re.escape(anchor) + r'\b', code):
-                        bound_edits[start, end] = (anchor, offset, width)
-        if len(edits) > 1:
-            combined = body
-            for start, end in reversed(edits):
-                combined = combined[:start] + replacement + combined[end:]
-            out.append((f'all references to retail float {replacement}', combined))
-    combined = body
-    for (start, end), replacement in sorted(all_edits.items(), reverse=True):
-        if (start, end) not in ambiguous:
-            combined = combined[:start] + replacement + combined[end:]
-    if combined != body:
-        out.insert(0, ('recover shared-pool literal values', combined))
-    # Express the shared layout in owned C declarations. Code bytes, including
-    # load offsets, still have to pass the oracle; this does not patch code or
-    # mark unequal pools equivalent.
-    layouts = {}
-    bound = body
-    for (start, end), (anchor, offset, width) in sorted(bound_edits.items(), reverse=True):
-        if (start, end) in ambiguous:
-            continue
-        layouts.setdefault(anchor, {})[offset] = width
-        bound = bound[:start] + f'{anchor}.unk_{offset:X}' + bound[end:]
-    declarations = []
-    for anchor, offsets in sorted(layouts.items()):
-        cursor = 0
-        fields = []
-        for offset, width in sorted(offsets.items()):
-            if offset < cursor or offset % width:
-                fields = []
+    def run(self, rows, rounds=2, beam=3, max_candidates=80, budget_s=None, captures=None):
+        start=time.monotonic(); history=list(rows); seen={r['id'] for r in rows}; initial={}
+        self.evaluate(rows)
+        self.emit({'stage': 'baseline', 'functions': len({r['symbol'] for r in rows}),
+                   'variants': len(rows), 'compiled': self.compiled, 'cached': self.cached})
+        self.save(history, stats=[], start=start)
+        for r in rows:
+            initial[r['symbol']]=max(initial.get(r['symbol'],-1),r['score'])
+        stats=[]
+        for step in range(rounds):
+            if budget_s is not None and time.monotonic()-start >= budget_s:
                 break
-            if offset > cursor:
-                fields.append(f'    u8 pad_{cursor:X}[0x{offset - cursor:X}];')
-            fields.append(f'    {"f32" if width == 4 else "f64"} unk_{offset:X};')
-            cursor = offset + width
-        if not fields:
-            declarations = []
-            break
-        declarations.append('extern const struct ' + sym.name + '_' + anchor + '_pool {\n'
-                            + '\n'.join(fields) + '\n} ' + anchor + ';\n')
-    if declarations:
-        # Place after includes so the repository's fixed-width types are in scope.
-        includes = list(re.finditer(r'^\s*#include[^\n]*\n', bound, re.M))
-        pos = includes[-1].end() if includes else 0
-        bound = bound[:pos] + '\n' + '\n'.join(declarations) + bound[pos:]
-        out.insert(0, ('bind recovered shared-pool fields', bound))
-        start = re.search(r'\b' + re.escape(sym.name) + r'\s*\([^;{]*\)\s*\{', bound)
-        if start:
-            pointers = []
-            for anchor in sorted(layouts):
-                typ = 'struct ' + sym.name + '_' + anchor + '_pool'
-                pointer = 'pool_' + anchor
-                pointers.append(f'\n    {typ} *{pointer} = ({typ} *)&{anchor};')
-                bound = bound.replace(anchor + '.unk_', pointer + '->unk_')
-            start = re.search(r'\b' + re.escape(sym.name) + r'\s*\([^;{]*\)\s*\{', bound)
-            bound = bound[:start.end()] + ''.join(pointers) + bound[start.end():]
-            out.insert(0, ('retain recovered shared-pool bases', bound))
-    return out
+            winners={r['symbol'] for r in history if r.get('matched')}
+            frontier=defaultdict(list); shapes=defaultdict(set)
+            for row in sorted(history,key=lambda r:(-r['score'],r['bit_errors'],r['id'])):
+                symbol=row['symbol']; words=self.words.get(row['id'])
+                if symbol in winners or not words or len(frontier[symbol])>=beam:
+                    continue
+                shape=tuple(words)
+                if shape in shapes[symbol]:
+                    continue
+                shapes[symbol].add(shape);frontier[symbol].append(row)
+            pending=[]; parents={}; generated=time.monotonic()
+            for symbol, seeds in frontier.items():
+                for seed in seeds:
+                    if budget_s is not None and time.monotonic()-start >= budget_s:
+                        break
+                    cap=(captures or {}).get((symbol,seed['sha256'],seed['mw'],seed['flags']))
+                    count=0
+                    for label,text in self.proposals(seed,cap):
+                        row=self.record(symbol,text,seed['mw'],seed['flags'],label=label,parent=seed['id'],seed=seed.get('seed',seed['id']))
+                        if row['id'] in seen:
+                            continue
+                        seen.add(row['id']); pending.append(row);parents[seed['id']]=seed;count+=1
+                        if count>=max_candidates:
+                            break
+            if not pending:
+                break
+            generation_seconds=time.monotonic()-generated
+            self.evaluate(pending)
+            # Compose observed independent bit repairs; no private compile loop.
+            responses=defaultdict(list)
+            for row in pending:
+                responses[row['parent']].append((row['label'],Path(row['source']).read_text(),self.words.get(row['id'])))
+            combined=[]
+            for parent, values in responses.items():
+                seed=parents[parent]; body=Path(seed['source']).read_text(); target=self.targets[seed['symbol']][1]; baseline=self.words[parent]
+                if len(baseline)!=len(target):
+                    continue
+                choices=source.linear_compositions(body,target,baseline,values)
+                greedy=source.compose(body,target,baseline,values)
+                if greedy: choices.append(greedy)
+                for label,text in choices:
+                    row=self.record(seed['symbol'],text,seed['mw'],seed['flags'],label=label,parent=parent,seed=seed.get('seed',parent))
+                    if row['id'] not in seen:
+                        seen.add(row['id']);combined.append(row)
+            self.evaluate(combined);pending+=combined;history+=pending
+            stat=dict(round=step+1,probes=len(pending),generation_seconds=generation_seconds,
+                      matches=len({r['symbol'] for r in history if r.get('matched')}),
+                      improved=len({r['symbol'] for r in history if r['score']>initial[r['symbol']]}))
+            stats.append(stat);self.emit(stat)
+            self.save(history,stats,start)
+        return self.save(history,stats,start)
+
+    def save(self,history,stats,start):
+        best={}
+        for r in sorted(history,key=lambda r:(not r.get('matched',False),-r['score'],r['bit_errors'],r['id'])):
+            best.setdefault(r['symbol'],r)
+        for row in best.values():
+            if row['score'] >= 0:
+                result = self.check(row)
+                row['percent'] = max(result.percent, result.percent_adjusted) if result.ok else 0
+        report=dict(generator_sha256=digest((Path(__file__).read_bytes()+Path(source.__file__).read_bytes()+Path(evidence.__file__).read_bytes())), records=history, best=best, rounds=stats, compiled=self.compiled,cached=self.cached,
+                    compile_seconds=self.compile_seconds,seconds=time.monotonic()-start,environment=self.environment)
+        (self.output/'report.json').write_text(json.dumps(report))
+        return report
 
 
-def stack_aggregates(body: str, diffs: List[Tuple[str, str]]) -> List[Tuple[str, str]]:
-    """Remove a draft's fake aggregate prefix when only the stack copy is biased.
+def try_fix(p, symbol, body, budget_s=30.0, max_candidates=80, base=None):
+    """Session/lifter adapter; same engine and transformations as corpus repair."""
+    start=time.monotonic()
+    if base and not base.ok:
+        return dict(matched=False,body=None,tried=0,best=0,secs=0,error=base.error)
+    if base and (base.matched or base.matched_pool):
+        return dict(matched=True,body=body,tried=0,best=100,secs=0)
+    sym=p.resolve(symbol)
+    engine=Engine(p,STATE_DIR/'fixup'/'sessions'/p.key(sym).replace(':','__'))
+    mw=base.mw_version if base else None;flags=base.extra_cflags if base else None
+    if not mw:
+        mw,flags=oracle.version_for(p,sym,p.work_path(symbol))
+    row=engine.record(symbol,body,mw,flags,label='input')
+    report=engine.run([row],rounds=2,beam=2,max_candidates=max_candidates,budget_s=budget_s)
+    best=report['best'][p.key(sym)]; matched=best.get('matched',False)
+    check=engine.check(best) if best['score']>=0 else None
+    return dict(matched=matched,body=Path(best['source']).read_text() if matched else None,
+                best_body=Path(best['source']).read_text(),label=best.get('label'),
+                best=max(check.percent,check.percent_adjusted) if check and check.ok else 0,
+                base=base.percent if base else row['score'],tried=report['compiled'],secs=time.monotonic()-start,
+                mw_version=best['mw'],extra_cflags=best['flags'])
 
-    A pointer before a local array can make field accesses agree while moving the
-    aggregate copy into the frame header. Recover the field origin and copy origin
-    together; retain the union's array member so its size does not shrink.
-    """
-    deltas = set()
-    for target, ours in diffs:
-        pattern = r'addi r\d+, r1, (-?0x[0-9a-f]+|-?\d+)$'
-        t, o = re.fullmatch(pattern, target), re.fullmatch(pattern, ours)
-        if t and o:
-            deltas.add(int(t[1], 0) - int(o[1], 0))
-    if len(deltas) != 1 or next(iter(deltas)) <= 0:
-        return []
-    delta = next(iter(deltas))
-    out = []
-    union = r'typedef\s+union\s*\{[^{}]*struct\s*\{(?P<fields>[^{}]*)\}\s+\w+;[^{}]*\}\s*(?P<type>\w+)\s*;'
-    for declaration in re.finditer(union, body):
-        fields = declaration['fields']
-        first = re.match(r'\s*(u8|s8|u16|s16|u32|s32)\s+(\w+)(?:\[(0[xX][0-9a-fA-F]+|\d+)\])?\s*;', fields)
-        if not first:
+
+def integrate(project, report, inputs, output):
+    from . import api
+    from .ledger import Ledger
+    ledger = Ledger()
+    provenance_path = ROOT / 'state/repairs/fixup_imports.json'
+    provenance = json.loads(provenance_path.read_text()) if provenance_path.exists() else {}
+    headers_sha256 = mwgraph.header_fingerprint(ROOT, project.version)
+    oracle_sha256 = digest(Path(oracle.__file__).read_bytes())
+    accepted, failed, skipped, rebound = [], [], [], []
+    for row in report['functions']:
+        symbol = row['symbol']
+        probe = next((p for p in row['probes'] if p.get('matched')), None)
+        if probe is None:
             continue
-        size = int(first[1][1:]) // 8 * (int(first[3], 0) if first[3] else 1)
-        if size != delta or re.search(rf'(?:\.|->){re.escape(first[2])}\b', body[declaration.end():]):
-            continue
-        assignment = (rf'\b(\w+)\s*=\s*\({re.escape(declaration["type"])}\s*\*\)\s*'
-                      r'\(\(u8\s*\*\)\s*(\w+)\s*-\s*(0[xX][0-9a-fA-F]+|\d+)\s*\)')
-        for source in re.finditer(assignment, body[declaration.end():]):
-            if int(source[3], 0) != delta:
+        record = inputs[symbol]
+        seed_symbol = symbol
+        sym = project.resolve(symbol)
+        target = project.target_object_for(sym)
+        check = oracle._diff(project, sym.module, sym.name, '', 0, target=target, base=Path(probe['object'])) if target else None
+        exact = check and check.ok and (check.matched or check.matched_pool)
+        if not exact:
+            alternatives = []
+            if sym.name in project.ambiguous_names():
+                for module in project.modules:
+                    other = project.resolve(module + ':' + sym.name)
+                    if other is None:
+                        continue
+                    obj = project.target_object_for(other)
+                    if obj and oracle.function_score(project, other.name, obj, Path(probe['object']))[0]:
+                        alternatives.append(project.key(other))
+            if len(alternatives) != 1:
+                failed.append({'symbol': symbol, 'error': 'saved result does not match its module target',
+                               'alternatives': alternatives})
                 continue
-            start, end = declaration.end() + source.start(), declaration.end() + source.end()
-            text = body[:start] + f'{source[1]} = ({declaration["type"]} *){source[2]}' + body[end:]
-            at = declaration.start('fields')
-            text = text[:at] + fields[first.end():] + text[declaration.end('fields'):]
-            pointer, array, typ = source[1], source[2], declaration['type']
-            # A real aggregate local rematerializes its address at each call.
-            # Keeping the draft's pointer would make MWCC save it across calls.
-            split = declaration.end() - first.end()
-            prefix, text = text[:split], text[split:]
-            text, arrays = re.subn(rf'(?m)^[ \t]*(?:u8|u16|u32)\s+{re.escape(array)}\[[^\]\n]+\];\n', '', text)
-            text, pointers = re.subn(rf'\b{re.escape(typ)}\s*\*\s*{re.escape(pointer)}\s*;', f'{typ} {pointer};', text)
-            text = re.sub(rf'(?m)^[ \t]*{re.escape(pointer)} = \({re.escape(typ)} \*\){re.escape(array)};\n', '', text)
-            text = re.sub(rf'\b{re.escape(pointer)}->', f'{pointer}.', text)
-            text = re.sub(rf'\*{re.escape(pointer)}\b', pointer, text)
-            if arrays == pointers == 1:
-                out.append((f'recover aggregate local with {delta}-byte false prefix', prefix + text))
-    return out
+            symbol = alternatives[0]
+            rebound.append({'from': seed_symbol, 'to': symbol})
+        previous = provenance.get(symbol, {})
+        if (previous.get('link') == 'rejected' and previous.get('generated_sha256') == digest(Path(probe['source']).read_bytes())
+                and previous.get('compiler') == record['mw'] and (previous.get('flags') or '') == (record['flags'] or '')
+                and previous.get('headers_sha256') == headers_sha256 and previous.get('oracle_sha256') == oracle_sha256):
+            skipped.append({'symbol': symbol, 'reason': 'this source/settings already failed the link'})
+            continue
+        state = ledger.get(symbol)
+        if state and state['status'] in ('matched', 'asm'):
+            skipped.append({'symbol': symbol, 'reason': 'already integrated'})
+            continue
+        if state is None or state['status'] == 'claimed':
+            failed.append({'symbol': symbol, 'error': 'not unclaimed/unmatched'})
+            continue
+        if hashlib.sha256(Path(record['source']).read_bytes()).hexdigest() != record['sha256']:
+            failed.append({'symbol': symbol, 'error': 'changed seed'})
+            continue
+        source = Path(probe['source']).read_text()
+        if api.lint(project, [probe['source']]):
+            failed.append({'symbol': symbol, 'error': 'source lint'})
+            continue
+        work = project.work_path(symbol)
+        work.parent.mkdir(parents=True, exist_ok=True)
+        if work.exists() and work.read_text() != source:
+            previous_sha = hashlib.sha256(work.read_bytes()).hexdigest()
+            backup = output / (symbol.replace(':', '__') + '.previous-' + previous_sha[:12] + '.c')
+            backup.write_bytes(work.read_bytes())
+        work.write_text(source)
+        mw = record['mw'] or oracle.module_flags(project, project.resolve(symbol).module)[1]
+        result = api.submit(project, symbol, agent='deterministic-fixup',
+                            message=probe['label'], harness='fixup', mw_version=mw,
+                            extra_cflags=record['flags'] or '')
+        if not result.get('ok'):
+            failed.append({'symbol': symbol, 'result': result})
+            continue
+        accepted.append(symbol)
+        provenance[symbol] = {'seed_symbol': seed_symbol, 'generator': 'fzgx fixup', 'transform': probe['label'],
+                              'seed': Path(record['source']).read_text(), 'seed_sha256': record['sha256'],
+                              'generated_sha256': hashlib.sha256(source.encode()).hexdigest(), 'generated_source': source,
+                              'compiler': mw, 'flags': record['flags'], 'source': result['unit'],
+                              'bytes': project.resolve(symbol).size, 'headers_sha256': headers_sha256, 'oracle_sha256': oracle_sha256, 'recipe': row.get('recipe', []), 'link': 'pending'}
+        provenance_path.write_text(json.dumps(provenance, indent=2) + '\n')
+    message = 'Integrate deterministic fixup matches'
+    verification = api.verify_links(project, message) if accepted else None
+    if verification:
+        for symbol in verification.get('verified', []):
+            if symbol in provenance:
+                provenance[symbol]['link'] = 'verified'
+                provenance[symbol]['commit'] = verification.get('commit')
+        for symbol in verification.get('rejected', []):
+            if symbol in provenance:
+                provenance[symbol]['link'] = 'rejected'
+        provenance_path.write_text(json.dumps(provenance, indent=2) + '\n')
+    outcome = {'accepted': accepted, 'failed': failed, 'skipped': skipped, 'rebound': rebound,
+               'verification': verification}
+    (output / 'integration.json').write_text(json.dumps(outcome, indent=2) + '\n')
+    print(json.dumps(outcome, indent=2))
+    if failed or (verification and (not verification.get('ok') or verification.get('rejected'))):
+        raise SystemExit(1)
 
 
-def try_fix(p: Project, symbol: str, body: str, budget_s: float = 30.0, max_candidates: int = 80, _depth: int = 0,
-            base: Optional[oracle.CheckResult] = None) -> Dict[str, object]:
-    """Search the cheap repairs; returns {"matched": bool, "body": text or None, "tried": n, "best": %, "secs": s}.
-    `base`: the body's check result when the caller already has it (saves one compile)."""
-    t0 = time.time()
-    sym = p.resolve(symbol)
-    key = p.key(sym)
-    scratch = STATE_DIR / "fixup" / (key.replace(":", "__") + ".c")
-    scratch.parent.mkdir(parents=True, exist_ok=True)
+def replay_archive(path):
+    archive=json.loads(gzip.decompress(path.read_bytes()))
+    if archive.get('format')=='fzgx-mwcc-graphs-v1':
+        return mwgraph.replay_archive(path)
+    for symbol,record in archive['repairs'].items():
+        body=record['seed']
+        if digest(body.encode())!=record['seed_sha256']:
+            raise ValueError(f'{symbol}: seed hash mismatch')
+        if record['transform']=='correct-module-target':
+            choices=[('correct-module-target',body)]
+        else:
+            constraints=source.web_constraints(record['captures'],record['target_words'],record['baseline_words'])
+            choices=source.carrier_candidates(body,symbol.split(':')[-1],record['captures'],constraints)
+        if not any(label==record['transform'] and digest(text.encode())==record['generated_sha256'] for label,text in choices):
+            raise ValueError(f'{symbol}: source not reproduced')
+    result=dict(reproduced=len(archive['repairs']),improved_seeds=len(archive['improved_seeds']))
+    print(json.dumps(result));return result
 
-    def check(text: str) -> oracle.CheckResult:
-        scratch.write_text(text)
-        return oracle.check(p, symbol, 0, source=scratch,
-                            mw_version=base.mw_version if base else None,
-                            extra_cflags=base.extra_cflags if base else None)
 
-    if base is None:
-        base = check(body)
-    out: Dict[str, object] = {"matched": False, "body": None, "tried": 0, "best": base.percent if base.ok else 0.0,
-                              "base": base.percent if base.ok else 0.0, "secs": 0.0, "kinds": {}}
-    if not base.ok:
-        out["error"] = base.error[-300:]
-        return out
-    if base.matched or base.matched_pool:
-        out.update(matched=True, body=body)
-        return out
-    counts = _kinds(base)
-    out["kinds"] = {k: v for k, v in counts.items()}
-    lrows, rrows = base._rows
-    diffs = [(stuck._fmt(a), stuck._fmt(b)) for a, b in zip(lrows, rrows) if (a.get("diff_kind") or "DIFF_NONE") != "DIFF_NONE"]
-    span = _function_span(body, sym.name)
-    candidates: List[Tuple[str, str]] = []
-    fam_marks: List[Tuple[int, str]] = []
-    # These candidates are derived from retail bytes. Large functions can
-    # exhaust the candidate budget on type permutations before reaching them.
-    fam_marks.append((len(candidates), 'literal'))
-    literals = float_literals(p, symbol, body, base)
-    candidates += literals[:3]
-    fam_marks.append((len(candidates), "compiler"))
-    candidates += optimizer_pragmas(body, sym.name)
-    fam_marks.append((len(candidates), "type"))
-    if span and _wants_type_flip(counts, diffs):
-        sites = _decl_sites(body, span)
-        for s, e, typ, name in sites:
-            alts = [FLIP[typ]] if typ in FLIP else []
-            if counts.get("ins:ext") or "@" in " ".join(t + o for t, o in diffs):
-                alts += WIDEN.get(typ, [])
-            for alt in alts:
-                candidates.append((f"{name}:{typ}->{alt}", body[:s] + alt + body[e:]))
-    fam_marks.append((len(candidates), "decl"))
-    # declaration variants: when a symbol this body declares is declared differently by another
-    # block of the same TU (a contested prototype or extern type), each sibling variant is a
-    # candidate: a matched neighbour usually already found the spelling the compiler wants
-    tu_src = None
-    try:
-        rec = p.unit_record(p.unit_of(sym)) if p.unit_of(sym) else None
-        tu_src = rec.get("tu") if rec else None
-        if tu_src is None:
-            tu_src = next((t for t in [_tu_of(p, sym)] if t), None)
-    except Exception:
-        tu_src = None
-    if tu_src:
-        from . import tufile, tutidy
+def load_records(engine,args):
+    from .ledger import Ledger
+    from seeds.recovered import SavedCandidates
+    p=engine.project;ledger=Ledger();rows=[]
+    def add(symbol,body,mw=None,flags=None,**metadata):
+        sym=p.resolve(symbol);state=ledger.get(symbol)
+        if not sym or not state or state['status']!='unmatched':
+            return
+        if args.module and sym.module!=args.module or args.max_size is not None and sym.size>args.max_size:
+            return
+        rows.append(engine.record(symbol,body,mw,flags,**metadata))
+    if args.symbol:
+        from . import api
+        body=Path(args.body).read_text() if args.body else api._attempt_text(p,args.symbol)
+        if body is None:
+            raise ValueError('no saved C for '+args.symbol)
+        sym=p.resolve(args.symbol)
+        mw,flags=oracle.version_for(p,sym,Path(args.body) if args.body else p.work_path(args.symbol))
+        add(args.symbol,body,mw,flags,label='saved-body')
+    elif args.corpus:
+        prepared=args.corpus/'prepared.json'
+        if prepared.exists():
+            inputs=json.loads(prepared.read_text())['records']
+        else:
+            inputs=[dict(r,symbol=s) for s,r in json.loads((args.corpus/'inputs.json').read_text()).items()]
+        for r in inputs:
+            body=Path(r['source']).read_text()
+            if digest(body.encode())!=r['sha256']:
+                raise ValueError(f"{r['symbol']}: frozen source changed")
+            add(r['symbol'],body,r['mw'],r['flags'],label='saved-body',origin=r.get('origin'))
+    else:
+        saved=SavedCandidates(args.min_percent-0.000001);saved.collect()
+        for symbol,choices in saved.candidates.items():
+            options={r['sha256']:r for r in choices if r['settings_recorded']}
+            for r in choices:
+                if r['percent']>args.max_percent:
+                    continue
+                chosen=r if r['settings_recorded'] else options.get(r['sha256'],r)
+                add(symbol,r['body'],chosen['mw'],chosen['flags'],label='saved-body',origin=r['origin'])
+        if args.drafts:
+            for symbol,r in json.loads((STATE_DIR/'lift/scores.json').read_text()).items():
+                if r.get('text') and args.min_percent<=r.get('percent',0)<=args.max_percent:
+                    add(symbol,r['text'],r.get('mw'),r.get('flags'),label='lifted-body')
+    rows=list({r['id']:r for r in rows}.values())
+    if args.limit:
+        selected=set(sorted({r['symbol'] for r in rows})[:args.limit]);rows=[r for r in rows if r['symbol'] in selected]
+    return rows
+
+
+def load_captures(engine,path,rows):
+    if path is None:
+        return {}
+    jobs=json.loads((path/'config.json').read_text())['jobs'];result={}
+    seeds={(r['symbol'],r['sha256'],r['mw'],r['flags']):r for r in rows}
+    for job in jobs:
+        matching=[(key,r) for key,r in seeds.items() if key[:3]==(job['symbol'],job['source_sha256'],job['compiler'])]
+        for key,row in matching:
+            flags,_=oracle.module_flags(engine.project,engine.project.resolve(row['symbol']).module)
+            extra=shlex.split(row['flags']);levels=[f for f in extra if f.startswith('-O')]
+            expected=[levels[-1] if levels and f.startswith('-O') else f for f in shlex.split(flags)]
+            expected += [f for f in extra if not f.startswith('-O')]
+            if job['headers_sha256']!=engine.headers or job['args'][1:-4]!=expected:
+                raise ValueError(f"{row['symbol']}: stale capture; recapture required")
+            capture=json.loads((path/(job['symbol'].replace(':','__')+'.json')).read_text())
+            if capture.get('error'):
+                continue
+            if not all('pcode' in c for c in capture['captures']):
+                raise ValueError('capture lacks PCode; recapture required')
+            result[key]=capture['captures']
+    return result
+
+
+def command(p,args):
+    if args.rounds < 0 or args.beam < 1 or args.max_candidates < 1 or (args.budget is not None and args.budget <= 0):
+        raise ValueError('rounds must be nonnegative; beam, max-candidates and budget must be positive')
+    if args.archive:
+        return replay_archive(args.archive)
+    if args.capture:
+        if args.corpus is None or args.output is None:
+            raise ValueError('--capture requires --corpus and --output')
+        args.symbols=[args.symbol] if args.symbol else None;args.all_near=True
+        return mwgraph.capture(p,args)
+    output=(args.output or STATE_DIR/'fixup'/'corpus').resolve()
+    if args.saved:
+        report=json.loads((output/'report.json').read_text())
+    else:
+        engine=Engine(p,output,verbose=True);rows=load_records(engine,args)
+        captures=load_captures(engine,args.captures,rows)
+        with oracle.build_lock():
+            report=engine.run(rows,args.rounds,args.beam,args.max_candidates,args.budget,captures)
+        # One canonical corpus format for capture and future repair, all variants
+        # remain in report.json rather than separate per-algorithm stores.
+        best={s:r for s,r in report['best'].items() if r['score']>=0 and not r.get('matched')}
+        (output/'inputs.json').write_text(json.dumps(best))
+        (output/'results.json').write_text(json.dumps({s:{'baseline':{'object':r['object'],'pure':'unclassified'}} for s,r in best.items()}))
+    if args.apply:
+        by_id={r['id']:r for r in report['records']};inputs={};functions=[]
+        for symbol,row in report['best'].items():
+            if not row.get('matched'):
+                continue
+            seed=by_id[row.get('seed',row['id'])]
+            inputs[symbol]=seed
+            recipe=[]; current=row
+            while current.get('parent'):
+                parent=by_id[current['parent']]
+                recipe.append(dict(label=current['label'], input_sha256=parent['sha256'], output_sha256=current['sha256']))
+                current=parent
+            functions.append(dict(symbol=symbol,probes=[dict(row,matched=True)],recipe=list(reversed(recipe))))
         try:
-            tf = tufile.load(p, tu_src)
-        except Exception:
-            tf = None
-        if tf is not None:
-            mine = {}
-            for ln in body.splitlines():
-                if tutidy.DECL_LINE_RE.match(ln):
-                    n = tutidy._decl_name(ln)
-                    if n:
-                        mine.setdefault(n, ln.strip())
-            variants: Dict[str, List[str]] = {}
-            for b in tf.blocks:
-                if b.name == sym.name:
-                    continue
-                for ln in b.body.splitlines():
-                    if tutidy.DECL_LINE_RE.match(ln):
-                        n = tutidy._decl_name(ln)
-                        if n in mine and ln.strip() != mine[n] and ln.strip() not in variants.setdefault(n, []):
-                            variants[n].append(ln.strip())
-            for ln in tf.prologue.splitlines():
-                if tutidy.DECL_LINE_RE.match(ln):
-                    n = tutidy._decl_name(ln)
-                    if n in mine and ln.strip() != mine[n] and ln.strip() not in variants.setdefault(n, []):
-                        variants[n].append(ln.strip())
-            for n, alts in variants.items():
-                for alt in alts[:4]:
-                    candidates.append((f"{n}: {mine[n]} -> {alt}", body.replace(mine[n], alt, 1)))
-    fam_marks.append((len(candidates), "sym"))
-    candidates += string_literals(p, sym.module, body, base)
-    candidates += literals[3:]
-    # wrong callee / wrong data symbol: the same instruction with a different relocation target.
-    # The retail name is known; the body names ours verbatim, so the substitution is exact.
-    subs: Dict[str, str] = {}
-    for t, o in diffs:
-        if not t or not o or t.split()[0] != o.split()[0]:
-            continue
-        mt = re.findall(r"\b([A-Za-z_]\w*)(?=@|$|\b)", re.sub(r"^\S+\s+", "", t))
-        mo = re.findall(r"\b([A-Za-z_]\w*)(?=@|$|\b)", re.sub(r"^\S+\s+", "", o))
-        tn = [x for x in mt if not re.fullmatch(r"[rf]\d+|cr\d|lt|gt|eq|so|ha|l|sda21", x)]
-        on = [x for x in mo if not re.fullmatch(r"[rf]\d+|cr\d|lt|gt|eq|so|ha|l|sda21", x)]
-        if len(tn) == 1 and len(on) == 1 and tn[0] != on[0] and not on[0].startswith("@"):
-            if re.sub(r"\b" + re.escape(on[0]) + r"\b", tn[0], o) == t:
-                subs.setdefault(on[0], tn[0])
-    # a hardware register block under an invented name: retail's `lis rX, 0xcc00` / `addi rX, rX,
-    # 0xNNNN` literal pair against ours `SYM@ha` / `SYM@l` names the address; the link script's
-    # canonical symbol for it (config/<v>/ldscript.tpl) is what the oracle accepts
-    abs_by_addr: Dict[int, str] = {}
-    for name_, addr_ in oracle.abs_symbols().items():
-        abs_by_addr.setdefault(addr_, name_)
-    for (t1, o1), (t2, o2) in zip(diffs, diffs[1:]):
-        m1 = re.match(r"lis r\d+, (0x[0-9a-f]+)$", t1 or ""); n1 = re.match(r"lis r\d+, (\w+)@ha$", o1 or "")
-        m2 = re.match(r"(addi|ori) r\d+, r\d+, (-?0x[0-9a-f]+|-?\d+)$", t2 or ""); n2 = re.match(r"(?:addi|ori) r\d+, r\d+, (\w+)@l$", o2 or "")
-        if not (m1 and n1 and m2 and n2 and n1.group(1) == n2.group(1)):
-            continue
-        hi, lo = int(m1.group(1), 16), int(m2.group(2), 0)
-        addr = ((hi << 16) + lo) & 0xFFFFFFFF if m2.group(1) == "addi" else (hi << 16) | lo
-        canon = abs_by_addr.get(addr)
-        if canon and canon != n1.group(1):
-            subs.setdefault(n1.group(1), canon)
-    for ours, retail in subs.items():
-        if re.search(rf"\b{re.escape(ours)}\b", body) and not re.search(rf"\b{re.escape(retail)}\b", body):
-            candidates.append((f"symbol {ours} -> {retail}", re.sub(rf"\b{re.escape(ours)}\b", retail, body)))
-    if len(subs) > 1:
-        text = body
-        for ours, retail in subs.items():
-            text = re.sub(rf"\b{re.escape(ours)}\b", retail, text)
-        candidates.append(("all symbol substitutions", text))
-    fam_marks.append((len(candidates), "float"))
-    # float vs double: fsubs/fsub, frsp rows come from f32/f64 declarations and literal suffixes
-    if any((t.split()[0] if t else "") in FLOAT_PAIRS or (o.split()[0] if o else "") in FLOAT_PAIRS or "frsp" in (t + o) for t, o in diffs):
-        for a, b in (("f64", "f32"), ("f32", "f64"), ("double", "float"), ("float", "double")):
-            if re.search(rf"\b{a}\b", body):
-                candidates.append((f"all {a}->{b}", re.sub(rf"\b{a}\b", b, body)))
-                for m in list(re.finditer(rf"\b{a}\b", body))[:12]:
-                    candidates.append((f"{a}->{b} at {m.start()}", body[:m.start()] + b + body[m.end():]))
-        lits = list(re.finditer(r"(?<![\w.])(\d+\.\d*(?:[eE][-+]?\d+)?)(?![\w.])", body))
-        if lits:
-            candidates.append(("float literals get f", re.sub(r"(?<![\w.])(\d+\.\d*(?:[eE][-+]?\d+)?)(?![\w.])", r"\1f", body)))
-        litf = list(re.finditer(r"(?<![\w.])(\d+\.\d*(?:[eE][-+]?\d+)?)f\b", body))
-        if litf:
-            candidates.append(("float literals lose f", re.sub(r"(?<![\w.])(\d+\.\d*(?:[eE][-+]?\d+)?)f\b", r"\1", body)))
-    fam_marks.append((len(candidates), "params"))
-    # unused leading parameters: retail keeps r3..r5 alive (they were parameters) and uses r6 for a
-    # temporary where we used r3; adding parameters the body ignores reproduces that
-    if span:
-        regs_t = set(re.findall(r"\br(\d+)\b", " ".join(t for t, o in diffs))); regs_o = set(re.findall(r"\br(\d+)\b", " ".join(o for t, o in diffs)))
-        hi_t = [int(x) for x in regs_t if 3 <= int(x) <= 10]; lo_o = [int(x) for x in regs_o if 3 <= int(x) <= 10]
-        m = re.search(rf"\b{re.escape(sym.name)}\s*\(([^)]*)\)\s*\{{", body)
-        if m and hi_t and lo_o and max(hi_t) > max(lo_o):
-            cur = m.group(1).strip()
-            n_cur = 0 if cur in ("", "void") else cur.count(",") + 1
-            for extra in range(1, 4):
-                pads = ", ".join(f"u32 unused{n_cur + i}" for i in range(extra))
-                newp = pads if cur in ("", "void") else cur + ", " + pads
-                candidates.append((f"+{extra} unused parameter(s)", body[:m.start(1)] + newp + body[m.end(1):]))
-    fam_marks.append((len(candidates), "struct"))
-    candidates += stack_aggregates(body, diffs)
-    # target-driven immediates: a row where only an immediate differs names ours and retail's
-    # value; the C literal that produced ours (as decimal, hex, or a struct stride) is replaced
-    imm_pairs = []
-    for t, o in diffs:
-        if not t or not o or t.split()[0] != o.split()[0]:
-            continue
-        ti = re.findall(r"(?<![\w(])(-?0x[0-9a-f]+|-?\d+)(?![\w(])", t); oi = re.findall(r"(?<![\w(])(-?0x[0-9a-f]+|-?\d+)(?![\w(])", o)
-        if len(ti) == len(oi) and re.sub(r"\b[rf]\d+\b", "R", re.sub(r"(-?0x[0-9a-f]+|-?\d+)", "#", t)) == re.sub(r"\b[rf]\d+\b", "R", re.sub(r"(-?0x[0-9a-f]+|-?\d+)", "#", o)):
-            for a, b in zip(ti, oi):
-                if a != b:
-                    imm_pairs.append((int(b, 0), int(a, 0), t.split()[0]))
-    seen_imm = set()
-    for ours_v, retail_v, mn in imm_pairs:
-        if (ours_v, retail_v) in seen_imm:
-            continue
-        seen_imm.add((ours_v, retail_v))
-        forms = {str(ours_v), f"0x{ours_v:X}", f"0x{ours_v:x}"}
-        if ours_v < 0:
-            forms |= {str(ours_v & 0xFFFF), f"0x{ours_v & 0xFFFF:X}"}
-        for form in forms:
-            for m in list(re.finditer(rf"(?<![\w.]){re.escape(form)}(?![\w.])", body))[:6]:
-                rep = f"0x{retail_v:X}" if form.startswith("0x") else str(retail_v)
-                candidates.append((f"imm {form} -> {rep} ({mn})", body[:m.start()] + rep + body[m.end():]))
-        if mn.rstrip(".") in ("lis", "addis", "subis", "oris", "xoris", "andis"):
-            # a high-half immediate: the C literal is a 32-bit constant whose upper half (with the
-            # low half's sign carried for addis/subis) is ours; retail's literal differs by the
-            # delta in the upper half, e.g. `== 0x1FFFF` (subis 1) where retail has 0x3FFFF (subis 3)
-            delta = (retail_v - ours_v) << 16
-            for lm in list(re.finditer(r"(?<![\w.])(0[xX][0-9A-Fa-f]+|\d+)(?![\w.])", body))[:64]:
-                L = int(lm.group(1), 0)
-                if L < 0x10000 or not ((L >> 16) & 0xFFFF == ours_v & 0xFFFF or ((L + 0x8000) >> 16) & 0xFFFF == ours_v & 0xFFFF):
-                    continue
-                nv = L + delta
-                if nv < 0:
-                    continue
-                rep = f"0x{nv:X}" if lm.group(1).lower().startswith("0x") else str(nv)
-                candidates.append((f"imm high half {lm.group(1)} -> {rep} ({mn})", body[:lm.start()] + rep + body[lm.end():]))
-        if mn == "mulli" and retail_v > ours_v:
-            # a stride: the struct the loop indexes is smaller than retail's; pad its tail
-            for sm in re.finditer(r"((?:typedef\s+)?struct\s+\w*\s*\{)([^}]*)(\})", body):
-                candidates.append((f"struct tail padding +{retail_v - ours_v} (stride {ours_v}->{retail_v})",
-                                   body[:sm.start(2)] + sm.group(2).rstrip() + f"\n    u8 pad_tail[{retail_v - ours_v}];\n" + body[sm.end(2):]))
-    # a compare of the wrong signedness where the operand is a header field: cast at the compare
-    if any(t and o and (t.split()[0], o.split()[0]) in (("cmpwi", "cmplwi"), ("cmplwi", "cmpwi"), ("cmpw", "cmplw"), ("cmplw", "cmpw")) for t, o in diffs):
-        want_signed = any(t and t.split()[0] in ("cmpwi", "cmpw") for t, o in diffs)
-        cast = "(s32)" if want_signed else "(u32)"
-        for m in list(re.finditer(r"\bif \(([A-Za-z_][\w>.\-\[\]]*) (==|!=|<|>|<=|>=) ", body))[:12]:
-            candidates.append((f"cast {cast} at compare of {m.group(1)}", body[:m.start(1)] + cast + m.group(1) + body[m.end(1):]))
-    # struct layout: every field offset off by the same delta means padding is missing or extra
-    # at the front of the block-private struct; two deltas mean two fields are in the wrong order
-    deltas = set()
-    for t, o in diffs:
-        if not t or not o or t.split()[0] != o.split()[0]:
-            continue
-        mt = re.search(r"(-?0x[0-9a-f]+|-?\d+)\((r\d+)\)", t); mo = re.search(r"(-?0x[0-9a-f]+|-?\d+)\((r\d+)\)", o)
-        if mt and mo and mt.group(2) == mo.group(2) and mt.group(2) != "r1" and mt.group(1) != mo.group(1):
-            deltas.add(int(mt.group(1), 0) - int(mo.group(1), 0))
-    struct_spans = [(m.start(), m.end(), m.group(1)) for m in re.finditer(r"(?:typedef\s+)?struct\s+\w*\s*\{([^}]*)\}", body)]
-    if len(deltas) == 1 and struct_spans:
-        delta = next(iter(deltas))
-        for s0, e0, inner in struct_spans:
-            if delta > 0:
-                new_inner = f"\n    u8 _pad_pre[0x{delta:X}];" + inner
-                candidates.append((f"struct +{delta} front padding", body[:s0] + body[s0:e0].replace(inner, new_inner, 1) + body[e0:]))
-            else:
-                m = re.match(r"\s*u8\s+(\w+)\[(0x[0-9A-Fa-f]+|\d+)\];", inner)
-                if m and int(m.group(2), 0) + delta >= 0:
-                    n = int(m.group(2), 0) + delta
-                    rep = "" if n == 0 else f"\n    u8 {m.group(1)}[0x{n:X}];"
-                    candidates.append((f"struct {delta} front padding", body[:s0] + body[s0:e0].replace(inner, re.sub(r"^\s*u8\s+\w+\[[^\]]+\];", rep, inner, count=1), 1) + body[e0:]))
-    if len(deltas) >= 2 and struct_spans:
-        for s0, e0, inner in struct_spans:
-            lines = inner.split("\n")
-            fl = [i for i, ln in enumerate(lines) if re.match(r"\s*[A-Za-z_][\w ]*\*?\s*\w+(\[[^\]]*\])?;", ln)]
-            for a, b in zip(fl, fl[1:]):
-                sw = list(lines); sw[a], sw[b] = sw[b], sw[a]
-                candidates.append((f"swap fields {lines[a].strip()} <-> {lines[b].strip()}", body[:s0] + body[s0:e0].replace(inner, "\n".join(sw), 1) + body[e0:]))
-                if len(candidates) > max_candidates:
-                    break
-    fam_marks.append((len(candidates), "branch"))
-    # two adjacent independent statements in the other order (the lab closed a function this way)
-    if span:
-        stmts_ = [(m.start(), m.end(), m.group(0)) for m in re.finditer(r"^[ \t]*[^\n{}]+;\n", body[span[0]:span[1]], re.M)]
-        for (s1, e1, t1), (s2, e2, t2) in list(zip(stmts_, stmts_[1:]))[:40]:
-            if e1 != s2:
-                continue
-            ids1 = set(re.findall(r"[A-Za-z_]\w*", t1)); ids2 = set(re.findall(r"[A-Za-z_]\w*", t2))
-            if ids1 & ids2 or ("(" in t1 and "(" in t2):
-                continue
-            candidates.append((f"swap `{t1.strip()[:24]}` / `{t2.strip()[:24]}`", body[:span[0] + s1] + t2 + t1 + body[span[0] + e2:]))
-    # inverted branch: negate one `if` condition and swap its then/else blocks
-    if any(t and o and (t.split()[0], o.split()[0]) in BRANCH_INV for t, o in diffs):
-        for m in list(re.finditer(r"\bif\s*\(", body))[:16]:
-            depth, i = 1, m.end()
-            while i < len(body) and depth:
-                depth += body[i] == "("; depth -= body[i] == ")"; i += 1
-            cond = body[m.end():i - 1]
-            j = i
-            while j < len(body) and body[j] in " \t\r\n": j += 1
-            if j >= len(body) or body[j] != "{":
-                continue
-            d2, k = 1, j + 1
-            while k < len(body) and d2:
-                d2 += body[k] == "{"; d2 -= body[k] == "}"; k += 1
-            then_blk = body[j:k]
-            rest = body[k:]
-            me = re.match(r"\s*else\s*(\{)", rest)
-            if me:
-                d3, e = 1, k + me.end()
-                while e < len(body) and d3:
-                    d3 += body[e] == "{"; d3 -= body[e] == "}"; e += 1
-                else_blk = body[k + me.end() - 1:e]
-                neg = f"!({cond})" if not re.fullmatch(r"\s*!\((.*)\)\s*", cond) else re.fullmatch(r"\s*!\((.*)\)\s*", cond).group(1)
-                text = body[:m.end()] + neg + ") " + else_blk + " else " + then_blk + body[e:]
-                candidates.append((f"invert if at {m.start()}", text))
-            else:
-                # `if (c) { return A; } ... return B;` is equivalent to `if (!c) { rest } return A;` only in
-                # simple shapes; the cheap variant that changes codegen: swap == / != in the condition
-                if "==" in cond or "!=" in cond:
-                    c2 = cond.replace("==", "\0").replace("!=", "==").replace("\0", "!=")
-                    candidates.append((f"flip ==/!= at {m.start()}", body[:m.end()] + c2 + body[i - 1:]))
-    def family_of(idx: int) -> str:
-        f = "misc"
-        for k, fam in fam_marks:
-            if k <= idx:
-                f = fam
-        return f
-    # the rows each family is meant to repair, by the kind classify_rows gives the base diff
-    FAMILY_KINDS = {"type": ("ins:ext", "ins:cmp", "op:cmp", "op:ext", "op:rlwinm", "op:extsh", "op:extsb"),
-                    "float": ("ins:float", "op:f"), "sym": ("reloc",), "struct": ("imm",), "branch": ("ins:branch", "op:b"),
-                    "params": ("regalloc",), "decl": (), "misc": ()}
-    kinds_rows = stuck.row_kinds(lrows, rrows)
-    def taddr(row):
-        ins_ = row.get("instruction") or {}
-        return ins_.get("address")
-    # rows are addressed by word index into the retail function (objdiff rows carry the address)
-    def _addr(a):
-        if a is None:
-            return None
-        # objdiff serializes u64 addresses as decimal strings, not hex.
-        return int(a)
-    fn_addr = next((_addr(taddr(l)) for l in lrows if taddr(l) is not None), None)
-    def tidx(row):
-        a = _addr(taddr(row))
-        return None if a is None or fn_addr is None else (a - fn_addr) // 4
-    base_diff = {tidx(l) for l, k in zip(lrows, kinds_rows) if k is not None and tidx(l) is not None}
-    base_extra = sum(1 for l, k in zip(lrows, kinds_rows) if k is not None and taddr(l) is None)
-    def targets(fam: str):
-        pats = FAMILY_KINDS.get(fam, ())
-        if not pats:
-            return set(base_diff)
-        return {tidx(l) for l, k in zip(lrows, kinds_rows) if k and tidx(l) is not None and any(k.startswith(pp) for pp in pats)}
-
-    import difflib
-    def spans_of(text: str):
-        sm = difflib.SequenceMatcher(None, body, text, autojunk=False)
-        return [(i1, i2, text[j1:j2]) for tag, i1, i2, j1, j2 in sm.get_opcodes() if tag != "equal"]
-    def compose(edit_lists):
-        allspans = sorted((sp for e in edit_lists for sp in e), key=lambda x: x[0])
-        for a, b in zip(allspans, allspans[1:]):
-            if b[0] < a[1]:
-                return None  # overlapping: not composable
-        t = body
-        for s0, e0, rep in reversed(allspans):
-            t = t[:s0] + rep + t[e0:]
-        return t
-
-    target = p.target_object_for(sym)
-    tw = oracle.words(target, sym.name) if target else None
-    bdir = STATE_DIR / "fixup" / "batch" / key.replace(":", "__")
-    bdir.mkdir(parents=True, exist_ok=True)
-
-    def evaluate(texts: List[str]):
-        """Batch compile, then per candidate: (score %, rows fixed, rows broken, extra rows)."""
-        for old in bdir.glob("*.c"):
-            old.unlink()
-        srcs = []
-        for i_, t_ in enumerate(texts):
-            f = bdir / f"c{i_}.c"; f.write_text(t_); srcs.append(f)
-        objs = oracle.compile_many(p, sym.module, srcs, bdir / "obj", base.mw_version, getattr(base, "extra_cflags", None)) if target and tw else {}
-        res = []
-        for i_, t_ in enumerate(texts):
-            o = objs.get(srcs[i_])
-            ow = oracle.words(o, sym.name) if o else None
-            if not ow:
-                res.append(None); continue
-            pct, bad = oracle.word_score(tw, ow)
-            now_diff = set(bad)
-            extra = max(0, len(ow) - len(tw))
-            fixed = base_diff - now_diff
-            broken = now_diff - base_diff
-            res.append((pct, fixed, broken, extra))
-        return res
-
-    best_text, best_pct = None, out["best"]
-    confirmed = {}
-
-    def accept(label, text):
-        if text not in confirmed:
-            confirmed[text] = check(text)
-        result = confirmed[text]
-        if result.ok and (result.matched or result.matched_pool):
-            out.update(matched=True, body=text, label=label, best=100.0,
-                       secs=round(time.time() - t0, 2))
-            return True
-        return False
-
-    cand = candidates[:max_candidates]
-    if cand and target and time.time() - t0 < budget_s:
-        scored = evaluate([body] + [t_ for _, t_ in cand])
-        best_pct = scored[0][0] if scored[0] else 0.0
-        singles = scored[1:]
-        out["tried"] = len(cand)
-        keepers = []
-        for i_, ((label, text), r_) in enumerate(zip(cand, singles)):
-            if r_ is None:
-                continue
-            pct, fixed, broken, extra = r_
-            if pct >= 100.0:
-                # Masked words omit relocation targets. An exact code shape with
-                # a wrong symbol/string must not hide a later fully exact repair.
-                if accept(label, text):
-                    return out
-            if pct > best_pct:
-                best_pct, best_text = pct, text; out["best_label"] = label
-            own = fixed & targets(family_of(i_))
-            # a keeper repairs rows of its own kind without breaking any row that was right
-            if own and not broken and extra <= base_extra:
-                keepers.append((len(own), i_, label, spans_of(text)))
-        if best_pct < 100.0 and keepers:
-            keepers.sort(key=lambda x: -x[0])
-            # 1. the composition of every keeper (disjoint edits): the fixpoint of the single repairs
-            # 2. every pair among the top keepers, for the cases where two edits only pay together
-            combos = []
-            allk = compose([k[3] for k in keepers])
-            if allk is not None and len(keepers) > 1:
-                combos.append(("all keepers: " + " + ".join(k[2] for k in keepers[:6]), allk))
-            top = keepers[:12]
-            for x in range(len(top)):
-                for y in range(x + 1, len(top)):
-                    t_ = compose([top[x][3], top[y][3]])
-                    if t_ is not None:
-                        combos.append((f"{top[x][2]} + {top[y][2]}", t_))
-            if combos and time.time() - t0 < budget_s:
-                res2 = evaluate([t_ for _, t_ in combos])
-                out["tried"] += len(combos)
-                for (label, text), r_ in zip(combos, res2):
-                    if r_ and r_[0] > best_pct:
-                        best_pct, best_text = r_[0], text; out["best_label"] = label
-                    if r_ and r_[0] >= 100.0:
-                        if accept(label, text):
-                            return out
-        if best_text is not None:
-            r = confirmed.get(best_text) or check(best_text)
-            if r.ok:
-                pct2 = r.percent_adjusted or r.percent
-                out["best"] = max(out["best"], pct2)
-                if r.matched or r.matched_pool:
-                    out.update(matched=True, body=best_text, label=out.get("label") or out.get("best_label"))
-    # Targeted repairs get the budget first: register permutations must not starve a
-    # one-declaration type or relocation fix.
-    left = budget_s - (time.time() - t0)
-    if not out["matched"] and base.percent >= 85.0 and _depth == 0 and left > 0:
-        from . import regalloc
-        # A greedy optimizer rewrite can improve the word score while making the
-        # exact declaration order unreachable. Retain the original seed too,
-        # dividing the existing time budget rather than discarding that branch.
-        seeds = list(dict.fromkeys([best_text or body, body]))
-        out["regalloc"] = dict(tried=0, best=0, secs=0, searches=[])
-        for i, seed in enumerate(seeds):
-            left = budget_s - (time.time() - t0)
-            if left <= 0:
-                break
-            ra = regalloc.search(p, symbol, seed, budget_s=min(left, 8.0) / (len(seeds) - i),
-                                 mw_version=base.mw_version, extra_cflags=base.extra_cflags)
-            stats = out["regalloc"]
-            stats["tried"] += ra.get("tried", 0)
-            stats["best"] = max(stats["best"], ra.get("best", 0))
-            stats["secs"] += ra.get("secs", 0)
-            stats["searches"].append(dict(seed="original" if seed == body else "repaired",
-                                         tried=ra.get("tried"), best=ra.get("best"), secs=ra.get("secs")))
-            out["tried"] += ra.get("tried", 0)
-            if ra.get("matched") and ra.get("body"):
-                out.update(matched=True, body=ra["body"], best=100.0,
-                           label=f"regalloc {ra.get('stage')}: {ra.get('label')}", secs=round(time.time() - t0, 2))
-                return out
-    # a plateau usually has more than one cause: when repairs improved the body without matching,
-    # search again from the improved body (bounded by the budget)
-    if not out["matched"] and best_text is not None and out["best"] > out["base"] + 0.05 and _depth < 2:
-        left = budget_s - (time.time() - t0)
-        if left > 2:
-            nxt = try_fix(p, symbol, best_text, budget_s=left, max_candidates=max_candidates, _depth=_depth + 1,
-                          base=check(best_text))
-            out["tried"] += nxt["tried"]
-            if nxt["best"] > out["best"]:
-                out["best"] = nxt["best"]; out["best_label"] = f"{out.get('best_label')} + {nxt.get('best_label')}"
-            if nxt.get("matched"):
-                out.update(matched=True, body=nxt["body"], label=f"{out.get('best_label')} + {nxt.get('label')}")
-            out["rounds"] = 1 + nxt.get("rounds", 0)
-    if not out["matched"] and best_text is not None and out["best"] > out["base"]:
-        out["best_body"] = best_text  # the improved body: the search's next stage starts from it
-    out["secs"] = round(time.time() - t0, 1)
-    return out
+            integrate(p,{'functions':functions},inputs,output)
+        finally:
+            result_path=output/'integration.json'
+            if result_path.exists():
+                result=json.loads(result_path.read_text())
+                rejected=(result.get('verification') or {}).get('rejected', [])
+                cache_path=output/'cache.json'
+                cache=json.loads(cache_path.read_text()) if cache_path.exists() else {}
+                for symbol in rejected:
+                    row=report['best'][symbol]
+                    row.update(matched=False,link_rejected=True)
+                    if row['id'] in cache:
+                        cache[row['id']].update(matched=False,link_rejected=True)
+                cache_path.write_text(json.dumps(cache))
+                (output/'report.json').write_text(json.dumps(report))
+    summary={k:report[k] for k in ('compiled','cached','compile_seconds','seconds')}
+    summary.update(functions=len(report['best']),variants=len(report['records']),
+                   matches=[s for s,r in report['best'].items() if r.get('matched')])
+    print(json.dumps(summary,indent=2));return summary

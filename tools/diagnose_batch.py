@@ -9,7 +9,7 @@ from collections import Counter, defaultdict
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
-from fzgx import fixup, oracle, stuck
+from fzgx import oracle, stuck
 from fzgx.ledger import Ledger
 from fzgx.project import ROOT, STATE_DIR, Project
 
@@ -182,46 +182,6 @@ def mine_transcripts(batch, output):
     print(json.dumps(summary, indent=2))
 
 
-def repair_saved(output):
-    """Replay release fixup on frozen candidates; never claim or install code."""
-    inputs = json.loads((output / 'inputs.json').read_text())
-    started = time.monotonic()
-    results, manifest = {}, {}
-    # A submit may replace retail split objects. Keep them stable for the pass;
-    # individual functions have separate compiler scratch directories.
-    with oracle.build_lock():
-        project = Project()
-        def repair(item):
-            symbol, record = item
-            source = Path(record['source'])
-            body = source.read_text()
-            if hashlib.sha256(body.encode()).hexdigest() != record['sha256']:
-                raise ValueError(f'{symbol}: frozen source changed')
-            base = oracle.check(project, symbol, 1000, source=source,
-                                mw_version=record['mw'], extra_cflags=record['flags'])
-            result = fixup.try_fix(project, symbol, body, budget_s=6, base=base)
-            if result.get('matched'):
-                path = source.with_name('repaired.c')
-                path.write_text(result.pop('body'))
-                result['candidate'] = dict(path=str(path), sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
-                                           mw=base.mw_version, flags=base.extra_cflags, percent=100,
-                                           kind='deterministic-repair', repair=result.get('label', 'baseline'))
-            result.pop('body', None)
-            result.pop('best_body', None)
-            return symbol, result
-        with ThreadPoolExecutor(max_workers=4) as workers:
-            for symbol, result in workers.map(repair, inputs.items()):
-                results[symbol] = result
-                if result.get('candidate'):
-                    manifest[symbol] = result['candidate']
-                    print(f'{symbol}: {result.get("label", "baseline")}', flush=True)
-    summary = dict(functions=len(results), matched=len(manifest), candidates=sum(r['tried'] for r in results.values()),
-                   secs=round(time.monotonic() - started, 3))
-    (output / 'repairs.json').write_text(json.dumps(dict(summary=summary, functions=results), indent=2) + '\n')
-    (output / 'repair-manifest.json').write_text(json.dumps(manifest, indent=2) + '\n')
-    print(json.dumps(summary))
-
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--batch')
@@ -230,11 +190,8 @@ if __name__ == '__main__':
     parser.add_argument('--min-percent', type=float, default=97)
     parser.add_argument('--saved', action='store_true', help='export exact candidates from saved results without recompiling')
     parser.add_argument('--transcripts', action='store_true', help='mine completed app-server logs without compiling or calling models')
-    parser.add_argument('--repair', action='store_true', help='run current release fixup on frozen inputs, saving exact candidates')
     args = parser.parse_args()
-    if args.repair:
-        repair_saved(args.output.resolve())
-    elif args.transcripts and args.batch:
+    if args.transcripts and args.batch:
         mine_transcripts(args.batch, args.output.resolve())
     elif args.saved:
         save_matches(args.output.resolve())

@@ -30,8 +30,8 @@ them `value-flow`. Match acceptance is unchanged.
 
 ## Bounded compiler-response experiment
 
-`tools/solve_regalloc.py` is an explicit experiment, not the production
-replacement for `regalloc.search`. It parses expression precedence, handles
+The original bounded compiler-response experiment preceded consolidation into
+`fzgx fixup`. Its candidate generators and response algebra now share the engine. It parses expression precedence, handles
 casts and repeated expression sites, probes nested declaration order, scopes,
 materialization and optimizer state, then attempts to combine observed
 repairs. It uses both disjoint repaired bits and bounded GF(2) response
@@ -61,11 +61,12 @@ No equation-composed candidate closed in this corpus. Isolated commutations,
 simultaneous repeated commutations, and explicit shared floating temporaries
 also failed to close `fn_80015D7C`; more spellings alone lack evidence here.
 
-Reproduce from the frozen diagnosis directory:
+Run the consolidated engine on the frozen diagnosis directory (the measurements
+above describe the original experiment, not this expanded candidate set):
 
 ```sh
-uv run tools/solve_regalloc.py --corpus .fzgx/near95-fast-batch \
-    --output .fzgx/regsolve-replay --probes 32
+uv run tools/fzgx.py fixup --corpus .fzgx/near95-fast-batch \
+    --output .fzgx/fixup/replay --max-candidates 32
 ```
 
 Per-function hashes, attempt IDs, settings and measurements are committed in
@@ -86,7 +87,7 @@ The batch remains stopped. No model sessions were launched for this work.
 
 ## Exact allocator capture and replay
 
-`tools/capture_mwgraph.py` now reads the **actual** interference graph before
+`fzgx fixup --capture` reads the **actual** interference graph before
 and after `SelectColors` in SHA-256-pinned GC/1.2.5n and GC/1.3.2. Native Wibo
 runs under local LLDB; the compiler and generated instructions are not patched.
 Sources with identical compiler settings share an invocation. Function-entry
@@ -150,14 +151,14 @@ compiler flags/hashes, and header/source hashes. It is a repair corpus, not a
 unit-test suite. Replay it without MWCC, LLDB, or the original scratch directory:
 
 ```sh
-uv run tools/capture_mwgraph.py --archive state/repairs/register_graphs_20260911.json.gz
+uv run tools/fzgx.py fixup --archive state/repairs/register_graphs_20260911.json.gz
 ```
 
 Capture a frozen diagnosis corpus, or recompute constraints from its cache:
 
 ```sh
-uv run tools/capture_mwgraph.py --corpus .fzgx/near95-fast-batch --output .fzgx/mwgraph
-uv run tools/capture_mwgraph.py --corpus .fzgx/near95-fast-batch --output .fzgx/mwgraph --replay
+uv run tools/fzgx.py fixup --capture --corpus .fzgx/near95-fast-batch --output .fzgx/mwgraph
+uv run tools/fzgx.py fixup --capture --corpus .fzgx/near95-fast-batch --output .fzgx/mwgraph --replay
 ```
 
 Capture requires macOS's `xcrun lldb` and the repository's native Wibo with its
@@ -215,9 +216,9 @@ The remaining three GC/1.3 corpus functions also captured and replayed exactly;
 There is no runtime dependency on donor sources or modified compiler binaries.
 
 ```sh
-uv run tools/capture_mwgraph.py --corpus CORPUS --output CAPTURES --all-near
-uv run tools/repair_mwgraph.py --corpus CORPUS --captures CAPTURES --output REPAIRS --next-corpus IMPROVED
-uv run tools/repair_mwgraph.py --corpus CORPUS --output REPAIRS --saved --apply
+uv run tools/fzgx.py fixup --capture --corpus CORPUS --output CAPTURES
+uv run tools/fzgx.py fixup --corpus CORPUS --captures CAPTURES --output REPAIRS
+uv run tools/fzgx.py fixup --corpus CORPUS --output REPAIRS --saved --apply
 ```
 
 Recapture after changing source, headers or compiler settings. Improved corpora
@@ -231,10 +232,74 @@ improved seeds (including the five further improvements). Reproduce the accepted
 source transformations without scratch files or a compiler:
 
 ```sh
-uv run tools/repair_mwgraph.py --archive state/repairs/mwgraph_repairs_20260911.json.gz
+uv run tools/fzgx.py fixup --archive state/repairs/mwgraph_repairs_20260911.json.gz
 ```
 
 This reproduces all 14 source hashes; compilation and link acceptance are separate
 checks. `state/repairs/mwgraph_imports.json` records compiler settings, transforms,
 owning source and verification commits. No unit tests were added and no model
 batch was resumed.
+
+
+## Consolidated engine
+
+`fzgx fixup` is the only repair command. Session release, lifter repair and the
+orchestrator API invoke the same engine in `tools/fzgx/fixup.py`.
+The former regalloc, spell, line-repair, lab, response-solver and graph-repair
+search loops are removed. Their source transformations live in
+`fixup_source.py`; retail-derived candidates and line diagnostics live in
+`fixup_evidence.py`. These helpers do not compile, run searches, cache or submit.
+Stock allocator capture/replay lives in `mwgraph.py` and is dispatched through
+this command too. SDK/data import and `stuck` remain separate because they import
+sources/data or diagnose failures, rather than running competing fixup searches.
+
+The engine batches compilation across symbols by module/compiler/flags, caches
+by source, headers, compiler flags/binary, retail object and oracle fingerprint, and
+confirms potential matches with the relocation-aware oracle. A bounded frontier
+retains distinct emitted bodies; all candidate families share its limits.
+Compiler-response compositions return to that same evaluator. There is one
+report and one cache in the output directory; `--saved --apply` verifies and
+integrates completed results without repeating search. Frozen sources and their
+compiler settings survive every round. Historical scores select candidates;
+current module targets determine their actual scores.
+
+```sh
+uv run tools/fzgx.py fixup --min-percent 95 --output .fzgx/fixup/near95
+uv run tools/fzgx.py fixup SYMBOL --body candidate.c --output .fzgx/fixup/one
+uv run tools/fzgx.py fixup --output .fzgx/fixup/near95 --saved --apply
+```
+
+The default corpus includes every distinct saved C/compiler combination above
+the threshold, not only one best body per function. `--rounds 0` rechecks and
+freezes that corpus without searching. `inputs.json`/`results.json` expose the
+best unfinished seeds for graph capture; `report.json` retains all variants.
+Use `--corpus PATH` to repair an existing frozen corpus. `--rounds`, `--beam`,
+`--max-candidates`, and optional total `--budget` bound the single shared search.
+
+
+Consolidation validation used 4,242 distinct saved C/compiler combinations across
+399 unfinished functions. One round evaluated 22,896 additional candidates:
+299.11 seconds cold, including 261.36 seconds in compilation/oracle evaluation.
+The cached repeat, after replacing whole-body character LCS in edit composition
+with line alignment and local span trimming, reused 27,138 results and compiled
+one new combination: 14.29 seconds total, 0.132 seconds in compiler evaluation.
+These are different cold/warm workloads, not a claimed 21x compiler speedup.
+The round improved 153 best word scores and found 12 function-level matches.
+
+Nine passed all target hashes immediately (2,596 bytes). Two other candidates
+emitted 1,004 bytes of unused static helper copies outside their matching
+functions. The unified engine now rejects such extra REL functions before
+integration and generates explicit inline helpers. The two repairs passed the
+stock object comparison in 0.49 seconds for 34 compiles, then one additional
+cached-pass compile selected the all-helpers rewrite. Both subsequently passed
+all 16 hashes: **11 functions / 3,564 bytes integrated** in total during
+consolidation, with source and recipe provenance in `state/repairs/fixup_imports.json`. The remaining original
+candidate is lint-rejected; it is not counted as integrated.
+
+Known link-rejected source/compiler combinations are retained with header and
+oracle fingerprints so unchanged saved inputs are not resubmitted repeatedly.
+Best bodies also retain current relocation-aware percentages; the shared saved
+candidate collector consumes those reports for subsequent repair/model batches.
+The one-time target-index history migration is complete: its standalone auditor
+is removed, and its immutable migration/provenance records remain in `state/`.
+All future compilation goes through module-qualified targets in the engine.

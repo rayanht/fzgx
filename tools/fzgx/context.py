@@ -366,7 +366,7 @@ def build_context(project: Project, ledger: Optional[Ledger], symbol: str,
                 shown_total = False
                 if total and tgt:
                     try:
-                        from . import repair as _repair
+                        from . import fixup_evidence as _repair
                         tdir = STATE_DIR / "lift" / "ctx"; tdir.mkdir(parents=True, exist_ok=True)
                         tf = tdir / f"{project.key(sym).replace(':', '__')}_total.c"; tf.write_text(total)
                         mw_, extra_ = _oracle.version_for(project, sym, tf)

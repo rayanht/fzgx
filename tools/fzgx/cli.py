@@ -364,31 +364,9 @@ def cmd_why_link(a, p):
 
 
 
-def cmd_sweep(a, p):
-    if a.symbol:
-        body = Path(a.body).read_text() if a.body else api._attempt_text(p, a.symbol)
-        if body is None:
-            print("no body: pass --body or have a saved attempt"); return 2
-        r = api.sweep_one(p, a.symbol, body, a.budget)
-        print(json.dumps({k: v for k, v in r.items() if k not in ("body", "best_body")}, indent=1))
-        if r.get("body") and a.out:
-            Path(a.out).write_text(r["body"]); print(f"wrote {a.out}")
-        return 0 if r.get("matched") else 1
-    out = api.sweep(p, a.module, a.min_percent, a.limit, a.workers, a.drafts, a.max_percent, a.budget, not a.no_submit, a.max_size, not a.fixup_only)
-    if a.json:
-        _print(out, True); return 0
-    print(f"{out['candidates']} bodies: {out['checked']} checked, {out['cached']} memoised; "
-          f"{len(out['submitted'])} matched as saved, {len(out['pool'])} pool, {len(out['fixed'])} fixed, {len(out['spelled'])} spelled")
-    for key, label in out["fixed"]:
-        print(f"  fixup  {key:24s} {label}")
-    for key, pct, path in out["spelled"]:
-        print(f"  spell  {key:24s} {' + '.join(path)[:100]}")
-    sp = out.get("spell") or {}
-    if sp:
-        print(f"spell: {sp.get('searched')} searched, {sp.get('skipped')} memoised, {sp.get('improved')} improved, {sp.get('candidates')} candidates, {sp.get('secs')} s; families {sp.get('families')}")
-    lint = [k for k, v in out["still"] if v == "lint"]
-    if lint:
-        print(f"still refused by the lint: {lint}")
+def cmd_fixup(a, p):
+    from . import fixup
+    fixup.command(p, a)
     return 0
 
 
@@ -525,14 +503,21 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--roots", nargs="*", help="dir:flagset pairs to compile instead of the SDK layout, e.g. src:smb")
     s = sub.add_parser("why-link", help="link with one rejected match flipped to Matching and name the bytes that differ"); s.set_defaults(fn=cmd_why_link)
     s.add_argument("symbol")
-    s = sub.add_parser("sweep", help="the search over every saved body: re-check, fixup, spelling search; submits matches. One symbol: the same stages on one body"); s.set_defaults(fn=cmd_sweep)
-    s.add_argument("symbol", nargs="?"); s.add_argument("--body"); s.add_argument("--out")
-    s.add_argument("--module"); s.add_argument("--min-percent", type=float, default=80.0); s.add_argument("--max-percent", type=float, default=100.0)
-    s.add_argument("--limit", type=int, default=2000); s.add_argument("--workers", type=int, default=12); s.add_argument("--budget", type=float, default=10.0)
-    s.add_argument("--drafts", action="store_true", help="the lifter's drafts (fzgx trivial) instead of the agents' saved bodies")
-    s.add_argument("--no-submit", action="store_true")
-    s.add_argument("--fixup-only", action="store_true", help="recheck and repair saved bodies without the spelling beam")
-    s.add_argument("--max-size", type=int, help="only functions up to N bytes")
+    s = sub.add_parser('fixup', help='all deterministic repairs: saved corpus, one body, graph capture and verified integration'); s.set_defaults(fn=cmd_fixup)
+    s.add_argument('symbol', nargs='?'); s.add_argument('--body', type=Path)
+    s.add_argument('--corpus', type=Path); s.add_argument('--output', type=Path)
+    s.add_argument('--captures', type=Path, help='validated PCode/allocator evidence for selected seeds')
+    s.add_argument('--capture', action='store_true', help='capture stock allocator evidence for --corpus into --output')
+    s.add_argument('--replay', action='store_true', help='validate existing --capture output')
+    s.add_argument('--archive', type=Path, help='reproduce portable archived repair evidence')
+    s.add_argument('--saved', action='store_true', help='reuse this output report without repeating search')
+    s.add_argument('--apply', action='store_true', help='submit exact results, verify all 16 hashes and commit')
+    s.add_argument('--min-percent', type=float, default=95); s.add_argument('--max-percent', type=float, default=100)
+    s.add_argument('--module'); s.add_argument('--max-size', type=int); s.add_argument('--limit', type=int)
+    s.add_argument('--rounds', type=int, default=2); s.add_argument('--beam', type=int, default=3)
+    s.add_argument('--max-candidates', type=int, default=80, help='per frontier seed per round, shared by every repair family')
+    s.add_argument('--budget', type=float, help='total search seconds, including compilation')
+    s.add_argument('--drafts', action='store_true', help='include saved lifter bodies')
     s = sub.add_parser("stuck", help="classify plateaued attempts (>= N%%) by failure mode from the object diff"); s.set_defaults(fn=cmd_stuck)
     s.add_argument('--seeds', type=Path, help='analyse saved candidates with their recorded compiler settings')
     s.add_argument("--min-percent", type=float, default=80.0); s.add_argument("--module"); s.add_argument("--workers", type=int, default=12)

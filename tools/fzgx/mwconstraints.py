@@ -8,7 +8,7 @@ import re
 
 from capstone import Cs, CS_ARCH_PPC, CS_MODE_32, CS_MODE_BIG_ENDIAN
 
-from . import mwgraph, regalloc
+from . import mwgraph, fixup_source
 
 REG = re.compile(r'\b[rf]\d+\b')
 COMMUTE = {'add', 'add.', 'and', 'and.', 'or', 'or.', 'xor', 'xor.',
@@ -109,11 +109,11 @@ def declaration_projection(body, name, capture, witness):
     """
     if witness['status'] != 'selection-witness':
         return None
-    span = regalloc._function_body_span(body, name)
+    span = fixup_source._function_body_span(body, name)
     if span is None:
         return None
-    locals_ = regalloc._locals(body, span)
-    if any(regalloc._init_of(body[a:b]) for a, b, *_ in locals_):
+    locals_ = fixup_source._locals(body, span)
+    if any(fixup_source._init_of(body[a:b]) for a, b, *_ in locals_):
         return None
     nodes = capture['before']['nodes']
     by_name = {}
