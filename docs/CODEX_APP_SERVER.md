@@ -29,6 +29,12 @@ budget bounds auxiliary examples/history only. A `lift_total` seed can include a
 Assignment and preflight use one `claim --check` CLI call in one tool slot.
 A full-width claim queue therefore cannot put every initial check behind all
 the remaining claims before any model starts.
+The local tool queue prioritizes existing sessions over new claims. Shared signature
+and call-constraint caches avoid rebuilding the same source/TU analysis per CLI
+process; source, header, symbol, TU and tooling changes invalidate them. One producer
+builds each cache, then publishes it atomically. Assembly caches also publish atomically.
+Assignment records separate context preparation and initial-check timings; session
+logs record local tool queue and execution times.
 
 The model has five dynamic tools: `write_unit`, `patch_unit`, `check`,
 `read_evidence`, and `release`. Their schemas omit symbol, agent identity,
@@ -82,6 +88,12 @@ mutation, and releases the saved best candidate. Finished threads are unsubscrib
 with an unload delay of zero. SIGTERM follows the same cleanup path. Killing a
 compiler submission halfway through carving is avoided. All accepted source
 still passes all 16 target hashes before being committed.
+SIGTERM sets a batch stop event instead of cancelling workers inside their cleanup.
+Queued claims and tool calls stop before execution; running mutations finish. Cleanup
+is shielded from cancellation and uses `release --save-only`, preserving the saved
+C, compiler settings and score without compiling or running repair searches.
+Ordinary completed releases retain their deterministic repair pass. Insufficient-balance
+errors stop the batch globally so the remaining queue survives for a funded resume.
 
 ## Live verification
 
@@ -123,6 +135,18 @@ uv run tools/seeds/released.py --batch PREVIOUS_BATCH \
 This selects still-unmatched final releases, with no size or score cutoff. It
 excludes functions already integrated since that release. Use the resulting
 manifest with a new batch name; its function count is the full-width `--parallel`.
+For a paused batch, add `--resume --seeds ORIGINAL_MANIFEST`: this selects
+interrupted/failed attempts and unstarted functions, preserving updated C and
+compiler metadata while excluding work that completed normally. Reports distinguish
+interrupted and unstarted work from failures.
+
+On the real `fn_1_EBE4` seed, profiled context plus MWCC preflight fell from
+10.876 to 0.599 seconds with the shared caches warm. The context and 95.11029%
+object score stayed identical; cached signatures and propagated constraints matched
+fresh recovery. A cold cache still needs one producer per source revision/TU.
+A 32-function DeepSeek low run on 2026-09-11 started its first model at 1.003 seconds,
+all 32 by 6.029 seconds, and saved/stopped all workers in 1.368 seconds with no open
+claims. This measures 32 real sessions, not full 512-session startup latency.
 
 ## Runtime isolation and records
 

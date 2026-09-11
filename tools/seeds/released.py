@@ -15,11 +15,16 @@ from fzgx.ledger import Ledger
 from fzgx.project import STATE_DIR, Project
 
 
-def prepare(batch: str, output: Path, seeds: Path | None = None):
+def prepare(batch: str, output: Path, seeds: Path | None = None, resume: bool = False):
     if (output / 'manifest.json').exists():
         raise ValueError(f'{output}: frozen manifest already exists; use a new directory')
     ledger, project = Ledger(), Project()
     original = json.loads(seeds.read_text()) if seeds else {}
+    if resume and not seeds:
+        raise ValueError('--resume requires the original --seeds manifest')
+    results = STATE_DIR / 'runs' / batch / 'results.jsonl'
+    completed = {r['symbol'] for line in results.read_text().splitlines()
+                 if (r := json.loads(line))['outcome'] in ('matched', 'released') and not r.get('error')} if resume and results.exists() else set()
     # Old harnesses could reopen a function with suffixed worker identities.
     # Use its final attempt, not any earlier release followed by a successful retry.
     pattern = re.compile(re.escape(batch) + r'-(?:codex|claude)-\d+(?:-.*)?$')
@@ -27,12 +32,15 @@ def prepare(batch: str, output: Path, seeds: Path | None = None):
     for row in ledger.db.execute('SELECT * FROM attempts ORDER BY id'):
         if pattern.fullmatch(row['agent'] or ''):
             attempts[row['symbol']] = dict(row)
-    if not attempts:
+    if not attempts and not resume:
         raise ValueError(f'{batch}: no worker attempts found')
     if active := [s for s, r in attempts.items() if r['ended'] is None]:
         raise ValueError(f'{batch}: stop and release active attempts first: {active}')
     manifest, bodies, skipped = {}, {}, {}
     for symbol, attempt in attempts.items():
+        if symbol in completed:
+            skipped[symbol] = dict(reason='completed before interruption')
+            continue
         status = ledger.get(symbol)['status']
         if attempt['outcome'] != 'released' or status != 'unmatched':
             skipped[symbol] = dict(outcome=attempt['outcome'], status=status)
@@ -81,11 +89,20 @@ def prepare(batch: str, output: Path, seeds: Path | None = None):
                                 origin=f"ledger:attempt/{attempt['id']}", original_path=str(source),
                                 compiler_origin=compiler_origin, previous_notes=attempt['notes'])
         bodies[symbol] = body
+    if resume:
+        for symbol, record in original.items():
+            if symbol in attempts or symbol in completed or ledger.get(symbol)['status'] != 'unmatched':
+                continue
+            body = Path(record['path']).read_bytes()
+            if hashlib.sha256(body).hexdigest() != record['sha256']:
+                raise ValueError(f'{symbol}: original seed changed')
+            manifest[symbol] = {**record, 'path': str(output / (symbol.replace(':', '__') + '.c'))}
+            bodies[symbol] = body
     output.mkdir(parents=True, exist_ok=True)
     for symbol, body in bodies.items():
         Path(manifest[symbol]['path']).write_bytes(body)
     (output / 'manifest.json').write_text(json.dumps(manifest, indent=2) + '\n')
-    summary = dict(source_batch=batch, functions=len(manifest), bytes=sum(r['size'] for r in manifest.values()),
+    summary = dict(source_batch=batch, resume=resume, functions=len(manifest), bytes=sum(r['size'] for r in manifest.values()),
                    size_cap=None, score_cutoff=None, prior_outcomes=dict(Counter(r['outcome'] for r in attempts.values())),
                    skipped=skipped, manifest=str(output / 'manifest.json'))
     (output / 'selection.json').write_text(json.dumps(summary, indent=2) + '\n')
@@ -97,8 +114,9 @@ def main():
     parser.add_argument('--batch', required=True)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--seeds', type=Path, help='original manifest: recover metadata only for byte-identical C')
+    parser.add_argument('--resume', action='store_true', help='resume interrupted/failed attempts and unstarted seeds, excluding completed work')
     args = parser.parse_args()
-    summary = prepare(args.batch, args.output.resolve(), args.seeds)
+    summary = prepare(args.batch, args.output.resolve(), args.seeds, args.resume)
     print(json.dumps({k: v for k, v in summary.items() if k != 'skipped'}), flush=True)
 
 

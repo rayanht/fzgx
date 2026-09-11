@@ -330,7 +330,10 @@ class Project:
         cache = STATE_DIR / f"asm_index_{self.version}_{module}.json"
         stamp = max((f.stat().st_mtime for f in files), default=0)
         if cache.exists():
-            data = json.loads(cache.read_text())
+            try:
+                data = json.loads(cache.read_text())
+            except (ValueError, FileNotFoundError):
+                data = {}  # Regenerate a cache interrupted by an older writer.
             if data.get("stamp") == stamp and data.get("v") == 3:
                 self._asm_index[module] = {
                     k: Function(self.symbols(module)[k], v["asm"], v["refs"], v["unit"])
@@ -376,10 +379,12 @@ class Project:
                 elif raw.strip().endswith(":"):
                     lines.append(raw.strip())  # local label
         cache.parent.mkdir(parents=True, exist_ok=True)
-        cache.write_text(json.dumps({
+        temporary = cache.with_suffix(f'.{os.getpid()}.tmp')
+        temporary.write_text(json.dumps({
             "stamp": stamp, "v": 3,
             "functions": {k: {"asm": v.asm, "refs": v.refs, "unit": v.unit} for k, v in result.items()},
         }))
+        temporary.replace(cache)
         self._asm_index[module] = result
         return result
 

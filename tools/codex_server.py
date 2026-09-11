@@ -45,6 +45,46 @@ class RpcError(RuntimeError):
         self.code = error.get('code')
 
 
+class BatchStopped(Exception):
+    pass
+
+
+class ToolSlots:
+    """Let active models and cleanup pass the queue of not-yet-started claims."""
+    def __init__(self, limit):
+        self.limit, self.active, self.serial = limit, 0, 0
+        self.waiters = []
+
+    def wake(self):
+        import heapq
+        while self.active < self.limit and self.waiters:
+            _, _, future = heapq.heappop(self.waiters)
+            if not future.done():
+                self.active += 1
+                future.set_result(None)
+
+    @contextlib.asynccontextmanager
+    async def take(self, priority):
+        import heapq
+        future = asyncio.get_running_loop().create_future()
+        self.serial += 1
+        heapq.heappush(self.waiters, (priority, self.serial, future))
+        self.wake()
+        try:
+            await future
+        except BaseException:
+            if future.done() and not future.cancelled():
+                self.active -= 1
+            future.cancel()
+            self.wake()
+            raise
+        try:
+            yield
+        finally:
+            self.active -= 1
+            self.wake()
+
+
 class AppServer:
     def __init__(self, command, directory):
         self.command, self.directory = command, directory
@@ -59,6 +99,7 @@ class AppServer:
         self.overload_retries = 0
         self.process = None
         self.closed = False
+        self.stopping = asyncio.Event()
 
     async def start(self):
         self.directory.mkdir(parents=True, exist_ok=True)
@@ -89,6 +130,8 @@ class AppServer:
         slots = self.start_slots if method in ('thread/start', 'turn/start') else self.control_slots
         async with asyncio.timeout(timeout):
             async with slots:
+                if method in ('thread/start', 'turn/start') and self.stopping.is_set():
+                    raise BatchStopped('batch stopped before model start')
                 delay = 0.05
                 while True:
                     try:
@@ -202,6 +245,7 @@ class Matcher:
         self.error = None
         self.total, self.samples = {}, []
         self.model_started = False
+        self.claim_started = False
         self.tool_calls, self.tool_secs, self.queue_secs = 0, 0.0, 0.0
         self.retries, self.retry_errors = 0, {}
         self.stream_chars, self.stream_events, self.stream_reported = 0, 0, 0.0
@@ -238,6 +282,8 @@ class Matcher:
             if turn.get('error'):
                 self.error = json.dumps(turn['error'])
             self.done.set()
+            if self.error and ('402 Payment Required' in self.error or 'Insufficient Balance' in self.error):
+                self.server.stopping.set()
         elif method == 'error':
             error = params.get('error', params)
             if params.get('willRetry', False):
@@ -249,9 +295,13 @@ class Matcher:
 
     async def cli(self, *args):
         queued = time.monotonic()
-        async with self.slots:
+        async with self.slots.take(1 if args[0] == 'claim' else 0):
+            if self.server.stopping.is_set() and args[0] != 'release':
+                raise BatchStopped('batch stopped before queued tool started')
             started = time.monotonic()
             self.queue_secs += started - queued
+            if args[0] == 'claim':
+                self.claim_started = True
             proc = await asyncio.create_subprocess_exec(
                 sys.executable, str(ROOT / 'tools/fzgx.py'), '--json', *args, cwd=ROOT, env=self.env,
                 stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE, start_new_session=True)
@@ -263,7 +313,12 @@ class Matcher:
             except asyncio.CancelledError:
                 await pending
                 raise
-            self.tool_secs += time.monotonic() - started
+            finally:
+                elapsed = time.monotonic() - started
+                self.tool_secs += elapsed
+                self.log.write(json.dumps(dict(timestamp=utcnow(), method='fzgx/tool/timing',
+                    params=dict(command=args[0], queue_secs=round(started - queued, 3),
+                                execute_secs=round(elapsed, 3), rc=proc.returncode))) + '\n')
             try:
                 return json.loads(stdout)
             except ValueError:
@@ -318,7 +373,8 @@ class Matcher:
                 response = dict(success=result.get('ok', True), contentItems=[dict(type='inputText', text=text)])
             except Exception as error:
                 response = dict(success=False, contentItems=[dict(type='inputText', text=str(error))])
-            await self.server.send(dict(id=rid, result=response))
+            if not self.server.stopping.is_set():
+                await self.server.send(dict(id=rid, result=response))
 
     async def run(self, options, revise=False):
         started = time.monotonic()
@@ -334,7 +390,9 @@ class Matcher:
                     seed['instruction'] = 'Continue this installed work copy from the initial diff using patch_unit.'
                 (self.directory / f'{self.symbol}.assignment.json').write_text(json.dumps(assignment, indent=2) + '\n')
                 setup_secs = round(time.monotonic() - started, 3)
-                if not self.terminal.exists():
+                if self.server.stopping.is_set() and not self.terminal.exists():
+                    raise BatchStopped('batch interrupted after assignment; saved for resume')
+                if not self.terminal.exists() and not self.server.stopping.is_set():
                     task = {'context': assignment['context']}
                     if seed:
                         task['seed'] = {k: seed[k] for k in ('source', 'kind', 'instruction', 'prior_attempt') if k in seed}
@@ -360,30 +418,32 @@ class Matcher:
                         threadId=self.thread, input=[dict(type='text', text=prompt)], effort=options.effort,
                         summary='none', model=self.model))
                     self.turn = response['turn']['id']
-                    await self.done.wait()
+                    waiters = [asyncio.create_task(self.done.wait()), asyncio.create_task(self.server.stopping.wait())]
+                    try:
+                        await asyncio.wait(waiters, return_when=asyncio.FIRST_COMPLETED)
+                    finally:
+                        for waiter in waiters:
+                            waiter.cancel()
+                        await asyncio.gather(*waiters, return_exceptions=True)
                     if self.error:
                         raise RuntimeError(self.error)
+                    if self.server.stopping.is_set() and not self.done.is_set():
+                        raise BatchStopped('batch interrupted; saved for resume')
+        except (BatchStopped, asyncio.CancelledError) as error:
+            outcome, self.error = 'interrupted', str(error) or 'batch cancelled; saved for resume'
         except TimeoutError:
             outcome, self.error = 'timeout', 'worker wall time exhausted'
         except Exception as error:
             outcome, self.error = 'crash', str(error)
         finally:
-            # Serialize cleanup after in-flight edits, including on timeout.
-            with contextlib.suppress(Exception):
-                await self.interrupt()
-            async with self.lock:
-                if not self.terminal.exists():
-                    reason = self.error or 'model ended without a match; best candidate saved automatically'
-                    try:
-                        await self.cli('release', self.symbol, '--agent', self.agent, '--reason', reason)
-                    except Exception as error:
-                        self.error = f'{reason}; automatic release failed: {error}'
-            if self.thread:
-                with contextlib.suppress(Exception):
-                    await self.server.request('thread/unsubscribe', dict(threadId=self.thread))
-                self.server.sessions.pop(self.thread, None)
-            self.log.close()
+            cleanup = asyncio.create_task(self.cleanup())
+            try:
+                await asyncio.shield(cleanup)
+            except asyncio.CancelledError:
+                await cleanup
         attempt = json.loads(self.terminal.read_text()) if self.terminal.exists() else {}
+        if self.claim_started and not attempt and self.error and 'automatic release failed' in self.error:
+            outcome = 'crash'
         if attempt:
             status = attempt['outcome'].removeprefix('shadow-')
             outcome = 'matched' if status in ('matched', 'matched-pool') else ('released' if not self.error else outcome + '+released')
@@ -394,19 +454,39 @@ class Matcher:
                     streamed_chars=self.stream_chars, reasoning_tokens=self.total.get('reasoningOutputTokens', 0),
                     model_started=self.model_started, model=self.model if self.model_started else '',
                     thread_id=self.thread, error=self.error, turns=1 if self.model_started else 0,
-                    rc=0 if not self.error else 1, attempt_id=attempt.get('id'), usage_samples=self.samples)
+                    rc=0 if not self.error or outcome.startswith('interrupted') else 1,
+                    attempt_id=attempt.get('id'), usage_samples=self.samples)
+
+    async def cleanup(self):
+        # Cancellation must not interrupt saving, even if it arrives while a
+        # naturally completed session is already inside cleanup.
+        with contextlib.suppress(Exception):
+            await self.interrupt()
+        async with self.lock:
+            if self.claim_started and not self.terminal.exists():
+                reason = self.error or 'model ended without a match; best candidate saved automatically'
+                try:
+                    await self.cli('release', self.symbol, '--agent', self.agent, '--reason', reason,
+                                   *(['--save-only'] if self.error or self.server.stopping.is_set() else []))
+                except Exception as error:
+                    self.error = f'{reason}; automatic release failed: {error}'
+        if self.thread:
+            with contextlib.suppress(Exception):
+                await self.server.request('thread/unsubscribe', dict(threadId=self.thread))
+            self.server.sessions.pop(self.thread, None)
+        self.log.close()
 
 
 async def fan_out(p, options, model, symbols, batch, revise, command, price):
     directory = STATE_DIR / 'runs' / batch
     server = AppServer(command, directory)
-    slots = asyncio.Semaphore(options.tool_parallel)
+    slots = ToolSlots(options.tool_parallel)
     queue = iter(enumerate(symbols, 1))
     results, spent = [], 0.0
 
     async def worker():
         nonlocal spent
-        while not server.closed and (options.budget_usd is None or spent < options.budget_usd):
+        while not server.closed and not server.stopping.is_set() and (options.budget_usd is None or spent < options.budget_usd):
             try:
                 idx, symbol = next(queue)
             except StopIteration:
@@ -426,9 +506,8 @@ async def fan_out(p, options, model, symbols, batch, revise, command, price):
             print(f"  {row['outcome']:16s} {symbol:14s} {pct:7s} checks={row['checks']} "
                   f"tools={row['tool_calls']} ${row['cost']:.3f} {row['secs']}s", flush=True)
 
-    parent = asyncio.current_task()
     loop = asyncio.get_running_loop()
-    loop.add_signal_handler(signal.SIGTERM, parent.cancel)
+    loop.add_signal_handler(signal.SIGTERM, server.stopping.set)
     try:
         await server.start()
         async with asyncio.TaskGroup() as group:

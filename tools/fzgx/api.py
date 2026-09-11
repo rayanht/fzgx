@@ -719,7 +719,7 @@ def _set_unit_opts(p: Project, unit_src: str, mw_version: Optional[str], extra_c
 
 def release(p: Project, symbol: str, reason: str, harness: Optional[str] = None,
             model: Optional[str] = None, tokens_in: int = 0, tokens_out: int = 0,
-            cost_usd: float = 0.0, agent: Optional[str] = None) -> Dict[str, Any]:
+            cost_usd: float = 0.0, agent: Optional[str] = None, save_only: bool = False) -> Dict[str, Any]:
     """Give the function up: keep the best work copy under .fzgx/attempts/, touch nothing in the tree."""
     l = Ledger()
     key = _key(p, symbol)
@@ -743,9 +743,12 @@ def release(p: Project, symbol: str, reason: str, harness: Optional[str] = None,
             saved = json.loads(metadata.read_text())
             if saved.get('sha256') == hashlib.sha256(src.read_bytes()).hexdigest():
                 seed = saved
-        base = oracle.check(p, symbol, 0, source=src,
-                            mw_version=seed.get('mw'), extra_cflags=seed.get('flags'))
-        fx = fixup.try_fix(p, symbol, src.read_text(), budget_s=6.0, base=base)
+        base = None
+        fx = {}
+        if not save_only:
+            base = oracle.check(p, symbol, 0, source=src,
+                                mw_version=seed.get('mw'), extra_cflags=seed.get('flags'))
+            fx = fixup.try_fix(p, symbol, src.read_text(), budget_s=6.0, base=base)
         if fx.get("matched") and fx.get("body"):
             work.parent.mkdir(parents=True, exist_ok=True)
             work.write_text(fx["body"])
@@ -761,8 +764,10 @@ def release(p: Project, symbol: str, reason: str, harness: Optional[str] = None,
         dest.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy(src, dest)  # the best-scoring body, not necessarily the last one written
         dest.with_suffix('.json').write_text(json.dumps(dict(
-            sha256=hashlib.sha256(dest.read_bytes()).hexdigest(), mw=base.mw_version,
-            flags=base.extra_cflags, percent=base.percent_adjusted if base.pool_rows else base.percent)) + '\n')
+            sha256=hashlib.sha256(dest.read_bytes()).hexdigest(), mw=base.mw_version if base else seed.get('mw'),
+            flags=base.extra_cflags if base else seed.get('flags'),
+            percent=(base.percent_adjusted if base.pool_rows else base.percent) if base else seed.get('percent',
+                     dict(l.current_attempt(key) or {}).get('best_in_attempt', 0)))) + '\n')
         body_path = str(dest)
     best.unlink(missing_ok=True)
     best.with_suffix('.json').unlink(missing_ok=True)

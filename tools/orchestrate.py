@@ -520,7 +520,8 @@ def main(argv: Optional[List[str]] = None) -> int:
         finish_result = finish_round(p, a, model, a.module)
     matched = [r for r in results if r["outcome"] == "matched"]
     released = [r for r in results if r["outcome"].startswith("released")]
-    other = [r for r in results if r not in matched and r not in released]
+    interrupted = [r for r in results if r['outcome'].startswith('interrupted')]
+    other = [r for r in results if r not in matched and r not in released and r not in interrupted]
     models = sorted({r.get("model") for r in results if r.get("model")})
     summary = {"batch": a.batch, "harness": a.harness, "model": model + (" (fast)" if a.fast else ""), "models_seen": models, "n": len(results), "matched": len(matched),
                "provider": a.provider, "transport": "app-server" if a.harness == "codex" else "cli",
@@ -530,12 +531,14 @@ def main(argv: Optional[List[str]] = None) -> int:
                "stream_retries": sum(r.get('stream_retries', 0) for r in results),
                "retried_sessions": sum(bool(r.get('stream_retries')) for r in results),
                "link_rejected": len(ver.get("rejected", [])),
-               "released": len(released), "failed": len(other), "cost_usd": round(spent, 3),
+               "released": len(released), "interrupted": len(interrupted), "unstarted": len(symbols) - len(results),
+               "failed": len(other), "cost_usd": round(spent, 3),
                "wall_s": round(time.time() - t0, 1), "finish": finish_result, "results": results}
     # report + snapshot
     rep = STATE_DIR / "reports" / f"{a.batch}{'-shadow' if a.shadow else ''}{'-revise' if a.revise else ''}{'-' + a.effort if a.effort else ''}.md"
     lines = [f"# Batch {a.batch}{' (shadow A/B trial)' if a.shadow else ''} — {a.harness}/{model}, {a.parallel} parallel",
-             "", f"{len(results)} functions: {len(matched)} matched, {len(released)} released, {len(other)} failed; "
+             "", f"{len(results)} functions: {len(matched)} matched, {len(released)} released, "
+             f"{len(interrupted)} interrupted, {len(symbols) - len(results)} unstarted, {len(other)} failed; "
              f"${spent:.2f}; {summary['wall_s']} s wall.", "",
              f"Provider: {a.provider}. Cost basis: {summary['cost_basis']}.", "",
              "| Function | Outcome | % | Checks | Turns | $ | s |", "|---|---|---|---|---|---|---|"]

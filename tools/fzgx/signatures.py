@@ -396,18 +396,59 @@ class Index:
 _CACHE = {}
 
 
+def _disk_index(p, identity, build):
+    """Share recovered constraints across CLI processes, excluding per-process project state."""
+    import hashlib
+    import json
+    import pickle
+    import os
+    from .project import STATE_DIR
+    from .oracle import build_lock
+    key = hashlib.sha256(json.dumps(identity).encode()).hexdigest()
+    directory = STATE_DIR / 'signatures'
+    directory.mkdir(parents=True, exist_ok=True)
+    path = directory / (key + '.pickle')
+    # One producer per source revision/TU prevents a 512-worker cache stampede.
+    with build_lock('signatures/' + key + '.lock'):
+        try:
+            state = pickle.loads(path.read_bytes())
+        except (FileNotFoundError, EOFError, pickle.UnpicklingError, AttributeError):
+            result = build()
+            state = {k: v for k, v in vars(result).items() if k not in ('p', '_flows')}
+            temporary = path.with_suffix(f'.{os.getpid()}.tmp')
+            temporary.write_bytes(pickle.dumps(state, protocol=pickle.HIGHEST_PROTOCOL))
+            temporary.replace(path)
+        result = Index.__new__(Index)
+        result.__dict__.update(state)
+        result.p = p
+        result._cache_id = key
+        return result
+
+
 def recovered(p):
     # Invalidate after a submitted source or recovered header changes, including in long-lived MCP sessions.
-    paths = sorted((ROOT / 'include').rglob('*.h')) + sorted((ROOT / 'src').rglob('*.c')) + [p.units_path]
+    paths = (sorted((ROOT / 'include').rglob('*.h')) + sorted((ROOT / 'src').rglob('*.c'))
+             + sorted((ROOT / 'tools/fzgx').glob('*.py')) + [p.units_path]
+             + sorted(p.config_dir.rglob('symbols.txt')) + sorted(p.config_dir.rglob('tus.json')))
     stamp = tuple((str(f), f.stat().st_mtime_ns, f.stat().st_size) for f in paths)
     key = (p.version, stamp)
     if key not in _CACHE:
         _CACHE.clear()
-        _CACHE[key] = Index(p)
+        _CACHE[key] = _disk_index(p, key, lambda: Index(p))
     return _CACHE[key]
 
 
 def propagate(index, module, names):
+    key = (module, tuple(names))
+    flows = index.__dict__.setdefault('_flows', {})
+    if key not in flows:
+        flows[key] = (_disk_index(index.p, (index._cache_id, module, list(names)),
+                                  lambda: _propagate(index, module, names))
+                      if hasattr(index, '_cache_id') else _propagate(index, module, names))
+    return flows[key]
+
+
+def _propagate(index, module, names):
     """Unify register origins across direct calls, retaining only constraints valid at CFG joins."""
     from collections import deque
     from copy import copy

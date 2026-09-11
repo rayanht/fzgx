@@ -6,6 +6,7 @@ import argparse
 import json
 import hashlib
 import os
+import time
 from pathlib import Path
 from typing import List, Optional
 
@@ -57,12 +58,16 @@ def cmd_inventory(a, p):
 
 
 def cmd_claim(a, p):
+    started = time.monotonic()
     r = api.claim(p, a.symbol, a.agent, a.ttl, a.max_attempts, a.no_carve)
+    prepared = time.monotonic()
     seed = r.get('seed') or {}
     if r['ok'] and a.check and seed and not (seed.get('kind') == 'lift_total' and '???' in seed['source']):
         # One tool slot covers preparation: a wide claim queue must not hold
         # every first model response behind a second queue of initial checks.
         r['initial_check'] = api.format_check(api.check(p, a.symbol))
+    r['timings'] = dict(prepare_secs=round(prepared - started, 3),
+                        preflight_secs=round(time.monotonic() - prepared, 3))
     _print(r, a.json); return 0 if r["ok"] else 2
 
 
@@ -116,7 +121,8 @@ def cmd_submit(a, p):
 
 
 def cmd_release(a, p):
-    r = api.release(p, a.symbol, a.reason, a.harness, a.model, a.tokens_in, a.tokens_out, a.cost_usd, agent=a.agent)
+    r = api.release(p, a.symbol, a.reason, a.harness, a.model, a.tokens_in, a.tokens_out, a.cost_usd, agent=a.agent,
+                    save_only=a.save_only)
     _print(r, a.json); return 0 if r["ok"] else 2
 
 
@@ -463,6 +469,7 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--extra-cflags", help="extra compiler flags for this unit, space separated")
     s = sub.add_parser("release", help="give up on a claim, keeping the best attempt"); s.set_defaults(fn=cmd_release)
     s.add_argument("symbol"); s.add_argument("--reason", required=True); s.add_argument("--agent")
+    s.add_argument('--save-only', action='store_true', help='save an interrupted attempt without compiling or repair search')
     for name in ("submit", "release"):
         sp = sub.choices[name]
         sp.add_argument("--model"); sp.add_argument("--harness")
