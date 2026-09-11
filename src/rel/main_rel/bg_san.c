@@ -106,6 +106,60 @@ void fn_1_DA7B8(void) {
 }
 /* fzgx:end fn_1_DA7B8 */
 
+/* fzgx:begin fn_1_DA7E4 noprologue */
+#include "types.h"
+
+struct fn_1_DA7E4_Sub {
+    u8 pad_0[0x9A0];
+    u32 blk[141];
+    u32 unk_BD4;
+    u32 unk_BD8;
+};
+
+struct fn_1_DA7E4_lbl_1_data_2A7E0 {
+    u8 pad_0[0x2C];
+    u32 unk_2C;
+    u8 pad_30[0xC];
+    struct fn_1_DA7E4_Sub *unk_3C;
+};
+
+extern f32 lbl_1_rodata_6628;
+extern struct fn_1_DA7E4_lbl_1_data_2A7E0 lbl_1_data_2A7E0;
+extern void fn_1_FB87C(u32 *, u32);
+extern u32 fn_1_FBFE4();
+extern s32 fn_1_58C4(void);
+extern void fn_1_103D28(void *, u32, f32);
+extern void fn_1_9A508(void);
+extern void fn_1_FB96C(int);
+
+void fn_1_DA7E4(void) {
+    struct fn_1_DA7E4_Sub *obj;
+    u32 tmp[4];
+    s32 n;
+    s32 i;
+
+    obj = lbl_1_data_2A7E0.unk_3C;
+    n = fn_1_58C4();
+    for (i = 0; i < n; i++) {
+        tmp[i] = obj->blk[i];
+    }
+    fn_1_9A508();
+    n = fn_1_58C4();
+    for (i = 0; i < n; i++) {
+        obj->blk[i] = tmp[i];
+    }
+    if (obj->unk_BD4 != 0) {
+        fn_1_FB87C(&obj->unk_BD4, 1);
+        fn_1_FB96C(0);
+        fn_1_FB96C(1);
+        fn_1_FB96C(2);
+        fn_1_FB96C(4);
+    }
+    lbl_1_data_2A7E0.unk_2C = (u32)fn_1_FBFE4;
+    fn_1_103D28(&obj->unk_BD8, 10, lbl_1_rodata_6628);
+}
+/* fzgx:end fn_1_DA7E4 */
+
 /* fzgx:begin fn_1_DA9F0 */
 #include "rel/main_rel/bg_san.h"
 

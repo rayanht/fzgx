@@ -221,6 +221,97 @@ s32 fn_1_15C35C(s32 a, s32 b, s32 c, s32 d) {
 }
 /* fzgx:end fn_1_15C35C */
 
+/* fzgx:begin fn_1_15DFD4 noprologue */
+#include "types.h"
+
+extern f32 lbl_1_rodata_DD6C[11];
+extern f32 lbl_1_rodata_DE50[39];
+extern void fn_1_496FC(f32, f32);
+extern void fn_1_49410(void);
+extern void fn_1_49728(int);
+extern void fn_1_495FC(void);
+extern void fn_1_495C8(int);
+extern void fn_1_15DD7C(u16);
+extern void fn_1_15C6C0(u16, int);
+extern void fn_1_49614(void);
+extern void fn_1_A4C9C(int, u8);
+
+extern u8 lbl_1_bss_26B18;
+extern u8 lbl_1_bss_26B1A;
+extern u8 lbl_1_bss_26B19;
+extern u8 lbl_1_bss_26B1E;
+extern u32 lbl_1_bss_3C30;
+
+typedef struct {
+    u8 pad_0[0xB];
+    u8 unk_B;
+    u8 pad_C[0x28];
+} BgWin38;
+
+extern BgWin38 lbl_1_bss_8FDA8[];
+extern u16 lbl_1_bss_50EC[];
+
+void fn_1_15DFD4(int index, int flags) {
+    int state;
+
+    flags &= 0xff;
+    if (lbl_1_bss_26B18 & flags) {
+        state = 4;
+    } else if (lbl_1_bss_26B1A & flags) {
+        state = 2;
+    } else if (lbl_1_bss_26B19 & flags) {
+        state = 1;
+    } else if (lbl_1_bss_26B1E & flags) {
+        state = 3;
+    } else {
+        return;
+    }
+
+    if (lbl_1_bss_3C30 & 0x1000) {
+        lbl_1_bss_8FDA8[index].unk_B = 0;
+    } else {
+        lbl_1_bss_8FDA8[index].unk_B = 1;
+    }
+
+    fn_1_496FC(lbl_1_rodata_DD6C[0], lbl_1_rodata_DE50[0]);
+    fn_1_49410();
+    fn_1_49728(1);
+    fn_1_495FC();
+    fn_1_495C8(9);
+
+    switch (state) {
+    case 1: {
+        u16 v = lbl_1_bss_50EC[index];
+        if (lbl_1_bss_8FDA8[index].unk_B != 0) {
+            fn_1_15DD7C(v);
+        }
+        break;
+    }
+    case 2: {
+        u16 v = lbl_1_bss_50EC[index];
+        if (lbl_1_bss_8FDA8[index].unk_B != 0) {
+            fn_1_15DD7C(v);
+        }
+        break;
+    }
+    case 3:
+        fn_1_15C6C0(lbl_1_bss_50EC[index], index);
+        break;
+    case 4: {
+        u16 v = lbl_1_bss_50EC[index];
+        if (lbl_1_bss_8FDA8[index].unk_B != 0) {
+            fn_1_15DD7C(v);
+        }
+        break;
+    }
+    }
+
+    fn_1_49614();
+    fn_1_49728(0);
+    fn_1_A4C9C(index, state);
+}
+/* fzgx:end fn_1_15DFD4 */
+
 /* fzgx:begin fn_1_15E1D0 noprologue */
 #include "types.h"
 

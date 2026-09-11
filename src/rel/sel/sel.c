@@ -172,6 +172,114 @@ void fn_10_3DE0(u32 index, SelEntry *entries, s16 slot) {
 }
 /* fzgx:end fn_10_3DE0 */
 
+/* fzgx:begin fn_10_436C */
+extern u8 lbl_10_bss_0[0x50004];
+extern s16 lbl_1_bss_96A;
+extern s16 lbl_1_bss_962[4];
+extern u8 lbl_1_bss_8B3A0[];
+
+extern void fn_1_4BB0(void);
+extern void fn_10_C594(void);
+extern void fn_1_12C0EC(void *);
+extern void fn_1_435C(u32);
+extern void fn_1_426C(u32);
+extern void fn_10_BEF4(void *);
+extern void fn_1_12C000(void *, s32);
+extern void fn_1_48140(s32);
+extern void fn_10_96F8(void *, void *);
+extern void fn_1_36AD0(void);
+extern void fn_1_12F10C(void);
+extern void fn_1_12AF7C(void);
+extern void fn_1_A5330(u8, u32);
+extern void fn_1_13F8C4(void);
+extern void fn_1_13F9F0(void);
+extern void fn_1_FDFF4(void);
+
+typedef struct {
+    u8 pad0[0x94];
+    u32 flags;
+    u8 pad98[7];
+    u8 value;
+    u8 padA0[4];
+    u8 *items;
+} SelState;
+
+void fn_10_436C(void) {
+    SelState *s;
+    u8 *base;
+    s32 offset;
+    s16 i;
+    s32 n;
+    base = lbl_10_bss_0 + 0x50000;
+    fn_1_4BB0();
+    fn_10_C594();
+
+    if (lbl_1_bss_96A == 0x12) {
+        s16 *ids;
+
+        s = (SelState *)lbl_1_bss_8B3A0;
+        i = 0;
+        ids = lbl_1_bss_962;
+        offset = 0;
+        while (i < 4) {
+            fn_1_12C0EC(s->items + (*ids - 0xe) * 0x94 + offset + 0x24);
+            offset += 0x1c;
+            i++;
+        }
+    }
+
+    if (lbl_1_bss_96A != 0x14 && *(s32 *)(base + 0x1740) != -1) {
+        fn_1_435C(*(u32 *)(base - 0x6c78));
+        fn_1_426C(*(u32 *)(base + 0x1740));
+        *(s32 *)(base + 0x1740) = -1;
+    }
+
+    fn_10_BEF4(lbl_1_bss_8B3A0);
+
+    s = (SelState *)lbl_1_bss_8B3A0;
+
+    if ((s->flags & 0x80000000) == 0 && lbl_1_bss_96A != 0x14) {
+        n = 4;
+        if (s->flags & 0x20000000) {
+            n = 1;
+        }
+        fn_1_12C000(base + 0x197c, n);
+        fn_1_12C000(base + 0x17ec, n);
+        fn_1_12C000(base + 0x1788, 1);
+        if (s->flags & 0x100) {
+            fn_1_48140(0xa0);
+        }
+    }
+
+    fn_10_96F8(base - 0x6c60, base - 0x1140);
+
+    if (lbl_1_bss_96A != 0x14) {
+        fn_1_36AD0();
+        fn_1_12F10C();
+        fn_1_12AF7C();
+    }
+
+    if (s->flags & 0x40000000) {
+        if (*(s16 *)(lbl_1_bss_8B3A0 + 0xe) == 6) {
+            *(u8 *)(lbl_1_bss_8B3A0 + 0x9f) = 0x32;
+        }
+        fn_1_A5330(*(u8 *)(lbl_1_bss_8B3A0 + 0x9f), 0);
+    }
+
+    if (s->flags & 0x40000000) {
+        fn_1_13F8C4();
+        fn_1_13F9F0();
+    } else {
+        s16 mode = *(s16 *)lbl_1_bss_8B3A0;
+        if ((u16)mode <= 1 || mode == 3 || mode == 2) {
+            fn_1_13F8C4();
+            fn_1_13F9F0();
+            fn_1_FDFF4();
+        }
+    }
+}
+/* fzgx:end fn_10_436C */
+
 /* fzgx:begin fn_10_4600 */
 extern s32 lbl_10_bss_14;
 extern s16 lbl_10_bss_4938C;

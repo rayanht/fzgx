@@ -57,6 +57,92 @@ void fn_10_25BC8(void) {
 }
 /* fzgx:end fn_10_25BC8 */
 
+/* fzgx:begin fn_10_25E1C noprologue */
+#include "types.h"
+
+typedef struct {
+    u8 pad[0x8c];
+    s16 value;
+} NameEntryState;
+
+typedef struct {
+    s16 v[14];
+} SndTable;
+
+extern NameEntryState lbl_1_bss_8B3A0;
+extern SndTable lbl_10_rodata_1D70;
+extern u8 lbl_10_bss_55CE0;
+extern u8 lbl_10_bss_55CE1;
+extern u8 lbl_1_bss_8E51D;
+extern u8 lbl_1_data_2B0D4[];
+extern u8 lbl_1_data_2B144[];
+
+extern s16 fn_1_12EF24(s16, s16);
+extern s32 fn_1_F89E4(u8);
+extern void fn_1_14A1AC(u8);
+extern void fn_1_14BC40(void);
+extern void fn_1_1554D0(void);
+extern void fn_1_1555B0(u8);
+extern void fn_1_47F74(s32);
+
+void fn_10_25E1C(void) {
+    NameEntryState *state = &lbl_1_bss_8B3A0;
+    s32 i;
+    s16 result;
+
+    for (i = 0; i < 6; i++) {
+        result = fn_1_12EF24(state->value, i);
+        if (state->value == 5) {
+            if (i == 5) {
+                if (fn_1_F89E4(0) == 0) {
+                    goto set_neg; // shared tail: retail merges both -1 arms
+                }
+            }
+            if (i != 5) {
+                if (fn_1_F89E4((u8)(i + 1)) == 0) {
+                    goto set_neg; // shared tail: retail merges both -1 arms
+                }
+            }
+            goto after_neg; // skip the merged -1 arm
+        set_neg:
+            result = -1;
+        after_neg: ;
+        }
+        if (result != -1) {
+            break;
+        }
+    }
+
+    if (result != -1) {
+        lbl_10_bss_55CE0 = (u8)result;
+    } else {
+        lbl_10_bss_55CE0 = (u8)fn_1_12EF24(state->value, 0);
+    }
+
+    fn_1_14A1AC(lbl_1_bss_8E51D);
+    fn_1_14BC40();
+    fn_1_1554D0();
+    fn_1_1555B0(lbl_10_bss_55CE0);
+    fn_1_47F74(0x91);
+    fn_1_47F74(0x97);
+    fn_1_47F74(0x99);
+
+    for (i = 0; i < 6; i++) {
+        result = fn_1_12EF24(state->value, i);
+        if (result != -1) {
+            u8 key = lbl_1_data_2B0D4[result];
+            SndTable table = lbl_10_rodata_1D70;
+            s16 index = lbl_1_data_2B144[key] - 1;
+
+            if ((((u32)index > 13) ? 0 : (index >= 0)) && table.v[index] != -1) {
+                fn_1_47F74(table.v[index]);
+            }
+        }
+    }
+    lbl_10_bss_55CE1 = 0;
+}
+/* fzgx:end fn_10_25E1C */
+
 /* fzgx:begin fn_10_26000 */
 u8 fn_10_26000(void) {
     u8 result;
