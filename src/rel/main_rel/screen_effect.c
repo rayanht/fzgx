@@ -798,6 +798,121 @@ void fn_1_79810(void) {
 }
 /* fzgx:end fn_1_79810 */
 
+/* fzgx:begin fn_1_79C88 noprologue */
+#include "types.h"
+
+typedef struct {
+    u32 flags;
+    s32 count;
+    void *nodes;
+} EffectManager;
+
+typedef struct {
+    u32 type;
+    u32 unk04;
+    void *resource;
+    f32 threshold;
+} EffectNode;
+
+typedef struct {
+    u8 unk00[0x14];
+    f32 scale;
+} EffectData;
+
+typedef struct {
+    u8 unk00[0x8];
+    f32 angle;
+} EffectResult;
+
+typedef struct {
+    u8 unk00[0x2c];
+    f32 value;
+} GlobalData;
+
+extern f32 lbl_1_rodata_3278[20];
+extern GlobalData *lbl_801A6D00;
+extern void lbl_8006E1B0(void *arg0, void *arg1);
+extern f32 fn_1_A71AC(void);
+
+static inline f32 fn_1_79C88_operand(f32 left, f32 right) { return left * right; }
+s32 fn_1_79C88(EffectManager *manager, u32 *out, s32 reverse, f32 value) {
+    void * fzgx_live;
+    EffectData *data;
+    f32 *rodata = lbl_1_rodata_3278;
+    EffectNode *node;
+    EffectResult result;
+    f32 phase;
+    f32 limit;
+    f32 inv;
+    f32 factor;
+    f32 tmp;
+    s32 index;
+    s32 i;
+
+    node = (EffectNode *)manager->nodes;
+    data = (EffectData *)node->resource;
+    if (((0) == (data))) {
+        return 0;
+    }
+
+    lbl_8006E1B0((u8 *)data + 8, &result);
+    phase = -result.angle;
+    limit = -lbl_801A6D00->value;
+    if ((manager->flags & 2) != 0) {
+        if (limit < rodata[43]) {
+            index = 0;
+        } else {
+            index = 0;
+            while (index < manager->count) {
+                if (limit < node->threshold) {
+                    break;
+                }
+                index++;
+                node++;
+            }
+        }
+    } else {
+        if (phase < rodata[43]) {
+            index = 0;
+        } else {
+            tmp = rodata[44] * data->scale;
+            value = tmp * value;
+            factor = phase * fn_1_A71AC();
+            inv = rodata[32];
+            index = 0;
+            while (index < manager->count) {
+                if (value > fn_1_79C88_operand((node->threshold / inv), (factor))) {
+                    break;
+                }
+                index++;
+                node++;
+            }
+        }
+    }
+
+    if (node->resource != 0 && index < manager->count) {
+        if (reverse != 0) {
+            for (i = index; i < manager->count; i++) {
+                if (node->resource == 0) {
+                    break;
+                }
+                node++;
+            }
+            node--;
+        }
+        if (out != 0) {
+            *out = node->type;
+        }
+        fzgx_live = node->resource;
+        return (s32)fzgx_live;
+    }
+    if (out != 0) {
+        *out = 0;
+    }
+    return 0;
+}
+/* fzgx:end fn_1_79C88 */
+
 /* fzgx:begin fn_1_7A648 */
 void fn_1_7A648(void *arg0) {
     fn_1_79C88(arg0, 0, lbl_1_rodata_32CC, 0);

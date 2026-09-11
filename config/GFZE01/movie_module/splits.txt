@@ -1691,3 +1691,6 @@ rel/movie_module/_prolog.c:
 
 rel/movie_module/fn_12_8F80.c:
 	.text       start:0x00008F80 end:0x00009594 align:4
+
+rel/movie_module/fn_12_25DA8.c:
+	.text       start:0x00025DA8 end:0x00025FA8 align:4

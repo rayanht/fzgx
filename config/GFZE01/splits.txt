@@ -5183,3 +5183,6 @@ dol/fn_8001C62C.c:
 
 dol/fn_80048340.c:
 	.text       start:0x80048340 end:0x80049728 align:4
+
+dol/fn_80015D7C.c:
+	.text       start:0x80015D7C end:0x80015E18 align:4
