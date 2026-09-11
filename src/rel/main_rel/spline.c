@@ -133,6 +133,39 @@ void fn_1_F57A8(f32 *out, f32 *in) {
 }
 /* fzgx:end fn_1_F57A8 */
 
+/* fzgx:begin fn_1_F588C */
+#pragma fp_contract off
+
+extern const f32 lbl_1_rodata_6D7C;
+extern const f32 lbl_1_rodata_6D80;
+extern const f32 lbl_1_rodata_6D74;
+extern f64 fn_80088538(f32);
+extern f64 fn_800883E8(f32);
+extern void fn_1_F5A2C(f32 *, f32 *, f32 *, f32);
+
+void fn_1_F588C(f32 *out, f32 *a, f32 *b, f32 t) {
+    f32 dot;
+    f32 angle;
+    f32 sin_angle;
+    f32 sin_t_angle;
+    f32 sin_rem_angle;
+
+    dot = a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3];
+    if (dot > lbl_1_rodata_6D7C && dot < lbl_1_rodata_6D80) {
+        angle = fn_80088538(dot);
+        sin_angle = fn_800883E8(angle);
+        sin_t_angle = fn_800883E8(angle * t);
+        sin_rem_angle = fn_800883E8(angle * (lbl_1_rodata_6D74 - t));
+        out[0] = (a[0] * sin_rem_angle + b[0] * sin_t_angle) / sin_angle;
+        out[1] = (a[1] * sin_rem_angle + b[1] * sin_t_angle) / sin_angle;
+        out[2] = (a[2] * sin_rem_angle + b[2] * sin_t_angle) / sin_angle;
+        out[3] = (a[3] * sin_rem_angle + b[3] * sin_t_angle) / sin_angle;
+    } else {
+        fn_1_F5A2C(out, a, b, t);
+    }
+}
+/* fzgx:end fn_1_F588C */
+
 /* fzgx:begin fn_1_F5A2C */
 typedef struct Vec4 {
     f32 x;

@@ -420,6 +420,43 @@ void fn_1_A2E5C(s32 arg0, s32 arg1) {
 }
 /* fzgx:end fn_1_A2E5C */
 
+/* fzgx:begin fn_1_A3C78 noprologue */
+#include "types.h"
+#include "rel/main_rel/sound.h"
+
+extern s32 fn_1_3F864(s32 arg0, s32 arg1);
+extern u32 fn_1_864E8(s32 arg0);
+extern void fn_80067344(s32 arg0, s32 arg1, u32 arg2, u32 arg3);
+extern void fn_80067898(u32 arg0);
+
+void fn_1_A3C78(s32 arg0, s32 arg1) {
+    u8 *base;
+    u8 *entry;
+
+    base = (u8 *)&lbl_1_bss_6EA98;
+    if (fn_1_3F864(arg0, arg1) != 0) {
+        switch (arg1) {
+        case 0:
+            if ((fn_1_864E8(arg0) & 0x280) == 0) {
+                entry = base + 0x74C;
+                arg1 = 0;
+                while (arg1 < *(s8 *)(base + 0x82C)) {
+                    if (arg0 == *(u8 *)(entry + 1) && *(u8 *)(entry + 2) != 0) {
+                        fn_80067344(1, 0x10, 0xB0270000, *(u8 *)(entry + 2));
+                        if (base[0x740] == 0 && *(u32 *)(base + 0x744) <= 0x2D) {
+                            fn_80067898(0xA9090F00);
+                        }
+                    }
+                    entry += 0x14;
+                    arg1++;
+                }
+            }
+            break;
+        }
+    }
+}
+/* fzgx:end fn_1_A3C78 */
+
 /* fzgx:begin fn_1_A4BC8 noprologue */
 #include "types.h"
 

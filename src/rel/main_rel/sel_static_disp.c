@@ -294,6 +294,60 @@ void fn_1_135894(void* arg0, void* arg1, void* arg2, void* arg3,
 }
 /* fzgx:end fn_1_135894 */
 
+/* fzgx:begin fn_1_136714 noprologue */
+#include "types.h"
+#include "rel/main_rel/globals.h"
+
+extern void fn_1_49410(void);
+extern void fn_1_495FC(void);
+extern void fn_1_495B0(s32 arg0);
+extern void fn_1_4965C(s32 arg0);
+extern void fn_1_495C8(s8 arg0);
+extern void fn_1_496FC(f32 arg0, f32 arg1);
+extern void fn_1_4954C(f32 arg0);
+extern void fn_1_4955C(f32 arg0, f32 arg1);
+extern void fn_1_49738(void* arg0);
+extern void fn_1_495A0(f32 arg0);
+extern void fn_1_49590(f32 arg0);
+extern char* fn_1_13F72C(f32 arg0, s16 arg1, void* arg2);
+extern void fn_1_4AE0C(const char* arg0, ...);
+extern const f32 lbl_1_rodata_85F0;
+extern const f32 lbl_1_rodata_85FC;
+extern const f32 lbl_1_rodata_8A30;
+extern const f64 lbl_1_rodata_8600;
+extern s32 lbl_801A66B4;
+
+void fn_1_136714(f32 arg0, f32 arg1, f32 arg2, s32 arg3, s32 arg4, s32 arg5,
+                 s32 arg6, void* arg7) {
+    f32 value;
+    char buffer[64];
+
+    fn_1_49410();
+    fn_1_495FC();
+    fn_1_495B0(-2147483647 - 1);
+    fn_1_4965C(2);
+    fn_1_495C8((s8)arg6);
+    fn_1_496FC((f32)arg4, (f32)arg5);
+    fn_1_4954C(arg0);
+    value = arg1 / lbl_1_rodata_85FC;
+    fn_1_4955C(value, value);
+    if (arg7 != 0) {
+        fn_1_49738(arg7);
+    }
+    fn_1_495A0(arg2);
+    switch (lbl_801A66B4) {
+    case 5:
+        break;
+    case 0:
+    default:
+        fn_1_49590(lbl_1_rodata_85F0);
+        fn_1_4955C(lbl_1_rodata_8A30 * arg1 / lbl_1_rodata_85FC, value);
+        break;
+    }
+    fn_1_4AE0C(fn_1_13F72C((f32)arg3, (s16)lbl_801A66B4, buffer));
+}
+/* fzgx:end fn_1_136714 */
+
 /* fzgx:begin fn_1_137288 noprologue */
 #include "types.h"
 
@@ -1108,6 +1162,60 @@ void fn_1_1420A4(void) {
     ((void (**)(void))lbl_1_data_4244C)[lbl_1_bss_8E51D]();
 }
 /* fzgx:end fn_1_1420A4 */
+
+/* fzgx:begin fn_1_1424E8 noprologue */
+#include "types.h"
+#include "font.h"
+#include "rel/main_rel/sel_static_disp.h"
+
+extern u32 lbl_1_rodata_26F8;
+extern u32 fn_1_51564(u32, u32, u32, u32, u32, u32);
+extern void fn_1_5158C(FontDrawPacket *, u32, u32, s16);
+extern const f64 lbl_1_rodata_93E8;
+extern f32 lbl_1_rodata_93F0[15];
+extern int fn_1_4F734(FontDrawPacket *);
+
+void fn_1_1424E8(u32 unused, s32 arg1) {
+    FontDrawPacket loc_8;
+    s32 mode;
+
+    if (lbl_1_bss_3C30.unk_0 & 0x04000000) {
+        mode = 7;
+    } else {
+        switch (lbl_1_bss_3C30.unk_5) {
+        case 1:
+            switch (lbl_1_bss_3C30.unk_A6) {
+            case 1: mode = 0; break;
+            case 2: mode = 1; break;
+            case 3: mode = 2; break;
+            case 4: mode = 3; break;
+            case 5: mode = 4; break;
+            default: mode = 0; break;
+            }
+            break;
+        case 0:
+        case 6:
+            mode = 5;
+            break;
+        case 2:
+            mode = 6;
+            break;
+        default:
+            mode = 7;
+            break;
+        }
+    }
+
+    loc_8 = *(FontDrawPacket *)&lbl_1_rodata_26F8;
+    loc_8.image = 0x9901;
+    fn_1_51564(0, 0, 0xA0, 0x10, 1, 8);
+    fn_1_5158C(&loc_8, loc_8.image, 0, mode);
+    loc_8.x = lbl_1_rodata_93F0[0];
+    loc_8.y = (f32)(arg1 - 8);
+    loc_8.flags = 7;
+    fn_1_4F734(&loc_8);
+}
+/* fzgx:end fn_1_1424E8 */
 
 /* fzgx:begin fn_1_144E90 */
 void fn_1_144E90(void) {
@@ -2518,6 +2626,83 @@ void fn_1_14F38C(StaticDisp *disp, u8 *table) {
     }
 }
 /* fzgx:end fn_1_14F38C */
+
+/* fzgx:begin fn_1_14F46C noprologue */
+#include "types.h"
+#include "rel/main_rel/globals.h"
+
+extern u8 lbl_1_rodata_CB98[324];
+extern char lbl_1_data_43E78[];
+extern u8 lbl_8015B200[];
+extern u32 strlen(const char *);
+extern int sprintf(char *, const char *, ...);
+extern void fn_1_465D0(char *, int);
+
+typedef struct {
+    char *entries[75];
+} StaticDisplayStrings;
+
+typedef struct {
+    u8 unk0[8];
+    u32 flags;
+} DisplayState;
+
+void fn_1_14F46C(DisplayState *state) {
+    StaticDisplayStrings strings;
+    char buffer0[32];
+    char buffer1[32];
+    char buffer2[32];
+    char *data;
+    s16 entry;
+    s16 i;
+    s16 j;
+
+    data = lbl_1_data_43E78;
+    strings = *(StaticDisplayStrings *)lbl_1_rodata_CB98;
+
+    entry = 0;
+    while ((u32)entry < 3) {
+        s16 index;
+        char *string;
+        s16 i;
+
+        index = ((s16 *)state)[entry];
+        string = strings.entries[index];
+        i = 0;
+        while (i < strlen(string)) {
+            u8 *p = (u8 *)strings.entries[index];
+            int c = p[i];
+            if (c == -1) {
+                c = -1;
+            } else {
+                c = lbl_8015B200[c];
+            }
+            p[i] = c;
+            i++;
+        }
+
+        sprintf(buffer1, data + 0x24c4, strings.entries[index]);
+        fn_1_465D0(buffer1, 1);
+
+        j = 0;
+        while (j < 4) {
+            if (state->flags & (1 << j)) {
+                if (j == 0) {
+                    sprintf(buffer0, data + 0x1338, strings.entries[index]);
+                } else {
+                    sprintf(buffer0, data + 0x1348, strings.entries[index], j + 1);
+                }
+                fn_1_465D0(buffer0, 1);
+            }
+            j++;
+        }
+
+        sprintf(buffer2, data + 0x135c, strings.entries[index]);
+        fn_1_465D0(buffer2, 1);
+        entry++;
+    }
+}
+/* fzgx:end fn_1_14F46C */
 
 /* fzgx:begin fn_1_14FC80 */
 void fn_1_14FC80(s16 arg0, u32 arg1) {

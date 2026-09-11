@@ -5789,3 +5789,18 @@ rel/main_rel/spline/fn_1_F8918.c:
 
 rel/main_rel/sound/fn_1_A2E5C.c:
 	.text       start:0x000A2E5C end:0x000A2FC8 align:4
+
+rel/main_rel/sound/fn_1_A3C78.c:
+	.text       start:0x000A3C78 end:0x000A3D5C align:4
+
+rel/main_rel/spline/fn_1_F588C.c:
+	.text       start:0x000F588C end:0x000F5A2C align:4
+
+rel/main_rel/sel_static_disp/fn_1_1424E8.c:
+	.text       start:0x001424E8 end:0x0014267C align:4
+
+rel/main_rel/sel_static_disp/fn_1_136714.c:
+	.text       start:0x00136714 end:0x001368A0 align:4
+
+rel/main_rel/sel_static_disp/fn_1_14F46C.c:
+	.text       start:0x0014F46C end:0x0014F608 align:4
