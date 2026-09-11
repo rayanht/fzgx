@@ -785,6 +785,145 @@ u32 fn_14_DC6C(u32 arg0, u32 arg1) {
 }
 /* fzgx:end fn_14_DC6C */
 
+/* fzgx:begin fn_14_DC90 */
+typedef struct RoData {
+    u8 pad_0[0x10];
+    f32 unk_10;
+    u8 pad_14[0x4];
+    f32 unk_18;
+    u8 pad_1C[0x1C];
+    f32 unk_38;
+    u8 pad_3C[0x74];
+    f32 unk_B0;
+    u8 pad_B4[0x274];
+    f32 unk_328;
+    u8 pad_32C[0x48];
+    f32 unk_374;
+    u8 pad_378[0x1A0];
+    u32 unk_518;
+    u32 unk_51C;
+    u8 pad_520[0xC];
+    u32 unk_52C;
+    u32 unk_530;
+    f32 unk_534;
+    f32 unk_538;
+    f32 unk_53C;
+    f32 unk_540;
+    f32 unk_544;
+    f32 unk_548;
+} RoData;
+
+typedef struct Cmd88 {
+    u32 unk_0;
+    f32 unk_4;
+    f32 unk_8;
+    f32 unk_C;
+    u8 pad_10[0x1C];
+    f32 unk_2C;
+    u32 unk_30;
+    u8 tail_34[0x24];
+} Cmd88;
+
+extern s16 lbl_1_bss_962;
+extern f32 lbl_14_data_0;
+extern RoData lbl_14_rodata_0;
+extern u32 lbl_14_bss_9460;
+extern u32 lbl_1_rodata_26F8;
+extern u32 lbl_801A66B4;
+
+extern void fn_1_4D0A0(void);
+extern void fn_1_50164(f32, f32, f32, f32, void *);
+extern u32 fn_1_49410(void);
+extern void fn_1_495FC(void);
+extern void fn_1_495C8(u8);
+extern void fn_1_495B0(u32);
+extern void fn_1_49590(f32);
+extern void fn_1_4954C(f32);
+extern int fn_1_B7E98(int);
+extern void fn_1_496FC(f32, f32);
+extern void fn_1_4955C(f32, f32);
+extern void fn_1_49514(u32 *);
+extern void fn_1_4AE0C(const char *, ...);
+extern void fn_1_4D10C(void *, f32, f32);
+
+#pragma opt_lifetimes off
+#pragma opt_propagation off
+void fn_14_DC90(f32 farg0) {
+    const char *dpp = (const char *)&lbl_14_data_0;
+    RoData *rp = (RoData *)&lbl_14_rodata_0;
+    const char **t;
+    Cmd88 cmd;
+    u32 sp18;
+    u32 sp14;
+    u32 sp10;
+    u32 out;
+    u8 bytes[4];
+
+    if (lbl_1_bss_962 != 0xaf) {
+        fn_1_4D0A0();
+    } else {
+        cmd = *(const Cmd88 *)&lbl_1_rodata_26F8;
+        cmd.unk_0 = 0x9E2B;
+        cmd.unk_4 = rp->unk_10;
+        cmd.unk_8 = rp->unk_328;
+        cmd.unk_C = rp->unk_534;
+        cmd.unk_30 = 0xa;
+        cmd.unk_2C = farg0;
+        fn_1_50164(rp->unk_538, rp->unk_53C, rp->unk_18, rp->unk_18, &cmd);
+        fn_1_49410();
+        fn_1_495FC();
+        fn_1_495C8(9);
+        fn_1_495B0(0x80000000);
+    }
+
+    fn_1_49590(rp->unk_B0);
+    fn_1_4954C(rp->unk_374);
+
+    if (fn_1_B7E98(1) != 0) {
+        if ((s32)lbl_14_bss_9460 != 0) {
+            fn_1_496FC(rp->unk_10, rp->unk_540);
+            fn_1_4955C(rp->unk_544, rp->unk_544);
+            sp18 = rp->unk_518;
+            fn_1_49514(&sp18);
+            t = (const char **)(dpp + 0x32FC);
+            fn_1_4AE0C(t[lbl_801A66B4]);
+            t = (const char **)(dpp + 0x3370);
+            fn_1_4AE0C(t[lbl_801A66B4]);
+            t = (const char **)(dpp + 0x33F0);
+            fn_1_4AE0C(t[lbl_801A66B4]);
+        } else {
+            fn_1_496FC(rp->unk_10, rp->unk_328);
+        }
+        fn_1_4955C(rp->unk_544, rp->unk_544);
+        sp14 = rp->unk_51C;
+        fn_1_49514(&sp14);
+        t = (const char **)(dpp + 0x34AC);
+        fn_1_4AE0C(t[lbl_801A66B4]);
+    } else if ((s32)lbl_14_bss_9460 != 0) {
+        fn_1_496FC(rp->unk_10, rp->unk_540);
+        fn_1_4955C(rp->unk_544, rp->unk_544);
+        sp10 = rp->unk_52C;
+        fn_1_49514(&sp10);
+        t = (const char **)(dpp + 0x32FC);
+        fn_1_4AE0C(t[lbl_801A66B4]);
+        t = (const char **)(dpp + 0x3370);
+        fn_1_4AE0C(t[lbl_801A66B4]);
+        t = (const char **)(dpp + 0x33F0);
+        fn_1_4AE0C(t[lbl_801A66B4]);
+    }
+
+    if (((s32)lbl_14_bss_9460 != 0 || fn_1_B7E98(1) != 0) && lbl_1_bss_962 != 0xaf) {
+        *(u32 *)bytes = rp->unk_530;
+        bytes[3] = (u8)(rp->unk_548 * farg0);
+        out = *(u32 *)bytes;
+        fn_1_4D10C(&out, rp->unk_534, rp->unk_38);
+    }
+}
+#pragma opt_propagation reset
+
+#pragma opt_lifetimes reset
+/* fzgx:end fn_14_DC90 */
+
 /* fzgx:begin fn_14_DF70 */
 extern s16 lbl_1_bss_8B3A0;
 extern u8 fn_1_128DD8(u8);

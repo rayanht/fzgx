@@ -17354,6 +17354,16 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_8004B1DC.c",
+    "symbols": [
+      "fn_8004B1DC"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3",
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
     "source": "dol/fn_8004B79C.c",
     "symbols": [
       "fn_8004B79C"
@@ -53504,6 +53514,17 @@
     ],
     "status": "matching",
     "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/pilotpoint/pilotpoint.c"
+  },
+  {
+    "module": "pilotpoint",
+    "source": "rel/pilotpoint/pilotpoint/fn_14_DC90.c",
+    "symbols": [
+      "fn_14_DC90"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
     "extra_cflags": [],
     "tu": "rel/pilotpoint/pilotpoint.c"
   },
