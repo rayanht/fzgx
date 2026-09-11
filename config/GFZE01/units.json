@@ -22199,6 +22199,27 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_80083428.c",
+    "symbols": [
+      "fn_80083428"
+    ],
+    "status": "matching",
+    "mw_version": "GC/2.0",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ],
+    "pool": {
+      "@7": "lbl_80094FE8",
+      "@127": "jumptable_8015B668"
+    }
+  },
+  {
+    "module": "main",
     "source": "dol/fn_80083970.c",
     "symbols": [
       "fn_80083970"
