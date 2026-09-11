@@ -355,3 +355,147 @@ void fn_1_9E5B8(Obj_1_bss_6EA80_Target *node) {
     }
 }
 /* fzgx:end fn_1_9E5B8 */
+
+/* fzgx:begin fn_1_9EDE8 noprologue */
+#include "dolphin/hw_regs.h"
+#include "types.h"
+#include "dolphin/types.h"
+
+extern volatile const f32 lbl_1_rodata_42D0; /* Reload before each ordered FIFO write. */
+extern volatile const f32 lbl_1_rodata_42D4; /* Reload before each ordered FIFO write. */
+extern u32 lbl_801A6D00;
+extern s32 fn_1_54E34(void *, f32);
+extern void fn_800724C8(void);
+extern void fn_8007245C(u32);
+extern void lbl_8006DAEC(void);
+extern void lbl_8006D758(void);
+extern u32 GXLoadPosMtxImm(u32, u32);
+extern void lbl_8006DB30(void);
+extern void fn_800736C0(u32, void *);
+extern u32 fn_8003462C(u32, u32, u32);
+extern void lbl_8006DFC4(u32);
+extern void lbl_8006E1D8(u32, f32, f32, f32);
+
+extern vu32 __DIRegs[];
+
+typedef struct {
+    f32 x;
+    f32 y;
+    f32 z;
+} Vec3;
+
+typedef struct {
+    u8 pad_00[0x14];
+    f32 unk_14;
+    u8 pad_18[0x0C];
+    f32 unk_24;
+    u8 pad_28[0x0C];
+    f32 unk_34;
+    u32 unk_38;
+    u32 unk_3c;
+} Obj_1_9EDE8;
+
+/* fzgx-allow: A1 GX FIFO write port; retail materialises it as lis 0xcc01/stfs -0x8000 */
+#define FIFO(v) (*(volatile f32 *)(GX_FIFO_BASE + 0x0) = (v)) /* Hardware access must remain ordered. */
+
+void fn_1_9EDE8(Obj_1_9EDE8 *arg0) {
+    Vec3 pos;
+    u32 z;
+    Vec3 vtx[4];
+    struct { f32 value; } radius;
+    struct { f32 value; } neg;
+
+    pos.x = arg0->unk_14;
+    pos.y = arg0->unk_24;
+    pos.z = arg0->unk_34;
+    if (arg0->unk_38 & 2) {
+        radius.value = *(f32 *)((u8 *)arg0 + 4);
+    } else {
+        radius.value = *(f32 *)arg0;
+    }
+    if (!(arg0->unk_38 & 4) && fn_1_54E34(&pos, radius.value) == 0) {
+        arg0->unk_38 |= 1;
+        return;
+    }
+    arg0->unk_38 &= ~1;
+    fn_800724C8();
+    fn_8007245C(0x2200);
+    lbl_8006DAEC();
+    lbl_8006D758();
+    GXLoadPosMtxImm(lbl_801A6D00, 0);
+    lbl_8006DB30();
+    z = arg0->unk_3c;
+    fn_800736C0(0, &z);
+    fn_8003462C(0x90, 0, 8);
+    FIFO(lbl_1_rodata_42D0);
+    FIFO(lbl_1_rodata_42D0);
+    FIFO(lbl_1_rodata_42D0);
+    FIFO(lbl_1_rodata_42D0);
+    FIFO(lbl_1_rodata_42D0);
+    FIFO(lbl_1_rodata_42D0);
+    FIFO(lbl_1_rodata_42D0);
+    FIFO(lbl_1_rodata_42D0);
+    FIFO(lbl_1_rodata_42D0);
+    FIFO(lbl_1_rodata_42D0);
+    FIFO(lbl_1_rodata_42D0);
+    FIFO(lbl_1_rodata_42D0);
+    FIFO(lbl_1_rodata_42D0);
+    FIFO(lbl_1_rodata_42D0);
+    FIFO(lbl_1_rodata_42D0);
+    FIFO(lbl_1_rodata_42D0);
+    FIFO(lbl_1_rodata_42D0);
+    FIFO(lbl_1_rodata_42D0);
+    FIFO(lbl_1_rodata_42D0);
+    FIFO(lbl_1_rodata_42D0);
+    FIFO(lbl_1_rodata_42D0);
+    FIFO(lbl_1_rodata_42D0);
+    FIFO(lbl_1_rodata_42D0);
+    FIFO(lbl_1_rodata_42D0);
+    FIFO(lbl_1_rodata_42D0);
+    FIFO(lbl_1_rodata_42D0);
+    FIFO(lbl_1_rodata_42D0);
+    FIFO(lbl_1_rodata_42D0);
+    FIFO(lbl_1_rodata_42D0);
+    FIFO(lbl_1_rodata_42D0);
+    FIFO(lbl_1_rodata_42D0);
+    FIFO(lbl_1_rodata_42D0);
+    FIFO(lbl_1_rodata_42D0);
+    FIFO(lbl_1_rodata_42D0);
+    FIFO(lbl_1_rodata_42D0);
+    FIFO(lbl_1_rodata_42D0);
+    FIFO(lbl_1_rodata_42D0);
+    FIFO(lbl_1_rodata_42D0);
+    FIFO(lbl_1_rodata_42D0);
+    FIFO(lbl_1_rodata_42D0);
+    fn_8003462C(0x80, 0, 4);
+    radius.value = *(f32 *)arg0;
+    neg.value = -radius.value;
+    lbl_8006DAEC();
+    lbl_8006DFC4((u32)((u8 *)arg0 + 8));
+    lbl_8006E1D8((u32)&vtx[0], neg.value, neg.value, lbl_1_rodata_42D0);
+    lbl_8006E1D8((u32)&vtx[1], radius.value, neg.value, lbl_1_rodata_42D0);
+    lbl_8006E1D8((u32)&vtx[2], radius.value, radius.value, lbl_1_rodata_42D0);
+    lbl_8006E1D8((u32)&vtx[3], neg.value, radius.value, lbl_1_rodata_42D0);
+    lbl_8006DB30();
+    FIFO(vtx[0].x);
+    FIFO(vtx[0].y);
+    FIFO(vtx[0].z);
+    FIFO(lbl_1_rodata_42D0);
+    FIFO(lbl_1_rodata_42D0);
+    FIFO(vtx[1].x);
+    FIFO(vtx[1].y);
+    FIFO(vtx[1].z);
+    FIFO(lbl_1_rodata_42D4);
+    FIFO(lbl_1_rodata_42D0);
+    FIFO(vtx[2].x);
+    FIFO(vtx[2].y);
+    FIFO(vtx[2].z);
+    FIFO(lbl_1_rodata_42D4);
+    FIFO(lbl_1_rodata_42D4);
+    FIFO(vtx[3].x);
+    FIFO(vtx[3].y);
+    FIFO(vtx[3].z);
+    FIFO(lbl_1_rodata_42D0);
+    FIFO(lbl_1_rodata_42D4);
+}
+/* fzgx:end fn_1_9EDE8 */

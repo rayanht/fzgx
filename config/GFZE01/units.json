@@ -1877,6 +1877,20 @@
   },
   {
     "module": "customize",
+    "source": "rel/customize/toolkit/fn_3_2A2F8.c",
+    "symbols": [
+      "fn_3_2A2F8"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "tu": "rel/customize/toolkit.c",
+    "pool": {
+      "@25": "lbl_3_rodata_800"
+    }
+  },
+  {
+    "module": "customize",
     "source": "rel/customize/toolkit/fn_3_2B750.c",
     "symbols": [
       "fn_3_2B750"
@@ -26072,6 +26086,17 @@
     ],
     "status": "matching",
     "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/background.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/background/fn_1_9EDE8.c",
+    "symbols": [
+      "fn_1_9EDE8"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
     "extra_cflags": [],
     "tu": "rel/main_rel/background.c"
   },

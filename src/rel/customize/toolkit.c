@@ -645,6 +645,101 @@ void fn_3_268D0(CustomizeObject *self) {
 }
 /* fzgx:end fn_3_268D0 */
 
+/* fzgx:begin fn_3_2A2F8 */
+#include "font.h"
+
+struct fn_3_2A2F8_Copy88 { u32 a[22]; };
+extern s32 lbl_3_bss_24370;
+extern f64 lbl_3_rodata_800;
+extern u32 lbl_1_rodata_26F8;
+extern int fn_1_4F734(FontDrawPacket *);
+extern void fn_1_51564(u16, u16, u16, u16, u16, u16);
+extern void fn_1_5158C(FontDrawPacket *, u32, s16, s16);
+
+void fn_3_2A2F8(s16 arg0, s16 arg1, s16 arg2, s16 arg3, s32 arg4) {
+    s32 digit;
+    s32 value;
+    FontDrawPacket loc_8;
+
+    if (arg4 < 0) {
+        value = 0;
+    } else {
+        value = 0x1869F;
+        if (arg4 <= 0x1869F) {
+            value = arg4;
+        }
+    }
+    if (lbl_3_bss_24370 - 1 > value) {
+        value = lbl_3_bss_24370 - 1;
+    }
+    lbl_3_bss_24370 = value;
+
+    loc_8 = *(const FontDrawPacket *)((const u8 *)&lbl_1_rodata_26F8);
+    loc_8.image = 0xA302;
+    loc_8.x = (f32)(arg0 - 0x32);
+    loc_8.y = (f32)arg1;
+    loc_8.z = (f32)(arg2 - 1);
+    fn_1_4F734(&loc_8);
+
+    loc_8 = *(const FontDrawPacket *)((const u8 *)&lbl_1_rodata_26F8);
+    loc_8.image = 0xA311;
+    loc_8.x = (f32)(arg0 - 0x3F);
+    loc_8.y = (f32)(arg1 - 0xF);
+    loc_8.z = (f32)arg2;
+    fn_1_4F734(&loc_8);
+
+    digit = lbl_3_bss_24370 % 10;
+    loc_8 = *(const FontDrawPacket *)((const u8 *)&lbl_1_rodata_26F8);
+    loc_8.image = 0xA300;
+    loc_8.x = (f32)((((arg3 * 3) + (arg0)) + (3)));
+    loc_8.y = (f32)arg1;
+    loc_8.z = (f32)(arg2 - 2);
+    fn_1_51564(0, 0, 0x10, 0x14, 0xA, 1);
+    fn_1_5158C(&loc_8, loc_8.image, (s16)(digit % 10), (s16)(digit / 10));
+    fn_1_4F734(&loc_8);
+
+    digit = (lbl_3_bss_24370 / 10) % 10;
+    loc_8 = *(const FontDrawPacket *)((const u8 *)&lbl_1_rodata_26F8);
+    loc_8.image = 0xA300;
+    loc_8.x = (f32)((((arg3 * 2) + (arg0)) + (3)));
+    loc_8.y = (f32)arg1;
+    loc_8.z = (f32)(arg2 - 2);
+    fn_1_51564(0, 0, 0x10, 0x14, 0xA, 1);
+    fn_1_5158C(&loc_8, loc_8.image, (s16)(digit % 10), (s16)(digit / 10));
+    fn_1_4F734(&loc_8);
+
+    digit = (lbl_3_bss_24370 / 100) % 10;
+    loc_8 = *(const FontDrawPacket *)((const u8 *)&lbl_1_rodata_26F8);
+    loc_8.image = 0xA300;
+    loc_8.x = (f32)((((((arg0)) + ((arg3)))) + (3)));
+    loc_8.y = (f32)arg1;
+    loc_8.z = (f32)(arg2 - 2);
+    fn_1_51564(0, 0, 0x10, 0x14, 0xA, 1);
+    fn_1_5158C(&loc_8, loc_8.image, (s16)(digit % 10), (s16)(digit / 10));
+    fn_1_4F734(&loc_8);
+
+    digit = (lbl_3_bss_24370 / 1000) % 10;
+    loc_8 = *(const FontDrawPacket *)((const u8 *)&lbl_1_rodata_26F8);
+    loc_8.image = 0xA300;
+    loc_8.x = (f32)(arg0 + 3);
+    loc_8.y = (f32)arg1;
+    loc_8.z = (f32)(arg2 - 2);
+    fn_1_51564(0, 0, 0x10, 0x14, 0xA, 1);
+    fn_1_5158C(&loc_8, loc_8.image, (s16)(digit % 10), (s16)(digit / 10));
+    fn_1_4F734(&loc_8);
+
+    digit = (lbl_3_bss_24370 / 10000) % 10;
+    loc_8 = *(const FontDrawPacket *)((const u8 *)&lbl_1_rodata_26F8);
+    loc_8.image = 0xA300;
+    loc_8.x = (f32)((arg0 - arg3) + 3);
+    loc_8.y = (f32)arg1;
+    loc_8.z = (f32)(arg2 - 2);
+    fn_1_51564(0, 0, 0x10, 0x14, 0xA, 1);
+    fn_1_5158C(&loc_8, loc_8.image, (s16)(digit % 10), (s16)(digit / 10));
+    fn_1_4F734(&loc_8);
+}
+/* fzgx:end fn_3_2A2F8 */
+
 /* fzgx:begin fn_3_2B750 */
 u32 fn_3_2B750(s16 arg0, s16 arg1) {
     return *(u32 *)(lbl_3_data_4648 + arg0 * 0x18 + arg1 * 4);
