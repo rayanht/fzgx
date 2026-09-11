@@ -77,6 +77,9 @@ Rules that hold for everyone:
   *pool match*: accepted and spliced, retail object still linked (`link_state=pool`).
   REL pool reads must use the relocation target's section: offsets overlap across
   `.text`, `.rodata` and `.data`. DOL strings use address-based segment lookup.
+  Shared BSS copies use the same binding path after symbol, size and zero-section
+  checks; preserve definitions when their range already belongs to the function's
+  unit. Compiler-generated `$N` names are ELF bindings, not valid MWCC C identifiers.
   `fzgx fixup` re-checks every saved body after oracle/header changes (and searches the rest).
 - Matchers edit only their own unit, and only through `write_unit`. Headers,
   names and splits belong to the librarian.

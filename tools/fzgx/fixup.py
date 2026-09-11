@@ -24,6 +24,7 @@ def digest(value):
 class Engine:
     def __init__(self, project, output, verbose=False):
         self.project, self.output, self.verbose = project, output, verbose
+        self.generator_sha256 = digest(Path(__file__).read_bytes() + Path(source.__file__).read_bytes() + Path(evidence.__file__).read_bytes() + Path(mwgraph.__file__).read_bytes())
         output.mkdir(parents=True, exist_ok=True)
         self.headers = mwgraph.header_fingerprint(ROOT, project.version)
         self.environment = digest((self.headers + ''.join(digest((ROOT/'tools/fzgx'/f).read_bytes()) for f in
@@ -96,7 +97,8 @@ class Engine:
                 if row['score'] == 100:
                     check = self.check(row)
                     row['matched'] = bool(check.matched or check.matched_pool)
-                self.cache[row['id']] = {k:row[k] for k in ('object','score','bit_errors','matched') if k in row}
+                    row['binding_score'] = check.percent_adjusted
+                self.cache[row['id']] = {k:row[k] for k in ('object','score','bit_errors','matched','binding_score') if k in row}
             if time.monotonic()-progress >= 10:
                 self.cache_path.write_text(json.dumps(self.cache))
                 self.emit({'stage': 'compile', 'compiled': self.compiled, 'cached': self.cached})
@@ -104,7 +106,7 @@ class Engine:
         self.compile_seconds += time.monotonic()-tick
         self.cache_path.write_text(json.dumps(self.cache))
         for row in rows:
-            row.update({k:v for k,v in unique[row['id']].items() if k in ('object','score','bit_errors','matched')})
+            row.update({k:v for k,v in unique[row['id']].items() if k in ('object','score','bit_errors','matched','binding_score')})
             # An exact function diff ignores other emitted functions. REL links
             # retain static helper copies, shifting text and dependent modules.
             sym = self.project.resolve(row['symbol'])
@@ -114,6 +116,27 @@ class Engine:
                 extras = [s['name'] for s in elf.symbols() if s['info'] & 15 == 2 and s['shndx'] and s['size'] and s['name'] != sym.name]
                 if extras:
                     row.update(matched=False, object_matched=True, extra_helpers=extras)
+            if row.get('matched') and row.get('object'):
+                from .poolfix import Elf
+                from .carve import exclusive_data
+                elf = Elf(Path(row['object']).read_bytes())
+                targets = dict(self.project.symbols(sym.module))
+                targets.update({f'{s.name}_{s.addr:08X}': s for s in list(targets.values())})
+                definitions = [targets[s['name']] for s in elf.symbols()
+                               if s['name'] in targets and s['size'] and 0 < s['shndx'] < len(elf.sections)
+                               and elf.sections[s['shndx']]['name'] in ('.bss', '.sbss')]
+                if definitions:
+                    fn = self.project.function(row['symbol'])
+                    owned = {s.name for group in exclusive_data(self.project, fn).values() for s in group} if fn else set()
+                    mapped = {target for _, target, _ in getattr(self.check(row), '_pool_pairs', [])}
+                    shared = [s.name for s in definitions if s.name not in owned and s.name not in mapped]
+                    if shared:
+                        row.update(matched=False, object_matched=True, extra_data=shared)
+            if row.get('matched'):
+                from .lint import lint_file
+                findings = lint_file(Path(row['source']))
+                if findings:
+                    row.update(matched=False, object_matched=True, source_lint=findings)
             failed = self.rejected.get(row['symbol'], {})
             if (failed.get('link') == 'rejected' and failed.get('generated_sha256') == row['sha256']
                     and failed.get('compiler') == row['mw'] and (failed.get('flags') or '') == row['flags']
@@ -136,11 +159,18 @@ class Engine:
         if check.ok:
             families.append(evidence.candidates(self.project, row['symbol'], body, check))
         if row.get('score') == 100:
-            families.insert(0, list(source.inline_helpers(body,name)))
+            if row.get('source_lint') and (check.matched or check.matched_pool):
+                yield from source.annotate_verified_branches(body, row['source_lint'])
+            yield from source.inline_helpers(body,name)
+            if families:
+                yield from families[0][:8]
         if capture:
             constraints = source.web_constraints(capture, self.targets[row['symbol']][1], self.words[row['id']])
             decls, _ = source.declaration_candidates(body, name, capture, constraints, max_orders)
-            families.append([('graph declaration-order',t) for t in decls]+source.carrier_candidates(body,name,capture,constraints))
+            # Allocator-derived edits have measured higher yield than spelling
+            # probes; do not bury them behind already-exhausted generic families.
+            yield from [('graph declaration-order',t) for t in decls]
+            yield from source.carrier_candidates(body,name,capture,constraints)
         families.extend([source.missing_values(body,name), source.expression_trees(body,name),
                          source.commutations(body,name), source.probes(body,name,64),
                          [(family+': '+label,text) for family,label,text in source.all_rewrites(body,name)]])
@@ -149,6 +179,27 @@ class Engine:
             for family in families:
                 if i < len(family):
                     yield family[i]
+
+    def refresh_captures(self, frontier, captures):
+        from types import SimpleNamespace
+        layers=defaultdict(dict)
+        for symbol,seeds in frontier.items():
+            for rank,row in enumerate(seeds):
+                key=(symbol,row['sha256'],row['mw'],row['flags'])
+                if key in captures or self.compilers[row['mw']] not in mwgraph.PROFILES:
+                    continue
+                layers[rank][symbol]=row
+        for rows in layers.values():
+            key=digest(json.dumps(sorted(r['id'] for r in rows.values())).encode())[:12]
+            directory=STATE_DIR/'fixup'/'graphs'/key
+            directory.mkdir(parents=True,exist_ok=True)
+            (directory/'inputs.json').write_text(json.dumps(rows))
+            (directory/'results.json').write_text(json.dumps({s:{'baseline':{'object':r['object']}} for s,r in rows.items()}))
+            output=directory/'capture'
+            self.emit({'stage':'capture','functions':len(rows)})
+            args=SimpleNamespace(corpus=directory,output=output,symbols=None,all_near=True,replay=(output/'report.json').exists())
+            mwgraph.capture(self.project,args,locked=True)
+            captures.update(load_captures(self,output,list(rows.values())))
 
     def run(self, rows, rounds=2, beam=3, max_candidates=80, budget_s=None, captures=None):
         start=time.monotonic(); history=list(rows); seen={r['id'] for r in rows}; initial={}
@@ -164,14 +215,17 @@ class Engine:
                 break
             winners={r['symbol'] for r in history if r.get('matched')}
             frontier=defaultdict(list); shapes=defaultdict(set)
-            for row in sorted(history,key=lambda r:(-r['score'],r['bit_errors'],r['id'])):
+            for row in sorted(history,key=lambda r:(-r['score'],-r.get('binding_score',0),r['bit_errors'],r['id'])):
                 symbol=row['symbol']; words=self.words.get(row['id'])
                 if symbol in winners or not words or len(frontier[symbol])>=beam:
                     continue
-                shape=tuple(words)
+                # Same instructions can hide different literal/relocation data.
+                shape=(tuple(words), row.get('binding_score',0))
                 if shape in shapes[symbol]:
                     continue
                 shapes[symbol].add(shape);frontier[symbol].append(row)
+            if captures is not None:
+                self.refresh_captures(frontier,captures)
             pending=[]; parents={}; generated=time.monotonic()
             for symbol, seeds in frontier.items():
                 for seed in seeds:
@@ -216,13 +270,13 @@ class Engine:
 
     def save(self,history,stats,start):
         best={}
-        for r in sorted(history,key=lambda r:(not r.get('matched',False),-r['score'],r['bit_errors'],r['id'])):
+        for r in sorted(history,key=lambda r:(not r.get('matched',False),-r['score'],-r.get('binding_score',0),r['bit_errors'],r['id'])):
             best.setdefault(r['symbol'],r)
         for row in best.values():
             if row['score'] >= 0:
                 result = self.check(row)
                 row['percent'] = max(result.percent, result.percent_adjusted) if result.ok else 0
-        report=dict(generator_sha256=digest((Path(__file__).read_bytes()+Path(source.__file__).read_bytes()+Path(evidence.__file__).read_bytes())), records=history, best=best, rounds=stats, compiled=self.compiled,cached=self.cached,
+        report=dict(generator_sha256=self.generator_sha256, records=history, best=best, rounds=stats, compiled=self.compiled,cached=self.cached,
                     compile_seconds=self.compile_seconds,seconds=time.monotonic()-start,environment=self.environment)
         (self.output/'report.json').write_text(json.dumps(report))
         return report
@@ -419,10 +473,20 @@ def load_captures(engine,path,rows):
     if path is None:
         return {}
     jobs=json.loads((path/'config.json').read_text())['jobs'];result={}
+    report_path = path/'replay-report.json'
+    if not report_path.exists():
+        report_path = path/'report.json'
+    reports = {r['symbol']: r for r in json.loads(report_path.read_text())['functions']}
     seeds={(r['symbol'],r['sha256'],r['mw'],r['flags']):r for r in rows}
     for job in jobs:
         matching=[(key,r) for key,r in seeds.items() if key[:3]==(job['symbol'],job['source_sha256'],job['compiler'])]
         for key,row in matching:
+            proof = reports.get(job['symbol'], {})
+            if (not proof.get('same_code') or not proof.get('same_object')
+                    or proof.get('replay_errors') or proof.get('simplify_errors')
+                    or proof.get('source_sha256') != row['sha256']):
+                engine.emit({'stage': 'capture-rejected', 'symbol': row['symbol'], 'reason': 'capture validation failed'})
+                continue
             flags,_=oracle.module_flags(engine.project,engine.project.resolve(row['symbol']).module)
             extra=shlex.split(row['flags']);levels=[f for f in extra if f.startswith('-O')]
             expected=[levels[-1] if levels and f.startswith('-O') else f for f in shlex.split(flags)]
@@ -453,7 +517,7 @@ def command(p,args):
         report=json.loads((output/'report.json').read_text())
     else:
         engine=Engine(p,output,verbose=True);rows=load_records(engine,args)
-        captures=load_captures(engine,args.captures,rows)
+        captures=load_captures(engine,args.captures,rows) if args.captures else None
         with oracle.build_lock():
             report=engine.run(rows,args.rounds,args.beam,args.max_candidates,args.budget,captures)
         # One canonical corpus format for capture and future repair, all variants

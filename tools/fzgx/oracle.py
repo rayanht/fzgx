@@ -317,12 +317,15 @@ def _diff(project: Project, module: str, symbol: str, unit: str, max_diff_lines:
         if symbol not in right_syms:
             res.diff = [f"(symbol {symbol} not present in our object: define it, check the name)"]
         else:
-            pool_rows, res._pool_pairs = _pool_rows(project, module, left, right, lrows, rrows, base)
+            pool_rows, res._pool_pairs = _pool_rows(project, module, left, right, lrows, rrows, base, symbol)
             if base is not None:
                 data_rows, data_pairs = _data_pool_rows(project, module, base, left, right, lrows, rrows)
                 pool_rows |= data_rows
                 res._pool_pairs += data_pairs
-                bss_rows, bss_pairs = _bss_base_rows(project, module, base, left, right, lrows, rrows)
+                ro_rows, ro_pairs = _data_pool_rows(project, module, base, left, right, lrows, rrows, ".rodata")
+                pool_rows |= ro_rows
+                res._pool_pairs += ro_pairs
+                bss_rows, bss_pairs = _bss_base_rows(project, module, base, left, right, lrows, rrows, symbol)
                 pool_rows |= bss_rows
                 res._pool_pairs += bss_pairs
             res.pool = [d for _, _, d in res._pool_pairs]
@@ -374,13 +377,12 @@ def _equivalent_reloc_rows(project, module, obj, left, right, lrows, rrows):
     return rows
 
 
-def _bss_base_rows(project, module, obj, left, right, lrows, rrows):
+def _bss_base_rows(project, module, obj, left, right, lrows, rrows, function_name=None):
     """A compiler section base and its named BSS object denote the same storage."""
     elf = poolfix.Elf(obj.read_bytes())
-    section = elf.section('.bss')
-    if not section:
-        return set(), []
     symbols = {s['name']: s for s in elf.symbols()}
+    fn = project.symbols(module).get(function_name)
+    unit = project.unit_of(fn) if fn else None
     rows, pairs = set(), []
     for i, (l, r) in enumerate(zip(lrows, rrows)):
         li, ri = l.get('instruction', {}), r.get('instruction', {})
@@ -392,33 +394,50 @@ def _bss_base_rows(project, module, obj, left, right, lrows, rrows):
         lname = left['symbols'][lr['target_symbol']]['name']
         rname = right['symbols'][rr['target_symbol']]['name']
         anchor, owned = symbols.get(rname), symbols.get(lname)
-        if not rname.startswith('...bss') or not anchor or not owned:
+        if not anchor or not 0 < anchor['shndx'] < len(elf.sections):
+            continue
+        section = elf.sections[anchor['shndx']]
+        if section['name'] not in ('.bss', '.sbss'):
             continue
         retail = project.symbols(module).get(lname)
         if retail is None:
             retail = next((s for s in project.symbols(module).values() if lname == f'{s.name}_{s.addr:08X}'), None)
-        if not retail or retail.section != '.bss' or owned['size'] != retail.size:
+        if not retail or retail.section not in ('.bss', '.sbss'):
+            continue
+        owned_here = unit is not None and project.unit_of(retail) == unit
+        if (anchor['size'] == retail.size and retail.size > 0
+                and (rname in (lname, retail.name) or
+                     ('$' in rname and '$' in retail.name and rname.split('$')[0] == retail.name.split('$')[0]))):
+            if owned_here:
+                continue
+            rows.add(i)
+            pair = (rname, retail.name, f'{retail.name}=BSS object[{retail.size}]')
+            if pair not in pairs:
+                pairs.append(pair)
+            continue
+        if not rname.startswith('...bss') or not owned or owned['size'] != retail.size:
             continue
         if anchor['shndx'] != section['index'] or owned['shndx'] != section['index'] or anchor['value'] != owned['value']:
             continue
         rows.add(i)
-        pair = (rname, lname, f'{lname}=owned BSS base')
-        if pair not in pairs:
-            pairs.append(pair)
+        for private in ((rname,) if owned_here else (rname, owned['name'])):
+            pair = (private, retail.name, f'{retail.name}=owned BSS base')
+            if pair not in pairs:
+                pairs.append(pair)
     return rows, pairs
 
 
-def _data_pool_rows(project, module, obj, left, right, lrows, rrows):
-    """Retarget a compiler-owned string pool only when its entire byte range agrees."""
+def _data_pool_rows(project, module, obj, left, right, lrows, rrows, section_name=".data"):
+    """Retarget a private literal pool only when its entire byte range agrees."""
     elf = poolfix.Elf(obj.read_bytes())
-    section = elf.section('.data')
+    section = elf.section(section_name)
     if not section or not section['size']:
         return set(), []
     if any(s['type'] == 4 and s['info'] == section['index'] and s['size'] for s in elf.sections):
         return set(), []
     symbols = elf.symbols()
     defined = [s for s in symbols if s['shndx'] == section['index'] and s['size']]
-    if not defined or any(not s['name'].startswith('@') for s in defined):
+    if not defined:
         return set(), []
     payload = bytes(elf.data[section['offset']:section['offset'] + section['size']])
     rows, pairs = set(), []
@@ -434,21 +453,36 @@ def _data_pool_rows(project, module, obj, left, right, lrows, rrows):
         ours = next((s for s in symbols if s['name'] == rname), None)
         target = project.symbols(module).get(lname)
         if target is None:
-            suffix = re.search(r'_([0-9A-Fa-f]{8})$', lname)
-            target = next((s for s in project.symbols(module).values() if suffix and s.addr == int(suffix[1], 16)), None)
+            suffix = re.fullmatch(r'(.+)_([0-9A-Fa-f]{8})', lname)
+            target = project.symbols(module).get(suffix[1]) if suffix else None
+            if target and target.addr != int(suffix[2], 16):
+                target = None
         if not ours or ours['shndx'] != section['index'] or not target:
             continue
         address = target.addr + int(lr.get('addend') or 0) - ours['value'] - int(rr.get('addend') or 0)
+        layout = project._rel_layout(module)
+        regions = layout.values() if module == 'main' else [layout.get(target.section, (0, b''))]
         actual = next((raw[address - base:address - base + len(payload)]
-                       for base, raw in project._rel_layout(module).values()
+                       for base, raw in regions
                        if base <= address and address + len(payload) <= base + len(raw)), None)
         if payload != actual:
             continue
-        rows.add(i)
-        if ours['value'] == 0 and (lr.get('addend') or 0) == (rr.get('addend') or 0):
-            pair = (rname, lname, f'{lname}=string pool[{len(payload)}]')
-            if pair not in pairs:
-                pairs.append(pair)
+        named = []
+        for own in defined:
+            if own['name'].startswith('@'):
+                continue
+            known = project.symbols(module).get(own['name'])
+            if (not known or known.kind != 'object' or known.section != target.section
+                    or address + own['value'] != known.addr or own['size'] > known.size):
+                break
+            named.append((own['name'], known.name, f'{known.name}=verified pool object[{own["size"]}]'))
+        else:
+            rows.add(i)
+            if ours['value'] == 0 and (lr.get('addend') or 0) == (rr.get('addend') or 0):
+                pair = (rname, lname, f'{lname}=literal pool[{len(payload)}]')
+                for item in [pair, *named]:
+                    if item not in pairs:
+                        pairs.append(item)
     return rows, pairs
 
 
@@ -504,8 +538,40 @@ def _abs_rows(right: dict, lrows: List[dict], rrows: List[dict]) -> set:
     return rows
 
 
+def _local_table_matches(project, module, elf, private, retail, function_name):
+    """Prove every switch entry against its containing function's code offset."""
+    if not elf or not private or not function_name or module != 'main':
+        return False
+    symbols = elf.symbols()
+    fn = next((s for s in symbols if s['name'] == function_name and s['info'] & 15 == 2), None)
+    target = project.symbols(module).get(function_name)
+    if not fn or not target or private['size'] != retail.size or not retail.size or retail.size % 4:
+        return False
+    from .evidence import retail_bytes
+    data = retail_bytes(project, module, retail.name, 0, retail.size)
+    if data is None:
+        return False
+    entries = {}
+    for section in elf.sections:
+        if section['type'] != 4 or section['info'] != private['shndx']:
+            continue
+        for pos in range(section['offset'], section['offset'] + section['size'], 12):
+            offset, info, addend = struct.unpack_from('>IIi', elf.data, pos)
+            offset -= private['value']
+            if not 0 <= offset < private['size']:
+                continue
+            if info & 255 != 1 or offset % 4 or offset in entries:
+                return False
+            dest = symbols[info >> 8]
+            relative = dest['value'] + addend - fn['value']
+            if dest['shndx'] != fn['shndx'] or not 0 <= relative < target.size or relative % 4:
+                return False
+            entries[offset] = target.addr + relative
+    return len(entries) * 4 == retail.size and all(struct.unpack_from('>I', data, off)[0] == value for off, value in entries.items())
+
+
 def _pool_rows(project: Project, module: str, left: dict, right: dict,
-               lrows: List[dict], rrows: List[dict], obj: Optional[Path] = None):
+               lrows: List[dict], rrows: List[dict], obj: Optional[Path] = None, function_name=None):
     """Rows that differ only by `relocation to a pooled constant (retail)` vs `relocation to
     our private literal with the same bytes`. Returns (row indices, [(private, pooled, desc)])."""
     lsyms, rsyms = left.get("symbols", []), right.get("symbols", [])
@@ -545,9 +611,19 @@ def _pool_rows(project: Project, module: str, left: dict, right: dict,
             if pair not in pairs:
                 pairs.append(pair)
             continue
+        if (s and s.kind == 'object' and rsym.get('name', '').startswith('@')
+                and int(lrel.get('addend') or 0) == int(rrel.get('addend') or 0)
+                and _local_table_matches(project, module, elf, objects.get(rsym['name']), s, function_name)):
+            rows.add(i)
+            pair = (rsym['name'], s.name, f'{s.name}=verified switch[{s.size // 4}]')
+            if pair not in pairs:
+                pairs.append(pair)
+            continue
         if not s or s.kind != "object" or s.section not in (".rodata", ".sdata2", ".data", ".sdata"):
             continue
-        if not rsym.get('name', '').startswith('@'):
+        private_name = rsym.get('name', '')
+        if not (private_name.startswith('@') or ('$' in private_name and '$' in s.name
+                and private_name.split('$')[0] == s.name.split('$')[0])):
             continue
         # Private initializer objects include strings and aggregates, not just
         # floating literals. Verify the complete object, including padding, and

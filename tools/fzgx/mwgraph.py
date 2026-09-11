@@ -278,9 +278,10 @@ def replay_archive(path):
                       'replay_ms': elapsed / 1e6, 'errors': 0}, indent=2))
 
 
-def capture(project, args):
+def capture(project, args, locked=False):
     from . import oracle, mwconstraints
     import os, signal, shlex, subprocess, time
+    from contextlib import nullcontext
     root = Path(__file__).resolve().parents[2]
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=True)
@@ -337,7 +338,7 @@ def capture(project, args):
         config.write_text(json.dumps(expected))
         start = time.perf_counter()
         script = root / 'tools/fzgx/mwgraph_lldb.py'
-        with oracle.build_lock(), (output / 'lldb.log').open('w') as log:
+        with (nullcontext() if locked else oracle.build_lock()), (output / 'lldb.log').open('w') as log:
             command = ['xcrun', 'lldb', '-b', '-o', f'command script import "{script}"',
                        '-o', f'script mwgraph_lldb.run(lldb.debugger, {str(config)!r})',
                        '-o', 'quit']
@@ -364,12 +365,14 @@ def capture(project, args):
         baseline_words = oracle.words(baseline, job['name'])
         same_code = bool(captured_words) and captured_words == baseline_words
         same_object, object_percent = oracle.function_score(project, job['name'], baseline, Path(job['args'][-1]))
-        errors, simplify_errors, witnesses, count = [], [], 0, 0
+        errors, simplify_errors, simplify_unsupported, witnesses, count = [], [], [], 0, 0
         start = time.perf_counter_ns()
         for capture in result['captures']:
             before, after = capture['before'], capture['after']
             order = simplify(before)
-            if order != before['simplify_order']:
+            if order is None:
+                simplify_unsupported.append(before['register_class'])
+            elif order != before['simplify_order']:
                 simplify_errors.append(before['register_class'])
             colors = replay(before)
             errors.extend((n['virtual_register'], colors[n['virtual_register']], n['physical_register'])
@@ -404,12 +407,16 @@ def capture(project, args):
                      'source_sha256': inputs[symbol]['sha256'], 'same_code': same_code,
                      'same_object': same_object, 'object_percent': object_percent,
                      'passes': len(result['captures']), 'active_nodes': count,
-                     'replay_errors': errors, 'simplify_errors': simplify_errors, 'replay_ns': replay_ns,
+                     'replay_errors': errors, 'simplify_errors': simplify_errors,
+                     'simplify_unsupported': simplify_unsupported, 'replay_ns': replay_ns,
                      'baseline_order_witnesses': witnesses, 'inverse_ns': inverse_ns,
                      'target_constraints': constraints, 'target_ns': target_ns,
                      'source_projections': len(set(projections))})
     report = {'capture_seconds': capture_seconds, 'functions': rows}
     (output / ('replay-report.json' if args.replay else 'report.json')).write_text(json.dumps(report, indent=2) + '\n')
-    print(json.dumps({'functions': len(rows), 'capture_seconds': capture_seconds, 'errors': sum(bool(r.get('error')) for r in rows)}))
-    if any(r.get('error') or not r['same_code'] or not r['same_object'] or r['replay_errors'] or r['simplify_errors'] for r in rows):
+    failures = sum(bool(r.get('error') or not r.get('same_code') or not r.get('same_object')
+                        or r.get('replay_errors') or r.get('simplify_errors')) for r in rows)
+    print(json.dumps({'functions': len(rows), 'capture_seconds': capture_seconds, 'errors': failures,
+                      'unsupported_simplify': sum(len(r.get('simplify_unsupported', [])) for r in rows)}), flush=True)
+    if failures:
         raise SystemExit(1)

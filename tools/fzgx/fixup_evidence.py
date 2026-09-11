@@ -143,6 +143,131 @@ def string_literals(p: Project, module: str, body: str, base: oracle.CheckResult
                 continue
             if value == current:
                 out.append((f'retail string {expected!r}', body[:token.start()] + json.dumps(expected) + body[token.end():]))
+    # Pooled strings are addressed through one section base, so later strings
+    # have no instruction relocation of their own. Recover their boundaries
+    # from the emitted symbols and retain retail padding when literals shrink.
+    pools = {}
+    reloc = re.compile(r'([A-Za-z_.$@][\w.$@]*?)([+-]0x[0-9a-f]+)?@(?:ha|l|sda21)\b')
+    for left, right in zip(*getattr(base, '_rows', ([], []))):
+        lt, rt = reloc.search(stuck._fmt(left)), reloc.search(stuck._fmt(right))
+        target, anchor = targets.get(lt[1]) if lt else None, own.get(rt[1]) if rt else None
+        if not target or not anchor or not rt[1].startswith('...data'):
+            continue
+        delta = (int(lt[2], 0) if lt[2] else 0) - (int(rt[2], 0) if rt[2] else 0) - anchor['value']
+        pools.setdefault(anchor['shndx'], set()).add((target.name, delta))
+    replacements = {}
+    for index, bindings in pools.items():
+        if len(bindings) != 1 or not 0 < index < len(elf.sections):
+            continue
+        name, delta = next(iter(bindings)); target = targets[name]
+        section = elf.sections[index]
+        layout = p._rel_layout(module)
+        regions = layout.values() if module == 'main' else [layout.get(target.section, (0, b''))]
+        for private in own.values():
+            if private['shndx'] != index or not private['name'].startswith('@') or private['size'] < 2:
+                continue
+            start = section['offset'] + private['value']
+            raw = bytes(elf.data[start:start + private['size']])
+            if not raw.endswith(b'\0') or b'\0' in raw[:-1]:
+                continue
+            address = target.addr + delta + private['value']
+            expected = next((data[address - base:address - base + 4096].split(b'\0', 1)[0]
+                             for base, data in regions if base <= address < base + len(data)
+                             and b'\0' in data[address - base:address - base + 4096]), None)
+            if expected is None or any(c >= 128 for c in expected) or raw[:-1] == expected:
+                continue
+            replacements.setdefault(raw[:-1].decode('latin1'), set()).add(expected.decode('ascii'))
+    edits = []
+    for token in re.finditer(r'"(?:\\.|[^"\\])*"', body):
+        try:
+            current = ast.literal_eval(token[0])
+        except (ValueError, SyntaxError):
+            continue
+        choices = replacements.get(current, set())
+        if len(choices) == 1:
+            edits.append((token.start(), token.end(), current, next(iter(choices))))
+    for padded in (False, True):
+        text = body
+        for start, end, current, expected in reversed(edits):
+            if padded:
+                expected += '\0' * max(0, len(current) - len(expected))
+            literal = json.dumps(expected).replace('\\u0000', '\\000')
+            text = text[:start] + literal + text[end:]
+        if text != body:
+            out.insert(0, ('recover pooled strings' + (' with padding' if padded else ''), text))
+    return out
+
+
+def relocation_bindings(p, sym, body, base):
+    """Express retail base/addend bindings using typed C lvalues."""
+    from .poolfix import Elf
+    elf = Elf(base._object.read_bytes())
+    own = {s['name']: s for s in elf.symbols()}
+    targets = dict(p.symbols(sym.module))
+    targets.update({f'{s.name}_{s.addr:08X}': s for s in list(targets.values())})
+    pattern = re.compile(r'([A-Za-z_.$@][\w.$@]*?)([+-]0x[0-9a-f]+)?@(?:ha|l|sda21)\b')
+    bindings = {}
+    for left, right in zip(*base._rows):
+        lt, rt = pattern.search(stuck._fmt(left)), pattern.search(stuck._fmt(right))
+        if not lt or not rt or pattern.sub('RELOC', stuck._fmt(left)) != pattern.sub('RELOC', stuck._fmt(right)):
+            continue
+        target, private = targets.get(lt[1]), own.get(rt[1])
+        if not target or target.kind != 'object' or not private:
+            continue
+        offset = (int(lt[2], 0) if lt[2] else 0) - (int(rt[2], 0) if rt[2] else 0)
+        if not 0 <= offset < target.size:
+            continue
+        bindings.setdefault(rt[1], set()).add((target.name, offset))
+    out = []
+    span = _function_span(body, sym.name)
+    if span:
+        edits = []
+        for name, private in own.items():
+            target = targets.get(name)
+            if (not target or private['shndx'] == 0 or private['size'] != target.size
+                    or not re.fullmatch(r'[A-Za-z_]\w*', name)):
+                continue
+            decl = re.search(rf'^(?!extern\b|static\b)([A-Za-z_]\w*(?:\s+\w+)*?\s+\**\s*){re.escape(name)}(\s*(?:\[[^\]\n]*\])?\s*(?:__attribute__\(\([^\n]*\)\))?\s*)(?:=[^;\n]*)?;', body[:span[0]], re.M)
+            if decl:
+                text = 'extern ' + decl[1] + name + decl[2] + ';'
+                edits.append((decl.start(), decl.end(), text))
+        text = body
+        for start, end, replacement in sorted(edits, reverse=True):
+            text = text[:start] + replacement + text[end:]
+        if text != body:
+            out.append(('reference existing retail data definitions', text))
+    for name, choices in bindings.items():
+        if len(choices) != 1:
+            continue
+        target, offset = next(iter(choices))
+        if name == target:
+            continue
+        private = own[name]
+        if private['shndx'] == 0 and re.fullmatch(r'\w+', name) and re.fullmatch(r'\w+', target):
+            decl = re.search(rf'^\s*extern\s+([\w ]+?(?:\s*\*)*)\s+{re.escape(name)}\s*;', body, re.M)
+            if not decl:
+                continue
+            typ = decl[1].strip()
+            base_decl = re.search(rf'^\s*extern\s+{re.escape(typ)}\s+{re.escape(target)}\s*;', body, re.M)
+            width = {'u8': 1, 's8': 1, 'u16': 2, 's16': 2, 'u32': 4, 's32': 4,
+                     'int': 4, 'unsigned int': 4, 'f32': 4, 'float': 4, 'f64': 8, 'double': 8}.get(typ)
+            size = targets[target].size
+            if base_decl and width and offset % width == 0 and size % width == 0:
+                from .sdkimport import masked
+                edits = [(decl.start(), decl.end(), ''),
+                         (base_decl.start(), base_decl.end(), f'\nextern {typ} {target}[{size // width}];')]
+                for token in re.finditer(rf'\b({re.escape(name)}|{re.escape(target)})\b', masked(body)):
+                    if any(a <= token.start() < b for a, b, _ in edits[:2]):
+                        continue
+                    edits.append((token.start(), token.end(), f'{target}[{offset // width if token[0] == name else 0}]'))
+                text = body
+                for start, end, replacement in sorted(edits, reverse=True):
+                    text = text[:start] + replacement + text[end:]
+                out.append((f'recover {target} array layout for {name}', text))
+            prefix = '' if re.search(r'\b' + re.escape(target) + r'\b', body) else f'extern unsigned char {target}[];\n'
+            text = (body[:decl.start()] + '\n' + prefix + f'#define {name} (*({typ} *)((unsigned char *)&{target} + {offset}))\n' + body[decl.end():])
+            out.append((f'bind {name} to {target}+{offset}', text))
+
     return out
 
 
@@ -243,6 +368,19 @@ def float_literals(p: Project, symbol: str, body: str, base: oracle.CheckResult)
     code = masked(body)
     out, all_edits, bound_edits = [], {}, {}
     ambiguous = set()
+    for declaration in re.finditer(r'\bconst\s+(f32|f64|float|double)\s+(\w+)\s*=\s*(-?\d+\.\d*(?:[eE][+-]?\d+)?[fF]?)\s*;', code[:span[0]]):
+        width = 4 if declaration[1] in ('f32', 'float') else 8
+        target, private = targets.get(declaration[2]), own.get(declaration[2])
+        if not target or not private or private['size'] != width:
+            continue
+        raw = retail_bytes(p, sym.module, target.name, 0, width)
+        if raw is None:
+            continue
+        value = struct.unpack('>f' if width == 4 else '>d', raw)[0]
+        if math.isfinite(value):
+            replacement = repr(value) + ('f' if width == 4 else '')
+            if replacement != declaration[3]:
+                all_edits[declaration.span(3)] = replacement
     for width, current, expected in sorted(floats):
         fmt = '>f' if width == 4 else '>d'
         value = struct.unpack(fmt, expected)[0]
@@ -384,6 +522,8 @@ def candidates(p: Project, symbol: str, body: str, base: oracle.CheckResult):
     diffs = [(stuck._fmt(a), stuck._fmt(b)) for a, b in zip(lrows, rrows) if (a.get("diff_kind") or "DIFF_NONE") != "DIFF_NONE"]
     span = _function_span(body, sym.name)
     candidates: List[Tuple[str, str]] = []
+    candidates += relocation_bindings(p, sym, body, base)
+    candidates += string_literals(p, sym.module, body, base)
     # These candidates are derived from retail bytes. Large functions can
     # exhaust the candidate budget on type permutations before reaching them.
     literals = float_literals(p, symbol, body, base)
@@ -438,7 +578,6 @@ def candidates(p: Project, symbol: str, body: str, base: oracle.CheckResult):
             for n, alts in variants.items():
                 for alt in alts[:4]:
                     candidates.append((f"{n}: {mine[n]} -> {alt}", body.replace(mine[n], alt, 1)))
-    candidates += string_literals(p, sym.module, body, base)
     candidates += literals[3:]
     # wrong callee / wrong data symbol: the same instruction with a different relocation target.
     # The retail name is known; the body names ours verbatim, so the substitution is exact.

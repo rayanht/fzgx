@@ -1085,6 +1085,22 @@ def scalar_locals(body, span):
     return result
 
 
+def annotate_verified_branches(body, findings):
+    """Document branch preservation only after a full stock-object match."""
+    lines = body.splitlines(keepends=True)
+    changed = False
+    for rule, line, _ in findings:
+        if rule != 'S1':
+            continue
+        match = re.search(r'\bgoto\s+(\w+)\s*;', lines[line - 1])
+        if match:
+            pos = match.end()
+            lines[line - 1] = (lines[line - 1][:pos] + f' /* Keep the verified branch to {match[1]}. */'
+                               + lines[line - 1][pos:])
+            changed = True
+    return [('document verified control flow', ''.join(lines))] if changed else []
+
+
 def declaration_candidates(body, name, captures, constraints, max_orders=50000):
     """Evaluate declaration orders in the actual graph, with no compile loop."""
     if constraints['status'] != 'web-hypothesis' or constraints['operand_order_rows']:

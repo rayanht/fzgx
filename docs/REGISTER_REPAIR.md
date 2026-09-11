@@ -303,3 +303,41 @@ candidate collector consumes those reports for subsequent repair/model batches.
 The one-time target-index history migration is complete: its standalone auditor
 is removed, and its immutable migration/provenance records remain in `state/`.
 All future compilation goes through module-qualified targets in the engine.
+
+## Expanded corpus and binding repairs
+
+A three-round continuation covered 387 unfinished functions / 161,896 bytes.
+It evaluated 57,127 new candidate records, with 44,912 actual compiles and
+12,602 cache hits including baselines. Four functions (724 bytes) reached the
+object oracle; 80 best instruction-word scores improved. Wall time was
+1,045.16 seconds, including 824.21 seconds in compiler/oracle evaluation.
+This broader search is not a millisecond-per-function result. Its four closures
+used response composition, field order, a scalar carrier, and graph-guided
+declaration order.
+
+Graph evidence now follows changed frontier bodies across rounds. Captures
+retain stock object/color replay validation; an unsupported spilling simplify
+path is reported separately from a replay mismatch. Three such graphs previously
+aborted an otherwise valid 380-function capture. Binding quality participates in
+frontier selection, so identical instruction words no longer automatically erase
+better data bindings.
+
+The same engine now derives string-pool boundaries and padding from emitted
+symbols and retail bytes, recovers named floating initializer anchors, and emits
+typed base-plus-offset references. Whole readonly pools require complete byte
+and padding equality with no internal relocations. Newly recognized DOL switch
+tables require every entry to resolve to the correct containing-function offset.
+REL pool reads are section-qualified, including local-symbol suffix resolution.
+
+Shared BSS uses the existing relocation-retargeting path: symbol identity,
+object size, zero-initialized section and addends are checked before copies are
+removed. Data already owned by the function's unit remains defined there.
+This preserves MWCC's code generation for shared section bases and handles its
+compiler-generated `$N` local-static symbols without inventing invalid C names.
+Exact bodies with unresolved shared definitions or source-lint failures remain
+searchable. Branch comments are generated only after a full object match; lint
+rules and address restrictions are not waived.
+
+The expanded historical eligibility threshold is 90%, selecting 595 functions
+and 7,063 distinct source/compiler combinations. All were recompiled against
+current module targets; historical percentages are eligibility, not acceptance.
