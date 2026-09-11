@@ -566,6 +566,87 @@ void fn_1_1902C(StcoliNode *root, StcoliVec *vec, void *arg3, f32 value) {
 }
 /* fzgx:end fn_1_1902C */
 
+/* fzgx:begin fn_1_20258 */
+extern u8 lbl_1_data_5548[400];
+
+typedef struct Fn_1_20258Constants {
+    unsigned char pad08[8];
+    f32 value08;
+    f32 value0c;
+    unsigned char pad10[0xb0];
+    f64 valuec0;
+    f32 valuec8;
+    unsigned char padcc[4];
+    f64 valued0;
+} Fn_1_20258Constants;
+
+extern Fn_1_20258Constants lbl_1_rodata_6C8;
+extern void OSReport(const char *, ...);
+extern void OSPanic(const char *, int, const char *, ...);
+
+typedef struct Fn_1_20258 {
+    unsigned char pad00[0x30];
+    f32 field30;
+    f32 field34;
+    unsigned char pad38[4];
+    f32 field3c;
+    unsigned char pad40[0x28];
+    f32 field68;
+    f32 field6c;
+    unsigned char pad70[0xc];
+    u32 flags;
+} Fn_1_20258;
+
+#pragma opt_strength_reduction on
+f32 fn_1_20258(Fn_1_20258 *self, f32 *out_ratio) {
+    u32 flags = self->flags;
+    u8 *data = lbl_1_data_5548;
+    Fn_1_20258Constants *constants = &lbl_1_rodata_6C8;
+    f32 ratio;
+    f32 scale;
+
+    if ((flags & 0x01c00000) != 0) {
+        ratio = self->field34 / self->field30;
+        if (ratio < constants->valuec0) {
+            ratio = constants->value08;
+        }
+    } else if ((flags & 0x02200000) != 0) {
+        ratio = constants->value0c;
+    } else {
+        OSReport((const char *)(data + 0x108), flags);
+        OSPanic((const char *)(data + 0x12c), 0x1650,
+                    (const char *)(data + 0x134));
+    }
+
+    if ((self->flags & 0x02200000) != 0 ||
+        constants->value08 == ratio) {
+        scale = self->field68;
+    } else if ((self->flags & 0x01800000) != 0) {
+        f32 t;
+
+        t = constants->valuec8 * ratio;
+        scale = (constants->value0c + t) * (self->field6c * self->field68);
+    } else if ((self->flags & 0x00400000) != 0) {
+        f32 t;
+        f64 prod;
+
+        t = constants->valuec8 * ratio;
+        prod = constants->valued0 * self->field3c;
+        scale = prod + (constants->value0c + t) * (self->field68 - self->field3c);
+    } else {
+        OSReport((const char *)(data + 0x138), self->flags);
+        OSPanic((const char *)(data + 0x12c), 0x1661,
+                    (const char *)(data + 0x15c));
+    }
+
+    if (out_ratio != 0) {
+        *out_ratio = ratio;
+    }
+    return scale;
+}
+#pragma opt_strength_reduction reset
+/* fzgx:end fn_1_20258 */
+
 /* fzgx:begin fn_1_20994 noprologue */
 #include "types.h"
 
