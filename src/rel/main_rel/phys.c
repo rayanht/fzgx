@@ -229,6 +229,17 @@ u8 *fn_1_E5768(u8 *self) {
 }
 /* fzgx:end fn_1_E5768 */
 
+/* fzgx:begin fn_1_E5770 */
+struct fn_1_E5770_Arg0 {
+    u8 pad_0[0x138];
+    u64 unk_138;
+};
+
+s32 fn_1_E5770(struct fn_1_E5770_Arg0 *arg0, u32 arg1, u64 mask) {
+    return (arg0->unk_138 & mask) ? 1 : 0;
+}
+/* fzgx:end fn_1_E5770 */
+
 /* fzgx:begin fn_1_E57A4 */
 f32 fn_1_E57A4(void *base) {
     return *(f32 *)((char *)base + 0x18);

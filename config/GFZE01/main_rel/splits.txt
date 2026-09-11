@@ -5732,3 +5732,9 @@ rel/main_rel/enemy_ctrl/fn_1_CFA0C.c:
 
 rel/main_rel/font/fn_1_54E34.c:
 	.text       start:0x00054E34 end:0x00054F5C align:4
+
+rel/main_rel/shadowmap/fn_1_57CD0.c:
+	.text       start:0x00057CD0 end:0x00057DC0 align:4
+
+rel/main_rel/phys/fn_1_E5770.c:
+	.text       start:0x000E5770 end:0x000E57A4 align:4

@@ -38478,6 +38478,17 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/phys/fn_1_E5770.c",
+    "symbols": [
+      "fn_1_E5770"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/phys.c"
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/phys/fn_1_E57A4.c",
     "symbols": [
       "fn_1_E57A4"
@@ -42521,6 +42532,17 @@
     "source": "rel/main_rel/shadowmap/fn_1_57BBC.c",
     "symbols": [
       "fn_1_57BBC"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/shadowmap.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/shadowmap/fn_1_57CD0.c",
+    "symbols": [
+      "fn_1_57CD0"
     ],
     "status": "matching",
     "mw_version": null,
@@ -49489,6 +49511,19 @@
     "status": "matching",
     "mw_version": null,
     "extra_cflags": []
+  },
+  {
+    "module": "movie_module",
+    "source": "rel/movie_module/fn_12_67A4.c",
+    "symbols": [
+      "fn_12_67A4"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "pool": {
+      "@17": "jumptable_12_data_4C"
+    }
   },
   {
     "module": "movie_module",
