@@ -28,7 +28,8 @@ class Engine:
         output.mkdir(parents=True, exist_ok=True)
         self.headers = mwgraph.header_fingerprint(ROOT, project.version)
         self.environment = digest((self.headers + ''.join(digest((ROOT/'tools/fzgx'/f).read_bytes()) for f in
-            ('oracle.py', 'poolfix.py', 'project.py'))).encode())
+            ('oracle.py', 'poolfix.py', 'project.py', 'regflow.py')) +
+            digest((ROOT/'config'/project.version/'ldscript.tpl').read_bytes())).encode())
         self.cache_path = output / 'cache.json'
         self.cache = json.loads(self.cache_path.read_text()) if self.cache_path.exists() else {}
         self.targets, self.words, self.checks, self.compilers = {}, {}, {}, {}
@@ -110,7 +111,7 @@ class Engine:
             # An exact function diff ignores other emitted functions. REL links
             # retain static helper copies, shifting text and dependent modules.
             sym = self.project.resolve(row['symbol'])
-            if row.get('matched') and sym.module != 'main' and row.get('object'):
+            if row.get('matched') and row.get('object'):
                 from .poolfix import Elf
                 elf = Elf(Path(row['object']).read_bytes())
                 extras = [s['name'] for s in elf.symbols() if s['info'] & 15 == 2 and s['shndx'] and s['size'] and s['name'] != sym.name]
@@ -158,10 +159,28 @@ class Engine:
         check = self.check(row)
         if check.ok:
             families.append(evidence.candidates(self.project, row['symbol'], body, check))
+            # Concrete stores/frame fixes precede generic declaration and flag
+            # probes. They used to be buried beyond a session's candidate cap.
+            yield from [c for c in families[0] if c[0].startswith(('retail store-value', 'pack stack', 'imm ', 'swap fields', 'recover aggregate', 'interior ', 'bind hardware'))]
+            if check.operand_order:
+                commuted=source.commutations(body,name)
+                commuted.sort(key=lambda c:not c[0].startswith('coupled scalar operands'))
+                # An optimizer can canonicalize both source spellings to the
+                # same object. Such zero-response edits disappear from the beam
+                # and from linear composition; probe their policy interaction.
+                for i,(label,text) in enumerate(commuted):
+                    yield label,text
+                    if i<8:
+                        for policy,combined in evidence.optimizer_pragmas(text,name):
+                            yield label+' with '+policy,combined
         if row.get('score') == 100:
             if row.get('source_lint') and (check.matched or check.matched_pool):
                 yield from source.annotate_verified_branches(body, row['source_lint'])
             yield from source.inline_helpers(body,name)
+            for helper in row.get('extra_helpers', []):
+                if self.project.find_symbol(helper, self.project.resolve(row['symbol']).module):
+                    yield from source.external_helper(body,helper)
+                    yield from source.split_helper_calls(body,helper)
             if families:
                 yield from families[0][:8]
         if capture:
@@ -215,7 +234,7 @@ class Engine:
                 break
             winners={r['symbol'] for r in history if r.get('matched')}
             frontier=defaultdict(list); shapes=defaultdict(set)
-            for row in sorted(history,key=lambda r:(-r['score'],-r.get('binding_score',0),r['bit_errors'],r['id'])):
+            for row in sorted(history,key=lambda r:(not r.get('value_flow_fixed',False),-r['score'],-r.get('binding_score',0),r['bit_errors'],r['id'])):
                 symbol=row['symbol']; words=self.words.get(row['id'])
                 if symbol in winners or not words or len(frontier[symbol])>=beam:
                     continue
@@ -244,6 +263,18 @@ class Engine:
                 break
             generation_seconds=time.monotonic()-generated
             self.evaluate(pending)
+            # Fixing a wrong stored value can initially worsen register numbers.
+            # Retain that bridge for the allocator pass instead of immediately
+            # discarding it in favor of the semantically wrong high-score seed.
+            from . import regflow
+            for row in pending:
+                if not row['label'].startswith('retail store-value') or not row.get('object'):
+                    continue
+                parent = parents[row['parent']]
+                conflicts = {r['row'] for r in self.check(parent).value_flow}
+                flow = regflow.analyse_rows(*getattr(self.check(row), '_rows', ([], [])))
+                if conflicts and not flow['value_flow'] and conflicts <= set(flow['equivalent_rows']):
+                    row['value_flow_fixed'] = True
             # Compose observed independent bit repairs; no private compile loop.
             responses=defaultdict(list)
             for row in pending:
@@ -532,8 +563,11 @@ def command(p,args):
                 continue
             seed=by_id[row.get('seed',row['id'])]
             inputs[symbol]=seed
-            recipe=[]; current=row
+            recipe=[]; current=row; visited=set()
             while current.get('parent'):
+                if current['id'] in visited:
+                    raise ValueError(f'{symbol}: cyclic repair provenance at {current["id"]}')
+                visited.add(current['id'])
                 parent=by_id[current['parent']]
                 recipe.append(dict(label=current['label'], input_sha256=parent['sha256'], output_sha256=current['sha256']))
                 current=parent

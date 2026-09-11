@@ -5165,3 +5165,18 @@ dol/fn_8004B1DC.c:
 
 dol/fn_80026FE0.c:
 	.text       start:0x80026FE0 end:0x8002805C align:4
+
+dol/fn_80010CB0.c:
+	.text       start:0x80010CB0 end:0x80010F38 align:4
+
+dol/fn_80072614.c:
+	.text       start:0x80072614 end:0x8007264C align:4
+
+dol/fn_80009AA8.c:
+	.text       start:0x80009AA8 end:0x80009CAC align:4
+
+dol/fn_8001C4A8.c:
+	.text       start:0x8001C4A8 end:0x8001C56C align:4
+
+dol/fn_8001C62C.c:
+	.text       start:0x8001C62C end:0x8001C704 align:4

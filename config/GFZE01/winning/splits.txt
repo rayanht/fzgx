@@ -98,3 +98,6 @@ rel/winning/winning/fn_15_FCC.c:
 
 rel/winning/winning/fn_15_1F28.c:
 	.text       start:0x00001F28 end:0x00002228 align:4
+
+rel/winning/winning/fn_15_5864.c:
+	.text       start:0x00005864 end:0x0000588C align:4

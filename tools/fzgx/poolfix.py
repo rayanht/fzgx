@@ -25,6 +25,7 @@ stays defined and its BSS range remains owned by the C unit.
 from __future__ import annotations
 
 import json
+import re
 import struct
 import sys
 from pathlib import Path
@@ -37,6 +38,12 @@ STT_OBJECT = 1
 SHT_SYMTAB = 2
 SHT_RELA = 4
 SHT_STRTAB = 3
+
+
+def binding_target(text):
+    """A symbolic pool/entry binding, optionally with a byte addend."""
+    match = re.fullmatch(r'(.+)\+(0x[0-9a-fA-F]+)', text)
+    return (match[1], int(match[2], 0)) if match else (text, 0)
 
 # Masks apply to the containing instruction, not the ELF relocation's byte offset.
 # MWCC uses halfword offsets for SDA21; DTK uses word offsets for the same field.
@@ -130,7 +137,18 @@ class Elf:
             if s is None:
                 skipped.append(f"{private}: no such symbol")
                 continue
-            name_off = self.add_string(strtab, pooled)
+            name, addend = binding_target(pooled)
+            if addend:
+                # Adjust only ELF relocation addends. Instruction words and
+                # initialized data are never patched to manufacture a match.
+                for section in self.sections:
+                    if section['type'] != SHT_RELA:
+                        continue
+                    for pos in range(section['offset'], section['offset'] + section['size'], 12):
+                        _, info, old = struct.unpack_from('>IIi', self.data, pos)
+                        if info >> 8 == s['index']:
+                            struct.pack_into('>i', self.data, pos + 8, old + addend)
+            name_off = self.add_string(strtab, name)
             self.data[s["off"]:s["off"] + 16] = struct.pack(">IIIBBH", name_off, 0, 0,
                                                             (STB_GLOBAL << 4) | STT_NOTYPE, 0, SHN_UNDEF)
             done.append(f"{private}->{pooled}")

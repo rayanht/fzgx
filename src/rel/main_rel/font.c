@@ -2135,6 +2135,122 @@ void fn_1_52BF8(void *arg0, u32 arg1, s16 arg2) {
 }
 /* fzgx:end fn_1_52BF8 */
 
+/* fzgx:begin fn_1_530C8 noprologue */
+#include "types.h"
+
+struct fn_1_530C8_lbl_801A6D00 {
+    u32 unk_0;
+};
+struct fn_1_530C8_lbl_1_rodata_282C {
+    f32 unk_0;
+};
+
+extern f32 lbl_8006D188(u32);
+extern struct fn_1_530C8_lbl_1_rodata_282C lbl_1_rodata_282C;
+extern struct fn_1_530C8_lbl_801A6D00 lbl_801A6D00;
+extern void GXLoadTexMtxImm(u32, u32, u32);
+extern void fn_8007245C(u32);
+extern void fn_80072C24(s32, s32, s32, s32, s32);
+extern void fn_80072CC4(s32, s32, s32, s32, s32);
+extern void fn_80072D64(s32, s32, s32, s32, u8, s32);
+extern void fn_80072E20(s32, s32, s32, s32, u8, s32);
+extern void fn_800734A8(u32, s32, s32, s32);
+extern void fn_80073678(u32);
+extern void fn_80073C6C(s32);
+extern void fn_800745A4(u32, s32, s32, u32, u32, u32);
+extern void fn_80074660(u32);
+extern void fn_80074918(u8, s32, u8);
+extern void lbl_8006D758(void);
+
+#pragma opt_propagation off
+void fn_1_530C8(void * arg0) {
+    u32 v0;
+    f32 v1;
+    u32 v2;
+    f32 v3;
+    u32 v4;
+    f32 v5;
+    u32 v6;
+    f32 v7;
+    f32 t1;
+    f32 t2;
+    f32 t4;
+    f32 t5;
+    f32 t7;
+    f32 t8;
+    f32 t10;
+    f32 t11;
+    lbl_8006D758();
+    t1 = lbl_8006D188(-6144);
+    v0 = lbl_801A6D00.unk_0;
+    *(f32 *)((u8 *)v0 + 12) = (*(f32 *)((u8 *)arg0 + 84) * t1);
+    t2 = lbl_8006D188(-22528);
+    v1 = (*(f32 *)((u8 *)arg0 + 84) * t2);
+    *(f32 *)((u8 *)lbl_801A6D00.unk_0 + 28) = (((lbl_1_rodata_282C.unk_0) + (v1)));
+    GXLoadTexMtxImm(lbl_801A6D00.unk_0, 30, 1);
+    t4 = lbl_8006D188(-2048);
+    v2 = lbl_801A6D00.unk_0;
+    *(f32 *)((u8 *)v2 + 12) = (*(f32 *)((u8 *)arg0 + 84) * t4);
+    t5 = lbl_8006D188(-18432);
+    v3 = (*(f32 *)((u8 *)arg0 + 84) * t5);
+    *(f32 *)((u8 *)lbl_801A6D00.unk_0 + 28) = (((lbl_1_rodata_282C.unk_0) + (v3)));
+    GXLoadTexMtxImm(lbl_801A6D00.unk_0, 33, 1);
+    t7 = lbl_8006D188(2048);
+    v4 = lbl_801A6D00.unk_0;
+    *(f32 *)((u8 *)v4 + 12) = (*(f32 *)((u8 *)arg0 + 84) * t7);
+    t8 = lbl_8006D188(-14336);
+    v5 = (*(f32 *)((u8 *)arg0 + 84) * t8);
+    *(f32 *)((u8 *)lbl_801A6D00.unk_0 + 28) = (((lbl_1_rodata_282C.unk_0) + (v5)));
+    GXLoadTexMtxImm(lbl_801A6D00.unk_0, 36, 1);
+    t10 = lbl_8006D188(6144);
+    v6 = lbl_801A6D00.unk_0;
+    *(f32 *)((u8 *)v6 + 12) = (*(f32 *)((u8 *)arg0 + 84) * t10);
+    t11 = lbl_8006D188(-10240);
+    v7 = (*(f32 *)((u8 *)arg0 + 84) * t11);
+    *(f32 *)((u8 *)lbl_801A6D00.unk_0 + 28) = (((lbl_1_rodata_282C.unk_0) + (v7)));
+    GXLoadTexMtxImm(lbl_801A6D00.unk_0, 39, 1);
+    fn_8007245C(8704);
+    fn_80073678(5);
+    fn_80074660(4);
+    fn_800745A4(0, 1, 4, 30, 0, 125);
+    fn_800745A4(1, 1, 4, 33, 0, 125);
+    fn_800745A4(2, 1, 4, 36, 0, 125);
+    fn_800745A4(3, 1, 4, 39, 0, 125);
+    fn_80073C6C(0);
+    fn_80073C6C(1);
+    fn_80073C6C(2);
+    fn_80073C6C(3);
+    fn_80073C6C(4);
+    fn_800734A8(0, 0, 0, 255);
+    fn_800734A8(1, 1, 0, 255);
+    fn_800734A8(2, 2, 0, 255);
+    fn_800734A8(3, 3, 0, 255);
+    fn_800734A8(4, 255, 255, 255);
+    fn_80072C24(0, 15, 15, 15, 8);
+    fn_80072D64(0, 0, 0, 0, 1, 0);
+    fn_80072CC4(0, 7, 7, 7, 4);
+    fn_80072E20(0, 0, 0, 0, 1, 0);
+    fn_80072C24(1, 15, 8, 12, 0);
+    fn_80072D64(1, 0, 0, 0, 1, 0);
+    fn_80072CC4(1, 4, 7, 7, 0);
+    fn_80072E20(1, 0, 0, 0, 1, 0);
+    fn_80072C24(2, 15, 8, 12, 0);
+    fn_80072D64(2, 0, 0, 0, 1, 0);
+    fn_80072CC4(2, 4, 7, 7, 0);
+    fn_80072E20(2, 0, 0, 0, 1, 0);
+    fn_80072C24(3, 15, 8, 12, 0);
+    fn_80072D64(3, 0, 0, 0, 1, 0);
+    fn_80072CC4(3, 4, 7, 7, 0);
+    fn_80072E20(3, 0, 0, 0, 1, 0);
+    fn_80072C24(4, 15, 2, 0, 4);
+    fn_80072D64(4, 0, 0, 0, 1, 0);
+    fn_80072CC4(4, 7, 1, 0, 2);
+    fn_80072E20(4, 0, 0, 0, 1, 0);
+    fn_80074918(1, 3, 1);
+}
+#pragma opt_propagation reset
+/* fzgx:end fn_1_530C8 */
+
 /* fzgx:begin fn_1_5415C */
 void fn_1_5415C(void *arg, s32 value) {
     fn_1_541A8(arg, value);

@@ -1493,3 +1493,16 @@ void fn_15_537C(void) {
 void fn_15_545C(void) {
 }
 /* fzgx:end fn_15_545C */
+
+/* fzgx:begin fn_15_5864 */
+extern s16 lbl_1_bss_960;
+extern u8 lbl_15_bss_4[8];
+
+#pragma opt_propagation off
+u32 fn_15_5864(u32 unused) {
+    s32 value = lbl_1_bss_960;
+    u32 mask = ~((value - 14) | (14 - value)) >> 31;
+    return ((lbl_15_bss_4[0]) & (mask));
+}
+#pragma opt_propagation reset
+/* fzgx:end fn_15_5864 */

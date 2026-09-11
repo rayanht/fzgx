@@ -773,6 +773,164 @@ void fn_1_128E8C(u32 unused, FnData *data) {
 }
 /* fzgx:end fn_1_128E8C */
 
+/* fzgx:begin fn_1_129D9C noprologue */
+#include "types.h"
+#include "rel/main_rel/accessory.h"
+
+extern int mathutil_mtxA_rotate_z__fzgx_offset_C();
+
+struct fn_1_129D9C_rodata {
+    f32 unk_0;
+    u8 pad_4[0xC];
+    f32 unk_10;
+    u8 pad_14[0x8C];
+    u32 unk_A0;
+    u32 unk_A4;
+    s32 unk_A8;
+    f32 unk_AC;
+    f32 unk_B0;
+    u8 pad_B4[0x4];
+    f64 unk_B8;
+    f32 unk_C0;
+    f32 unk_C4;
+    f32 unk_C8;
+    f32 unk_CC;
+    f32 unk_D0;
+    f32 unk_D4;
+};
+struct fn_1_129D9C_system {
+    u8 pad_0[0x2C];
+    f32 unk_2C;
+};
+struct fn_1_129D9C_vec {
+    f32 unk_0;
+    f32 unk_4;
+    f32 unk_8;
+};
+struct fn_1_129D9C_obj {
+    u8 pad_0[0x10];
+    u8 unk_10;
+};
+struct fn_1_129D9C_chain {
+    u8 pad_0[0x38];
+    u32 unk_38;
+    u8 pad_3C[0xC];
+    u32 unk_48;
+};
+
+extern struct fn_1_129D9C_rodata lbl_1_rodata_8068;
+extern struct fn_1_129D9C_system *lbl_801A6D00;
+extern void lbl_8006DCA4(void);
+extern void lbl_8006E1C0(void *, void *);
+extern void lbl_8006DFC4(void *);
+extern void lbl_8006DBAC(void *);
+extern void lbl_8006D7B0(void);
+extern void lbl_8006D668(void *);
+extern void lbl_8006E0B4(f32, f32, f32);
+extern void lbl_8006E14C(f32);
+extern void lbl_8006DB74(void *);
+extern void fn_80072558(void);
+extern void fn_80083DB0(void *, void *);
+extern void *fn_1_55210(void *);
+extern void *fn_1_548AC(u32);
+extern void *fn_1_5448C(void *);
+extern void fn_1_5489C(void *, void *);
+extern void fn_1_12A0E0(void);
+
+#pragma opt_common_subs off
+void fn_1_129D9C(void *arg0, struct fn_1_129D9C_vec *arg1, struct fn_1_129D9C_obj *arg2,
+                 f32 arg3, void *arg4, u8 arg5,
+                 u8 arg6, u8 arg7, f32 arg8) {
+    struct fn_1_129D9C_rodata *p;
+    f32 v1;
+    f32 v2;
+    f32 d;
+
+    p = (struct fn_1_129D9C_rodata *)&lbl_1_rodata_8068;
+    if (arg2 != 0) {
+        v1 = p->unk_AC;
+    } else {
+        v1 = p->unk_B0;
+    }
+    if (arg7) {
+        v1 = p->unk_AC;
+    }
+    v2 = p->unk_B0 * v1;
+    if (!arg5) {
+        lbl_8006DCA4();
+        lbl_8006E1C0(arg1, arg1);
+        lbl_8006DFC4(arg0);
+    } else {
+        lbl_8006DBAC(arg0);
+    }
+    lbl_8006D7B0();
+    if (__fabsf(arg1->unk_0) > p->unk_B8 ||
+        __fabsf(arg1->unk_4) > p->unk_B8) {
+        arg1->unk_8 = p->unk_0;
+        lbl_8006D668(arg1);
+        mathutil_mtxA_rotate_z__fzgx_offset_C(-arg1->unk_0, arg1->unk_4);
+    }
+    lbl_8006E0B4(p->unk_0, p->unk_C0, p->unk_0);
+    lbl_8006E14C(v1);
+    d = -lbl_801A6D00->unk_2C;
+    d *= arg3;
+    {
+        f32 q = p->unk_C4 / d;
+        if ((q * v2) < p->unk_C8) {
+            v2 = d * (p->unk_C8 / v2 / p->unk_C4);
+        } else if ((q * v2) > p->unk_CC) {
+            v2 = d * (p->unk_CC / v2 / p->unk_C4);
+        } else {
+            v2 = p->unk_10;
+        }
+    }
+    lbl_8006E14C(v2);
+    if (arg7) {
+        lbl_8006E0B4(p->unk_0, p->unk_D0, p->unk_0);
+    }
+    lbl_8006E0B4(p->unk_0, p->unk_10, p->unk_0);
+    fn_80072558();
+    fn_1_55210((void *)((struct fn_1_129D9C_chain *)lbl_1_bss_38458->unk_8)->unk_38);
+    if (arg6) {
+        lbl_8006E0B4(p->unk_0, p->unk_10, p->unk_0);
+        lbl_8006D7B0();
+        lbl_8006E14C(v1);
+        lbl_8006E14C(v2);
+        fn_80072558();
+        fn_1_55210((void *)((struct fn_1_129D9C_chain *)lbl_1_bss_38458->unk_8)->unk_48);
+        lbl_8006E0B4(p->unk_0, p->unk_D4, p->unk_0);
+        if (arg4 == 0) {
+            return;
+        }
+    }
+    lbl_8006E0B4(p->unk_0, p->unk_10, p->unk_0);
+    lbl_8006D7B0();
+    lbl_8006E14C(v1);
+    lbl_8006E14C(v2);
+    if (arg2 != 0) {
+        arg2->unk_10 = 0;
+        arg4 = fn_1_548AC(0x50);
+        if (arg4 != 0) {
+{
+    u32 loc_8[3];
+            loc_8[0] = p->unk_A0;
+            loc_8[1] = p->unk_A4;
+            loc_8[2] = p->unk_A8;
+            lbl_8006DB74((u8 *)arg4 + 8);
+            *(f32 *)((u8 *)arg4 + 56) = p->unk_10 / v2;
+            *(void **)((u8 *)arg4 + 4) = (void *)fn_1_12A0E0;
+            fn_80083DB0((u8 *)arg4 + 60, arg2);
+            fn_1_5489C(fn_1_5448C(loc_8), arg4);
+}
+        }
+    } else {
+        fn_80072558();
+        fn_1_55210(arg4);
+    }
+}
+#pragma opt_common_subs reset
+/* fzgx:end fn_1_129D9C */
+
 /* fzgx:begin fn_1_12A24C */
 s8 fn_1_12A24C(s8 arg) {
     if ((s8)fn_1_86678((s32)arg) == -1) {

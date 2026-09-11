@@ -55,6 +55,10 @@ def analyse(target, ours, boundaries=()):
             return None
         if op in COMMUTATIVE:
             operands.sort()
+        elif op in {'fmadd', 'fmadds', 'fmsub', 'fmsubs', 'fnmadd', 'fnmadds', 'fnmsub', 'fnmsubs'}:
+            # Only the product operands commute; moving the addend changes the
+            # expression and must still be reported as a value-flow conflict.
+            operands[:2] = sorted(operands[:2])
         key = hashlib.blake2b(repr((op, operands)).encode(), digest_size=12).hexdigest()
         return key, ', '.join(dict.fromkeys(origins))[:160]
 

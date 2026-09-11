@@ -129,3 +129,80 @@ void fn_1_71CA0(void *arg0, void *arg1, u16 arg2) {
     }
 }
 /* fzgx:end fn_1_71CA0 */
+
+/* fzgx:begin fn_1_72318 noprologue */
+#include "dolphin/hw_regs.h"
+#include "types.h"
+
+extern void fn_1_867CC(s16 arg0, void *arg1);
+extern u32 lbl_1_rodata_314C[13];
+extern void lbl_8006DC6C(void *arg0, u32 arg1);
+extern void lbl_8006E1B0(void *arg0, void *arg1);
+extern s16 fn_1_59078(void *arg0);
+extern void *memset(void *dest, int value, u32 size);
+
+struct EffectCar {
+    u8 pad_18[0x18];
+    s16 field_18;
+    u8 pad_1a[0x1e];
+    u32 field_38;
+    u8 pad_3c[0x7c];
+    u8 field_b8;
+};
+
+struct EffectWorkData {
+    u8 pad_00[0xc];
+    s16 field_0c;
+    u8 pad_0e[0xa];
+    s16 field_18;
+    u16 field_1a;
+    u8 pad_1c[0x1c];
+    u32 field_38;
+    u32 field_3c;
+    u32 field_40;
+    u32 field_44;
+    u8 pad_48[0x14];
+    s16 field_5c;
+    u8 pad_5e[0x8a];
+};
+
+#pragma opt_propagation off
+s16 fn_1_72318(struct EffectCar *arg0) {
+    f32 vec[3];
+    struct EffectWorkData data;
+    u32 lab_t0;
+    f32 v0, v1, v2;
+
+    lab_t0 = arg0->field_18;
+
+    fn_1_867CC(lab_t0, vec);
+    memset(&data, 0, sizeof(data));
+
+    data.field_18 = arg0->field_18;
+    data.field_0c = 0x25;
+    data.field_38 = arg0->field_38;
+    data.field_1a = 0xffff;
+    lbl_8006DC6C(&arg0->field_b8, data.field_38);
+
+    v2 = vec[0];
+    v1 = vec[1];
+    v0 = vec[2];
+
+    // These are effect-engine scratch registers used to pass the generated vector.
+    // fzgx-allow: A2 hardware scratch register addresses are encoded by the target.
+    *(volatile f32 *)(LC_BASE + 0xC) = v2;
+    // fzgx-allow: A2 hardware scratch register addresses are encoded by the target.
+    *(volatile f32 *)(LC_BASE + 0x1C) = v1;
+    // fzgx-allow: A2 hardware scratch register addresses are encoded by the target.
+    *(volatile f32 *)(LC_BASE + 0x2C) = v0;
+
+    data.field_3c = lbl_1_rodata_314C[0];
+    data.field_40 = lbl_1_rodata_314C[1];
+    data.field_44 = lbl_1_rodata_314C[2];
+    lbl_8006E1B0(&data.field_3c, &data.field_3c);
+
+    data.field_5c = 0x100;
+    return fn_1_59078(&data);
+}
+#pragma opt_propagation reset
+/* fzgx:end fn_1_72318 */

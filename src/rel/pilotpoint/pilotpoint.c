@@ -577,6 +577,67 @@ void fn_14_A244(void) {
 }
 /* fzgx:end fn_14_A244 */
 
+/* fzgx:begin fn_14_A2A4 */
+extern void fn_1_133DBC(void *);
+extern u8 fn_1_B7C00(void);
+extern s32 fn_1_12F228(void);
+extern u8 fn_14_DF70(void);
+extern s32 fn_1_B7E98(u32);
+extern s32 fn_1_B7C6C(u32);
+extern void fn_1_F7954(void);
+extern u32 fn_1_B7CE4(u32, void *);
+extern u32 fn_1_AA6D8(u32, u32, void *);
+extern u8 fn_1_B7CD4(void);
+extern u16 lbl_1_bss_96A[];
+extern struct fn_14_A2A4_bss_9454 lbl_14_bss_9454;
+extern u8 lbl_1_bss_718E0;
+
+struct fn_14_A2A4_bss_9454 {
+    s32 unk_0;
+};
+
+struct fn_14_A2A4_cfg {
+    u8 enabled;
+    u8 pad[3];
+    u32 fn;
+    void *state_ptr;
+    void *table;
+    u32 extra[4];
+
+    u8 fzgx_tail_padding[8];
+};
+
+void fn_14_A2A4(void) {
+    struct fn_14_A2A4_cfg cfg;
+    u8 state[64];
+
+    fn_1_133DBC(0);
+    if (fn_1_B7C00()) {
+        return;
+    }
+    if (fn_1_12F228()) {
+        lbl_1_bss_96A[0] = fn_14_DF70() ? 0xaf : 0xb2;
+        return;
+    }
+    if (fn_1_B7E98(1)) {
+        if (fn_1_B7C6C(1) == 0 && ((((lbl_14_bss_9454.unk_0)) == ((0))))) {
+            fn_1_F7954();
+            fn_1_B7CE4(1, state);
+            cfg.enabled = 1;
+            cfg.state_ptr = state;
+            cfg.table = &lbl_1_bss_718E0;
+            cfg.fn = 0xA004;
+            fn_1_AA6D8(0, 1, &cfg);
+            lbl_14_bss_9454.unk_0 = 1;
+            return;
+        }
+    } else {
+        lbl_14_bss_9454.unk_0 = 0;
+    }
+    fn_1_B7CD4();
+}
+/* fzgx:end fn_14_A2A4 */
+
 /* fzgx:begin fn_14_A398 */
 extern struct fn_14_A398_lbl_14_bss_20 lbl_14_bss_20;
 extern struct fn_14_A398_lbl_14_bss_9452 lbl_14_bss_9452;

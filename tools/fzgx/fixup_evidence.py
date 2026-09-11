@@ -289,8 +289,10 @@ def float_literals(p: Project, symbol: str, body: str, base: oracle.CheckResult)
         if expected is not None:
             inferred.setdefault((width, current), set()).add(expected)
             locations.setdefault((width, current), set()).add((target['symbol'], target['offset']))
+    # Equal values can still occupy the wrong shared-pool offsets. They need
+    # symbolic layout candidates even though no literal value needs correcting.
     floats.update((width, current, next(iter(expected))) for (width, current), expected in inferred.items()
-                  if len(expected) == 1 and current != next(iter(expected)))
+                  if len(expected) == 1)
     from .sdkimport import masked
     code = masked(body)
     out, all_edits, bound_edits = [], {}, {}
@@ -325,7 +327,8 @@ def float_literals(p: Project, symbol: str, body: str, base: oracle.CheckResult)
             if actual == current:
                 start, end = token.span()
                 edits.append((start, end))
-                out.append((f'retail float {token[0]} -> {replacement}', body[:start] + replacement + body[end:]))
+                if current != expected:
+                    out.append((f'retail float {token[0]} -> {replacement}', body[:start] + replacement + body[end:]))
                 if (start, end) in all_edits and all_edits[start, end] != replacement:
                     ambiguous.add((start, end))
                 all_edits[start, end] = replacement
@@ -334,7 +337,7 @@ def float_literals(p: Project, symbol: str, body: str, base: oracle.CheckResult)
                     anchor, offset = next(iter(refs))
                     if offset >= 0 and not re.search(r'\b' + re.escape(anchor) + r'\b', code):
                         bound_edits[start, end] = (anchor, offset, width)
-        if len(edits) > 1:
+        if len(edits) > 1 and current != expected:
             combined = body
             for start, end in reversed(edits):
                 combined = combined[:start] + replacement + combined[end:]
@@ -442,13 +445,188 @@ def stack_aggregates(body: str, diffs: List[Tuple[str, str]]) -> List[Tuple[str,
     return out
 
 
+def store_values(body, name, base):
+    """Swap store operands only when retail shows a reciprocal value conflict.
+
+    These are source candidates, never object patches. The compiler oracle also
+    checks that evaluation order and every other use of the values are retained.
+    """
+    conflicts = base.value_flow
+    span = _function_span(body, name)
+    if not span or len(conflicts) < 2:
+        return []
+    stores = []
+    for row in conflicts:
+        t = re.fullmatch(r'(st\w+) ([rf]\d+), (.+)', row['target'])
+        o = re.fullmatch(r'(st\w+) ([rf]\d+), (.+)', row['ours'])
+        if t and o and t[1] == o[1] and t[3] == o[3]:
+            stores.append((t[1], t[2], o[2]))
+    if not any(a == d and b == f and c == e and b != c
+               for a,b,c in stores for d,e,f in stores):
+        return []
+    assignments = []
+    for m in re.finditer(r'(?m)^[ \t]*(?P<lhs>[^;\n=]+)\s*=\s*(?P<rhs>[A-Za-z_]\w*)\s*;', body[span[0]:span[1]]):
+        if any(x in m['lhs'] for x in ('*', '->', '.', '[')):
+            assignments.append((span[0]+m.start('rhs'), span[0]+m.end('rhs'), m['rhs']))
+    out = []
+    for i,(a,b,x) in enumerate(assignments):
+        for c,d,y in assignments[i+1:]:
+            if x != y:
+                out.append((f'retail store-value swap {x}/{y}', body[:a]+y+body[b:c]+x+body[d:]))
+    return out
+
+
+def stack_locals(body, name, diffs):
+    """Pack address-taken scalar locals whose separately allocated slots differ.
+
+    An aggregate expresses shared frame storage and natural subword alignment;
+    it does not force machine offsets or alter emitted instructions afterward.
+    """
+    if not any('(r1)' in t+o and t != o for t,o in diffs):
+        return []
+    span = _function_span(body, name)
+    if not span:
+        return []
+    start = body.index('{', span[0])+1
+    pattern = re.compile(r'(?m)^[ \t]*((?:volatile\s+)?(?:u8|s8|u16|s16|u32|s32|f32|f64|int|float|double))\s+(\w+)\s*;[ \t]*\n')
+    sites = [m for m in pattern.finditer(body,start,span[1])
+             if re.search(r'&\s*'+re.escape(m[2])+r'\b',body[m.end():span[1]])]
+    if not 2 <= len(sites) <= 12:
+        return []
+    # Do not move a declaration out of a nested lexical scope.
+    sites = [m for m in sites if body[start:m.start()].count('{') == body[start:m.start()].count('}')]
+    if len(sites) < 2:
+        return []
+    widths={'u8':1,'s8':1,'u16':2,'s16':2,'u32':4,'s32':4,'f32':4,'f64':8,'int':4,'float':4,'double':8}
+    orders=[sites,list(reversed(sites)),sorted(sites,key=lambda m:widths[m[1].split()[-1]]),sorted(sites,key=lambda m:-widths[m[1].split()[-1]])]
+    orders += [sites[:i]+[sites[i+1],sites[i]]+sites[i+2:] for i in range(len(sites)-1)]
+    var='fzgx_frame'
+    while re.search(r'\b'+var+r'\b',body):
+        var += '_'
+    inner=body[start:span[1]-1]
+    for m in reversed(sites):
+        inner=inner[:m.start()-start]+inner[m.end()-start:]
+    names={m[2] for m in sites}
+    inner=re.sub(r'\b[A-Za-z_]\w*\b',lambda m:var+'.'+m[0] if m[0] in names else m[0],inner)
+    out=[]
+    for order in orders:
+        fields=' '.join(m[1]+' '+m[2]+';' for m in order)
+        text=body[:start]+'\n    struct { '+fields+' } '+var+';\n'+inner+body[span[1]-1:]
+        out.append(('pack stack scalars '+','.join(m[2] for m in order),text))
+    return list(dict.fromkeys(out))
+
+
+def stack_field_origins(body, diffs):
+    """Move false leading padding to the tail, retaining the aggregate extent."""
+    deltas=set()
+    for t,o in diffs:
+        tm=re.fullmatch(r'(\w+ [rf]\d+, )(-?0x[0-9a-f]+)\(r1\)',t)
+        om=re.fullmatch(r'(\w+ [rf]\d+, )(-?0x[0-9a-f]+)\(r1\)',o)
+        if tm and om and tm[1]==om[1] and tm[2]!=om[2]:
+            deltas.add(int(tm[2],0)-int(om[2],0))
+    out=[]
+    for m in re.finditer(r'\bstruct\s+(\w+)\s*\{(?P<fields>[^{}]+)\}',body):
+        prefix=re.match(r'\s*u8\s+(\w+)\[(0x[0-9a-fA-F]+|\d+)\];',m['fields'])
+        if not prefix or re.search(r'(?:\.|->)\s*'+re.escape(prefix[1])+r'\b',body):
+            continue
+        size=int(prefix[2],0)
+        for delta in sorted(deltas):
+            if not -size<=delta<0:
+                continue
+            remaining=size+delta
+            first=f'\n    u8 {prefix[1]}[{remaining}];' if remaining else ''
+            fields=first+m['fields'][prefix.end():]+f'\n    u8 fzgx_tail_padding[{-delta}];\n'
+            out.append((f'recover aggregate field origin {m[1]} {delta}',body[:m.start('fields')]+fields+body[m.end('fields'):]))
+    return out
+
+
+def interior_references(p, module, body, diffs):
+    """Explicit symbolic subobject/entry declarations, proven by the pool oracle."""
+    out=[]
+    for target,ours in diffs:
+        t=re.fullmatch(r'(\w+ .+?, )([A-Za-z_]\w*)\+(0x[0-9a-f]+)@(\w+)',target)
+        o=re.fullmatch(r'(\w+ .+?, )([A-Za-z_]\w*)@(\w+)',ours)
+        if t and o and t[1]==o[1] and t[4]==o[3]:
+            owner=p.find_symbol(t[2],module) or p.resolve(t[2])
+            delta=int(t[3],0)
+            if owner is None or not 0<delta<owner.size:
+                continue
+            declaration=re.search(r'(?m)^extern\s+(u32|s32|u16|s16|u8|s8|f32|f64)\s+'+re.escape(o[2])+r'\s*;',body)
+            if not declaration or delta+int(declaration[1][1:])//8>owner.size:
+                continue
+            alias=f'{owner.name}__fzgx_offset_{delta:X}'
+            text=re.sub(r'\b'+re.escape(o[2])+r'\b',alias,body)
+            out.append((f'interior data {o[2]} -> {owner.name}+{delta}',text))
+        t=re.fullmatch(r'bl ([A-Za-z_]\w*)\+(0x[0-9a-f]+)',target)
+        if t and ours=='bl '+t[1]:
+            owner=p.find_symbol(t[1],module) or p.resolve(t[1])
+            delta=int(t[2],0)
+            if not owner or not 0<delta<owner.size or delta%4:
+                continue
+            decl=re.search(r'(?m)^extern\s+([\w *]+?)\s+'+re.escape(t[1])+r'\s*\(([^;{}]*)\);',body)
+            alias=f'{owner.name}__fzgx_offset_{delta:X}'
+            # An implicit declaration retains C's default argument promotions.
+            prototype=f'extern {decl[1] if decl else "int"} {alias}({decl[2] if decl else ""});\n'
+            uses=list(re.finditer(r'\b'+re.escape(t[1])+r'(?=\s*\()',body[decl.end() if decl else 0:]))
+            start=decl.end() if decl else 0
+            for use in uses:
+                a,b=start+use.start(),start+use.end()
+                text=body[:a]+alias+body[b:]
+                pos=decl.end() if decl else (max((m.end() for m in re.finditer(r'^#include[^\n]*\n',body,re.M)),default=0))
+                out.append((f'interior call {owner.name}+{delta}',text[:pos]+'\n'+prototype+text[pos:]))
+    return list(dict.fromkeys(out))
+
+
+def hardware_lvalues(body):
+    """Use the shared hardware map for fixed-address scratch lvalues."""
+    number=r'0[xX][0-9a-fA-F]+'
+    pattern=re.compile(r'\(\s*((?:volatile\s+)?(?:f32|f64|u8|u16|u32|s8|s16|s32))\s*\*\s*\)\s*('+number+r'|\(\s*'+number+r'\s*\+\s*'+number+r'\s*\))')
+    from .project import ROOT
+    header=ROOT/'include/dolphin/hw_regs.h'
+    bases=sorted(((int(addr,16),name) for name,addr in re.findall(
+        r'^#define (\w+_BASE) (0x[0-9A-Fa-f]+)[uU]?$',header.read_text(),re.M)),reverse=True)
+    edits=[]
+    hardware_variables=set()
+    for m in pattern.finditer(body):
+        address=sum(int(n,16) for n in re.findall(number,m[2]))
+        owner=next(((addr,name) for addr,name in bases if 0<=address-addr<0x1000),None)
+        if owner:
+            addr,name=owner
+            edits.append((m.start(2),m.end(2),f'({name} + 0x{address-addr:X})'))
+    for m in re.finditer(r'\b(\w+)\s*=\s*('+number+r')[uUlL]*(?=\s*;)',body):
+        address=int(m[2],16)
+        owner=next((name for addr,name in bases if addr==address),None)
+        if owner and re.search(r'\([^();]+\*\)\s*'+re.escape(m[1])+r'\b',body[m.end():]):
+            edits.append((m.start(2),m.end(2),owner))
+            hardware_variables.add(m[1])
+    edits=sorted(set(edits))
+    if not edits:
+        return []
+    text=body
+    for a,b,replacement in reversed(edits):
+        text=text[:a]+replacement+text[b:]
+    names=hardware_variables | {name for _,name in bases}
+    text='\n'.join(line+' /* Hardware access must remain ordered. */'
+                   if 'volatile' in line and not any(c in line for c in ('//','/*'))
+                   and any(re.search(r'\b'+re.escape(name)+r'\b',line) for name in names)
+                   else line for line in text.split('\n'))
+    if '#include "dolphin/hw_regs.h"' not in text:
+        text='#include "dolphin/hw_regs.h"\n'+text
+    return [('bind hardware lvalues',text)]
+
+
+
 def candidates(p: Project, symbol: str, body: str, base: oracle.CheckResult):
     sym = p.resolve(symbol)
     counts = _kinds(base)
     lrows, rrows = base._rows
     diffs = [(stuck._fmt(a), stuck._fmt(b)) for a, b in zip(lrows, rrows) if (a.get("diff_kind") or "DIFF_NONE") != "DIFF_NONE"]
     span = _function_span(body, sym.name)
-    candidates: List[Tuple[str, str]] = []
+    candidates: List[Tuple[str, str]] = store_values(body, sym.name, base)
+    candidates += stack_locals(body, sym.name, diffs)
+    candidates += stack_field_origins(body, diffs)
+    candidates += interior_references(p, sym.module, body, diffs)
+    candidates += hardware_lvalues(body)
     candidates += string_literals(p, sym.module, body, base)
     # These candidates are derived from retail bytes. Large functions can
     # exhaust the candidate budget on type permutations before reaching them.

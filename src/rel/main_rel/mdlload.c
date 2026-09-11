@@ -403,6 +403,58 @@ void fn_1_D3C58(void) {
 }
 /* fzgx:end fn_1_D3C58 */
 
+/* fzgx:begin fn_1_D3CF4 noprologue */
+#include "types.h"
+#include "rel/main_rel/globals.h"
+#include "rel/main_rel/mdlload.h"
+
+extern f32 lbl_1_rodata_6168;
+
+extern void fn_1_9AD54(void);
+extern void *fn_1_9D260(void);
+extern int fn_1_58C4(void);
+extern void fn_1_5948(int);
+extern void fn_1_D42A8(u32, int);
+extern s32 fn_1_D3E90(void);
+extern void fn_1_106084(u32, int, f32, f32, f32);
+extern void fn_1_D4FFC(u32, int);
+extern void fn_1_D47F0(u32, int);
+extern void fn_1_627C(s32 index);
+extern void fn_1_D59A8(u32);
+extern void fn_1_D4370(u32);
+extern void fn_1_D41D8(void);
+extern void fn_1_D3FDC(u32, void *);
+
+void fn_1_D3CF4(void) {
+    int count;
+    f32 *v2;
+    int i;
+    u32 obj;
+    void *t1;
+
+    obj = (u32)lbl_1_data_2A7E0.unk_3C;
+    fn_1_9AD54();
+    t1 = fn_1_9D260();
+    count = fn_1_58C4();
+    v2 = (f32 *)obj;
+    for (i = 0; i < count; i++) {
+        fn_1_5948(i);
+        fn_1_D42A8(obj, i);
+        if (fn_1_D3E90() == 0) {
+            fn_1_106084(obj + 0x20, i, *(f32 *)(obj + 0xC040), *v2, lbl_1_rodata_6168);
+        }
+        fn_1_D4FFC(obj, i);
+        fn_1_D47F0(obj, i);
+        fn_1_627C(i);
+        v2++;
+    }
+    fn_1_D59A8(obj);
+    fn_1_D4370(obj);
+    fn_1_D41D8();
+    fn_1_D3FDC(obj, t1);
+}
+/* fzgx:end fn_1_D3CF4 */
+
 /* fzgx:begin fn_1_D3DDC */
 void fn_1_D3DDC(void) {
     fn_1_D3F88(lbl_1_data_2A7E0.unk_3C);

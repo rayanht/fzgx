@@ -449,7 +449,13 @@ class Project:
                 pool = unit.get('pool')
                 if not isinstance(pool, dict) or (module != 'main' and unit['module'] != module):
                     continue
-                renamed = {mapping.get(private, private): mapping.get(target, target) for private, target in pool.items()}
+                from .poolfix import binding_target
+                def rename_binding(target):
+                    base, offset = binding_target(target)
+                    return mapping.get(base, base) + (f'+0x{offset:X}' if offset else '')
+                # The private identifier may retain its original spelling; the
+                # compiled symbol is still bound to the promoted owning object.
+                renamed = {mapping.get(private, private): rename_binding(target) for private, target in pool.items()}
                 if renamed != pool:
                     unit['pool'] = renamed
                     updated = True

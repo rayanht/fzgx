@@ -795,7 +795,7 @@ def commutations(body, name, operations=None):
             if op in COMMUTE and pure and rp and body[start:end] != body[rs:re_]:
                 replacement = f'(({body[rs:re_]}) {op} ({body[start:end]}))'
                 proposals.append((f'operand {op} at {start}', body[:start] + replacement + body[re_:]))
-                sites[(body[start:re_], replacement)].append((start, re_))
+                sites[(body[start:re_], replacement, op)].append((start, re_))
             end, i, pure = re_, j, pure and rp and precedence != 1
         return i, (start, end, pure)
 
@@ -809,13 +809,29 @@ def commutations(body, name, operations=None):
     # CSE couples identical occurrences: changing one may leave the shared
     # expression's operand order determined by the unchanged occurrence.
     grouped = []
-    for (old, replacement), ranges in sites.items():
+    for (old, replacement, op), ranges in sites.items():
         ranges = sorted(set(ranges))
         if len(ranges) > 1 and all(b <= c for (_, b), (c, _) in zip(ranges, ranges[1:])):
             text = body
             for a, b in reversed(ranges):
                 text = text[:a] + replacement + text[b:]
             grouped.append((f'shared operands {old}', text))
+    # Repeated blocks often use different temporary names. Exact text grouping
+    # misses their coupled operand choices; group disjoint scalar expressions by
+    # operator as well. Exclude pointer arithmetic and nested overlapping trees.
+    by_operator = defaultdict(list)
+    for (old, replacement, op), ranges in sites.items():
+        if re.search(r'\*\s*\)|\b(?:u8|s8|void|char)\b|\[', old):
+            continue
+        for a,b in ranges:
+            by_operator[op].append((a,b,replacement))
+    for op, ranges in by_operator.items():
+        ranges=sorted(set(ranges))
+        if len(ranges)>1 and all(b<=c for (_,b,_),(c,_,_) in zip(ranges,ranges[1:])):
+            text=body
+            for a,b,replacement in reversed(ranges):
+                text=text[:a]+replacement+text[b:]
+            grouped.append((f'coupled scalar operands {op}',text))
     return list(dict.fromkeys(grouped + proposals))
 
 
@@ -1128,8 +1144,31 @@ def declaration_candidates(body, name, captures, constraints, max_orders=50000):
              for cls in constraints['desired']}
     if any([r for _, (bank, r) in movable if bank == cls] != order for cls, order in slots.items()):
         return [], {'status': 'unknown-creation-order', 'orders': 0}
+    witnesses = []
+    positions = {}
+    for capture in captures:
+        before=capture['before']; cls=before['register_class']
+        desired={n['virtual_register']:n['physical_register'] for n in capture['after']['nodes']
+                 if n['virtual_register'] in before['simplify_order']}
+        desired.update(constraints['desired'][cls])
+        if any(not 0<=color<32 for color in desired.values()):
+            continue
+        witness=mwgraph.selection_order(before,desired)
+        if witness:
+            positions[cls]={r:i for i,r in enumerate(witness)}
+    if positions:
+        ordered=list(movable)
+        for cls,rank in positions.items():
+            indices=[i for i,(_, (bank,r)) in enumerate(movable) if bank==cls]
+            values=sorted((movable[i] for i in indices),key=lambda x:rank.get(x[1][1],10**9))
+            for i,value in zip(indices,values):
+                ordered[i]=value
+        witnesses.append(ordered)
     candidates, checked, best = [], 0, None
-    for order in itertools.islice(itertools.permutations(movable), max_orders):
+    # Source ranks still have to reproduce simplify and coloring, not merely
+    # the abstract selection witness. Keep a bounded small-stratum fallback.
+    orders=itertools.chain(witnesses,itertools.islice(itertools.permutations(movable),min(max_orders,720)))
+    for order in orders:
         ranks = {cls: dict(zip((r for _, (bank, r) in order if bank == cls), slots[cls])) for cls in slots}
         score = 0
         for capture in captures:
@@ -1325,6 +1364,44 @@ def missing_values(body, name):
     return out
 
 
+def external_helper(body, name):
+    """Use an already-owned helper instead of emitting a duplicate local copy."""
+    span=_function_body_span(body,name)
+    if not span:
+        return
+    start=body.rfind('\n',0,span[0])+1
+    header=body[start:span[1]-1].strip()
+    header=re.sub(r'\b(?:static|inline)\s+', '', header)
+    yield 'reuse owned helper '+name,body[:start]+'extern '+header+';\n'+body[span[2]+1:]
+
+
+def split_helper_calls(body, name):
+    """Separate inlined uses from calls to an already-owned out-of-line helper."""
+    span=_function_body_span(body,name)
+    if not span:
+        return
+    alias=name+'_inline'
+    if re.search(r'\b'+re.escape(alias)+r'\b',body):
+        return
+    uses=list(re.finditer(r'\b'+re.escape(name)+r'(?=\s*\()',body[span[2]+1:]))
+    if not 1<=len(uses)<=8:
+        return
+    start=body.rfind('\n',0,span[0])+1
+    signature=body[start:span[1]-1].strip()
+    signature=re.sub(r'\b(?:static|inline|extern)\s+','',signature)
+    # Keep the original signature for external calls; the private copy is only
+    # allowed to survive if the compiler inlines every selected use.
+    for mask in range(1,1<<len(uses)):
+        text=body
+        for i,use in reversed(list(enumerate(uses))):
+            if mask & (1<<i):
+                a,b=span[2]+1+use.start(),span[2]+1+use.end()
+                text=text[:a]+alias+text[b:]
+        text=text[:span[0]]+alias+text[span[0]+len(name):]
+        text=text[:start]+'extern '+signature+';\n'+text[start:]
+        yield f'split inline/external helper {name} uses {mask:x}',text
+
+
 def inline_helpers(body, name):
     """Do not emit unused out-of-line copies of reconstructed static helpers.
 
@@ -1340,3 +1417,19 @@ def inline_helpers(body, name):
         yield 'inline all static helpers',text
     for at in sites:
         yield 'inline helper at '+str(at), body[:at]+'inline '+body[at:]
+    for definition in re.finditer(r'\bstatic\s+inline\s+(?:'+TYPE+r')\s+(\w+)\s*\([^;{}]*\)\s*\{',body):
+        helper=definition[1]
+        if helper==name:
+            continue
+        prototypes=list(re.finditer(r'(?m)^(?!static\b)(?:extern\s+)?(?:'+TYPE+r')\s+'+re.escape(helper)+r'\s*\([^;{}]*\);',body[:definition.start()]))
+        if prototypes:
+            text=body
+            for m in reversed(prototypes):
+                text=text[:m.start()]+'static inline '+re.sub(r'^extern\s+','',m[0])+text[m.end():]
+            yield 'localize inline helper declaration '+helper,text
+    # A recovered helper can also be a public definition already owned by
+    # another TU. Keep its body available to the inliner without exporting it.
+    pattern = re.compile(r'(?m)^(?!static\b|extern\b)(?:'+TYPE+r')\s+(\w+)\s*\([^;{}]*\)\s*\{')
+    for match in pattern.finditer(body):
+        if match[1] != name:
+            yield 'internal inline helper '+match[1], body[:match.start()]+'static inline '+body[match.start():]

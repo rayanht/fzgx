@@ -110,3 +110,6 @@ rel/pilotpoint/pilotpoint/fn_14_316C.c:
 
 rel/pilotpoint/pilotpoint/fn_14_DC90.c:
 	.text       start:0x0000DC90 end:0x0000DF70 align:4
+
+rel/pilotpoint/pilotpoint/fn_14_A2A4.c:
+	.text       start:0x0000A2A4 end:0x0000A398 align:4

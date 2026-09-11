@@ -368,6 +368,33 @@ void fn_1_E5930(void *base, u32 unused, u32 mask138, u32 mask13c) {
 }
 /* fzgx:end fn_1_E5930 */
 
+/* fzgx:begin fn_1_E594C */
+struct fn_1_E594C_Arg0 {
+    u8 pad_0[0x138];
+    u32 unk_138;
+    u32 unk_13C;
+};
+
+#pragma opt_propagation off
+#pragma peephole off
+void fn_1_E594C(struct fn_1_E594C_Arg0 *arg0, u32 arg1, u32 arg2, u32 arg3) {
+    s32 inv2;
+    u32 value138;
+    s32 inv3;
+    u32 value13c;
+
+    value13c = arg0->unk_13C;
+    inv3 = ~(s32)arg3;
+    value138 = arg0->unk_138;
+    inv2 = ~(s32)arg2;
+    arg0->unk_13C = ((value13c) & ((u32)inv3));
+    arg0->unk_138 = ((value138) & ((u32)inv2));
+}
+#pragma peephole reset
+
+#pragma opt_propagation reset
+/* fzgx:end fn_1_E594C */
+
 /* fzgx:begin fn_1_E5970 */
 void fn_1_E5970(void *base, f32 value) {
     *(f32 *)((char *)base + 0x18) = value;

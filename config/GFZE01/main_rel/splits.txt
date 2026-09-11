@@ -6080,3 +6080,33 @@ rel/main_rel/sel_static_disp/fn_1_14108C.c:
 
 rel/main_rel/enemy_ctrl/fn_1_CA8FC.c:
 	.text       start:0x000CA8FC end:0x000CAB38 align:4
+
+rel/main_rel/accessory/fn_1_129D9C.c:
+	.text       start:0x00129D9C end:0x0012A080 align:4
+
+rel/main_rel/phys/fn_1_E594C.c:
+	.text       start:0x000E594C end:0x000E5970 align:4
+
+rel/main_rel/live_camera/fn_1_11ABC.c:
+	.text       start:0x00011ABC end:0x00011C08 align:4
+
+rel/main_rel/effect_car/fn_1_72318.c:
+	.text       start:0x00072318 end:0x000723E0 align:4
+
+rel/main_rel/sel_static_disp/fn_1_1373B0.c:
+	.text       start:0x001373B0 end:0x0013750C align:4
+
+rel/main_rel/archive/fn_1_12CCB0.c:
+	.text       start:0x0012CCB0 end:0x0012CEA8 align:4
+
+rel/main_rel/archive/fn_1_12AB38.c:
+	.text       start:0x0012AB38 end:0x0012ABB4 align:4
+
+rel/main_rel/font/fn_1_530C8.c:
+	.text       start:0x000530C8 end:0x000535A0 align:4
+
+rel/main_rel/mdlload/fn_1_D3CF4.c:
+	.text       start:0x000D3CF4 end:0x000D3DDC align:4
+
+rel/main_rel/car/fn_1_83CB0.c:
+	.text       start:0x00083CB0 end:0x00083D28 align:4

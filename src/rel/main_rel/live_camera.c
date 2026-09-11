@@ -334,6 +334,100 @@ void fn_1_10268(Camera_1_10268 *arg) {
 }
 /* fzgx:end fn_1_10268 */
 
+/* fzgx:begin fn_1_11ABC noprologue */
+#include "dolphin/hw_regs.h"
+#include "types.h"
+
+typedef struct {
+    f32 x;
+    f32 y;
+    f32 z;
+} Vec3;
+
+typedef struct {
+    Vec3 v;              /* 0x00 */
+    u8 pad_C[0x14];
+} CameraData;            /* 32 bytes */
+
+typedef struct {
+    u8 unk_0;
+    u8 unk_1;
+    u8 pad_2[2];
+    s16 unk_4;
+    s16 unk_6;
+    u8 pad_8[0xC];
+    s16 unk_14;
+    u8 pad_16[6];
+    f32 unk_1C;
+    u8 pad_20[0x14];
+    Vec3 unk_34;
+    u8 pad_40[0xC];
+    Vec3 unk_4C;
+    f32 unk_58;
+    s16 unk_5C;
+    u8 pad_5E[0x12];
+    f32 unk_70;
+    u8 pad_74[8];
+    f32 unk_7C;
+} LiveCamera;
+
+extern u32 lbl_801A63C0;
+extern CameraData lbl_1_data_4AA0[];
+
+extern void fn_1_862D4(s16, Vec3 *);
+extern void fn_1_8636C(s16, void *);
+extern void fn_1_862A8(s16, void *);
+extern void lbl_8006DC6C(void *);
+extern void lbl_8006E1B0(void *, void *);
+extern void fn_8006E2B0(void *, Vec3 *);
+extern s32 lbl_8006D24C(f32, f32);
+
+#pragma opt_propagation off
+void fn_1_11ABC(LiveCamera *camera) {
+    Vec3 first;
+    Vec3 second;
+    u8 mode = camera->unk_0;
+
+    if (mode == 5 || mode <= 1 || mode == 2) {
+        u32 value;
+        u32 next = lbl_801A63C0 * 0x676A4B6Bu + 0x33CB;
+        s16 result;
+
+        value = (next << 1) >> 17;
+        result = (s16)(value % 9);
+        lbl_801A63C0 = next;
+        camera->unk_14 = result;
+        camera->unk_4 = result;
+    }
+
+    fn_1_862D4(camera->unk_6, &first);
+    fn_1_8636C(camera->unk_6, &camera->unk_7C);
+    fn_1_862A8(camera->unk_6, &camera->unk_70);
+
+    camera->unk_34 = lbl_1_data_4AA0[camera->unk_4].v;
+
+    {
+        f32 m2, m1, m0;
+        f32 *mtx = (f32 *)(LC_BASE + 0x0);
+        m0 = first.x;
+        m1 = first.y;
+        m2 = first.z;
+        mtx[3] = m0;
+        mtx[7] = m1;
+        mtx[11] = m2;
+    }
+
+    lbl_8006DC6C(&camera->unk_7C);
+    lbl_8006E1B0(&camera->unk_34, &camera->unk_1C);
+    fn_8006E2B0(&camera->unk_70, &second);
+
+    camera->unk_4C = first;
+    camera->unk_5C = (s16)-lbl_8006D24C(second.x, second.y);
+    camera->unk_58 = 55.0f;
+}
+#pragma opt_propagation reset
+/* fzgx:end fn_1_11ABC */
+
 /* fzgx:begin fn_1_12620 */
 extern void OSPanic(u8 *file, int line, u8 *message, ...);
 extern u32 fn_80008E30(u32);

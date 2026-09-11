@@ -1688,3 +1688,6 @@ rel/movie_module/fn_12_F70.c:
 
 rel/movie_module/_prolog.c:
 	.text       start:0x00000000 end:0x000004D0 align:4
+
+rel/movie_module/fn_12_8F80.c:
+	.text       start:0x00008F80 end:0x00009594 align:4

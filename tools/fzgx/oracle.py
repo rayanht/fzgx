@@ -306,18 +306,19 @@ def _diff(project: Project, module: str, symbol: str, unit: str, max_diff_lines:
         lrows = left_syms.get(symbol, {}).get("instructions", [])
         rrows = right_syms.get(symbol, {}).get("instructions", [])
         res._rows = (lrows, rrows)
-        if len(lrows) == len(rrows) and all(
-                re.sub(r'\b[rf]\d+\b', 'REG', l.get('instruction', {}).get('formatted', '')) ==
-                re.sub(r'\b[rf]\d+\b', 'REG', r.get('instruction', {}).get('formatted', ''))
-                for l, r in zip(lrows, rrows)):
-            from . import regflow
-            flow = regflow.analyse_rows(lrows, rrows)
-            res.value_flow = flow['value_flow']
-            res.operand_order = flow['operand_order']
+        # The flow walker invalidates unsupported regions itself. A different
+        # opcode elsewhere must not hide a known wrong store in a supported one.
+        from . import regflow
+        flow = regflow.analyse_rows(lrows, rrows)
+        res.value_flow = flow['value_flow']
+        res.operand_order = flow['operand_order']
         if symbol not in right_syms:
             res.diff = [f"(symbol {symbol} not present in our object: define it, check the name)"]
         else:
             pool_rows, res._pool_pairs = _pool_rows(project, module, left, right, lrows, rrows, base, symbol)
+            interior_rows, interior_pairs = _interior_binding_rows(project, module, base, left, right, lrows, rrows)
+            pool_rows |= interior_rows
+            res._pool_pairs += interior_pairs
             if base is not None:
                 data_rows, data_pairs = _data_pool_rows(project, module, base, left, right, lrows, rrows)
                 pool_rows |= data_rows
@@ -351,6 +352,48 @@ def _diff(project: Project, module: str, symbol: str, unit: str, max_diff_lines:
                 # resolved literal): the link produces retail's bytes; verify's hash is the guard
                 res.matched = True
     return res
+
+
+def _interior_binding_rows(project, module, obj, left, right, lrows, rrows):
+    """Prove an explicit generated subobject/entry alias against retail relocs."""
+    if obj is None:
+        return set(), []
+    undefined = {s['name'] for s in poolfix.Elf(obj.read_bytes()).symbols() if s['shndx'] == 0}
+    rows, pairs = set(), set()
+    for i,(l,r) in enumerate(zip(lrows,rrows)):
+        li,ri=l.get('instruction',{}),r.get('instruction',{})
+        lr,rr=li.get('relocation'),ri.get('relocation')
+        if not lr or not rr or lr.get('type_name') != rr.get('type_name'):
+            continue
+        name=right['symbols'][rr['target_symbol']]['name']
+        match=re.fullmatch(r'(.+)__fzgx_offset_([0-9A-F]+)',name)
+        if not match or name not in undefined:
+            continue
+        owner=project.find_symbol(match[1],module) or project.resolve(match[1])
+        if owner is None:
+            # Promotion preserves the private C identifier but updates its
+            # committed relocation binding to the new owning symbol.
+            bindings={u['pool'][name] for u in project.load_units()
+                      if u.get('module')==module and isinstance(u.get('pool'),dict) and name in u['pool']}
+            if len(bindings)==1:
+                base,offset=poolfix.binding_target(next(iter(bindings)))
+                if offset==int(match[2],16):
+                    owner=project.find_symbol(base,module) or project.resolve(base)
+        retail=left['symbols'][lr['target_symbol']]['name']
+        target=project.find_symbol(retail,module) or project.resolve(retail)
+        delta=int(match[2],16)
+        if (not owner or not target or owner.module != target.module or owner.section != target.section
+                or not 0 < delta < owner.size
+                or owner.addr + delta + int(rr.get('addend') or 0) != target.addr + int(lr.get('addend') or 0)):
+            continue
+        if owner.section == '.text' and delta % 4:
+            continue
+        if [x for x in li.get('parts',[]) if 'reloc' not in json.dumps(x)] != [x for x in ri.get('parts',[]) if 'reloc' not in json.dumps(x)]:
+            continue
+        rows.add(i)
+        binding=f'{owner.name}+0x{delta:X}'
+        pairs.add((name,binding,f'interior symbol {binding}'))
+    return rows, sorted(pairs)
 
 
 def _equivalent_reloc_rows(project, module, obj, left, right, lrows, rrows):
@@ -532,7 +575,9 @@ def _abs_rows(right: dict, lrows: List[dict], rrows: List[dict]) -> set:
         forms = set()
         for hi_txt in (f"0x{ha:x}", f"-0x{(0x10000 - ha) & 0xFFFF:x}" if ha >= 0x8000 else f"0x{ha:x}"):
             for lo_txt in (f"0x{lo:x}", f"-0x{-lo_s:x}" if lo_s < 0 else f"0x{lo_s:x}"):
-                forms.add(ours.replace(f"{name}@ha", hi_txt).replace(f"{name}@h", hi_txt).replace(f"{name}@l", lo_txt))
+                ref = re.escape(name) + r"(?:[+-]0x[0-9a-fA-F]+)?"
+                rendered = re.sub(ref + r"@(?:ha|h)\b", hi_txt, ours)
+                forms.add(re.sub(ref + r"@l\b", lo_txt, rendered))
         if li.get("formatted", "") in forms:
             rows.add(i)
     return rows

@@ -502,6 +502,55 @@ void fn_1_137288(int index, void* value0, void* value1, void* value2, s16 select
 }
 /* fzgx:end fn_1_137288 */
 
+/* fzgx:begin fn_1_1373B0 noprologue */
+#include "types.h"
+
+extern void* fn_1_12F118(void);
+extern void* fn_1_36AD0(void);
+extern void fn_1_14E9E4(u8 arg0, void* arg1);
+
+void fn_1_1373B0(s16 arg0, u8* arg1, u8* arg2, u8* arg3, s16 arg4) {
+    struct { u8* value; } base;
+    u8* tmp;
+    s16 i;
+    int level;
+    struct {
+        u8 unk[8];
+        s16 value;
+    } info;
+
+    { u8* __reg_value_base = fn_1_12F118(); base.value = __reg_value_base; }
+    if (base.value == fn_1_36AD0()) {
+        tmp = ((arg4 * 0x81c0) + (base.value));
+    } else {
+        tmp = base.value + (arg0 - 0x29) * 0x81c0;
+    }
+    { u8* __reg_value_base = tmp; base.value = __reg_value_base; }
+
+    for (i = 0; i < 3u; i++) {
+        fn_1_14E9E4(base.value[0x81a4], &info);
+        switch (info.value) {
+        case 0: level = 1; break;
+        case 1: level = 1; break;
+        case 2: level = 2; break;
+        case 3: level = 2; break;
+        case 4: level = 3; break;
+        case 5: level = 3; break;
+        case 6: level = 4; break;
+        case 7: level = 4; break;
+        case 8: level = 5; break;
+        case 9: level = 5; break;
+        }
+        switch (i) {
+        case 0: *arg1 = level; break;
+        case 1: *arg3 = level; break;
+        case 2: *arg2 = level; break;
+        }
+        base.value += 8;
+    }
+}
+/* fzgx:end fn_1_1373B0 */
+
 /* fzgx:begin fn_1_13750C */
 void fn_1_13750C(void* arg0, void* arg1, void* arg2, void* arg3) {
     fn_1_1375C0(0, arg0, arg1, arg2, arg3);

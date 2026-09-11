@@ -213,6 +213,42 @@ void fn_1_12AAC8(void *arg0) {
 }
 /* fzgx:end fn_1_12AAC8 */
 
+/* fzgx:begin fn_1_12AB38 */
+struct fn_1_12AB38_state {
+    s32 unk_0;
+    s32 unk_4;
+    s32 unk_8;
+    u8 entries[1];
+};
+
+extern void fn_8006A9B4(void *arg0, void *arg1);
+extern void fn_80006E10(void *arg0);
+
+#pragma opt_propagation off
+#pragma opt_common_subs off
+#pragma opt_dead_assignments off
+void fn_1_12AB38(void *arg0) {
+    struct fn_1_12AB38_state *state =
+        (struct fn_1_12AB38_state *)&lbl_1_bss_897A0;
+
+    if (state->unk_4 != 0) {
+        u8 *entry = state->entries;
+        u32 index = state->unk_0;
+        fn_8006A9B4(((0x4c) + ((index * 0x6c) + (entry))), arg0);
+        if (state->unk_8 != 0) {
+            fn_80006E10(arg0);
+        }
+    } else {
+        fn_80006E10(arg0);
+    }
+}
+#pragma opt_dead_assignments reset
+
+#pragma opt_common_subs reset
+
+#pragma opt_propagation reset
+/* fzgx:end fn_1_12AB38 */
+
 /* fzgx:begin fn_1_12ABB4 */
 // Register the archive table only on its first use.
 void fn_1_12ABB4(void *archive) {
@@ -684,6 +720,76 @@ s32 fn_1_12CB04(s16 arg) {
     return 0;
 }
 /* fzgx:end fn_1_12CB04 */
+
+/* fzgx:begin fn_1_12CCB0 */
+extern void OSPanic(u8 *arg0, s32 arg1, u8 *arg2, ...);
+
+typedef struct {
+    u8 pad0[5];
+    u8 id;
+    u8 pad6[0x819a];
+    u8 value;
+    u8 pad_a1[0x1f];
+} FnEntry;
+
+extern FnEntry *fn_1_12F118(void);
+extern FnEntry *fn_1_36AD0(void);
+
+static inline s16 fn_1_12C7B8(s16 arg) {
+    FnEntry *table;
+    s16 i;
+
+    if (arg < 0x29) {
+        return arg;
+    }
+
+    table = fn_1_12F118();
+    if (table == 0) {
+        return 6;
+    }
+
+    if (table != fn_1_36AD0()) {
+        for (i = 0; i < 9; i++) {
+            if (table[i].id == arg) {
+                return table[i].value;
+            }
+        }
+    } else if (arg >= 0x32 && arg <= 0x35) {
+        return table[arg - 0x32].value;
+    } else if (arg >= 0x36 && arg <= 0x39) {
+        return table[arg - 0x36].value;
+    } else {
+        for (i = 0; i < 4; i++) {
+            if (table[i].id == arg) {
+                return table[i].value;
+            }
+        }
+    }
+
+    return 6;
+}
+
+s16 fn_1_12CCB0(s16 arg0, s16 arg1) {
+    switch (fn_1_12C7B8(arg0)) {
+    case 0x15:
+        switch (arg1) {
+        case 0:
+            return 0x29;
+        default:
+            return -1;
+        }
+    case 0x21:
+        switch (arg1) {
+        case 0:
+            return 0x2a;
+        case 1:
+            return 0x2b;
+        }
+        return -1;
+    }
+    return -1;
+}
+/* fzgx:end fn_1_12CCB0 */
 
 /* fzgx:begin fn_1_12D254 noprologue */
 #include "types.h"

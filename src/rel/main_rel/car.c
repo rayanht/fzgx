@@ -554,6 +554,47 @@ void fn_1_8365C(s32 enabled) {
 }
 /* fzgx:end fn_1_8365C */
 
+/* fzgx:begin fn_1_83CB0 */
+#include "dolphin/hw_regs.h"
+
+extern u32 lbl_1_rodata_3A94[7];
+extern void lbl_8006DC6C(void *, u32, u32);
+extern void lbl_8006E1B0(void *, void *);
+
+typedef struct {
+    u8 _pad_00[0x7c];
+    f32 field_7c;
+    f32 field_80;
+    f32 field_84;
+    u8 _pad_88[0x64];
+    u8 field_ec[0x3b4];
+    u8 field_4a0[0x10];
+} Fn183CB0Object;
+
+#pragma opt_propagation off
+void fn_1_83CB0(Fn183CB0Object *obj) {
+    u32 local[3];
+    f32 x;
+    f32 y;
+    f32 z;
+
+    local[0] = lbl_1_rodata_3A94[0];
+    local[1] = lbl_1_rodata_3A94[1];
+    local[2] = lbl_1_rodata_3A94[2];
+    lbl_8006DC6C(obj->field_ec, lbl_1_rodata_3A94[1],
+                 lbl_1_rodata_3A94[0]);
+    z = obj->field_7c;
+    y = obj->field_80;
+    x = obj->field_84;
+    /* Hardware register base is defined by the target address map. */
+    *(volatile f32 *)(LC_BASE + 0xC) = z; /* hardware register */
+    *(volatile f32 *)(LC_BASE + 0x1C) = y; /* hardware register */
+    *(volatile f32 *)(LC_BASE + 0x2C) = x; /* hardware register */
+    lbl_8006E1B0(local, obj->field_4a0);
+}
+#pragma opt_propagation reset
+/* fzgx:end fn_1_83CB0 */
+
 /* fzgx:begin fn_1_84124 */
 typedef struct {
     u8 _pad[0x38c];
