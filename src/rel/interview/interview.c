@@ -1,5 +1,26 @@
 #include "types.h"
 
+/* fzgx:begin _epilog */
+extern const f32 lbl_17_rodata_20;
+extern u32 lbl_17_bss_14;
+extern u32 lbl_17_bss_18[2];
+
+extern void fn_8006CE1C(f32 value);
+extern void fn_1_48140(int value);
+extern void fn_1_435C(u32 value);
+extern void fn_1_41A8(void);
+
+void _epilog(void) {
+    fn_8006CE1C(lbl_17_rodata_20);
+    fn_1_48140(0x8c);
+    fn_1_48140(0xa1);
+    fn_1_435C(lbl_17_bss_14);
+    fn_1_41A8();
+    fn_1_435C(lbl_17_bss_18[0]);
+    fn_1_41A8();
+}
+/* fzgx:end _epilog */
+
 /* fzgx:begin fn_17_23C */
 extern s32 lbl_17_bss_58[2];
 extern s32 lbl_17_bss_24[4];

@@ -35,6 +35,27 @@ void fn_13_A6C(struct fn_13_A6C_Arg0 *arg0) {
 }
 /* fzgx:end fn_13_A6C */
 
+/* fzgx:begin _prolog */
+extern u32 lbl_1_bss_7167C;
+extern u32 lbl_1_bss_71680;
+extern u32 lbl_1_bss_71684;
+extern u16 lbl_1_bss_96A;
+extern u8 lbl_13_bss_3C;
+extern void fn_13_AFC(void);
+extern void fn_13_B00(void);
+extern void fn_13_B08(void);
+extern void fn_1_A8F78(void);
+
+void _prolog(void) {
+    lbl_1_bss_7167C = (u32)fn_13_AFC;
+    lbl_1_bss_71680 = (u32)fn_13_B00;
+    lbl_1_bss_71684 = (u32)fn_13_B08;
+    lbl_1_bss_96A = 0xA7;
+    fn_1_A8F78();
+    lbl_13_bss_3C = 0;
+}
+/* fzgx:end _prolog */
+
 /* fzgx:begin fn_13_AFC */
 // fn_13_AFC: empty in retail (single blr).
 void fn_13_AFC(void) {

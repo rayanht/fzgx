@@ -101,6 +101,58 @@ void fn_4_894(void) {
 }
 /* fzgx:end fn_4_894 */
 
+/* fzgx:begin _epilog noprologue */
+#include "types.h"
+
+extern const f32 lbl_4_rodata_4C[45];
+extern struct option_epilog_lbl_4_bss_4 lbl_4_bss_4;
+extern struct option_epilog_lbl_4_bss_8 lbl_4_bss_8;
+extern struct option_epilog_lbl_1_bss_6EAD0 lbl_1_bss_6EAD0;
+extern void fn_8006CE1C(f32);
+extern void fn_1_1596DC(u32);
+extern void fn_1_484CC(u32);
+extern void fn_1_47A60(u32);
+extern void fn_1_412A0(u32);
+extern void fn_1_3C78(void);
+extern void fn_1_435C(u32);
+extern void fn_1_41A8(void);
+extern void fn_8004BF0C(u32, s32);
+extern void ADXT_Stop(u32);
+
+struct option_epilog_lbl_4_bss_4 {
+    u32 unk_0;
+};
+struct option_epilog_lbl_4_bss_8 {
+    u32 unk_0;
+};
+struct option_epilog_lbl_1_bss_6EAD0 {
+    u32 unk_0;
+};
+struct option_epilog_object {
+    u32 unk_0;
+    u32 unk_4;
+};
+
+void _epilog(void) {
+    fn_8006CE1C(lbl_4_rodata_4C[0]);
+    fn_1_1596DC(2);
+    fn_1_484CC(2);
+    fn_1_47A60(3);
+    fn_1_412A0(1);
+    fn_1_3C78();
+    fn_1_435C(lbl_4_bss_4.unk_0);
+    fn_1_41A8();
+    fn_1_435C(lbl_4_bss_8.unk_0);
+    fn_1_41A8();
+    if (lbl_1_bss_6EAD0.unk_0 != 0) {
+        fn_8004BF0C(((struct option_epilog_object *)lbl_1_bss_6EAD0.unk_0)->unk_0, -999);
+        fn_8004BF0C(((struct option_epilog_object *)lbl_1_bss_6EAD0.unk_0)->unk_4, -999);
+        ADXT_Stop(((struct option_epilog_object *)lbl_1_bss_6EAD0.unk_0)->unk_0);
+        ADXT_Stop(((struct option_epilog_object *)lbl_1_bss_6EAD0.unk_0)->unk_4);
+    }
+}
+/* fzgx:end _epilog */
+
 /* fzgx:begin fn_4_9B0 noprologue */
 #include "types.h"
 

@@ -1,5 +1,76 @@
 #include "types.h"
 
+/* fzgx:begin _prolog */
+extern struct _prolog_lbl_801A6410 lbl_801A6410;
+extern struct _prolog_lbl_8_bss_0 lbl_8_bss_0;
+extern struct _prolog_lbl_1_bss_58 lbl_1_bss_58;
+extern struct _prolog_lbl_1_bss_8B3A0 lbl_1_bss_8B3A0;
+extern struct _prolog_lbl_1_bss_960 lbl_1_bss_960;
+extern u16 lbl_1_bss_968;
+extern u16 lbl_1_bss_96A;
+extern u32 lbl_1_bss_7167C;
+extern u32 lbl_1_bss_71680;
+extern u32 lbl_1_bss_71684;
+extern s16 lbl_1_bss_964;
+extern u32 lbl_8_data_434;
+
+extern u32 fn_1_45D0(u32, u32, void *, u32);
+extern u32 fn_1_3CF0(u32, u32);
+extern u32 fn_1_479F0(u32);
+extern u32 fn_8_954(void);
+extern void fn_8_AA8(void);
+extern void fn_8_B7C(void);
+extern void fn_1_A8F78(void);
+
+struct _prolog_lbl_8_bss_0 {
+    u8 pad_0[0x234];
+    u32 unk_234;
+    u32 unk_238;
+    u8 unk_23C;
+    u8 unk_23D;
+};
+struct _prolog_lbl_801A6410 {
+    u32 unk_0;
+};
+struct _prolog_lbl_1_bss_960 {
+    s16 unk_0;
+};
+struct _prolog_lbl_1_bss_58 {
+    u8 pad_0[0x1C];
+    u32 unk_1C;
+};
+struct _prolog_lbl_1_bss_8B3A0 {
+    u8 pad_0[0x9E];
+    u8 unk_9E;
+};
+
+void _prolog(void) {
+    struct _prolog_lbl_8_bss_0 *p_lbl_8_bss_0;
+    s32 t0;
+    s32 t1;
+    p_lbl_8_bss_0 = (struct _prolog_lbl_8_bss_0 *)&lbl_8_bss_0;
+    t0 = fn_1_45D0(lbl_801A6410.unk_0, 0x173c, &lbl_8_data_434, 0x2f1);
+    p_lbl_8_bss_0->unk_234 = t0;
+    t1 = fn_1_45D0(lbl_801A6410.unk_0, 0x173c, &lbl_8_data_434, 0x2f2);
+    p_lbl_8_bss_0->unk_238 = t1;
+    fn_1_3CF0(p_lbl_8_bss_0->unk_234, 0x80);
+    fn_1_3CF0(p_lbl_8_bss_0->unk_238, 0x80);
+    fn_1_479F0(lbl_1_bss_960.unk_0);
+    lbl_1_bss_7167C = (u32)fn_8_954;
+    lbl_1_bss_71680 = (u32)fn_8_AA8;
+    lbl_1_bss_71684 = (u32)fn_8_B7C;
+    p_lbl_8_bss_0->unk_23C = 0;
+    if (lbl_1_bss_964 == 8 && (s32)lbl_1_bss_58.unk_1C != 0) {
+    lbl_1_bss_8B3A0.unk_9E = 0;
+    lbl_1_bss_968 = 1;
+    } else {
+    lbl_1_bss_96A = 158;
+    }
+    p_lbl_8_bss_0->unk_23D = 0;
+    fn_1_A8F78();
+}
+/* fzgx:end _prolog */
+
 /* fzgx:begin fn_8_AA8 */
 extern struct fn_8_AA8_lbl_8_bss_234 lbl_8_bss_234;
 extern struct fn_8_AA8_lbl_8_bss_238 lbl_8_bss_238;
