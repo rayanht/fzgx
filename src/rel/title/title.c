@@ -177,6 +177,142 @@ void fn_8_BE0(void) {
 }
 /* fzgx:end fn_8_BE0 */
 
+/* fzgx:begin fn_8_BE4 */
+struct TitleState {
+    u8 unk0[0x2];
+    u8 unk2;
+    u8 unk3[0x221];
+    s16 unk224;
+    u8 unk226[0x18];
+    u16 unk23e;
+    u8 unk240;
+};
+
+struct Prng {
+    u32 unk0;
+};
+
+struct Bss58 {
+    u8 unk0[0x15];
+    u8 unk15;
+};
+
+extern u8 lbl_8_bss_0;
+extern char lbl_8_data_0[4];
+extern u16 jumptable_8_data_494[15];
+extern f32 lbl_8_rodata_C[85];
+extern s16 lbl_1_bss_966;
+extern u8 lbl_801A66BA;
+extern struct Prng lbl_801A63C0;
+extern struct Bss58 lbl_1_bss_58;
+
+extern void fn_1_47F74(s32);
+extern u32 fn_1_4706C(void);
+extern void fn_1_46A60(void);
+extern u32 fn_1_47E54(u32);
+extern void fn_1_7B084(s16, s32);
+extern void fn_1_9A958(s16, s32);
+extern void fn_1_7FFF0(void);
+extern void fn_1_8001C(void);
+extern void *fn_1_7F518(s16, void *, s32);
+extern int sprintf(char *, const char *, ...);
+extern s32 fn_1_465D0(char *, s32);
+extern void fn_1_4100C(void);
+extern void fn_1_41104(s32);
+extern void fn_8006CE1C(f32);
+extern void fn_1_A1340(void);
+
+void fn_8_BE4(void) {
+    struct TitleState *state = (struct TitleState *)&lbl_8_bss_0;
+    char *data = lbl_8_data_0;
+    s32 i;
+    int v;
+
+    if (lbl_1_bss_966 != 0xa1) {
+        fn_1_47F74(0x8e);
+    }
+
+    state->unk23e = 0x1e;
+
+    if (lbl_801A66BA == 0) {
+        state->unk2 = 1;
+        state->unk240 = 0;
+    } else {
+        state->unk240 = 1;
+    }
+
+    {
+        u32 tmp = lbl_801A63C0.unk0 * 0x676a4b6b + 0x33cb;
+        s32 t;
+        s32 c;
+        s32 q;
+        s32 idx;
+
+        lbl_801A63C0.unk0 = tmp;
+        t = (tmp >> 16) & 0x7fff;
+        c = t >> 8;
+        q = c / 14;
+        idx = c - q * 14;
+        switch (idx) {
+        case 0: state->unk224 = 1; break;
+        case 1: state->unk224 = 16; break;
+        case 2: state->unk224 = 8; break;
+        case 3: state->unk224 = 26; break;
+        case 4: state->unk224 = 5; break;
+        case 5: state->unk224 = 14; break;
+        case 6: state->unk224 = 7; break;
+        case 7: state->unk224 = 11; break;
+        case 8: state->unk224 = 13; break;
+        case 9: state->unk224 = 3; break;
+        case 10: state->unk224 = 15; break;
+        case 11: state->unk224 = 10; break;
+        case 12: state->unk224 = 29; break;
+        case 13: state->unk224 = 9; break;
+        case 14: state->unk224 = 27; break;
+        default: state->unk224 = 1; break;
+        }
+    }
+
+    v = lbl_1_bss_58.unk15;
+    if ((s8)v == 0 || (s8)v == 2) {
+        char buf[0x20];
+        s8 i;
+        fn_1_4706C();
+        fn_1_46A60();
+        fn_1_47E54(1);
+        fn_1_47E54(3);
+        fn_1_7B084(state->unk224, 0);
+        fn_1_9A958(state->unk224, 0);
+        fn_1_7FFF0();
+        fn_1_8001C();
+        for (i = 0; i < 41; i++) {
+            char tmp[0x20];
+            sprintf(buf, data + 0x43c, fn_1_7F518(i, tmp, 0));
+            fn_1_465D0(buf, 1);
+        }
+        fn_1_4100C();
+        fn_1_41104(2);
+    } else {
+        fn_1_4706C();
+        fn_1_47E54(1);
+        fn_1_47E54(0x87);
+        fn_1_465D0(data + 0x450, 1);
+        fn_1_465D0(data + 0x464, 1);
+        fn_1_465D0(data + 0x478, 1);
+        fn_1_41104(1);
+        fn_1_47E54(0x9a);
+        fn_1_47E54(0x9b);
+        fn_1_47E54(0x9d);
+        fn_1_47E54(0xa1);
+        fn_1_47E54(0x9c);
+        fn_1_47E54(0xa2);
+    }
+
+    fn_8006CE1C(lbl_8_rodata_C[0]);
+    fn_1_A1340();
+}
+/* fzgx:end fn_8_BE4 */
+
 /* fzgx:begin fn_8_1304 */
 extern u32 fn_1_48140(u32);
 extern u32 fn_1_A1364(u32);

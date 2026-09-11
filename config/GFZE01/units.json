@@ -52358,6 +52358,16 @@
   },
   {
     "module": "movie_module",
+    "source": "rel/movie_module/fn_12_CCC4.c",
+    "symbols": [
+      "fn_12_CCC4"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "movie_module",
     "source": "rel/movie_module/fn_12_CF2C.c",
     "symbols": [
       "fn_12_CF2C"
@@ -52413,6 +52423,16 @@
     "source": "rel/movie_module/fn_12_EFA4.c",
     "symbols": [
       "fn_12_EFA4"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "movie_module",
+    "source": "rel/movie_module/fn_12_F70.c",
+    "symbols": [
+      "fn_12_F70"
     ],
     "status": "matching",
     "mw_version": "GC/1.3.2",
@@ -57551,6 +57571,20 @@
     "mw_version": null,
     "extra_cflags": [],
     "tu": "rel/title/title.c"
+  },
+  {
+    "module": "title",
+    "source": "rel/title/title/fn_8_BE4.c",
+    "symbols": [
+      "fn_8_BE4"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "tu": "rel/title/title.c",
+    "pool": {
+      "@36": "jumptable_8_data_494"
+    }
   },
   {
     "module": "winning",
