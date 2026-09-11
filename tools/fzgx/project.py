@@ -424,6 +424,8 @@ class Project:
         if not mapping:
             return []
         pattern = re.compile(r'(?<![\w.$@])(?:' + '|'.join(map(re.escape, mapping)) + r')(?![\w.$@])')
+        # A dot after a C object starts member access, not a symbol suffix.
+        c_pattern = re.compile(r'(?<![\w.$@])(?:' + '|'.join(map(re.escape, mapping)) + r')(?![\w$@])')
         paths = {(ROOT / 'src' / (u.get('tu') or u['source'])).with_suffix('.s' if u.get('asm') else '.c') for u in self.load_units()
                  if module == 'main' or u['module'] == module}
         headers = ROOT / 'include' if module == 'main' else ROOT / 'include/rel' / module
@@ -433,7 +435,7 @@ class Project:
             if not path.exists():
                 continue
             body = path.read_text()
-            rewritten = pattern.sub(lambda match: mapping[match[0]], body)
+            rewritten = (pattern if path.suffix == ".s" else c_pattern).sub(lambda match: mapping[match[0]], body)
             if rewritten != body:
                 path.write_text(rewritten)
                 changed.append(str(path.relative_to(ROOT)))

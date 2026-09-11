@@ -13,6 +13,7 @@ import signal
 import ssl
 import sys
 import time
+from collections import deque
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -51,25 +52,32 @@ class BatchStopped(Exception):
 
 
 class ToolSlots:
-    """Let active models and cleanup pass the queue of not-yet-started claims."""
+    """Bound claim starvation while reserving most dispatches for active sessions."""
     def __init__(self, limit):
-        self.limit, self.active, self.serial = limit, 0, 0
-        self.waiters = []
+        self.limit, self.active = limit, 0
+        self.waiters = (deque(), deque())
+        self.dispatch = 0
 
     def wake(self):
-        import heapq
-        while self.active < self.limit and self.waiters:
-            _, _, future = heapq.heappop(self.waiters)
-            if not future.done():
-                self.active += 1
-                future.set_result(None)
+        while self.active < self.limit:
+            for queue in self.waiters:
+                while queue and queue[0].done():
+                    queue.popleft()
+            # Three active-tool dispatches per claim when both queues are busy.
+            # Empty queues lend their whole capacity; the total limit is unchanged.
+            preferred = int(self.dispatch == 3)
+            queue = self.waiters[preferred] or self.waiters[1 - preferred]
+            if not queue:
+                return
+            future = queue.popleft()
+            self.dispatch = (self.dispatch + 1) % 4
+            self.active += 1
+            future.set_result(None)
 
     @contextlib.asynccontextmanager
     async def take(self, priority):
-        import heapq
         future = asyncio.get_running_loop().create_future()
-        self.serial += 1
-        heapq.heappush(self.waiters, (priority, self.serial, future))
+        self.waiters[priority].append(future)
         self.wake()
         try:
             await future
@@ -157,9 +165,49 @@ class DeepSeekTransport:
         await asyncio.gather(*list(self.tasks), return_exceptions=True)
 
 
+class ToolPool:
+    """Persistent isolated CLI workers; never retry an ambiguous mutation."""
+    def __init__(self, limit, directory):
+        self.directory = directory
+        self.available = asyncio.Queue()
+        self.processes = {}
+        for slot in range(limit):
+            self.available.put_nowait(slot)
+
+    async def request(self, args, env):
+        slot = await self.available.get()
+        try:
+            proc = self.processes.get(slot)
+            if proc is None or proc.returncode is not None:
+                with (self.directory / f'tool-worker-{slot}.stderr.log').open('a') as errors:
+                    proc = await asyncio.create_subprocess_exec(
+                        sys.executable, str(ROOT / 'tools/fzgx.py'), '--tool-worker', cwd=ROOT,
+                        stdin=asyncio.subprocess.PIPE, stdout=asyncio.subprocess.PIPE,
+                        stderr=errors, start_new_session=True, limit=32 * 1024 * 1024)
+                self.processes[slot] = proc
+            keys = ('FZGX_AGENT_ID', 'FZGX_SYMBOL', 'FZGX_HARNESS', 'FZGX_MODEL', 'FZGX_RESULT_FILE')
+            proc.stdin.write((json.dumps(dict(args=['--json', *args],
+                                              env={k: env[k] for k in keys if k in env})) + '\n').encode())
+            await proc.stdin.drain()
+            line = await proc.stdout.readline()
+            if not line:
+                await proc.wait()
+                raise RuntimeError(f'tool worker {slot} exited {proc.returncode}; request was not retried')
+            return json.loads(line)
+        finally:
+            self.available.put_nowait(slot)
+
+    async def close(self):
+        for proc in self.processes.values():
+            if proc.returncode is None:
+                proc.stdin.close()
+        await asyncio.gather(*(proc.wait() for proc in self.processes.values()))
+
+
 class AppServer:
     def __init__(self, command, directory, provider=None):
         self.command, self.directory = command, directory
+        self.tool_pool = None
         self.transport = DeepSeekTransport() if provider == "deepseek" else None
         self.pending, self.sessions, self.jobs = {}, {}, set()
         self.serial = 0
@@ -301,6 +349,8 @@ class AppServer:
         self.events.close()
         if self.transport:
             await self.transport.close()
+        if self.tool_pool:
+            await self.tool_pool.close()
 
 
 def utcnow():
@@ -385,14 +435,11 @@ class Matcher:
             self.queue_secs += started - queued
             if args[0] == 'claim':
                 self.claim_started = True
-            proc = await asyncio.create_subprocess_exec(
-                sys.executable, str(ROOT / 'tools/fzgx.py'), '--json', *args, cwd=ROOT, env=self.env,
-                stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE, start_new_session=True)
-            # Shield a tool mutation from session cancellation. Killing submit
-            # halfway through carving would leave the build tree inconsistent.
-            pending = asyncio.create_task(proc.communicate())
+            # Shield mutations through completion, including session cancellation.
+            pending = asyncio.create_task(self.server.tool_pool.request(args, self.env))
+            response = None
             try:
-                stdout, stderr = await asyncio.shield(pending)
+                response = await asyncio.shield(pending)
             except asyncio.CancelledError:
                 await pending
                 raise
@@ -401,11 +448,12 @@ class Matcher:
                 self.tool_secs += elapsed
                 self.log.write(json.dumps(dict(timestamp=utcnow(), method='fzgx/tool/timing',
                     params=dict(command=args[0], queue_secs=round(started - queued, 3),
-                                execute_secs=round(elapsed, 3), rc=proc.returncode))) + '\n')
+                                execute_secs=round(elapsed, 3), rc=response['rc'] if response else None))) + '\n')
+            stdout, stderr = response['stdout'], response['stderr']
             try:
                 return json.loads(stdout)
             except ValueError:
-                raise RuntimeError((stderr or stdout or b'empty tool result').decode(errors='replace')[-2000:])
+                raise RuntimeError((stderr or stdout or 'empty tool result')[-2000:])
 
     async def interrupt(self):
         if self.turn and not self.done.is_set() and not self.server.closed:
@@ -580,6 +628,7 @@ class Matcher:
 async def fan_out(p, options, model, symbols, batch, revise, command, price):
     directory = STATE_DIR / 'runs' / batch
     server = AppServer(command, directory, provider=options.provider)
+    server.tool_pool = ToolPool(options.tool_parallel, directory)
     slots = ToolSlots(options.tool_parallel)
     queue = iter(enumerate(symbols, 1))
     results, spent = [], 0.0

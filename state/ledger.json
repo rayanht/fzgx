@@ -1,5 +1,5 @@
 {
- "generated": 1789108836,
+ "generated": 1789109371,
  "functions": [
   {
    "symbol": "car_colchg:_prolog",
@@ -12064,11 +12064,11 @@
   {
    "symbol": "fn_80010CB0",
    "module": "main",
-   "unit": "dol/fn_80010CB0.c",
+   "unit": null,
    "addr": 2147552432,
    "size": 648,
-   "status": "matched",
-   "attempts": 2,
+   "status": "unmatched",
+   "attempts": 3,
    "best_percent": 99.78395,
    "claimed_by": null,
    "claimed_at": null,
@@ -12077,7 +12077,7 @@
    "blocked_issue": null,
    "blocked_reason": null,
    "prev_status": null,
-   "link_state": "pending"
+   "link_state": null
   },
   {
    "symbol": "OSSuspendThread",
@@ -30271,11 +30271,11 @@
    "claimed_by": null,
    "claimed_at": null,
    "claim_ttl": null,
-   "matched_commit": null,
+   "matched_commit": "778910c",
    "blocked_issue": null,
    "blocked_reason": null,
    "prev_status": null,
-   "link_state": "pending"
+   "link_state": "verified"
   },
   {
    "symbol": "ADXF_ExecServer",
@@ -39901,11 +39901,11 @@
    "claimed_by": null,
    "claimed_at": null,
    "claim_ttl": null,
-   "matched_commit": null,
+   "matched_commit": "778910c",
    "blocked_issue": null,
    "blocked_reason": null,
    "prev_status": null,
-   "link_state": "pending"
+   "link_state": "verified"
   },
   {
    "symbol": "fn_8007698C",
@@ -47227,11 +47227,11 @@
    "claimed_by": null,
    "claimed_at": null,
    "claim_ttl": null,
-   "matched_commit": null,
+   "matched_commit": "778910c",
    "blocked_issue": null,
    "blocked_reason": null,
    "prev_status": null,
-   "link_state": "pending"
+   "link_state": "verified"
   },
   {
    "symbol": "fn_1_1FE8",
@@ -50719,11 +50719,11 @@
    "claimed_by": null,
    "claimed_at": null,
    "claim_ttl": null,
-   "matched_commit": null,
+   "matched_commit": "778910c",
    "blocked_issue": null,
    "blocked_reason": null,
    "prev_status": null,
-   "link_state": "pending"
+   "link_state": "verified"
   },
   {
    "symbol": "fn_1_12850",
@@ -51277,11 +51277,11 @@
    "claimed_by": null,
    "claimed_at": null,
    "claim_ttl": null,
-   "matched_commit": null,
+   "matched_commit": "778910c",
    "blocked_issue": null,
    "blocked_reason": null,
    "prev_status": null,
-   "link_state": "pending"
+   "link_state": "verified"
   },
   {
    "symbol": "fn_1_17FCC",
@@ -54998,7 +54998,7 @@
    "addr": 259256,
    "size": 68,
    "status": "unmatched",
-   "attempts": 6,
+   "attempts": 7,
    "best_percent": 67.94118,
    "claimed_by": null,
    "claimed_at": null,
@@ -59809,11 +59809,11 @@
    "claimed_by": null,
    "claimed_at": null,
    "claim_ttl": null,
-   "matched_commit": null,
+   "matched_commit": "778910c",
    "blocked_issue": null,
    "blocked_reason": null,
    "prev_status": null,
-   "link_state": "pending"
+   "link_state": "verified"
   },
   {
    "symbol": "fn_1_4EB74",
@@ -62113,11 +62113,11 @@
    "claimed_by": null,
    "claimed_at": null,
    "claim_ttl": null,
-   "matched_commit": null,
+   "matched_commit": "778910c",
    "blocked_issue": null,
    "blocked_reason": null,
    "prev_status": null,
-   "link_state": "pending"
+   "link_state": "verified"
   },
   {
    "symbol": "fn_1_5745C",
@@ -66703,11 +66703,11 @@
    "claimed_by": null,
    "claimed_at": null,
    "claim_ttl": null,
-   "matched_commit": null,
+   "matched_commit": "778910c",
    "blocked_issue": null,
    "blocked_reason": null,
    "prev_status": null,
-   "link_state": "pending"
+   "link_state": "verified"
   },
   {
    "symbol": "fn_1_76448",
@@ -78799,11 +78799,11 @@
    "claimed_by": null,
    "claimed_at": null,
    "claim_ttl": null,
-   "matched_commit": null,
+   "matched_commit": "778910c",
    "blocked_issue": null,
    "blocked_reason": null,
    "prev_status": null,
-   "link_state": "pending"
+   "link_state": "verified"
   },
   {
    "symbol": "fn_1_ACD00",
@@ -81535,11 +81535,11 @@
    "claimed_by": null,
    "claimed_at": null,
    "claim_ttl": null,
-   "matched_commit": null,
+   "matched_commit": "778910c",
    "blocked_issue": null,
    "blocked_reason": null,
    "prev_status": null,
-   "link_state": "pending"
+   "link_state": "verified"
   },
   {
    "symbol": "fn_1_D0428",
@@ -82322,7 +82322,7 @@
    "addr": 864192,
    "size": 96,
    "status": "unmatched",
-   "attempts": 9,
+   "attempts": 10,
    "best_percent": 97.5,
    "claimed_by": null,
    "claimed_at": null,
@@ -83857,11 +83857,11 @@
    "claimed_by": null,
    "claimed_at": null,
    "claim_ttl": null,
-   "matched_commit": null,
+   "matched_commit": "778910c",
    "blocked_issue": null,
    "blocked_reason": null,
    "prev_status": null,
-   "link_state": "pending"
+   "link_state": "verified"
   },
   {
    "symbol": "fn_1_D9224",
@@ -84739,11 +84739,11 @@
    "claimed_by": null,
    "claimed_at": null,
    "claim_ttl": null,
-   "matched_commit": null,
+   "matched_commit": "778910c",
    "blocked_issue": null,
    "blocked_reason": null,
    "prev_status": null,
-   "link_state": "pending"
+   "link_state": "verified"
   },
   {
    "symbol": "fn_1_DCE60",
@@ -95521,11 +95521,11 @@
    "claimed_by": null,
    "claimed_at": null,
    "claim_ttl": null,
-   "matched_commit": null,
+   "matched_commit": "778910c",
    "blocked_issue": null,
    "blocked_reason": null,
    "prev_status": null,
-   "link_state": "pending"
+   "link_state": "verified"
   },
   {
    "symbol": "fn_1_12B3BC",
@@ -95872,11 +95872,11 @@
   {
    "symbol": "fn_1_12CCB0",
    "module": "main_rel",
-   "unit": "rel/main_rel/archive/fn_1_12CCB0.c",
+   "unit": null,
    "addr": 1232048,
    "size": 504,
-   "status": "matched",
-   "attempts": 3,
+   "status": "unmatched",
+   "attempts": 4,
    "best_percent": 100.0,
    "claimed_by": null,
    "claimed_at": null,
@@ -95885,7 +95885,7 @@
    "blocked_issue": null,
    "blocked_reason": null,
    "prev_status": null,
-   "link_state": "pending"
+   "link_state": null
   },
   {
    "symbol": "fn_1_12CEA8",
@@ -96907,11 +96907,11 @@
    "claimed_by": null,
    "claimed_at": null,
    "claim_ttl": null,
-   "matched_commit": null,
+   "matched_commit": "778910c",
    "blocked_issue": null,
    "blocked_reason": null,
    "prev_status": null,
-   "link_state": "pending"
+   "link_state": "verified"
   },
   {
    "symbol": "fn_1_133748",
@@ -97771,11 +97771,11 @@
    "claimed_by": null,
    "claimed_at": null,
    "claim_ttl": null,
-   "matched_commit": null,
+   "matched_commit": "778910c",
    "blocked_issue": null,
    "blocked_reason": null,
    "prev_status": null,
-   "link_state": "pending"
+   "link_state": "verified"
   },
   {
    "symbol": "fn_1_13B548",
@@ -107401,11 +107401,11 @@
    "claimed_by": null,
    "claimed_at": null,
    "claim_ttl": null,
-   "matched_commit": null,
+   "matched_commit": "778910c",
    "blocked_issue": null,
    "blocked_reason": null,
    "prev_status": null,
-   "link_state": "pending"
+   "link_state": "verified"
   },
   {
    "symbol": "fn_12_8344",
@@ -120307,11 +120307,11 @@
    "claimed_by": null,
    "claimed_at": null,
    "claim_ttl": null,
-   "matched_commit": null,
+   "matched_commit": "778910c",
    "blocked_issue": null,
    "blocked_reason": null,
    "prev_status": null,
-   "link_state": "pending"
+   "link_state": "verified"
   },
   {
    "symbol": "fn_4_898C",
@@ -129271,11 +129271,11 @@
    "claimed_by": null,
    "claimed_at": null,
    "claim_ttl": null,
-   "matched_commit": null,
+   "matched_commit": "778910c",
    "blocked_issue": null,
    "blocked_reason": null,
    "prev_status": null,
-   "link_state": "pending"
+   "link_state": "verified"
   },
   {
    "symbol": "fn_8_5514",
@@ -130837,11 +130837,11 @@
    "claimed_by": null,
    "claimed_at": null,
    "claim_ttl": null,
-   "matched_commit": null,
+   "matched_commit": "778910c",
    "blocked_issue": null,
    "blocked_reason": null,
    "prev_status": null,
-   "link_state": "pending"
+   "link_state": "verified"
   },
   {
    "symbol": "fn_15_DD8",
@@ -130873,11 +130873,11 @@
    "claimed_by": null,
    "claimed_at": null,
    "claim_ttl": null,
-   "matched_commit": null,
+   "matched_commit": "778910c",
    "blocked_issue": null,
    "blocked_reason": null,
    "prev_status": null,
-   "link_state": "pending"
+   "link_state": "verified"
   },
   {
    "symbol": "fn_15_11DC",
@@ -426440,8 +426440,8 @@
    "tokens_in": 91281,
    "tokens_out": 7118,
    "cost_usd": 0.009659,
-   "outcome": "matched",
-   "notes": "oracle match accepted automatically",
+   "outcome": "link-mismatch",
+   "notes": "oracle match accepted automatically [object matched but link differed]",
    "best_body_path": null,
    "stale_checks": 0,
    "best_in_attempt": 100.0
@@ -432368,8 +432368,8 @@
    "tokens_in": 0,
    "tokens_out": 0,
    "cost_usd": 0.0,
-   "outcome": "matched",
-   "notes": "oracle match accepted automatically",
+   "outcome": "link-mismatch",
+   "notes": "oracle match accepted automatically [object matched but link differed]",
    "best_body_path": null,
    "stale_checks": 0,
    "best_in_attempt": 99.78395
@@ -434976,6 +434976,44 @@
    "best_body_path": "/Users/rayan/fzgx/.fzgx/attempts/fn_12_2B358.1789108804.c",
    "stale_checks": 0,
    "best_in_attempt": 79.21311
+  },
+  {
+   "id": 15971,
+   "symbol": "fn_1_3F4B8",
+   "agent": "tool-pool-validation-fn_1_3F4B8",
+   "harness": null,
+   "model": null,
+   "started": 1789109276,
+   "ended": 1789109288,
+   "checks": 7,
+   "final_percent": 67.94118,
+   "tokens_in": 0,
+   "tokens_out": 0,
+   "cost_usd": 0.0,
+   "outcome": "released",
+   "notes": "tool worker performance validation; source unchanged",
+   "best_body_path": "/Users/rayan/fzgx/.fzgx/attempts/fn_1_3F4B8.1789109288.c",
+   "stale_checks": 6,
+   "best_in_attempt": 67.94118
+  },
+  {
+   "id": 15972,
+   "symbol": "fn_1_D2FC0",
+   "agent": "tool-pool-validation-fn_1_D2FC0",
+   "harness": null,
+   "model": null,
+   "started": 1789109283,
+   "ended": 1789109288,
+   "checks": 7,
+   "final_percent": 97.5,
+   "tokens_in": 0,
+   "tokens_out": 0,
+   "cost_usd": 0.0,
+   "outcome": "released",
+   "notes": "tool worker performance validation; source unchanged",
+   "best_body_path": "/Users/rayan/fzgx/.fzgx/attempts/fn_1_D2FC0.1789109288.c",
+   "stale_checks": 6,
+   "best_in_attempt": 97.5
   }
  ],
  "names": [

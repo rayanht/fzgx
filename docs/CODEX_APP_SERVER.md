@@ -17,6 +17,25 @@ uv run tools/orchestrate.py --provider deepseek --model deepseek-flash \
 Use the prepared manifest for the intended pool; the concurrency setting does
 not select functions. An already-running CLI batch keeps its existing transport.
 
+The local tool pool keeps up to `--tool-parallel` Python workers alive. Workers
+serve one request at a time over JSON lines, reset host-supplied function/agent
+bindings after every call, and reuse project indexes until symbol, unit, objdiff,
+or split configuration changes. Per-function locks and submit/relink locks remain;
+checks for different functions do not acquire a global compiler lock. A crashed
+worker is replaced for the next call; an ambiguous mutation is never retried.
+Shutdown waits for dispatched mutations before closing workers.
+
+Measured on two real REL functions with their saved compiler settings: disposable
+CLI checks averaged 290 ms; persistent warm checks averaged 88 ms (3.3x faster),
+with identical object diffs. Switching symbols in one worker retained isolation;
+a mismatched function/agent request was rejected. No model sessions were used.
+
+Fair scheduling alone was insufficient: a closed-loop replay of 21,119 recorded
+tool operations reduced mean claim wait from 221 to 25 seconds, but increased
+active-tool wait from 0.55 to 30.25 seconds and lengthened the replay by 14%.
+Retaining worker indexes addresses the repeated service cost instead of only
+redistributing wait. The replay is not a live throughput measurement of the new pool.
+
 ## Ownership and limits
 
 The runner claims the function, verifies and installs the saved C, and performs
@@ -29,7 +48,11 @@ budget bounds auxiliary examples/history only. A `lift_total` seed can include a
 Assignment and preflight use one `claim --check` CLI call in one tool slot.
 A full-width claim queue therefore cannot put every initial check behind all
 the remaining claims before any model starts.
-The local tool queue prioritizes existing sessions over new claims. Shared signature
+When both local tool queues are busy, the runner dispatches three active-session
+operations per new claim, FIFO within each class. Either class can use all tool
+slots when the other is empty. This replaces strict priority, which starved claims
+for minutes under sustained model traffic. The shared `--tool-parallel` bound
+applies across both classes, including cancellation and cleanup. Shared signature
 and call-constraint caches avoid rebuilding the same source/TU analysis per CLI
 process; source, header, symbol, TU and tooling changes invalidate them. One producer
 builds each cache, then publishes it atomically. Assembly caches also publish atomically.

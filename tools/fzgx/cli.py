@@ -550,7 +550,53 @@ def build_parser() -> argparse.ArgumentParser:
     return ap
 
 
-def main(argv: Optional[List[str]] = None) -> int:
+def worker_main():
+    """Serve one host-bound request at a time, retaining immutable project indexes."""
+    import contextlib
+    import io
+    import sys
+    import traceback
+    project = None
+    stamp = None
+    bindings = ('FZGX_AGENT_ID', 'FZGX_SYMBOL', 'FZGX_HARNESS', 'FZGX_MODEL', 'FZGX_RESULT_FILE')
+    for line in sys.stdin:
+        stdout, stderr = io.StringIO(), io.StringIO()
+        rc = 1
+        with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(stderr):
+            try:
+                request = json.loads(line)
+                for key in bindings:
+                    os.environ.pop(key, None)
+                env = request['env']
+                if set(env) - set(bindings) or not env.get('FZGX_AGENT_ID') or not env.get('FZGX_SYMBOL'):
+                    raise ValueError('tool worker requires a host-bound function and agent')
+                os.environ.update(env)
+                if project is None:
+                    project = Project()
+                paths = [project.config_dir / 'config.yml', project.units_path,
+                         project.build_dir / 'config.json', project.config_dir.parent.parent / 'objdiff.json']
+                paths += [project.module_config_dir(m) / 'symbols.txt' for m in project.modules]
+                current = tuple((str(f), f.stat().st_mtime_ns, f.stat().st_size)
+                                for f in paths if f.exists())
+                if current != stamp:
+                    project = Project()
+                    stamp = current
+                rc = main(request['args'], project=project)
+            except SystemExit as error:
+                rc = error.code if isinstance(error.code, int) else 1
+            except Exception:
+                traceback.print_exc()
+            finally:
+                for key in bindings:
+                    os.environ.pop(key, None)
+        print(json.dumps(dict(rc=rc, stdout=stdout.getvalue(), stderr=stderr.getvalue())), flush=True)
+    return 0
+
+
+def main(argv: Optional[List[str]] = None, project=None) -> int:
+    import sys
+    if (sys.argv[1:] if argv is None else argv) == ['--tool-worker']:
+        return worker_main()
     a = build_parser().parse_args(argv)
     assigned = os.environ.get("FZGX_SYMBOL")
     if assigned:
@@ -562,7 +608,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         from . import oracle
         lock = "worker-" + hashlib.sha256(assigned.encode()).hexdigest() + ".lock"
         with oracle.build_lock(lock):
-            p = Project(a.version)
+            p = project if project is not None and project.version == a.version else Project(a.version)
             rc = a.fn(a, p)
             result_file = os.environ.get('FZGX_RESULT_FILE')
             if result_file:

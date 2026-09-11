@@ -20,7 +20,10 @@ uv run tools/fzgx.py restore                    # (optional) load state/ledger.j
 
 Headless batches use `uv run tools/orchestrate.py --harness codex ...`.
 One local Codex app server multiplexes the model sessions; a bounded pool of
-short-lived CLI processes serves dynamic tools. The runner assigns functions
+persistent CLI workers serves dynamic tools. Each request binds its own function
+and agent; project indexes are reused until symbols, units or build configuration
+change. Active calls and claims share the tool bound with 3:1 fair dispatch, so
+claims cannot starve behind a continuous stream of edits. The runner assigns functions
 and supplies their existing C and initial diff. Models only edit/check their
 bound work copy or release early for a technical reason. Tooling accepts matches
 and releases exhausted attempts; the runner interrupts and unloads the thread.
@@ -111,6 +114,8 @@ Rules that hold for everyone:
   in the DOL need `Project.bytes_at` to find the segment by address (it was broken for every
   DOL section until 2026-09-09: no DOL pool match could land).
   `fzgx uncarve --stubs` removes any unit without matched code (verify uncarves what it rejects).
+  Symbol promotion must rewrite C `global.member` bases too; a following dot only
+  extends a symbol name in assembly, not in C. Preserve separate token boundaries.
 - Plateaus are data, not agent work. `fzgx stuck` classifies every saved best body at 80%+ by
   failure mode from the object diff (`.fzgx/stuck.json`, rows included). `fzgx fixup`
   is the sole deterministic repair command. All saved variants, source rewrites,
