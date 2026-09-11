@@ -19538,6 +19538,19 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_8005A9B8.c",
+    "symbols": [
+      "fn_8005A9B8"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on"
+    ]
+  },
+  {
+    "module": "main",
     "source": "dol/fn_8005ACF0.c",
     "symbols": [
       "fn_8005ACF0"
