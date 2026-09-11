@@ -6143,3 +6143,6 @@ rel/main_rel/enemy_ctrl/fn_1_D19B8.c:
 
 rel/main_rel/effect_car/fn_1_6F404.c:
 	.text       start:0x0006F404 end:0x0006F8D0 align:4
+
+rel/main_rel/sel_static_disp/fn_1_1368A0.c:
+	.text       start:0x001368A0 end:0x00136CC4 align:4
