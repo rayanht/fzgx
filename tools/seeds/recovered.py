@@ -103,12 +103,15 @@ class SavedCandidates:
             self.add(row['symbol'], record, f'ledger:attempt/{row["id"]}')
 
         # The unified fixup report is the canonical store for improved bodies.
-        # Its best rows carry relocation-aware percentages and exact settings.
+        # Keep every already-diffed alternative: better instruction alignment
+        # and better objdiff similarity need not select the same spelling.
         for path in sorted((STATE_DIR / 'fixup').rglob('report.json')):
             data = json.loads(path.read_text())
-            for symbol, record in data.get('best', {}).items():
-                if 'percent' in record:
-                    self.add(symbol, {**record, 'path': record['source']}, str(path.relative_to(ROOT)))
+            records = [dict(record,symbol=symbol) for symbol,record in data.get('best', {}).items()]
+            records.extend(data.get('records', []))
+            for record in records:
+                if 'percent' in record and 'symbol' in record:
+                    self.add(record['symbol'], {**record, 'path': record['source']}, str(path.relative_to(ROOT)))
 
         # Only compile-result stores: donor discovery/fuzzy scores measure opcode
         # similarity, not how closely an owned C reconstruction compiles.

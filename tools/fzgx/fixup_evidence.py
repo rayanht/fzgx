@@ -210,7 +210,8 @@ def optimizer_pragmas(body: str, name: str) -> List[Tuple[str, str]]:
         return []
     start = body.rfind('\n', 0, span[0]) + 1
     out = []
-    for option in ('peephole', 'opt_propagation', 'opt_common_subs', 'opt_lifetimes', 'opt_dead_assignments'):
+    for option in ('peephole', 'opt_propagation', 'opt_common_subs', 'opt_lifetimes', 'opt_dead_assignments',
+                   'opt_strength_reduction', 'opt_loop_invariants', 'opt_pointer_analysis'):
         if re.search(rf'^\s*#pragma\s+{option}\s+off\b', body[:span[1]], re.M):
             continue
         text = (body[:start] + f'#pragma {option} off\n' + body[start:span[1]] +
@@ -265,9 +266,10 @@ def float_literals(p: Project, symbol: str, body: str, base: oracle.CheckResult)
     # A whole-TU pool often has only one lis/addi relocation: its later loads
     # carry ordinary offsets. Follow both objects' bases rather than expecting
     # a relocation on every lfs/lfd. Conflicting alignments are not evidence.
-    from .evidence import memory_loads, retail_bytes
+    from .evidence import memory_loads, retail_bytes, object_jump_tables
     inferred, locations = {}, {}
-    left_loads, right_loads = (memory_loads(rows) for rows in base._rows)
+    left_loads = memory_loads(base._rows[0], object_jump_tables(p.target_object_for(sym), sym.name, p, sym.module))
+    right_loads = memory_loads(base._rows[1], object_jump_tables(base._object, sym.name))
     for i, target in left_loads.items():
         private = right_loads.get(i)
         if not private or target['op'] not in ('lfs', 'lfd') or target['op'] != private['op']:
@@ -337,7 +339,7 @@ def float_literals(p: Project, symbol: str, body: str, base: oracle.CheckResult)
                 if len(refs) == 1:
                     anchor, offset = next(iter(refs))
                     if offset >= 0 and not re.search(r'\b' + re.escape(anchor) + r'\b', code):
-                        bound_edits[start, end] = (anchor, offset, width)
+                        bound_edits[start, end] = (anchor, offset, width, 'f32' if width == 4 else 'f64')
         if len(edits) > 1 and current != expected:
             combined = body
             for start, end in reversed(edits):
@@ -349,27 +351,73 @@ def float_literals(p: Project, symbol: str, body: str, base: oracle.CheckResult)
             combined = combined[:start] + replacement + combined[end:]
     if combined != body:
         out.insert(0, ('recover shared-pool literal values', combined))
+    # Integer tables can share the same base as floating literals. Keeping an
+    # invented private palette prevents that base from ever matching, even when
+    # all float tokens have been rebound. Bind constant-index reads using their
+    # emitted object offsets and the aligned retail loads, not guessed values.
+    removals = []
+    widths = {'u8': 1, 's8': 1, 'u16': 2, 's16': 2, 'u32': 4, 's32': 4, 'f32': 4, 'f64': 8}
+    for declaration in re.finditer(r'\bstatic\s+const\s+(u8|s8|u16|s16|u32|s32|f32|f64)\s+(\w+)\s*\[([^\]]*)\]\s*=\s*\{[^{}]*\}\s*;', code):
+        ty, name = declaration[1], declaration[2]
+        obj = own.get(name)
+        if not obj or not obj['size']:
+            continue
+        locations_by_index = {}
+        for i, private in right_loads.items():
+            target = left_loads.get(i)
+            anchor = own.get(private['symbol'])
+            if not anchor or not target or target['width'] != widths[ty] or private['op'] != target['op']:
+                continue
+            offset = anchor['value'] + private['offset'] - obj['value']
+            if anchor['shndx'] != obj['shndx'] or not 0 <= offset < obj['size'] or offset % widths[ty]:
+                continue
+            if retail_bytes(p, sym.module, target['symbol'], target['offset'], widths[ty]) is not None:
+                locations_by_index.setdefault(offset // widths[ty], set()).add((target['symbol'], target['offset']))
+        uses = [m for m in re.finditer(r'\b'+re.escape(name)+r'\s*\[\s*(0x[\da-fA-F]+|\d+)\s*\]', code)
+                if not declaration.start() <= m.start() < declaration.end()]
+        replacements = {}
+        for use in uses:
+            options = locations_by_index.get(int(use[1], 0), set())
+            if len(options) != 1:
+                continue
+            anchor, offset = next(iter(options))
+            if offset < 0 or re.search(r'\b'+re.escape(anchor)+r'\b', code):
+                continue
+            replacements[use.span()] = (anchor, offset, widths[ty], ty)
+        if replacements:
+            bound_edits.update(replacements)
+            tokens = [m for m in re.finditer(r'\b'+re.escape(name)+r'\b', code)
+                      if not declaration.start() <= m.start() < declaration.end()]
+            if len(replacements) == len(tokens):
+                removals.append(declaration.span())
     # Express the shared layout in owned C declarations. Code bytes, including
     # load offsets, still have to pass the oracle; this does not patch code or
     # mark unequal pools equivalent.
     layouts = {}
     bound = body
-    for (start, end), (anchor, offset, width) in sorted(bound_edits.items(), reverse=True):
+    edits = []
+    for (start, end), (anchor, offset, width, ty) in sorted(bound_edits.items(), reverse=True):
         if (start, end) in ambiguous:
             continue
-        layouts.setdefault(anchor, {})[offset] = width
-        bound = bound[:start] + f'{anchor}.unk_{offset:X}' + bound[end:]
+        if any(a <= start < b for a,b in removals):
+            continue
+        layouts.setdefault(anchor, {})[offset] = (width, ty)
+        edits.append((start,end,f'{anchor}.unk_{offset:X}'))
+    for start,end in removals:
+        edits.append((start,end,''))
+    for start,end,value in sorted(edits, reverse=True):
+        bound = bound[:start]+value+bound[end:]
     declarations = []
     for anchor, offsets in sorted(layouts.items()):
         cursor = 0
         fields = []
-        for offset, width in sorted(offsets.items()):
+        for offset, (width, ty) in sorted(offsets.items()):
             if offset < cursor or offset % width:
                 fields = []
                 break
             if offset > cursor:
                 fields.append(f'    u8 pad_{cursor:X}[0x{offset - cursor:X}];')
-            fields.append(f'    {"f32" if width == 4 else "f64"} unk_{offset:X};')
+            fields.append(f'    {ty} unk_{offset:X};')
             cursor = offset + width
         if not fields:
             declarations = []
@@ -394,6 +442,24 @@ def float_literals(p: Project, symbol: str, body: str, base: oracle.CheckResult)
             bound = bound[:start.end()] + ''.join(pointers) + bound[start.end():]
             out.insert(0, ('retain recovered shared-pool bases', bound))
     return out
+
+
+def shared_pool_coverage(p, symbol, check):
+    """Aligned loads that retain retail's named pool and member displacement."""
+    from .evidence import memory_loads, object_jump_tables
+    sym = p.resolve(symbol)
+    left = memory_loads(check._rows[0], object_jump_tables(p.target_object_for(sym),sym.name,p,sym.module))
+    right = memory_loads(check._rows[1], object_jump_tables(check._object,sym.name))
+    matching = 0
+    for i,load in left.items():
+        target = p.find_symbol(load['symbol'],sym.module)
+        other = right.get(i)
+        if not target or target.section not in ('.rodata','.sdata2') or not other:
+            continue
+        candidate = p.find_symbol(other['symbol'],sym.module)
+        if candidate and candidate.section == target.section and candidate.module == target.module:
+            matching += (target.addr+load['offset'] == candidate.addr+other['offset'] and load['op'] == other['op'])
+    return matching
 
 
 def stack_aggregates(body: str, diffs: List[Tuple[str, str]]) -> List[Tuple[str, str]]:
@@ -634,6 +700,34 @@ def member_layouts(body, diffs):
             cursor += width * (int(field[4], 0) if field[4] else 1)
         if not valid:
             continue
+        # A wrong argument/member selection is not a missing layout gap. Try
+        # the existing, identically typed member before moving any declarations.
+        # Apply cycles simultaneously (A->B, B->C, C->A), retaining shared types.
+        by_offset = {offset: field for field,offset,_,_ in fields}
+        replacements = {}
+        for old,new in sorted(pairs):
+            before,after = by_offset.get(old),by_offset.get(new)
+            if before is None or after is None or (before[1],before[2],before[4]) != (after[1],after[2],after[4]):
+                continue
+            replacements.setdefault(before[3],set()).add(after[3])
+        accesses = []
+        for member, choices in replacements.items():
+            if len(choices)!=1:
+                continue
+            replacement = next(iter(choices))
+            sites = list(re.finditer(r'(?:\.|->)\s*('+re.escape(member)+r')\b',code))
+            text = body
+            for site in reversed(sites):
+                a,b = site.span(1)
+                accesses.append((a,b,replacement))
+                text = text[:a]+replacement+text[b:]
+            if text != body:
+                out.append((f'recover member accesses {member}->{replacement}',text))
+        if accesses:
+            text = body
+            for a,b,replacement in sorted(accesses,reverse=True):
+                text = text[:a]+replacement+text[b:]
+            out.insert(0,('recover member accesses together',text))
         edits = {}
         for i, (field, offset, start, end) in enumerate(fields):
             if not re.search(r'(?:\.|->)\s*' + re.escape(field[3]) + r'\b', code):
@@ -745,6 +839,47 @@ def hardware_lvalues(body):
     return [('bind hardware lvalues',text)]
 
 
+def reload_lvalues(body, name, diffs):
+    """Shorten a cached load's lifetime where retail explicitly loads again."""
+    from .fixup_source import TYPE
+    from .sdkimport import masked
+    code = masked(body)
+    span = _function_span(code,name)
+    if not span:
+        return []
+    offsets = set()
+    for target, ours in diffs:
+        m = re.fullmatch(r'(lwz|lhz|lha|lbz|lfs|lfd) [rf]\d+, (0x[\da-f]+)\(r(?:[2-9]|[12]\d|3[01])\)',target)
+        if m and not ours:
+            offsets.add(int(m[2],0))
+    out = []
+    for offset in sorted(offsets):
+        field = re.compile(r'\b(unk_?'+format(offset,'x')+r')\b',re.I)
+        names = {m[1] for m in field.finditer(code[:span[0]])}
+        for member in sorted(names):
+            types = set(re.findall(r'('+TYPE+r')\s+'+re.escape(member)+r'\s*;',code[:span[0]]))
+            if len(types) != 1:
+                continue
+            ty = types.pop()
+            if 'volatile' in ty:
+                continue
+            matches = list(re.finditer(r'\b\w+(?:(?:->|\.)\w+)*(?:->|\.)'+re.escape(member)+r'\b',code[span[0]:span[1]]))
+            groups = {}
+            for match in matches:
+                a,b = span[0]+match.start(),span[0]+match.end()
+                if re.match(r'\s*(?:=(?!=)|[+*/&|^-]=|\+\+|--)',code[b:]) or code[max(0,a-1):a]=='&':
+                    continue
+                groups.setdefault(match[0],[]).append((a,b))
+            for expression, sites in groups.items():
+                replacement = f'(*(volatile {ty} *)&({expression})) /* Retail reloads this field. */'
+                for positions in [sites]+[[site] for site in sites]:
+                    text = body
+                    for a,b in reversed(positions):
+                        text = text[:a]+replacement+text[b:]
+                    out.append((f'lifetime reload {expression} at '+('every site' if positions is sites else str(positions[0][0])),text))
+    return out
+
+
 
 def candidates(p: Project, symbol: str, body: str, base: oracle.CheckResult):
     sym = p.resolve(symbol)
@@ -753,6 +888,7 @@ def candidates(p: Project, symbol: str, body: str, base: oracle.CheckResult):
     diffs = [(stuck._fmt(a), stuck._fmt(b)) for a, b in zip(lrows, rrows) if (a.get("diff_kind") or "DIFF_NONE") != "DIFF_NONE"]
     span = _function_span(body, sym.name)
     candidates: List[Tuple[str, str]] = store_values(body, sym.name, base)
+    candidates += reload_lvalues(body, sym.name, diffs)
     candidates += stack_locals(body, sym.name, [(stuck._fmt(a), stuck._fmt(b)) for a,b in zip(lrows,rrows)])
     candidates += stack_field_origins(body, diffs)
     candidates += member_layouts(body, diffs)

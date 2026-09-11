@@ -1,5 +1,5 @@
 {
- "generated": 1789143391,
+ "generated": 1789146633,
  "functions": [
   {
    "symbol": "car_colchg:_prolog",
@@ -3064,20 +3064,20 @@
   {
    "symbol": "fn_3_12E4C",
    "module": "customize",
-   "unit": null,
+   "unit": "rel/customize/emb_memcard/fn_3_12E4C.c",
    "addr": 77388,
    "size": 392,
-   "status": "unmatched",
-   "attempts": 5,
+   "status": "matched",
+   "attempts": 6,
    "best_percent": 98.92857,
    "claimed_by": null,
    "claimed_at": null,
    "claim_ttl": null,
-   "matched_commit": null,
+   "matched_commit": "8b3b91e",
    "blocked_issue": null,
    "blocked_reason": null,
    "prev_status": null,
-   "link_state": null
+   "link_state": "verified"
   },
   {
    "symbol": "fn_3_12FD4",
@@ -122836,20 +122836,20 @@
   {
    "symbol": "fn_16_6B24",
    "module": "profile",
-   "unit": null,
+   "unit": "rel/profile/fn_16_6B24.c",
    "addr": 27428,
    "size": 436,
-   "status": "unmatched",
-   "attempts": 5,
+   "status": "matched",
+   "attempts": 6,
    "best_percent": 95.642204,
    "claimed_by": null,
    "claimed_at": null,
    "claim_ttl": null,
-   "matched_commit": null,
+   "matched_commit": "8b3b91e",
    "blocked_issue": null,
    "blocked_reason": null,
    "prev_status": null,
-   "link_state": null
+   "link_state": "verified"
   },
   {
    "symbol": "fn_16_6CD8",
@@ -461861,6 +461861,44 @@
    "best_body_path": "/Users/rayan/fzgx/.fzgx/attempts/fn_10_200D8.1789142704.c",
    "stale_checks": 4,
    "best_in_attempt": 80.26
+  },
+  {
+   "id": 17386,
+   "symbol": "fn_16_6B24",
+   "agent": "deterministic-fixup",
+   "harness": "fixup",
+   "model": null,
+   "started": 1789146584,
+   "ended": 1789146584,
+   "checks": 0,
+   "final_percent": null,
+   "tokens_in": 0,
+   "tokens_out": 0,
+   "cost_usd": 0.0,
+   "outcome": "matched",
+   "notes": "recover member accesses together with opt_loop_invariants off",
+   "best_body_path": null,
+   "stale_checks": 0,
+   "best_in_attempt": 0.0
+  },
+  {
+   "id": 17387,
+   "symbol": "fn_3_12E4C",
+   "agent": "deterministic-fixup",
+   "harness": "fixup",
+   "model": null,
+   "started": 1789146584,
+   "ended": 1789146584,
+   "checks": 0,
+   "final_percent": null,
+   "tokens_in": 0,
+   "tokens_out": 0,
+   "cost_usd": 0.0,
+   "outcome": "matched",
+   "notes": "state:u32->u8 with opt_common_subs off",
+   "best_body_path": null,
+   "stale_checks": 0,
+   "best_in_attempt": 0.0
   }
  ],
  "names": [

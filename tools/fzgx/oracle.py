@@ -827,14 +827,20 @@ def compile_many(project: Project, module: str, sources: List[Path], out_dir: Pa
                 isolated.append(arguments[i])
                 i += 1
         arguments = isolated + ['-cwd', 'source'] + [arg for path in include_dirs for arg in ('-i', str(path))]
-    base_cmd += arguments + ["-nofail", "-c", "-o", str(out_dir)]
-    for o in (out_dir / (s.stem + ".o") for s in sources):
-        o.unlink(missing_ok=True)
+    base_cmd += arguments + ["-nofail", "-c"]
 
-    def one_chunk(chunk: List[Path]) -> None:
-        result = subprocess.run(base_cmd + [str(s) for s in chunk], cwd=ROOT, text=True, capture_output=True, timeout=900)
+    def one_chunk(chunk: List[Path]) -> Dict[Path, Path]:
+        # Wibo scans directories to resolve Windows paths for new output files.
+        # A corpus-sized directory makes each compile progressively slower.
+        chunk_dir = out_dir / chunk[0].stem
+        chunk_dir.mkdir(exist_ok=True)
+        paths = {s: chunk_dir / (s.stem + '.o') for s in chunk}
+        for obj in paths.values():
+            obj.unlink(missing_ok=True)
+        result = subprocess.run(base_cmd + ['-o', str(chunk_dir)] + [str(s) for s in chunk], cwd=ROOT, text=True, capture_output=True, timeout=900)
         # Retain actual compiler diagnostics for deterministic repair passes.
-        (out_dir / (chunk[0].stem + '.log')).write_text(result.stdout + result.stderr)
+        (chunk_dir / 'compile.log').write_text(result.stdout + result.stderr)
+        return {s: obj for s,obj in paths.items() if obj.exists()}
 
     # parallel: chunks of up to COMPILE_CHUNK sources, COMPILE_WORKERS mwcc processes at once
     # (a process start is ~80 ms, a source in a batch ~2-8 ms)
@@ -844,13 +850,10 @@ def compile_many(project: Project, module: str, sources: List[Path], out_dir: Pa
         chunks = [sources[i:i + per] for i in range(0, n, per)]
         from concurrent.futures import ThreadPoolExecutor
         with ThreadPoolExecutor(max_workers=COMPILE_WORKERS) as ex:
-            list(ex.map(one_chunk, chunks))
+            for objects in ex.map(one_chunk, chunks):
+                out.update(objects)
     elif n:
-        one_chunk(sources)
-    for s_ in sources:
-        o = out_dir / (s_.stem + ".o")
-        if o.exists():
-            out[s_] = o
+        out.update(one_chunk(sources))
     return out
 
 

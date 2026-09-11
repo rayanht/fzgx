@@ -28,8 +28,8 @@ class Engine:
         self.generator_sha256 = digest(Path(__file__).read_bytes() + Path(source.__file__).read_bytes() + Path(evidence.__file__).read_bytes() + Path(mwgraph.__file__).read_bytes())
         output.mkdir(parents=True, exist_ok=True)
         self.headers = mwgraph.header_fingerprint(ROOT, project.version)
-        self.environment = digest((self.headers + ''.join(digest((ROOT/'tools/fzgx'/f).read_bytes()) for f in
-            ('oracle.py', 'poolfix.py', 'project.py', 'regflow.py')) +
+        self.environment = digest(('aligned-word-distance-v1' + self.headers + ''.join(digest((ROOT/'tools/fzgx'/f).read_bytes()) for f in
+            ('oracle.py', 'poolfix.py', 'project.py', 'regflow.py', 'evidence.py')) +
             digest((ROOT/'config'/project.version/'ldscript.tpl').read_bytes())).encode())
         self.cache_path = output / 'cache.json'
         self.cache = json.loads(self.cache_path.read_text()) if self.cache_path.exists() else {}
@@ -94,7 +94,7 @@ class Engine:
                 words = oracle.words(obj, self.project.resolve(row['symbol']).name) if obj else None
                 target = self.targets[row['symbol']][1]
                 self.words[row['id']] = words
-                row.update(object=str(obj) if obj else None, score=oracle.word_score(target, words)[0] if words else -1,
+                row.update(object=str(obj) if obj else None, score=source.fitness(target, words)[0] if words else -1,
                            bit_errors=(sum((a^b).bit_count() for a,b in zip(target,words))+32*abs(len(target)-len(words))) if words else 10**9)
                 if row['score'] == 100:
                     check = self.check(row)
@@ -151,7 +151,9 @@ class Engine:
             sym = self.project.resolve(row['symbol'])
             self.checks[row['id']] = oracle._diff(self.project, sym.module, sym.name, '', 0,
                                                 target=self.targets[row['symbol']][0], base=Path(row['object']))
-        return self.checks[row['id']]
+        result = self.checks[row['id']]
+        row['percent'] = max(result.percent, result.percent_adjusted) if result.ok else 0
+        return result
 
     def proposals(self, row, capture=None, max_orders=50000):
         body = Path(row['source']).read_text()
@@ -160,6 +162,18 @@ class Engine:
         check = self.check(row)
         if check.ok:
             families.append(evidence.candidates(self.project, row['symbol'], body, check))
+            targeted = [[c for c in families[0] if c[0].startswith(('bind recovered shared-pool', 'retain recovered shared-pool', 'lifetime reload'))],
+                        source.address_expressions(body, name), source.pointer_lifetimes(body, name)]
+            policies = []
+            for family in targeted:
+                for label, text in family:
+                    if 'every site' in label or 'shared-pool' in label:
+                        policies.extend((label+' with '+policy,combined) for policy,combined in evidence.optimizer_pragmas(text,name))
+            targeted.append(policies)
+            for i in range(max(map(len, targeted), default=0)):
+                for family in targeted:
+                    if i < len(family):
+                        yield family[i]
             # Concrete stores/frame fixes precede generic declaration and flag
             # probes. They used to be buried beyond a session's candidate cap.
             yield from [c for c in families[0] if c[0].startswith(('retail store-value', 'pack stack', 'imm ', 'swap fields', 'recover aggregate', 'recover member', 'interior ', 'bind hardware'))]
@@ -252,7 +266,14 @@ class Engine:
                 break
             winners={r['symbol'] for r in history if r.get('matched')}
             frontier=defaultdict(list); shapes=defaultdict(set)
-            for row in sorted(history,key=lambda r:(not r.get('value_flow_fixed',False),-r['score'],-r.get('binding_score',0),r['bit_errors'],r['id'])):
+            pool_bridges = {}
+            for row in history:
+                if row.get('pool_layout_fixed') and (row['symbol'] not in pool_bridges or
+                        (row['pool_coverage'],row['score']) > (pool_bridges[row['symbol']]['pool_coverage'],pool_bridges[row['symbol']]['score'])):
+                    pool_bridges[row['symbol']] = row
+            for row in sorted(history,key=lambda r:(not r.get('value_flow_fixed',False),
+                    pool_bridges.get(r['symbol'],{}).get('id') != r['id'],
+                    -r['score'],-r.get('binding_score',0),r['bit_errors'],r['id'])):
                 symbol=row['symbol']; words=self.words.get(row['id'])
                 if symbol in winners or not words or len(frontier[symbol])>=beam:
                     continue
@@ -286,6 +307,12 @@ class Engine:
             # discarding it in favor of the semantically wrong high-score seed.
             from . import regflow
             for row in pending:
+                if row['label'].startswith(('bind recovered shared-pool', 'retain recovered shared-pool')) and row.get('object'):
+                    parent = parents[row['parent']]
+                    if 'pool_coverage' not in parent:
+                        parent['pool_coverage'] = evidence.shared_pool_coverage(self.project,parent['symbol'],self.check(parent))
+                    row['pool_coverage'] = evidence.shared_pool_coverage(self.project,row['symbol'],self.check(row))
+                    row['pool_layout_fixed'] = row['pool_coverage'] > parent['pool_coverage']
                 if not row['label'].startswith('retail store-value') or not row.get('object'):
                     continue
                 parent = parents[row['parent']]

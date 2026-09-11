@@ -11,6 +11,7 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 from capstone import Cs, CS_ARCH_PPC, CS_MODE_32, CS_MODE_BIG_ENDIAN
+from Levenshtein import distance
 from . import oracle, mwgraph, mwconstraints
 
 TYPE = (r'(?:(?:register|const|volatile)\s+){0,3}'
@@ -41,7 +42,8 @@ def _locals(body: str, span) -> List[Tuple[int, int, str, str, str]]:
     """Leading local declarations, one per line: (start, end, type, name, dims). Declarations
     with initializers count (their text keeps the initializer)."""
     out = []
-    for m in re.finditer(r"[^\n]*\n", body[span[1]:span[2]]):
+    from .sdkimport import masked
+    for m in re.finditer(r"[^\n]*\n", masked(body)[span[1]:span[2]]):
         line = m.group(0)
         s0 = span[1] + m.start()
         if not line.strip():
@@ -705,11 +707,9 @@ def fitness(tw: List[int], ow: List[int]) -> Tuple[float, float]:
     """(aligned matched words as a percent, positional percent)."""
     if not tw or not ow:
         return (0.0, 0.0)
-    sm = difflib.SequenceMatcher(None, tw, ow, autojunk=False)
-    matched = sum(b.size for b in sm.get_matching_blocks())
     n = max(len(tw), len(ow))
     pos, _ = oracle.word_score(tw, ow)
-    return (100.0 * matched / n, pos)
+    return (100.0 * (n - distance(tw, ow)) / n, pos)
 
 
 
@@ -1337,6 +1337,233 @@ def expression_trees(body, name):
                     out.append((f'expression-tree {op} at {outer["start"]}',
                                 body[:outer['start']]+text+body[outer['end']:]))
     return list(dict.fromkeys(out))
+
+
+def address_expressions(body, name):
+    """Keep member-base formation separate from a dynamic array index.
+
+    Macro bodies participate too: their argument names need not be declared C
+    members until expansion. All forms retain the original element type.
+    """
+    from .sdkimport import masked
+    code = masked(body)
+    span = _function_body_span(code, name)
+    if not span:
+        return []
+    pattern = re.compile(r'\b(\w+(?:(?:->|\.)\w+)+)\[([^\[\]\n;]+)\]')
+    sites = [m for m in pattern.finditer(code)
+             if m.start() >= span[1] or body[body.rfind('\n', 0, m.start())+1:m.start()].rstrip().endswith('=')
+             or '\\' in body[m.end():body.find('\n', m.end())]]
+    out = []
+    # Inlining preserves the array parameter's address web before lowering.
+    # Resolve macro parameters from their actual member arguments, so a pointer
+    # table never acquires an invented scalar element type.
+    members = {}
+    for declaration in re.finditer(r'('+TYPE+r')\s*(?:(?<=\*)|\s)(\w+)\s*\[[^\]]+\]\s*;', code[:span[0]]):
+        members.setdefault(declaration[2], set()).add(declaration[1].strip())
+    typed = {}
+    for site in sites:
+        member = re.split(r'->|\.',site[1])[-1]
+        types = members.get(member,set())
+        if not types:
+            definitions = list(re.finditer(r'(?m)^#define\s+(\w+)\(([^)]*)\)',code[:site.start()]))
+            if definitions:
+                macro = definitions[-1]
+                parameters = [x.strip() for x in macro[2].split(',')]
+                if member in parameters:
+                    index = parameters.index(member)
+                    arguments = [call[1].split(',') for call in re.finditer(r'\b'+macro[1]+r'\(([^()\n]*)\)',code[span[1]:span[2]])]
+                    actual = [args[index].strip() for args in arguments if index<len(args)]
+                    if actual and all(arg in members for arg in actual):
+                        types = set().union(*(members[arg] for arg in actual))
+        if len(types)==1:
+            typed.setdefault(next(iter(types)),[]).append(site)
+    for element, accesses in typed.items():
+        helper = name+'_array_read'
+        while re.search(r'\b'+helper+r'\b',code):
+            helper += '_'
+        for kind in ('index', 'index-first', 'base'):
+            if kind == 'base':
+                definition = f'static inline {element} *{helper}({element} *array) {{ return array; }}\n'
+            else:
+                args = f'{element} *array, s32 index' if kind=='index' else f's32 index, {element} *array'
+                definition = f'static inline {element} {helper}({args}) {{ return array[index]; }}\n'
+            text = body
+            for site in reversed(accesses):
+                base,index = body[site.start(1):site.end(1)],body[site.start(2):site.end(2)]
+                value = f'{helper}({base})[{index}]' if kind=='base' else (f'{helper}({base}, {index})' if kind=='index' else f'{helper}({index}, {base})')
+                text = text[:site.start()]+value+text[site.end():]
+            # Earlier macro edits change the declaration's byte offset.
+            current = _function_body_span(masked(text),name)
+            pos = text.rfind('\n',0,current[0])+1
+            text = text[:pos]+definition+text[pos:]
+            out.append((f'address typed {kind} at every site ({element})',text))
+    for kind in ('index-first', 'dereference', 'index-first-dereference'):
+        edits = []
+        for m in sites:
+            base, index = body[m.start(1):m.end(1)], body[m.start(2):m.end(2)]
+            if kind == 'index-first':
+                replacement = f'({index})[{base}]'
+            elif kind == 'dereference':
+                replacement = f'*(({base}) + ({index}))'
+            else:
+                replacement = f'*(({index}) + ({base}))'
+            edits.append((m.start(), m.end(), '('+replacement+')'))
+        combined = body
+        for a,b,value in reversed(edits):
+            combined = combined[:a]+value+combined[b:]
+        if edits:
+            out.append(('address '+kind+' at every site', combined))
+        for a,b,value in edits:
+            out.append((f'address {kind} at {a}', body[:a]+value+body[b:]))
+    return out
+
+
+def pointer_lifetimes(body, name):
+    """Materialize typed pointer reads at their existing evaluation point.
+
+    A repeated member chain often conceals two live values from the allocator.
+    Bind before a complete statement, never inside one of its unsequenced
+    operands. Function-wide carriers let separate reads share a live range.
+    """
+    from .sdkimport import masked
+    code = masked(body)
+    span = _function_body_span(code, name)
+    if not span:
+        return []
+    fields = {}
+    for struct in re.finditer(r'(?:typedef\s+)?struct\s*(\w+)?\s*\{([^{}]*)\}\s*(\w+)?', code[:span[0]]):
+        members = {}
+        for line in struct[2].split(';'):
+            decl = DECL_RE.match(line.strip()+';')
+            if decl:
+                members[decl[2]] = decl[1]
+        if struct[1]:
+            fields[struct[1]] = members
+        if struct[3]:
+            fields[struct[3]] = members
+    variables = {}
+    for decl in re.finditer(r'('+TYPE+r')\s*(?:(?<=\*)|\s)(\w+)\s*(?=[,;=)])', code):
+        variables[decl[2]] = decl[1]
+    out = []
+    declarations = {}
+    for line in re.finditer(r'(?m)^[ \t]*[^\n]+;[ \t]*$',code[span[1]:span[2]]):
+        decl = DECL_RE.match(line[0])
+        if not decl or decl[3] or decl[1].strip() in ('return','goto','break','continue'):
+            continue
+        declarations.setdefault(decl[2],[]).append((span[1]+line.start(),span[1]+line.end(),decl[1],decl[4]))
+    leading = {r[3] for r in _locals(body,span)}
+    for var, decls in declarations.items():
+        if len(decls)<2 or var in leading or len({d[2] for d in decls})!=1:
+            continue
+        if re.search(r'\b'+re.escape(var)+r'\b',code[span[0]:span[1]]):
+            continue
+        text = body
+        for a,b,ty,init in reversed(decls):
+            replacement = (re.match(r'[ \t]*',body[a:b])[0]+var+' = '+body[a:b][body[a:b].find('=')+1:].strip()) if init else ''
+            text = text[:a]+replacement+text[b:]
+        text = text[:span[1]]+'\n    '+decls[0][2]+' '+var+';'+text[span[1]:]
+        out.append(('lifetime shared local '+var,text))
+    sites = {}
+    pattern = re.compile(r'\b(\w+)((?:(?:->|\.)\w+)+)')
+    for m in pattern.finditer(code, span[1], span[2]):
+        ty = variables.get(m[1], '')
+        for member in re.finditer(r'(->|\.)(\w+)', m[2]):
+            tag = re.sub(r'\b(?:struct|const|volatile)\b|\*', '', ty).strip()
+            ty = fields.get(tag, {}).get(member[2], '')
+            end = m.start(2)+member.end()
+            destination = end == m.end() and re.match(r'\s*(?:=(?!=)|[+*/&|^-]=|\+\+|--)',code[end:])
+            if '*' in ty and not destination:
+                sites.setdefault((body[m.start():end], ty), []).append((m.start(),end))
+    for (expression, ty), uses in sites.items():
+        var = 'fzgx_live'
+        while re.search(r'\b'+var+r'\b', code):
+            var += '_'
+        grouped = {}
+        for a,b in uses:
+            line = code.rfind('\n', span[1], a)+1
+            grouped.setdefault(line, []).append((a,b))
+        # A switch selector and its arms often consume the same pointer web.
+        # A declaration in each arm cannot express that shared lifetime.
+        for control in re.finditer(r'\bswitch\s*\([^;{}]*\)\s*\{', code[span[1]:span[2]]):
+            lo, opening = span[1]+control.start(), span[1]+control.end()-1
+            if expression not in body[lo:opening]:
+                continue
+            depth, end = 1, opening+1
+            while depth and end < span[2]:
+                depth += (code[end] == '{')-(code[end] == '}')
+                end += 1
+            if depth:
+                continue
+            text = body[lo:end]
+            text = re.sub(r'\b'+re.escape(expression)+r'\b', var, text)
+            replacement = '{\n    '+ty+' '+var+' = '+expression+';\n'+text+'\n}'
+            out.insert(0, (f'lifetime switch pointer {expression} at {lo}', body[:lo]+replacement+body[end:]))
+        edits = []
+        for line, positions in grouped.items():
+            # Each line must be a complete expression statement, without a
+            # short-circuit or control-flow boundary between repeated reads.
+            end = code.find('\n', positions[-1][1])
+            statement = code[line:end]
+            if any(x in statement for x in ('&&','||','?', 'if ', 'if(', 'while', 'for ')) or not statement.rstrip().endswith(';'):
+                continue
+            changes = [(a,b,var) for a,b in positions]
+            indent = re.match(r'[ \t]*', body[line:])[0]
+            changes.insert(0, (line,line,indent+var+' = '+expression+';\n'))
+            text = body
+            for a,b,value in reversed(changes):
+                text = text[:a]+value+text[b:]
+            text = text[:span[1]]+'\n    '+ty+' '+var+';'+text[span[1]:]
+            out.append((f'lifetime pointer {expression} at {line}', text))
+            edits.extend(changes)
+        if edits:
+            text = body
+            for a,b,value in sorted(edits, reverse=True):
+                text = text[:a]+value+text[b:]
+            text = text[:span[1]]+'\n    '+ty+' '+var+';'+text[span[1]:]
+            out.insert(0, ('lifetime pointer '+expression+' at every site', text))
+        # An inlined accessor has its own parameter/return webs before inlining.
+        # This can separate a pointer lifetime without forcing a stack spill.
+        root = re.match(r'\w+', expression)[0]
+        root_type = variables.get(root)
+        if root_type:
+            helper = name+'_read_pointer'
+            while re.search(r'\b'+helper+r'\b', code):
+                helper += '_'
+            expression_in_helper = 'owner'+expression[len(root):]
+            definition = f'static inline {ty} {helper}({root_type} owner) {{ return {expression_in_helper}; }}\n'
+            insertion = body.rfind('\n', 0, span[0])+1
+            for positions in [uses]+[[use] for use in uses]:
+                text = body
+                for a,b in reversed(positions):
+                    text = text[:a]+helper+'('+root+')'+text[b:]
+                text = text[:insertion]+definition+text[insertion:]
+                out.append((f'lifetime accessor {expression} at '+('every site' if positions is uses else str(positions[0][0])), text))
+    # A store's address and computed value have independent lifetimes. Expose
+    # either side while retaining the recovered field type and conversion.
+    assignments = re.compile(r'(?m)^([ \t]*)(\w+(?:(?:->|\.)\w+){2,})\s*=\s*([^;\n]+);')
+    for assignment in assignments.finditer(code, span[1], span[2]):
+        lhs = assignment[2]
+        tokens = re.split(r'->|\.', lhs)
+        ty = variables.get(tokens[0], '')
+        for member in tokens[1:]:
+            tag = re.sub(r'\b(?:struct|const|volatile)\b|\*', '', ty).strip()
+            ty = fields.get(tag, {}).get(member, '')
+        if not ty or 'volatile' in ty:
+            continue
+        var = 'fzgx_value'
+        while re.search(r'\b'+var+r'\b', code):
+            var += '_'
+        rhs = body[assignment.start(3):assignment.end(3)]
+        for address in (False, True):
+            declaration = ty+(' *' if address else ' ')+var+';'
+            first = '&('+lhs+')' if address else rhs
+            second = '*'+var+' = '+rhs if address else lhs+' = '+var
+            replacement = assignment[1]+var+' = '+first+';\n'+assignment[1]+second+';'
+            text = body[:assignment.start()]+replacement+body[assignment.end():]
+            text = text[:span[1]]+'\n    '+declaration+text[span[1]:]
+            out.append((f'lifetime store {"address" if address else "value"} at {assignment.start()}', text))
+    return out
 
 
 def missing_values(body, name):

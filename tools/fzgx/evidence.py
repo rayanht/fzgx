@@ -10,12 +10,13 @@ MEMORY = re.compile(r'(.+)\((r\d+)\)$')
 WIDTH = {'lfs': 4, 'lfd': 8, 'lwz': 4, 'lhz': 2, 'lha': 2, 'lbz': 1}
 
 
-def memory_loads(rows):
+def memory_loads(rows, tables=None):
     """Follow symbolic bases through the CFG, intersecting facts at every join.
 
     Results use aligned-row indices so target and candidate accesses can be
     compared without confusing object addresses with the diff's row offsets.
     """
+    tables = tables or {}
     instructions = {i: row['instruction'] for i, row in enumerate(rows)
                     if row.get('instruction', {}).get('address') is not None}
     indices = list(instructions)
@@ -49,6 +50,15 @@ def memory_loads(rows):
                 value = (base[0], base[1] + int(args[2], 0), False)
         elif op == 'li' and symbolic and rel[3] == 'sda21':
             value = symbolic
+        elif op == 'lwzx':
+            for register in args[1:]:
+                base = before.get(register)
+                if base and not base[2] and base[0] in tables:
+                    value = (base[0], base[1], 'table')
+        elif op == 'mtctr':
+            after.pop('ctr', None)
+            if args and args[0] in before:
+                after['ctr'] = before[args[0]]
         loads.pop(i, None)
         if op in WIDTH and len(args) == 2 and (mem := MEMORY.fullmatch(args[1])):
             base = before.get(mem[2])
@@ -71,6 +81,7 @@ def memory_loads(rows):
             after.pop(mem[2], None)
         call = op in ('bl', 'bctrl', 'blrl')
         if call and not (args and args[0].startswith(('_savegpr_', '_restgpr_', '_savefpr_', '_restfpr_'))):
+            after.pop('ctr', None)
             for reg in (0, *range(3, 13)):
                 after.pop(f'r{reg}', None)
         successors = []
@@ -80,10 +91,14 @@ def memory_loads(rows):
         if dest is not None and not call and int(dest) in addresses:
             successors.append(addresses[int(dest)])
         if op == 'bctr':
-            # The row stream has no switch relocations. Unknown successors must
-            # not inherit a guessed base from one arm of an indirect branch.
-            successors = indices
-            after = {}
+            table = before.get('ctr')
+            if table and table[2] == 'table' and table[0] in tables:
+                successors = [addresses[a] for a in tables[table[0]] if a in addresses]
+            else:
+                # Unknown successors must not inherit a guessed base from one
+                # arm. Relocated tables, however, preserve dominating pool bases.
+                successors = indices
+                after = {}
         for nxt in successors:
             old = incoming.get(nxt)
             merged = after if old is None else {k: v for k, v in old.items() if after.get(k) == v}
@@ -91,6 +106,40 @@ def memory_loads(rows):
                 incoming[nxt] = dict(merged)
                 pending.append(nxt)
     return loads
+
+
+def object_jump_tables(path, name, project=None, module=None):
+    """Internal switch edges from ELF relocations; no guessed branch targets."""
+    from .poolfix import Elf
+    elf = Elf(path.read_bytes())
+    symbols = elf.symbols()
+    fn = next((s for s in symbols if s['name'] == name), None)
+    if not fn:
+        return {}
+    relocations = {}
+    for section in elf.sections:
+        if section['type'] != 4:
+            continue
+        for pos in range(section['offset'], section['offset']+section['size'], 12):
+            offset, info, addend = struct.unpack_from('>IIi', elf.data, pos)
+            target = symbols[info >> 8]
+            address = target['value']+addend
+            if info & 255 == 1 and target['shndx'] == fn['shndx'] and fn['value'] <= address < fn['value']+fn['size']:
+                relocations[section['info'],offset] = address
+    tables = {}
+    if project is not None:
+        function = project.function((module+':'+name) if module else name)
+        if function:
+            tables.update({table: [a-function.symbol.addr+fn['value'] for a in targets]
+                           for table,targets in jump_tables(project, function).items()})
+    for symbol in symbols:
+        if symbol['shndx'] == fn['shndx'] or symbol['size'] < 8 or symbol['size'] % 4:
+            continue
+        entries = [relocations.get((symbol['shndx'],offset))
+                   for offset in range(symbol['value'],symbol['value']+symbol['size'],4)]
+        if entries and all(a is not None and a % 4 == 0 for a in entries):
+            tables[symbol['name']] = entries
+    return tables
 
 
 def assembly_rows(fn):
@@ -165,7 +214,7 @@ def data_context(project, fn, full=False):
         for index, address in enumerate(targets):
             lines.append(f'  [{index}] -> {fn.symbol.name}+0x{address - fn.symbol.addr:X} (assembly {address:08X})')
     accesses = {}
-    loads = memory_loads(assembly_rows(fn))
+    loads = memory_loads(assembly_rows(fn), jump_tables(project, fn))
     for load in loads.values():
         if load['op'] not in ('lfs', 'lfd'):
             continue
