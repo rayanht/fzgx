@@ -86,3 +86,6 @@ rel/winning/winning/fn_15_1DF4.c:
 
 rel/winning/winning/_epilog.c:
 	.text       start:0x00000124 end:0x000001F4 align:4
+
+rel/winning/winning/_prolog.c:
+	.text       start:0x00000000 end:0x00000124 align:4

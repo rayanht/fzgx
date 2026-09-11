@@ -118,6 +118,62 @@ void fn_1_57720(u32 value_1, u32 value_2, u32 value_3, u32 value_4) {
 }
 /* fzgx:end fn_1_57720 */
 
+/* fzgx:begin fn_1_5773C */
+extern void fn_1_57DC0(void);
+extern void fn_8003462C(u32 size, u32 heap, u32 alignment);
+extern void GXLoadPosMtxImm(void *arg0, int arg1);
+extern void *lbl_801A6D00;
+
+typedef union GXFifo {
+    volatile f32 f32; /* write-gather FIFO: writes have side effects */
+    volatile u8 u8;   /* write-gather FIFO: writes have side effects */
+} GXFifo;
+
+enum { GX_FIFO_ADDR = 0xCC008000 }; /* fzgx-allow: A1 GX write-gather FIFO hardware address */
+#define GXWGFifo (*(GXFifo *)GX_FIFO_ADDR)
+
+typedef struct Vec3 {
+    f32 x;
+    f32 y;
+    f32 z;
+} Vec3;
+
+void fn_1_5773C(Vec3 *arg0, Vec3 *arg1, u8 *arg2) {
+    u32 color;
+    f32 y;
+    f32 z;
+    f32 x;
+    f32 y2;
+    f32 z2;
+    f32 x2;
+
+    fn_1_57DC0();
+    color = *(u32 *)arg2;
+    GXLoadPosMtxImm(lbl_801A6D00, 0);
+    fn_8003462C(0xA8, 0, 2);
+    z = arg0->z;
+    y = arg0->y;
+    x = arg0->x;
+    GXWGFifo.f32 = x;
+    GXWGFifo.f32 = y;
+    GXWGFifo.f32 = z;
+    GXWGFifo.u8 = ((u8 *)&color)[0];
+    GXWGFifo.u8 = ((u8 *)&color)[1];
+    GXWGFifo.u8 = ((u8 *)&color)[2];
+    GXWGFifo.u8 = ((u8 *)&color)[3];
+    z2 = arg1->z;
+    y2 = arg1->y;
+    x2 = arg1->x;
+    GXWGFifo.f32 = x2;
+    GXWGFifo.f32 = y2;
+    GXWGFifo.f32 = z2;
+    GXWGFifo.u8 = ((u8 *)&color)[0];
+    GXWGFifo.u8 = ((u8 *)&color)[1];
+    GXWGFifo.u8 = ((u8 *)&color)[2];
+    GXWGFifo.u8 = ((u8 *)&color)[3];
+}
+/* fzgx:end fn_1_5773C */
+
 /* fzgx:begin fn_1_57BBC */
 typedef struct {
     u32 unk_0;

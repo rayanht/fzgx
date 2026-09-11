@@ -70,6 +70,70 @@ s32 fn_1_12A6D8(void *arg0) {
 }
 /* fzgx:end fn_1_12A6D8 */
 
+/* fzgx:begin fn_1_12A8A4 noprologue */
+#include "types.h"
+#include "rel/main_rel/archive.h"
+
+extern u32 lbl_1_bss_897A0;
+extern u32 lbl_801A6410;
+
+typedef struct ArchiveState {
+    s32 count;
+    s32 loaded;
+    u8 pad[4];
+    u8 entries[1];
+} ArchiveState;
+
+extern s32 fn_8006A480(void *arg0, void *arg1, void *arg2);
+extern void *fn_8006A998(void *arg0);
+extern s32 fn_1_45730(void *arg0, void *arg1);
+extern s32 fn_1_45B2C(void *arg0);
+extern void *fn_1_45D0(u32 arg0, u32 arg1, void *arg2, u32 arg3);
+extern void fn_1_458A0(void *arg0, void *arg1, u32 arg2, u32 arg3);
+extern void fn_1_45850(void *arg0);
+extern void OSPanic(u8 *arg0, s32 arg1, u8 *arg2, ...);
+
+#pragma opt_propagation off
+s32 fn_1_12A8A4(u32 arg0, void *arg1) {
+    u8 *entries;
+    s32 result;
+    u8 work[12];
+    u8 info[0x60];
+    ArchiveState *state;
+
+    state = (ArchiveState *)&lbl_1_bss_897A0;
+
+    if (state->loaded != 0) {
+        s32 count = state->count;
+        entries = state->entries;
+        if (fn_8006A480(entries + count * 0x6C + 0x4C,
+                        (void *)arg0, work) != 0) {
+            result = (s32)fn_8006A998(work);
+        } else {
+            result = 0;
+        }
+        *(void **)arg1 = (void *)result;
+        if (*(void **)arg1 == 0) {
+            return 0;
+        }
+    } else {
+        if (fn_1_45730((void *)arg0, info) != 0) {
+            s32 aligned;
+            aligned = (fn_1_45B2C(info) + 0x1F) & ~0x1F;
+            *(void **)arg1 = fn_1_45D0(lbl_801A6410, aligned,
+                                       lbl_1_data_40608, 0x188);
+            fn_1_458A0(info, *(void **)arg1, aligned, 0);
+            fn_1_45850(info);
+        } else {
+            OSPanic(lbl_1_data_40608, 0x18C, lbl_1_data_40750);
+        }
+    }
+
+    return 1;
+}
+#pragma opt_propagation reset
+/* fzgx:end fn_1_12A8A4 */
+
 /* fzgx:begin fn_1_12A9BC noprologue */
 #include "types.h"
 #include "rel/main_rel/archive.h"

@@ -2509,6 +2509,37 @@ void fn_1_56000(u8 value0, u8 value1, u8 value2) {
 }
 /* fzgx:end fn_1_56000 */
 
+/* fzgx:begin fn_1_56018 noprologue */
+#include "types.h"
+#include "rel/main_rel/globals.h"
+#include "rel/main_rel/font.h"
+
+extern void fn_800749B0(s32, void *);
+extern void *lbl_801A66CC;
+
+u32 fn_1_56018(s32 value) {
+    s32 i;
+    u32 result;
+
+    result = (u32)((-(s32)lbl_1_bss_6C7CC.unk_0 | lbl_1_bss_6C7CC.unk_0) >> 31);
+    if (value == 0) {
+        for (i = 0; i < 4; i++) {
+            if (__rlwnm((s32)lbl_1_bss_6C7CC.unk_0, (i + 1) & 31, 31, 31)) {
+                fn_800749B0(0, (void *)0);
+            }
+        }
+        lbl_1_bss_6C7CC.unk_0 = 0;
+    } else {
+        for (i = 0; i < 4; i++) {
+            if (__rlwnm((s32)lbl_1_bss_6C7CC.unk_0, (i + 1) & 31, 31, 31)) {
+                fn_800749B0(i, (void *)((u8 *)*(void **)&lbl_801A66CC + i * 0x30 + 0xe0));
+            }
+        }
+    }
+    return result;
+}
+/* fzgx:end fn_1_56018 */
+
 /* fzgx:begin fn_1_560F0 */
 // Marks the selected font resource as active before handing it to the loader.
 void fn_1_560F0(s32 index, void *arg) {

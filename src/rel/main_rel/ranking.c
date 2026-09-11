@@ -64,6 +64,46 @@ void fn_1_15555C(void) {
 }
 /* fzgx:end fn_1_15555C */
 
+/* fzgx:begin fn_1_1555B0 noprologue */
+#include "types.h"
+#include "rel/main_rel/ranking.h"
+
+extern void fn_1_12EF80(s16 value, s16 *out_0, s16 *out_1);
+extern void fn_80008BA8(void *arg0, void *arg1, u32 size);
+extern void fn_80008BEC(void *dst, u32 value, u32 size);
+
+s32 fn_1_1555B0(s32 value) {
+    u32 state = (u32)&lbl_1_bss_8EF20;
+    s16 index_0;
+    s16 index_1;
+    u32 table;
+    u32 i;
+    s32 j;
+    u8 *dst;
+
+    if (*(u32 *)state == 0) {
+        return 0;
+    }
+
+    *(u32 *)(state + 0x40) = value;
+    fn_1_12EF80((s16)value, &index_0, &index_1);
+    table = (u32)&lbl_1_bss_7F0C0 + (index_1 + index_0 * 6) * 0x180;
+
+    for (i = 0; i < 10; i++) {
+        fn_80008BA8((void *)(*(u32 *)state + i * 0x38), (void *)(table + i * 0x20 + 0xf8), 0x20);
+    }
+
+    fn_80008BEC((void *)(state + 0x48), 0, 0x230);
+    dst = (u8 *)state + 0x48;
+
+    for (j = 0; j < 10; j++, dst += 0x38) {
+        fn_80008BA8(dst, (void *)(*(u32 *)state + j * 0x38), 0x38);
+    }
+
+    return 1;
+}
+/* fzgx:end fn_1_1555B0 */
+
 /* fzgx:begin fn_1_155F7C */
 u32 fn_1_155F7C(void) {
     return lbl_1_bss_8F3E0;
@@ -724,6 +764,91 @@ void fn_1_1574E0(RankingState *state) {
     fn_8006B6F8(state->value);
 }
 /* fzgx:end fn_1_1574E0 */
+
+/* fzgx:begin fn_1_157598 */
+extern s32 fn_8006B55C(void *, void *, void *);
+extern s32 fn_8006B628(u32, void *);
+extern s32 fn_8006B6F8(u32);
+
+typedef struct {
+    u32 flags;
+    void *owner;
+    u8 _pad08[0x20];
+    u32 value;
+    u8 _pad2c[0x20];
+    u8 state;
+} RankingState;
+
+typedef struct {
+    u8 type;
+    u8 _pad01[3];
+    u32 duration;
+    u32 flags;
+    u8 strength;
+    u8 _pad0d;
+    s16 angle;
+    s16 value10;
+    s16 value12;
+    s16 value14;
+    u32 value18;
+    u32 value1c;
+    u8 value20;
+    u8 value21;
+} RankingConfig;
+
+#pragma opt_dead_assignments off
+void fn_1_157598(RankingState *state) {
+    s32 success;
+    u32 value;
+    void *owner;
+    RankingConfig config;
+    success = 0;
+
+    if (!(state->state & 0x40)) {
+        return;
+    }
+
+    success = 0;
+    config.type = 4;
+    config.duration = 700;
+    config.flags = success;
+    config.strength = 250;
+    config.angle = 90;
+    config.value10 = 100;
+    config.value12 = success;
+    config.value14 = success;
+    config.value18 = 20;
+    config.value1c = 200;
+    config.value20 = success;
+    config.value21 = success;
+
+    if (!(((0x80) & (state->flags)))) {
+        value = state->value;
+        owner = state->owner;
+
+        if (value + 0x10000u == 0xffffu) {
+            if (fn_8006B55C(owner, &state->value, &config) >= 0) {
+                success = 1;
+            }
+        } else {
+            if (fn_8006B628(value, &config) >= 0) {
+                success = 1;
+            }
+        }
+
+        if (success) {
+            if (!(((0x80) & (state->flags)))) {
+                if (fn_8006B6F8(state->value) >= 0) {
+                    state->flags |= 0x80;
+                }
+            }
+        }
+    } else {
+        fn_8006B6F8(state->value);
+    }
+}
+#pragma opt_dead_assignments reset
+/* fzgx:end fn_1_157598 */
 
 /* fzgx:begin fn_1_1577D0 noprologue */
 #include "types.h"

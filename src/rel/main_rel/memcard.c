@@ -909,6 +909,57 @@ void fn_1_AC12C(MemcardRequest *request) {
 }
 /* fzgx:end fn_1_AC12C */
 
+/* fzgx:begin fn_1_AC188 */
+typedef struct Fn1AC188Config {
+    u8 pad_00[0x48];
+    int value;
+} Fn1AC188Config;
+
+typedef struct Fn1AC188State {
+    u8 pad_00[0x2];
+    u16 value;
+    int result;
+    u8 pad_08[0x84];
+    Fn1AC188Config *config;
+} Fn1AC188State;
+
+typedef struct Fn1AC188Target {
+    u8 id;
+    u8 pad_01[0x23];
+    Fn1AC188State *state;
+    u8 pad_28[0x2];
+    u8 flags;
+    u8 pad_2b[0x5];
+    int start;
+    u8 pad_34[0x4];
+    f32 value;
+} Fn1AC188Target;
+
+extern const f64 lbl_1_rodata_4CB8;
+extern const f64 lbl_1_rodata_4CB0;
+extern const f32 lbl_1_rodata_4CC0;
+extern const f32 lbl_1_rodata_4CC4;
+
+extern u32 CARDGetResultCode(u32);
+extern u32 fn_8002C0A0(u32);
+
+void fn_1_AC188(Fn1AC188Target *target) {
+    f32 fraction;
+    int rounded;
+
+    rounded = (target->state->config->value + 0x1fff) & ~0x1fff;
+    fraction = (f32)(u32)rounded;
+    fraction = fraction / (f32)(u32)(rounded + 0x4000);
+    target->state->result = CARDGetResultCode(target->id);
+    target->value = fraction + (lbl_1_rodata_4CC0 - fraction) *
+        (f32)(s32)(fn_8002C0A0(target->id) - target->start) / lbl_1_rodata_4CC4;
+    if (target->state->result != -1) {
+        target->flags = target->flags & ~2;
+        target->state->value = 0;
+    }
+}
+/* fzgx:end fn_1_AC188 */
+
 /* fzgx:begin fn_1_AC294 */
 typedef struct Fn1AC294State {
     u8 pad_00[0x2];

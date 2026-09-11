@@ -5936,3 +5936,24 @@ rel/main_rel/archive/fn_1_12A9BC.c:
 
 rel/main_rel/ranking/fn_1_1563E8.c:
 	.text       start:0x001563E8 end:0x001564D0 align:4
+
+rel/main_rel/ranking/fn_1_157598.c:
+	.text       start:0x00157598 end:0x001576B4 align:4
+
+rel/main_rel/archive/fn_1_12A8A4.c:
+	.text       start:0x0012A8A4 end:0x0012A9BC align:4
+
+rel/main_rel/memcard/fn_1_AC188.c:
+	.text       start:0x000AC188 end:0x000AC294 align:4
+
+rel/main_rel/shadowmap/fn_1_5773C.c:
+	.text       start:0x0005773C end:0x00057810 align:4
+
+rel/main_rel/effect/fn_1_59514.c:
+	.text       start:0x00059514 end:0x0005962C align:4
+
+rel/main_rel/ranking/fn_1_1555B0.c:
+	.text       start:0x001555B0 end:0x001556B4 align:4
+
+rel/main_rel/font/fn_1_56018.c:
+	.text       start:0x00056018 end:0x000560F0 align:4

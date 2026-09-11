@@ -1,5 +1,76 @@
 #include "types.h"
 
+/* fzgx:begin _prolog */
+struct _prolog_lbl_15_bss_0 {
+    u8 pad_0[0xC];
+    u32 unk_C;
+    u32 unk_10;
+    u32 unk_14;
+    u32 unk_18;
+    u32 unk_1C;
+    u8 unk_20;
+    u8 unk_21;
+    u8 unk_22;
+    u8 unk_23;
+};
+struct _prolog_lbl_801A6410 {
+    u32 unk_0;
+};
+struct _prolog_lbl_1_bss_96A {
+    u16 unk_0;
+};
+
+extern u32 fn_1_45D0(u32, u32, void *, u32);
+extern struct _prolog_lbl_15_bss_0 lbl_15_bss_0;
+extern struct _prolog_lbl_1_bss_96A lbl_1_bss_96A;
+extern struct _prolog_lbl_801A6410 lbl_801A6410;
+extern u32 fn_1_3CF0(void *, u32);
+extern u32 fn_1_479F0(u32);
+extern u32 fn_1_47F74(u32);
+extern u32 fn_1_4A00(u32, u32, void *);
+extern u32 lbl_15_data_A4;
+extern u32 lbl_1_bss_7167C;
+extern u32 lbl_1_bss_71680;
+extern u32 lbl_1_bss_71684;
+extern void fn_15_1F4(void);
+extern void fn_15_260(void);
+extern void fn_15_350(void);
+extern void fn_1_C2454(void);
+
+void _prolog(void) {
+    struct _prolog_lbl_15_bss_0 *p_lbl_15_bss_0;
+    u32 v0;
+    u32 zero;
+    s32 t0;
+    s32 t1;
+    p_lbl_15_bss_0 = (struct _prolog_lbl_15_bss_0 *)&lbl_15_bss_0;
+    t0 = fn_1_45D0(lbl_801A6410.unk_0, 5948, &lbl_15_data_A4, 0x158);
+    p_lbl_15_bss_0->unk_C = t0;
+    t1 = fn_1_45D0(lbl_801A6410.unk_0, 5948, &lbl_15_data_A4, 0x159);
+    p_lbl_15_bss_0->unk_10 = t1;
+    fn_1_3CF0((void *)p_lbl_15_bss_0->unk_C, 128);
+    fn_1_3CF0((void *)p_lbl_15_bss_0->unk_10, 128);
+    fn_1_479F0(14);
+    fn_1_47F74(140);
+    fn_1_47F74(187);
+    p_lbl_15_bss_0->unk_14 = 0;
+    p_lbl_15_bss_0->unk_14 = p_lbl_15_bss_0->unk_14 | 0x40000000;
+    v0 = p_lbl_15_bss_0->unk_10;
+    p_lbl_15_bss_0->unk_18 = 0;
+    p_lbl_15_bss_0->unk_1C = 30;
+    p_lbl_15_bss_0->unk_20 = 1;
+    p_lbl_15_bss_0->unk_21 = 0;
+    p_lbl_15_bss_0->unk_22 = 0;
+    p_lbl_15_bss_0->unk_23 = 0;
+    lbl_1_bss_96A.unk_0 = 183;
+    fn_1_4A00(1, 30, (void *)v0);
+    fn_1_C2454();
+    lbl_1_bss_7167C = (u32)(fn_15_1F4);
+    lbl_1_bss_71680 = (u32)(fn_15_260);
+    lbl_1_bss_71684 = (u32)(fn_15_350);
+}
+/* fzgx:end _prolog */
+
 /* fzgx:begin _epilog */
 extern f32 lbl_15_rodata_0[25];
 extern u32 lbl_15_bss_C;

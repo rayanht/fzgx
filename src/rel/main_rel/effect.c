@@ -478,6 +478,32 @@ void fn_1_59510(void) {
 }
 /* fzgx:end fn_1_59510 */
 
+/* fzgx:begin fn_1_59514 */
+extern const f32 lbl_1_rodata_2950;
+extern u32 lbl_1_data_1D628;
+extern f32 fn_1_8652C(s16);
+
+void fn_1_59514(void *obj) {
+    if (*(s32 *)((u8 *)obj + 0x10) == 0) {
+        u32 s = lbl_1_data_1D628 * 0x41c64e6d + 0x3039;
+        u32 r;
+        lbl_1_data_1D628 = s;
+        r = (s >> 16) & 0x7fff;
+        *(s32 *)((u8 *)obj + 0x10) = (s32)(60.0f * (0.1f + (f32)r / 32767.0f));
+    }
+
+    {
+        f32 t = fn_1_8652C(*(s16 *)((u8 *)obj + 0x18));
+        u32 s = lbl_1_data_1D628 * 0x41c64e6d + 0x3039;
+        u32 r;
+        lbl_1_data_1D628 = s;
+        r = (s >> 16) & 0x7fff;
+        *(f32 *)((u8 *)obj + 0x94) = 0.05f * ((f32)r / 32767.0f);
+        *(f32 *)((u8 *)obj + 0x98) = (f32)(0.07 + t / 20000.0f);
+    }
+}
+/* fzgx:end fn_1_59514 */
+
 /* fzgx:begin fn_1_59A70 */
 // fn_1_59A70: empty in retail (single blr).
 void fn_1_59A70(void) {
