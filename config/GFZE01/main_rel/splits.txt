@@ -5777,3 +5777,6 @@ rel/main_rel/relocation/fn_1_A5DEC.c:
 
 rel/main_rel/game/fn_1_402D4.c:
 	.text       start:0x000402D4 end:0x00040354 align:4
+
+rel/main_rel/bg_for/fn_1_E1934.c:
+	.text       start:0x000E1934 end:0x000E1A00 align:4

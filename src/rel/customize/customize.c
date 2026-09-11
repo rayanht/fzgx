@@ -28,6 +28,75 @@ extern void OSReport(const char *, ...);
 extern u32 lbl_3_bss_A179C;
 extern u32 lbl_3_data_1A14;
 
+/* fzgx:begin fn_3_ACF4 noprologue */
+#include "types.h"
+
+typedef struct {
+    u8 pad[0x324];
+    s32 value;
+    u8 tail[0x118];
+} CustomizeEntry;
+
+extern u32 lbl_3_bss_F0[12];
+extern CustomizeEntry lbl_3_bss_20860[4];
+extern u8 lbl_3_bss_21960[10368];
+extern s32 lbl_3_data_B8;
+extern u32 lbl_3_bss_20850;
+extern u32 lbl_1_bss_6D82C;
+typedef struct {
+    u8 pad[0x3a4];
+    u32 field_3a4;
+} CustomizeObject;
+
+extern CustomizeObject *lbl_3_bss_7EBA4;
+extern u8 lbl_3_data_11DC[84];
+extern u32 lbl_3_bss_7EBA8;
+extern u32 lbl_801A6410;
+
+extern void fn_1_80F1C(s32, CustomizeEntry *);
+extern void fn_1_14DBCC(void *);
+extern void fn_80071718(u32);
+extern void fn_1_151BDC(s32);
+extern void fn_1_435C(u32);
+extern void fn_1_426C(u32);
+extern void fn_1_46B4(u32, u32, u8 *, s32);
+extern void fn_1_7F3AC(CustomizeObject *);
+
+void fn_3_ACF4(void) {
+    s16 index;
+
+    if ((lbl_3_bss_F0[0] & 0x20000000) == 0) {
+        index = *(s16 *)((u8 *)lbl_3_bss_F0 + 8);
+        if (lbl_3_bss_20860[index].value != -1) {
+            fn_1_80F1C((s16)lbl_3_bss_20860[index].value, &lbl_3_bss_20860[index]);
+            lbl_3_bss_20860[index].value = -1;
+        }
+        fn_1_14DBCC((u8 *)lbl_3_bss_21960 + index * 0xa20);
+        if (lbl_1_bss_6D82C != 0) {
+            fn_80071718(lbl_1_bss_6D82C);
+            lbl_1_bss_6D82C = 0;
+        }
+        fn_1_151BDC(0);
+        if (lbl_3_data_B8 != -1) {
+            fn_1_435C(lbl_3_bss_20850);
+            fn_1_426C(lbl_3_data_B8);
+            lbl_3_data_B8 = -1;
+        }
+    }
+    if (lbl_3_bss_7EBA4->field_3a4 != 0) {
+        fn_1_7F3AC(lbl_3_bss_7EBA4);
+    }
+    if (lbl_3_bss_7EBA4 != 0) {
+        fn_1_46B4(lbl_801A6410, (u32)lbl_3_bss_7EBA4, lbl_3_data_11DC, 0x11b3);
+    }
+    if (lbl_3_bss_7EBA8 != 0) {
+        fn_1_46B4(lbl_801A6410, lbl_3_bss_7EBA8, lbl_3_data_11DC, 0x11b5);
+    }
+    lbl_3_bss_7EBA4 = 0;
+    lbl_3_bss_7EBA8 = 0;
+}
+/* fzgx:end fn_3_ACF4 */
+
 /* fzgx:begin fn_3_B5FC */
 void fn_3_B5FC(void) {
     u32 flags;

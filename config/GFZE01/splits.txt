@@ -5000,3 +5000,6 @@ dol/fn_8003610C.c:
 
 dol/fn_8006496C.c:
 	.text       start:0x8006496C end:0x80064A30 align:4
+
+dol/fn_800647F0.c:
+	.text       start:0x800647F0 end:0x8006496C align:4

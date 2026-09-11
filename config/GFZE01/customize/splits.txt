@@ -419,3 +419,6 @@ rel/customize/_prolog/fn_3_5B9C.c:
 
 rel/customize/emblem/fn_3_13D98.c:
 	.text       start:0x00013D98 end:0x00013EA4 align:4
+
+rel/customize/customize/fn_3_ACF4.c:
+	.text       start:0x0000ACF4 end:0x0000AE74 align:4

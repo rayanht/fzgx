@@ -65,3 +65,35 @@ void fn_1_DCF54(Vec3 *a, Vec3 *b, Vec3 *c) {
     lbl_1_bss_7ADE8.c = *c;
 }
 /* fzgx:end fn_1_DCF54 */
+
+/* fzgx:begin fn_1_E1934 */
+extern void fn_1_E1408(void *, void *);
+
+typedef struct {
+    u8 pad0[0x8];
+    s16 field8;
+    s16 fieldA;
+    u8 padC[0x12c];
+    u64 field138;
+    u8 pad140[0x68];
+} Fn1E1934Object;
+
+void fn_1_E1934(Fn1E1934Object *obj, Fn1E1934Object *base, s16 limit) {
+    s16 index;
+
+    if ((obj->field138 & 0x40) != 0) {
+        return;
+    }
+
+    if (obj->fieldA != base->fieldA) {
+        index = 0;
+    } else {
+        index = obj->field8 + 1;
+    }
+
+    while ((s16)index < limit) {
+        fn_1_E1408(obj, &base[index]);
+        index++;
+    }
+}
+/* fzgx:end fn_1_E1934 */
