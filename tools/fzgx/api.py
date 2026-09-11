@@ -489,6 +489,9 @@ def format_check(res: Dict[str, Any]) -> str:
     if res.get('instruction_rows') and not res['matched']:
         lines.append(f"{res['differing_rows']} of {res['instruction_rows']} aligned instruction rows still differ "
                      "after accepted relocation equivalences; the displayed % is objdiff's similarity score.")
+    for conflict in res.get('operand_order', [])[:4]:
+        lines.append(f"Operand-order difference at row {conflict['row']}: {conflict['target']} | {conflict['ours']}. "
+                     "These inputs use the same physical registers in reversed order; inspect expression lowering and shared temporaries.")
     for conflict in res.get('value_flow', [])[:4]:
         lines.append(f"Value-flow mismatch at row {conflict['row']}: retail stores a value from "
                      f"{conflict['target_inputs']}; this C stores a value from {conflict['ours_inputs']}. "

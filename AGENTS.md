@@ -66,6 +66,10 @@ Prioritize deterministic SDK C imports (CARD, then OS, EXI, SI) regardless of
 function size. Under-256-byte functions (`--max-size 255`) remain useful repair
 corpora, not a gate on identified larger functions. Prefer deterministic work: `fzgx trivial`, `fzgx reuse`, and size-filtered `fzgx sweep`/`fzgx stuck`;
 fix recurring failure modes in the tooling before spending agents on them.
+Register-field similarity is not proof of an allocation problem: inspect value-flow
+and operand-order diagnostics first. `tools/capture_mwgraph.py` captures/replays
+the stock allocator; selection-order witnesses require a source-realizability
+check and a stock-compiler oracle result before integration.
 Picks remaining work with `fzgx --json inventory --status unmatched --max-size N`
 (smallest first), runs 48 Luna workers via the headless orchestrator, then librarian,
 then triage; writes `docs/batches/<date>.md` from `fzgx report` and commits

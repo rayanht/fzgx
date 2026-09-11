@@ -36,7 +36,7 @@ def analyse(target, ours, boundaries=()):
     """Inputs are formatted aligned rows. Proofs are confined to supported regions."""
     values = [{f'{bank}{i}': ('entry:' + bank + str(i), 'entry ' + bank + str(i))
                for bank in 'rf' for i in range(32)} for _ in range(2)]
-    differences, permutations, unknown = [], [], []
+    differences, permutations, unknown, operand_order = [], [], [], []
     memory = 0
 
     def expression(op, args, regs):
@@ -67,6 +67,12 @@ def analyse(target, ours, boundaries=()):
             values = [{}, {}]
             unknown.append(i)
             continue
+        if op in COMMUTATIVE and len(parsed[0]) == len(parsed[1]) == 2:
+            ta = [a.strip() for a in parsed[0][1].split(',')]
+            oa = [a.strip() for a in parsed[1][1].split(',')]
+            if (len(ta) == len(oa) == 3 and ta[0] == oa[0] and ta[1] != ta[2]
+                    and ta[1:] == oa[1:][::-1] and all(REG.fullmatch(a) for a in ta + oa)):
+                operand_order.append(dict(row=i, target=t, ours=o))
         if op.startswith('b'):
             if op == 'bl':
                 if parsed[0] != parsed[1]:
@@ -129,4 +135,5 @@ def analyse(target, ours, boundaries=()):
                     regs['r1'] = ('frame', 'stack frame')
                 else:
                     regs.clear()
-    return dict(value_flow=differences, equivalent_rows=permutations, unresolved_rows=sorted(set(unknown)))
+    return dict(value_flow=differences, equivalent_rows=permutations,
+                operand_order=operand_order, unresolved_rows=sorted(set(unknown)))

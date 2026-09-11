@@ -58,6 +58,7 @@ class CheckResult:
     instruction_rows: int = 0
     differing_rows: int = 0
     value_flow: List[dict] = field(default_factory=list)
+    operand_order: List[dict] = field(default_factory=list)
 
     def to_json(self) -> dict:
         return {k: v for k, v in self.__dict__.items() if not k.startswith("_")}
@@ -297,7 +298,9 @@ def _diff(project: Project, module: str, symbol: str, unit: str, max_diff_lines:
                 re.sub(r'\b[rf]\d+\b', 'REG', r.get('instruction', {}).get('formatted', ''))
                 for l, r in zip(lrows, rrows)):
             from . import regflow
-            res.value_flow = regflow.analyse_rows(lrows, rrows)['value_flow']
+            flow = regflow.analyse_rows(lrows, rrows)
+            res.value_flow = flow['value_flow']
+            res.operand_order = flow['operand_order']
         if symbol not in right_syms:
             res.diff = [f"(symbol {symbol} not present in our object: define it, check the name)"]
         else:
