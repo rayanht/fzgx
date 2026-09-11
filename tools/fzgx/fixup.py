@@ -163,8 +163,8 @@ class Engine:
         check = self.check(row)
         if check.ok:
             families.append(evidence.candidates(self.project, row['symbol'], body, check))
-            targeted = [[c for c in families[0] if c[0].startswith(('bind recovered shared-pool', 'retain recovered shared-pool', 'recover native shared-pool', 'lifetime reload'))],
-                        source.address_expressions(body, name), source.pointer_lifetimes(body, name)]
+            targeted = [[c for c in families[0] if c[0].startswith(('retail format argument', 'bind recovered shared-pool', 'retain recovered shared-pool', 'recover native shared-pool', 'lifetime reload', 'lifetime ordered'))],
+                        source.address_expressions(body, name), source.pointer_lifetimes(body, name), source.through_local(body, name)]
             operand_types = {'and':('&',('u32','s32')), 'or':('|',('u32','s32')),
                              'xor':('^',('u32','s32')), 'mullw':('*',('u32','s32')),
                              'fadd':('+',('f64',)), 'fadds':('+',('f32',)),
@@ -188,7 +188,7 @@ class Engine:
                         yield family[i]
             # Concrete stores/frame fixes precede generic declaration and flag
             # probes. They used to be buried beyond a session's candidate cap.
-            yield from [c for c in families[0] if c[0].startswith(('retail store-value', 'pack stack', 'imm ', 'swap fields', 'recover aggregate', 'recover member', 'interior ', 'bind hardware'))]
+            yield from [c for c in families[0] if c[0].startswith(('retail store-value', 'retail format argument', 'pack stack', 'imm ', 'swap fields', 'recover aggregate', 'recover member', 'interior ', 'bind hardware'))]
             # Layout/type repairs can increase register differences while fixing
             # the actual memory access or extension. Probe their optimizer
             # interactions before the word-score frontier discards them.

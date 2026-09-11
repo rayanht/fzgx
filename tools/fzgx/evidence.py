@@ -10,7 +10,7 @@ MEMORY = re.compile(r'(.+)\((r\d+)\)$')
 WIDTH = {'lfs': 4, 'lfd': 8, 'lwz': 4, 'lhz': 2, 'lha': 2, 'lbz': 1}
 
 
-def memory_loads(rows, tables=None):
+def memory_loads(rows, tables=None, addresses=False):
     """Follow symbolic bases through the CFG, intersecting facts at every join.
 
     Results use aligned-row indices so target and candidate accesses can be
@@ -60,6 +60,9 @@ def memory_loads(rows, tables=None):
             if args and args[0] in before:
                 after['ctr'] = before[args[0]]
         loads.pop(i, None)
+        if addresses and value and value[2] is False and op in ('addi','li'):
+            loads[i] = dict(symbol=value[0],offset=value[1],width=0,op=op,
+                            address=int(ins['address']))
         if op in WIDTH and len(args) == 2 and (mem := MEMORY.fullmatch(args[1])):
             base = before.get(mem[2])
             location = None

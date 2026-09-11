@@ -508,7 +508,7 @@ def native_pool_literals(p, symbol, body, check):
     bytes; leave dynamic reads and pointer-bearing data alone.
     """
     from .sdkimport import masked, integer_expression
-    from .fixup_source import DECL_RE, declared_types
+    from .fixup_source import declared_types, record_layouts
     from .dataimport import BASIC, number
     from .evidence import memory_loads, object_jump_tables, retail_bytes
     sym = p.resolve(symbol)
@@ -517,33 +517,7 @@ def native_pool_literals(p, symbol, body, check):
     if not span or re.search(r'#pragma\s+(?:pack|options\s+align)\b',code):
         return []
     _, variables = declared_types(code, span[0])
-    layouts = {}
-    for record in re.finditer(r'(?P<td>typedef\s+)?struct\s*(?P<tag>\w+)?\s*\{(?P<body>[^{}]*)\}\s*(?P<alias>\w+)?',code[:span[0]]):
-        fields, offset = {}, 0
-        for declaration in record['body'].split(';'):
-            if not declaration.strip():
-                continue
-            field = DECL_RE.fullmatch(declaration.strip()+';')
-            ty = re.sub(r'\bconst\s+', '', field[1]).strip() if field else ''
-            if not field or ty not in BASIC or field[4]:
-                fields = {}; break
-            width = BASIC[ty][0]
-            try:
-                dims = [integer_expression(n) for n in re.findall(r'\[([^]]+)\]',field[3])]
-            except (ValueError, SyntaxError):
-                fields = {}; break
-            if len(dims)>1 or any(n<=0 for n in dims):
-                fields = {}; break
-            offset = (offset+width-1)//width*width
-            fields[field[2]] = (offset,ty,dims[0] if dims else None)
-            offset += width*(dims[0] if dims else 1)
-        if fields:
-            if record['tag']:
-                layouts[record['tag']] = fields
-            if record['td'] and record['alias']:
-                layouts[record['alias']] = fields
-            elif record['alias'] and record['tag']:
-                variables[record['alias']] = 'struct '+record['tag']
+    layouts = record_layouts(code,span[0],variables)
     loads = memory_loads(check._rows[0],object_jump_tables(p.target_object_for(sym),sym.name,p,sym.module))
     referenced = {(load['symbol'],load['offset'],load['width']) for load in loads.values()}
     roots = {}
@@ -616,21 +590,166 @@ def native_pool_literals(p, symbol, body, check):
     return [('recover native shared-pool literals',text)]
 
 
+def format_arguments(p, symbol, body):
+    """Recover omitted variadic arguments from owned prototypes and retail text."""
+    from .fixup_source import call_sites, declared_types, member_type, record_layouts
+    from .sdkimport import masked, integer_expression
+    from .evidence import retail_bytes
+    from .dataimport import BASIC
+    sym=p.resolve(symbol);code=masked(body);span=_function_span(code,sym.name)
+    if not span:
+        return []
+    fields,variables=declared_types(code,span[0])
+    layouts=record_layouts(code,span[0],variables)
+    signature=code[span[0]:code.index('{',span[0])]
+    parameters={m[1] for part in signature[signature.index('(')+1:signature.rfind(')')].split(',')
+                if (m:=re.search(r'(\w+)\s*(?:\[[^]]*\])?\s*$',part))}
+    formats={'OSReport':0,'OSPanic':2,'printf':0,'sprintf':1,'snprintf':2}
+    calls=call_sites(body)
+    for name,start,end,args in calls:
+        if start>=span[0] or len(args)<2 or code[args[-1][0]:args[-1][1]].strip()!='...':
+            continue
+        if re.search(r'\bchar\s*\*',code[args[-2][0]:args[-2][1]]):
+            formats[name]=len(args)-2
+    aliases={}
+    for match in re.finditer(r'\b(\w+)\s*=\s*([^;{}]+);',code[:span[1]]):
+        if len(re.findall(r'\b'+re.escape(match[1])+r'\s*=(?!=)',code[:span[1]]))==1:
+            aliases[match[1]]=match[2].strip()
+    for name,owner in re.findall(r'(?m)^#define\s+(\w+)\s+(\w+)\s*$',code[:span[0]]):
+        aliases[name]=owner
+        if owner in variables:
+            variables[name]=variables[owner]
+
+    def address(expression,seen=()):
+        from .fixup_source import TYPE
+        expression=expression.strip()
+        while True:
+            previous=expression
+            cast=re.match(r'^\(\s*'+TYPE+r'\s*\)\s*',expression)
+            if cast and cast.end()<len(expression):
+                expression=expression[cast.end():].strip()
+            if expression.startswith('(') and expression.endswith(')'):
+                depth=0
+                for i,ch in enumerate(expression):
+                    depth+=(ch=='(')-(ch==')')
+                    if depth==0:
+                        break
+                if i==len(expression)-1:
+                    expression=expression[1:-1].strip()
+            if expression==previous:
+                break
+        member=re.fullmatch(r'&?\s*(\w+)(?:->|\.)(\w+)',expression)
+        if member:
+            root,field=member[1],member[2]
+            tag=re.sub(r'\b(?:const|volatile|struct)\b|\*','',variables.get(root,'')).strip()
+            layout=layouts.get(tag,{}).get(field)
+            if not layout or layout[1] not in ('char','u8','s8','unsigned char','signed char') or layout[2] is None:
+                return None
+            value=address(root,seen)
+            return (value[0],value[1]+layout[0]) if value else None
+        match=re.fullmatch(r'&?\s*(\w+)\s*(?:\[([^]]+)\]|\+\s*(.+))?',expression)
+        if not match or match[1] in seen:
+            return None
+        root=match[1];target=p.find_symbol(root,sym.module)
+        value=(target.name,0) if target and target.kind=='object' else address(aliases[root],(*seen,root)) if root in aliases else None
+        if value is None:
+            return None
+        if match[2] or match[3]:
+            ty=re.sub(r'\b(?:const|volatile|struct)\b|\*','',variables.get(root,'')).strip()
+            if ty not in BASIC:
+                return None
+            try:
+                delta=integer_expression(match[2] or match[3])*BASIC[ty][0]
+            except (ValueError,SyntaxError):
+                return None
+            value=(value[0],value[1]+delta)
+        return value
+
+    out=[]
+    for callee,start,end,args in calls:
+        index=formats.get(callee)
+        if index is None or not span[0]<=start<end<=span[1] or len(args)<=index:
+            continue
+        text=body[args[index][0]:args[index][1]].strip()
+        if re.fullmatch(r'"(?:\\.|[^"\\])*"',text):
+            try:
+                fmt=ast.literal_eval(text)
+            except (ValueError,SyntaxError):
+                continue
+        else:
+            location=address(text)
+            if location is None:
+                continue
+            raw=retail_bytes(p,sym.module,*location,1024)
+            if not raw or b'\0' not in raw:
+                continue
+            try:
+                fmt=raw.split(b'\0',1)[0].decode('ascii')
+            except UnicodeDecodeError:
+                continue
+        expected=[];valid=True;position=0
+        while '%' in fmt[position:]:
+            position=fmt.index('%',position)
+            spec=re.match(r'%(%|[-+ #0]*([*]|\d+)?(?:\.([*]|\d+))?(hh|ll|[hljztL])?([diuoxXfFeEgGaAcspn]))',fmt[position:])
+            if not spec:
+                valid=False;break
+            position+=spec.end()
+            if spec[1]=='%':
+                continue
+            expected.extend('integer' for width in (spec[2],spec[3]) if width=='*')
+            expected.append('pointer' if spec[5] in 'spn' else 'float' if spec[5] in 'fFeEgGaA'
+                            else 'integer64' if spec[4] in ('ll','j') else 'integer')
+        supplied=len(args)-index-1
+        if not valid or supplied>=len(expected):
+            continue
+        wanted=expected[supplied];candidates=[]
+        for use in reversed(list(re.finditer(r'\b\w+(?:(?:->|\.)\w+)*\b',code[span[0]:start]))):
+            expression=use[0];ty=member_type(expression,fields,variables).strip()
+            kind='pointer' if '*' in ty else 'float' if ty in ('f32','f64','float','double') else 'integer64' if ty in ('u64','s64','long long','unsigned long long') else 'integer' if ty in BASIC else None
+            if kind!=wanted or expression in candidates or 'volatile' in ty:
+                continue
+            if re.match(r'\s*\[',code[span[0]+use.end():]):
+                continue
+            if '->' not in expression and '.' not in expression and expression not in parameters and not p.find_symbol(expression,sym.module):
+                if not re.search(r'\b'+re.escape(expression)+r'\s*=(?!=)',code[span[0]:start]):
+                    continue
+            candidates.append(expression)
+            if len(candidates)>=24:
+                break
+        for expression in candidates:
+            out.append((f'retail format argument {callee} slot {supplied+1}: {expression}',body[:end-1]+', '+expression+body[end-1:]))
+    return out
+
+
 def shared_pool_coverage(p, symbol, check):
-    """Aligned loads that retain retail's named pool and member displacement."""
+    """Aligned pool loads and addresses, including proven private bindings."""
     from .evidence import memory_loads, object_jump_tables
     sym = p.resolve(symbol)
-    left = memory_loads(check._rows[0], object_jump_tables(p.target_object_for(sym),sym.name,p,sym.module))
-    right = memory_loads(check._rows[1], object_jump_tables(check._object,sym.name))
+    left = memory_loads(check._rows[0], object_jump_tables(p.target_object_for(sym),sym.name,p,sym.module),addresses=True)
+    right = memory_loads(check._rows[1], object_jump_tables(check._object,sym.name),addresses=True)
+    from .poolfix import Elf, binding_target
+    elf = Elf(check._object.read_bytes())
+    objects = {s['name']:s for s in elf.symbols()}
+    bindings = {private:binding_target(target) for private,target,_ in getattr(check,'_pool_pairs',[])}
     matching = 0
     for i,load in left.items():
         target = p.find_symbol(load['symbol'],sym.module)
         other = right.get(i)
         if not target or target.section not in ('.rodata','.sdata2') or not other:
             continue
-        candidate = p.find_symbol(other['symbol'],sym.module)
+        anchor, offset = other['symbol'], other['offset']
+        if anchor in bindings:
+            own = objects.get(anchor)
+            if not own or not 0 < own['shndx'] < len(elf.sections):
+                continue
+            size = own['size'] or elf.sections[own['shndx']]['size']-own['value']
+            if not 0 <= offset <= size-other['width']:
+                continue
+            anchor, delta = bindings[anchor]
+            offset += delta
+        candidate = p.find_symbol(anchor,sym.module)
         if candidate and candidate.section == target.section and candidate.module == target.module:
-            matching += (target.addr+load['offset'] == candidate.addr+other['offset'] and load['op'] == other['op'])
+            matching += (target.addr+load['offset'] == candidate.addr+offset and load['op'] == other['op'])
     return matching
 
 
@@ -1013,29 +1132,38 @@ def hardware_lvalues(body):
 
 def reload_lvalues(body, name, diffs, missing_globals=()):
     """Shorten a cached load's lifetime where retail explicitly loads again."""
-    from .fixup_source import declared_types, member_type
+    from .fixup_source import declared_types, member_type, record_layouts, DECL_RE
     from .sdkimport import masked
     code = masked(body)
     span = _function_span(code,name)
     if not span:
         return []
     fields, variables = declared_types(code, span[0])
+    layouts = record_layouts(code, span[0], variables)
     offsets = {}
     for target, ours in diffs:
         m = re.fullmatch(r'(lwz|lhz|lha|lbz|lfs|lfd) [rf]\d+, (0x[\da-f]+)\(r(?:[2-9]|[12]\d|3[01])\)',target)
         if m and not ours:
             offsets.setdefault(int(m[2],0), set()).add(m[1])
-    out = []
+    out, pointers = [], {}
     for offset in sorted(offsets,key=lambda n:(n==0,n)):
-        field = re.compile(r'\b(unk_?'+format(offset,'x')+r')\b',re.I)
+        field = re.compile(r'\b(unk_?0*'+format(offset,'x')+r')\b',re.I)
         names = {m[1] for m in field.finditer(code[:span[0]])}
+        names.update(member for layout in layouts.values() for member,(at,_,count) in layout.items()
+                     if at==offset and count is None)
         for member in sorted(names):
-            if re.search(r'\b'+re.escape(member)+r'\s*\[',code[:span[0]]):
-                continue
             matches = list(re.finditer(r'\b\w+(?:(?:->|\.)\w+)*(?:->|\.)'+re.escape(member)+r'\b',code[span[0]:span[1]]))
             groups = {}
             for match in matches:
                 a,b = span[0]+match.start(),span[0]+match.end()
+                owner=re.split(r'->|\.',match[0])[:-1]
+                owner_type=member_type('->'.join(owner),fields,variables)
+                tag=re.sub(r'\b(?:extern|static|struct|const|volatile)\b|\*','',owner_type).strip()
+                layout=layouts.get(tag,{}).get(member)
+                if (layout and (layout[0]!=offset or layout[2] is not None)) or (not layout and not field.fullmatch(member)):
+                    continue
+                if not layout and re.search(r'\b'+re.escape(member)+r'\s*\[',code[:span[0]]):
+                    continue
                 if re.match(r'\s*(?:=(?!=)|[+*/&|^-]=|\+\+|--)',code[b:]) or code[max(0,a-1):a]=='&':
                     continue
                 groups.setdefault(match[0],[]).append((a,b))
@@ -1047,6 +1175,8 @@ def reload_lvalues(body, name, diffs, missing_globals=()):
                      'u32':'lwz','s32':'lwz','int':'lwz','f32':'lfs','f64':'lfd'}.get(ty.strip())
                 if op not in offsets[offset]:
                     continue
+                if '*' in ty:
+                    pointers.setdefault(offset,set()).add((expression,ty))
                 # Qualify the loaded object, including a pointer itself, rather
                 # than its pointee; otherwise MWCC can still reuse the pointer.
                 replacement = f'(*({ty} volatile *)&({expression})) /* Retail reloads this field. */'
@@ -1055,6 +1185,68 @@ def reload_lvalues(body, name, diffs, missing_globals=()):
                     for a,b in reversed(positions):
                         text = text[:a]+replacement+text[b:]
                     out.append((f'lifetime reload {expression} at '+('every site' if positions is sites else str(positions[0][0])),text))
+    # A saved draft can hide the missing read behind a block-local pointer.
+    # Refresh that alias at complete statements, retaining one pointer value
+    # for multiple fields in the same expression and respecting shadowing.
+    scopes, stack = [], []
+    for token in re.finditer(r'[{}]',code[span[0]:span[1]]):
+        at=span[0]+token.start()
+        if token[0]=='{':
+            stack.append(at)
+        elif stack:
+            scopes.append((stack.pop(),at))
+    declarations=[]
+    for line in re.finditer(r'(?m)^[ \t]*[^\n;{}]+;[ \t]*$',code[span[0]:span[1]]):
+        declaration=DECL_RE.fullmatch(line[0])
+        if declaration:
+            declarations.append((span[0]+line.start(),span[0]+line.end(),declaration))
+    for start,end,decl in declarations:
+        ty,alias,_,initial=decl.groups()
+        if '*' not in ty or not initial:
+            continue
+        expression=initial.strip()
+        if not any((expression,ty.strip()) in {(e,t.strip()) for e,t in values} for values in pointers.values()):
+            continue
+        scope=min((s for s in scopes if s[0]<start<s[1]),key=lambda s:s[1]-s[0],default=None)
+        if scope is None:
+            continue
+        shadows=[min((s for s in scopes if s[0]<a<s[1]),key=lambda s:s[1]-s[0])
+                 for a,b,d in declarations if end<a<scope[1] and d[2]==alias]
+        uses=[m for m in re.finditer(r'\b'+re.escape(alias)+r'\b',code[end:scope[1]])
+              if not any(a<=end+m.start()<b for a,b in shadows)]
+        if not uses or any(not re.match(r'\s*->',code[end+m.end():]) for m in uses):
+            continue
+        edits=[(end+m.start(),end+m.end(),expression) for m in uses]
+        text=body
+        for a,b,value in reversed(edits):
+            text=text[:a]+value+text[b:]
+        out.insert(0,(f'lifetime reload alias {alias} from {expression} at {start}',text[:start]+text[end:]))
+        grouped={}
+        for use in uses:
+            a=end+use.start();line=code.rfind('\n',end,a)+1
+            grouped.setdefault(line,[]).append(use)
+        changes=[];after_stores=[]
+        for line,positions in grouped.items():
+            stop=code.find('\n',end+positions[-1].end())
+            statement=code[line:stop]
+            if DECL_RE.fullmatch(statement) or not statement.rstrip().endswith(';') or any(x in statement for x in ('&&','||','?','if ','if(','while','for ')):
+                continue
+            indent=re.match(r'[ \t]*',body[line:])[0]
+            change=(line,line,indent+alias+' = (*('+ty+' volatile *)&('+expression+')); /* Retail reloads the pointer between statements. */\n')
+            changes.append(change)
+            previous=re.search(r'([^;{}]+);\s*\Z',code[:line])
+            if previous and re.search(r'(?:->|\.|\[|\*)[^=]*=(?!=)',previous[1]):
+                after_stores.append(change)
+        if changes:
+            text=body
+            for a,b,value in reversed(changes):
+                text=text[:a]+value+text[b:]
+            out.insert(0,(f'lifetime reload alias {alias} between statements at {start}',text))
+        if after_stores and after_stores!=changes:
+            text=body
+            for a,b,value in reversed(after_stores):
+                text=text[:a]+value+text[b:]
+            out.insert(0,(f'lifetime reload alias {alias} after stores at {start}',text))
     for expression in sorted(set(missing_globals)):
         ty = variables.get(expression,'')
         if not ty or 'volatile' in ty or re.search(r'\b'+re.escape(expression)+r'\s*\[',code[:span[0]]):
@@ -1067,6 +1259,44 @@ def reload_lvalues(body, name, diffs, missing_globals=()):
             for a,b in reversed(positions):
                 text = text[:a]+f'(*({ty} volatile *)&{expression}) /* Retail reloads this object. */'+text[b:]
             out.insert(0,(f'lifetime reload {expression} at '+('every site' if positions is sites else str(positions[0][0])),text))
+    # Preserve the ordering dependency between an observed store and a call's
+    # pointer reload. Qualifying only the read still lets a nonvolatile store
+    # move past it; source-level ordering needs both accesses.
+    from .fixup_source import call_sites
+    stores, prior = {}, []
+    for index,(target, ours) in enumerate(diffs):
+        load = re.fullmatch(r'lwz r\d+, (0x[\da-f]+)\(r(?:[2-9]|[12]\d|3[01])\)',target)
+        if load and not ours and int(load[1],0) in pointers:
+            following = [text for text,_ in diffs[index+1:index+6] if text]
+            callee = next((m[1] for text in following if (m := re.fullmatch(r'bl (\w+)',text))),None)
+            for before in reversed(prior[-3:]):
+                store = re.fullmatch(r'stw r\d+, (0x[\da-f]+)\(r(?:[2-9]|[12]\d|3[01])\)',before)
+                if store and callee:
+                    stores.setdefault((int(store[1],0),callee),set()).update(pointers[int(load[1],0)])
+                    break
+                if before.startswith('b'):
+                    break
+        if target:
+            prior.append(target)
+    for (offset,callee),loads in sorted(stores.items()):
+        for expression,ty in sorted(loads):
+            groups = []
+            for called,start,end,args in call_sites(code):
+                if called != callee or not args or not span[0]<=start<end<=span[1]:
+                    continue
+                uses = list(re.finditer(r'\b'+re.escape(expression)+r'\b',code[args[0][0]:args[-1][1]]))
+                previous = re.search(r'(?m)^[ \t]*(\w+(?:(?:->|\.)\w+)*(?:->|\.)unk_?0*'+format(offset,'x')+r')\s*=[^;\n]+;\s*\Z',code[:start],re.I)
+                store_type = member_type(previous[1],fields,variables) if previous else ''
+                if not uses or not store_type or 'volatile' in store_type:
+                    continue
+                edits = [(previous.start(1),previous.end(1),f'(*({store_type} volatile *)&({previous[1]})) /* Retail stores before the call reload. */')]
+                edits += [(args[0][0]+use.start(),args[0][0]+use.end(),f'(*({ty} volatile *)&({expression})) /* Retail reloads after the store. */') for use in uses]
+                groups.append(edits)
+            for edits in ([sum(groups,[])]+groups if groups else []):
+                text = body
+                for a,b,value in sorted(edits,reverse=True):
+                    text = text[:a]+value+text[b:]
+                out.insert(0,(f'lifetime ordered reload {expression} after store 0x{offset:X} before {callee} at '+('every site' if len(edits)>2 else str(edits[0][0])),text))
     return out
 
 
@@ -1078,13 +1308,14 @@ def candidates(p: Project, symbol: str, body: str, base: oracle.CheckResult):
     diffs = [(stuck._fmt(a), stuck._fmt(b)) for a, b in zip(lrows, rrows) if (a.get("diff_kind") or "DIFF_NONE") != "DIFF_NONE"]
     span = _function_span(body, sym.name)
     candidates: List[Tuple[str, str]] = store_values(body, sym.name, base)
+    candidates += format_arguments(p,symbol,body)
     missing_globals = []
     if any(not ours and re.fullmatch(r'(?:lwz|lhz|lha|lbz|lfs|lfd) [rf]\d+, 0x0\(r\d+\)',target) for target,ours in diffs):
         from .evidence import memory_loads, object_jump_tables
         loads = memory_loads(lrows,object_jump_tables(p.target_object_for(sym),sym.name,p,sym.module))
         missing_globals = [load['symbol'] for i,load in loads.items()
                            if not load['offset'] and not stuck._fmt(rrows[i])]
-    candidates += reload_lvalues(body, sym.name, diffs, missing_globals)
+    candidates += reload_lvalues(body, sym.name, [(stuck._fmt(a),stuck._fmt(b)) for a,b in zip(lrows,rrows)], missing_globals)
     candidates += stack_locals(body, sym.name, [(stuck._fmt(a), stuck._fmt(b)) for a,b in zip(lrows,rrows)])
     candidates += stack_field_origins(body, diffs)
     candidates += member_layouts(body, diffs)

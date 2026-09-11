@@ -154,12 +154,14 @@ def through_local(body: str, name: str) -> List[Tuple[str, str]]:
         return out
     locs = _locals(body, span)
     inner = body[span[1]:span[2]]
-    for m in re.finditer(r"^(\s*)([A-Za-z_]\w*) = ([A-Za-z_][\w>.\-\[\]\(\)\* ]*?) (>>|<<|\+|-|&|\||\*) ([^;]+);\n", inner, re.M):
+    for m in re.finditer(r"^(\s*)([A-Za-z_]\w*) = ((?:\("+TYPE+r"\)\s*)?[A-Za-z_][\w>.\-\[\]\(\)\* ]*?) (>>|<<|\+|-|&|\||\*|%|/) ([^;]+);\n", inner, re.M):
         ind, x, a, op, b = m.groups()
-        if x in a or "(" in a and not a.startswith("*("):
+        value=re.sub(r'^\('+TYPE+r'\)\s*','',a)
+        if re.search(r'\b'+re.escape(x)+r'\b',a) or "(" in value and not value.startswith("*("):
             continue
         s0, e0 = span[1] + m.start(), span[1] + m.end()
         out.append((f"through {x}", body[:s0] + f"{ind}{x} = {a};\n{ind}{x} = {x} {op} {b};\n" + body[e0:]))
+        out.append((f"through {x} compound", body[:s0] + f"{ind}{x} = {a};\n{ind}{x} {op}= {b};\n" + body[e0:]))
     if locs:
         top = locs[-1][1]
         indent = re.match(r"\s*", body[locs[0][0]:locs[0][1]]).group(0)
@@ -550,8 +552,25 @@ def extra_families(body: str, name: str) -> List[Tuple[str, str, str]]:
     return out
 
 
-# a call with its argument list; casts inside the arguments are one level of parentheses
-CALL_RE = re.compile(r"\b([A-Za-z_]\w*)\(((?:[^()]|\([^()]*\))*)\)")
+def call_sites(text):
+    """Balanced call and argument spans, including casts and nested calls."""
+    from .sdkimport import masked
+    code = masked(text)
+    stack, calls = [], []
+    for token in re.finditer(r'(?P<name>\b[A-Za-z_]\w*)\s*\(|[()\[\]{},]',code):
+        if token[0].endswith('('):
+            stack.append([token['name'],token.start(),token.end(),[]])
+        elif token[0] in '[{':
+            stack.append([None,token.start(),token.end(),[]])
+        elif token[0]==',' and stack and stack[-1][0]:
+            frame=stack[-1];frame[3].append((frame[2],token.start()));frame[2]=token.end()
+        elif token[0] in ')]}' and stack:
+            name,start,last,args=stack.pop()
+            if name:
+                if args or code[last:token.start()].strip():
+                    args.append((last,token.start()))
+                calls.append((name,start,token.end(),args))
+    return sorted(calls,key=lambda call:call[1])
 
 
 def _pair_proto(text: str, callee: str, idx: int) -> Optional[str]:
@@ -577,14 +596,13 @@ def _u64_family(body: str, name: str, span, inner: str) -> List[Tuple[str, str, 
     # (a) two adjacent zero arguments: one u64 zero (materialised low word first, as retail does)
     declared = {m.group(1) for m in re.finditer(r"^extern [\w ]+?\*? ([A-Za-z_]\w*)\(", body, re.M)} | set(aliases)
     keywords = {"if", "while", "for", "switch", "return", "sizeof"}
-    for cm in re.finditer(CALL_RE, inner):
-        callee, args = cm.group(1), cm.group(2)
-        if callee == name or callee in keywords or not args.strip():
+    for callee,_,_,arguments in call_sites(inner):
+        if callee == name or callee in keywords or not arguments:
             continue
-        al = [a.strip() for a in args.split(",")]
+        al = [inner[a:b].strip() for a,b in arguments]
         for k in range(len(al) - 1):
             if al[k] == "0" and al[k + 1] == "0":
-                new_inner = inner[:cm.start(2)] + ", ".join(al[:k] + ["(u64)0"] + al[k + 2:]) + inner[cm.end(2):]
+                new_inner = inner[:arguments[0][0]] + ", ".join(al[:k] + ["(u64)0"] + al[k + 2:]) + inner[arguments[-1][1]:]
                 text = body[:span[1]] + new_inner + body[span[2]:]
                 text = _pair_proto(text, proto_name(callee), k) if callee in declared else text
                 if text:
@@ -617,11 +635,11 @@ def _u64_family(body: str, name: str, span, inner: str) -> List[Tuple[str, str, 
             # call sites: the pair becomes one argument; the callee's prototype pairs the same slot
             text = body[:span[1]] + new_inner + body[span[2]:]
             ok = True
-            for cm in list(re.finditer(CALL_RE, new_inner)):
-                al = [a.strip() for a in cm.group(2).split(",")]
+            for callee,_,_,arguments in call_sites(new_inner):
+                al = [new_inner[a:b].strip() for a,b in arguments]
                 for j in range(len(al) - 1):
                     if al[j] == A and al[j + 1] == B:
-                        t2 = _pair_proto(text, proto_name(cm.group(1)), j)
+                        t2 = _pair_proto(text, proto_name(callee), j)
                         if t2 is None:
                             ok = False
                         else:
@@ -633,15 +651,14 @@ def _u64_family(body: str, name: str, span, inner: str) -> List[Tuple[str, str, 
             out.append(("u64", f"parameters {A}, {B} -> u64 {P}", text))
     # (d) a call argument that is a cast local or a plain local: dropped, with the prototype
     #     shortened (retail's register there was scratch; the body invented the argument)
-    for cm in re.finditer(CALL_RE, inner):
-        callee, args = cm.group(1), cm.group(2)
-        if callee == name or callee in keywords or not args.strip():
+    for callee,_,_,arguments in call_sites(inner):
+        if callee == name or callee in keywords or not arguments:
             continue
-        al = [a.strip() for a in args.split(",")]
+        al = [inner[a:b].strip() for a,b in arguments]
         for k, arg in enumerate(al):
             if not re.fullmatch(r"\((?:u32|s32)\)\w+|[a-z]\w*", arg) or len(al) < 2:
                 continue
-            new_inner = inner[:cm.start(2)] + ", ".join(al[:k] + al[k + 1:]) + inner[cm.end(2):]
+            new_inner = inner[:arguments[0][0]] + ", ".join(al[:k] + al[k + 1:]) + inner[arguments[-1][1]:]
             text = body[:span[1]] + new_inner + body[span[2]:]
             if callee in declared:
                 pm = re.search(rf"^extern ([\w ]+?\*?) {re.escape(proto_name(callee))}\(([^)]*)\);$", text, re.M)
@@ -1478,23 +1495,92 @@ def operand_lifetimes(body, name, operators):
     return out
 
 
+def records(code, end):
+    """Declared records in dependency order, retaining anonymous member owners."""
+    closing,stack={},[]
+    for token in re.finditer(r'[{}]',code[:end]):
+        if token[0]=='{':
+            stack.append(token.start())
+        elif stack:
+            closing[stack.pop()]=token.start()
+    found=[]
+    for match in re.finditer(r'(?P<td>typedef\s+)?struct\s*(?P<tag>\w+)?\s*\{',code[:end]):
+        close=closing.get(match.end()-1)
+        if close is None:
+            continue
+        tail=re.match(r'\s*(\w+)?',code[close+1:end])
+        alias=tail[1] if tail else None
+        key=match['tag'] or (alias if match['td'] else None) or '__fzgx_record_'+str(match.start())
+        found.append(dict(start=match.start(),opening=match.end(),end=close+1,key=key,
+                          tag=match['tag'],td=bool(match['td']),alias=alias))
+    for record in sorted(found,key=lambda r:r['end']):
+        text=code[record['opening']:record['end']-1];children=[]
+        for child in found:
+            if record['opening']<=child['start']<child['end']<record['end'] and not any(a<=child['start']<b for a,b,_ in children):
+                children.append((child['start'],child['end'],'struct '+child['key']))
+        for a,b,value in reversed(children):
+            text=text[:a-record['opening']]+value+text[b-record['opening']:]
+        yield dict(record,body=text)
+
+
 def declared_types(code, end):
     """Resolve fields by their owning record, never by a shared member name."""
-    fields = {}
-    for struct in re.finditer(r'(?:typedef\s+)?struct\s*(\w+)?\s*\{([^{}]*)\}\s*(\w+)?', code[:end]):
+    fields, instances = {}, {}
+    for record in records(code,end):
         members = {}
-        for line in struct[2].split(';'):
+        for line in record['body'].split(';'):
             decl = DECL_RE.match(line.strip()+';')
             if decl:
                 members[decl[2]] = decl[1]+(' *' if decl[3] else '')
-        if struct[1]:
-            fields[struct[1]] = members
-        if struct[3]:
-            fields[struct[3]] = members
+        fields[record['key']] = members
+        if record['td'] and record['alias']:
+            fields[record['alias']] = members
+        elif record['alias']:
+            instances[record['alias']]='struct '+record['key']
     variables = {}
     for decl in re.finditer(r'('+TYPE+r')\s*(?:(?<=\*)|\s)(\w+)\s*(?=[,;=)\[])', code):
         variables[decl[2]] = decl[1]+(' *' if code[decl.end():].startswith('[') else '')
+    variables.update(instances)
     return fields, variables
+
+
+def record_layouts(code, end, variables):
+    """Byte offsets of explicitly declared PowerPC records and their members."""
+    from .sdkimport import integer_expression
+    from .dataimport import BASIC
+    if re.search(r'#pragma\s+(?:pack|options\s+align)\b',code[:end]):
+        return {}
+    layouts, sizes = {}, {}
+    for record in records(code,end):
+        fields, offset, alignment = {}, 0, 1
+        for declaration in record['body'].split(';'):
+            if not declaration.strip():
+                continue
+            field = DECL_RE.fullmatch(declaration.strip()+';')
+            ty = re.sub(r'\b(?:const|volatile)\s+', '', field[1]).strip() if field else ''
+            tag = re.sub(r'^struct\s+', '', ty)
+            if not field or not (ty in BASIC or '*' in ty or tag in sizes) or field[4]:
+                fields = {}; break
+            width, align = (4,4) if '*' in ty else (BASIC[ty][0],BASIC[ty][0]) if ty in BASIC else sizes[tag]
+            try:
+                dims = [integer_expression(n) for n in re.findall(r'\[([^]]+)\]',field[3])]
+            except (ValueError, SyntaxError):
+                fields = {}; break
+            if len(dims)>1 or any(n<=0 for n in dims):
+                fields = {}; break
+            offset = (offset+align-1)//align*align
+            alignment = max(alignment,align)
+            fields[field[2]] = (offset,ty,dims[0] if dims else None)
+            offset += width*(dims[0] if dims else 1)
+        if fields:
+            layouts[record['key']] = fields
+            sizes[record['key']] = ((offset+alignment-1)//alignment*alignment,alignment)
+            if record['td'] and record['alias']:
+                layouts[record['alias']] = fields
+                sizes[record['alias']] = ((offset+alignment-1)//alignment*alignment,alignment)
+            elif record['alias'] and record['tag']:
+                variables[record['alias']] = 'struct '+record['tag']
+    return layouts
 
 
 def member_type(expression, fields, variables):
