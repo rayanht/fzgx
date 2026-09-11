@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import ast
+import itertools
 import json
 import math
 import re
@@ -513,6 +514,63 @@ def stack_locals(body, name, diffs):
         fields=' '.join(m[1]+' '+m[2]+';' for m in order)
         text=body[:start]+'\n    struct { '+fields+' } '+var+';\n'+inner+body[span[1]-1:]
         out.append(('pack stack scalars '+','.join(m[2] for m in order),text))
+    # Retail can reuse one address-taken slot across distinct scalar lifetimes.
+    # Packing alone cannot express that overlap. Propose equal-width reuse
+    # only when the object diff shows two compiler slots mapping to one retail
+    # slot; the stock compiler and full oracle decide source realizability.
+    slots = {}
+    for target, ours in diffs:
+        t = re.fullmatch(r'(\w+) [rf]\d+, (0x[0-9a-f]+)\(r1\)', target)
+        o = re.fullmatch(r'(\w+) [rf]\d+, (0x[0-9a-f]+)\(r1\)', ours)
+        if t and o and t[1] == o[1]:
+            slots.setdefault(int(t[2], 0), set()).add(int(o[2], 0))
+    if len(sites) <= 7 and any(len(v) > 1 for v in slots.values()):
+        merged = []
+        def qualified_reuse(keep, drop, lo, hi, remove=False):
+            if not keep[1].startswith('volatile ') or drop[1].startswith('volatile '):
+                return
+            ty = keep[1].removeprefix('volatile ')
+            edits = [(keep.start(1), keep.end(1), ty)]
+            for token in re.finditer(r'(?<![.\w])(?<!->)'+re.escape(keep[2])+r'\b', body[keep.end():span[1]]):
+                a = keep.end()+token.start()
+                edits.append((a,a+len(keep[2]),'(*(volatile '+ty+' *)&'+keep[2]+') /* Keep this staged access volatile. */'))
+            for token in re.finditer(r'(?<![.\w])(?<!->)'+re.escape(drop[2])+r'\b', body[lo:hi]):
+                a = lo+token.start()
+                edits.append((a,a+len(drop[2]),keep[2]))
+            if remove:
+                edits.append((drop.start(),drop.end(),''))
+            text = body
+            for a,b,value in sorted(edits,reverse=True):
+                text = text[:a]+value+text[b:]
+            merged.append(('pack stack qualified lifetime '+drop[2]+' as '+keep[2]+f' at {lo}', text))
+        for keep, drop in itertools.permutations(sites, 2):
+            if widths[keep[1].split()[-1]] != widths[drop[1].split()[-1]]:
+                continue
+            text = body[:drop.start()] + body[drop.end():]
+            fn = _function_span(text, name)
+            inner_text = text[fn[0]:fn[1]]
+            if keep[1] != drop[1]:
+                inner_text = re.sub(r'&\s*'+re.escape(drop[2])+r'\b',
+                                    '('+drop[1]+' *)&'+keep[2], inner_text)
+            inner_text = re.sub(r'(?<![.\w])(?<!->)'+re.escape(drop[2])+r'\b', keep[2], inner_text)
+            merged.append(('pack stack reuse '+drop[2]+' as '+keep[2], text[:fn[0]]+inner_text+text[fn[1]:]))
+            qualified_reuse(keep,drop,drop.end(),span[1],True)
+            # A temporary may occupy different retail slots in distinct live
+            # ranges. Retain its declaration and redirect one assignment/use
+            # interval instead of forcing every occurrence into the same slot.
+            assigns = list(re.finditer(r'(?m)^\s*'+re.escape(drop[2])+r'\s*=(?!=)', body[drop.end():span[1]]))
+            for j, assignment in enumerate(assigns):
+                lo = drop.end() + assignment.start()
+                hi = drop.end() + assigns[j+1].start() if j+1 < len(assigns) else span[1]
+                segment = body[lo:hi]
+                if not re.search(r'&\s*'+re.escape(drop[2])+r'\b', segment):
+                    continue
+                if keep[1] != drop[1]:
+                    segment = re.sub(r'&\s*'+re.escape(drop[2])+r'\b', '('+drop[1]+' *)&'+keep[2], segment)
+                segment = re.sub(r'(?<![.\w])(?<!->)'+re.escape(drop[2])+r'\b', keep[2], segment)
+                merged.append(('pack stack lifetime '+drop[2]+' as '+keep[2]+f' at {lo}', body[:lo]+segment+body[hi:]))
+                qualified_reuse(keep,drop,lo,hi)
+        out = merged + out
     return list(dict.fromkeys(out))
 
 
@@ -538,6 +596,74 @@ def stack_field_origins(body, diffs):
             fields=first+m['fields'][prefix.end():]+f'\n    u8 fzgx_tail_padding[{-delta}];\n'
             out.append((f'recover aggregate field origin {m[1]} {delta}',body[:m.start('fields')]+fields+body[m.end('fields'):]))
     return out
+
+
+def member_layouts(body, diffs):
+    """Recover internal gaps from emitted member offsets, not identifier spelling."""
+    pairs = set()
+    for target, ours in diffs:
+        t = re.fullmatch(r'(\w+) [rf]\d+, (-?0x[0-9a-f]+)\(r\d+\)', target)
+        o = re.fullmatch(r'(\w+) [rf]\d+, (-?0x[0-9a-f]+)\(r\d+\)', ours)
+        if t and o and t[1] == o[1] and t[2] != o[2] and '(r1)' not in target + ours:
+            pairs.add((int(o[2], 0), int(t[2], 0)))
+        t = re.fullmatch(r'addi r\d+, r(?!1\b)\d+, (0x[0-9a-f]+)', target)
+        o = re.fullmatch(r'addi r\d+, r(?!1\b)\d+, (0x[0-9a-f]+)', ours)
+        if t and o and t[1] != o[1]:
+            pairs.add((int(o[1], 0), int(t[1], 0)))
+    if not pairs:
+        return []
+    sizes = {'u8': 1, 's8': 1, 'char': 1, 'u16': 2, 's16': 2, 'short': 2,
+             'u32': 4, 's32': 4, 'int': 4, 'f32': 4, 'float': 4, 'f64': 8, 'double': 8}
+    from .sdkimport import masked
+    code = masked(body)
+    out = []
+    for sm in re.finditer(r'\bstruct\s*\w*\s*\{([^{}]*)\}', code):
+        fields, cursor, valid = [], 0, True
+        for part in re.finditer(r'([^;]+);', sm[1]):
+            field = re.fullmatch(r'\s*(?:const\s+|volatile\s+)*(\w+)\s*(\*)?\s+(\w+)\s*(?:\[\s*(0x[\da-fA-F]+|\d+)\s*\])?\s*;', part[0])
+            # Also accept the common `u8 *cur` declarator spelling.
+            if not field:
+                field = re.fullmatch(r'\s*(?:const\s+|volatile\s+)*(\w+)\s+(\*)?\s*(\w+)\s*(?:\[\s*(0x[\da-fA-F]+|\d+)\s*\])?\s*;', part[0])
+            if not field or (not field[2] and field[1] not in sizes):
+                valid = False
+                break
+            width = 4 if field[2] else sizes[field[1]]
+            cursor = (cursor + width - 1) // width * width
+            start = sm.start(1) + part.start()
+            fields.append((field, cursor, start, sm.start(1) + part.end()))
+            cursor += width * (int(field[4], 0) if field[4] else 1)
+        if not valid:
+            continue
+        edits = {}
+        for i, (field, offset, start, end) in enumerate(fields):
+            if not re.search(r'(?:\.|->)\s*' + re.escape(field[3]) + r'\b', code):
+                continue
+            for old, new in sorted(pairs):
+                if old != offset or new < 0:
+                    continue
+                delta = new - old
+                if i:
+                    pad, _, ps, pe = fields[i - 1]
+                    if (pad[1] == 'u8' and pad[4] and not pad[2]
+                            and not re.search(r'(?:\.|->)\s*' + re.escape(pad[3]) + r'\b', code)):
+                        length = int(pad[4], 0) + delta
+                        if length >= 0:
+                            a, b = ps + pad.start(4), ps + pad.end(4)
+                            edit = (a, b, f'0x{length:X}') if length else (ps, pe, '')
+                            edits.setdefault(edit[:2], set()).add(edit[2])
+                            out.append((f'recover member gap {field[3]} {old:#x}->{new:#x}',
+                                        body[:edit[0]] + edit[2] + body[edit[1]:]))
+                if delta > 0:
+                    text = f'\n    u8 fzgx_pad_before_{field[3]}[0x{delta:X}];'
+                    out.append((f'recover member gap before {field[3]} {old:#x}->{new:#x}',
+                                body[:start] + text + body[start:]))
+        combined = body
+        for (a, b), choices in sorted(edits.items(), reverse=True):
+            if len(choices) == 1:
+                combined = combined[:a] + next(iter(choices)) + combined[b:]
+        if combined != body:
+            out.insert(0, ('recover member gaps together', combined))
+    return list(dict.fromkeys(out))
 
 
 def interior_references(p, module, body, diffs):
@@ -606,6 +732,10 @@ def hardware_lvalues(body):
     for a,b,replacement in reversed(edits):
         text=text[:a]+replacement+text[b:]
     names=hardware_variables | {name for _,name in bases}
+    fifo_macros = {m[1] for m in re.finditer(r'^#define\s+(\w+)\([^\n]+GX_FIFO_BASE[^\n]*', text, re.M)}
+    fifo_inputs = {m[1] for macro in fifo_macros for m in re.finditer(r'\b'+re.escape(macro)+r'\((\w+)\)', text)}
+    text = re.sub(r'(?m)^extern volatile const (f32|f64) (\w+);$',
+                  lambda m: m[0] + (' /* Reload before each ordered FIFO write. */' if m[2] in fifo_inputs else ''), text)
     text='\n'.join(line+' /* Hardware access must remain ordered. */'
                    if 'volatile' in line and not any(c in line for c in ('//','/*'))
                    and any(re.search(r'\b'+re.escape(name)+r'\b',line) for name in names)
@@ -623,15 +753,16 @@ def candidates(p: Project, symbol: str, body: str, base: oracle.CheckResult):
     diffs = [(stuck._fmt(a), stuck._fmt(b)) for a, b in zip(lrows, rrows) if (a.get("diff_kind") or "DIFF_NONE") != "DIFF_NONE"]
     span = _function_span(body, sym.name)
     candidates: List[Tuple[str, str]] = store_values(body, sym.name, base)
-    candidates += stack_locals(body, sym.name, diffs)
+    candidates += stack_locals(body, sym.name, [(stuck._fmt(a), stuck._fmt(b)) for a,b in zip(lrows,rrows)])
     candidates += stack_field_origins(body, diffs)
+    candidates += member_layouts(body, diffs)
     candidates += interior_references(p, sym.module, body, diffs)
     candidates += hardware_lvalues(body)
     candidates += string_literals(p, sym.module, body, base)
     # These candidates are derived from retail bytes. Large functions can
     # exhaust the candidate budget on type permutations before reaching them.
     literals = float_literals(p, symbol, body, base)
-    candidates += literals[:3]
+    candidates += literals
     candidates += optimizer_pragmas(body, sym.name)
     if span and _wants_type_flip(counts, diffs):
         sites = _decl_sites(body, span)

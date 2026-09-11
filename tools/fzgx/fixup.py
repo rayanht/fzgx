@@ -9,6 +9,7 @@ from collections import defaultdict
 import gzip
 import hashlib
 import json
+import re
 from pathlib import Path
 import shlex
 import time
@@ -161,7 +162,15 @@ class Engine:
             families.append(evidence.candidates(self.project, row['symbol'], body, check))
             # Concrete stores/frame fixes precede generic declaration and flag
             # probes. They used to be buried beyond a session's candidate cap.
-            yield from [c for c in families[0] if c[0].startswith(('retail store-value', 'pack stack', 'imm ', 'swap fields', 'recover aggregate', 'interior ', 'bind hardware'))]
+            yield from [c for c in families[0] if c[0].startswith(('retail store-value', 'pack stack', 'imm ', 'swap fields', 'recover aggregate', 'recover member', 'interior ', 'bind hardware'))]
+            # Layout/type repairs can increase register differences while fixing
+            # the actual memory access or extension. Probe their optimizer
+            # interactions before the word-score frontier discards them.
+            has_extensions = evidence._kinds(check).get('ins:ext')
+            for label, text in families[0]:
+                if label.startswith('recover member') or (has_extensions and ':' in label and '->' in label and ' at ' not in label):
+                    for policy, combined in evidence.optimizer_pragmas(text, name):
+                        yield label + ' with ' + policy, combined
             if check.operand_order:
                 commuted=source.commutations(body,name)
                 commuted.sort(key=lambda c:not c[0].startswith('coupled scalar operands'))
@@ -193,6 +202,15 @@ class Engine:
         families.extend([source.missing_values(body,name), source.expression_trees(body,name),
                          source.commutations(body,name), source.probes(body,name,64),
                          [(family+': '+label,text) for family,label,text in source.all_rewrites(body,name)]])
+        # Inlined helpers contribute instructions and stack lifetimes to this
+        # function. Restricting rewrites to the outer body leaves those regions
+        # unreachable even though the same existing generators can repair them.
+        for helper in re.findall(r'\bstatic\s+inline\s+[\w *]+?\b(\w+)\s*\([^;{}]*\)\s*\{', body):
+            if helper == name:
+                continue
+            variants = source.commutations(body,helper) + source.probes(body,helper,64)
+            variants += [(family+': '+label,text) for family,label,text in source.all_rewrites(body,helper)]
+            families.insert(0, [('inline '+helper+': '+label,text) for label,text in variants])
         # Round-robin preserves access to each family within the shared budget.
         for i in range(max(map(len,families),default=0)):
             for family in families:

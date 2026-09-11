@@ -1,5 +1,5 @@
 {
- "generated": 1789113569,
+ "generated": 1789137229,
  "functions": [
   {
    "symbol": "car_colchg:_prolog",
@@ -5494,20 +5494,20 @@
   {
    "symbol": "fn_3_2A2F8",
    "module": "customize",
-   "unit": null,
+   "unit": "rel/customize/toolkit/fn_3_2A2F8.c",
    "addr": 172792,
    "size": 2044,
-   "status": "unmatched",
-   "attempts": 1,
+   "status": "matched",
+   "attempts": 2,
    "best_percent": 93.85,
    "claimed_by": null,
    "claimed_at": null,
    "claim_ttl": null,
-   "matched_commit": null,
+   "matched_commit": "c62e25a",
    "blocked_issue": null,
    "blocked_reason": null,
    "prev_status": null,
-   "link_state": null
+   "link_state": "verified"
   },
   {
    "symbol": "fn_3_2AAF4",
@@ -74740,20 +74740,20 @@
   {
    "symbol": "fn_1_9EDE8",
    "module": "main_rel",
-   "unit": null,
+   "unit": "rel/main_rel/background/fn_1_9EDE8.c",
    "addr": 650728,
    "size": 892,
-   "status": "unmatched",
-   "attempts": 1,
+   "status": "matched",
+   "attempts": 2,
    "best_percent": 99.753365,
    "claimed_by": null,
    "claimed_at": null,
    "claim_ttl": null,
-   "matched_commit": null,
+   "matched_commit": "c62e25a",
    "blocked_issue": null,
    "blocked_reason": null,
    "prev_status": null,
-   "link_state": null
+   "link_state": "verified"
   },
   {
    "symbol": "fn_1_9F164",
@@ -458989,6 +458989,44 @@
    "cost_usd": 0.0,
    "outcome": "matched",
    "notes": "revalidate interior data lbl_801A6980 -> lbl_801A697C+4",
+   "best_body_path": null,
+   "stale_checks": 0,
+   "best_in_attempt": 0.0
+  },
+  {
+   "id": 17235,
+   "symbol": "fn_3_2A2F8",
+   "agent": "deterministic-fixup",
+   "harness": "fixup",
+   "model": null,
+   "started": 1789136943,
+   "ended": 1789136943,
+   "checks": 0,
+   "final_percent": null,
+   "tokens_in": 0,
+   "tokens_out": 0,
+   "cost_usd": 0.0,
+   "outcome": "matched",
+   "notes": "operand + at 2061",
+   "best_body_path": null,
+   "stale_checks": 0,
+   "best_in_attempt": 0.0
+  },
+  {
+   "id": 17236,
+   "symbol": "fn_1_9EDE8",
+   "agent": "deterministic-fixup",
+   "harness": "fixup",
+   "model": null,
+   "started": 1789136944,
+   "ended": 1789136944,
+   "checks": 0,
+   "final_percent": null,
+   "tokens_in": 0,
+   "tokens_out": 0,
+   "cost_usd": 0.0,
+   "outcome": "matched",
+   "notes": "bind hardware lvalues",
    "best_body_path": null,
    "stale_checks": 0,
    "best_in_attempt": 0.0

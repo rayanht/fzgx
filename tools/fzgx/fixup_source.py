@@ -329,15 +329,27 @@ def perturbations(body: str, name: str) -> List[Tuple[str, str, str]]:
     for m in re.finditer(r"^(\s*)((?:[A-Za-z_][\w>.\-\[\]]* = )?)([A-Za-z_]\w*)\(([^;]*)\);\n", body[span[1]:span[2]], re.M):
         indent, lhs, callee, args = m.groups()
         parts = [a.strip() for a in re.split(r",(?![^()]*\))", args)] if args.strip() else []
+        prototype = re.search(r'\b'+re.escape(callee)+r'\s*\(([^;{}]*)\)\s*;', body[:span[0]])
+        parameter_types = []
+        if prototype:
+            for parameter in prototype[1].split(','):
+                parameter = parameter.strip()
+                typed = re.fullmatch('('+TYPE+r')(?:\s+\w+)?', parameter)
+                parameter_types.append(typed[1] if typed else None)
         for k, a in enumerate(parts):
-            if re.fullmatch(r"[A-Za-z_]\w*|-?\d+|0x[0-9A-Fa-f]+|&[A-Za-z_]\w*|\d+\.\d*f?", a):
+            known_type = parameter_types[k] if k < len(parameter_types) else None
+            if not known_type and re.fullmatch(r"[A-Za-z_]\w*|-?\d+|0x[0-9A-Fa-f]+|&[A-Za-z_]\w*|\d+\.\d*f?", a):
                 continue
             tname = f"lab_t{k}"
+            while re.search(r'\b'+tname+r'\b',body):
+                tname += '_'
             newparts = list(parts); newparts[k] = tname
             stmt = f"{indent}u32 {tname};\n" if False else ""
             text = body[:span[1] + m.start()] + f"{indent}{tname} = {a};\n{indent}{lhs}{callee}({', '.join(newparts)});\n" + body[span[1] + m.end():]
-            # declare the temp with the locals (type guessed from the expression: float if it has a float field or literal)
-            ty = "f32" if re.search(r"\d\.\d|f32|unk_\w*f\b", a) else "u32"
+            # The call's conversion belongs in the temporary too. In particular,
+            # pointer arguments are not integers and narrow counts truncate here.
+            cast = re.match(r'\(('+TYPE+r')\)',a)
+            ty = known_type or (cast[1] if cast else None) or ("f32" if re.search(r"\d\.\d|f32|unk_\w*f\b", a) else "u32")
             ins_at = locs[-1][1] if locs else span[1] + 1
             text = text[:ins_at] + f"    {ty} {tname};\n" + text[ins_at:]
             out.append(("hoist-arg", f"hoist arg {k} of {callee}", text))
