@@ -5747,3 +5747,6 @@ rel/main_rel/stcoli/fn_1_2A318.c:
 
 rel/main_rel/sel_static_disp/fn_1_14A1AC.c:
 	.text       start:0x0014A1AC end:0x0014A278 align:4
+
+rel/main_rel/sel_static_disp/fn_1_133A8C.c:
+	.text       start:0x00133A8C end:0x00133BD8 align:4

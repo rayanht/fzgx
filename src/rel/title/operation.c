@@ -460,6 +460,44 @@ void fn_8_9B40(void) {
 }
 /* fzgx:end fn_8_9B40 */
 
+/* fzgx:begin fn_8_BAEC noprologue */
+#include "types.h"
+
+struct fn_8_BAEC_lbl_8_bss_2A8 {
+    u8 pad_0[0x9C];
+    s16 unk_9C;
+    u8 pad_9E[0x86];
+    s32 unk_124;
+    s32 unk_128;
+};
+
+extern const f64 lbl_8_rodata_188;
+extern f32 lbl_8_rodata_198;
+extern u32 lbl_801A66A0;
+extern struct fn_8_BAEC_lbl_8_bss_2A8 lbl_8_bss_2A8;
+extern u32 fn_1_5370(s8, u32);
+extern void fn_80008BEC(void *, int, u32);
+extern void fn_8006CE1C(f32);
+
+void fn_8_BAEC(void) {
+    struct fn_8_BAEC_lbl_8_bss_2A8 *base;
+    f32 v;
+    u32 t;
+
+    base = (struct fn_8_BAEC_lbl_8_bss_2A8 *)&lbl_8_bss_2A8;
+    if (base->unk_124 == base->unk_128 / 2) {
+        fn_80008BEC((u8 *)base + 0x24, 0, 60);
+        fn_80008BEC((u8 *)base + 0x60, 0, 60);
+        fn_80008BEC((u8 *)base + 0x9C, 0, 60);
+        fn_80008BEC((u8 *)base + 0xD8, 0, 60);
+        fn_1_5370(1, 0);
+    }
+
+    base->unk_9C = lbl_801A66A0 * 512;
+    fn_8006CE1C(lbl_8_rodata_198 - (f32)__fabs((f64)(f32)(base->unk_128 / 2 - base->unk_124)) / (f32)(base->unk_128 / 2));
+}
+/* fzgx:end fn_8_BAEC */
+
 /* fzgx:begin fn_8_BC04 noprologue */
 #include "types.h"
 

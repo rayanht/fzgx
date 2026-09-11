@@ -191,3 +191,6 @@ rel/title/title/fn_8_1FB0.c:
 
 rel/title/operation/fn_8_6A70.c:
 	.text       start:0x00006A70 end:0x00006C50 align:4
+
+rel/title/operation/fn_8_BAEC.c:
+	.text       start:0x0000BAEC end:0x0000BC04 align:4
