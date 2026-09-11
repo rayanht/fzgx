@@ -2551,6 +2551,30 @@ void fn_1_C17CC(void) {
 }
 /* fzgx:end fn_1_C17CC */
 
+/* fzgx:begin fn_1_C23CC */
+extern void fn_80008BA8(void *arg0, void *arg1, u32 arg2);
+
+void fn_1_C23CC(void *base0, u32 stride0, u32 arg2, void *base1,
+                u32 stride1, u32 count_add, u32 offset, u32 count) {
+    s32 i;
+    u32 size;
+    u32 end;
+    u32 p;
+
+    i = count >> 2;
+    size = (stride1 & 0x7FFFFFF) << 3;
+    end = count + count_add;
+    p = count;
+    while (p < end) {
+        fn_80008BA8((u8 *)base0 + (((offset + i * stride0) & 0x7FFFFFF) << 3),
+                    (u8 *)base1 + (((i * stride1) & 0x7FFFFFF) << 3),
+                    size);
+        i++;
+        p += 4;
+    }
+}
+/* fzgx:end fn_1_C23CC */
+
 /* fzgx:begin fn_1_C2454 */
 extern void fn_1_C36EC(void);
 

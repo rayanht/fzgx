@@ -2313,6 +2313,36 @@ void fn_10_1BCD0(void) {
 }
 /* fzgx:end fn_10_1BCD0 */
 
+/* fzgx:begin fn_10_1E398 */
+#include "font.h"
+
+struct fn_10_1E398_lbl_10_rodata_158 {
+    u8 pad_0[0x174];
+    f32 unk_174;
+    u8 pad_178[0x180];
+    f32 unk_2F8;
+    f32 unk_2FC;
+};
+
+extern int fn_1_4F734(FontDrawPacket *);
+extern struct fn_10_1E398_lbl_10_rodata_158 lbl_10_rodata_158;
+extern FontDrawPacket lbl_1_rodata_26F8;
+
+void fn_10_1E398(void) {
+    FontDrawPacket loc;
+    struct fn_10_1E398_lbl_10_rodata_158 *p;
+
+    p = (struct fn_10_1E398_lbl_10_rodata_158 *)(u32)&lbl_10_rodata_158;
+    loc = lbl_1_rodata_26F8;
+    loc.image = 0x10000 - 26089;
+    loc.x = p->unk_2F8;
+    loc.y = p->unk_2FC;
+    loc.z = p->unk_174;
+    loc.flags = 10;
+    fn_1_4F734(&loc);
+}
+/* fzgx:end fn_10_1E398 */
+
 /* fzgx:begin fn_10_1E67C */
 extern struct fn_10_1E67C_lbl_10_rodata_158 lbl_10_rodata_158;
 extern u32 fn_1_49410(u32);

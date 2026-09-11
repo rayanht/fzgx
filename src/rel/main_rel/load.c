@@ -559,6 +559,27 @@ u32 fn_1_471A0(void) {
 }
 /* fzgx:end fn_1_471A0 */
 
+/* fzgx:begin fn_1_47268 noprologue */
+#include "types.h"
+
+extern u32 lbl_1_bss_384D8[];
+
+u32 fn_1_47268(void) {
+    u32 *p;
+    u32 i;
+    u32 total;
+
+    total = 0;
+    p = lbl_1_bss_384D8;
+    for (i = 0; i < 0x400; i++, p += 4) {
+        if ((p[0] & 0x10000000) != 0) {
+            total += p[3];
+        }
+    }
+    return total;
+}
+/* fzgx:end fn_1_47268 */
+
 /* fzgx:begin fn_1_479B0 */
 // Reset the loading state and clear the associated resource markers.
 void fn_1_479B0(void) {

@@ -5906,3 +5906,18 @@ rel/main_rel/car/fn_1_858A8.c:
 
 rel/main_rel/stcoli/fn_1_2C768.c:
 	.text       start:0x0002C768 end:0x0002C7C4 align:4
+
+rel/main_rel/memcard/fn_1_C23CC.c:
+	.text       start:0x000C23CC end:0x000C2454 align:4
+
+rel/main_rel/light/fn_1_7BCCC.c:
+	.text       start:0x0007BCCC end:0x0007BD6C align:4
+
+rel/main_rel/load/fn_1_47268.c:
+	.text       start:0x00047268 end:0x00047330 align:4
+
+rel/main_rel/spline/fn_1_F809C.c:
+	.text       start:0x000F809C end:0x000F8158 align:4
+
+rel/main_rel/spline/fn_1_F8158.c:
+	.text       start:0x000F8158 end:0x000F8214 align:4

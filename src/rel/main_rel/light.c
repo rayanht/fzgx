@@ -14,6 +14,39 @@ extern const f32 lbl_1_rodata_33A8;
 extern void fn_1_495D8(int, int, f32);
 extern void fn_1_495FC(void);
 
+/* fzgx:begin fn_1_7BCCC */
+typedef struct {
+    u32 unk_0;
+    u32 unk_4;
+    u32 unk_8;
+} Triple_80074D28;
+
+typedef struct {
+    u8 pad_0[0x2];
+    u16 unk_2;
+    u8 pad_4[0x12];
+    u16 unk_16;
+    u8 pad_18[0x8];
+    u32 unk_20;
+} Fn17BCCCState;
+
+extern void OSPanic(const char *, int, const char *, ...);
+extern void fn_80074D28(Triple_80074D28 *);
+
+void fn_1_7BCCC(Triple_80074D28 *arg0) {
+    Fn17BCCCState *state;
+
+    state = (Fn17BCCCState *)&lbl_1_bss_6D7A8;
+    if (state->unk_16 >= state->unk_2) {
+        OSPanic((const char *)lbl_1_data_1EE44, 143, (const char *)lbl_1_data_1EE70);
+    }
+    *(Triple_80074D28 *)((u8 *)state->unk_20 + state->unk_16 * 12) = *arg0;
+    fn_80074D28(arg0);
+    state->unk_16++;
+    return;
+}
+/* fzgx:end fn_1_7BCCC */
+
 /* fzgx:begin fn_1_7BE94 */
 u16 fn_1_7BE94(void) {
     return lbl_1_bss_6D7C0[0] - 1;

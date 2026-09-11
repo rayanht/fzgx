@@ -678,6 +678,46 @@ void fn_1_F8048(void) {
 }
 /* fzgx:end fn_1_F8048 */
 
+/* fzgx:begin fn_1_F809C */
+s32 fn_1_F809C(s32 value) {
+    s16 index;
+    u64 mask;
+    s32 result;
+
+    index = value;
+    if (index > 63) {
+        index = value - 64;
+        mask = (u64)1 << index;
+        if (*(u64 *)&lbl_1_bss_7F0C0.unk_10 & mask) {
+            return 1;
+        }
+        result = 0;
+    } else {
+        mask = (u64)1 << index;
+        if (*(u64 *)&lbl_1_bss_7F0C0.unk_8 & mask) {
+            result = 1;
+        } else {
+            result = 0;
+        }
+    }
+    return result;
+}
+/* fzgx:end fn_1_F809C */
+
+/* fzgx:begin fn_1_F8158 */
+extern u64 __shl2i(u32 hi, u32 lo, s16 count);
+
+s32 fn_1_F8158(s32 value) {
+    u64 mask;
+    if ((s16)value > 63) {
+        mask = __shl2i(0, 1, (s16)(value - 64));
+        return (*(u64 *)&lbl_1_bss_7F0C0.unk_58 & mask) ? 1 : 0;
+    }
+    mask = __shl2i(0, 1, (s16)value);
+    return (*(u64 *)&lbl_1_bss_7F0C0.unk_50 & mask) ? 1 : 0;
+}
+/* fzgx:end fn_1_F8158 */
+
 /* fzgx:begin fn_1_F82E0 */
 void fn_1_F82E0(void) {
     s16 i;
