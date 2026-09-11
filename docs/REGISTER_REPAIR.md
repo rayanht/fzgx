@@ -366,3 +366,87 @@ The final 24-function and one-function link checks both used the fast path.
 `state/repairs/fixup_imports.json` retains all 25 original seeds and 51 successive
 source-repair steps, in addition to generated C, compiler settings and verification
 commits. No model sessions or standalone repair tools were added.
+
+
+## Whole-corpus near misses, 2026-09-11
+
+The post-batch audit selected 598 historical >95% candidates; 592 remained above
+95% after recompilation. This pass integrated **18 functions / 7,348 bytes**.
+All 18 passed the 16-target hash check without bisection or rejection (9.229 s).
+Tooling, headers, source and initial provenance landed together in `f7bf82d`.
+`state/repairs/fixup_imports.json` retains the original seeds, final C, compiler
+settings, source-repair chains and link results. Local detailed evidence is under
+`.fzgx/fixup/near95-*/` and `.fzgx/reports/near95-current/`.
+
+| Closing mechanism | Functions | Bytes |
+| --- | ---: | ---: |
+| Previously exact bodies: helper ownership and hardware declarations | 5 | 3,096 |
+| Interior object/entrypoint bindings | 3 | 1,152 |
+| Correct store values, then repair their code generation | 2 | 320 |
+| Preserve aggregate size while correcting its field origin | 1 | 244 |
+| Allocator capture and source-realizable carrier/declaration changes | 3 | 1,096 |
+| Coupled operand order and optimizer policy | 3 | 1,316 |
+| Existing block-declaration generator | 1 | 124 |
+
+The important machinery changes are shared by the CLI and session/lifter adapter:
+
+- Keep a proven value-correct candidate on the frontier even if its first word
+  score decreases. `fn_1_83CB0` dropped from 93.33% exact words to 80% after fixing
+  the swapped stores, then reached 100% with propagation disabled. The analogous
+  `fn_1_72318` correction dropped from 96% to 88%, then reached 100% with an
+  argument temporary. Both now use the shared hardware map instead of literal
+  pointer casts. Mixed instruction differences no longer suppress all value-flow
+  diagnostics; fused product operands commute in the diagnostic without moving
+  the addend.
+- Preserve coupled operand changes across optimizer policies. A commutation with
+  zero machine-code response cannot participate in the existing linear response
+  solver. Explicitly combining it with policy changes closed `fn_1_530C8` (four
+  additions), `fn_1_E594C` and `fn_15_5864`. The original 80-proposal probe closed
+  none; a targeted 155-combination probe found exact code for `fn_1_530C8`.
+- Generate and prove symbolic interior bindings. `OWNER__fzgx_offset_HEX` retains
+  the C declaration and uses the existing pool map to bind to `OWNER+offset`.
+  Validate module, section, owner bounds, relocation kind, operand agreement and
+  resolved retail target before acceptance. Only ELF relocation addends change;
+  code/data bytes are not rewritten. Negative probes with wrong offsets were
+  rejected on all three real functions. Symbol promotion updates the owning
+  names in saved mappings. All three bindings linked exactly.
+- Reject extra helper definitions in both DOL and REL objects. A public helper
+  can become a private inline definition; mixed inlined/out-of-line uses need
+  separate spellings with external calls bound to the already-owned function.
+  This repaired all three earlier link rejections, including the movie function
+  whose unused helper copy added 164 bytes. The session/lifter adapter no longer
+  bypasses ownership/lint checks when the supplied function oracle is already
+  exact; the real `fn_80010CB0` adapter probe repaired its duplicate helper.
+- Derive a selection-order witness first, then validate it through stock
+  simplify/color replay and source declaration order. Bound the small-stratum
+  permutation fallback to 720 orders. A witness alone is never accepted C.
+- Move false leading aggregate padding to the tail when retail stack stores
+  identify a shifted field origin; preserve object extent. `fn_14_A2A4` closed
+  by moving eight bytes, without changing its total frame size.
+
+Measured passes (some ran concurrently with the blanket compiler sweep; these
+are workload totals, not isolated speedup comparisons):
+
+| Pass | Functions | Compiles | Wall seconds | Outcome |
+| --- | ---: | ---: | ---: | --- |
+| Blanket first round | 598 | 49,264 | 802.94 | 212 word-score improvements; three usable exact candidates |
+| Captured allocator repair | 160 | 5,203 | 32.15 | Three exact, 13 improved; capture separately took 9.80 s |
+| Up to four differing rows | 175 | 12,225 | 92.42 | Nine exact, 38 improved |
+| Operand-order witnesses | 31 | 5,442 | 35.77 | Three exact, eight improved |
+| Value-correction bridges | 2 | 346 | 1.95 | Both exact code; one then needed the hardware-map rewrite |
+
+These pass outcomes overlap; only the 18 link-verified functions above are counted
+as closures. The blanket second round expanded to roughly 144,000 additional
+candidates and was interrupted. Its uncheckpointed work is excluded from the
+reported completed-pass results. The first-round checkpoint and improved bodies
+remain available to the saved-candidate collector.
+
+Remaining limits: `fn_80048340` still needs its larger stack layout recovered;
+packing scalar locals did not close it (that generator improved two other corpus
+functions). `fn_1_59B00` still has a shared conversion-pool layout mismatch.
+Recovery now considers equal-valued literals at different offsets, but generated
+shared-field references did not reproduce its implicit conversion-bias addressing.
+An explicit union-conversion experiment also regressed and was removed. Scalar
+array spellings for interior references changed code generation and were replaced
+by the proven relocation-binding path. Register allocation is not universally
+solved, and the remaining high similarity scores must not be reported as closure.

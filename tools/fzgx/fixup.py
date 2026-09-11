@@ -318,8 +318,8 @@ def try_fix(p, symbol, body, budget_s=30.0, max_candidates=80, base=None):
     start=time.monotonic()
     if base and not base.ok:
         return dict(matched=False,body=None,tried=0,best=0,secs=0,error=base.error)
-    if base and (base.matched or base.matched_pool):
-        return dict(matched=True,body=body,tried=0,best=100,secs=0)
+    # Function equality alone does not prove that the unit is integrable:
+    # exact inputs still need helper-definition, data-ownership and lint checks.
     sym=p.resolve(symbol)
     engine=Engine(p,STATE_DIR/'fixup'/'sessions'/p.key(sym).replace(':','__'))
     mw=base.mw_version if base else None;flags=base.extra_cflags if base else None

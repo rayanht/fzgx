@@ -1150,7 +1150,7 @@ def declaration_candidates(body, name, captures, constraints, max_orders=50000):
         before=capture['before']; cls=before['register_class']
         desired={n['virtual_register']:n['physical_register'] for n in capture['after']['nodes']
                  if n['virtual_register'] in before['simplify_order']}
-        desired.update(constraints['desired'][cls])
+        desired.update({r:color for r,color in constraints['desired'][cls].items() if r in desired})
         if any(not 0<=color<32 for color in desired.values()):
             continue
         witness=mwgraph.selection_order(before,desired)
@@ -1196,7 +1196,7 @@ def declaration_candidates(body, name, captures, constraints, max_orders=50000):
         if candidates:
             break
     return candidates, {'status': 'predicted' if candidates else 'no-predicted-declaration-repair',
-                        'orders': checked, 'exhaustive': checked == math.factorial(len(movable)),
+                        'orders': checked, 'exhaustive': checked >= len(witnesses) + math.factorial(len(movable)),
                         'best_conflicts': best}
 
 

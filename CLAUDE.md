@@ -367,6 +367,20 @@ Rules that hold for everyone:
   submit.lock then the build lock; after a failed incremental build it establishes a
   known-good baseline before bisection. Never wrap verify in another submit.lock.
 
+- Near-miss fixup must preserve a proven store-value correction in its search
+  frontier even when register differences initially lower its word score. Value-flow
+  diagnostics invalidate unsupported regions locally; mixed diffs must not disable
+  them for the entire function. Operand swaps that compile identically can become
+  effective under a different optimizer policy, so probe those combinations explicitly.
+  Extra helper definitions block integration in both DOL and REL units. Separate
+  inlined uses from calls to an already-owned helper when both appear in retail.
+  Interior references use generated `OWNER__fzgx_offset_HEX` declarations and the
+  existing pool-binding path: prove module, section, owner bounds, relocation type
+  and resolved target, then adjust only relocation addends. Never patch instructions.
+  Fixed hardware literals belong in `include/dolphin/hw_regs.h`, not matcher C.
+  Repair provenance must be acyclic; rechecking an identical content-addressed
+  candidate must not create a parent reference to itself.
+
 ## Layout
 
 - `config/GFZE01/` — dtk config, per-module `symbols.txt`/`splits.txt`, `units.json` (generated units, read by `configure.py`).
