@@ -7,20 +7,43 @@ This module also runs in Apple's LLDB Python 3.9.
 from __future__ import annotations
 
 import struct
+import hashlib
 
 PROFILES = {
     'ccf4b465cec73b5aae9c5c5543dcf8cda8a62aba246f89e2e0b200d742f2e55c': {
         'compiler': 'GC/1.2.5n', 'codegen': 0x4351C0, 'select': 0x4CE2D0, 'graph': 0x587E3C,
         'counts': {'gpr': 0x58846E, 'fpr': 0x58846C}, 'count_width': 2,
         'class_global': None, 'register_offset': 12,
+        'pcode_blocks': 0x587C74, 'opcode_table': 0x5654B0,
+    },
+    '4e502c38465500d4fda8d966b268151a6c74c730508e3d9b7efd23d1a6083715': {
+        'compiler': 'GC/1.3', 'codegen': 0x433590, 'select': 0x506F50, 'graph': 0x5E67D0,
+        'counts': {'gpr': 0x5E6A8C, 'fpr': 0x5E6A88}, 'count_width': 4,
+        'class_global': 0x5E7317, 'register_offset': 16,
+        'pcode_blocks': 0x5E67B0, 'opcode_table': 0x5BDCF0,
     },
     '7cbae0a5bd81e07d7fa8975bbc4e969b5dea265cc29c5ee6bae0453a6e25f225': {
         'compiler': 'GC/1.3.2', 'codegen': 0x433310, 'select': 0x507A30, 'graph': 0x5E87D0,
         'counts': {'gpr': 0x5E8A8C, 'fpr': 0x5E8A88}, 'count_width': 4,
         'class_global': 0x5E931F, 'register_offset': 16,
+        'pcode_blocks': 0x5E87B0, 'opcode_table': 0x5BEE78,
     },
 }
+PROFILES['0443b5c02b1aa7b575b61e0e24c4d5ad6bed8fd54cc42de5a2204a5216001914'] = {
+    **PROFILES['ccf4b465cec73b5aae9c5c5543dcf8cda8a62aba246f89e2e0b200d742f2e55c'],
+    'compiler': 'GC/1.2.5',
+}
+
 INITIAL = {'gpr': (0, *range(3, 13)), 'fpr': tuple(range(14))}
+
+
+def header_fingerprint(root, version):
+    digest = hashlib.sha256()
+    for directory in (root / 'include', root / 'build' / version / 'include'):
+        for path in sorted(directory.rglob('*')):
+            if path.is_file():
+                digest.update(str(path.relative_to(root)).encode() + b'\0' + path.read_bytes())
+    return digest.hexdigest()
 
 
 def read_graph(read, profile, register_class, head=0):
@@ -170,3 +193,61 @@ def simplify(snapshot, ranks=None):
         if not changed:
             return None
     return removed[::-1]
+
+
+def read_pcode(read, profile):
+    """Capture instruction identities, virtual operands and source lines."""
+    modern = profile['register_offset'] == 16
+    block_global = profile['pcode_blocks']
+    table, stride = profile['opcode_table'], 18 if modern else 16
+    header_size, opcode_offset = (36, 32) if modern else (28, 20)
+    def u32(address):
+        return int.from_bytes(read(address, 4), 'little')
+    def string(address):
+        result = bytearray()
+        for i in range(1024):
+            byte = read(address + i, 1)
+            if byte == b'\0':
+                return result.decode('utf-8', errors='replace')
+            result.extend(byte)
+        raise ValueError('unterminated PCode string')
+    block, seen_blocks, rows, descriptors = u32(block_global), set(), [], {}
+    while block:
+        if block in seen_blocks or len(seen_blocks) > 100000:
+            raise ValueError('invalid PCode block list')
+        seen_blocks.add(block)
+        instruction, seen = u32(block + 20), set()
+        block_index = u32(block + 28)
+        while instruction:
+            if instruction in seen or len(seen) > 100000:
+                raise ValueError('invalid PCode instruction list')
+            seen.add(instruction)
+            header = read(instruction, header_size)
+            opcode = struct.unpack_from('<h', header, opcode_offset)[0]
+            count = struct.unpack_from('<h', header, header_size - 2)[0]
+            if not 0 <= opcode < 512 or not 0 <= count <= 4096:
+                raise ValueError(f'invalid PCode instruction: {opcode}, {count}')
+            if opcode not in descriptors:
+                descriptor = read(table + opcode * stride, stride)
+                descriptors[opcode] = (string(int.from_bytes(descriptor[:4], 'little')),
+                                       string(int.from_bytes(descriptor[4:8], 'little')))
+            operands = []
+            for i in range(count):
+                raw = read(instruction + header_size + i * 12, 12)
+                if modern:
+                    kind = {4: 'gpr', 3: 'fpr'}.get(raw[1]) if raw[0] == 0 else None
+                    reg = struct.unpack_from('<h', raw, 4)[0]
+                    flags = int.from_bytes(raw[2:4], 'little')
+                else:
+                    kind = {0: 'gpr', 1: 'fpr'}.get(raw[0])
+                    reg = struct.unpack_from('<h', raw, 2)[0]
+                    flags = raw[1]
+                operands.append({'class': kind, 'reg': reg if kind else None,
+                                 'flags': flags, 'raw': raw.hex()})
+            mnemonic, fmt = descriptors[opcode]
+            rows.append({'id': instruction, 'block': block_index, 'mnemonic': mnemonic.lower(),
+                         'format': fmt, 'line': struct.unpack_from('<i', header, 28)[0] if modern else None,
+                         'operands': operands})
+            instruction = int.from_bytes(header[:4], 'little')
+        block = u32(block)
+    return rows

@@ -164,3 +164,77 @@ Capture requires macOS's `xcrun lldb` and the repository's native Wibo with its
 loader symbols. Cached replay rejects changed source hashes, header hashes or
 compiler settings. The normal relocation-aware oracle and all 16 target hashes
 remain the acceptance authority. No model batch was resumed.
+
+
+## PCode-directed source repairs (2026-09-11)
+
+The next pass connects captured PCode operands and source lines to virtual value
+webs, aligns their emitted instructions with retail, and proposes C changes for
+the implicated locals. Commutative operand choices, conflicting constraints and
+unresolved rows remain explicit hypotheses. Declaration orders are evaluated in
+the captured allocator before compilation; bounded exhaustion is reported as
+such. One-field scalar carriers change MWCC's scalarization/temporary creation
+order while retaining the declared scalar type. Source-line provenance also
+finds locals hidden behind compiler-generated `@` temporaries. Generated C must
+still pass the stock compiler, relocation-aware oracle and all target hashes.
+
+This integrated **9 generated repairs / 2,944 bytes**. A target-binding correction
+also recovered **5 already-exact saved bodies / 868 bytes**: **14 functions and
+3,812 bytes total**, verified in commits `d684864`, `b1e4500`, and `44b5f02`.
+
+The auto-object index previously keyed functions globally by bare symbol name.
+Consequently, `title:_prolog` was compared against car_colchg's 664-byte entrypoint
+instead of title's 296-byte entrypoint. Index keys, normalized-object caches and
+caller/context lookups now retain module identity. The oracle rejects foreign
+frozen targets, including same-sized ambiguous targets with different bindings.
+One generated candidate was recovered for its actual owner, car_colchg; no
+foreign-target score is accepted as a match. The historical audit invalidated
+48 attempt records across 15 functions and re-scored 47 saved sources. Original
+scores are preserved in `state/repairs/target_binding_v4.json`; replacement
+attempts carry correct-module scores. The migration cutoff protects new attempts.
+
+Measured on 265 frozen near misses:
+
+| Pass | Compiler probes | Exact candidate functions | Improved functions, including exact |
+| --- | ---: | ---: | ---: |
+| Named scalar carriers | 228 | 5 | 21 |
+| Source-origin and initialized carriers | 545 | 9 | 34 |
+| Add generated block-copy temporaries | 1,073 | 9 | 40 |
+
+The final pass spent **12.605 s generating candidates and 3.085 s compiling**;
+cold grouped PCode capture took **11.860 s** separately. These are corpus totals,
+not per-function latency guarantees. The nine candidate functions include the
+misbound entrypoint subsequently recovered for its correct owner. Parameter-home
+rewrites added 32 probes with zero improvements and were removed. A further pass
+on the 31 nonexact improvements used 240 probes, improved five seeds, and closed
+zero additional functions. These results do not imply universal register repair.
+
+Live capture now supports hash-identified GC/1.2.5, GC/1.2.5n, GC/1.3 and GC/1.3.2.
+The remaining three GC/1.3 corpus functions also captured and replayed exactly;
+14 repair probes yielded no improvements. All captured objects stayed unchanged.
+There is no runtime dependency on donor sources or modified compiler binaries.
+
+```sh
+uv run tools/capture_mwgraph.py --corpus CORPUS --output CAPTURES --all-near
+uv run tools/repair_mwgraph.py --corpus CORPUS --captures CAPTURES --output REPAIRS --next-corpus IMPROVED
+uv run tools/repair_mwgraph.py --corpus CORPUS --output REPAIRS --saved --apply
+```
+
+Recapture after changing source, headers or compiler settings. Improved corpora
+preserve compiler settings and replace seeds only on a strictly improved word
+score; that score is not relocation-aware match acceptance. Integration rechecks
+current module targets and performs the complete link verification.
+
+The portable archive preserves all 14 seeds, generated hashes, the nine repairs'
+PCode/allocator captures and baseline/retail words, plus the best 31 nonexact
+improved seeds (including the five further improvements). Reproduce the accepted
+source transformations without scratch files or a compiler:
+
+```sh
+uv run tools/repair_mwgraph.py --archive state/repairs/mwgraph_repairs_20260911.json.gz
+```
+
+This reproduces all 14 source hashes; compilation and link acceptance are separate
+checks. `state/repairs/mwgraph_imports.json` records compiler settings, transforms,
+owning source and verification commits. No unit tests were added and no model
+batch was resumed.

@@ -405,16 +405,16 @@ class Project:
         return seen
 
     def function(self, name: str) -> Optional[Function]:
-        sym = self.find_symbol(name)
+        sym = self.resolve(name)
         if not sym or sym.kind != "function":
             return None
-        return self.function_asm(sym.module).get(name)
+        return self.function_asm(sym.module).get(sym.name)
 
     def callers(self, name: str, limit: int = 8) -> List[str]:
-        sym = self.find_symbol(name)
+        sym = self.resolve(name)
         if not sym:
             return []
-        out = [f.symbol.name for f in self.function_asm(sym.module).values() if name in f.refs]
+        out = [self.key(f.symbol) for f in self.function_asm(sym.module).values() if sym.name in f.refs]
         return out[:limit]
 
     # -------------------------------------------------------------------- units
@@ -464,7 +464,7 @@ class Project:
     # ------------------------------------------------------------ retail objects
     def target_object_for(self, sym: Symbol) -> Optional[Path]:
         """The retail split object (dtk output) that defines this function: its own unit's
-        object if carved, else the auto unit's. Indexed by symbol name across build/<v>/obj."""
+        object if carved, else the auto unit's. Module identity is part of every key."""
         if not hasattr(self, "_obj_index"):
             from .poolfix import Elf  # scoped: avoids the project<->poolfix import cycle at load
             cache = STATE_DIR / f"obj_index_{self.version}.json"
@@ -488,7 +488,7 @@ class Project:
                 pass
             objs = sorted(o for o in (ROOT / rel for rel in listed) if o.exists() and "/obj/auto_" in str(o))
             st = cfg.stat() if cfg.exists() else None
-            stamp = f"v3:{st.st_mtime_ns}:{st.st_size}:{len(objs)}" if st else "0"
+            stamp = f"v4:{st.st_mtime_ns}:{st.st_size}:{len(objs)}" if st else "0"
             idx: Dict[str, str] = {}
             suffixed: Dict[str, str] = {}  # plain name -> dtk's address-suffixed local name in the object
             if cache.exists():
@@ -500,6 +500,10 @@ class Project:
                     idx = {}
             if not idx:
                 for o in objs:
+                    relative = o.relative_to(self.build_dir)
+                    module = 'main' if relative.parts[0] == 'obj' else relative.parts[0]
+                    if module not in self.modules:
+                        continue
                     try:
                         elf = Elf(o.read_bytes())
                     except (ValueError, IndexError, struct.error):
@@ -509,19 +513,22 @@ class Project:
                     exec_idx = {sec["index"] for sec in elf.sections if sec["flags"] & 4}
                     for e in elf.symbols():
                         if (e["info"] & 0xF) == 2 and e["shndx"] in exec_idx:
-                            idx.setdefault(e["name"], str(o.relative_to(ROOT)))
+                            key = f'{module}:{e["name"]}'
+                            idx.setdefault(key, str(o.relative_to(ROOT)))
                             m = re.fullmatch(r"(.+)_[0-9A-F]{8}", e["name"])
-                            if m and m.group(1) not in idx:
-                                idx[m.group(1)] = str(o.relative_to(ROOT))
-                                suffixed[m.group(1)] = e["name"]
+                            if m and f"{module}:{m.group(1)}" not in idx:
+                                key = f"{module}:{m.group(1)}"
+                                idx[key] = str(o.relative_to(ROOT))
+                                suffixed[key] = e["name"]
                 cache.parent.mkdir(parents=True, exist_ok=True)
                 cache.write_text(json.dumps({"stamp": stamp, "index": idx, "suffixed": suffixed}))
             self._obj_index = idx
             self._obj_suffixed = suffixed
-        rel = self._obj_index.get(sym.name)
+        key = f"{sym.module}:{sym.name}"
+        rel = self._obj_index.get(key)
         if rel:
-            if sym.name in self._obj_suffixed:
-                return self._plain_named_copy(ROOT / rel, self._obj_suffixed[sym.name], sym.name)
+            if key in self._obj_suffixed:
+                return self._plain_named_copy(ROOT / rel, self._obj_suffixed[key], sym.name)
             return ROOT / rel
         # carved: dtk writes the retail object of the unit itself under <module build dir>/obj
         unit_src = self.unit_of(sym)
@@ -535,7 +542,8 @@ class Project:
         """A copy of a retail object with dtk's address-suffixed local function name shortened
         to the symbols.txt name in place (same string length, NUL-padded), so objdiff sees the
         same symbol on both sides. Cached by the object's mtime."""
-        out = STATE_DIR / "objfix" / f"{obj.stem}.{plain}.o"
+        module = obj.relative_to(self.build_dir).parts[0]
+        out = STATE_DIR / "objfix" / module / f"{obj.stem}.{plain}.o"
         if out.exists() and out.stat().st_mtime >= obj.stat().st_mtime:
             return out
         data = bytearray(obj.read_bytes())

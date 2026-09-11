@@ -126,7 +126,7 @@ def verify(p: Project, message: Optional[str] = None) -> Dict[str, object]:
             files = sorted(set(files))
             subprocess.run(["git", "add", '--', *files], cwd=ROOT, capture_output=True, check=True)
             msg = message or f"match: {len(good)} functions link-verified"
-            names = ", ".join(p.resolve(k).name for k in good[:8]) + (" ..." if len(good) > 8 else "")
+            names = ", ".join(p.key(p.resolve(k)) for k in good[:8]) + (" ..." if len(good) > 8 else "")
             changed = subprocess.run(['git', 'diff', '--cached', '--quiet', '--', *files], cwd=ROOT).returncode
             if changed:
                 subprocess.run(["git", "commit", '--only', "-q", "-m", msg + (f" ({names})" if names else ''), '--', *files],

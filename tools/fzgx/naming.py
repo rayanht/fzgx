@@ -112,7 +112,7 @@ def bundle(p: Project, module: str, tu: str, only_matched: bool = True) -> str:
             continue
         n += 1
         fn = idx.get(f.name)
-        callers = [c for c in p.callers(f.name, 6)]
+        callers = [c for c in p.callers(p.key(f), 6)]
         callees = [r for r in (fn.refs if fn else []) if r.startswith("fn_") or (p.find_symbol(r, module) and p.find_symbol(r, module).kind == "function")]
         tables = table_refs.get(f.name, [])
         tbl = ""

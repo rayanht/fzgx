@@ -70,6 +70,10 @@ Register-field similarity is not proof of an allocation problem: inspect value-f
 and operand-order diagnostics first. `tools/capture_mwgraph.py` captures/replays
 the stock allocator; selection-order witnesses require a source-realizability
 check and a stock-compiler oracle result before integration.
+`tools/repair_mwgraph.py` projects captured PCode constraints into generated C;
+recapture after changing source, headers or compiler settings. Target-object
+indexes and normalized-object caches must retain module identity, including REL
+entrypoints. Reject stale frozen targets before accepting their scores.
 Picks remaining work with `fzgx --json inventory --status unmatched --max-size N`
 (smallest first), runs 48 Luna workers via the headless orchestrator, then librarian,
 then triage; writes `docs/batches/<date>.md` from `fzgx report` and commits

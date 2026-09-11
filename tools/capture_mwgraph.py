@@ -43,6 +43,7 @@ def main():
     mode.add_argument('--archive', type=Path, help='validate saved real allocator graphs without MWCC or LLDB')
     parser.add_argument('--output', type=Path)
     parser.add_argument('--symbols', nargs='+')
+    parser.add_argument('--all-near', action='store_true', help='include every saved near miss with a supported compiler')
     parser.add_argument('--replay', action='store_true', help='read existing captures without running MWCC')
     args = parser.parse_args()
     if args.archive:
@@ -58,16 +59,11 @@ def main():
     results = json.loads((args.corpus / 'results.json').read_text())
     jobs = []
     compiler_hashes = {}
-    headers = hashlib.sha256()
-    for directory in (root / 'include', root / 'build' / project.version / 'include'):
-        for path in sorted(directory.rglob('*')):
-            if path.is_file():
-                headers.update(str(path.relative_to(root)).encode() + b'\0' + path.read_bytes())
-    headers_sha256 = headers.hexdigest()
+    headers_sha256 = mwgraph.header_fingerprint(root, project.version)
     for symbol, record in inputs.items():
         if args.symbols and symbol not in args.symbols:
             continue
-        if results[symbol]['baseline']['pure'] != 'regalloc':
+        if not args.all_near and results[symbol]['baseline']['pure'] != 'regalloc':
             continue
         source = Path(record['source']).resolve()
         if hashlib.sha256(source.read_bytes()).hexdigest() != record['sha256']:
@@ -78,6 +74,9 @@ def main():
         if compiler not in compiler_hashes:
             compiler_hashes[compiler] = hashlib.sha256(compiler.read_bytes()).hexdigest()
         if compiler_hashes[compiler] not in mwgraph.PROFILES:
+            if args.all_near:
+                print(json.dumps({'symbol': symbol, 'skipped': 'unsupported compiler', 'compiler': mw}))
+                continue
             raise ValueError(f'{symbol}: unsupported compiler {record["mw"]}')
         stem = symbol.replace(':', '__')
         obj = output / (stem + '.o')

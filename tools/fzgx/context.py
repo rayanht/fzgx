@@ -267,7 +267,7 @@ def build_context(project: Project, ledger: Optional[Ledger], symbol: str,
         f2 = asm_index.get(u["symbols"][0])
         return len(my_refs & set(f2.refs)) if f2 else 0
     by_overlap = sorted((u for u in matched_units if overlap(u) >= 2), key=lambda u: -overlap(u))[:2]
-    by_addr = sorted(matched_units, key=lambda u: abs((project.find_symbol(u["symbols"][0]) or sym).addr - sym.addr))
+    by_addr = sorted(matched_units, key=lambda u: abs((project.find_symbol(u["symbols"][0], module) or sym).addr - sym.addr))
     chosen, seen_src = [], set()
     for u in by_overlap + by_addr:
         if u["source"] not in seen_src and len(chosen) < 3:

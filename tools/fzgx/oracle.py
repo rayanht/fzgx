@@ -263,6 +263,19 @@ def check(project: Project, symbol: str, max_diff_lines: int = 80, source: Optio
 def _diff(project: Project, module: str, symbol: str, unit: str, max_diff_lines: int,
           target: Optional[Path] = None, base: Optional[Path] = None) -> CheckResult:
     if target is not None:
+        expected = project.find_symbol(symbol, module)
+        target_words = words(target, symbol)
+        if expected and (target_words is None or len(target_words) * 4 != expected.size):
+            actual_size = len(target_words) * 4 if target_words is not None else None
+            return CheckResult(False, symbol, unit, error=(
+                f"retail target identity mismatch for {module}:{symbol}: expected {expected.size} bytes, "
+                f"found {actual_size}; regenerate stale target objects"))
+        if expected and symbol in project.ambiguous_names():
+            canonical = project.target_object_for(expected)
+            if canonical is None or (target.resolve() != canonical.resolve() and
+                    not function_score(project, symbol, canonical, target)[0]):
+                return CheckResult(False, symbol, unit, error=(
+                    f"retail target does not match its module binding: {module}:{symbol}"))
         cp = run([str(OBJDIFF), "diff", "-1", str(target), "-2", str(base), "-o", "-", "--format", "json", symbol])
     else:
         cp = run([str(OBJDIFF), "diff", "-p", str(ROOT), "-u", unit, "-o", "-", "--format", "json"])

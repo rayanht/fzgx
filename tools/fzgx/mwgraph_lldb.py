@@ -9,7 +9,7 @@ from pathlib import Path
 import lldb
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from fzgx.mwgraph import PROFILES, read_graph
+from fzgx.mwgraph import PROFILES, read_graph, read_pcode
 
 _state = {}
 
@@ -50,7 +50,8 @@ def select(frame, location, internal):
             cls = {0: 'gpr', 1: 'fpr'}[number(stack + 4)]
             head = number(stack + 8)
         index = len(_state['captures'])
-        _state['captures'].append({'before': read_graph(memory, profile, cls, head)})
+        _state['captures'].append({'before': read_graph(memory, profile, cls, head),
+                                   'pcode': read_pcode(memory, profile)})
         bp = _state['target'].BreakpointCreateByAddress(number(stack))
         bp.SetScriptCallbackFunction('mwgraph_lldb.after')
         _state['pending'][bp.GetID()] = index, cls
@@ -137,7 +138,8 @@ def run(debugger, config_path):
             if failure or not captures:
                 report = {'symbol': job['symbol'], 'error': failure or 'no allocator capture for function'}
             else:
-                report = {'symbol': job['symbol'], 'compiler_sha256': digest, 'captures': captures}
+                report = {'symbol': job['symbol'], 'compiler_sha256': digest, 'source_sha256': job['source_sha256'],
+                          'headers_sha256': job['headers_sha256'], 'captures': captures}
             Path(job['capture']).write_text(json.dumps(report))
             reports.append({k: v for k, v in report.items() if k != 'captures'})
             print(json.dumps(reports[-1]), flush=True)
