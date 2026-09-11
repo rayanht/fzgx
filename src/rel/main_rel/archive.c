@@ -862,6 +862,113 @@ u8 fn_1_12E424(void *arg0, u8 *arg1) {
 }
 /* fzgx:end fn_1_12E424 */
 
+/* fzgx:begin fn_1_12ECA8 */
+extern void fn_1_934CC(void *arg0, void *arg1, void *arg2);
+extern u8 lbl_1_bss_8B5CC[32];
+extern void fn_1_12E424(void);
+extern void fn_1_12E468(void);
+
+typedef struct {
+    u8 pad0[5];
+    u8 id;
+    u8 pad6[0x819a];
+    u8 value;
+    u8 pad_a1[0x1f];
+} FnEntry;
+
+extern FnEntry *fn_1_12F118(void);
+extern FnEntry *fn_1_36AD0(void);
+
+#pragma opt_common_subs off
+static inline s16 fn_1_12ECA8_lookup(s16 arg) {
+    FnEntry *table;
+    s16 i;
+
+    if (arg < 0x29) {
+        return arg;
+    }
+
+    table = fn_1_12F118();
+    if (table == 0) {
+        return 6;
+    }
+
+    if (table != fn_1_36AD0()) {
+        for (i = 0; i < 9; i++) {
+            if (table[i].id == arg) {
+                return table[i].value;
+            }
+        }
+    } else if (arg >= 0x32 && arg <= 0x35) {
+        return table[arg - 0x32].value;
+    } else if (arg >= 0x36 && arg <= 0x39) {
+        return table[arg - 0x36].value;
+    } else {
+        for (i = 0; i < 4; i++) {
+            if (table[i].id == arg) {
+                return table[i].value;
+            }
+        }
+    }
+
+    return 6;
+}
+#pragma opt_common_subs reset
+
+
+static inline s16 fn_1_12ECA8_map(s16 arg) {
+    switch (fn_1_12ECA8_lookup(arg)) {
+    case 0x15:
+        return 1;
+    case 0x21:
+        return 2;
+    }
+
+    return 0;
+}
+
+#pragma opt_common_subs on
+void fn_1_12ECA8(s16 arg0, s16 arg1, void *arg2, void *arg3, void *arg4) {
+    struct { void * value; } scan;
+    s16 index;
+    void *table;
+    s16 count;
+    void *p;
+    s32 tmp_ra1;
+
+    table = &lbl_1_data_40BB8;
+
+    tmp_ra1 = lbl_1_bss_8B3A0.unk_94;
+
+    if ((tmp_ra1 & 0x80000000) == 0) {
+        fn_1_934CC(arg2, (u8 *)arg2 + 0x148, table);
+        index = arg1;
+        p = *(void **)((u8 *)arg2 + 0x150);
+        *(u16 *)((u8 *)p + 0x40) |= 1;
+        count = 0;
+        { void * __reg_value_scan = arg3; scan.value = __reg_value_scan; }
+        while (count < fn_1_12ECA8_map(index)) {
+            fn_1_934CC(scan.value, (u8 *)scan.value + 0x148, table);
+            p = *(void **)((u8 *)scan.value + 0x150);
+            { void * __reg_value_scan = ((0x4e0) + ((u8 *)scan.value)); scan.value = __reg_value_scan; }
+            count++;
+            *(u16 *)((u8 *)p + 0x40) |= 1;
+        }
+    }
+
+    p = (u8 *)lbl_1_bss_8B5CC + ((s32)(s16)arg0 << 3);
+    *(void **)p = arg2;
+    *(void **)((u8 *)p + 4) = arg3;
+    *(void **)((u8 *)arg4 + 0xc) = (void *)fn_1_12E424;
+    *(void **)((u8 *)arg4 + 0x10) = arg2;
+    *(void **)((u8 *)arg4 + 0x14) = (void *)fn_1_12E468;
+    *(void **)((u8 *)arg4 + 0x18) = p;
+    *(u8 *)((u8 *)arg4 + 8) = 1;
+    *(u32 *)((u8 *)arg4 + 4) = 0;
+}
+#pragma opt_common_subs reset
+/* fzgx:end fn_1_12ECA8 */
+
 /* fzgx:begin fn_1_12EF24 */
 struct Table {
     s16 values[66];
