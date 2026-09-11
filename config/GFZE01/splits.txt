@@ -5075,3 +5075,12 @@ dol/fn_8006F6A8.c:
 
 dol/fn_8006F038.c:
 	.text       start:0x8006F038 end:0x8006F120 align:4
+
+dol/fn_8005741C.c:
+	.text       start:0x8005741C end:0x80057494 align:4
+
+dol/fn_80039020.c:
+	.text       start:0x80039020 end:0x80039060 align:4
+
+dol/DVDGetTransferredSize.c:
+	.text       start:0x800176FC end:0x80017768 align:4
