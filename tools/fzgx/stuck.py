@@ -10,6 +10,7 @@ fix for relocations, a type change for missing sign extensions.
 
 from __future__ import annotations
 
+import copy
 import json
 import re
 import sqlite3
@@ -180,21 +181,26 @@ def analyse(p: Project, symbol: str, path: str, res: Optional[oracle.CheckResult
         res = oracle.check(p, symbol, 0, source=Path(path))
     if not res.ok:
         return {"symbol": symbol, "ok": False, "error": res.error[-300:]}
-    lrows, rrows = getattr(res, "_rows", ([], []))
+    lrows, rrows = copy.deepcopy(getattr(res, "_rows", ([], [])))
+    raw_counts = classify_rows(lrows, rrows)
+    accepted = getattr(res, "_accepted_rows", set())
+    # Proven pool/absolute bindings are not remaining repair work. Keep the
+    # oracle's cached rows untouched for later consumers.
+    for i in accepted:
+        lrows[i]["diff_kind"] = rrows[i]["diff_kind"] = "DIFF_NONE"
     counts = classify_rows(lrows, rrows)
     # the differing rows themselves (index, target, ours): every later question is a JSON read
     diffs = [(i, _fmt(a), _fmt(b)) for i, (a, b) in enumerate(zip(lrows, rrows))
              if (a.get("diff_kind") or "DIFF_NONE") != "DIFF_NONE" or (b.get("diff_kind") or "DIFF_NONE") != "DIFF_NONE"]
     pure = _pure(counts, lrows, rrows)
-    flow = None
-    if pure == 'regalloc':
-        from . import regflow
-        flow = regflow.analyse_rows(lrows, rrows)
-        if flow['value_flow']:
-            pure = 'value-flow'
+    from . import regflow
+    flow = regflow.analyse_rows(lrows, rrows)
+    if pure == 'regalloc' and flow['value_flow']:
+        pure = 'value-flow'
     return {"symbol": symbol, "ok": True, "percent": res.percent, "percent_adjusted": res.percent_adjusted,
             "pool_rows": res.pool_rows, "matched_pool": res.matched_pool, "rows": (len(lrows), len(rrows)),
-            "counts": counts, "pure": pure, "diffs": diffs, "register_flow": flow}
+            "counts": counts, "raw_counts": raw_counts, "accepted_rows": sorted(accepted),
+            "matched": res.matched, "pure": pure, "diffs": diffs, "register_flow": flow}
 
 
 def run(p: Project, min_percent: float = 80.0, module: Optional[str] = None, workers: int = 12,
@@ -234,9 +240,11 @@ def run(p: Project, min_percent: float = 80.0, module: Optional[str] = None, wor
 
 
 def summary(out: Dict[str, object]) -> str:
-    rs = [r for r in out["results"] if r.get("ok")]
+    compiled = [r for r in out["results"] if r.get("ok")]
+    rs = [r for r in compiled if max(r["percent"], r["percent_adjusted"]) >= out["min_percent"]]
     bad = [r for r in out["results"] if not r.get("ok")]
-    lines = [f"{len(rs)} plateaued bodies recompiled ({len(bad)} failed to compile), best >= {out['min_percent']}%", ""]
+    lines = [f"{len(compiled)} saved bodies recompiled ({len(bad)} failed to compile); "
+             f"{len(rs)} currently >= {out['min_percent']}%, {len(compiled) - len(rs)} below threshold", ""]
     by: Dict[str, list] = defaultdict(list)
     for r in rs:
         by[r["pure"]].append(r)
