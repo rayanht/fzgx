@@ -323,8 +323,7 @@ frontier selection, so identical instruction words no longer automatically erase
 better data bindings.
 
 The same engine now derives string-pool boundaries and padding from emitted
-symbols and retail bytes, recovers named floating initializer anchors, and emits
-typed base-plus-offset references. Whole readonly pools require complete byte
+symbols and retail bytes and recovers named floating initializer anchors. Whole readonly pools require complete byte
 and padding equality with no internal relocations. Newly recognized DOL switch
 tables require every entry to resolve to the correct containing-function offset.
 REL pool reads are section-qualified, including local-symbol suffix resolution.
@@ -341,3 +340,29 @@ rules and address restrictions are not waived.
 The expanded historical eligibility threshold is 90%, selecting 595 functions
 and 7,063 distinct source/compiler combinations. All were recompiled against
 current module targets; historical percentages are eligibility, not acceptance.
+
+
+The 595-function pass evaluated 57,644 bodies including baselines in 984.13
+seconds (864.49 seconds in compiler/oracle evaluation). It found 22 object
+matches and improved 150 best instruction-word scores. A final pass over those
+595 best bodies evaluated 5,163 bodies in 44.42 seconds, including 21.33 seconds
+in compiler/oracle evaluation. It reached **25 functions / 6,844 bytes**, all
+subsequently linked from C and verified against all 16 target hashes. Code
+progress moved from 21.80% to **22.03% (647,044 / 2,937,044 bytes)**.
+
+Direct extern conversions, byte-pointer aliases and typed array views did not
+close the remaining scalar-alias examples: their instruction sequences changed.
+Those added generators were removed rather than retained as another low-yield
+search family. Shared BSS was instead repaired by the verified binding path.
+
+Integration exposed two additional symbol-promotion gaps: existing pool mappings
+retained stale suffixed targets, and renamed source definitions also needed their
+private mapping keys updated. Promotion now updates both, including `@`/`$`
+identifiers. Ninja mappings quote and escape compiler-generated `$N` symbols
+through both expansion layers. The verifier filters absent, untracked rejected
+files from its dependency journal before staging, while retaining tracked deletions.
+The final 24-function and one-function link checks both used the fast path.
+
+`state/repairs/fixup_imports.json` retains all 25 original seeds and 51 successive
+source-repair steps, in addition to generated C, compiler settings and verification
+commits. No model sessions or standalone repair tools were added.

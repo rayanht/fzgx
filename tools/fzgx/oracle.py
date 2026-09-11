@@ -397,7 +397,7 @@ def _bss_base_rows(project, module, obj, left, right, lrows, rrows, function_nam
         if not anchor or not 0 < anchor['shndx'] < len(elf.sections):
             continue
         section = elf.sections[anchor['shndx']]
-        if section['name'] not in ('.bss', '.sbss'):
+        if section['name'] not in ('.bss', '.sbss') or section['type'] != 8:
             continue
         retail = project.symbols(module).get(lname)
         if retail is None:
@@ -406,7 +406,7 @@ def _bss_base_rows(project, module, obj, left, right, lrows, rrows, function_nam
             continue
         owned_here = unit is not None and project.unit_of(retail) == unit
         if (anchor['size'] == retail.size and retail.size > 0
-                and (rname in (lname, retail.name) or
+                and (rname in (lname, retail.name, f'{retail.name}_{retail.addr:08X}') or
                      ('$' in rname and '$' in retail.name and rname.split('$')[0] == retail.name.split('$')[0]))):
             if owned_here:
                 continue

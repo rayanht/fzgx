@@ -198,79 +198,6 @@ def string_literals(p: Project, module: str, body: str, base: oracle.CheckResult
     return out
 
 
-def relocation_bindings(p, sym, body, base):
-    """Express retail base/addend bindings using typed C lvalues."""
-    from .poolfix import Elf
-    elf = Elf(base._object.read_bytes())
-    own = {s['name']: s for s in elf.symbols()}
-    targets = dict(p.symbols(sym.module))
-    targets.update({f'{s.name}_{s.addr:08X}': s for s in list(targets.values())})
-    pattern = re.compile(r'([A-Za-z_.$@][\w.$@]*?)([+-]0x[0-9a-f]+)?@(?:ha|l|sda21)\b')
-    bindings = {}
-    for left, right in zip(*base._rows):
-        lt, rt = pattern.search(stuck._fmt(left)), pattern.search(stuck._fmt(right))
-        if not lt or not rt or pattern.sub('RELOC', stuck._fmt(left)) != pattern.sub('RELOC', stuck._fmt(right)):
-            continue
-        target, private = targets.get(lt[1]), own.get(rt[1])
-        if not target or target.kind != 'object' or not private:
-            continue
-        offset = (int(lt[2], 0) if lt[2] else 0) - (int(rt[2], 0) if rt[2] else 0)
-        if not 0 <= offset < target.size:
-            continue
-        bindings.setdefault(rt[1], set()).add((target.name, offset))
-    out = []
-    span = _function_span(body, sym.name)
-    if span:
-        edits = []
-        for name, private in own.items():
-            target = targets.get(name)
-            if (not target or private['shndx'] == 0 or private['size'] != target.size
-                    or not re.fullmatch(r'[A-Za-z_]\w*', name)):
-                continue
-            decl = re.search(rf'^(?!extern\b|static\b)([A-Za-z_]\w*(?:\s+\w+)*?\s+\**\s*){re.escape(name)}(\s*(?:\[[^\]\n]*\])?\s*(?:__attribute__\(\([^\n]*\)\))?\s*)(?:=[^;\n]*)?;', body[:span[0]], re.M)
-            if decl:
-                text = 'extern ' + decl[1] + name + decl[2] + ';'
-                edits.append((decl.start(), decl.end(), text))
-        text = body
-        for start, end, replacement in sorted(edits, reverse=True):
-            text = text[:start] + replacement + text[end:]
-        if text != body:
-            out.append(('reference existing retail data definitions', text))
-    for name, choices in bindings.items():
-        if len(choices) != 1:
-            continue
-        target, offset = next(iter(choices))
-        if name == target:
-            continue
-        private = own[name]
-        if private['shndx'] == 0 and re.fullmatch(r'\w+', name) and re.fullmatch(r'\w+', target):
-            decl = re.search(rf'^\s*extern\s+([\w ]+?(?:\s*\*)*)\s+{re.escape(name)}\s*;', body, re.M)
-            if not decl:
-                continue
-            typ = decl[1].strip()
-            base_decl = re.search(rf'^\s*extern\s+{re.escape(typ)}\s+{re.escape(target)}\s*;', body, re.M)
-            width = {'u8': 1, 's8': 1, 'u16': 2, 's16': 2, 'u32': 4, 's32': 4,
-                     'int': 4, 'unsigned int': 4, 'f32': 4, 'float': 4, 'f64': 8, 'double': 8}.get(typ)
-            size = targets[target].size
-            if base_decl and width and offset % width == 0 and size % width == 0:
-                from .sdkimport import masked
-                edits = [(decl.start(), decl.end(), ''),
-                         (base_decl.start(), base_decl.end(), f'\nextern {typ} {target}[{size // width}];')]
-                for token in re.finditer(rf'\b({re.escape(name)}|{re.escape(target)})\b', masked(body)):
-                    if any(a <= token.start() < b for a, b, _ in edits[:2]):
-                        continue
-                    edits.append((token.start(), token.end(), f'{target}[{offset // width if token[0] == name else 0}]'))
-                text = body
-                for start, end, replacement in sorted(edits, reverse=True):
-                    text = text[:start] + replacement + text[end:]
-                out.append((f'recover {target} array layout for {name}', text))
-            prefix = '' if re.search(r'\b' + re.escape(target) + r'\b', body) else f'extern unsigned char {target}[];\n'
-            text = (body[:decl.start()] + '\n' + prefix + f'#define {name} (*({typ} *)((unsigned char *)&{target} + {offset}))\n' + body[decl.end():])
-            out.append((f'bind {name} to {target}+{offset}', text))
-
-    return out
-
-
 def optimizer_pragmas(body: str, name: str) -> List[Tuple[str, str]]:
     """Recover optimizer state lost when a function is extracted from its TU.
 
@@ -522,7 +449,6 @@ def candidates(p: Project, symbol: str, body: str, base: oracle.CheckResult):
     diffs = [(stuck._fmt(a), stuck._fmt(b)) for a, b in zip(lrows, rrows) if (a.get("diff_kind") or "DIFF_NONE") != "DIFF_NONE"]
     span = _function_span(body, sym.name)
     candidates: List[Tuple[str, str]] = []
-    candidates += relocation_bindings(p, sym, body, base)
     candidates += string_literals(p, sym.module, body, base)
     # These candidates are derived from retail bytes. Large functions can
     # exhaust the candidate budget on type permutations before reaching them.
