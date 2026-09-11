@@ -20780,6 +20780,16 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_80071ED4.c",
+    "symbols": [
+      "fn_80071ED4"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
     "source": "dol/fn_800721FC.c",
     "symbols": [
       "fn_800721FC"
