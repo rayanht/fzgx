@@ -702,6 +702,106 @@ void fn_1_CD6C0(fn_1_CD6C0_object *object) {
 #pragma opt_propagation reset
 /* fzgx:end fn_1_CD6C0 */
 
+/* fzgx:begin fn_1_CF5B0 noprologue */
+#include "types.h"
+#include "font.h"
+#include "rel/main_rel/globals.h"
+#include "rel/main_rel/enemy_ctrl.h"
+
+extern u32 fn_1_5910(void *);
+extern void fn_1_3EF14(void *);
+extern void fn_1_49410(void);
+extern void fn_1_49514(u32 *);
+extern void fn_1_494DC(s16);
+extern void fn_1_495C8(u8);
+extern void fn_1_4955C(f32, f32);
+extern void fn_1_496FC(f32, f32);
+extern void fn_1_4AE0C(const char *, ...);
+extern void fn_1_495A0(f32);
+extern int fn_1_4F734(FontDrawPacket *);
+extern u32 lbl_1_rodata_5FF0;
+extern u32 lbl_1_rodata_5FF4;
+extern f32 lbl_1_rodata_26F8[22];
+extern const f32 lbl_1_rodata_5C3C;
+extern const f32 lbl_1_rodata_5CB0;
+extern const f32 lbl_1_rodata_5CFC;
+extern const f32 lbl_1_rodata_5D68;
+extern const f32 lbl_1_rodata_5F7C;
+extern const f32 lbl_1_rodata_5FF8;
+extern const f32 lbl_1_rodata_5FFC;
+extern const f32 lbl_1_rodata_6000;
+extern const f32 lbl_1_rodata_6004;
+extern const f32 lbl_1_rodata_6008;
+extern const f32 lbl_1_rodata_600C;
+
+void fn_1_CF5B0(void *self) {
+    FontDrawPacket loc_10;
+    u32 spC;
+    u32 sp8;
+    s32 var_r30;
+    s32 var_r31;
+    s32 temp_r0;
+
+    if (((((u32 *)&lbl_1_data_3D544)[fn_1_5910(self)]) >> 17) & 1) {
+        fn_1_3EF14(&lbl_1_bss_3C30);
+        if (lbl_1_bss_3C30.unk_0 & 0x40000) {
+            var_r30 = 0;
+            var_r31 = ((lbl_1_bss_3C30.unk_A4 + 0x3B) / 60 < 0) ? 0
+                      : (((lbl_1_bss_3C30.unk_A4 + 0x3B) / 60 > 0x3E7) ? 0x3E7 : (lbl_1_bss_3C30.unk_A4 + 0x3B) / 60);
+            if (var_r31 < 0xA) {
+                var_r30 = 1;
+            }
+            fn_1_49410();
+            if (var_r30 != 0) {
+                spC = lbl_1_rodata_5FF0;
+                fn_1_49514(&spC);
+            }
+            fn_1_494DC(0x10);
+            fn_1_495C8(9);
+            if (var_r31 > 0x63) {
+                fn_1_4955C(lbl_1_rodata_5FF8, lbl_1_rodata_5CFC);
+                fn_1_496FC(lbl_1_rodata_5FFC, lbl_1_rodata_5F7C);
+                fn_1_4AE0C((const char *)&lbl_1_data_3D570, var_r31 / 100);
+                fn_1_496FC(lbl_1_rodata_5C3C, lbl_1_rodata_5F7C);
+                fn_1_4AE0C((const char *)&lbl_1_data_3D570, (var_r31 / 10) % 10);
+                fn_1_496FC(lbl_1_rodata_6000, lbl_1_rodata_5F7C);
+                fn_1_4AE0C((const char *)&lbl_1_data_3D570, var_r31 % 10);
+            } else {
+                fn_1_496FC(lbl_1_rodata_6004, lbl_1_rodata_5F7C);
+                fn_1_4AE0C((const char *)&lbl_1_data_3D570, var_r31 / 10);
+                fn_1_496FC(lbl_1_rodata_6008, lbl_1_rodata_5F7C);
+                fn_1_4AE0C((const char *)&lbl_1_data_3D570, var_r31 % 10);
+            }
+            fn_1_49410();
+            fn_1_494DC(0x11);
+            fn_1_495C8(9);
+            sp8 = lbl_1_rodata_5FF4;
+            fn_1_49514(&sp8);
+            fn_1_495A0(lbl_1_rodata_5CB0);
+            if (var_r31 > 0x63) {
+                fn_1_4955C(lbl_1_rodata_5FF8, lbl_1_rodata_5CFC);
+                fn_1_496FC(lbl_1_rodata_5FFC, lbl_1_rodata_5F7C);
+                fn_1_4AE0C((const char *)&lbl_1_data_3D570, var_r31 / 100);
+                fn_1_496FC(lbl_1_rodata_5C3C, lbl_1_rodata_5F7C);
+                fn_1_4AE0C((const char *)&lbl_1_data_3D570, (var_r31 / 10) % 10);
+                fn_1_496FC(lbl_1_rodata_6000, lbl_1_rodata_5F7C);
+                fn_1_4AE0C((const char *)&lbl_1_data_3D570, var_r31 % 10);
+            } else {
+                fn_1_496FC(lbl_1_rodata_6004, lbl_1_rodata_5F7C);
+                fn_1_4AE0C((const char *)&lbl_1_data_3D570, var_r31 / 10);
+                fn_1_496FC(lbl_1_rodata_6008, lbl_1_rodata_5F7C);
+                fn_1_4AE0C((const char *)&lbl_1_data_3D570, var_r31 % 10);
+            }
+            loc_10 = *(const FontDrawPacket *)lbl_1_rodata_26F8;
+            loc_10.image = 0x940A;
+            loc_10.x = lbl_1_rodata_600C;
+            loc_10.y = lbl_1_rodata_5D68;
+            fn_1_4F734(&loc_10);
+        }
+    }
+}
+/* fzgx:end fn_1_CF5B0 */
+
 /* fzgx:begin fn_1_CFA0C noprologue */
 #include "types.h"
 #include "rel/main_rel/enemy_ctrl.h"

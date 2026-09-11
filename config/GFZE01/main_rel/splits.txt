@@ -6053,3 +6053,12 @@ rel/main_rel/sel_static_disp/fn_1_1332FC.c:
 
 rel/main_rel/bg_aur/fn_1_151EF8.c:
 	.text       start:0x00151EF8 end:0x00152208 align:4
+
+rel/main_rel/bg_lig/fn_1_D5C70.c:
+	.text       start:0x000D5C70 end:0x000D5FA8 align:4
+
+rel/main_rel/enemy_ctrl/fn_1_CF5B0.c:
+	.text       start:0x000CF5B0 end:0x000CFA0C align:4
+
+rel/main_rel/font/fn_1_52BF8.c:
+	.text       start:0x00052BF8 end:0x000530C8 align:4

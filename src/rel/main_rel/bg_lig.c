@@ -30,6 +30,108 @@ extern void fn_1_D9D8C(Obj_1_bss_7AD78 *obj, u32 arg, s32 index);
 extern void fn_1_DA3A0(Obj_1_bss_7AD78 *obj);
 extern void fn_1_E87FC(void);
 
+/* fzgx:begin fn_1_D5C70 */
+extern int fn_1_58C4(void);
+extern void OSPanic(const char *file, int line, const char *msg, ...);
+
+typedef struct {
+    u32 unk0;
+    void *data;
+    u32 unk8;
+    u32 flags;
+    u8 rest[0xac - 0x10];
+} Elem;
+
+#define IDX (*(s32 *)(p - 0x1820))
+#define FLAG(idx) (((Elem *)(p - 0x1820))[idx].flags)
+#define DATA(idx) (((Elem *)(p - 0x1820))[idx].data)
+#define SB0 (*(s16 *)(p - 0x1888))
+#define SB1 (*(s16 *)(p - 0x1886))
+
+s32 fn_1_D5C70(u32 arg0, u32 *arg1) {
+    u8 *p;
+    u8 *scan;
+
+    p = (u8 *)lbl_1_data_2A7E0.unk_3C + 0x10000;
+
+    switch (arg0) {
+    case 0:
+        FLAG(IDX) |= 0x40000000;
+        FLAG(IDX) |= 0x10000000;
+        DATA(IDX) = arg1;
+        IDX = IDX + 1;
+        if (IDX >= 32) {
+            OSPanic((const char *)lbl_1_data_3DBE8, 0x577, (const char *)lbl_1_data_3DBF4);
+        }
+        break;
+    case 1:
+        FLAG(IDX) |= 0x40000000;
+        FLAG(IDX) |= 0x20000000;
+        DATA(IDX) = arg1;
+        IDX = IDX + 1;
+        if (IDX >= 32) {
+            OSPanic((const char *)lbl_1_data_3DBE8, 0x57e, (const char *)lbl_1_data_3DBF4);
+        }
+        break;
+    case 2:
+        FLAG(IDX) |= 0x40000000;
+        FLAG(IDX) |= 0x10000000;
+        FLAG(IDX) |= 0x08000000;
+        DATA(IDX) = arg1;
+        IDX = IDX + 1;
+        if (IDX >= 32) {
+            OSPanic((const char *)lbl_1_data_3DBE8, 0x586, (const char *)lbl_1_data_3DBF4);
+        }
+        break;
+    case 3:
+        FLAG(IDX) |= 0x40000000;
+        FLAG(IDX) |= 0x20000000;
+        FLAG(IDX) |= 0x08000000;
+        DATA(IDX) = arg1;
+        IDX = IDX + 1;
+        if (IDX >= 32) {
+            OSPanic((const char *)lbl_1_data_3DBE8, 0x58e, (const char *)lbl_1_data_3DBF4);
+        }
+        break;
+    case 5:
+        *arg1 |= 0x01000000;
+        break;
+    case 6:
+        if (fn_1_58C4() <= 2) {
+            *arg1 |= 0x02000000;
+            SB0 = 0x1b;
+            SB1 = 0x28;
+        } else {
+            *arg1 &= ~0x02000000;
+        }
+        break;
+    case 7:
+    case 8:
+    case 9:
+        if (fn_1_58C4() <= 2) {
+            *arg1 |= 0x02000000;
+            SB0 = 0x18;
+            SB1 = 0x18;
+        } else {
+            *arg1 &= ~0x02000000;
+        }
+        break;
+    case 10:
+        scan = (u8 *)lbl_1_bss_3BE0->unk_54;
+        *(s32 *)(p - 0x29c) = 0;
+        while (scan != (u8 *)arg1) {
+            scan += 0x40;
+            *(s32 *)(p - 0x29c) = *(s32 *)(p - 0x29c) + 1;
+        }
+        *arg1 |= 0x80000000;
+        break;
+    default:
+        break;
+    }
+    return 1;
+}
+/* fzgx:end fn_1_D5C70 */
+
 /* fzgx:begin fn_1_D6680 */
 // fn_1_D6680: returns a constant.
 int fn_1_D6680(void) {
