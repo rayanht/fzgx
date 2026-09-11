@@ -39662,6 +39662,20 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/memcard/fn_1_B03CC.c",
+    "symbols": [
+      "fn_1_B03CC"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "tu": "rel/main_rel/memcard.c",
+    "pool": {
+      "@380": "jumptable_1_data_3CAB4"
+    }
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/memcard/fn_1_B1710.c",
     "symbols": [
       "fn_1_B1710"

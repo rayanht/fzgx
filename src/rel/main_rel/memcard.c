@@ -3093,6 +3093,814 @@ void fn_1_B03A8(void *arg0, void *arg1) {
 }
 /* fzgx:end fn_1_B03A8 */
 
+/* fzgx:begin fn_1_B03CC noprologue */
+#include "types.h"
+
+extern u32 lbl_801A6410;
+extern s32 lbl_801A66B4;
+extern const f32 lbl_1_rodata_4CA8;
+extern s16 lbl_1_bss_962;
+extern u32 lbl_1_data_35AC8;
+
+typedef struct B03CC_File {
+    u8 pad_0[0x3E];
+    u8 unk_3E;
+    u8 pad_3F[5];
+    s32 unk_44;
+} B03CC_File;
+
+typedef struct B03CC_Work {
+    u8 unk_0;
+    u8 unk_1;
+    u8 pad_2[2];
+    s32 unk_4;
+    u32 unk_8;
+    s32 unk_C;
+    s32 unk_10;
+    s32 unk_14;
+    u32 unk_18;
+    u32 unk_1C;
+    u8 pad_20[0x20];
+    u32 unk_40;
+    s32 unk_44;
+    u8 pad_48[0x44];
+    B03CC_File *unk_8C;
+    u32 unk_90;
+    u8 *unk_94;
+    u8 pad_98[0x20];
+    u32 unk_B8;
+    u8 pad_BC[0x20];
+    u32 unk_DC;
+    u32 unk_E0;
+    u32 unk_E4;
+} B03CC_Work;
+
+typedef struct B03CC_Slot {
+    u8 pad_0[0xA0];
+} B03CC_Slot;
+
+typedef struct B03CC_Globals {
+    u8 unk_0;
+    u8 pad_1[7];
+    B03CC_Slot slot[2];
+    u8 pad_148[0xA9];
+    u8 unk_1F1;
+    u8 pad_1F2[0x2];
+    u32 unk_1F4;
+    u8 unk_1F8;
+    u8 pad_1F9[0x5A0F];
+    u8 unk_5C08;
+    u8 pad_5C09[0x40];
+    u8 unk_5C49;
+    u8 unk_5C4A;
+} B03CC_Globals;
+
+typedef struct B03CC_9F8 {
+    u8 pad_0[8];
+    u16 unk_8;
+} B03CC_9F8;
+
+extern B03CC_Globals lbl_1_bss_716C0;
+extern B03CC_9F8 lbl_1_bss_9F8;
+
+typedef struct B03CC_State {
+    u8 unk_0;
+    s8 unk_1;
+    u8 unk_2;
+    u8 unk_3;
+    u8 unk_4;
+    u8 unk_5;
+    u8 unk_6;
+    u8 unk_7;
+    s16 unk_8;
+    s16 unk_a;
+    u32 unk_C;
+    u8 pad_10[0x14];
+    B03CC_Work *unk_24;
+    s8 unk_28;
+    u8 pad_29[1];
+    u8 unk_2A;
+    u8 pad_2B[5];
+    u32 unk_30;
+    f32 unk_34;
+    f32 unk_38;
+    s32 unk_3C;
+    u32 unk_40;
+    u8 pad_44[4];
+    u32 unk_48;
+    u32 unk_4C;
+    u32 unk_50;
+    u8 unk_54[0x20];
+} B03CC_State;
+
+extern s32 CARDUnmount(u8);
+extern void OSReport(const char *, ...);
+extern void OSPanic(const char *, int, const char *, ...);
+extern u32 fn_1_1563E8(u32, u32);
+extern void fn_1_46B4(u32, u32, const char *, int);
+extern void fn_80008BA8(u32, u32, u32);
+
+void fn_1_B03CC(B03CC_State *arg0) {
+    B03CC_Work * fzgx_live;
+    u8 cmd;
+    char *base = (char *)&lbl_1_data_35AC8;
+    B03CC_Globals *g = &lbl_1_bss_716C0;
+    u8 *slot0;
+
+    if (arg0->unk_4 == 0xff) {
+        return;
+    }
+    switch (arg0->unk_4) {
+    default:
+        OSReport(base + 0x6ddc, arg0->unk_4);
+        OSReport(base + 0x6df0, arg0->unk_3);
+        OSPanic(base + 0x6cf0, 0x11f2, base + 0x6e04);
+        break;
+
+    case 0:
+    case 1:
+    case 2:
+    case 3: {
+        arg0->unk_24->unk_8 &= ~0x200;
+        if (lbl_1_bss_962 == 100 && arg0->unk_24->unk_0 == 3) {
+            arg0->unk_24->unk_8 |= 2;
+        }
+        if (arg0->unk_24->unk_8 & 0x8000) {
+            arg0->unk_3 = 0x15;
+        } else if ((((*(u16 volatile *)&(lbl_1_bss_9F8.unk_8)) /* Retail reloads this field. */ & 0x100) >> 8) && (arg0->unk_24->unk_8 & 0x800)) {
+            arg0->unk_3 = 0xc;
+            arg0->unk_24->unk_8 &= ~0x800;
+            arg0->unk_24->unk_8 &= ~2;
+            arg0->unk_24->unk_8 |= 0x200;
+            arg0->unk_2A &= ~4;
+            arg0->unk_8 = -1;
+            arg0->unk_a = -1;
+        } else if (lbl_1_bss_962 == 100 && ((B03CC_Work *)*(void **)((u8 *)arg0 + 0x24))->unk_0 == 3) {
+            if (((B03CC_Work *)*(void **)((u8 *)arg0 + 0x24))->unk_4 == -4) {
+                arg0->unk_8 = -1;
+                arg0->unk_a = -1;
+                arg0->unk_3 = 0x20;
+            } else if (((B03CC_Work *)*(void **)((u8 *)arg0 + 0x24))->unk_4 == -13) {
+                arg0->unk_a = 0x16;
+                arg0->unk_24->unk_8 &= ~2;
+                if ((lbl_1_bss_9F8.unk_8 >> 11) & 1) {
+                    if (arg0->unk_5 == 3 && arg0->unk_C != 0) {
+                        B03CC_Work *wA;
+                        while (CARDUnmount(arg0->unk_0) == -1) {
+                        }
+                        fn_1_46B4(lbl_801A6410, arg0->unk_C, base + 0x6cf0, 0x121e);
+                        arg0->unk_7 = 0;
+                        arg0->unk_C = 0;
+                        wA = arg0->unk_24;
+                        wA->unk_1C = 0;
+                        wA->unk_18 = 0;
+                    }
+                    if (arg0->unk_6 != 0xff) {
+                        arg0->unk_3 = arg0->unk_6;
+                        arg0->unk_6 = 0xff;
+                    } else {
+                        arg0->unk_3 = arg0->unk_5;
+                    }
+                    slot0 = (u8 *)&g->slot[0];
+                    arg0->unk_8 = -1;
+                    arg0->unk_a = -1;
+                    arg0->unk_2A &= ~4;
+                    if ((u8 *)arg0 == slot0) {
+                        g->unk_1F1 = 0;
+                    } else if ((u8 *)arg0 == slot0 + 0xa0) {
+                        g->unk_1F1 = 1;
+                    }
+                }
+                if (((lbl_1_bss_9F8.unk_8 >> 10) & 1) && (arg0->unk_24->unk_8 & 0x400)) {
+                    arg0->unk_3 = 5;
+                    arg0->unk_24->unk_8 &= ~0x400;
+                    arg0->unk_24->unk_8 |= 0x200;
+                    arg0->unk_2A &= ~4;
+                    arg0->unk_2A |= 0x10;
+                }
+                if ((lbl_1_bss_9F8.unk_8 >> 8) & 1) {
+                    arg0->unk_3 = 0x15;
+                }
+            } else {
+                arg0->unk_a = 0xe;
+                if ((lbl_1_bss_9F8.unk_8 >> 8) & 1) {
+                    arg0->unk_3 = 0x15;
+                }
+            }
+        } else if ((lbl_1_bss_9F8.unk_8 >> 8) & 1) {
+            if ((lbl_1_bss_9F8.unk_8 >> 8) & 1) {
+                arg0->unk_3 = 0x15;
+            } else {
+                arg0->unk_3 = 0x20;
+            }
+        } else if (((lbl_1_bss_9F8.unk_8 >> 11) & 1) && (((B03CC_Work *)*(void **)((u8 *)arg0 + 0x24))->unk_8 & 2) == 0) {
+            if (arg0->unk_5 == 3 && arg0->unk_C != 0) {
+                B03CC_Work *wB;
+                while (CARDUnmount(arg0->unk_0) == -1) {
+                }
+                fn_1_46B4(lbl_801A6410, arg0->unk_C, base + 0x6cf0, 0x1251);
+                arg0->unk_7 = 0;
+                arg0->unk_C = 0;
+                wB = arg0->unk_24;
+                wB->unk_1C = 0;
+                wB->unk_18 = 0;
+            }
+            if (arg0->unk_6 != 0xff) {
+                arg0->unk_3 = arg0->unk_6;
+                arg0->unk_6 = 0xff;
+            } else {
+                arg0->unk_3 = arg0->unk_5;
+            }
+            slot0 = (u8 *)&g->slot[0];
+            arg0->unk_8 = -1;
+            arg0->unk_a = -1;
+            arg0->unk_2A &= ~4;
+            if ((u8 *)arg0 == slot0) {
+                g->unk_1F1 = 0;
+            } else if ((u8 *)arg0 == slot0 + 0xa0) {
+                g->unk_1F1 = 1;
+            }
+        } else if ((((*(u16 volatile *)&(lbl_1_bss_9F8.unk_8)) /* Retail reloads this field. */ >> 10) & 1) && (((B03CC_Work *)*(void **)((u8 *)arg0 + 0x24))->unk_8 & 0x400)) {
+            arg0->unk_3 = 5;
+            ((B03CC_Work *)*(void **)((u8 *)arg0 + 0x24))->unk_8 &= ~0x400;
+            ((B03CC_Work *)*(void **)((u8 *)arg0 + 0x24))->unk_8 |= 0x200;
+            arg0->unk_2A &= ~4;
+            arg0->unk_2A |= 0x10;
+        }
+        g->unk_5C49 = 0;
+        break;
+    }
+
+    case 4: {
+        if (lbl_1_bss_962 == 100 && arg0->unk_24->unk_0 == 3) {
+            if (arg0->unk_24->unk_4 == -121) {
+                arg0->unk_2 = 0xfe;
+            } else {
+                arg0->unk_8 = 0x68;
+                arg0->unk_a = 0xe;
+                arg0->unk_24->unk_8 &= ~0x2000;
+                arg0->unk_24->unk_8 |= 2;
+            }
+        }
+        if (arg0->unk_24->unk_8 & 0x8000) {
+            arg0->unk_2 = 0xfe;
+        } else if ((lbl_1_bss_9F8.unk_8 >> 8) & 1) {
+            arg0->unk_2 = 0xfe;
+        }
+        break;
+    }
+
+    case 5: {
+        arg0->unk_2 = 0xfe;
+        break;
+    }
+
+    case 6: {
+        s8 v = arg0->unk_1;
+        if (v == -127) {
+            arg0->unk_24->unk_4 = v;
+            arg0->unk_3 = 1;
+        } else {
+            B03CC_Work *work = arg0->unk_24;
+            switch (work->unk_4) {
+            case -5:
+                work->unk_8 |= 2;
+            case -128:
+            case -3:
+            case -2:
+                arg0->unk_3 = 1;
+                break;
+            case -13:
+                if (work->unk_8 & 0x8000) {
+                    arg0->unk_2A |= 4;
+                    arg0->unk_2 = 0xfe;
+                } else if (lbl_801A66B4 == 5) {
+                    arg0->unk_3 = 5;
+                } else {
+                    work->unk_8 |= 0x400;
+                    arg0->unk_3 = 1;
+                }
+                break;
+            case -6:
+            case 0:
+                arg0->unk_3 = 4;
+                break;
+            case -1:
+                break;
+            default:
+                arg0->unk_3 = 0;
+                break;
+            }
+        }
+        break;
+    }
+
+    case 7: {
+        arg0->unk_3 = 3;
+        break;
+    }
+
+    case 8: {
+        B03CC_Work *work = arg0->unk_24;
+        switch (work->unk_4) {
+        case -5:
+            work->unk_8 |= 2;
+        case -128:
+        case -3:
+            arg0->unk_3 = 1;
+            break;
+        case -6:
+            if (work->unk_8 & 0x8000) {
+                arg0->unk_2A |= 4;
+                arg0->unk_2 = 0xfe;
+            } else {
+                arg0->unk_3 = 5;
+            }
+            break;
+        case -13:
+            if (work->unk_8 & 0x8000) {
+                arg0->unk_2A |= 4;
+                arg0->unk_2 = 0xfe;
+            } else if (lbl_801A66B4 == 5) {
+                arg0->unk_3 = 5;
+            } else {
+                work->unk_8 |= 0x400;
+                arg0->unk_3 = 1;
+            }
+            break;
+        case 0:
+            arg0->unk_3 = 7;
+            break;
+        case -1:
+            break;
+        default:
+            arg0->unk_3 = 0;
+            break;
+        }
+        break;
+    }
+
+    case 9: {
+        if (arg0->unk_24->unk_4 != 0) {
+            s32 flag;
+            if ((arg0->unk_2A & 1) == 0) {
+                arg0->unk_28 = 0xc;
+                arg0->unk_2A |= 1;
+                flag = 0;
+            } else if (arg0->unk_28 > 0) {
+                arg0->unk_28--;
+                flag = 0;
+            } else {
+                flag = 1;
+            }
+            if (flag == 0) {
+                break;
+            }
+            if (arg0->unk_24->unk_4 == 2 || arg0->unk_24->unk_1 == 1) {
+                arg0->unk_24->unk_4 = -126;
+                arg0->unk_3 = 1;
+            } else {
+                arg0->unk_3 = 6;
+                arg0->unk_24->unk_8 |= 0x200;
+                if (lbl_1_bss_962 == 100 && arg0->unk_24->unk_0 == 3) {
+                    arg0->unk_24->unk_8 &= ~0x2000;
+                }
+            }
+        }
+        break;
+    }
+
+    case 10: {
+        B03CC_Work *work = arg0->unk_24;
+        switch (work->unk_4) {
+        case -5:
+            work->unk_8 |= 2;
+        case -128:
+        case -3:
+            arg0->unk_3 = 1;
+            break;
+        case 0:
+            arg0->unk_3 = 0x16;
+            arg0->unk_24->unk_8 &= ~0x200;
+            break;
+        case -1:
+            break;
+        default:
+            arg0->unk_3 = 0;
+            break;
+        }
+        break;
+    }
+
+    case 11: {
+        if (arg0->unk_24->unk_8 & 4) {
+            s32 flag;
+            if ((arg0->unk_24->unk_8 & 8) == 0) {
+                arg0->unk_28 = 0x2d;
+                arg0->unk_24->unk_8 |= 8;
+                flag = 0;
+            } else if (arg0->unk_28 > 0) {
+                arg0->unk_28--;
+                flag = 0;
+            } else {
+                flag = 1;
+            }
+            if (flag != 0) {
+                arg0->unk_3 = 0x20;
+            }
+        } else if ((lbl_1_bss_9F8.unk_8 >> 8) & 1) {
+            arg0->unk_3 = 0x15;
+        }
+        arg0->unk_24->unk_4 = -121;
+        break;
+    }
+
+    case 12: {
+        B03CC_Work *work = arg0->unk_24;
+        switch (work->unk_4) {
+        case -128:
+        case -3:
+            arg0->unk_3 = 1;
+            break;
+        case 0:
+            arg0->unk_3 = 0xa;
+            break;
+        case -1:
+            break;
+        default:
+            arg0->unk_3 = 0;
+            break;
+        }
+        break;
+    }
+
+    case 13: {
+        B03CC_Work *work = arg0->unk_24;
+        switch (work->unk_4) {
+        case -128:
+        case -10:
+        case -6:
+        case -3:
+            arg0->unk_3 = 1;
+            break;
+        case -4:
+            arg0->unk_3 = 0x12;
+            break;
+        case 0:
+            arg0->unk_3 = 0xe;
+            break;
+        case -1:
+            break;
+        default:
+            arg0->unk_3 = 0;
+            break;
+        }
+        break;
+    }
+
+    case 14: {
+        B03CC_Work *work = arg0->unk_24;
+        switch (work->unk_4) {
+        case -5:
+            work->unk_8 |= 2;
+        case -128:
+        case -12:
+        case -10:
+        case -7:
+        case -3:
+            arg0->unk_3 = 1;
+            break;
+        case -4:
+            if (work->unk_8 & 0x100) {
+                arg0->unk_3 = 0x1f;
+            } else {
+                arg0->unk_3 = 1;
+            }
+            break;
+        case 0:
+            arg0->unk_3 = 0xa;
+            break;
+        case -1:
+            break;
+        default:
+            arg0->unk_3 = 0;
+            break;
+        }
+        break;
+    }
+
+    case 15: {
+        B03CC_Work *work = arg0->unk_24;
+        switch (work->unk_4) {
+        case -128:
+        case -6:
+        case -3:
+            arg0->unk_3 = 1;
+            break;
+        case 0:
+            work->unk_4 = -4;
+            arg0->unk_3 = 1;
+            break;
+        case -1:
+            break;
+        default:
+            arg0->unk_3 = 0;
+            break;
+        }
+        break;
+    }
+
+    case 16: {
+        B03CC_Work *work = arg0->unk_24;
+        switch (work->unk_4) {
+        case -128:
+        case -10:
+        case -4:
+        case -3:
+            arg0->unk_3 = 1;
+            break;
+        case 0:
+            if (work->unk_40 < work->unk_C) {
+                work->unk_4 = -122;
+                g->unk_1F4 = -122;
+                arg0->unk_3 = 1;
+            } else {
+                arg0->unk_3 = 0x17;
+            }
+            break;
+        case -1:
+            break;
+        default:
+            arg0->unk_3 = 0;
+            break;
+        }
+        break;
+    }
+
+    case 17: {
+        switch (arg0->unk_24->unk_4) {
+        case -128:
+        case -14:
+        case -11:
+        case -10:
+        case -4:
+        case -3:
+            arg0->unk_3 = 1;
+            break;
+        case 0: {
+            u32 res = (u16)fn_1_1563E8((u32)(arg0->unk_24->unk_94 + 2), arg0->unk_24->unk_C - 2);
+            if (*(u16 *)arg0->unk_24->unk_94 != res) {
+                fzgx_live = arg0->unk_24;
+                fzgx_live->unk_4 = -124;
+                arg0->unk_24->unk_8 |= 2;
+                arg0->unk_24->unk_8 |= 0x800;
+                arg0->unk_3 = 1;
+                break;
+            } else if (*(u8 *)(arg0->unk_24->unk_94 + 3) != *(u8 *)((u8 *)arg0->unk_24->unk_8C + 0x3e)) {
+                arg0->unk_24->unk_4 = -122;
+                arg0->unk_3 = 1;
+                break;
+            } else if ((arg0->unk_24->unk_8 & 0x20) == 0) {
+                if (arg0->unk_24->unk_0 == 1) {
+                    if ((s64)(s32) * (u16 *)(arg0->unk_24->unk_94 + 0x2200)
+                            + ((u64)*(u16 *)(arg0->unk_24->unk_94 + 0x7580) << 16)
+                            + ((u64)*(u16 *)(arg0->unk_24->unk_94 + 0x2060) << 32)
+                            + ((u64)*(u16 *)(arg0->unk_24->unk_94 + 0x2066) << 48)
+                        != *(u64 *)((u8 *)arg0->unk_24 + 0x18)) {
+                        arg0->unk_24->unk_4 = -124;
+                        arg0->unk_24->unk_8 |= 2;
+                        arg0->unk_24->unk_8 |= 0x800;
+                        arg0->unk_3 = 1;
+                        break;
+                    }
+                }
+                if (arg0->unk_24->unk_8C->unk_44 == -1) {
+                    fn_80008BA8(arg0->unk_24->unk_90, (u32)(arg0->unk_24->unk_94 + 0x2060), arg0->unk_24->unk_B8);
+                    if (arg0->unk_24->unk_0 == 1) {
+                        fn_80008BA8((u32)arg0->unk_54, (u32)(arg0->unk_24->unk_94 + 0x24), 0x20);
+                    }
+                } else {
+                    fn_80008BA8(arg0->unk_24->unk_90, (u32)(arg0->unk_24->unk_94 + arg0->unk_24->unk_E0), arg0->unk_24->unk_E4);
+                    if (arg0->unk_24->unk_0 == 1) {
+                        fn_80008BA8((u32)arg0->unk_54, (u32)(arg0->unk_24->unk_94 + 0x24), 0x20);
+                    }
+                }
+            }
+            arg0->unk_3 = 8;
+            break;
+        }
+        case -1:
+            break;
+        default:
+            arg0->unk_3 = 0;
+            break;
+        }
+        break;
+    }
+
+    case 18: {
+        B03CC_Work *work = arg0->unk_24;
+        switch (work->unk_4) {
+        case -5:
+            work->unk_8 |= 2;
+        case -128:
+        case -10:
+        case -3:
+            arg0->unk_3 = 1;
+            break;
+        case -4:
+        case 0:
+            arg0->unk_3 = 9;
+            break;
+        case -1:
+            break;
+        default:
+            arg0->unk_3 = 0;
+            break;
+        }
+        break;
+    }
+
+    case 19: {
+        B03CC_Work *work = arg0->unk_24;
+        switch (work->unk_4) {
+        case -5:
+            work->unk_8 |= 2;
+        case -128:
+        case -10:
+        case -4:
+        case -3:
+            arg0->unk_3 = 1;
+            break;
+        case 0:
+            work->unk_4 = -4;
+            arg0->unk_3 = 0x20;
+            break;
+        case -1:
+            break;
+        default:
+            arg0->unk_3 = 0;
+            break;
+        }
+        break;
+    }
+
+    case 20:
+    case 21:
+    case 22: {
+        switch (arg0->unk_24->unk_4) {
+        case -128:
+        case -6:
+        case -3:
+            arg0->unk_3 = 1;
+            break;
+        case 0:
+            if (arg0->unk_24->unk_0 == 1) {
+                u32 t0;
+                u32 t1;
+                arg0->unk_50 = 1;
+                *(u64 *)((u8 *)arg0 + 0x48) = *(u64 *)((u8 *)arg0->unk_24 + 0x18);
+                g->unk_5C4A = arg0->unk_0;
+            }
+            if (arg0->unk_24->unk_8 & 0x2000) {
+                g->unk_1F4 = arg0->unk_24->unk_4;
+                if (arg0->unk_C != 0) {
+                    B03CC_Work *wC;
+                    while (CARDUnmount(arg0->unk_0) == -1) {
+                    }
+                    fn_1_46B4(lbl_801A6410, arg0->unk_C, base + 0x6cf0, 0x3c8);
+                    arg0->unk_7 = 0;
+                    arg0->unk_C = 0;
+                    wC = arg0->unk_24;
+                    wC->unk_1C = 0;
+                    wC->unk_18 = 0;
+                }
+                if (arg0->unk_24->unk_8 & 0x80) {
+                    arg0->unk_3C = arg0->unk_24->unk_10 / 8192;
+                    arg0->unk_40 = arg0->unk_24->unk_14;
+                }
+                if ((arg0->unk_24->unk_8 & 0x20) == 0) {
+                    fn_1_46B4(lbl_801A6410, (u32)arg0->unk_24->unk_94, base + 0x6cf0, 0x3d4);
+                }
+                if (arg0->unk_2 == 4) {
+                    if (g->unk_0 != 0) {
+                        u32 t;
+                        B03CC_Work *wD;
+                        wD = arg0->unk_24;
+                        t = (u32)wD->unk_94;
+                        wD->unk_94 = (u8 *)wD->unk_DC;
+                        wD->unk_DC = t;
+                        g->unk_0 = 0;
+                    }
+                    if (arg0->unk_24->unk_DC != 0) {
+                        fn_1_46B4(lbl_801A6410, arg0->unk_24->unk_DC, base + 0x6cf0, 0x3de);
+                        arg0->unk_24->unk_DC = 0;
+                    }
+                }
+                fn_1_46B4(lbl_801A6410, (u32)arg0->unk_24, base + 0x6cf0, 0x3ec);
+                arg0->unk_24 = 0;
+                arg0->unk_2 = 0xff;
+                arg0->unk_3 = 0xff;
+                arg0->unk_4 = 0xff;
+                arg0->unk_5 = 0xff;
+                arg0->unk_6 = 0xff;
+                arg0->unk_7 = 0;
+                arg0->unk_8 = -1;
+                arg0->unk_a = -1;
+                arg0->unk_30 = 0;
+                arg0->unk_34 = lbl_1_rodata_4CA8;
+                arg0->unk_38 = lbl_1_rodata_4CA8;
+                arg0->unk_2A &= ~4;
+                g->unk_5C08 = 0;
+                g->unk_1F8 = 1;
+            } else {
+                arg0->unk_3 = 0x18;
+            }
+            break;
+        case -1:
+            break;
+        default:
+            arg0->unk_3 = 0;
+            break;
+        }
+        break;
+    }
+
+    case 23:
+    case 24:
+    case 25:
+    case 26:
+    case 27:
+    case 28:
+    case 29:
+    case 30:
+    case 31:
+    case 32:
+    case 33:
+    case 34:
+    case 35:
+    case 36:
+    case 37:
+    case 38: {
+        if (arg0->unk_24->unk_8 & 4) {
+            s32 flag;
+            if ((arg0->unk_24->unk_8 & 8) == 0) {
+                arg0->unk_28 = 0x2d;
+                arg0->unk_24->unk_8 |= 8;
+                flag = 0;
+            } else if (arg0->unk_28 > 0) {
+                arg0->unk_28--;
+                flag = 0;
+            } else {
+                flag = 1;
+            }
+            if (flag != 0) {
+                (*(u32 volatile *)&(g->unk_1F4)) /* Retail stores before the call reload. */ = arg0->unk_24->unk_4;
+                fn_1_46B4(lbl_801A6410, (u32)(*(B03CC_Work * volatile *)&(arg0->unk_24)) /* Retail reloads after the store. */, base + 0x6cf0, 0x3ec);
+                arg0->unk_24 = 0;
+                arg0->unk_2 = 0xff;
+                arg0->unk_3 = 0xff;
+                arg0->unk_4 = 0xff;
+                arg0->unk_5 = 0xff;
+                arg0->unk_6 = 0xff;
+                arg0->unk_7 = 0;
+                arg0->unk_8 = -1;
+                arg0->unk_a = -1;
+                arg0->unk_30 = 0;
+                arg0->unk_34 = lbl_1_rodata_4CA8;
+                arg0->unk_38 = lbl_1_rodata_4CA8;
+                arg0->unk_2A &= ~4;
+                g->unk_5C08 = 0;
+                g->unk_1F8 = 1;
+            }
+        } else if ((lbl_1_bss_9F8.unk_8 >> 8) & 1) {
+            (*(u32 volatile *)&(g->unk_1F4)) /* Retail stores before the call reload. */ = arg0->unk_24->unk_4;
+            fn_1_46B4(lbl_801A6410, (u32)(*(B03CC_Work * volatile *)&(arg0->unk_24)) /* Retail reloads after the store. */, base + 0x6cf0, 0x3ec);
+            arg0->unk_24 = 0;
+            arg0->unk_2 = 0xff;
+            arg0->unk_3 = 0xff;
+            arg0->unk_4 = 0xff;
+            arg0->unk_5 = 0xff;
+            arg0->unk_6 = 0xff;
+            arg0->unk_7 = 0;
+            arg0->unk_8 = -1;
+            arg0->unk_a = -1;
+            arg0->unk_30 = 0;
+            arg0->unk_34 = lbl_1_rodata_4CA8;
+            arg0->unk_38 = lbl_1_rodata_4CA8;
+            arg0->unk_2A &= ~4;
+            g->unk_5C08 = 0;
+            g->unk_1F8 = 1;
+        }
+        break;
+    }
+    }
+    if (arg0->unk_24 != 0) {
+        g->unk_1F4 = arg0->unk_24->unk_4;
+    }
+}
+/* fzgx:end fn_1_B03CC */
+
 /* fzgx:begin fn_1_B1710 */
 void fn_1_B1710(int unused, void *ptr) {
     *(u8 *)((u8 *)ptr + 3) = 0x3;

@@ -6131,3 +6131,6 @@ rel/main_rel/stcoli/fn_1_25004.c:
 
 rel/main_rel/game/fn_1_3FCB0.c:
 	.text       start:0x0003FCB0 end:0x0003FCD4 align:4
+
+rel/main_rel/memcard/fn_1_B03CC.c:
+	.text       start:0x000B03CC end:0x000B1710 align:4
