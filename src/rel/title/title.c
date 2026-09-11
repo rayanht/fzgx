@@ -95,6 +95,41 @@ void fn_8_AA8(void) {
 }
 /* fzgx:end fn_8_AA8 */
 
+/* fzgx:begin _epilog */
+extern u8 lbl_801A66B9;
+extern u32 lbl_8_bss_234;
+extern u32 lbl_8_bss_238;
+extern s16 lbl_1_bss_960;
+
+extern void fn_1_4FEC(void);
+extern void fn_1_C3378(void);
+extern void fn_1_F7A20(void);
+extern s32 fn_1_3FC38(void);
+extern void fn_1_37E98(void);
+extern void fn_1_435C(u32);
+extern void fn_1_41A8(void);
+extern void fn_1_47A60(s16);
+
+#pragma opt_dead_assignments off
+void _epilog(void) {
+    if (!lbl_801A66B9) {
+        fn_1_4FEC();
+        fn_1_C3378();
+        fn_1_F7A20();
+        lbl_801A66B9 = 1;
+    }
+    if (fn_1_3FC38()) {
+        fn_1_37E98();
+    }
+    fn_1_435C(lbl_8_bss_234);
+    fn_1_41A8();
+    fn_1_435C(lbl_8_bss_238);
+    fn_1_41A8();
+    fn_1_47A60(lbl_1_bss_960);
+}
+#pragma opt_dead_assignments reset
+/* fzgx:end _epilog */
+
 /* fzgx:begin fn_8_B7C */
 typedef u32 (*fn_8_B7C_Fn0)(void);
 struct fn_8_B7C_lbl_8_data_318_0_E16 {

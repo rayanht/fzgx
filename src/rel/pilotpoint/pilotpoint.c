@@ -1,5 +1,47 @@
 #include "types.h"
 
+/* fzgx:begin _epilog */
+struct _epilog_lbl_14_bss_0 {
+    u8 pad_0[0x14];
+    u32 unk_14;
+    u8 pad_18[0x4];
+    u32 unk_1C;
+    u32 unk_20;
+};
+struct _epilog_lbl_801A6410 {
+    u32 unk_0;
+};
+
+extern struct _epilog_lbl_14_bss_0 lbl_14_bss_0;
+extern struct _epilog_lbl_801A6410 lbl_801A6410;
+extern u32 fn_1_1596DC(u32);
+extern u32 fn_1_412A0(u32);
+extern u32 fn_1_435C(u32);
+extern u32 fn_1_A0AA4(void);
+extern u32 lbl_14_data_2FB0;
+extern void fn_1_41A8(void);
+extern void fn_1_46B4(u32, u32, const char *, int);
+extern void fn_1_47A60(s16);
+extern void fn_1_484CC(s32);
+
+void _epilog(void) {
+    struct _epilog_lbl_14_bss_0 *p_lbl_14_bss_0;
+    p_lbl_14_bss_0 = (struct _epilog_lbl_14_bss_0 *)&lbl_14_bss_0;
+    fn_1_435C(p_lbl_14_bss_0->unk_1C);
+    fn_1_41A8();
+    fn_1_435C(p_lbl_14_bss_0->unk_20);
+    fn_1_41A8();
+    fn_1_1596DC(2);
+    fn_1_47A60(1);
+    fn_1_47A60(13);
+    fn_1_484CC(2);
+    fn_1_412A0(1);
+    fn_1_A0AA4();
+    fn_1_46B4(lbl_801A6410.unk_0, p_lbl_14_bss_0->unk_14, (const char *)&lbl_14_data_2FB0, 860);
+    p_lbl_14_bss_0->unk_14 = 0;
+}
+/* fzgx:end _epilog */
+
 /* fzgx:begin fn_14_220 */
 extern struct fn_14_220_lbl_14_bss_1C lbl_14_bss_1C;
 extern struct fn_14_220_lbl_14_bss_20 lbl_14_bss_20;

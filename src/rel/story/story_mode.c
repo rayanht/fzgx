@@ -76,6 +76,41 @@ void fn_7_25C(void) {
 }
 /* fzgx:end fn_7_25C */
 
+/* fzgx:begin _epilog */
+struct _epilog_lbl_7_bss_0 {
+    u32 unk_0;
+    u8 pad_4[0x14];
+    u32 unk_18;
+    u32 unk_1C;
+};
+struct _epilog_lbl_801A6410 {
+    u32 unk_0;
+};
+
+extern struct _epilog_lbl_7_bss_0 lbl_7_bss_0;
+extern struct _epilog_lbl_801A6410 lbl_801A6410;
+extern u32 fn_1_4E060(void);
+extern u32 lbl_7_data_13A3C;
+extern void * fn_1_435C(void *);
+extern void fn_1_3C78(void);
+extern void fn_1_41A8(void);
+extern void fn_1_46B4(u32, u32, const char *, int);
+extern void fn_1_A8F78(void);
+
+void _epilog(void) {
+    struct _epilog_lbl_7_bss_0 *p_lbl_7_bss_0;
+    p_lbl_7_bss_0 = (struct _epilog_lbl_7_bss_0 *)&lbl_7_bss_0;
+    fn_1_3C78();
+    fn_1_A8F78();
+    fn_1_46B4(lbl_801A6410.unk_0, p_lbl_7_bss_0->unk_0, (const char *)&lbl_7_data_13A3C, 478);
+    fn_1_435C((void *)p_lbl_7_bss_0->unk_18);
+    fn_1_41A8();
+    fn_1_435C((void *)p_lbl_7_bss_0->unk_1C);
+    fn_1_41A8();
+    fn_1_4E060();
+}
+/* fzgx:end _epilog */
+
 /* fzgx:begin fn_7_388 */
 typedef u32 (*fn_7_388_Fn0)(void);
 struct fn_7_388_lbl_7_data_13A58_0_E44 {
