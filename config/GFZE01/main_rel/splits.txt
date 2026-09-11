@@ -5888,3 +5888,6 @@ rel/main_rel/ranking/fn_1_1568C4.c:
 
 rel/main_rel/sel_static_disp/fn_1_13B24C.c:
 	.text       start:0x0013B24C end:0x0013B328 align:4
+
+rel/main_rel/spline/fn_1_F7C48.c:
+	.text       start:0x000F7C48 end:0x000F7CAC align:4

@@ -552,6 +552,23 @@ s16 fn_1_F7B80(void) {
 }
 /* fzgx:end fn_1_F7B80 */
 
+/* fzgx:begin fn_1_F7C48 */
+extern u64 __shl2i(u32, u32, s32);
+
+s16 fn_1_F7C48(s16 arg) {
+    u64 mask = (u64)1 << arg;
+    u64 bits = ((u64)lbl_1_bss_7F0C0.unk_48 << 32) | lbl_1_bss_7F0C0.unk_4C;
+    s16 ret;
+
+    if (bits & mask) {
+        ret = 1;
+    } else {
+        ret = 0;
+    }
+    return ret;
+}
+/* fzgx:end fn_1_F7C48 */
+
 /* fzgx:begin fn_1_F7CAC */
 extern u64 __shl2i(u32, u32, s32);
 

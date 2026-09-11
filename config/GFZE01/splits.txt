@@ -5066,3 +5066,6 @@ dol/SIGetType.c:
 
 dol/fn_8004BDD8.c:
 	.text       start:0x8004BDD8 end:0x8004BE90 align:4
+
+dol/fn_80030754.c:
+	.text       start:0x80030754 end:0x800307CC align:4
