@@ -1,5 +1,5 @@
 {
- "generated": 1789170837,
+ "generated": 1789172537,
  "functions": [
   {
    "symbol": "car_colchg:_prolog",
@@ -66644,7 +66644,7 @@
    "addr": 469496,
    "size": 13196,
    "status": "unmatched",
-   "attempts": 9,
+   "attempts": 10,
    "best_percent": 97.83,
    "claimed_by": null,
    "claimed_at": null,
@@ -129104,7 +129104,7 @@
    "addr": 9824,
    "size": 10284,
    "status": "unmatched",
-   "attempts": 9,
+   "attempts": 10,
    "best_percent": 94.02,
    "claimed_by": null,
    "claimed_at": null,
@@ -463552,6 +463552,44 @@
    "best_body_path": "/Users/rayan/fzgx/.fzgx/attempts/fn_1_729F8.1789170785.c",
    "stale_checks": 6,
    "best_in_attempt": 97.83
+  },
+  {
+   "id": 17475,
+   "symbol": "fn_1_729F8",
+   "agent": "deepseek-largest2-low32-20260911-201432-codex-1",
+   "harness": "codex",
+   "model": "deepseek-flash",
+   "started": 1789172072,
+   "ended": 1789172536,
+   "checks": 15,
+   "final_percent": 96.44,
+   "tokens_in": 2172511,
+   "tokens_out": 100670,
+   "cost_usd": 0.084564,
+   "outcome": "released",
+   "notes": "Plateau at 98.8%: our GC/1.3.2 build materialises the const rodata object's address as a separate live value (`addi rX, r30, 0` before each `lbl_1_rodata_3180` field load, unlike retail's single `lbl_1_rodata_3180`-based r30), which pushes every `(f32)(s32)` conversion block's temporaries up one register (r7/r8/r9 vs r6/r7/r8) and reorders case 12/13; all source-shape probes (locals, initializers, pointer/array views, pragma, alternate compilers) compile to identical or worse output.",
+   "best_body_path": "/Users/rayan/fzgx/.fzgx/attempts/fn_1_729F8.1789172536.c",
+   "stale_checks": 14,
+   "best_in_attempt": 96.44
+  },
+  {
+   "id": 17476,
+   "symbol": "fn_8_2660",
+   "agent": "deepseek-largest2-low32-20260911-201432-codex-2",
+   "harness": "codex",
+   "model": "deepseek-flash",
+   "started": 1789172072,
+   "ended": 1789172482,
+   "checks": 32,
+   "final_percent": 93.82,
+   "tokens_in": 3581737,
+   "tokens_out": 80319,
+   "cost_usd": 0.089011,
+   "outcome": "released",
+   "notes": "budget exhausted: 32 checks used",
+   "best_body_path": "/Users/rayan/fzgx/.fzgx/attempts/fn_8_2660.1789172482.c",
+   "stale_checks": 30,
+   "best_in_attempt": 94.02
   }
  ],
  "names": [
