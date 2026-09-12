@@ -836,6 +836,35 @@ void fn_1_4D274(u32 *object, f32 value) {
 }
 /* fzgx:end fn_1_4D274 */
 
+/* fzgx:begin fn_1_4D494 noprologue */
+typedef unsigned char u8;
+
+typedef unsigned long u32;
+
+typedef float f32;
+
+/* lbl_1_bss_4BA30: .bss size 0x14, 5 refs from font.c */
+typedef struct {
+u32 unk_0; /* 0 loads, 2 stores */
+f32 unk_4; /* 1 loads, 1 stores */
+f32 unk_8; /* 3 loads, 1 stores */
+f32 unk_C; /* 3 loads, 1 stores */
+f32 unk_10; /* 3 loads, 1 stores */
+} Obj_1_bss_4BA30;
+extern Obj_1_bss_4BA30 lbl_1_bss_4BA44;
+
+extern u8 lbl_1_rodata_FD0[];
+void fn_1_4D494(void) {
+Obj_1_bss_4BA30 *bss = &lbl_1_bss_4BA44;
+f32 *rodata = (f32 *)lbl_1_rodata_FD0;
+bss->unk_0 = 1;
+bss->unk_4 = rodata[0x16ac / 4];
+bss->unk_8 = rodata[0xf0 / 4];
+bss->unk_C = rodata[0x16b0 / 4];
+bss->unk_10 = rodata[0xf0 / 4];
+}
+/* fzgx:end fn_1_4D494 */
+
 /* fzgx:begin fn_1_4DC20 */
 typedef struct {
     u32 words[23];

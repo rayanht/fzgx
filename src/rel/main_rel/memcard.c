@@ -549,6 +549,75 @@ void fn_1_ABB24(fn_1_ABB24_MemcardArg *arg) {
 }
 /* fzgx:end fn_1_ABB24 */
 
+/* fzgx:begin fn_1_ABB4C noprologue */
+typedef signed long s32;
+
+typedef unsigned char u8;
+typedef unsigned short u16;
+typedef unsigned long u32;
+
+/* lbl_1_bss_9F8: .bss size 0x50, referenced by 67 functions, shape {'object': 301} */
+typedef struct {
+u16 unk_0; /* 22 loads, 0 stores */
+u16 unk_2; /* 35 loads, 0 stores */
+u8 pad_4[0x4];
+u16 unk_8; /* 108 loads, 0 stores */
+u16 unk_A; /* 22 loads, 0 stores */
+u8 pad_C[0x4];
+u16 unk_10; /* 56 loads, 0 stores */
+u16 unk_12; /* 53 loads, 0 stores */
+u8 pad_14[0x3C];
+} Obj_1_bss_9F8;
+extern Obj_1_bss_9F8 lbl_1_bss_9F8;
+
+extern void fn_1_A2DC4(u32);
+typedef struct {
+u8 pad_0[0x24];
+void *unk_24;
+u8 pad_28[0x2];
+u8 unk_2A;
+} MemcardArg;
+typedef struct {
+u8 pad_0[0x1];
+u8 unk_1;
+u8 pad_2[0x2];
+s32 unk_4;
+} MemcardState;
+/* fzgx-allow: A1 absolute retail data address */
+/* fzgx-allow: A1 absolute retail data address */
+void fn_1_ABB4C(MemcardArg *arg) {
+MemcardState *state;
+s32 value;
+if ((arg->unk_2A & 1) == 0) {
+state = (MemcardState *)arg->unk_24;
+if (((lbl_1_bss_9F8.unk_10 & 1) != 0 ||
+(lbl_1_bss_9F8.unk_12 & 1) != 0) &&
+state->unk_1 == 1) {
+fn_1_A2DC4(0xA9011300 );
+state->unk_1 = 0;
+/* Volatile prevents the compiler from reusing the first status read. */
+} else if ((((*((volatile u16 *)&lbl_1_bss_9F8.unk_10) >> 1) & 1) != 0 ||
+((lbl_1_bss_9F8.unk_12 >> 1) & 1) != 0) &&
+state->unk_1 == 0) {
+fn_1_A2DC4(0xA9011300 );
+state->unk_1 = 1;
+}
+if (((lbl_1_bss_9F8.unk_8 >> 8) & 1) != 0) {
+fn_1_A2DC4(0xA9011100 );
+value = 1;
+} else {
+value = 0;
+}
+state = (MemcardState *)arg->unk_24;
+state->unk_4 = value;
+state = (MemcardState *)arg->unk_24;
+if (state->unk_4 == 2) {
+state->unk_1 = 1;
+}
+}
+}
+/* fzgx:end fn_1_ABB4C */
+
 /* fzgx:begin fn_1_ABC5C */
 typedef struct {
     u8 byte_0;

@@ -35439,6 +35439,17 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/font/fn_1_4D494.c",
+    "symbols": [
+      "fn_1_4D494"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "tu": "rel/main_rel/font.c"
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/font/fn_1_4DC20.c",
     "symbols": [
       "fn_1_4DC20"
@@ -39285,6 +39296,17 @@
     ],
     "status": "matching",
     "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/memcard.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/memcard/fn_1_ABB4C.c",
+    "symbols": [
+      "fn_1_ABB4C"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
     "extra_cflags": [],
     "tu": "rel/main_rel/memcard.c"
   },
@@ -58579,6 +58601,17 @@
     ],
     "status": "matching",
     "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/title/title.c"
+  },
+  {
+    "module": "title",
+    "source": "rel/title/title/fn_8_4F64.c",
+    "symbols": [
+      "fn_8_4F64"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
     "extra_cflags": [],
     "tu": "rel/title/title.c"
   },

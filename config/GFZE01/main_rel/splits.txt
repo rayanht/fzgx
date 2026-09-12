@@ -6191,3 +6191,9 @@ rel/main_rel/phys/fn_1_E1C10.c:
 
 rel/main_rel/_prolog/fn_1_E9C.c:
 	.text       start:0x00000E9C end:0x00000ECC align:4
+
+rel/main_rel/font/fn_1_4D494.c:
+	.text       start:0x0004D494 end:0x0004D4C8 align:4
+
+rel/main_rel/memcard/fn_1_ABB4C.c:
+	.text       start:0x000ABB4C end:0x000ABC5C align:4

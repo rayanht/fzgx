@@ -215,3 +215,6 @@ rel/title/operation/fn_8_988C.c:
 
 rel/title/title/fn_8_1C18.c:
 	.text       start:0x00001C18 end:0x00001C90 align:4
+
+rel/title/title/fn_8_4F64.c:
+	.text       start:0x00004F64 end:0x0000516C align:4
