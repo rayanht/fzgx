@@ -6242,3 +6242,12 @@ rel/main_rel/car/fn_1_87238.c:
 
 rel/main_rel/memcard/fn_1_BF600.c:
 	.text       start:0x000BF600 end:0x000BF700 align:4
+
+rel/main_rel/sel_static_disp/fn_1_143E7C.c:
+	.text       start:0x00143E7C end:0x00143F5C align:4
+
+rel/main_rel/memcard/fn_1_BFCF8.c:
+	.text       start:0x000BFCF8 end:0x000BFE20 align:4
+
+rel/main_rel/bg_lig/fn_1_D8D58.c:
+	.text       start:0x000D8D58 end:0x000D8EEC align:4

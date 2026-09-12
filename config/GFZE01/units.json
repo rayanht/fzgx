@@ -27698,6 +27698,21 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/bg_lig/fn_1_D8D58.c",
+    "symbols": [
+      "fn_1_D8D58"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/bg_lig.c",
+    "pool": {
+      "...rodata.0": "lbl_1_rodata_6490",
+      "@9": "lbl_1_rodata_64A0"
+    }
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/bg_lig/fn_1_D8EEC.c",
     "symbols": [
       "fn_1_D8EEC"
@@ -40522,6 +40537,23 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/memcard/fn_1_BFCF8.c",
+    "symbols": [
+      "fn_1_BFCF8"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/memcard.c",
+    "pool": {
+      "...rodata.0": "lbl_1_rodata_4AE0",
+      "@38": "lbl_1_rodata_4D1C",
+      "@9": "lbl_1_rodata_4CA8",
+      "@11": "lbl_1_rodata_4CB0"
+    }
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/memcard/fn_1_C0510.c",
     "symbols": [
       "fn_1_C0510"
@@ -44311,6 +44343,21 @@
     "tu": "rel/main_rel/sel_static_disp.c",
     "pool": {
       "@22": "lbl_1_rodata_93E8"
+    }
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/sel_static_disp/fn_1_143E7C.c",
+    "symbols": [
+      "fn_1_143E7C"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/sel_static_disp.c",
+    "pool": {
+      "...rodata.0": "lbl_1_rodata_92C0",
+      "@34": "lbl_1_rodata_93E8"
     }
   },
   {
