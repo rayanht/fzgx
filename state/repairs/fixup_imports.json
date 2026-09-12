@@ -3288,5 +3288,374 @@
     ],
     "link": "verified",
     "commit": "11a4392"
+  },
+  "fn_10_21EC": {
+    "seed_symbol": "fn_10_21EC",
+    "generator": "fzgx fixup",
+    "transform": "lifetime initialization order at 3468: fzgx_loop_p9C8_3463.value,fzgx_loop_p9F8_3463.value,fzgx_loop_i_3463.value,fzgx_loop_psel_3463",
+    "seed": "#include \"types.h\"\n\nstruct SelState {\n    u8 pad_0[0x8];\n    u16 unk_8;\n    u16 unk_A;\n    u8 pad_C[0x8];\n    s32 unk_14;\n};\n\nstruct SelSub {\n    u8 pad_0[0x1a];\n    u8 unk_1a;\n};\n\nstruct SelObject {\n    s16 unk_0;\n    u8 pad_2[0x8e];\n    s16 unk_90;\n    u8 pad_92[0x2];\n    u32 unk_94;\n    s32 unk_98;\n    u8 pad_9C[0x8];\n    struct SelSub *unk_A4;\n    u8 pad_A8[0x81];\n    u8 unk_129;\n    u8 pad_12A[0x16];\n    u32 unk_140;\n};\n\nstruct SelTile {\n    u8 pad_0[0x8];\n    u16 unk_8;\n    u8 pad_A[0xa];\n    u16 unk_14;\n};\n\nextern u8 lbl_10_bss_0[];\nextern struct SelObject lbl_1_bss_8B3A0;\nextern struct SelTile lbl_1_bss_9F8;\nextern u8 lbl_1_bss_9C8[];\nextern s16 lbl_1_bss_962;\nextern s16 lbl_1_bss_96A;\nextern u8 lbl_1_bss_8CA24;\n\nextern int fn_1_4C10(void);\nextern u8 fn_1_D6690(void);\nextern u8 fn_1_D6698(void);\nextern s16 fn_10_3D64(void);\nextern s16 fn_10_C258(void *ctx, s32 arg);\nextern u32 fn_10_A90C(void *obj);\nextern u32 fn_10_AB98(void *obj);\nextern u32 fn_10_AE14(void *obj);\nextern int fn_1_12F228(void);\nextern u32 fn_1_4A00(u32 a, u32 b, void *c);\nextern u32 fn_1_EB4BC(void);\nextern u8 fn_1_B7C00(void);\nextern void fn_10_C210(void *obj, s16 arg);\nextern void fn_10_C274(void *obj, int arg);\nextern void fn_10_C298(void *obj, int arg);\nextern void fn_1_12EF80(u32 mode, void *out1, void *out2);\nextern void fn_1_12F150(s16 idx, u32 a, u32 b);\nextern void fn_1_12F17C(void);\nextern void fn_1_12F1E8(s32 arg);\nextern void fn_1_159440(int a, int b);\nextern void fn_1_1596DC(u32 a);\nextern void fn_1_46A60(void);\nextern void fn_1_7B218(s32 a);\nextern void fn_1_7B2E8(u32 a);\nextern void fn_1_A2D84(u32 a);\nextern void fn_1_A51C8(s16 a);\nextern void fn_1_EB330(void);\n\n#pragma opt_common_subs off\nvoid fn_10_21EC(void) {\n    struct SelState *base;\n    u8 *far;\n    s16 ret;\n    s16 count;\n    s32 v3;\n    struct SelObject *sel;\n    s16 i;\n    u8 *p9F8;\n    u8 *p9C8;\n    struct SelObject *psel;\n    s16 t;\n    u32 v;\n    s16 locE;\n    s16 locC;\n    s16 locA;\n    s16 loc8;\n    s32 old;\n    s32 cond;\n\n    base = (struct SelState *)lbl_10_bss_0;\n    far = (u8 *)base + 0x50000;\n    ret = fn_10_C258(&lbl_1_bss_8B3A0, lbl_1_bss_962);\n    count = 0;\n    if (base->unk_14 == -1) {\n        fn_1_4C10();\n    }\n    if (((lbl_1_bss_8B3A0.unk_140 & 0x80000000) != 0) &&\n        ((lbl_1_bss_8B3A0.unk_140 & 0x40000000) == 0) &&\n        ((lbl_1_bss_8B3A0.unk_94 & 0x8) == 0)) {\n        cond = 1;\n    } else {\n        if (fn_1_4C10() != 0) {\n            cond = 1;\n        } else {\n            cond = 0;\n        }\n    }\n    if (cond != 0) {\n        return;\n    }\n    if (fn_1_B7C00() != 0) {\n        return;\n    }\n    old = base->unk_14;\n    if (old != -1) {\n        base->unk_14 = -1;\n        lbl_1_bss_96A = old;\n        return;\n    }\n    if (((2) == (lbl_1_bss_8B3A0.unk_0)) || lbl_1_bss_8B3A0.unk_0 == 10) {\n        v3 = (fn_1_EB4BC() == 0);\n    } else {\n        v3 = 1;\n    }\n    sel = &lbl_1_bss_8B3A0;\n    if ((sel->unk_94 & 0x40000000) != 0 && v3 != 0) {\n        if ((sel->unk_94 & 0x200) != 0) {\n            switch (ret) {\n            case 0:\n                if (fn_1_12F228() == 0) {\n                    fn_10_A90C(&lbl_1_bss_8B3A0);\n                }\n                p9C8 = lbl_1_bss_9C8;\n                i = 0;\n                p9F8 = (u8 *)&lbl_1_bss_9F8;\n                psel = &lbl_1_bss_8B3A0;\n                while ((s16)i < 4) {\n                    if (((-1) != ((s8)p9C8[0xa])) &&\n                        (__rlwnm(psel->unk_98, (i + 1) & 31, 31, 31)) != 0) {\n                        if (((*(u16 *)(p9F8 + 8) >> 9) & 1) != 0) {\n                            count--;\n                        }\n                        if ((((*(u16 *)(p9F8 + 8) >> 8) & 1) != 0) || fn_1_12F228() != 0) {\n                            count++;\n                        }\n                        if ((((*(u16 *)(p9F8 + 8) >> 8) & 1) != 0) || fn_1_12F228() != 0) {\n                            fn_1_12F150(i, 5, 1);\n                        } else if (((*(u16 *)(p9F8 + 8) >> 9) & 1) != 0) {\n                            fn_1_12F150(i, 5, 0);\n                        }\n                    }\n                    p9C8 += 12;\n                    p9F8 += 20;\n                    i++;\n                }\n                if (count > 0) {\n                    fn_10_C274(&lbl_1_bss_8B3A0, lbl_1_bss_962);\n                    fn_10_AB98(&lbl_1_bss_8B3A0);\n                    fn_1_A2D84(0xA9010100);\n                }\n                if (count < 0 &&\n                    ((sel->unk_94 & 0x40000000) == 0 || (sel->unk_94 & 0x4000) != 0)) {\n                    base->unk_14 = 14;\n                    t = fn_10_C258(&lbl_1_bss_8B3A0, 14);\n                    if (t == 0) {\n                        *(u32 *)(far + 0x1748) = 1;\n                    }\n                    fn_1_12F17C();\n                    fn_1_4A00(0, *(s16 *)(far - 0x6c74) & 0xff, *(void **)(far - 0x6c78));\n                    *(u32 *)(far + 0x1744) = 0;\n                    fn_1_A2D84(0xA9010200);\n                    fn_10_C210(&lbl_1_bss_8B3A0, base->unk_14);\n                }\n                break;\n            case 1:\n                if (*(u8 *)(far + 0x1750) > 1) {\n                    *(u8 *)(far + 0x1750) -= 1;\n                }\n                if (*(u16 *)(far + 0x1752) > 1) {\n                    *(u16 *)(far + 0x1752) -= 1;\n                }\n                if (*(u16 *)(far + 0x174e) != 0) {\n                    u16 c = *(u16 *)(far + 0x174e);\n                    c--;\n                    *(u16 *)(far + 0x174e) = c;\n                    if (c == 0xb3) {\n                        if (lbl_1_bss_8B3A0.unk_90 != 0x24) {\n                            lbl_1_bss_8CA24 = 0;\n                        } else if (lbl_1_bss_8CA24 != 0) {\n                            fn_1_A2D84(0xA9000400);\n                        }\n                        *(u8 *)(far + 0x1754) = 0;\n                    }\n                    if (*(u16 *)(far + 0x174e) == 0xaa) {\n                        fn_1_12EF80(lbl_1_bss_8B3A0.unk_90, &locE, &locC);\n                        fn_1_A51C8(locC);\n                    }\n                    if (*(u16 *)(far + 0x174e) == 1) {\n                        base->unk_14 = 16;\n                        fn_1_12F17C();\n                        fn_1_4A00(0, *(s16 *)(far - 0x6c74) & 0xff, *(void **)(far - 0x6c78));\n                        *(u32 *)(far + 0x1744) = 0;\n                    }\n                } else {\n                    if (fn_1_12F228() == 0) {\n                        fn_10_AE14(&lbl_1_bss_8B3A0);\n                    }\n                    p9C8 = lbl_1_bss_9C8;\n                    i = 0;\n                    p9F8 = (u8 *)&lbl_1_bss_9F8;\n                    psel = &lbl_1_bss_8B3A0;\n                    while ((s16)i < 4) {\n                        if (((-1) != ((s8)p9C8[0xa])) &&\n                            (__rlwnm(psel->unk_98, (i + 1) & 31, 31, 31)) != 0) {\n                            if (((*(u16 *)(p9F8 + 8) >> 9) & 1) != 0) {\n                                count--;\n                            }\n                            if ((((*(u16 *)(p9F8 + 8) >> 8) & 1) != 0) || fn_1_12F228() != 0) {\n                                count++;\n                            }\n                            if ((((*(u16 *)(p9F8 + 8) >> 8) & 1) != 0) || fn_1_12F228() != 0) {\n                                fn_1_12F150(i, 6, 1);\n                            } else if (((*(u16 *)(p9F8 + 8) >> 9) & 1) != 0) {\n                                fn_1_12F150(i, 6, 0);\n                            }\n                        }\n                        p9C8 += 12;\n                        p9F8 += 20;\n                        i++;\n                    }\n                    if (count > 0) {\n                        psel = &lbl_1_bss_8B3A0;\n                        if (psel->unk_A4->unk_1a == 0) {\n                            fn_1_A2D84(0xA9010100);\n                            psel->unk_A4->unk_1a = 1;\n                        }\n                        fn_1_12F1E8(0);\n                        if (fn_1_D6698() != 0 || fn_1_D6690() == 0) {\n                            if (*(u16 *)(far + 0x1752) == 1) {\n                                fn_1_7B2E8(lbl_1_bss_8B3A0.unk_90);\n                                *(u16 *)(far + 0x174e) = 180;\n                            }\n                        }\n                        if (*(u16 *)(far + 0x1752) == 0) {\n                            if (lbl_1_bss_8B3A0.unk_0 != 2 && lbl_1_bss_8B3A0.unk_0 != 10) {\n                                *(u16 *)(far + 0x1752) = 60;\n                            } else {\n                                *(u16 *)(far + 0x1752) = 1;\n                            }\n                        }\n                        if (*(u8 *)(far + 0x1750) == 0) {\n                            *(u8 *)(far + 0x1750) = 20;\n                        }\n                        if (((lbl_1_bss_9F8.unk_8 >> 12) & 1) != 0 &&\n                            *(u8 *)(far + 0x1754) != 0 &&\n                            (lbl_1_bss_9F8.unk_14 & 0xb) == 0xb &&\n                            ((lbl_1_bss_9F8.unk_14 >> 2) & 1) == 0) {\n                            *(u8 *)(far + 0x1754) = 0;\n                            lbl_1_bss_8CA24 = 1;\n                        }\n                        lbl_1_bss_8B3A0.unk_129 = 0;\n                    }\n                    if (count < 0 &&\n                        ((sel->unk_94 & 0x40000000) == 0 || (sel->unk_94 & 0x4000) != 0)) {\n                        fn_10_C298(&lbl_1_bss_8B3A0, lbl_1_bss_962);\n                        psel = &lbl_1_bss_8B3A0;\n                        if (psel->unk_A4->unk_1a == 0) {\n                            fn_1_A2D84(0xA9010200);\n                            psel->unk_A4->unk_1a = 1;\n                        }\n                    }\n                }\n                break;\n            }\n        } else {\n            if (*(u8 *)(far + 0x1750) > 1) {\n                *(u8 *)(far + 0x1750) -= 1;\n            }\n            if (*(u16 *)(far + 0x1752) > 1) {\n                *(u16 *)(far + 0x1752) -= 1;\n            }\n            if (*(u16 *)(far + 0x174e) != 0) {\n                u16 c = *(u16 *)(far + 0x174e);\n                c--;\n                *(u16 *)(far + 0x174e) = c;\n                if (c == 0xb3) {\n                    if (lbl_1_bss_8B3A0.unk_90 != 0x24) {\n                        lbl_1_bss_8CA24 = 0;\n                    } else if (lbl_1_bss_8CA24 != 0) {\n                        fn_1_A2D84(0xA9000400);\n                    }\n                    *(u8 *)(far + 0x1754) = 0;\n                }\n                if (*(u16 *)(far + 0x174e) == 0xaa) {\n                    fn_1_12EF80(lbl_1_bss_8B3A0.unk_90, &locA, &loc8);\n                    fn_1_A51C8(loc8);\n                }\n                if (*(u16 *)(far + 0x174e) == 1) {\n                    base->unk_14 = 16;\n                    fn_1_12F17C();\n                    fn_1_4A00(0, *(s16 *)(far - 0x6c74) & 0xff, *(void **)(far - 0x6c78));\n                    *(u32 *)(far + 0x1744) = 0;\n                }\n            } else {\n                if (fn_1_12F228() == 0) {\n                    fn_10_AE14(&lbl_1_bss_8B3A0);\n                }\n                p9C8 = lbl_1_bss_9C8;\n                i = 0;\n                p9F8 = (u8 *)&lbl_1_bss_9F8;\n                psel = &lbl_1_bss_8B3A0;\n                while ((s16)i < 4) {\n                    if (((-1) != ((s8)p9C8[0xa])) &&\n                        (__rlwnm(psel->unk_98, (i + 1) & 31, 31, 31)) != 0) {\n                        if (((*(u16 *)(p9F8 + 8) >> 9) & 1) != 0) {\n                            count--;\n                        }\n                        if ((((*(u16 *)(p9F8 + 8) >> 8) & 1) != 0) || fn_1_12F228() != 0) {\n                            count++;\n                        }\n                        if ((((*(u16 *)(p9F8 + 8) >> 8) & 1) != 0) || fn_1_12F228() != 0) {\n                            fn_1_12F150(i, 6, 1);\n                        } else if (((*(u16 *)(p9F8 + 8) >> 9) & 1) != 0) {\n                            fn_1_12F150(i, 6, 0);\n                        }\n                    }\n                    p9C8 += 12;\n                    p9F8 += 20;\n                    i++;\n                }\n                if (count > 0) {\n                    fn_1_12F1E8(0);\n                    if (fn_1_D6698() != 0 || fn_1_D6690() == 0) {\n                        if (*(u16 *)(far + 0x1752) == 1) {\n                            fn_1_7B2E8(lbl_1_bss_8B3A0.unk_90);\n                            *(u16 *)(far + 0x174e) = 180;\n                        }\n                    }\n                    psel = &lbl_1_bss_8B3A0;\n                    if (psel->unk_A4->unk_1a == 0) {\n                        fn_1_A2D84(0xA9010100);\n                        psel->unk_A4->unk_1a = 1;\n                    }\n                    if (*(u16 *)(far + 0x1752) == 0) {\n                        if (lbl_1_bss_8B3A0.unk_0 != 2 && lbl_1_bss_8B3A0.unk_0 != 10) {\n                            *(u16 *)(far + 0x1752) = 60;\n                        } else {\n                            *(u16 *)(far + 0x1752) = 1;\n                        }\n                    }\n                    if (*(u8 *)(far + 0x1750) == 0) {\n                        *(u8 *)(far + 0x1750) = 20;\n                    }\n                    if (((lbl_1_bss_9F8.unk_8 >> 12) & 1) != 0 &&\n                        *(u8 *)(far + 0x1754) != 0 &&\n                        (lbl_1_bss_9F8.unk_14 & 0xb) == 0xb &&\n                        ((lbl_1_bss_9F8.unk_14 >> 2) & 1) == 0) {\n                        *(u8 *)(far + 0x1754) = 0;\n                        lbl_1_bss_8CA24 = 1;\n                    }\n                    lbl_1_bss_8B3A0.unk_129 = 0;\n                }\n                if (count < 0 &&\n                    ((sel->unk_94 & 0x40000000) == 0 || (sel->unk_94 & 0x4000) != 0)) {\n                    fn_10_C298(&lbl_1_bss_8B3A0, lbl_1_bss_962);\n                    psel = &lbl_1_bss_8B3A0;\n                    if (psel->unk_A4->unk_1a == 0) {\n                        fn_1_A2D84(0xA9010200);\n                        psel->unk_A4->unk_1a = 1;\n                    }\n                    fn_1_12F1E8(0);\n                }\n            }\n        }\n    } else {\n        if (v3 != 0) {\n            if (lbl_1_bss_8B3A0.unk_0 == 1) {\n                switch (ret) {\n                case 0:\n                    fn_10_A90C(&lbl_1_bss_8B3A0);\n                    p9C8 = lbl_1_bss_9C8;\n                    i = 0;\n                    p9F8 = (u8 *)&lbl_1_bss_9F8;\n                    psel = &lbl_1_bss_8B3A0;\n                    while ((s16)i < 4) {\n                        if (((-1) != ((s8)p9C8[0xa])) &&\n                            (__rlwnm(psel->unk_98, (i + 1) & 31, 31, 31)) != 0) {\n                            if (((*(u16 *)(p9F8 + 8) >> 9) & 1) != 0) {\n                                count--;\n                            }\n                            if (((*(u16 *)(p9F8 + 8) >> 8) & 1) != 0) {\n                                count = (s16)(count + 1);\n                            }\n                            if (((*(u16 *)(p9F8 + 8) >> 8) & 1) != 0) {\n                                fn_1_12F150(i, 5, 1);\n                                fn_1_12F17C();\n                            } else if (((*(u16 *)(p9F8 + 8) >> 9) & 1) != 0) {\n                                fn_1_12F150(i, 5, 0);\n                                fn_1_12F17C();\n                            }\n                        }\n                        p9C8 += 12;\n                        p9F8 += 20;\n                        i++;\n                    }\n                    if (count > 0) {\n                        t = fn_10_3D64();\n                        v = sel->unk_94;\n                        base->unk_A = t;\n                        base->unk_8 = t;\n                        if ((v & 0x400) != 0 && t != 0) {\n                            base->unk_14 = 20;\n                        } else {\n                            base->unk_A = 0;\n                            base->unk_8 = 0;\n                            base->unk_14 = 16;\n                        }\n                        fn_10_AB98(&lbl_1_bss_8B3A0);\n                        fn_1_A2D84(0xA9010100);\n                        lbl_1_bss_8B3A0.unk_129 = 0;\n                    }\n                    if (count < 0 &&\n                        ((sel->unk_94 & 0x40000000) == 0 || (sel->unk_94 & 0x4000) != 0)) {\n                        v = sel->unk_94;\n                        base->unk_14 = 14;\n                        sel->unk_94 = v & 0xffffffef;\n                        sel->unk_94 = v & 0xffffffcf;\n                        t = fn_10_C258(&lbl_1_bss_8B3A0, 14);\n                        if (t == 0) {\n                            *(u32 *)(far + 0x1748) = 1;\n                        }\n                        fn_1_A2D84(0xA9010200);\n                        fn_10_C210(&lbl_1_bss_8B3A0, base->unk_14);\n                    }\n                    if (count != 0) {\n                        fn_1_4A00(0, *(s16 *)(far - 0x6c74) & 0xff, *(void **)(far - 0x6c78));\n                        *(u32 *)(far + 0x1744) = 0;\n                    }\n                    break;\n                }\n            } else {\n                switch (ret) {\n                case 0:\n                    fn_10_A90C(&lbl_1_bss_8B3A0);\n                    p9C8 = lbl_1_bss_9C8;\n                    i = 0;\n                    p9F8 = (u8 *)&lbl_1_bss_9F8;\n                    psel = &lbl_1_bss_8B3A0;\n                    while ((s16)i < 4) {\n                        if (((-1) != ((s8)p9C8[0xa])) &&\n                            (__rlwnm(psel->unk_98, (i + 1) & 31, 31, 31)) != 0) {\n                            if (((*(u16 *)(p9F8 + 8) >> 9) & 1) != 0) {\n                                count--;\n                            }\n                            if (((*(u16 *)(p9F8 + 8) >> 8) & 1) != 0) {\n                                count = (s16)(count + 1);\n                            }\n                            if (((*(u16 *)(p9F8 + 8) >> 8) & 1) != 0) {\n                                fn_1_12F150(i, 5, 1);\n                            } else if (((*(u16 *)(p9F8 + 8) >> 9) & 1) != 0) {\n                                fn_1_12F150(i, 5, 0);\n                            }\n                        }\n                        p9C8 += 12;\n                        p9F8 += 20;\n                        i++;\n                    }\n                    if (count > 0) {\n                        *(s16 *)(far + 0x174c) = 1;\n                        fn_1_A2D84(0xA9010100);\n                        fn_1_7B218(0);\n                        fn_1_4A00(0, *(s16 *)(far - 0x6c74) & 0xff, *(void **)(far - 0x6c78));\n                        *(u32 *)(far + 0x1744) = 0;\n                        return;\n                    }\n                    if (*(s16 *)(far + 0x174c) > 0) {\n                        fn_1_4A00(1, *(s16 *)(far - 0x6c74) & 0xff, *(void **)(far - 0x6c78));\n                        v = sel->unk_94;\n                        *(u32 *)(far + 0x1744) = 0;\n                        *(s16 *)(far + 0x174c) = 0;\n                        if ((v & 0x4) != 0) {\n                            base->unk_14 = 33;\n                            fn_1_12F17C();\n                            fn_1_4A00(0, *(s16 *)(far - 0x6c74) & 0xff, *(void **)(far - 0x6c78));\n                            *(u32 *)(far + 0x1744) = 0;\n                            fn_1_12F1E8(0);\n                        } else {\n                            fn_10_C274(&lbl_1_bss_8B3A0, lbl_1_bss_962);\n                            fn_10_AB98(&lbl_1_bss_8B3A0);\n                        }\n                    }\n                    if (count < 0 &&\n                        ((sel->unk_94 & 0x40000000) == 0 || (sel->unk_94 & 0x4000) != 0) &&\n                        (sel->unk_94 & 0x20) == 0) {\n                        v = sel->unk_94;\n                        base->unk_14 = 14;\n                        sel->unk_94 = v & 0xffffffef;\n                        sel->unk_94 = v & 0xffffffcf;\n                        t = fn_10_C258(&lbl_1_bss_8B3A0, 14);\n                        if (t == 0) {\n                            *(u32 *)(far + 0x1748) = 1;\n                        }\n                        fn_1_12F17C();\n                        fn_1_4A00(0, *(s16 *)(far - 0x6c74) & 0xff, *(void **)(far - 0x6c78));\n                        *(u32 *)(far + 0x1744) = 0;\n                        fn_1_A2D84(0xA9010200);\n                        fn_10_C210(&lbl_1_bss_8B3A0, base->unk_14);\n                    }\n                    break;\n                case 1:\n                    if (((2) == (lbl_1_bss_8B3A0.unk_0)) && ((lbl_1_bss_9F8.unk_8 >> 11) & 1) != 0) {\n                        fn_1_EB330();\n                    } else {\n                        fn_10_AE14(&lbl_1_bss_8B3A0);\n                        p9C8 = lbl_1_bss_9C8;\n                        i = 0;\n                        p9F8 = (u8 *)&lbl_1_bss_9F8;\n                        psel = &lbl_1_bss_8B3A0;\n                        while ((s16)i < 4) {\n                            if (((-1) != ((s8)p9C8[0xa])) &&\n                                (__rlwnm(psel->unk_98, (i + 1) & 31, 31, 31)) != 0) {\n                                if (((*(u16 *)(p9F8 + 8) >> 9) & 1) != 0) {\n                                    count--;\n                                }\n                                if ((((*(u16 *)(p9F8 + 8) >> 8) & 1) != 0) || fn_1_12F228() != 0) {\n                                    count++;\n                                }\n                                if ((((*(u16 *)(p9F8 + 8) >> 8) & 1) != 0) || fn_1_12F228() != 0) {\n                                    fn_1_12F150(i, 6, 1);\n                                } else if (((*(u16 *)(p9F8 + 8) >> 9) & 1) != 0) {\n                                    fn_1_12F150(i, 6, 0);\n                                }\n                            }\n                            p9C8 += 12;\n                            p9F8 += 20;\n                            i++;\n                        }\n                        if (count > 0) {\n                            t = fn_10_3D64();\n                            v = sel->unk_94;\n                            base->unk_A = t;\n                            base->unk_8 = t;\n                            if ((v & 0x400) != 0 && t != 0) {\n                                base->unk_14 = 20;\n                            } else {\n                                base->unk_A = 0;\n                                base->unk_8 = 0;\n                                base->unk_14 = 16;\n                            }\n                            fn_1_12F17C();\n                            fn_1_4A00(0, *(s16 *)(far - 0x6c74) & 0xff, *(void **)(far - 0x6c78));\n                            *(u32 *)(far + 0x1744) = 0;\n                            fn_1_A2D84(0xA9010100);\n                            fn_1_12F1E8(0);\n                            lbl_1_bss_8B3A0.unk_129 = 0;\n                        }\n                        if (count < 0 &&\n                            ((sel->unk_94 & 0x40000000) == 0 || (sel->unk_94 & 0x4000) != 0)) {\n                            *(s16 *)(far + 0x174c) = -1;\n                            fn_1_4A00(0, *(s16 *)(far - 0x6c74) & 0xff, *(void **)(far - 0x6c78));\n                            *(u32 *)(far + 0x1744) = 0;\n                            fn_1_A2D84(0xA9010200);\n                            return;\n                        }\n                        if (*(s16 *)(far + 0x174c) < 0) {\n                            fn_1_4A00(1, *(s16 *)(far - 0x6c74) & 0xff, *(void **)(far - 0x6c78));\n                            *(u32 *)(far + 0x1744) = 0;\n                            *(u16 *)(far + 0x174c) = 0;\n                            fn_10_C298(&lbl_1_bss_8B3A0, lbl_1_bss_962);\n                            fn_1_46A60();\n                            fn_1_1596DC(3);\n                            fn_1_159440(3, 0);\n                        }\n                    }\n                    break;\n                }\n            }\n        }\n    }\n    if (v3 == 0) {\n        lbl_1_bss_96A = -1;\n    }\n}\n#pragma opt_common_subs reset\n",
+    "seed_sha256": "ecf5e03f3a9fba73f3d9642b6e443a86b8083f52ad481ecb633b726b89521c0d",
+    "generated_sha256": "3f8bd941d525383286f58b53d38b63904b0df9946910f1d2e79970e51c5cf208",
+    "generated_source": "#include \"types.h\"\n\nstruct SelState {\n    u8 pad_0[0x8];\n    u16 unk_8;\n    u16 unk_A;\n    u8 pad_C[0x8];\n    s32 unk_14;\n};\n\nstruct SelSub {\n    u8 pad_0[0x1a];\n    u8 unk_1a;\n};\n\nstruct SelObject {\n    s16 unk_0;\n    u8 pad_2[0x8e];\n    s16 unk_90;\n    u8 pad_92[0x2];\n    u32 unk_94;\n    s32 unk_98;\n    u8 pad_9C[0x8];\n    struct SelSub *unk_A4;\n    u8 pad_A8[0x81];\n    u8 unk_129;\n    u8 pad_12A[0x16];\n    u32 unk_140;\n};\n\nstruct SelTile {\n    u8 pad_0[0x8];\n    u16 unk_8;\n    u8 pad_A[0xa];\n    u16 unk_14;\n};\n\nextern u8 lbl_10_bss_0[];\nextern struct SelObject lbl_1_bss_8B3A0;\nextern struct SelTile lbl_1_bss_9F8;\nextern u8 lbl_1_bss_9C8[];\nextern s16 lbl_1_bss_962;\nextern s16 lbl_1_bss_96A;\nextern u8 lbl_1_bss_8CA24;\n\nextern int fn_1_4C10(void);\nextern u8 fn_1_D6690(void);\nextern u8 fn_1_D6698(void);\nextern s16 fn_10_3D64(void);\nextern s16 fn_10_C258(void *ctx, s32 arg);\nextern u32 fn_10_A90C(void *obj);\nextern u32 fn_10_AB98(void *obj);\nextern u32 fn_10_AE14(void *obj);\nextern int fn_1_12F228(void);\nextern u32 fn_1_4A00(u32 a, u32 b, void *c);\nextern u32 fn_1_EB4BC(void);\nextern u8 fn_1_B7C00(void);\nextern void fn_10_C210(void *obj, s16 arg);\nextern void fn_10_C274(void *obj, int arg);\nextern void fn_10_C298(void *obj, int arg);\nextern void fn_1_12EF80(u32 mode, void *out1, void *out2);\nextern void fn_1_12F150(s16 idx, u32 a, u32 b);\nextern void fn_1_12F17C(void);\nextern void fn_1_12F1E8(s32 arg);\nextern void fn_1_159440(int a, int b);\nextern void fn_1_1596DC(u32 a);\nextern void fn_1_46A60(void);\nextern void fn_1_7B218(s32 a);\nextern void fn_1_7B2E8(u32 a);\nextern void fn_1_A2D84(u32 a);\nextern void fn_1_A51C8(s16 a);\nextern void fn_1_EB330(void);\n\n#pragma opt_common_subs off\nvoid fn_10_21EC(void) {\n    u32 fzgx_condition_19430;\n    struct SelState *base;\n    u8 *far;\n    s16 ret;\n    s16 count;\n    s32 v3;\n    struct SelObject *sel;\n    struct { s16 value; } i;\n    struct { u8 * value; } p9F8;\n    struct { u8 * value; } p9C8;\n    struct SelObject *psel;\n    s16 t;\n    u32 v;\n    s16 locE;\n    s16 locC;\n    s16 locA;\n    s16 loc8;\n    s32 old;\n    s32 cond;\n    u32 lab_v;\n\n    base = (struct SelState *)lbl_10_bss_0;\n    far = (u8 *)base + 0x50000;\n    ret = fn_10_C258(&lbl_1_bss_8B3A0, lbl_1_bss_962);\n    count = 0;\n    if (base->unk_14 == -1) {\n        fn_1_4C10();\n    }\n    lab_v = lbl_1_bss_8B3A0.unk_140;\n    if (((lab_v & 0x80000000) != 0) &&\n        ((lab_v & 0x40000000) == 0) &&\n        ((lbl_1_bss_8B3A0.unk_94 & 0x8) == 0)) {\n        cond = 1;\n    } else {\n        if (fn_1_4C10() != 0) {\n            cond = 1;\n        } else {\n            cond = 0;\n        }\n    }\n    if (cond != 0) {\n        return;\n    }\n    if (fn_1_B7C00() != 0) {\n        return;\n    }\n    old = base->unk_14;\n    if (old != -1) {\n        base->unk_14 = -1;\n        lbl_1_bss_96A = old;\n        return;\n    }\n    if (((2) == (lbl_1_bss_8B3A0.unk_0)) || lbl_1_bss_8B3A0.unk_0 == 10) {\n        old = (fn_1_EB4BC() == 0);\n        v3 = old;\n    } else {\n        v3 = 1;\n    }\n    sel = &lbl_1_bss_8B3A0;\n    if ((sel->unk_94 & 0x40000000) != 0 && v3 != 0) {\n        if ((sel->unk_94 & 0x200) != 0) {\n            switch (ret) {\n            case 0:\n                if (fn_1_12F228() == 0) {\n                    fn_10_A90C(&lbl_1_bss_8B3A0);\n                }\n{\n    struct { s16 value; } fzgx_loop_i_3463;\n    struct { u8 * value; } fzgx_loop_p9C8_3463;\n    struct { u8 * value; } fzgx_loop_p9F8_3463;\n    struct SelObject * fzgx_loop_psel_3463;\n                fzgx_loop_p9C8_3463.value = lbl_1_bss_9C8;\n                fzgx_loop_p9F8_3463.value = (u8 *)&lbl_1_bss_9F8;\n                fzgx_loop_i_3463.value = 0;\n                fzgx_loop_psel_3463 = &lbl_1_bss_8B3A0;\n                while ((s16)fzgx_loop_i_3463.value < 4) {\n                    if (((-1) != ((s8)fzgx_loop_p9C8_3463.value[0xa])) &&\n                        (__rlwnm(fzgx_loop_psel_3463->unk_98, (fzgx_loop_i_3463.value + 1) & 31, 31, 31)) != 0) {\n                        if (((*(u16 *)(fzgx_loop_p9F8_3463.value + 8) >> 9) & 1) != 0) {\n                            count--;\n                        }\n                        if ((((*(u16 *)(fzgx_loop_p9F8_3463.value + 8) >> 8) & 1) != 0) || fn_1_12F228() != 0) {\n                            count++;\n                        }\n                        if ((((*(u16 *)(fzgx_loop_p9F8_3463.value + 8) >> 8) & 1) != 0) || fn_1_12F228() != 0) {\n                            fn_1_12F150(fzgx_loop_i_3463.value, 5, 1);\n                        } else if (((*(u16 *)(fzgx_loop_p9F8_3463.value + 8) >> 9) & 1) != 0) {\n                            fn_1_12F150(fzgx_loop_i_3463.value, 5, 0);\n                        }\n                    }\n                    fzgx_loop_p9C8_3463.value += 12;\n                    fzgx_loop_p9F8_3463.value += 20;\n                    fzgx_loop_i_3463.value++;\n                }\n    i.value = fzgx_loop_i_3463.value;\n    p9C8.value = fzgx_loop_p9C8_3463.value;\n    p9F8.value = fzgx_loop_p9F8_3463.value;\n    psel = fzgx_loop_psel_3463;\n}\n                if (count > 0) {\n                    fn_10_C274(&lbl_1_bss_8B3A0, lbl_1_bss_962);\n                    fn_10_AB98(&lbl_1_bss_8B3A0);\n                    fn_1_A2D84(0xA9010100);\n                }\n                if (count < 0 &&\n                    ((sel->unk_94 & 0x40000000) == 0 || (sel->unk_94 & 0x4000) != 0)) {\n                    base->unk_14 = 14;\n                    t = fn_10_C258(&lbl_1_bss_8B3A0, 14);\n                    if (t == 0) {\n                        *(u32 *)(far + 0x1748) = 1;\n                    }\n                    fn_1_12F17C();\n                    fn_1_4A00(0, *(s16 *)(far - 0x6c74) & 0xff, *(void **)(far - 0x6c78));\n                    *(u32 *)(far + 0x1744) = 0;\n                    fn_1_A2D84(0xA9010200);\n                    fn_10_C210(&lbl_1_bss_8B3A0, base->unk_14);\n                }\n                break;\n            case 1:\n                if (*(u8 *)(far + 0x1750) > 1) {\n                    *(u8 *)(far + 0x1750) -= 1;\n                }\n                if (*(u16 *)(far + 0x1752) > 1) {\n                    *(u16 *)(far + 0x1752) -= 1;\n                }\n                if (*(u16 *)(far + 0x174e) != 0) {\n                    u16 c = *(u16 *)(far + 0x174e);\n                    c--;\n                    *(u16 *)(far + 0x174e) = c;\n                    if (c == 0xb3) {\n                        if (lbl_1_bss_8B3A0.unk_90 != 0x24) {\n                            lbl_1_bss_8CA24 = 0;\n                        } else if (lbl_1_bss_8CA24 != 0) {\n                            fn_1_A2D84(0xA9000400);\n                        }\n                        *(u8 *)(far + 0x1754) = 0;\n                    }\n                    if (*(u16 *)(far + 0x174e) == 0xaa) {\n                        fn_1_12EF80(lbl_1_bss_8B3A0.unk_90, &locE, &locC);\n                        fn_1_A51C8(locC);\n                    }\n                    if (*(u16 *)(far + 0x174e) == 1) {\n                        base->unk_14 = 16;\n                        fn_1_12F17C();\n                        fn_1_4A00(0, *(s16 *)(far - 0x6c74) & 0xff, *(void **)(far - 0x6c78));\n                        *(u32 *)(far + 0x1744) = 0;\n                    }\n                } else {\n                    if (fn_1_12F228() == 0) {\n                        fn_10_AE14(&lbl_1_bss_8B3A0);\n                    }\n                    p9C8.value = lbl_1_bss_9C8;\n                    i.value = 0;\n                    p9F8.value = (u8 *)&lbl_1_bss_9F8;\n                    psel = &lbl_1_bss_8B3A0;\n                    while ((s16)i.value < 4) {\n                        if (((-1) != ((s8)p9C8.value[0xa])) &&\n                            (__rlwnm(psel->unk_98, (i.value + 1) & 31, 31, 31)) != 0) {\n                            if (((*(u16 *)(p9F8.value + 8) >> 9) & 1) != 0) {\n                                count--;\n                            }\n                            if ((((*(u16 *)(p9F8.value + 8) >> 8) & 1) != 0) || fn_1_12F228() != 0) {\n                                count++;\n                            }\n                            if ((((*(u16 *)(p9F8.value + 8) >> 8) & 1) != 0) || fn_1_12F228() != 0) {\n                                fn_1_12F150(i.value, 6, 1);\n                            } else if (((*(u16 *)(p9F8.value + 8) >> 9) & 1) != 0) {\n                                fn_1_12F150(i.value, 6, 0);\n                            }\n                        }\n                        p9C8.value += 12;\n                        p9F8.value += 20;\n                        i.value++;\n                    }\n                    if (count > 0) {\n                        psel = &lbl_1_bss_8B3A0;\n                        if (psel->unk_A4->unk_1a == 0) {\n                            fn_1_A2D84(0xA9010100);\n                            psel->unk_A4->unk_1a = 1;\n                        }\n                        fn_1_12F1E8(0);\n                        if (fn_1_D6698() != 0 || fn_1_D6690() == 0) {\n                            if (*(u16 *)(far + 0x1752) == 1) {\n                                fn_1_7B2E8(lbl_1_bss_8B3A0.unk_90);\n                                *(u16 *)(far + 0x174e) = 180;\n                            }\n                        }\n                        if (*(u16 *)(far + 0x1752) == 0) {\n                            if (lbl_1_bss_8B3A0.unk_0 != 2 && lbl_1_bss_8B3A0.unk_0 != 10) {\n                                *(u16 *)(far + 0x1752) = 60;\n                            } else {\n                                *(u16 *)(far + 0x1752) = 1;\n                            }\n                        }\n                        if (*(u8 *)(far + 0x1750) == 0) {\n                            *(u8 *)(far + 0x1750) = 20;\n                        }\n                        if (((lbl_1_bss_9F8.unk_8 >> 12) & 1) != 0 &&\n                            *(u8 *)(far + 0x1754) != 0 &&\n                            (lbl_1_bss_9F8.unk_14 & 0xb) == 0xb &&\n                            ((lbl_1_bss_9F8.unk_14 >> 2) & 1) == 0) {\n                            *(u8 *)(far + 0x1754) = 0;\n                            lbl_1_bss_8CA24 = 1;\n                        }\n                        lbl_1_bss_8B3A0.unk_129 = 0;\n                    }\n                    if (count < 0 &&\n                        ((sel->unk_94 & 0x40000000) == 0 || (sel->unk_94 & 0x4000) != 0)) {\n                        fn_10_C298(&lbl_1_bss_8B3A0, lbl_1_bss_962);\n                        psel = &lbl_1_bss_8B3A0;\n                        if (psel->unk_A4->unk_1a == 0) {\n                            fn_1_A2D84(0xA9010200);\n                            psel->unk_A4->unk_1a = 1;\n                        }\n                    }\n                }\n                break;\n            }\n        } else {\n            if (*(u8 *)(far + 0x1750) > 1) {\n                *(u8 *)(far + 0x1750) -= 1;\n            }\n            if (*(u16 *)(far + 0x1752) > 1) {\n                *(u16 *)(far + 0x1752) -= 1;\n            }\n            if (*(u16 *)(far + 0x174e) != 0) {\n                u16 c = *(u16 *)(far + 0x174e);\n                c--;\n                *(u16 *)(far + 0x174e) = c;\n                if (c == 0xb3) {\n                    if (lbl_1_bss_8B3A0.unk_90 != 0x24) {\n                        lbl_1_bss_8CA24 = 0;\n                    } else if (lbl_1_bss_8CA24 != 0) {\n                        fn_1_A2D84(0xA9000400);\n                    }\n                    *(u8 *)(far + 0x1754) = 0;\n                }\n                if (*(u16 *)(far + 0x174e) == 0xaa) {\n                    fn_1_12EF80(lbl_1_bss_8B3A0.unk_90, &locA, &loc8);\n                    fn_1_A51C8(loc8);\n                }\n                if (*(u16 *)(far + 0x174e) == 1) {\n                    base->unk_14 = 16;\n                    fn_1_12F17C();\n                    fn_1_4A00(0, *(s16 *)(far - 0x6c74) & 0xff, *(void **)(far - 0x6c78));\n                    *(u32 *)(far + 0x1744) = 0;\n                }\n            } else {\n                if (fn_1_12F228() == 0) {\n                    fn_10_AE14(&lbl_1_bss_8B3A0);\n                }\n                p9C8.value = lbl_1_bss_9C8;\n                i.value = 0;\n                p9F8.value = (u8 *)&lbl_1_bss_9F8;\n                psel = &lbl_1_bss_8B3A0;\n                while ((s16)i.value < 4) {\n                    if (((-1) != ((s8)p9C8.value[0xa])) &&\n                        (__rlwnm(psel->unk_98, (i.value + 1) & 31, 31, 31)) != 0) {\n                        if (((*(u16 *)(p9F8.value + 8) >> 9) & 1) != 0) {\n                            count--;\n                        }\n                        if ((((*(u16 *)(p9F8.value + 8) >> 8) & 1) != 0) || fn_1_12F228() != 0) {\n                            count++;\n                        }\n                        if ((((*(u16 *)(p9F8.value + 8) >> 8) & 1) != 0) || fn_1_12F228() != 0) {\n                            fn_1_12F150(i.value, 6, 1);\n                        } else if (((*(u16 *)(p9F8.value + 8) >> 9) & 1) != 0) {\n                            fn_1_12F150(i.value, 6, 0);\n                        }\n                    }\n                    p9C8.value += 12;\n                    p9F8.value += 20;\n                    i.value++;\n                }\n                if (count > 0) {\n                    fn_1_12F1E8(0);\n                    if (fn_1_D6698() != 0 || fn_1_D6690() == 0) {\n                        if (*(u16 *)(far + 0x1752) == 1) {\n                            fn_1_7B2E8(lbl_1_bss_8B3A0.unk_90);\n                            *(u16 *)(far + 0x174e) = 180;\n                        }\n                    }\n                    psel = &lbl_1_bss_8B3A0;\n                    if (psel->unk_A4->unk_1a == 0) {\n                        fn_1_A2D84(0xA9010100);\n                        psel->unk_A4->unk_1a = 1;\n                    }\n                    if (*(u16 *)(far + 0x1752) == 0) {\n                        if (lbl_1_bss_8B3A0.unk_0 != 2 && lbl_1_bss_8B3A0.unk_0 != 10) {\n                            *(u16 *)(far + 0x1752) = 60;\n                        } else {\n                            *(u16 *)(far + 0x1752) = 1;\n                        }\n                    }\n                    if (*(u8 *)(far + 0x1750) == 0) {\n                        *(u8 *)(far + 0x1750) = 20;\n                    }\n                    if (((lbl_1_bss_9F8.unk_8 >> 12) & 1) != 0 &&\n                        *(u8 *)(far + 0x1754) != 0 &&\n                        (lbl_1_bss_9F8.unk_14 & 0xb) == 0xb &&\n                        ((lbl_1_bss_9F8.unk_14 >> 2) & 1) == 0) {\n                        *(u8 *)(far + 0x1754) = 0;\n                        lbl_1_bss_8CA24 = 1;\n                    }\n                    lbl_1_bss_8B3A0.unk_129 = 0;\n                }\n                if (count < 0 &&\n                    ((sel->unk_94 & 0x40000000) == 0 || (sel->unk_94 & 0x4000) != 0)) {\n                    fn_10_C298(&lbl_1_bss_8B3A0, lbl_1_bss_962);\n                    psel = &lbl_1_bss_8B3A0;\n                    if (psel->unk_A4->unk_1a == 0) {\n                        fn_1_A2D84(0xA9010200);\n                        psel->unk_A4->unk_1a = 1;\n                    }\n                    fn_1_12F1E8(0);\n                }\n            }\n        }\n    } else {\n        if (v3 != 0) {\n            if (lbl_1_bss_8B3A0.unk_0 == 1) {\n                switch (ret) {\n                case 0:\n                    fn_10_A90C(&lbl_1_bss_8B3A0);\n                    p9C8.value = lbl_1_bss_9C8;\n                    i.value = 0;\n                    p9F8.value = (u8 *)&lbl_1_bss_9F8;\n                    psel = &lbl_1_bss_8B3A0;\n                    while ((s16)i.value < 4) {\n                        if (((-1) != ((s8)p9C8.value[0xa])) &&\n                            (__rlwnm(psel->unk_98, (i.value + 1) & 31, 31, 31)) != 0) {\n                            if (((*(u16 *)(p9F8.value + 8) >> 9) & 1) != 0) {\n                                count--;\n                            }\n                            if (((*(u16 *)(p9F8.value + 8) >> 8) & 1) != 0) {\n                                count = (s16)(count + 1);\n                            }\n                            if (((*(u16 *)(p9F8.value + 8) >> 8) & 1) != 0) {\n                                fn_1_12F150(i.value, 5, 1);\n                                fn_1_12F17C();\n                            } else if (((*(u16 *)(p9F8.value + 8) >> 9) & 1) != 0) {\n                                fn_1_12F150(i.value, 5, 0);\n                                fn_1_12F17C();\n                            }\n                        }\n                        p9C8.value += 12;\n                        p9F8.value += 20;\n                        i.value++;\n                    }\n                    if (count > 0) {\n                        t = fn_10_3D64();\n                        v = sel->unk_94;\n                        base->unk_A = t;\n                        base->unk_8 = t;\n                        if ((v & 0x400) != 0 && t != 0) {\n                            base->unk_14 = 20;\n                        } else {\n                            base->unk_A = 0;\n                            base->unk_8 = 0;\n                            base->unk_14 = 16;\n                        }\n                        fn_10_AB98(&lbl_1_bss_8B3A0);\n                        fn_1_A2D84(0xA9010100);\n                        lbl_1_bss_8B3A0.unk_129 = 0;\n                    }\n                    if (count < 0 &&\n                        ((sel->unk_94 & 0x40000000) == 0 || (sel->unk_94 & 0x4000) != 0)) {\n                        v = sel->unk_94;\n                        base->unk_14 = 14;\n                        sel->unk_94 &= 0xffffffefU;\n                        sel->unk_94 &= 0xffffffcfU;\n                        t = fn_10_C258(&lbl_1_bss_8B3A0, 14);\n                        if (t == 0) {\n                            *(u32 *)(far + 0x1748) = 1;\n                        }\n                        fn_1_A2D84(0xA9010200);\n                        fn_10_C210(&lbl_1_bss_8B3A0, base->unk_14);\n                    }\n                    if (count != 0) {\n                        fn_1_4A00(0, *(s16 *)(far - 0x6c74) & 0xff, *(void **)(far - 0x6c78));\n                        *(u32 *)(far + 0x1744) = 0;\n                    }\n                    break;\n                }\n            } else {\n                switch (ret) {\n                case 0:\n                    fn_10_A90C(&lbl_1_bss_8B3A0);\n                    p9C8.value = lbl_1_bss_9C8;\n                    i.value = 0;\n                    p9F8.value = (u8 *)&lbl_1_bss_9F8;\n                    psel = &lbl_1_bss_8B3A0;\n                    while ((s16)i.value < 4) {\n                        if (((-1) != ((s8)p9C8.value[0xa])) &&\n                            (__rlwnm(psel->unk_98, (i.value + 1) & 31, 31, 31)) != 0) {\n                            if (((*(u16 *)(p9F8.value + 8) >> 9) & 1) != 0) {\n                                count--;\n                            }\n                            if (((*(u16 *)(p9F8.value + 8) >> 8) & 1) != 0) {\n                                count = (s16)(count + 1);\n                            }\n                            if (((*(u16 *)(p9F8.value + 8) >> 8) & 1) != 0) {\n                                fn_1_12F150(i.value, 5, 1);\n                            } else if (((*(u16 *)(p9F8.value + 8) >> 9) & 1) != 0) {\n                                fn_1_12F150(i.value, 5, 0);\n                            }\n                        }\n                        p9C8.value += 12;\n                        p9F8.value += 20;\n                        i.value++;\n                    }\n                    if (count > 0) {\n                        *(s16 *)(far + 0x174c) = 1;\n                        fn_1_A2D84(0xA9010100);\n                        fn_1_7B218(0);\n                        fn_1_4A00(0, *(s16 *)(far - 0x6c74) & 0xff, *(void **)(far - 0x6c78));\n                        *(u32 *)(far + 0x1744) = 0;\n                        return;\n                    }\n                    if (*(s16 *)(far + 0x174c) > 0) {\n                        fn_1_4A00(1, *(s16 *)(far - 0x6c74) & 0xff, *(void **)(far - 0x6c78));\n                        v = sel->unk_94;\n                        *(u32 *)(far + 0x1744) = 0;\n                        *(s16 *)(far + 0x174c) = 0;\n                        if ((v & 0x4) != 0) {\n                            base->unk_14 = 33;\n                            fn_1_12F17C();\n                            fn_1_4A00(0, *(s16 *)(far - 0x6c74) & 0xff, *(void **)(far - 0x6c78));\n                            *(u32 *)(far + 0x1744) = 0;\n                            fn_1_12F1E8(0);\n                        } else {\n                            fn_10_C274(&lbl_1_bss_8B3A0, lbl_1_bss_962);\n                            fn_10_AB98(&lbl_1_bss_8B3A0);\n                        }\n                    }\n                    if (count < 0 &&\n                        (((fzgx_condition_19430 = sel->unk_94) & 0x40000000) == 0 || (fzgx_condition_19430 & 0x4000) != 0) &&\n                        (fzgx_condition_19430 & 0x20) == 0) {\n                        v = sel->unk_94;\n                        base->unk_14 = 14;\n                        sel->unk_94 &= 0xffffffefU;\n                        sel->unk_94 &= 0xffffffcfU;\n                        t = fn_10_C258(&lbl_1_bss_8B3A0, 14);\n                        if (t == 0) {\n                            *(u32 *)(far + 0x1748) = 1;\n                        }\n                        fn_1_12F17C();\n                        fn_1_4A00(0, *(s16 *)(far - 0x6c74) & 0xff, *(void **)(far - 0x6c78));\n                        *(u32 *)(far + 0x1744) = 0;\n                        fn_1_A2D84(0xA9010200);\n                        fn_10_C210(&lbl_1_bss_8B3A0, base->unk_14);\n                    }\n                    break;\n                case 1:\n                    if (((2) == (lbl_1_bss_8B3A0.unk_0)) && ((lbl_1_bss_9F8.unk_8 >> 11) & 1) != 0) {\n                        fn_1_EB330();\n                    } else {\n                        fn_10_AE14(&lbl_1_bss_8B3A0);\n                        p9C8.value = lbl_1_bss_9C8;\n                        i.value = 0;\n                        p9F8.value = (u8 *)&lbl_1_bss_9F8;\n                        psel = &lbl_1_bss_8B3A0;\n                        while ((s16)i.value < 4) {\n                            if (((-1) != ((s8)p9C8.value[0xa])) &&\n                                (__rlwnm(psel->unk_98, (i.value + 1) & 31, 31, 31)) != 0) {\n                                if (((*(u16 *)(p9F8.value + 8) >> 9) & 1) != 0) {\n                                    count--;\n                                }\n                                if ((((*(u16 *)(p9F8.value + 8) >> 8) & 1) != 0) || fn_1_12F228() != 0) {\n                                    count++;\n                                }\n                                if ((((*(u16 *)(p9F8.value + 8) >> 8) & 1) != 0) || fn_1_12F228() != 0) {\n                                    fn_1_12F150(i.value, 6, 1);\n                                } else if (((*(u16 *)(p9F8.value + 8) >> 9) & 1) != 0) {\n                                    fn_1_12F150(i.value, 6, 0);\n                                }\n                            }\n                            p9C8.value += 12;\n                            p9F8.value += 20;\n                            i.value++;\n                        }\n                        if (count > 0) {\n                            t = fn_10_3D64();\n                            v = sel->unk_94;\n                            base->unk_A = t;\n                            base->unk_8 = t;\n                            if ((v & 0x400) != 0 && t != 0) {\n                                base->unk_14 = 20;\n                            } else {\n                                base->unk_A = 0;\n                                base->unk_8 = 0;\n                                base->unk_14 = 16;\n                            }\n                            fn_1_12F17C();\n                            fn_1_4A00(0, *(s16 *)(far - 0x6c74) & 0xff, *(void **)(far - 0x6c78));\n                            *(u32 *)(far + 0x1744) = 0;\n                            fn_1_A2D84(0xA9010100);\n                            fn_1_12F1E8(0);\n                            lbl_1_bss_8B3A0.unk_129 = 0;\n                        }\n                        if (count < 0 &&\n                            ((sel->unk_94 & 0x40000000) == 0 || (sel->unk_94 & 0x4000) != 0)) {\n                            *(s16 *)(far + 0x174c) = -1;\n                            fn_1_4A00(0, *(s16 *)(far - 0x6c74) & 0xff, *(void **)(far - 0x6c78));\n                            *(u32 *)(far + 0x1744) = 0;\n                            fn_1_A2D84(0xA9010200);\n                            return;\n                        }\n                        if (*(s16 *)(far + 0x174c) < 0) {\n                            fn_1_4A00(1, *(s16 *)(far - 0x6c74) & 0xff, *(void **)(far - 0x6c78));\n                            *(u32 *)(far + 0x1744) = 0;\n                            *(u16 *)(far + 0x174c) = 0;\n                            fn_10_C298(&lbl_1_bss_8B3A0, lbl_1_bss_962);\n                            fn_1_46A60();\n                            fn_1_1596DC(3);\n                            fn_1_159440(3, 0);\n                        }\n                    }\n                    break;\n                }\n            }\n        }\n    }\n    if (v3 == 0) {\n        lbl_1_bss_96A = -1;\n    }\n}\n#pragma opt_common_subs reset\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "rel/sel/sel/fn_10_21EC.c",
+    "bytes": 4220,
+    "headers_sha256": "f9f5e84c1423bef39ec206906b9b67f385818e424c01f7582cef703630a3eba9",
+    "oracle_sha256": "2e996ebb6485e6c925f54f77df3da5b518adeeb4580e7aad68ac7874ad2808b1",
+    "recipe": [
+      {
+        "label": "stmt-swap: swap `i = 0;` / `p9F8 = (u8 *)&lbl_1_bss_9F8;`",
+        "input_sha256": "ecf5e03f3a9fba73f3d9642b6e443a86b8083f52ad481ecb633b726b89521c0d",
+        "output_sha256": "bd9c6f4d734ad31133afe8af783779e38a3f7290e1b2446634701bc3d157a06a",
+        "input_symbol": "fn_10_21EC",
+        "output_symbol": "fn_10_21EC",
+        "edits": [
+          [
+            3199,
+            3199,
+            "                p9F8 = (u8 *)&lbl_1_bss_9F8;\n"
+          ],
+          [
+            3222,
+            3267,
+            ""
+          ]
+        ]
+      },
+      {
+        "label": "stmt-swap: swap `p9C8 = lbl_1_bss_9C8;` / `p9F8 = (u8 *)&lbl_1_bss_9F8;`",
+        "input_sha256": "bd9c6f4d734ad31133afe8af783779e38a3f7290e1b2446634701bc3d157a06a",
+        "output_sha256": "681f3a278751143de17f39b69e8022b5a23bb4c5836953d2ed1b0ce0d7468b12",
+        "input_symbol": "fn_10_21EC",
+        "output_symbol": "fn_10_21EC",
+        "edits": [
+          [
+            3161,
+            3161,
+            "                p9F8 = (u8 *)&lbl_1_bss_9F8;\n"
+          ],
+          [
+            3199,
+            3244,
+            ""
+          ]
+        ]
+      },
+      {
+        "label": "repeat-to-local: local for lbl_1_bss_8B3A0.unk_140",
+        "input_sha256": "681f3a278751143de17f39b69e8022b5a23bb4c5836953d2ed1b0ce0d7468b12",
+        "output_sha256": "03fa92ab2f011e26594311d6fedcd71bb93dea3436535d94e5286db4e2f6816d",
+        "input_symbol": "fn_10_21EC",
+        "output_symbol": "fn_10_21EC",
+        "edits": [
+          [
+            2012,
+            2012,
+            "    u32 lab_v;\n"
+          ],
+          [
+            2220,
+            2306,
+            "lab_v = lbl_1_bss_8B3A0.unk_140;\n    if (((lab_v & 0x80000000) != 0) &&\n        ((lab_v"
+          ]
+        ]
+      },
+      {
+        "label": "lifetime reuse old for v3 at 2827",
+        "input_sha256": "03fa92ab2f011e26594311d6fedcd71bb93dea3436535d94e5286db4e2f6816d",
+        "output_sha256": "f868aef525131325e9264b3180ba23d07174fcea01a595f7c565d55e4590ce35",
+        "input_symbol": "fn_10_21EC",
+        "output_symbol": "fn_10_21EC",
+        "edits": [
+          [
+            2835,
+            2859,
+            "old = (fn_1_EB4BC() == 0);\n        v3 = old"
+          ]
+        ]
+      },
+      {
+        "label": "lifetime flag stores compound at 16302,19676",
+        "input_sha256": "f868aef525131325e9264b3180ba23d07174fcea01a595f7c565d55e4590ce35",
+        "output_sha256": "b278efebaf2ea1466c3a9ff49f1f1108cda5610e94a059ecddaebc1e624c8401",
+        "input_symbol": "fn_10_21EC",
+        "output_symbol": "fn_10_21EC",
+        "edits": [
+          [
+            16338,
+            16408,
+            "&= 0xffffffefU;\n                        sel->unk_94 &= 0xffffffcfU"
+          ],
+          [
+            19712,
+            19782,
+            "&= 0xffffffefU;\n                        sel->unk_94 &= 0xffffffcfU"
+          ]
+        ]
+      },
+      {
+        "label": "lifetime condition sel->unk_94 at 19430",
+        "input_sha256": "b278efebaf2ea1466c3a9ff49f1f1108cda5610e94a059ecddaebc1e624c8401",
+        "output_sha256": "aa1af1d0e44f7fd989917892d22ef46eb8c085f96ddf0511eb9155abe132dd01",
+        "input_symbol": "fn_10_21EC",
+        "output_symbol": "fn_10_21EC",
+        "edits": [
+          [
+            1733,
+            1733,
+            "    u32 fzgx_condition_19430;\n"
+          ],
+          [
+            19469,
+            19571,
+            "(fzgx_condition_19430 = sel->unk_94) & 0x40000000) == 0 || (fzgx_condition_19430 & 0x4000) != 0) &&\n                        (fzgx_condition_19430"
+          ]
+        ]
+      },
+      {
+        "label": "carrier:i,p9F8,p9C8",
+        "input_sha256": "aa1af1d0e44f7fd989917892d22ef46eb8c085f96ddf0511eb9155abe132dd01",
+        "output_sha256": "4a5c7863005067801d5ddb2a5f14bc24f60de9eecae05cb08281b8173725101f",
+        "input_symbol": "fn_10_21EC",
+        "output_symbol": "fn_10_21EC",
+        "edits": [
+          [
+            1875,
+            1903,
+            "truct { s16 value; } i;\n    struct { u8 * value; } p9F8;\n    struct { u8 * value; } "
+          ],
+          [
+            3246,
+            3326,
+            ".value = (u8 *)&lbl_1_bss_9F8;\n                p9C8.value = lbl_1_bss_9C8;\n                i.value"
+          ],
+          [
+            3402,
+            3584,
+            ".value < 4) {\n                    if (((-1) != ((s8)p9C8.value[0xa])) &&\n                        (__rlwnm(psel->unk_98, (i.value + 1) & 31, 31, 31)) != 0) {\n                        if (((*(u16 *)(p9F8.value"
+          ],
+          [
+            3716,
+            3716,
+            ".value"
+          ],
+          [
+            3871,
+            4085,
+            ".value + 8) >> 8) & 1) != 0) || fn_1_12F228() != 0) {\n                            fn_1_12F150(i.value, 5, 1);\n                        } else if (((*(u16 *)(p9F8.value + 8) >> 9) & 1) != 0) {\n                            fn_1_12F150(i.value"
+          ],
+          [
+            4166,
+            4227,
+            ".value += 12;\n                    p9F8.value += 20;\n                    i.value"
+          ],
+          [
+            6568,
+            6637,
+            ".value = lbl_1_bss_9C8;\n                    i.value = 0;\n                    p9F8.value"
+          ],
+          [
+            6740,
+            6934,
+            ".value < 4) {\n                        if (((-1) != ((s8)p9C8.value[0xa])) &&\n                            (__rlwnm(psel->unk_98, (i.value + 1) & 31, 31, 31)) != 0) {\n                            if (((*(u16 *)(p9F8.value"
+          ],
+          [
+            7078,
+            7078,
+            ".value"
+          ],
+          [
+            7245,
+            7471,
+            ".value + 8) >> 8) & 1) != 0) || fn_1_12F228() != 0) {\n                                fn_1_12F150(i.value, 6, 1);\n                            } else if (((*(u16 *)(p9F8.value + 8) >> 9) & 1) != 0) {\n                                fn_1_12F150(i.value"
+          ],
+          [
+            7564,
+            7633,
+            ".value += 12;\n                        p9F8.value += 20;\n                        i.value"
+          ],
+          [
+            11107,
+            11168,
+            ".value = lbl_1_bss_9C8;\n                i.value = 0;\n                p9F8.value"
+          ],
+          [
+            11263,
+            11445,
+            ".value < 4) {\n                    if (((-1) != ((s8)p9C8.value[0xa])) &&\n                        (__rlwnm(psel->unk_98, (i.value + 1) & 31, 31, 31)) != 0) {\n                        if (((*(u16 *)(p9F8.value"
+          ],
+          [
+            11577,
+            11577,
+            ".value"
+          ],
+          [
+            11732,
+            11946,
+            ".value + 8) >> 8) & 1) != 0) || fn_1_12F228() != 0) {\n                            fn_1_12F150(i.value, 6, 1);\n                        } else if (((*(u16 *)(p9F8.value + 8) >> 9) & 1) != 0) {\n                            fn_1_12F150(i.value"
+          ],
+          [
+            12027,
+            12088,
+            ".value += 12;\n                    p9F8.value += 20;\n                    i.value"
+          ],
+          [
+            14285,
+            14354,
+            ".value = lbl_1_bss_9C8;\n                    i.value = 0;\n                    p9F8.value"
+          ],
+          [
+            14457,
+            14651,
+            ".value < 4) {\n                        if (((-1) != ((s8)p9C8.value[0xa])) &&\n                            (__rlwnm(psel->unk_98, (i.value + 1) & 31, 31, 31)) != 0) {\n                            if (((*(u16 *)(p9F8.value"
+          ],
+          [
+            14794,
+            14794,
+            ".value"
+          ],
+          [
+            14954,
+            15024,
+            ".value + 8) >> 8) & 1) != 0) {\n                                fn_1_12F150(i.value"
+          ],
+          [
+            15134,
+            15204,
+            ".value + 8) >> 9) & 1) != 0) {\n                                fn_1_12F150(i.value"
+          ],
+          [
+            15344,
+            15413,
+            ".value += 12;\n                        p9F8.value += 20;\n                        i.value"
+          ],
+          [
+            17158,
+            17227,
+            ".value = lbl_1_bss_9C8;\n                    i.value = 0;\n                    p9F8.value"
+          ],
+          [
+            17330,
+            17524,
+            ".value < 4) {\n                        if (((-1) != ((s8)p9C8.value[0xa])) &&\n                            (__rlwnm(psel->unk_98, (i.value + 1) & 31, 31, 31)) != 0) {\n                            if (((*(u16 *)(p9F8.value"
+          ],
+          [
+            17667,
+            17667,
+            ".value"
+          ],
+          [
+            17827,
+            18030,
+            ".value + 8) >> 8) & 1) != 0) {\n                                fn_1_12F150(i.value, 5, 1);\n                            } else if (((*(u16 *)(p9F8.value + 8) >> 9) & 1) != 0) {\n                                fn_1_12F150(i.value"
+          ],
+          [
+            18123,
+            18192,
+            ".value += 12;\n                        p9F8.value += 20;\n                        i.value"
+          ],
+          [
+            20657,
+            20734,
+            ".value = lbl_1_bss_9C8;\n                        i.value = 0;\n                        p9F8.value"
+          ],
+          [
+            20845,
+            21051,
+            ".value < 4) {\n                            if (((-1) != ((s8)p9C8.value[0xa])) &&\n                                (__rlwnm(psel->unk_98, (i.value + 1) & 31, 31, 31)) != 0) {\n                                if (((*(u16 *)(p9F8.value"
+          ],
+          [
+            21207,
+            21207,
+            ".value"
+          ],
+          [
+            21386,
+            21624,
+            ".value + 8) >> 8) & 1) != 0) || fn_1_12F228() != 0) {\n                                    fn_1_12F150(i.value, 6, 1);\n                                } else if (((*(u16 *)(p9F8.value + 8) >> 9) & 1) != 0) {\n                                    fn_1_12F150(i.value"
+          ],
+          [
+            21729,
+            21806,
+            ".value += 12;\n                            p9F8.value += 20;\n                            i.value"
+          ]
+        ]
+      },
+      {
+        "label": "lifetime initialization order at 3282: i.value,p9C8.value,p9F8.value,psel",
+        "input_sha256": "4a5c7863005067801d5ddb2a5f14bc24f60de9eecae05cb08281b8173725101f",
+        "output_sha256": "dcf9bf489753df0ec8dde8c3c8fdbb86dd4f4cd2a18e33b2e60c52dfe94c2b31",
+        "input_symbol": "fn_10_21EC",
+        "output_symbol": "fn_10_21EC",
+        "edits": [
+          [
+            3282,
+            3282,
+            "                i.value = 0;\n                p9C8.value = lbl_1_bss_9C8;\n"
+          ],
+          [
+            3333,
+            3406,
+            ""
+          ]
+        ]
+      },
+      {
+        "label": "lifetime loop at 3463: i,p9C8,p9F8,psel",
+        "input_sha256": "dcf9bf489753df0ec8dde8c3c8fdbb86dd4f4cd2a18e33b2e60c52dfe94c2b31",
+        "output_sha256": "3f0c4615807d5e87ae95ba9892009223fb7c0d901eab24cd5f97bce00f21182c",
+        "input_symbol": "fn_10_21EC",
+        "output_symbol": "fn_10_21EC",
+        "edits": [
+          [
+            3282,
+            3676,
+            "{\n    struct { s16 value; } fzgx_loop_i_3463;\n    struct { u8 * value; } fzgx_loop_p9C8_3463;\n    struct { u8 * value; } fzgx_loop_p9F8_3463;\n    struct SelObject * fzgx_loop_psel_3463;\n                fzgx_loop_i_3463.value = 0;\n                fzgx_loop_p9C8_3463.value = lbl_1_bss_9C8;\n                fzgx_loop_p9F8_3463.value = (u8 *)&lbl_1_bss_9F8;\n                fzgx_loop_psel_3463 = &lbl_1_bss_8B3A0;\n                while ((s16)fzgx_loop_i_3463.value < 4) {\n                    if (((-1) != ((s8)fzgx_loop_p9C8_3463.value[0xa])) &&\n                        (__rlwnm(fzgx_loop_psel_3463->unk_98, (fzgx_loop_i_3463.value + 1) & 31, 31, 31)) != 0) {\n                        if (((*(u16 *)(fzgx_loop_p9F8_3463"
+          ],
+          [
+            3810,
+            3814,
+            "fzgx_loop_p9F8_3463"
+          ],
+          [
+            3971,
+            4207,
+            "fzgx_loop_p9F8_3463.value + 8) >> 8) & 1) != 0) || fn_1_12F228() != 0) {\n                            fn_1_12F150(fzgx_loop_i_3463.value, 5, 1);\n                        } else if (((*(u16 *)(fzgx_loop_p9F8_3463.value + 8) >> 9) & 1) != 0) {\n                            fn_1_12F150(fzgx_loop_i_3463"
+          ],
+          [
+            4290,
+            4367,
+            "fzgx_loop_p9C8_3463.value += 12;\n                    fzgx_loop_p9F8_3463.value += 20;\n                    fzgx_loop_i_3463"
+          ],
+          [
+            4395,
+            4395,
+            "    i.value = fzgx_loop_i_3463.value;\n    p9C8.value = fzgx_loop_p9C8_3463.value;\n    p9F8.value = fzgx_loop_p9F8_3463.value;\n    psel = fzgx_loop_psel_3463;\n}\n"
+          ]
+        ]
+      },
+      {
+        "label": "lifetime initialization order at 3468: fzgx_loop_p9C8_3463.value,fzgx_loop_p9F8_3463.value,fzgx_loop_i_3463.value,fzgx_loop_psel_3463",
+        "input_sha256": "3f0c4615807d5e87ae95ba9892009223fb7c0d901eab24cd5f97bce00f21182c",
+        "output_sha256": "3f8bd941d525383286f58b53d38b63904b0df9946910f1d2e79970e51c5cf208",
+        "input_symbol": "fn_10_21EC",
+        "output_symbol": "fn_10_21EC",
+        "edits": [
+          [
+            3468,
+            3512,
+            ""
+          ],
+          [
+            3637,
+            3637,
+            "                fzgx_loop_i_3463.value = 0;\n"
+          ]
+        ]
+      }
+    ],
+    "link": "verified",
+    "commit": "13e0b55"
   }
 }

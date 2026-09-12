@@ -355,6 +355,40 @@ def float_literals(p: Project, symbol: str, body: str, base: oracle.CheckResult)
     from .sdkimport import masked
     code = masked(body)
     out, all_edits, bound_edits = [], {}, {}
+    from .fixup_source import declared_types, record_layouts, record_tag
+    _, variables = declared_types(code, span[0])
+    declared_layouts = record_layouts(code, span[0], variables)
+    views = {}
+    for assignment in re.finditer(r'\b(\w+)\s*=\s*(?:\([^();]+\)\s*)*&?\s*(\w+)\s*;',code[span[0]:span[1]]):
+        root,anchor = assignment[1],assignment[2]
+        if anchor not in targets or len(re.findall(r'\b'+re.escape(root)+r'\s*=(?!=)',code[span[0]:span[1]]))!=1:
+            continue
+        for field,(offset,ty,count) in declared_layouts.get(record_tag(variables.get(root,'')),{}).items():
+            if count is None and ty in ('f32','float','f64','double'):
+                views[anchor,offset,4 if ty in ('f32','float') else 8]=root+'->'+field
+    view_edits=[]
+    # Existing recovered views used to suppress binding altogether. Match bits
+    # against the retail loads, then use the already-declared field and base.
+    values={}
+    for target in left_loads.values():
+        key=target['symbol'],target['offset'],target['width']
+        if target['op'] in ('lfs','lfd') and key in views:
+            raw=retail_bytes(p,sym.module,*key)
+            if raw is not None:
+                values.setdefault((key[2],raw),set()).add(views[key])
+    for token in re.finditer(r'(?<![\w.])-?\d+\.\d*(?:[eE][+-]?\d+)?[fF]?(?![\w.])',code[span[0]:span[1]]):
+        width=4 if token[0].lower().endswith('f') else 8
+        try:
+            raw=struct.pack('>f' if width==4 else '>d',float(token[0].rstrip('fF')))
+        except (ValueError,OverflowError):
+            continue
+        choices=values.get((width,raw),())
+        if len(choices)==1:
+            view_edits.append((span[0]+token.start(),span[0]+token.end(),next(iter(choices))))
+    if view_edits:
+        text=body
+        for a,b,value in reversed(view_edits):text=text[:a]+value+text[b:]
+        out.append(('bind recovered shared-pool existing fields',text))
     ambiguous = set()
     for declaration in re.finditer(r'\bconst\s+(f32|f64|float|double)\s+(\w+)\s*=\s*(-?\d+\.\d*(?:[eE][+-]?\d+)?[fF]?)\s*;', code[:span[0]]):
         width = 4 if declaration[1] in ('f32', 'float') else 8
@@ -637,6 +671,22 @@ def numeric_evidence(p, symbol, check):
         check._numeric_values=conversion_values(p,sym.module,check._rows[0],
             object_jump_tables(p.target_object_for(sym),sym.name,p,sym.module))
     return check._numeric_values
+
+
+def rotate_bit_tests(body, name, check):
+    """Recover a rotated low-bit test misread as a shifted sign-bit test."""
+    from .sdkimport import masked
+    code=masked(body);span=_function_span(code,name)
+    if not span or not any(re.fullmatch(r'rlwnm\.? r\d+, r\d+, r\d+, 31, 31',stuck._fmt(row)) for row in check._rows[0]):
+        return []
+    pattern=r'\(\s*(\w+(?:(?:->|\.)\w+)*)\s*<<\s*\(([^();]+)\)\s*\)\s*>>\s*31\b'
+    sites=list(re.finditer(pattern,code[span[0]:span[1]]))
+    text=body
+    for site in reversed(sites):
+        value,amount=site.groups()
+        replacement='__rlwnm('+value+', ('+amount+') & 31, 31, 31)'
+        a,b=span[0]+site.start(),span[0]+site.end();text=text[:a]+replacement+text[b:]
+    return [('retail rotated bit tests intrinsic',text)] if text!=body else []
 
 
 def conversion_arguments(p, symbol, body, check):
@@ -1012,6 +1062,17 @@ def native_pool_objects(p, symbol, body, check):
     if not span or re.search(r'#pragma\s+(?:pack|options\s+align)\b',code):
         return []
     layouts,sizes = record_layouts(code,span[0]); out=native_bss_objects(p,symbol,body,check)
+    # Lifts often retain an array declaration and cast it to a recovered pool
+    # view. Normalize that spelling before splitting the same measured layout.
+    for alias in re.finditer(r'\bstruct\s+(\w+)\s*\*\s*(\w+)\s*=\s*\(\s*struct\s+\1\s*\*\s*\)\s*(\w+)\s*;',code[span[0]:span[1]]):
+        typ,root,anchor=alias.groups()
+        declaration=re.search(r'\bextern\s+(?:u8|char|unsigned char)\s+'+re.escape(anchor)+r'\s*\[\s*\]\s*;',code[:span[0]])
+        if not declaration or typ not in layouts or len(re.findall(r'\b'+re.escape(anchor)+r'\b',code))!=2:
+            continue
+        lo,hi=span[0]+alias.start(),span[0]+alias.end()
+        text=body[:lo]+f'struct {typ} *{root};\n{root} = &{anchor};'+body[hi:]
+        text=text[:declaration.start()]+f'extern struct {typ} {anchor};'+text[declaration.end():]
+        out.extend(native_pool_objects(p,symbol,text,check))
     for declaration in re.finditer(r'\bextern\s+struct\s+(\w+)\s+(\w+)\s*;',code[:span[0]]):
         typ,anchor=declaration[1],declaration[2]; owner=p.find_symbol(anchor,sym.module)
         if not owner or owner.module!=sym.module or owner.section not in ('.data','.rodata') or typ not in layouts:
@@ -1019,7 +1080,7 @@ def native_pool_objects(p, symbol, body, check):
         fields=[f for f in layouts[typ] if not f[0].startswith('pad_')]
         if not fields or sizes[typ][0]<=owner.size:
             continue
-        limit=owner.addr+sizes[typ][0]
+        limit=owner.addr+max(offset+width*math.prod(dims or (1,)) for _,_,offset,width,dims in fields)
         objects=sorted((s for s in p.symbols(sym.module).values() if s.kind=='object' and s.section==owner.section
                         and owner.addr<=s.addr),key=lambda s:(s.addr,-s.size))
         table=next((s.addr for s in objects if s.name.startswith('jumptable_') and s.addr>=limit),None)
@@ -1031,7 +1092,12 @@ def native_pool_objects(p, symbol, body, check):
                 break
             if obj.addr<cursor or not obj.size:
                 continue
-            if obj.addr!=cursor or obj.name.startswith('jumptable_'):
+            if obj.addr!=cursor:
+                from .evidence import retail_bytes
+                gap=obj.addr-cursor
+                if gap>7 or retail_bytes(p,sym.module,owner.name,cursor-owner.addr,gap)!=bytes(gap):
+                    break
+            if obj.name.startswith('jumptable_'):
                 break
             selected.append(obj);cursor=obj.addr+obj.size
         if cursor<limit or not selected:

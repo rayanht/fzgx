@@ -158,14 +158,23 @@ def hoists(body: str, name: str) -> List[Tuple[str, str]]:
     locs = _locals(body, span)
     top = locs[-1][1] if locs else span[1] + (1 if body[span[1]] == "\n" else 0)
     names = {l[3] for l in locs}
-    for m in re.finditer(r"^([ \t]+)(?:register\s+)?(?:const\s+)?((?:struct\s+\w+\s*\*?|[A-Za-z_]\w*(?:\s*\*)?)\s+([A-Za-z_]\w*)((?:\[[^\]]*\])*))\s*(?:=\s*([^;]+))?;[ \t]*\n", body[top:span[2]], re.M):
-        nm = m.group(3)
+    from .sdkimport import masked
+    code=masked(body)
+    sites=[]
+    for line in re.finditer(r'(?m)^[ \t]+[^\n]*;[^\n]*\n',code[top:span[2]]):
+        declaration=DECL_RE.fullmatch(line[0].rstrip('\n'))
+        if declaration and declaration[1] not in ('return','goto','break','continue'):
+            sites.append((line,declaration))
+    for line, declaration in sites:
+        typ,nm,dims,init=declaration.groups()
         if nm in names or nm == name:
             continue
+        if sum(d[2]==nm for _,d in sites)>1:
+            continue
         indent = re.match(r"\s*", body[locs[0][0]:locs[0][1]]).group(0) if locs else "    "
-        s0, e0 = top + m.start(), top + m.end()
-        decl = f"{indent}{m.group(2)};\n"
-        repl = f"{m.group(1)}{nm} = {m.group(5).strip()};\n" if m.group(5) else ""
+        s0, e0 = top + line.start(), top + line.end()
+        decl = f"{indent}{declarator(typ,nm+dims)};\n"
+        repl = f"{re.match(r'[ \t]*',line[0])[0]}{nm} = {body[s0+declaration.start(4):s0+declaration.end(4)].strip()};\n" if init else ""
         text = body[:s0] + repl + body[e0:]
         text = text[:top] + decl + text[top:]
         out.append((f"hoist {nm}", text))
@@ -689,6 +698,138 @@ def _pair_proto(text: str, callee: str, idx: int) -> Optional[str]:
     return text[:m.start(2)] + ", ".join(ps) + text[m.end(2):]
 
 
+def loop_lifetimes(body, name):
+    """Separate loop-local homes while preserving their outgoing scalar values."""
+    from .sdkimport import masked
+    code=masked(body);span=_function_body_span(code,name)
+    if not span:return []
+    types={r[3]:r[2] for r in _locals(body,span) if not r[4] and
+           ('{' not in r[2] or re.fullmatch(r'struct\s*\{\s*'+TYPE+r'\s+value;\s*\}',r[2]))};out=[]
+    for callee,start,end,args in call_sites(code):
+        if callee!='while' or not span[1]<=start<end<span[2]:continue
+        opening=re.match(r'\s*\{',code[end:])
+        if not opening:continue
+        lo=end+opening.end()-1;depth=1;hi=lo+1
+        while hi<span[2] and depth:
+            depth+=(code[hi]=='{')-(code[hi]=='}');hi+=1
+        if depth or re.search(r'\bgoto\b',code[lo:hi]):continue
+        a=body.rfind('\n',0,start)+1;initializers=[]
+        for _ in range(6):
+            previous=re.search(r'(?m)^([ \t]*)(\w+)(?:\.value)?\s*=\s*[^;{}\n]+;\s*\Z',code[span[1]:a])
+            if not previous or previous[2] not in types:break
+            a=span[1]+previous.start();initializers.insert(0,previous[2])
+        variables=[v for v in initializers if re.search(r'\b'+re.escape(v)+r'\b',code[start:hi]) and
+                   not re.search(r'&\s*\b'+re.escape(v)+r'\b',code[span[1]:span[2]])]
+        if not variables:continue
+        groups=[(v,) for v in variables]
+        groups+=list(itertools.combinations(variables,2))
+        if len(variables)>2:groups.append(tuple(variables))
+        for group in groups:
+            names={v:'fzgx_loop_'+v+'_'+str(start) for v in group}
+            if any(re.search(r'\b'+n+r'\b',code) for n in names.values()):continue
+            region=body[a:hi];changes=[];previous=None
+            for token in TOKEN.finditer(masked(region)):
+                if token[0] in names and previous not in ('.','->'):
+                    changes.append((token.start(),token.end(),names[token[0]]))
+                previous=token[0]
+            for x,y,value in reversed(changes):region=region[:x]+value+region[y:]
+            declarations='\n'.join('    '+types[v]+' '+names[v]+';' for v in group)
+            copies='\n'.join('    '+v+('.value' if '{' in types[v] else '')+' = '+names[v]+('.value' if '{' in types[v] else '')+';' for v in group)
+            text=body[:a]+'{\n'+declarations+'\n'+region+'\n'+copies+'\n}'+body[hi:]
+            out.append((f'lifetime loop at {start}: '+','.join(group),text))
+    return out
+
+
+def flag_stores(body, name):
+    """Recover consecutive flag-field assignments hidden by a cached word."""
+    from .sdkimport import masked
+    code=masked(body);span=_function_body_span(code,name)
+    if not span:return []
+    pattern=(r'(?m)^([ \t]*)(\w+(?:(?:->|\.)\w+)+)\s*=\s*(\w+)\s*&\s*(0x[0-9a-fA-F]+)[uU]?;\s*\n'
+             r'[ \t]*\2\s*=\s*\3\s*&\s*(0x[0-9a-fA-F]+)[uU]?;')
+    sites=[]
+    for m in re.finditer(pattern,code[span[1]:span[2]]):
+        indent,member,var,first,second=m.groups();a,b=span[1]+m.start(),span[1]+m.end()
+        assignment=reaching_assignment(code,var,a,span[1])
+        if not assignment or code[slice(*assignment)].strip()!=member:continue
+        first,second=int(first,16),int(second,16)
+        if first&second!=second or first>0xffffffff:continue
+        sites.append((a,b,indent,member,first,second))
+    out=[]
+    for selected in ([sites] if len(sites)>1 else [])+[[s] for s in sites]:
+        text=body
+        for a,b,indent,member,first,second in reversed(selected):
+            replacement=indent+member+' &= '+hex(first)+'U;\n'+indent+member+' &= '+hex(second)+'U;'
+            text=text[:a]+replacement+text[b:]
+        out.append(('lifetime flag stores compound at '+','.join(str(s[0]) for s in selected),text))
+    return out
+
+
+def initialization_orders(body, name):
+    """Reorder independent local initializations as one scheduling decision."""
+    from .sdkimport import masked
+    code=masked(body);span=_function_body_span(code,name)
+    if not span:return []
+    locals_={r[3] for r in _locals(body,span)};groups=[];group=[]
+    for match in re.finditer(r'(?m)^[ \t]*[^\n]+;[ \t]*$',code[span[1]:span[2]]):
+        declaration=DECL_RE.fullmatch(match[0])
+        if declaration and declaration[1].strip() not in ('return','goto','break','continue'):
+            locals_.add(declaration[2])
+    for record in records(code,span[2]):
+        if record['start']<span[1]:continue
+        tail=re.match(r'\s*(\w+)\s*;',code[record['end']:])
+        if tail:locals_.add(tail[1])
+    for m in re.finditer(r'(?m)^([ \t]*)(\w+(?:\.\w+)?)\s*=\s*([^;{}\n]+);[ \t]*\n',code[span[1]:span[2]]):
+        a,b=span[1]+m.start(),span[1]+m.end();var,value=m[2],m[3]
+        if var.split('.')[0] not in locals_ or re.search(r'\b\w+\s*\(|->|[.\[\]+/?:=]|--',value) or re.search(r'&\s*\b'+re.escape(var)+r'\b',code[span[1]:span[2]]):
+            if len(group)>1:groups.append(group)
+            group=[];continue
+        if group and (a!=group[-1][1] or len(group)==4):
+            if len(group)>1:groups.append(group)
+            group=[]
+        group.append((a,b,var,value))
+    if len(group)>1:groups.append(group)
+    out=[];policies=defaultdict(list)
+    for group in groups:
+        names={r[2].split('.')[0] for r in group}
+        if len(names)!=len(group) or any(names & set(re.findall(r'\b\w+\b',r[3])) for r in group):continue
+        a,b=group[0][0],group[-1][1]
+        for order in itertools.permutations(group):
+            if list(order)==group:continue
+            replacement=''.join(body[r[0]:r[1]] for r in order)
+            text=body[:a]+replacement+body[b:]
+            policies[(tuple(r[2] for r in group),tuple(r[2] for r in order))].append((a,b,replacement))
+            out.append((f'lifetime initialization order at {a}: '+','.join(r[2] for r in order),text))
+    for (before,after),changes in policies.items():
+        if len(changes)<2:continue
+        text=body
+        for a,b,replacement in reversed(changes):text=text[:a]+replacement+text[b:]
+        out.append(('lifetime repeated initialization order: '+','.join(after),text))
+    return out
+
+
+def reuse_temporaries(body, name):
+    """Let a dead local carry a later result without extending its old value."""
+    from .sdkimport import masked
+    code=masked(body);span=_function_body_span(code,name)
+    if not span:return []
+    locals_=_locals(body,span);_,variables=declared_types(code,span[0]);out=[]
+    candidates=[]
+    for a,b,ty,var,dims in locals_:
+        if dims or ty.strip() not in ('u32','s32','int','unsigned') or re.search(r'&\s*\b'+re.escape(var)+r'\b',code[span[1]:span[2]]):continue
+        uses=list(re.finditer(r'\b'+re.escape(var)+r'\b',code[b:span[2]]))
+        if uses:candidates.append((var,b+uses[-1].end()))
+    for m in re.finditer(r'(?m)^([ \t]*)(\w+)\s*=\s*([^;{}\n]+);',code[span[1]:span[2]]):
+        a,b=span[1]+m.start(),span[1]+m.end();indent,var,value=m.groups()
+        if variables.get(var,'').strip() not in ('u32','s32','int','unsigned'):continue
+        if re.fullmatch(r'-?\d+|0x[0-9A-Fa-f]+',value.strip()):continue
+        for temp,last in candidates:
+            if last>=a or temp==var:continue
+            text=body[:a]+indent+temp+' = '+value+';\n'+indent+var+' = '+temp+';'+body[b:]
+            out.append((f'lifetime reuse {temp} for {var} at {a}',text))
+    return out
+
+
 def returned_regions(body, name):
     """Recover a context-free inlined getter from both arms of a value join."""
     from .sdkimport import masked
@@ -752,6 +893,8 @@ def returned_regions(body, name):
                 text=text[:pos]+definition+text[pos:]
                 out.append((f'lifetime returned region {var} at {start}'+label+' into condition',text))
     return out
+
+
 
 
 def promoted_locals(body, name):
@@ -1419,10 +1562,13 @@ def web_constraints(captures, target, ours, check=None):
         origins.append(operands)
     matching = difflib.SequenceMatcher(a=[r[:2] for r in keys], b=[r[:2] for r in original], autojunk=False)
     domains, alternatives, anchors = defaultdict(set), [], []
+    extra_copies=set()
     for block in matching.get_matching_blocks():
         for offset in range(block.size):
             row, index = block.b + offset, block.a + offset
             if row not in retail_rows:
+                if keys[index][0] in ('mr','fmr') and len(origins[index])==2:
+                    extra_copies.update(web for web in origins[index] if web[1]>=32)
                 continue
             if keys[index][2] and keys[index][2]!=emitted_key(original[row])[2]:
                 continue
@@ -1457,7 +1603,10 @@ def web_constraints(captures, target, ours, check=None):
         if swap:
             swapped.append(row)
     return {'status': 'web-hypothesis', 'anchors': anchors,
-            'conflicts': conflicts, 'desired': {cls: {r: c for (bank, r), c in desired.items() if cls == bank and r >= 32}
+            'conflicts': conflicts,
+            'extra_copy_webs': {cls:[r for bank,r in extra_copies if bank==cls] for cls in nodes},
+            'conflicting_webs': {cls:[r for (bank,r),colors in domains.items() if bank==cls and r>=32 and len(colors)>1] for cls in nodes},
+            'desired': {cls: {r: c for (bank, r), c in desired.items() if cls == bank and r >= 32}
                         for cls in nodes}, 'operand_order_rows': swapped, 'unresolved_rows': unresolved}
 
 
@@ -1606,6 +1755,11 @@ def carrier_candidates(body, name, captures, constraints):
         desired = {int(r): c for r, c in constraints['desired'][cls].items()}
         nodes = {n['virtual_register']: n for n in capture['after']['nodes']}
         wrong = {r for r, color in desired.items() if nodes[r]['physical_register'] != color}
+        # A single web demanded in several retail registers needs a lifetime
+        # split even when every unambiguous allocation already agrees.
+        wrong.update(constraints.get('conflicting_webs', {}).get(cls, []))
+        wrong.update(constraints.get('extra_copy_webs', {}).get(cls, []))
+        implicated.update(n['name'] for r,n in nodes.items() if r in wrong and n.get('name'))
         for instruction in capture['pcode']:
             line = instruction['line']
             if line is None or line < 1:
@@ -1618,6 +1772,20 @@ def carrier_candidates(body, name, captures, constraints):
     groups.extend(itertools.combinations(selected, 2))
     if len(selected) > 2:
         groups.append(tuple(selected))
+    # Coalescing a loop's pointer copies changes its allocation stratum.
+    # Include adjacent live scalar homes in the same source-realizable move.
+    related=set(implicated)
+    for capture in captures:
+        nodes={n['virtual_register']:n for n in capture['after']['nodes']}
+        chosen=[n for n in nodes.values() if n.get('name') in implicated and 14<=n['physical_register']<32]
+        if not chosen:continue
+        low=min(n['physical_register'] for n in chosen)-1
+        high=max(n['physical_register'] for n in chosen)+1
+        registers={n['virtual_register'] for n in chosen}
+        related.update(n['name'] for n in nodes.values() if n.get('name') and
+                       low<=n['physical_register']<=high and registers.intersection(n['neighbors']))
+    neighbors=tuple(l for l in locals_ if l[3] in related and not l[4])
+    if len(selected)<len(neighbors)<=len(selected)+3:groups.append(neighbors)
     for group in groups:
         if any('volatile' in l[2] or 'register' in l[2] for l in group):
             continue
@@ -1649,6 +1817,23 @@ def carrier_candidates(body, name, captures, constraints):
         source = body[:group[0][0]] + ''.join(pieces) + body[span[2]:]
         label = 'carrier:' + ','.join(l[3] for l in group)
         proposals.append((label, source))
+        # Aggregate initializers can keep an otherwise scalarized pointer on
+        # the stack. Split pure address initializers before the carrier move.
+        initialized=[l for l in group if _init_of(body[l[0]:l[1]]) is not None]
+        if initialized and all(l in group or _init_of(body[l[0]:l[1]]) is None for l in locals_):
+            split=source;assignments=[]
+            for a,b,type_,var,_ in initialized:
+                init=_init_of(body[a:b])
+                if not re.fullmatch(r'&?\s*\w+',init):break
+                declaration=next(d for x,y,d in changes if x==a)
+                split=split.replace(declaration,declaration[:declaration.index(' = {')]+ ';\n',1)
+                assignments.append('    '+var+'.value = '+uses(init)+';\n')
+            else:
+                split_span=_function_body_span(split,name);split_locals=_locals(split,split_span)
+                if split_locals:
+                    pos=split_locals[-1][1]
+                    split=split[:pos]+''.join(assignments)+split[pos:]
+                    proposals.append((label+':split-initializer',split))
         # A block-local value can survive scalarization as a separate web where
         # assigning the aggregate member directly collapses back to a scalar.
         split = source
@@ -1905,6 +2090,35 @@ def member_layout(expression, layouts, variables):
     return base, offset, typ, count
 
 
+def accessor_lifetimes(body, name):
+    """Repair saved accessors that let a copied aggregate's array escape."""
+    from .sdkimport import masked
+    from .signatures import member_declarations
+    code=masked(body); span=_function_body_span(code,name)
+    if not span:
+        return []
+    arrays={r['key']:{n for n,t,d in member_declarations(r['body']) or [] if d}
+            for r in records(code,span[0])}
+    pattern=(r'\bstatic\s+inline\s+('+TYPE+r')\s+(\w+)\s*\(\s*'
+             r'((?:struct|union)\s+\w+|\w+)\s+(\w+)\s*\)\s*'
+             r'\{\s*return\s+\4\.(\w+)\s*;\s*\}')
+    changes=[]
+    for helper in re.finditer(pattern,code[:span[0]]):
+        ret,fn,typ,owner,field=helper.groups()
+        if '*' not in ret or field not in arrays.get(record_tag(typ),set()):
+            continue
+        uses=[call for call in call_sites(body) if call[0]==fn and call[1]>=span[1]]
+        if not uses or any(len(c[3])!=1 or not re.fullmatch(r'\w+',code[s:e].strip()) for c in uses for s,e in c[3]):
+            continue
+        changes.append((helper.start(),helper.end(),''))
+        for _,start,end,args in uses:
+            a,b=args[0];changes.append((start,end,'('+body[a:b]+').'+field))
+    text=body
+    for a,b,value in sorted(changes,reverse=True):text=text[:a]+value+text[b:]
+    return [('restore escaping aggregate member',text)] if changes else []
+
+
+
 def pointer_lifetimes(body, name):
     """Materialize pointer and floating-point reads at their evaluation point.
 
@@ -1926,6 +2140,29 @@ def pointer_lifetimes(body, name):
     while more := {name for name,typ in aliases.items() if typ in pointers} - pointers:
         pointers.update(more)
     out = []
+    # An assignment at the first short-circuited read preserves its evaluation
+    # point; hoisting the read before the condition can change both behavior
+    # and the allocator's live ranges.
+    for callee,start,end,args in call_sites(code):
+        if callee!='if' or not span[1]<=start<end<span[2] or len(args)!=1:continue
+        a,b=args[0];condition=code[a:b]
+        if any(fn not in ('if','sizeof') for fn,lo,hi,_ in call_sites(condition)):
+            continue
+        sites={}
+        for m in re.finditer(r'\b\w+(?:(?:->|\.)\w+)+',condition):
+            if member_type(m[0],fields,variables).strip() not in ('u32','s32','unsigned','int'):continue
+            sites.setdefault(m[0],[]).append(m)
+        for expression,reads in sites.items():
+            if len(reads)<2 or re.search(r'(?<![=!<>])=(?!=)|\+\+|--',condition):continue
+            temp='fzgx_condition_'+str(a)
+            if re.search(r'\b'+temp+r'\b',code):continue
+            text=body
+            for i,m in reversed(list(enumerate(reads))):
+                replacement='('+temp+' = '+expression+')' if i==0 else temp
+                lo,hi=a+m.start(),a+m.end();text=text[:lo]+replacement+text[hi:]
+            ty=member_type(expression,fields,variables).strip()
+            text=text[:span[1]]+'\n    '+ty+' '+temp+';'+text[span[1]:]
+            out.append((f'lifetime condition {expression} at {a}',text))
     declarations = {}
     for line in re.finditer(r'(?m)^[ \t]*[^\n]+;[ \t]*$',code[span[1]:span[2]]):
         decl = DECL_RE.match(line[0])
@@ -2019,12 +2256,19 @@ def pointer_lifetimes(body, name):
             while re.search(r'\b'+helper+r'\b', code):
                 helper += '_'
             expression_in_helper = 'owner'+expression[len(root):]
+            argument = root
+            if '*' not in root_type and record_tag(root_type) in fields:
+                # Array members must still refer to the caller's object; a
+                # by-value owner would return a pointer into a dead temporary.
+                root_type += ' *'
+                expression_in_helper = 'owner->'+expression[len(root)+1:]
+                argument = '&'+root
             definition = 'static inline '+declarator(ty, helper+'('+declarator(root_type, 'owner')+')')+' { return '+expression_in_helper+'; }\n'
             insertion = body.rfind('\n', 0, span[0])+1
             for positions in [uses]+[[use] for use in uses]:
                 text = body
                 for a,b in reversed(positions):
-                    text = text[:a]+helper+'('+root+')'+text[b:]
+                    text = text[:a]+helper+'('+argument+')'+text[b:]
                 text = text[:insertion]+definition+text[insertion:]
                 out.append((f'lifetime accessor {expression} at '+('every site' if positions is uses else str(positions[0][0])), text))
     # A store's address and computed value have independent lifetimes. Expose

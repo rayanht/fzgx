@@ -246,10 +246,12 @@ class Engine:
         body = Path(row['source']).read_text()
         name = self.project.resolve(row['symbol']).name
         families = []
+        deferred_graph = []
         operators = {}
         check = self.check(row)
         if check.ok:
             yield from evidence.relocation_bindings(body, check)
+        yield from source.accessor_lifetimes(body, name)
         if row.get('score') == 100:
             if row.get('source_lint') and (check.matched or check.matched_pool):
                 yield from source.annotate_verified_branches(body, row['source_lint'])
@@ -261,12 +263,18 @@ class Engine:
         if capture:
             constraints = source.web_constraints(capture, self.targets[row['symbol']][1], self.words[row['id']],check)
             decls, _ = source.declaration_candidates(body, name, capture, constraints, max_orders)
-            yield from [('graph declaration-order',t) for t in decls]
-            yield from source.carrier_candidates(body,name,capture,constraints)
+            graph = [('graph declaration-order',t) for t in decls]
+            carriers = source.carrier_candidates(body,name,capture,constraints)
+            # Large declaration graphs must not consume the entire budget
+            # before semantic, ABI and lifetime repairs get a compiler check.
+            yield from graph[:32]
+            yield from carriers[:32]
+            deferred_graph.extend((graph[32:],carriers[32:]))
         if check.ok:
             yield from evidence.aggregate_initializers(self.project, row['symbol'], body, check)
             yield from evidence.native_pool_objects(self.project, row['symbol'], body, check)
             yield from evidence.conversion_arguments(self.project, row['symbol'], body, check)
+            yield from evidence.rotate_bit_tests(body, name, check)
             yield from evidence.call_result_types(self.project, row['symbol'], body, check)
             yield from evidence.floating_expressions(self.project, row['symbol'], body, check)
             yield from evidence.scalar_lifetimes(self.project, row['symbol'], body, check)
@@ -275,7 +283,7 @@ class Engine:
             families.append(evidence.candidates(self.project, row['symbol'], body, check))
             targeted = [[c for c in families[0] if c[0].startswith(('retail scalar flag masks', 'retail format argument', 'retail call argument', 'retail call parameter', 'retail argument order:', 'retail float branch', 'retail zero comparison', 'bind recovered shared-pool', 'retain recovered shared-pool', 'recover native shared-pool', 'lifetime reload', 'lifetime ordered', 'lifetime shared-pool'))],
                         source.address_expressions(body, name), source.pointer_lifetimes(body, name), source.through_local(body, name),
-                        source.wide_member_values(body,name),source.promoted_locals(body,name),source.returned_regions(body,name)]
+                        source.wide_member_values(body,name),source.promoted_locals(body,name),source.returned_regions(body,name),source.reuse_temporaries(body,name),source.initialization_orders(body,name),source.flag_stores(body,name),source.loop_lifetimes(body,name)]
             operand_types = {'and':('&',('u32','s32')), 'or':('|',('u32','s32')),
                              'xor':('^',('u32','s32')), 'mullw':('*',('u32','s32')),
                              'fadd':('+',('f64',)), 'fadds':('+',('f32',)),
@@ -319,6 +327,7 @@ class Engine:
                     if i<8:
                         for policy,combined in evidence.optimizer_pragmas(text,name):
                             yield label+' with '+policy,combined
+        families.extend(deferred_graph)
         families.extend([source.missing_values(body,name), source.expression_trees(body,name),
                          source.commutations(body,name), source.probes(body,name,64),
                          [(family+': '+label,text) for family,label,text in source.all_rewrites(body,name)]])

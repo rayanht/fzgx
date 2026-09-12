@@ -1,5 +1,5 @@
 {
- "generated": 1789238374,
+ "generated": 1789244838,
  "functions": [
   {
    "symbol": "car_colchg:_prolog",
@@ -123466,20 +123466,20 @@
   {
    "symbol": "fn_10_21EC",
    "module": "sel",
-   "unit": null,
+   "unit": "rel/sel/sel/fn_10_21EC.c",
    "addr": 8684,
    "size": 4220,
-   "status": "unmatched",
-   "attempts": 6,
+   "status": "matched",
+   "attempts": 7,
    "best_percent": 97.585785,
    "claimed_by": null,
    "claimed_at": null,
    "claim_ttl": null,
-   "matched_commit": null,
+   "matched_commit": "13e0b55",
    "blocked_issue": null,
    "blocked_reason": null,
    "prev_status": null,
-   "link_state": null
+   "link_state": "verified"
   },
   {
    "symbol": "fn_10_3268",
@@ -464309,6 +464309,25 @@
    "cost_usd": 0.0,
    "outcome": "matched",
    "notes": "bind exact clone",
+   "best_body_path": null,
+   "stale_checks": 0,
+   "best_in_attempt": 0.0
+  },
+  {
+   "id": 17515,
+   "symbol": "fn_10_21EC",
+   "agent": "deterministic-fixup",
+   "harness": "fixup",
+   "model": null,
+   "started": 1789244448,
+   "ended": 1789244448,
+   "checks": 0,
+   "final_percent": null,
+   "tokens_in": 0,
+   "tokens_out": 0,
+   "cost_usd": 0.0,
+   "outcome": "matched",
+   "notes": "lifetime initialization order at 3468: fzgx_loop_p9C8_3463.value,fzgx_loop_p9F8_3463.value,fzgx_loop_i_3463.value,fzgx_loop_psel_3463",
    "best_body_path": null,
    "stale_checks": 0,
    "best_in_attempt": 0.0
