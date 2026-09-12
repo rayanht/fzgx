@@ -5207,3 +5207,6 @@ dol/__OSReboot.c:
 
 dol/fn_8003086C.c:
 	.text       start:0x8003086C end:0x800309FC align:4
+
+dol/fn_80049BF4.c:
+	.text       start:0x80049BF4 end:0x80049E34 align:4

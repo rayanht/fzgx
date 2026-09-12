@@ -17456,6 +17456,19 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_80049BF4.c",
+    "symbols": [
+      "fn_80049BF4"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on"
+    ]
+  },
+  {
+    "module": "main",
     "source": "dol/fn_8004A530.c",
     "symbols": [
       "fn_8004A530"
