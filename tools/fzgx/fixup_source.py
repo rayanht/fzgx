@@ -425,14 +425,37 @@ def perturbations(body: str, name: str) -> List[Tuple[str, str, str]]:
         a, b = line_start - shift, line_end - shift
         text = text[:a] + "{\n" + decl + text[a:b] + "}\n" + text[b:]
         out.append(("inner-scope", f"scope {nm}", text))
+    # Nested switch arms commonly reuse a spelling for unrelated locals. Count
+    # reads inside the declaration's scope, rather than the whole function.
+    from .sdkimport import masked
+    code = masked(body)
+    scopes, stack = [], []
+    for token in re.finditer(r'[{}]', code):
+        if token[0] == '{':
+            stack.append(token.start())
+        elif stack:
+            scopes.append((stack.pop(), token.start()))
     # 4. temp inlining: `v = expr;` used once afterwards -> substitute
     for m in re.finditer(r"^(\s*)([A-Za-z_]\w*) = ([^;]+);\n", body[span[1]:span[2]], re.M):
         v, expr = m.group(2), m.group(3)
-        rest = body[span[1] + m.end():span[2]]
+        start, end = span[1] + m.start(), span[1] + m.end()
+        declarations = list(re.finditer(r'\b'+TYPE+r'\s*(?:(?<=\*)|\s)'+re.escape(v)+r'\s*[;=]', code[span[1]:start]))
+        scope_end = span[2]
+        for declaration in reversed(declarations):
+            enclosing = [(a,b) for a,b in scopes if a < span[1]+declaration.start() < start < b]
+            if enclosing:
+                scope_end = min(enclosing, key=lambda s:s[1]-s[0])[1]
+                break
+        rest = body[end:scope_end]
         uses = list(re.finditer(rf"\b{re.escape(v)}\b", rest))
         if len(uses) == 1 and not re.search(rf"\b{re.escape(v)}\s*=", rest):
+            # Move only into the immediately following statement. Calls, writes
+            # or control flow between the definition and read can change it.
+            prefix = rest[:uses[0].start()]
+            if re.search(r'[;{}]|\+\+|--', prefix) or call_sites(expr+prefix):
+                continue
             new_rest = rest[:uses[0].start()] + f"({expr})" + rest[uses[0].end():]
-            out.append(("inline-temp", f"inline {v}", body[:span[1] + m.start()] + body[span[1] + m.end():span[1] + m.end()] + new_rest.join(["", ""]) if False else body[:span[1] + m.start()] + new_rest + body[span[2]:]))
+            out.append(("inline-temp", f"inline {v} at {start}", body[:start] + new_rest + body[scope_end:]))
     out.extend(("hoist-arg",label,text) for label,text in argument_lifetimes(body,name))
     # 6. increment forms
     for m in re.finditer(r"^(\s*)(\S[^=\n]*?) = \2 \+ 1;\n", body, re.M):
@@ -1947,6 +1970,23 @@ def address_expressions(body, name):
     for declaration in re.finditer(r'('+TYPE+r')\s*(?:(?<=\*)|\s)(\w+)\s*\[[^\]]+\]\s*;', code[:span[0]]):
         members.setdefault(declaration[2], set()).add(declaration[1].strip())
     fields, variables = declared_types(code,span[0])
+    # Indexed stores create their base and index webs in a different order
+    # from a dereferenced sum. Byte elements make the displacement unambiguous.
+    byte_type = r'(?:u8|s8|char|unsigned char|signed char)'
+    store = (r'\*\s*\(\s*('+byte_type+r')\s*\*\s*\)\s*\(\s*'
+             r'\(\s*\1\s*\*\s*\)\s*(\w+(?:(?:->|\.)\w+)*)\s*\+\s*')
+    for match in re.finditer(store,code[span[1]:span[2]]):
+        lo, offset_start = span[1]+match.start(), span[1]+match.end()
+        end, depth = offset_start, 1
+        while end < span[2] and depth:
+            depth += (code[end]=='(')-(code[end]==')'); end += 1
+        if depth or not re.match(r'\s*=(?!=)', code[end:]):
+            continue
+        offset = body[offset_start:end-1].strip()
+        if re.search(r'[;{}]|\+\+|--', offset) or call_sites(offset):
+            continue
+        replacement = '(('+match[1]+' *)'+match[2]+')['+offset+']'
+        out.append((f'address indexed byte store at {lo}',body[:lo]+replacement+body[end:]))
     offset_home=(r'('+TYPE+r')\s*(?:(?<=\*)|\s)(\w+)\s*(?:=\s*|;\s*\2\s*=\s*)\(\s*\1\s*\)\s*(\w+)\s*;\s*'
                  r'\2\s*=\s*(\w+)\s*\+\s*\(\s*s32\s*\)\s*\2\s*;\s*return\s+\2\s*;')
     for match in re.finditer(offset_home,code[:span[0]]):

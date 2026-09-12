@@ -160,9 +160,9 @@ Rules that hold for everyone:
   wrapper can still have missing passthrough parameters: follow its callees' entry registers
   (the `memset`/`fn_80008BEC` size argument was one such case). Drafts containing `???` remain
   incomplete and cannot be submitted by this pass.
-- Current work is strictly deterministic tool development. Do not hand-write or manually tune
-  reconstructed C. Fix the generator, type recovery or lowering and submit only its verified
-  output. Use existing retail functions as the repair corpus; do not add unit tests.
+- Prefer deterministic repairs, and carry recurring manual fixes back into the existing engine.
+  Manual reconstruction and tuning are also authorized. Submit only oracle-verified C and
+  check all 16 hashes. Use existing retail functions as the repair corpus; do not add unit tests.
   `fzgx lift --callee fn_1_4F734 --callee fn_1_4AE0C` selects the union of direct callers
   across TUs; `--no-submit` retains drafts without carving. Header layouts constrain copied
   stack objects. Integer-to-float recovery tracks both scratch-word stores in either order
