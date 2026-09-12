@@ -384,7 +384,10 @@ class Project:
             "stamp": stamp, "v": 3,
             "functions": {k: {"asm": v.asm, "refs": v.refs, "unit": v.unit} for k, v in result.items()},
         }))
-        temporary.replace(cache)
+        try:
+            temporary.replace(cache)
+        except FileNotFoundError:
+            pass  # another thread of this process built and installed the same index first
         self._asm_index[module] = result
         return result
 
