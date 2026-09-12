@@ -15,7 +15,7 @@ import shlex
 import struct
 import time
 
-from . import fixup_evidence as evidence, fixup_source as source, mwgraph, oracle
+from . import fixup_evidence as evidence, fixup_source as source, mwgraph, oracle, reuse
 from .project import ROOT, STATE_DIR, Project
 
 
@@ -26,7 +26,7 @@ def digest(value):
 class Engine:
     def __init__(self, project, output, verbose=False):
         self.project, self.output, self.verbose = project, output, verbose
-        self.generator_sha256 = digest(Path(__file__).read_bytes() + Path(source.__file__).read_bytes() + Path(evidence.__file__).read_bytes() + Path(mwgraph.__file__).read_bytes() + b''.join((ROOT/'tools/fzgx'/name).read_bytes() for name in ('signatures.py','evidence.py','dataimport.py','lift.py')))
+        self.generator_sha256 = digest(Path(__file__).read_bytes() + Path(source.__file__).read_bytes() + Path(evidence.__file__).read_bytes() + Path(mwgraph.__file__).read_bytes() + b''.join((ROOT/'tools/fzgx'/name).read_bytes() for name in ('signatures.py','evidence.py','dataimport.py','lift.py','reuse.py','sdkimport.py')))
         output.mkdir(parents=True, exist_ok=True)
         self.headers = mwgraph.header_fingerprint(ROOT, project.version)
         self.environment = digest(('region-frontier-v1' + self.headers + ''.join(digest((ROOT/'tools/fzgx'/f).read_bytes()) for f in
@@ -39,10 +39,16 @@ class Engine:
         self.rejected = json.loads(provenance.read_text()) if provenance.exists() else {}
         self.compiled = self.cached = 0
         self.compile_seconds = 0.0
+        self.clones, self.clone_skips, self.clone_shared, self.clone_independent = [], [], set(), set()
+        self.declarations = reuse.Declarations(self)
 
     def emit(self, value):
         if self.verbose:
             print(json.dumps(value), flush=True)
+
+    def matched_symbols(self, history):
+        targets={r['symbol'] for group in self.clones for r in group['members'] if r['status']=='unmatched'}
+        return {r['symbol'] for r in history if r.get('matched') and (not self.clones or r['symbol'] in targets)}
 
     def record(self, symbol, body, mw=None, flags=None, **metadata):
         sym = self.project.resolve(symbol)
@@ -77,7 +83,7 @@ class Engine:
         unique = {r['id']: r for r in rows}
         for row in unique.values():
             cached = self.cache.get(row['id'])
-            if cached and (not cached.get('object') or Path(cached['object']).exists()):
+            if cached and (not cached.get('object') or cached.get('word_errors') is not None and Path(cached['object']).exists()):
                 row.update(cached); self.cached += 1
                 if row.get('object'):
                     self.words[row['id']] = oracle.words(Path(row['object']), self.project.resolve(row['symbol']).name)
@@ -95,12 +101,12 @@ class Engine:
                 words = oracle.words(obj, self.project.resolve(row['symbol']).name) if obj else None
                 target = self.targets[row['symbol']][1]
                 self.words[row['id']] = words
-                row.update(object=str(obj) if obj else None, score=source.fitness(target, words)[0] if words else -1,
+                row.update(object=str(obj) if words else None, score=source.fitness(target, words)[0] if words else -1,
                            bit_errors=(sum((a^b).bit_count() for a,b in zip(target,words))+32*abs(len(target)-len(words))) if words else 10**9)
                 row['word_errors'] = source.distance(target, words) if words else None
                 row['shape_errors'] = source.distance(source.instruction_shapes(target),source.instruction_shapes(words)) if words else None
                 row['aligned_word_percent'] = row['score']
-                row['response_sha256'] = self.response_hash(obj, words) if obj else None
+                row['response_sha256'] = self.response_hash(obj, words) if words else None
                 if row['score'] == 100:
                     check = self.check(row)
                     row['matched'] = bool(check.matched or check.matched_pool)
@@ -354,6 +360,81 @@ class Engine:
             mwgraph.capture(self.project,args,locked=True)
             captures.update(load_captures(self,output,list(rows.values())))
 
+    def transfer_clones(self, history, seen, transfers):
+        originals = {row['id']: row for row, _ in transfers}
+        expanded, pending = {}, []
+        for row in originals.values():
+            try:
+                body = self.declarations.expand(row)
+                flat = self.record(row['symbol'], body, row['mw'], row['flags'],
+                    label='expand owned clone declarations', parent=row['id'], seed=row.get('seed', row['id']))
+                expanded[row['id']] = flat
+                if flat['id'] not in seen:
+                    seen.add(flat['id']); pending.append(flat)
+            except (ValueError, OSError) as error:
+                self.clone_skips.append(dict(symbol=row['symbol'], source=row['sha256'], error=str(error)))
+        self.evaluate(list(expanded.values()))
+        history.extend(pending)
+        pending, origins, proofs = [], {}, []
+        existing = {r['id']: r for r in history}
+        for row, target in transfers:
+            flat = expanded.get(row['id'])
+            # A preprocessor success is insufficient: __FILE__, compiler pragmas
+            # and header definitions can change the actual compiled response.
+            if not flat or flat.get('response_sha256') != row.get('response_sha256') or not flat.get('object'):
+                self.clone_skips.append(dict(symbol=row['symbol'], source=row['sha256'], error='expanded declarations changed compiler response'))
+                continue
+            mapping = reuse.bindings(self.project, row['symbol'], target)
+            body = reuse.rebind(Path(flat['source']).read_text(), mapping)
+            rebound = self.record(target, body, row['mw'], row['flags'], label='bind exact clone',
+                parent=flat['id'], seed=flat.get('seed', flat['id']),
+                clone=dict(donor=row['symbol'], recipient=target, bindings=mapping))
+            origins[rebound['id']] = row
+            if rebound['id'] in seen:
+                if rebound['id'] in existing:
+                    proofs.append(existing[rebound['id']])
+            else:
+                seen.add(rebound['id']); pending.append(rebound); proofs.append(rebound)
+        self.evaluate(pending)
+        for row in proofs:
+            donor = origins[row['id']]
+            pair = donor['symbol'], row['symbol']
+            if row.get('object'):
+                self.check(row)
+                if (self.words[row['id']] == self.words[donor['id']]
+                        and abs(row['percent_adjusted'] - self.check(donor).percent_adjusted) < 0.00001):
+                    if pair not in self.clone_independent:
+                        self.clone_shared.add(pair)
+                    continue
+            self.clone_shared.discard(pair)
+            self.clone_independent.add(pair)
+        history.extend(pending)
+
+    def share_clones(self, history, seen, beam, initial=False):
+        def choices():
+            result = self.frontier(history, beam)
+            for row in history:
+                if row.get('matched'):
+                    result[row['symbol']] = [row]
+            return result
+        if initial:
+            selected = choices(); transfers = []
+            for group in self.clones:
+                rep = group['representative']
+                for member in group['members']:
+                    if member['symbol'] != rep:
+                        transfers.extend((row, rep) for row in selected.get(member['symbol'], []))
+            self.transfer_clones(history, seen, transfers)
+        selected = choices(); transfers = []
+        for group in self.clones:
+            rep = group['representative']
+            for member in group['members']:
+                if member['status'] == 'unmatched' and member['symbol'] != rep:
+                    transfers.extend((row, member['symbol']) for row in selected.get(rep, []))
+        self.transfer_clones(history, seen, transfers)
+        self.emit(dict(stage='clones', families=len(self.clones), shared=len(self.clone_shared),
+                       matches=len(self.matched_symbols(history))))
+
     def run(self, rows, rounds=2, beam=3, max_candidates=80, budget_s=None, captures=None):
         start=time.monotonic(); history=list(rows); seen={r['id'] for r in rows}; initial={}
         self.evaluate(rows)
@@ -362,14 +443,22 @@ class Engine:
                 self.check(row)
         self.emit({'stage': 'baseline', 'functions': len({r['symbol'] for r in rows}),
                    'variants': len(rows), 'compiled': self.compiled, 'cached': self.cached})
-        self.save(history, stats=[], start=start)
         for r in rows:
             initial[r['symbol']]=max(initial.get(r['symbol'],-1),r['score'])
+        if self.clones:
+            self.share_clones(history, seen, beam, initial=True)
+        self.save(history, stats=[], start=start)
         stats=[]
         for step in range(rounds):
             if budget_s is not None and time.monotonic()-start >= budget_s:
                 break
             frontier=self.frontier(history,beam)
+            for group in self.clones:
+                rep = group['representative']
+                for member in group['members']:
+                    key = member['symbol']
+                    if key != rep and (rep, key) in self.clone_shared:
+                        frontier.pop(key, None)
             if captures is not None:
                 self.refresh_captures(frontier,captures)
             pending=[]; parents={}; generated=time.monotonic();progress=generated
@@ -445,9 +534,11 @@ class Engine:
                     if row['id'] not in seen:
                         seen.add(row['id']);combined.append(row)
             self.evaluate(combined);pending+=combined;history+=pending
+            if self.clones:
+                self.share_clones(history, seen, beam)
             stat=dict(round=step+1,probes=len(pending),generation_seconds=generation_seconds,
-                      matches=len({r['symbol'] for r in history if r.get('matched')}),
-                      improved=len({r['symbol'] for r in history if r['score']>initial[r['symbol']]}))
+                      matches=len(self.matched_symbols(history)),
+                      improved=len({r['symbol'] for r in history if r['score']>initial.get(r['symbol'],-1)}))
             stats.append(stat);self.emit(stat)
             self.save(history,stats,start)
         return self.save(history,stats,start)
@@ -461,6 +552,9 @@ class Engine:
                 self.check(row)
         report=dict(generator_sha256=self.generator_sha256, records=history, best=best, frontier=dict(self.frontier(history,3)), rounds=stats, compiled=self.compiled,cached=self.cached,
                     compile_seconds=self.compile_seconds,seconds=time.monotonic()-start,environment=self.environment)
+        if self.clones:
+            report.update(clones=self.clones, clone_skips=self.clone_skips, clone_shared=sorted(self.clone_shared),
+                          clone_independent=sorted(self.clone_independent))
         (self.output/'report.json').write_text(json.dumps(report))
         return report
 
@@ -559,7 +653,7 @@ def integrate(project, report, inputs, output):
             failed.append({'symbol': symbol, 'result': result})
             continue
         accepted.append(symbol)
-        provenance[symbol] = {'seed_symbol': seed_symbol, 'generator': 'fzgx fixup', 'transform': probe['label'],
+        provenance[symbol] = {'seed_symbol': record.get('symbol', seed_symbol), 'generator': 'fzgx fixup', 'transform': probe['label'],
                               'seed': Path(record['source']).read_text(), 'seed_sha256': record['sha256'],
                               'generated_sha256': hashlib.sha256(source.encode()).hexdigest(), 'generated_source': source,
                               'compiler': mw, 'flags': record['flags'], 'source': result['unit'],
@@ -607,12 +701,28 @@ def replay_archive(path):
                     for step in record['recipe']:
                         if digest(body.encode())!=step['input_sha256']:
                             raise ValueError(symbol+': recipe input hash mismatch')
-                        row=engine.record(symbol,body,record['mw'],record['flags'])
+                        if 'edits' in step:
+                            # Replay the measured source response without rerunning
+                            # allocator searches or reconstructing composition beams.
+                            for start,end,text in sorted(step['edits'],reverse=True):
+                                body=body[:start]+text+body[end:]
+                            if digest(body.encode())!=step['output_sha256']:
+                                raise ValueError(symbol+': recipe output hash mismatch')
+                            continue
+                        row=engine.record(step.get('input_symbol',symbol),body,record['mw'],record['flags'])
                         engine.evaluate([row])
                         if not row.get('object'):
                             raise ValueError(symbol+': recipe input no longer compiles')
-                        body=next((text for label,text in engine.proposals(row)
-                                   if label==step['label'] and digest(text.encode())==step['output_sha256']),None)
+                        if step['label'] == 'expand owned clone declarations':
+                            body=engine.declarations.expand(row)
+                        elif step['label'] == 'bind exact clone':
+                            mapping=reuse.bindings(project,step['input_symbol'],step['output_symbol'])
+                            if mapping != step['clone']['bindings']:
+                                raise ValueError(symbol+': clone bindings changed')
+                            body=reuse.rebind(body,mapping)
+                        else:
+                            body=next((text for label,text in engine.proposals(row)
+                                       if label==step['label'] and digest(text.encode())==step['output_sha256']),None)
                         if body is None:
                             raise ValueError(symbol+': cannot reproduce '+step['label'])
                 if body is None or digest(body.encode())!=record['sha256']:
@@ -644,14 +754,25 @@ def load_records(engine,args):
     from .ledger import Ledger
     from seeds.recovered import SavedCandidates
     p=engine.project;ledger=Ledger();rows=[]
+    clone_members = None
+    if getattr(args, 'clones', False):
+        groups = reuse.families(p, args.max_size, args.module, args.symbol)
+        if args.limit:
+            groups = groups[:args.limit]
+        engine.clones = [dict(representative=next(r['symbol'] for r in group if r['status']=='unmatched'), members=group) for group in groups]
+        clone_members = {r['symbol'] for group in groups for r in group}
+        engine.emit(dict(stage='clone-inventory', families=len(groups), functions=sum(r['status']=='unmatched' for g in groups for r in g),
+                         bytes=sum(r['size'] for g in groups for r in g if r['status']=='unmatched')))
     def add(symbol,body,mw=None,flags=None,**metadata):
         sym=p.resolve(symbol);state=ledger.get(symbol)
-        if not sym or not state or state['status']!='unmatched':
+        if not sym or not state or state['status'] not in (('unmatched','matched') if clone_members is not None else ('unmatched',)):
             return
-        if args.module and sym.module!=args.module or args.max_size is not None and sym.size>args.max_size:
+        if clone_members is not None and symbol not in clone_members:
+            return
+        if clone_members is None and (args.module and sym.module!=args.module or args.max_size is not None and sym.size>args.max_size):
             return
         rows.append(engine.record(symbol,body,mw,flags,**metadata))
-    if args.symbol:
+    if args.symbol and (clone_members is None or args.body):
         from . import api
         body=Path(args.body).read_text() if args.body else api._attempt_text(p,args.symbol)
         if body is None:
@@ -666,12 +787,14 @@ def load_records(engine,args):
         else:
             inputs=[dict(r,symbol=s) for s,r in json.loads((args.corpus/'inputs.json').read_text()).items()]
         for r in inputs:
+            if clone_members is not None and r['symbol'] not in clone_members:
+                continue
             body=Path(r['source']).read_text()
             if digest(body.encode())!=r['sha256']:
                 raise ValueError(f"{r['symbol']}: frozen source changed")
             add(r['symbol'],body,r['mw'],r['flags'],label='saved-body',origin=r.get('origin'))
     else:
-        saved=SavedCandidates(args.min_percent-0.000001);saved.collect()
+        saved=SavedCandidates(args.min_percent-0.000001, clone_members);saved.collect()
         for symbol,choices in saved.candidates.items():
             options={r['sha256']:r for r in choices if r['settings_recorded']}
             for r in choices:
@@ -683,8 +806,18 @@ def load_records(engine,args):
             for symbol,r in json.loads((STATE_DIR/'lift/scores.json').read_text()).items():
                 if r.get('text') and args.min_percent<=r.get('percent',0)<=args.max_percent:
                     add(symbol,r['text'],r.get('mw'),r.get('flags'),label='lifted-body')
+    if clone_members is not None:
+        from . import api
+        for group in engine.clones:
+            for member in group['members']:
+                if member['status'] != 'matched':
+                    continue
+                sym=p.resolve(member['symbol']);unit=p.unit_of(sym)
+                if unit and not (p.unit_record(unit) or {}).get('asm'):
+                    mw,flags=oracle.version_for(p,sym)
+                    add(member['symbol'],api._canonical_text(p,unit),mw,flags,label='verified clone donor')
     rows=list({r['id']:r for r in rows}.values())
-    if args.limit:
+    if args.limit and clone_members is None:
         selected=set(sorted({r['symbol'] for r in rows})[:args.limit]);rows=[r for r in rows if r['symbol'] in selected]
     return rows
 
@@ -706,6 +839,7 @@ def load_captures(engine,path,rows):
                     or proof.get('replay_errors') or proof.get('simplify_errors')
                     or proof.get('source_sha256') != row['sha256']):
                 engine.emit({'stage': 'capture-rejected', 'symbol': row['symbol'], 'reason': 'capture validation failed'})
+                result[key]=None
                 continue
             flags,_=oracle.module_flags(engine.project,engine.project.resolve(row['symbol']).module)
             extra=shlex.split(row['flags']);levels=[f for f in extra if f.startswith('-O')]
@@ -722,7 +856,49 @@ def load_captures(engine,path,rows):
     return result
 
 
+def repair_recipe(by_id, row):
+    recipe=[]; current=row; visited=set()
+    while current.get('parent'):
+        if current['id'] in visited:
+            raise ValueError(f'{row["symbol"]}: cyclic repair provenance at {current["id"]}')
+        visited.add(current['id'])
+        parent=by_id[current['parent']]
+        recipe.append(dict(label=current['label'], input_sha256=parent['sha256'], output_sha256=current['sha256'],
+                           input_symbol=parent['symbol'], output_symbol=current['symbol'],
+                           edits=source.edits(Path(parent['source']).read_text(),Path(current['source']).read_text()),
+                           **({'clone':current['clone']} if 'clone' in current else {})))
+        current=parent
+    return current, list(reversed(recipe))
+
+
+def archive_sources(report, path):
+    """Portable C and replay recipes, including partial results for future passes."""
+    by_id={r['id']:r for r in report['records']}
+    selected={r['id']:r for r in [*report['best'].values(), *(r for group in report['frontier'].values() for r in group)]}
+    # The word frontier can prefer fewer differing instructions to a higher
+    # objdiff percentage. Preserve both for the next pass.
+    raw_best={}
+    for row in report['records']:
+        if row.get('object') and 'raw_percent' in row and row['raw_percent']>raw_best.get(row['symbol'],{}).get('raw_percent',-1):
+            raw_best[row['symbol']]=row
+    selected.update((r['id'],r) for r in raw_best.values())
+    targets={r['symbol'] for group in report.get('clones',[]) for r in group['members'] if r['status']=='unmatched'}
+    records=[]
+    for row in selected.values():
+        if not row.get('object') or 'raw_percent' not in row or targets and row['symbol'] not in targets:
+            continue
+        seed,recipe=repair_recipe(by_id,row)
+        records.append(dict(symbol=row['symbol'],body=Path(row['source']).read_text(),sha256=row['sha256'],
+            seed=Path(seed['source']).read_text(),seed_sha256=seed['sha256'],seed_symbol=seed['symbol'],
+            generator='fzgx fixup',recipe=recipe,mw=row['mw'],flags=row['flags'],
+            **{k:row[k] for k in ('raw_percent','percent','percent_adjusted','score','word_errors','aligned_word_percent','matched') if k in row}))
+    path.write_bytes(gzip.compress(json.dumps(dict(format='fzgx-source-repairs-v1',
+        generator_sha256=report['generator_sha256'],environment=report['environment'],records=records)).encode(),mtime=0))
+
+
 def command(p,args):
+    if args.min_percent is None:
+        args.min_percent = 0 if getattr(args, 'clones', False) else 95
     if args.rounds < 0 or args.beam < 1 or args.max_candidates < 1 or (args.budget is not None and args.budget <= 0):
         raise ValueError('rounds must be nonnegative; beam, max-candidates and budget must be positive')
     if args.archive:
@@ -731,7 +907,10 @@ def command(p,args):
         if args.corpus is None or args.output is None:
             raise ValueError('--capture requires --corpus and --output')
         args.symbols=[args.symbol] if args.symbol else None;args.all_near=True
-        return mwgraph.capture(p,args)
+        result=mwgraph.capture(p,args)
+        if result['errors']:
+            raise SystemExit(1)
+        return result
     output=(args.output or STATE_DIR/'fixup'/'corpus').resolve()
     if args.saved:
         report=json.loads((output/'report.json').read_text())
@@ -747,22 +926,16 @@ def command(p,args):
         seeds={r['id']:r for r in [*best.values(),*(r for group in report['frontier'].values() for r in group)]}
         (output/'prepared.json').write_text(json.dumps({'records':list(seeds.values())}))
         (output/'results.json').write_text(json.dumps({s:{'baseline':{'object':r['object'],'pure':'unclassified'}} for s,r in best.items()}))
+    if report.get('clones'):
+        archive_sources(report,output/'sources.json.gz')
     if args.apply:
         by_id={r['id']:r for r in report['records']};inputs={};functions=[]
         for symbol,row in report['best'].items():
             if not row.get('matched'):
                 continue
-            seed=by_id[row.get('seed',row['id'])]
+            seed,recipe=repair_recipe(by_id,row)
             inputs[symbol]=seed
-            recipe=[]; current=row; visited=set()
-            while current.get('parent'):
-                if current['id'] in visited:
-                    raise ValueError(f'{symbol}: cyclic repair provenance at {current["id"]}')
-                visited.add(current['id'])
-                parent=by_id[current['parent']]
-                recipe.append(dict(label=current['label'], input_sha256=parent['sha256'], output_sha256=current['sha256']))
-                current=parent
-            functions.append(dict(symbol=symbol,probes=[dict(row,matched=True)],recipe=list(reversed(recipe))))
+            functions.append(dict(symbol=symbol,probes=[dict(row,matched=True)],recipe=recipe))
         try:
             integrate(p,{'functions':functions},inputs,output)
         finally:
@@ -780,6 +953,8 @@ def command(p,args):
                 cache_path.write_text(json.dumps(cache))
                 (output/'report.json').write_text(json.dumps(report))
     summary={k:report[k] for k in ('compiled','cached','compile_seconds','seconds')}
-    summary.update(functions=len(report['best']),variants=len(report['records']),
-                   matches=[s for s,r in report['best'].items() if r.get('matched')])
+    targets={r['symbol'] for group in report.get('clones',[]) for r in group['members'] if r['status']=='unmatched'}
+    reported={s:r for s,r in report['best'].items() if not report.get('clones') or s in targets}
+    summary.update(functions=len(reported),variants=len(report['records']),
+                   matches=[s for s,r in reported.items() if r.get('matched')])
     print(json.dumps(summary,indent=2));return summary

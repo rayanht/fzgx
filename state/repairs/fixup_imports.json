@@ -2994,5 +2994,299 @@
     ],
     "link": "verified",
     "commit": "9b40101"
+  },
+  "fn_1_4D494": {
+    "seed_symbol": "fn_1_4D0A0",
+    "generator": "fzgx fixup",
+    "transform": "bind exact clone",
+    "seed": "#include \"types.h\"\n#include \"rel/main_rel/globals.h\"\n#include \"rel/main_rel/font.h\"\n\nextern const f32 lbl_1_rodata_10D4;\nextern void fn_1_4955C(f32 value1, f32 value2);\nextern f32 lbl_1_rodata_10C0[5];\nextern f32 fn_1_4B1D4(s32 mode, s32 value);\nextern u32 strlen(const char *str);\nextern void sprintf(void *arg0, void *arg1, u32 arg2, ...);\nextern f32 lbl_1_rodata_26B8[16];\nextern void fn_1_4D10C(void *data, f32 scale, f32 value);\nextern void fn_1_4D2AC(void *data, f32 scale, f32 value);\nextern int fn_1_3F164(void);\nextern void fn_800724C8(void);\nextern void fn_8007245C(int);\nextern void fn_80074788(int);\nextern void fn_80074660(int);\nextern void fn_80073678(int);\nextern void fn_80073898(int);\nextern void fn_80073C6C(int);\nextern void fn_800745A4(int, int, int, int, int, int);\nextern void fn_800734A8(int, int, int, int);\nextern void fn_80072AB0(int, int, int);\nextern void fn_80072C24(int, int, int, int, int);\nextern void fn_80072D64(int, int, int, int, int, int);\nextern void fn_80072CC4(int, int, int, int, int);\nextern void fn_80072E20(int, int, int, int, int, int);\nextern void fn_80074918(s32, s32, s32);\nextern void fn_800728A8(int, int, int, int);\nextern void fn_800720B0(int);\nextern void fn_80072864(int);\nextern void fn_1_A71CC(void);\nextern void lbl_8006D758(void);\nextern void fn_80072558(void);\nextern f32 lbl_1_rodata_26F8[22];\nextern f32 fn_1_A6FE8(void);\nextern void *lbl_801A6D00;\nextern void fn_80015E18(void *, f32, f32, f32, f32);\nextern void fn_80015EE8(void *, f32, f32, f32, f32, f32, f32);\nextern void fn_800737E4(void *, s32);\nextern void fn_1_A722C(void);\nextern void fn_1_50190(f32 a, f32 b, f32 c, f32 d, f32 e, f32 f);\nextern void fn_1_52BF8(void *arg0, void *arg1, s32 arg2);\nextern void *fn_1_541A8(void *arg, s32 value);\nextern u32 lbl_801A66B4;\nextern void fn_1_54320(void);\nextern void fn_1_9FA18(void);\nextern void fn_1_58248(void);\nextern void fn_1_54848(void);\nextern void fn_800794F0(u8 *data, void *value, s32 size);\nextern s32 fn_1_54F5C(u8 *data, f32 value, f32 scale);\nextern void fn_1_55210(void *value);\nextern void fn_1_56530(void);\nextern const f32 lbl_1_rodata_28A8;\nextern void fn_1_557C4(void *value);\nextern void fn_1_556B8(void *value);\nextern void fn_1_563E4(void *data);\nextern void fn_80077E7C(void *value);\nextern void fn_80077F8C(void *value);\nextern void fn_80074CF4(void);\nextern void lbl_8006DD14(void *arg0, void *arg1);\nextern void fn_800749B0(s32 arg0, void *arg1);\nextern const f32 lbl_1_rodata_28AC;\nextern void fn_80074C74(u8 *value);\nextern void fn_80074A7C(void);\nextern void fn_80077BAC(void);\nextern u8 lbl_1_bss_6C7DC[100];\nextern u8 *fn_1_565E8(void);\nextern void fn_1_45730(void);\nextern void fn_1_45B2C(void);\nextern void fn_1_458A0(void);\nextern void fn_1_45850(void);\nextern void fn_1_565F4(void);\nextern void fn_80070D60(void *);\n\nextern u8 *fn_1_565E8(void);\nextern void fn_1_45730(void);\nextern void fn_1_45B2C(void);\nextern void fn_1_458A0(void);\nextern void fn_1_45850(void);\nextern void fn_1_565F4(void);\nextern void fn_80070D60(void *);\nextern u8 *lbl_801A66CC;\nextern void fn_80008BA8(void *, void *, u32);\nextern f64 lbl_1_rodata_2778[2];\nextern s8 fn_1_A5DC4(s32 value);\nextern f32 lbl_1_rodata_2788[6];\nextern const f64 lbl_1_rodata_10F8;\nextern f32 fn_1_519FC(f32 value);\nextern f32 fn_1_51AC0(f32 value);\nextern f32 fn_1_51B84(f32 value);\nextern f32 fn_1_51BFC(f32 value);\nextern u16 fn_1_A5D88(void);\nextern const f32 lbl_1_rodata_2770;\nextern void fn_80038F10(void *result);\nextern u32 fn_1_A5DB0(void);\nextern const f64 lbl_1_rodata_2758;\nextern const f32 lbl_1_rodata_276C;\nextern void * * fn_1_54448(s32);\nextern void lbl_8006D784(void *arg);\n\nextern u8 lbl_1_rodata_FD0[];\n\nvoid fn_1_4D0A0(void) {\n    Obj_1_bss_4BA30 *bss = &lbl_1_bss_4BA30;\n    f32 *rodata = (f32 *)lbl_1_rodata_FD0;\n\n    bss->unk_0 = 1;\n    bss->unk_4 = rodata[0x16ac / 4];\n    bss->unk_8 = rodata[0xf0 / 4];\n    bss->unk_C = rodata[0x16b0 / 4];\n    bss->unk_10 = rodata[0xf0 / 4];\n}\n",
+    "seed_sha256": "e6efda4ae1887268b23143b21098210cafbe7f39f1948dbad570111e2883b1ea",
+    "generated_sha256": "141b4e1abab147cb465fa0d7ee64046072dcd7b81c6e56058c63c030bfb711cc",
+    "generated_source": "\n\ntypedef unsigned char u8;\n\ntypedef unsigned long u32;\n\ntypedef float f32;\n\n/* lbl_1_bss_4BA30: .bss size 0x14, 5 refs from font.c */\ntypedef struct {\nu32 unk_0; /* 0 loads, 2 stores */\nf32 unk_4; /* 1 loads, 1 stores */\nf32 unk_8; /* 3 loads, 1 stores */\nf32 unk_C; /* 3 loads, 1 stores */\nf32 unk_10; /* 3 loads, 1 stores */\n} Obj_1_bss_4BA30;\nextern Obj_1_bss_4BA30 lbl_1_bss_4BA44;\n\nextern u8 lbl_1_rodata_FD0[];\nvoid fn_1_4D494(void) {\nObj_1_bss_4BA30 *bss = &lbl_1_bss_4BA44;\nf32 *rodata = (f32 *)lbl_1_rodata_FD0;\nbss->unk_0 = 1;\nbss->unk_4 = rodata[0x16ac / 4];\nbss->unk_8 = rodata[0xf0 / 4];\nbss->unk_C = rodata[0x16b0 / 4];\nbss->unk_10 = rodata[0xf0 / 4];\n}\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "rel/main_rel/font/fn_1_4D494.c",
+    "bytes": 52,
+    "headers_sha256": "f9f5e84c1423bef39ec206906b9b67f385818e424c01f7582cef703630a3eba9",
+    "oracle_sha256": "2e996ebb6485e6c925f54f77df3da5b518adeeb4580e7aad68ac7874ad2808b1",
+    "recipe": [
+      {
+        "label": "expand owned clone declarations",
+        "input_sha256": "e6efda4ae1887268b23143b21098210cafbe7f39f1948dbad570111e2883b1ea",
+        "output_sha256": "eb16f53c8edc5d3674f3b7e85c2898f095b19b081dee648b212d710167943e46",
+        "input_symbol": "fn_1_4D0A0",
+        "output_symbol": "fn_1_4D0A0",
+        "edits": [
+          [
+            0,
+            84,
+            ""
+          ],
+          [
+            85,
+            2818,
+            ""
+          ],
+          [
+            2819,
+            3646,
+            "typedef unsigned char u8;\n\ntypedef unsigned long u32;\n\ntypedef float f32;\n\n/* lbl_1_bss_4BA30: .bss size 0x14, 5 refs from font.c */\ntypedef struct {\nu32 unk_0; /* 0 loads, 2 stores */\nf32 unk_4; /* 1 loads, 1 stores */\nf32 unk_8; /* 3 loads, 1 stores */\nf32 unk_C; /* 3 loads, 1 stores */\nf32 unk_10; /* 3 loads, 1 stores */\n} Obj_1_bss_4BA30;\nextern Obj_1_bss_4BA30 lbl_1_bss_4BA30"
+          ],
+          [
+            3679,
+            3680,
+            ""
+          ],
+          [
+            3704,
+            3926,
+            "Obj_1_bss_4BA30 *bss = &lbl_1_bss_4BA30;\nf32 *rodata = (f32 *)lbl_1_rodata_FD0;\nbss->unk_0 = 1;\nbss->unk_4 = rodata[0x16ac / 4];\nbss->unk_8 = rodata[0xf0 / 4];\nbss->unk_C = rodata[0x16b0 / 4];\n"
+          ]
+        ]
+      },
+      {
+        "label": "bind exact clone",
+        "input_sha256": "eb16f53c8edc5d3674f3b7e85c2898f095b19b081dee648b212d710167943e46",
+        "output_sha256": "141b4e1abab147cb465fa0d7ee64046072dcd7b81c6e56058c63c030bfb711cc",
+        "input_symbol": "fn_1_4D0A0",
+        "output_symbol": "fn_1_4D494",
+        "edits": [
+          [
+            383,
+            385,
+            "44"
+          ],
+          [
+            430,
+            481,
+            "494(void) {\nObj_1_bss_4BA30 *bss = &lbl_1_bss_4BA44"
+          ]
+        ],
+        "clone": {
+          "donor": "fn_1_4D0A0",
+          "recipient": "fn_1_4D494",
+          "bindings": {
+            "lbl_1_rodata_FD0": "lbl_1_rodata_FD0",
+            "lbl_1_bss_4BA30": "lbl_1_bss_4BA44",
+            "fn_1_4D0A0": "fn_1_4D494"
+          }
+        }
+      }
+    ],
+    "link": "verified",
+    "commit": "11a4392"
+  },
+  "fn_1_ABB4C": {
+    "seed_symbol": "fn_1_AB64C",
+    "generator": "fzgx fixup",
+    "transform": "bind exact clone",
+    "seed": "#include \"types.h\"\n#include \"rel/main_rel/globals.h\"\n#include \"rel/main_rel/memcard.h\"\nextern void* lbl_801A6410;\nextern int fn_1_45D0(void *arg0, int arg1, Obj_1_data_3C7B8 *arg2, int arg3);\nextern void fn_1_AB45C(void);\nextern void CARDMountAsync(u8, u32, void (*)(void), s32);\nextern int CARDGetSerialNo(u8 value, void *data);\nextern void CARDCheckAsync(u8 byte_val, int value);\nextern void CARDFormatAsync(u8 byte, int value);\nextern const f32 lbl_1_rodata_4CA8;\nextern const f64 lbl_1_rodata_4CB0;\nextern const f32 lbl_1_rodata_4CAC;\nextern void fn_80083DB0(void *dst, void *src);\nextern void strcat(void *dst, void *src);\nextern void CARDDeleteAsync(u8 byte, void *data, int arg);\nextern s32 CARDFreeBlocks(u8 byte_val, void *arg1, void *arg2);\nextern s32 CARDOpen(u8 byte_val, void *arg1, void *arg2);\nextern void CARDFastDeleteAsync(u8 byte_val, void *arg, s32 zero);\nextern void CARDCreateAsync(u8 byte_val, void *arg1, void *arg2, void *arg3, u32 arg4);\nextern void CARDSetStatusAsync(u8 id, void *arg, void *data, int zero);\nextern void CARDRenameAsync(u8 id, void *data1, void *data2, int zero);\nextern void CARDReadAsync(void *arg0, void *arg1, void *arg2, int arg3, int arg4);\nextern const f64 lbl_1_rodata_4CC8;\nextern void fn_80030754(u8 value, void *data, int size, int mode);\nextern u8 lbl_1_bss_71810[161];\nextern u8 lbl_1_bss_718B8;\nextern u8 lbl_1_bss_718B9[7];\nextern int fn_8002A744(void);\nextern void fn_8002A74C(u16 value);\nextern int fn_8002DFE0(int arg0, u32 arg1, int arg2);\nextern int CARDCheck(int arg0);\nextern void fn_1_B9C38(s32 index);\nextern void fn_1_1596DC(u32);\nextern void fn_1_484CC(u32);\nextern void fn_80008BEC(void *dst, s32 value, s32 size);\nextern void fn_1_AA6D8(s32 arg0, u32 arg1, void *arg2);\nextern void fn_1_F755C(u8 value);\nextern void fn_1_A6840(u8 value);\nextern void OSPanic(void *arg0, u32 arg1, ...);\nextern void fn_1_F79C8(void);\nextern void *lbl_801A6410;\nextern void strncpy(void *arg0, void *arg1, int arg2);\nextern u32 lbl_1_bss_77310[28];\nextern u32 lbl_1_bss_7730C;\nextern u8 lbl_1_bss_772C8[66];\nextern u32 fn_1_4630(void *heap, u32 size, void *file, s32 line);\nextern s32 fn_8002FC14(s32 chan, void *fileName);\nextern s32 fn_80030338(s32 chan, void *oldName, void *newName);\nextern const f64 lbl_1_rodata_4CB8;\nextern void fn_1_C36EC(void);\n\nextern void fn_1_A2DC4(u32);\n\ntypedef struct {\n    u8 pad_0[0x24];\n    void *unk_24;\n    u8 pad_28[0x2];\n    u8 unk_2A;\n} MemcardArg;\n\ntypedef struct {\n    u8 pad_0[0x1];\n    u8 unk_1;\n    u8 pad_2[0x2];\n    s32 unk_4;\n} MemcardState;\n\n/* fzgx-allow: A1 absolute retail data address */\n#define DATA_A9011300 0xA9011300\n/* fzgx-allow: A1 absolute retail data address */\n#define DATA_A9011100 0xA9011100\n\nvoid fn_1_AB64C(MemcardArg *arg) {\n    MemcardState *state;\n    s32 value;\n\n    if ((arg->unk_2A & 1) == 0) {\n        state = (MemcardState *)arg->unk_24;\n        if (((lbl_1_bss_9F8.unk_10 & 1) != 0 ||\n             (lbl_1_bss_9F8.unk_12 & 1) != 0) &&\n            state->unk_1 == 1) {\n            fn_1_A2DC4(DATA_A9011300);\n            state->unk_1 = 0;\n        /* Volatile prevents the compiler from reusing the first status read. */\n        } else if ((((*((volatile u16 *)&lbl_1_bss_9F8.unk_10) >> 1) & 1) != 0 ||\n                    ((lbl_1_bss_9F8.unk_12 >> 1) & 1) != 0) &&\n                   state->unk_1 == 0) {\n            fn_1_A2DC4(DATA_A9011300);\n            state->unk_1 = 1;\n        }\n\n        if (((lbl_1_bss_9F8.unk_8 >> 8) & 1) != 0) {\n            fn_1_A2DC4(DATA_A9011100);\n            value = 1;\n        } else {\n            value = 0;\n        }\n        state = (MemcardState *)arg->unk_24;\n        state->unk_4 = value;\n        state = (MemcardState *)arg->unk_24;\n        if (state->unk_4 == 2) {\n            state->unk_1 = 1;\n        }\n    }\n}\n",
+    "seed_sha256": "78c1c13a0b8f203ce27f9c3f3c9606a50fce6b5b3d8bd71aa925768a7112d98f",
+    "generated_sha256": "0c6f7dfa4d5c9c6b0a42a2590237fe802d34b7d999f8b6c70544b8e8e6fff773",
+    "generated_source": "\n\ntypedef signed long s32;\n\ntypedef unsigned char u8;\ntypedef unsigned short u16;\ntypedef unsigned long u32;\n\n/* lbl_1_bss_9F8: .bss size 0x50, referenced by 67 functions, shape {'object': 301} */\ntypedef struct {\nu16 unk_0; /* 22 loads, 0 stores */\nu16 unk_2; /* 35 loads, 0 stores */\nu8 pad_4[0x4];\nu16 unk_8; /* 108 loads, 0 stores */\nu16 unk_A; /* 22 loads, 0 stores */\nu8 pad_C[0x4];\nu16 unk_10; /* 56 loads, 0 stores */\nu16 unk_12; /* 53 loads, 0 stores */\nu8 pad_14[0x3C];\n} Obj_1_bss_9F8;\nextern Obj_1_bss_9F8 lbl_1_bss_9F8;\n\nextern void fn_1_A2DC4(u32);\ntypedef struct {\nu8 pad_0[0x24];\nvoid *unk_24;\nu8 pad_28[0x2];\nu8 unk_2A;\n} MemcardArg;\ntypedef struct {\nu8 pad_0[0x1];\nu8 unk_1;\nu8 pad_2[0x2];\ns32 unk_4;\n} MemcardState;\n/* fzgx-allow: A1 absolute retail data address */\n/* fzgx-allow: A1 absolute retail data address */\nvoid fn_1_ABB4C(MemcardArg *arg) {\nMemcardState *state;\ns32 value;\nif ((arg->unk_2A & 1) == 0) {\nstate = (MemcardState *)arg->unk_24;\nif (((lbl_1_bss_9F8.unk_10 & 1) != 0 ||\n(lbl_1_bss_9F8.unk_12 & 1) != 0) &&\nstate->unk_1 == 1) {\nfn_1_A2DC4(0xA9011300 );\nstate->unk_1 = 0;\n/* Volatile prevents the compiler from reusing the first status read. */\n} else if ((((*((volatile u16 *)&lbl_1_bss_9F8.unk_10) >> 1) & 1) != 0 ||\n((lbl_1_bss_9F8.unk_12 >> 1) & 1) != 0) &&\nstate->unk_1 == 0) {\nfn_1_A2DC4(0xA9011300 );\nstate->unk_1 = 1;\n}\nif (((lbl_1_bss_9F8.unk_8 >> 8) & 1) != 0) {\nfn_1_A2DC4(0xA9011100 );\nvalue = 1;\n} else {\nvalue = 0;\n}\nstate = (MemcardState *)arg->unk_24;\nstate->unk_4 = value;\nstate = (MemcardState *)arg->unk_24;\nif (state->unk_4 == 2) {\nstate->unk_1 = 1;\n}\n}\n}\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "rel/main_rel/memcard/fn_1_ABB4C.c",
+    "bytes": 272,
+    "headers_sha256": "f9f5e84c1423bef39ec206906b9b67f385818e424c01f7582cef703630a3eba9",
+    "oracle_sha256": "2e996ebb6485e6c925f54f77df3da5b518adeeb4580e7aad68ac7874ad2808b1",
+    "recipe": [
+      {
+        "label": "expand owned clone declarations",
+        "input_sha256": "78c1c13a0b8f203ce27f9c3f3c9606a50fce6b5b3d8bd71aa925768a7112d98f",
+        "output_sha256": "202a77c16e3297f9eb880f3cb933114b04e978894824ccb6721178a8720204bd",
+        "input_symbol": "fn_1_AB64C",
+        "output_symbol": "fn_1_AB64C",
+        "edits": [
+          [
+            0,
+            2305,
+            "\n\ntypedef signed long s32;\n\ntypedef unsigned char u8;\ntypedef unsigned short u16;\ntypedef unsigned long u32;\n\n/* lbl_1_bss_9F8: .bss size 0x50, referenced by 67 functions, shape {'object': 301} */\ntypedef struct {\nu16 unk_0; /* 22 loads, 0 stores */\nu16 unk_2; /* 35 loads, 0 stores */\nu8 pad_4[0x4];\nu16 unk_8; /* 108 loads, 0 stores */\nu16 unk_A; /* 22 loads, 0 stores */\nu8 pad_C[0x4];\nu16 unk_10; /* 56 loads, 0 stores */\nu16 unk_12; /* 53 loads, 0 stores */\nu8 pad_14[0x3C];\n} Obj_1_bss_9F8;\nextern Obj_1_bss_9F8 lbl_1_bss_9F8"
+          ],
+          [
+            2337,
+            2338,
+            ""
+          ],
+          [
+            2355,
+            2417,
+            "u8 pad_0[0x24];\nvoid *unk_24;\nu8 pad_28[0x2];\n"
+          ],
+          [
+            2442,
+            2443,
+            ""
+          ],
+          [
+            2460,
+            2516,
+            "u8 pad_0[0x1];\nu8 unk_1;\nu8 pad_2[0x2];\n"
+          ],
+          [
+            2543,
+            2544,
+            ""
+          ],
+          [
+            2594,
+            2627,
+            ""
+          ],
+          [
+            2677,
+            2711,
+            ""
+          ],
+          [
+            2746,
+            3774,
+            "MemcardState *state;\ns32 value;\nif ((arg->unk_2A & 1) == 0) {\nstate = (MemcardState *)arg->unk_24;\nif (((lbl_1_bss_9F8.unk_10 & 1) != 0 ||\n(lbl_1_bss_9F8.unk_12 & 1) != 0) &&\nstate->unk_1 == 1) {\nfn_1_A2DC4(0xA9011300 );\nstate->unk_1 = 0;\n/* Volatile prevents the compiler from reusing the first status read. */\n} else if ((((*((volatile u16 *)&lbl_1_bss_9F8.unk_10) >> 1) & 1) != 0 ||\n((lbl_1_bss_9F8.unk_12 >> 1) & 1) != 0) &&\nstate->unk_1 == 0) {\nfn_1_A2DC4(0xA9011300 );\nstate->unk_1 = 1;"
+          ],
+          [
+            3777,
+            3777,
+            "if (((lbl_1_bss_9F8.unk_8 >> 8) & 1) != 0) {\nfn_1_A2DC4(0xA9011100 );\nvalue = 1;\n} else {\nvalue = 0;\n}\nstate = (MemcardState *)arg->unk_24;\nstate->unk_4 = value;\nstate = (MemcardState *)arg->unk_24;\nif (state->unk_4 == 2) {\nstate->unk_1 = 1;\n}\n}\n}\n"
+          ]
+        ]
+      },
+      {
+        "label": "bind exact clone",
+        "input_sha256": "202a77c16e3297f9eb880f3cb933114b04e978894824ccb6721178a8720204bd",
+        "output_sha256": "0c6f7dfa4d5c9c6b0a42a2590237fe802d34b7d999f8b6c70544b8e8e6fff773",
+        "input_symbol": "fn_1_AB64C",
+        "output_symbol": "fn_1_ABB4C",
+        "edits": [
+          [
+            847,
+            848,
+            "B"
+          ]
+        ],
+        "clone": {
+          "donor": "fn_1_AB64C",
+          "recipient": "fn_1_ABB4C",
+          "bindings": {
+            "lbl_1_bss_9F8": "lbl_1_bss_9F8",
+            "fn_1_A2DC4": "fn_1_A2DC4",
+            "fn_1_AB64C": "fn_1_ABB4C"
+          }
+        }
+      }
+    ],
+    "link": "verified",
+    "commit": "11a4392"
+  },
+  "fn_8_4F64": {
+    "seed_symbol": "fn_8_530C",
+    "generator": "fzgx fixup",
+    "transform": "bind exact clone",
+    "seed": "#include \"types.h\"\n\n#include \"font.h\"\n\nstruct TitleState {\n    u8 unk0;\n    u8 unk1;\n    u8 unk2;\n    u8 pad3[0x21d];\n    f32 unk220;\n    u8 pad224[0x19];\n    u8 unk23d;\n    u8 pad23e[4];\n    u8 unk242;\n};\n\nstruct TitleRodata {\n    f32 unk0;\n    f32 unk4;\n    f32 unk8;\n    u8 padC[0x20];\n    f32 unk2c;\n    f32 unk30;\n    f32 unk34;\n};\n\nstruct FzgxCopy88 { u32 words[22]; };\n\nextern struct TitleState lbl_8_bss_0;\nextern struct TitleRodata lbl_8_rodata_0;\nextern struct FzgxCopy88 lbl_1_rodata_26F8;\nextern u16 lbl_1_bss_96A;\nextern u32 lbl_801A66A0;\nextern int fn_1_3F038(void);\nextern void fn_1_52070(u32);\nextern void fn_1_51678(FontDrawPacket *, u32, s16, s16, s16, s16);\nextern int fn_1_4F734(FontDrawPacket *);\nextern u32 fn_1_52088(void);\nextern u16 fn_1_486C4(u32);\nextern u16 fn_1_48690(u32);\nextern void fn_8_6A70(void);\n\nvoid fn_8_530C(void) {\n    struct TitleState *state = (struct TitleState *) &lbl_8_bss_0;\n    struct TitleRodata *rodata = (struct TitleRodata *) &lbl_8_rodata_0;\n    struct FzgxCopy88 loc_60;\n    struct FzgxCopy88 loc_8;\n    s16 temp_r30;\n    s16 temp_r29;\n\n    if (state->unk23d != 0) {\n        fn_1_3F038();\n        return;\n    }\n    if (state->unk242 != 0) {\n        if (fn_1_3F038() != 0) {\n            if (state->unk0 != 0) {\n                state->unk1 = 1;\n                state->unk0 = 0;\n                return;\n            }\n            lbl_1_bss_96A = 0xA3;\n        }\n        return;\n    }\n    fn_1_52070(0x60);\n    loc_60 = lbl_1_rodata_26F8;\n    loc_60.words[0] = 0x100;\n    *(f32 *) ((u8 *) &loc_60 + 4) = rodata->unk2c;\n    *(f32 *) ((u8 *) &loc_60 + 8) = rodata->unk30;\n    *(f32 *) ((u8 *) &loc_60 + 12) = rodata->unk34;\n    *(u32 *) ((u8 *) &loc_60 + 0x30) = 0xD;\n    fn_1_51678((FontDrawPacket *) &loc_60, 0x100, 0, 0, 0xFA, 0x22);\n    fn_1_4F734((FontDrawPacket *) &loc_60);\n    fn_1_52088();\n    fn_1_52070(0x220);\n    state->unk220 = rodata->unk8;\n    fn_1_52088();\n    fn_1_52070(0x140);\n    if (state->unk2 != 0 && (lbl_801A66A0 & 0x18)) {\n        loc_8 = lbl_1_rodata_26F8;\n        loc_8.words[0] = 0x102;\n        fn_1_51678((FontDrawPacket *) &loc_8, loc_8.words[0], 0,\n                   (s16) (((fn_1_486C4(loc_8.words[0]) >> 2) & 0x3FFF) * 3),\n                   (fn_1_48690(loc_8.words[0])), ((fn_1_486C4(0x102) >> 2) & 0x3FFF));\n        *(f32 *) ((u8 *) &loc_8 + 4) = rodata->unk0;\n        *(f32 *) ((u8 *) &loc_8 + 8) = rodata->unk4;\n        *(f32 *) ((u8 *) &loc_8 + 12) = rodata->unk8;\n        *(u32 *) ((u8 *) &loc_8 + 0x30) = 6;\n        fn_1_4F734((FontDrawPacket *) &loc_8);\n    }\n    fn_1_52088();\n    fn_8_6A70();\n}\n",
+    "seed_sha256": "3ad99a13647241965f7a5be42442edd0208f3c0117c8a48dbf5f389f8bcadbf2",
+    "generated_sha256": "3b61473d2d86cf546b72e83d81fc5f8097ea61c11fccb954b0a246ed42843e3f",
+    "generated_source": "\n\ntypedef signed short s16;\n\ntypedef unsigned char u8;\ntypedef unsigned short u16;\ntypedef unsigned long u32;\n\ntypedef float f32;\n\ntypedef struct FontDrawPacket FontDrawPacket;\ntypedef struct FontVertex {\nf32 x, y, z;\n} FontVertex;\nstruct FontDrawPacket {\nu32 image;\nf32 x, y, z;\nf32 scale_x, scale_y;\nf32 u0, v0, u1, v1;\ns16 rotation_z, rotation_y;\nf32 alpha;\nu32 flags;\nf32 depth;\nu8 color[4], color_add[4];\nu32 format;\nu16 width, height;\nvoid* pixels;\nFontDrawPacket* secondary;\nvoid (*vertex_callback)(FontDrawPacket* packet, FontVertex* vertices);\nu32 unk_54;\n};\nvoid fn_1_4A0D8(const char* text);\nvoid fn_1_4AE0C(const char* format, ...);\nint fn_1_4F734(FontDrawPacket* packet);\nvoid fn_1_4EDAC(FontDrawPacket* packet, f32 width, f32 height);\nvoid fn_1_51678(FontDrawPacket* packet, u32 image, s16 x, s16 y, s16 width, s16 height);\nvoid fn_1_517EC(FontDrawPacket* packet, s16 x, s16 y, s16 width, s16 height,\ns16 texture_width, s16 texture_height);\nstruct TitleState {\nu8 unk0;\nu8 unk1;\nu8 unk2;\nu8 pad3[0x21d];\nf32 unk220;\nu8 pad224[0x19];\nu8 unk23d;\nu8 pad23e[4];\nu8 unk242;\n};\nstruct TitleRodata {\nf32 unk0;\nf32 unk4;\nf32 unk8;\nu8 padC[0x20];\nf32 unk2c;\nf32 unk30;\nf32 unk34;\n};\nstruct FzgxCopy88 { u32 words[22]; };\nextern struct TitleState lbl_8_bss_0;\nextern struct TitleRodata lbl_8_rodata_0;\nextern struct FzgxCopy88 lbl_1_rodata_26F8;\nextern u16 lbl_1_bss_96A;\nextern u32 lbl_801A66A0;\nextern int fn_1_3F038(void);\nextern void fn_1_52070(u32);\nextern void fn_1_51678(FontDrawPacket *, u32, s16, s16, s16, s16);\nextern int fn_1_4F734(FontDrawPacket *);\nextern u32 fn_1_52088(void);\nextern u16 fn_1_486C4(u32);\nextern u16 fn_1_48690(u32);\nextern void fn_8_68F4(void);\nvoid fn_8_4F64(void) {\nstruct TitleState *state = (struct TitleState *) &lbl_8_bss_0;\nstruct TitleRodata *rodata = (struct TitleRodata *) &lbl_8_rodata_0;\nstruct FzgxCopy88 loc_60;\nstruct FzgxCopy88 loc_8;\ns16 temp_r30;\ns16 temp_r29;\nif (state->unk23d != 0) {\nfn_1_3F038();\nreturn;\n}\nif (state->unk242 != 0) {\nif (fn_1_3F038() != 0) {\nif (state->unk0 != 0) {\nstate->unk1 = 1;\nstate->unk0 = 0;\nreturn;\n}\nlbl_1_bss_96A = 0xA3;\n}\nreturn;\n}\nfn_1_52070(0x60);\nloc_60 = lbl_1_rodata_26F8;\nloc_60.words[0] = 0x100;\n*(f32 *) ((u8 *) &loc_60 + 4) = rodata->unk2c;\n*(f32 *) ((u8 *) &loc_60 + 8) = rodata->unk30;\n*(f32 *) ((u8 *) &loc_60 + 12) = rodata->unk34;\n*(u32 *) ((u8 *) &loc_60 + 0x30) = 0xD;\nfn_1_51678((FontDrawPacket *) &loc_60, 0x100, 0, 0, 0xFA, 0x22);\nfn_1_4F734((FontDrawPacket *) &loc_60);\nfn_1_52088();\nfn_1_52070(0x220);\nstate->unk220 = rodata->unk8;\nfn_1_52088();\nfn_1_52070(0x140);\nif (state->unk2 != 0 && (lbl_801A66A0 & 0x18)) {\nloc_8 = lbl_1_rodata_26F8;\nloc_8.words[0] = 0x102;\nfn_1_51678((FontDrawPacket *) &loc_8, loc_8.words[0], 0,\n(s16) (((fn_1_486C4(loc_8.words[0]) >> 2) & 0x3FFF) * 3),\n(fn_1_48690(loc_8.words[0])), ((fn_1_486C4(0x102) >> 2) & 0x3FFF));\n*(f32 *) ((u8 *) &loc_8 + 4) = rodata->unk0;\n*(f32 *) ((u8 *) &loc_8 + 8) = rodata->unk4;\n*(f32 *) ((u8 *) &loc_8 + 12) = rodata->unk8;\n*(u32 *) ((u8 *) &loc_8 + 0x30) = 6;\nfn_1_4F734((FontDrawPacket *) &loc_8);\n}\nfn_1_52088();\nfn_8_68F4();\n}\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "rel/title/title/fn_8_4F64.c",
+    "bytes": 520,
+    "headers_sha256": "f9f5e84c1423bef39ec206906b9b67f385818e424c01f7582cef703630a3eba9",
+    "oracle_sha256": "2e996ebb6485e6c925f54f77df3da5b518adeeb4580e7aad68ac7874ad2808b1",
+    "recipe": [
+      {
+        "label": "expand owned clone declarations",
+        "input_sha256": "3ad99a13647241965f7a5be42442edd0208f3c0117c8a48dbf5f389f8bcadbf2",
+        "output_sha256": "f6ce3637bbf29d130cd27b9aac5617b552d14ba91b65d05166f311749640b390",
+        "input_symbol": "fn_8_530C",
+        "output_symbol": "fn_8_530C",
+        "edits": [
+          [
+            0,
+            19,
+            ""
+          ],
+          [
+            20,
+            38,
+            ""
+          ],
+          [
+            39,
+            39,
+            "typedef signed short s16;\n\ntypedef unsigned char u8;\ntypedef unsigned short u16;\ntypedef unsigned long u32;\n\ntypedef float f32;\n\ntypedef struct FontDrawPacket FontDrawPacket;\ntypedef struct FontVertex {\nf32 x, y, z;\n} FontVertex;\nstruct FontDrawPacket {\nu32 image;\nf32 x, y, z;\nf32 scale_x, scale_y;\nf32 u0, v0, u1, v1;\ns16 rotation_z, rotation_y;\nf32 alpha;\nu32 flags;\nf32 depth;\nu8 color[4], color_add[4];\nu32 format;\nu16 width, height;\nvoid* pixels;\nFontDrawPacket* secondary;\nvoid (*vertex_callback)(FontDrawPacket* packet, FontVertex* vertices);\nu32 unk_54;\n};\nvoid fn_1_4A0D8(const char* text);\nvoid fn_1_4AE0C(const char* format, ...);\nint fn_1_4F734(FontDrawPacket* packet);\nvoid fn_1_4EDAC(FontDrawPacket* packet, f32 width, f32 height);\nvoid fn_1_51678(FontDrawPacket* packet, u32 image, s16 x, s16 y, s16 width, s16 height);\nvoid fn_1_517EC(FontDrawPacket* packet, s16 x, s16 y, s16 width, s16 height,\ns16 texture_width, s16 texture_height);\n"
+          ],
+          [
+            59,
+            192,
+            "u8 unk0;\nu8 unk1;\nu8 unk2;\nu8 pad3[0x21d];\nf32 unk220;\nu8 pad224[0x19];\nu8 unk23d;\nu8 pad23e[4];\n"
+          ],
+          [
+            206,
+            207,
+            ""
+          ],
+          [
+            228,
+            323,
+            "f32 unk0;\nf32 unk4;\nf32 unk8;\nu8 padC[0x20];\nf32 unk2c;\nf32 unk30;\n"
+          ],
+          [
+            337,
+            338,
+            ""
+          ],
+          [
+            376,
+            377,
+            ""
+          ],
+          [
+            832,
+            833,
+            ""
+          ],
+          [
+            856,
+            2585,
+            "struct TitleState *state = (struct TitleState *) &lbl_8_bss_0;\nstruct TitleRodata *rodata = (struct TitleRodata *) &lbl_8_rodata_0;\nstruct FzgxCopy88 loc_60;\nstruct FzgxCopy88 loc_8;\ns16 temp_r30;\ns16 temp_r29;\nif (state->unk23d != 0) {\nfn_1_3F038();\nreturn"
+          ],
+          [
+            2589,
+            2589,
+            "if (state->unk242 != 0) {\nif (fn_1_3F038() != 0) {\nif (state->unk0 != 0) {\nstate->unk1 = 1;\nstate->unk0 = 0;\nreturn;\n}\nlbl_1_bss_96A = 0xA3;\n}\nreturn;\n}\nfn_1_52070(0x60);\nloc_60 = lbl_1_rodata_26F8;\nloc_60.words[0] = 0x100;\n*(f32 *) ((u8 *) &loc_60 + 4) = rodata->unk2c;\n*(f32 *) ((u8 *) &loc_60 + 8) = rodata->unk30;\n*(f32 *) ((u8 *) &loc_60 + 12) = rodata->unk34;\n*(u32 *) ((u8 *) &loc_60 + 0x30) = 0xD;\nfn_1_51678((FontDrawPacket *) &loc_60, 0x100, 0, 0, 0xFA, 0x22);\nfn_1_4F734((FontDrawPacket *) &loc_60);\nfn_1_52088();\nfn_1_52070(0x220);\nstate->unk220 = rodata->unk8;\nfn_1_52088();\nfn_1_52070(0x140);\nif (state->unk2 != 0 && (lbl_801A66A0 & 0x18)) {\nloc_8 = lbl_1_rodata_26F8;\nloc_8.words[0] = 0x102;\nfn_1_51678((FontDrawPacket *) &loc_8, loc_8.words[0], 0,\n(s16) (((fn_1_486C4(loc_8.words[0]) >> 2) & 0x3FFF) * 3),\n(fn_1_48690(loc_8.words[0])), ((fn_1_486C4(0x102) >> 2) & 0x3FFF));\n*(f32 *) ((u8 *) &loc_8 + 4) = rodata->unk0;\n*(f32 *) ((u8 *) &loc_8 + 8) = rodata->unk4;\n*(f32 *) ((u8 *) &loc_8 + 12) = rodata->unk8;\n*(u32 *) ((u8 *) &loc_8 + 0x30) = 6;\nfn_1_4F734((FontDrawPacket *) &loc_8);\n}\nfn_1_52088();\nfn_8_6A70();\n}\n"
+          ]
+        ]
+      },
+      {
+        "label": "bind exact clone",
+        "input_sha256": "f6ce3637bbf29d130cd27b9aac5617b552d14ba91b65d05166f311749640b390",
+        "output_sha256": "3b61473d2d86cf546b72e83d81fc5f8097ea61c11fccb954b0a246ed42843e3f",
+        "input_symbol": "fn_8_530C",
+        "output_symbol": "fn_8_4F64",
+        "edits": [
+          [
+            1670,
+            1695,
+            "8F4(void);\nvoid fn_8_4F64"
+          ],
+          [
+            3089,
+            3092,
+            "8F4"
+          ]
+        ],
+        "clone": {
+          "donor": "fn_8_530C",
+          "recipient": "fn_8_4F64",
+          "bindings": {
+            "lbl_8_bss_0": "lbl_8_bss_0",
+            "lbl_8_rodata_0": "lbl_8_rodata_0",
+            "fn_8_6A70": "fn_8_68F4",
+            "fn_8_530C": "fn_8_4F64"
+          }
+        }
+      }
+    ],
+    "link": "verified",
+    "commit": "11a4392"
   }
 }

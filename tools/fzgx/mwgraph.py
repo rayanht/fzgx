@@ -418,5 +418,4 @@ def capture(project, args, locked=False):
                         or r.get('replay_errors') or r.get('simplify_errors')) for r in rows)
     print(json.dumps({'functions': len(rows), 'capture_seconds': capture_seconds, 'errors': failures,
                       'unsupported_simplify': sum(len(r.get('simplify_unsupported', [])) for r in rows)}), flush=True)
-    if failures:
-        raise SystemExit(1)
+    return dict(report, errors=failures)

@@ -123,6 +123,11 @@ Rules that hold for everyone:
   one engine, content-addressed compile cache and verification path. Session release
   and lifter repair call that same engine. `--apply` submits exact results and
   verifies all 16 hashes; without it, output remains in the repair corpus.
+  `--clones` pools saved C across exact retail instruction families, repairs one
+  representative and rechecks its copies. It preserves owned declaration closures,
+  source pragmas and compiler settings; differing compiler responses keep independent
+  search. `reuse` calls this same engine. Clone runs also save portable partial C
+  and replay recipes in `sources.json.gz` for subsequent passes.
   `--capture --corpus PATH --output PATH` captures allocator/PCode evidence;
   `--captures PATH` consumes it. Do not add standalone repair/search runners.
   A unit may carry its own `mw_version`/`extra_cflags` (an `-O` override replaces the module's);

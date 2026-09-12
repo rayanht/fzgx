@@ -6,6 +6,7 @@ import argparse
 import hashlib
 import gzip
 import json
+import os
 import sys
 from collections import defaultdict
 from pathlib import Path
@@ -31,11 +32,11 @@ def percent(record):
 
 
 class SavedCandidates:
-    def __init__(self, threshold):
+    def __init__(self, threshold, symbols=None):
         self.project, self.ledger = Project(), Ledger()
         self.threshold = threshold
         self.rows = {r['symbol']: dict(r) for r in self.ledger.db.execute(
-            "SELECT * FROM functions WHERE status='unmatched'")}
+            "SELECT * FROM functions WHERE status='unmatched'") if symbols is None or r['symbol'] in symbols}
         self.candidates = defaultdict(list)
         self.evidence = defaultdict(list)
         self.missing = []
@@ -102,6 +103,8 @@ class SavedCandidates:
                     self.add(symbol, {**record, 'path': str(index.parent / f"{record['n']:03d}.c")},
                              f'{index.relative_to(ROOT)}:{record["n"]}')
         for row in self.ledger.db.execute('SELECT * FROM attempts ORDER BY id'):
+            if row['symbol'] not in self.rows:
+                continue
             record = dict(percent=max(row['best_in_attempt'] or 0, row['final_percent'] or 0),
                           path=row['best_body_path'])
             metadata = Path(row['best_body_path']).with_suffix('.json') if row['best_body_path'] else None
@@ -112,7 +115,14 @@ class SavedCandidates:
         # The unified fixup report is the canonical store for improved bodies.
         # Keep every already-diffed alternative: better instruction alignment
         # and better objdiff similarity need not select the same spelling.
-        for path in sorted((STATE_DIR / 'fixup').rglob('report.json')):
+        reports=[]
+        for directory, dirs, files in os.walk(STATE_DIR / 'fixup'):
+            # These contain millions of generated C/object files, never corpus
+            # reports. Walking them dominated collection of a small family.
+            dirs[:]=[d for d in dirs if d not in ('objects','sources','declarations')]
+            if 'report.json' in files:
+                reports.append(Path(directory)/'report.json')
+        for path in sorted(reports):
             data = json.loads(path.read_text())
             records = [dict(record,symbol=symbol) for symbol,record in data.get('best', {}).items()]
             records.extend(data.get('records', []))
