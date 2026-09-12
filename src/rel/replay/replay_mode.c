@@ -1,6 +1,9 @@
 #include "types.h"
+#include "rel/replay/replay_mode.h"
 
-/* fzgx:begin fn_13_BCC */
+/* fzgx:begin fn_13_BCC noprologue */
+#include "types.h"
+
 extern char lbl_13_data_48[14];
 extern u8 lbl_13_bss_0;
 extern const f32 lbl_13_rodata_C;
@@ -69,7 +72,9 @@ void fn_13_BCC(void) {
 }
 /* fzgx:end fn_13_BCC */
 
-/* fzgx:begin fn_13_CDC */
+/* fzgx:begin fn_13_CDC noprologue */
+#include "types.h"
+
 struct fn_13_CDC_Copy88 {
     u32 unk_0;
     f32 unk_4;
@@ -169,7 +174,9 @@ void fn_13_CDC(u32 arg0) {
 }
 /* fzgx:end fn_13_CDC */
 
-/* fzgx:begin fn_13_E8C */
+/* fzgx:begin fn_13_E8C noprologue */
+#include "types.h"
+
 extern struct fn_13_E8C_lbl_1_bss_960 lbl_1_bss_960;
 extern struct fn_13_E8C_lbl_801A63D0 lbl_801A63D0;
 extern u32 fn_1_1547FC(u32);
@@ -201,7 +208,9 @@ void fn_13_E8C(void) {
 }
 /* fzgx:end fn_13_E8C */
 
-/* fzgx:begin fn_13_EF0 */
+/* fzgx:begin fn_13_EF0 noprologue */
+#include "types.h"
+
 extern u32 lbl_13_bss_50;
 
 void fn_13_EF0(void) {
@@ -209,7 +218,9 @@ void fn_13_EF0(void) {
 }
 /* fzgx:end fn_13_EF0 */
 
-/* fzgx:begin fn_13_F00 */
+/* fzgx:begin fn_13_F00 noprologue */
+#include "types.h"
+
 extern s16 lbl_1_bss_968;
 extern struct fn_13_F00_lbl_13_bss_0 lbl_13_bss_0;
 extern struct fn_13_F00_lbl_801A6410 lbl_801A6410;
@@ -257,7 +268,9 @@ void fn_13_F00(void) {
 }
 /* fzgx:end fn_13_F00 */
 
-/* fzgx:begin fn_13_FA8 */
+/* fzgx:begin fn_13_FA8 noprologue */
+#include "types.h"
+
 // fn_13_FA8: empty in retail (single blr).
 void fn_13_FA8(void) {
 }

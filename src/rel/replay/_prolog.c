@@ -1,4 +1,16 @@
 #include "types.h"
+extern u32 fn_1_D0790(void);
+extern u32 lbl_13_bss_38;
+extern int fn_13_A40(void);
+extern s32 fn_13_A48(void);
+extern s16 lbl_1_bss_962;
+extern struct fn_13_B08_lbl_13_data_18 lbl_13_data_18;
+extern u32 lbl_1_bss_71688;
+extern u32 lbl_1_bss_7168C;
+extern u32 lbl_1_bss_26C60;
+extern void fn_13_3FC(void);
+extern u32 fn_1_3F038(void);
+extern u32 lbl_13_bss_40;
 
 /* fzgx:begin fn_13_A40 */
 // fn_13_A40: returns a constant.
@@ -8,8 +20,6 @@ int fn_13_A40(void) {
 /* fzgx:end fn_13_A40 */
 
 /* fzgx:begin fn_13_A48 */
-extern u32 fn_1_D0790(void);
-
 s32 fn_13_A48(void) {
     fn_1_D0790();
     return 0;
@@ -17,10 +27,6 @@ s32 fn_13_A48(void) {
 /* fzgx:end fn_13_A48 */
 
 /* fzgx:begin fn_13_A6C */
-extern u32 lbl_13_bss_38;
-extern void fn_13_A40(void);
-extern void fn_13_A48(void);
-
 struct fn_13_A6C_Arg0 {
     u8 pad_0[0xAC];
     u32 unk_AC;
@@ -86,11 +92,6 @@ struct fn_13_B08_lbl_13_data_18 {
     struct fn_13_B08_lbl_13_data_18_0_E16 unk_0[1];
 };
 
-extern s16 lbl_1_bss_962;
-extern struct fn_13_B08_lbl_13_data_18 lbl_13_data_18;
-extern u32 lbl_1_bss_71688;
-extern u32 lbl_1_bss_7168C;
-
 void fn_13_B08(void) {
     s32 index;
     struct fn_13_B08_lbl_13_data_18_0_E16 *p;
@@ -105,9 +106,6 @@ void fn_13_B08(void) {
 /* fzgx:end fn_13_B08 */
 
 /* fzgx:begin fn_13_B64 */
-extern u32 lbl_1_bss_26C60;
-extern void fn_13_3FC(void);
-
 void fn_13_B64(void) {
     lbl_1_bss_26C60 = (u32)fn_13_3FC;
 }
@@ -122,8 +120,6 @@ void fn_13_B78(void) {
 /* fzgx:begin fn_13_B7C */
 extern struct fn_13_B7C_lbl_13_bss_3C lbl_13_bss_3C;
 extern u16 lbl_1_bss_96A;
-extern u32 fn_1_3F038(void);
-extern u32 lbl_13_bss_40;
 
 struct fn_13_B7C_lbl_13_bss_3C {
     u8 unk_0;
