@@ -6149,3 +6149,6 @@ rel/main_rel/sel_static_disp/fn_1_1368A0.c:
 
 rel/main_rel/custom_memcard/fn_1_132FB4.c:
 	.text       start:0x00132FB4 end:0x001332FC align:4
+
+rel/main_rel/screen_effect/fn_1_729F8.c:
+	.text       start:0x000729F8 end:0x00075D84 align:4

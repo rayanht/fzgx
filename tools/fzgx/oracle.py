@@ -320,7 +320,8 @@ def _diff(project: Project, module: str, symbol: str, unit: str, max_diff_lines:
             pool_rows |= interior_rows
             res._pool_pairs += interior_pairs
             if base is not None:
-                data_rows, data_pairs = _data_pool_rows(project, module, base, left, right, lrows, rrows)
+                data_rows, data_pairs = _data_pool_rows(project, module, base, left, right, lrows, rrows,
+                                                       verified_pairs=res._pool_pairs)
                 pool_rows |= data_rows
                 res._pool_pairs += data_pairs
                 ro_rows, ro_pairs = _data_pool_rows(project, module, base, left, right, lrows, rrows, ".rodata")
@@ -478,19 +479,44 @@ def _bss_base_rows(project, module, obj, left, right, lrows, rrows, function_nam
     return rows, pairs
 
 
-def _data_pool_rows(project, module, obj, left, right, lrows, rrows, section_name=".data"):
+def _data_pool_rows(project, module, obj, left, right, lrows, rrows, section_name=".data",
+                    verified_pairs=()):
     """Retarget a private literal pool only when its entire byte range agrees."""
     elf = poolfix.Elf(obj.read_bytes())
     section = elf.section(section_name)
     if not section or not section['size']:
         return set(), []
-    if any(s['type'] == 4 and s['info'] == section['index'] and s['size'] for s in elf.sections):
-        return set(), []
     symbols = elf.symbols()
     defined = [s for s in symbols if s['shndx'] == section['index'] and s['size']]
     if not defined:
         return set(), []
-    payload = bytes(elf.data[section['offset']:section['offset'] + section['size']])
+    extent = section['size']
+    relocs = [struct.unpack_from('>IIi', elf.data, pos)
+              for rs in elf.sections if rs['type'] == 4 and rs['info'] == section['index']
+              for pos in range(rs['offset'], rs['offset'] + rs['size'], 12)]
+    if relocs:
+        # MWCC appends switch tables to ordinary TU data. Their destinations
+        # have already been checked against retail; compare the preceding
+        # initialized objects independently instead of rejecting the whole pool.
+        table_names = {private for private, retail, _ in verified_pairs
+                       if retail.startswith('jumptable_')}
+        tables = [s for s in defined if s['name'] in table_names]
+        if not tables or any(not any(t['value'] <= offset and offset + 4 <= t['value'] + t['size']
+                                     for t in tables) for offset, _, _ in relocs):
+            return set(), []
+        extent = min(t['value'] for t in tables)
+        if any(s['value'] + s['size'] > extent and s not in tables for s in defined):
+            return set(), []
+        covered = bytearray(section['size'] - extent)
+        for table in tables:
+            covered[table['value'] - extent:table['value'] + table['size'] - extent] = b'\1' * table['size']
+        suffix = elf.data[section['offset'] + extent:section['offset'] + section['size']]
+        if any(value and not covered[i] for i, value in enumerate(suffix)):
+            return set(), []
+        defined = [s for s in defined if s['value'] + s['size'] <= extent]
+    if not extent:
+        return set(), []
+    payload = bytes(elf.data[section['offset']:section['offset'] + extent])
     rows, pairs = set(), []
     for i, (l, r) in enumerate(zip(lrows, rrows)):
         li, ri = l.get('instruction', {}), r.get('instruction', {})
@@ -523,10 +549,17 @@ def _data_pool_rows(project, module, obj, left, right, lrows, rrows, section_nam
             if own['name'].startswith('@'):
                 continue
             known = project.symbols(module).get(own['name'])
+            delta = 0
+            alias = re.fullmatch(r'(.+)__fzgx_offset_([0-9A-F]+)', own['name'])
+            if not known and alias:
+                known = project.symbols(module).get(alias[1])
+                delta = int(alias[2], 16)
             if (not known or known.kind != 'object' or known.section != target.section
-                    or address + own['value'] != known.addr or own['size'] > known.size):
+                    or address + own['value'] != known.addr + delta
+                    or delta + own['size'] > known.size):
                 break
-            named.append((own['name'], known.name, f'{known.name}=verified pool object[{own["size"]}]'))
+            binding = f'{known.name}+0x{delta:X}' if delta else known.name
+            named.append((own['name'], binding, f'{binding}=verified pool object[{own["size"]}]'))
         else:
             rows.add(i)
             if ours['value'] == 0 and (lr.get('addend') or 0) == (rr.get('addend') or 0):
