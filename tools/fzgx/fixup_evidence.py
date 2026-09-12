@@ -500,7 +500,7 @@ def float_literals(p: Project, symbol: str, body: str, base: oracle.CheckResult)
     return out
 
 
-def native_pool_literals(p, symbol, body, check):
+def pool_scalar_reads(p, symbol, body, check):
     """Let MWCC pool explicit literals together with its implicit cast biases.
 
     External struct views preserve offsets but keep generated conversion atoms
@@ -548,8 +548,10 @@ def native_pool_literals(p, symbol, body, check):
             if not any(a<=start and end<=b for a,b in ranges):
                 continue
             prefix = code[code.rfind('\n',0,start)+1:start]
+            wrapper = re.search(r'\(\s*\*\s*\(\s*(?:f32|float|f64|double)\s+(?:volatile\s+)?\*\s*\)\s*&\s*\(\s*$',code[:start])
+            closing = re.match(r'\s*\)\s*\)',code[end:]) if wrapper else None
             if (re.match(r'\s*\)*\s*(?:=(?!=)|[+*/&|^-]=|\+\+|--|\[|->|\.)',code[end:])
-                    or re.search(r'(?:&|\+\+|--)\s*\(*\s*$',code[:start])
+                    or (re.search(r'(?:&|\+\+|--)\s*\(*\s*$',code[:start]) and not closing)
                     or re.fullmatch(r'\s*(?!return\b)'+TYPE+r'\s+',prefix)
                     or re.search(r'#\s*define\s+$',prefix)):
                 continue
@@ -585,8 +587,16 @@ def native_pool_literals(p, symbol, body, check):
                 value = number(raw,element)
             except ValueError:
                 continue
-            edits.append((start,end,value))
-    if not edits:
+            edits.append((wrapper.start() if closing else start,end+closing.end() if closing else end,value))
+    return edits
+
+
+def native_pool_literals(p, symbol, body, check):
+    from .sdkimport import masked
+    code = masked(body)
+    span = _function_span(code, p.resolve(symbol).name)
+    edits = pool_scalar_reads(p, symbol, body, check)
+    if not edits or not span:
         return []
     text = body
     for start,end,value in sorted(set(edits),reverse=True):
@@ -617,6 +627,533 @@ def native_pool_literals(p, symbol, body, check):
             cursor = b+following.end(); count += 1
             moved = body[:a]+body[b:cursor]+'\n'+body[a:b]+body[cursor:]
             out.append((f'lifetime shared-pool read {var} after {count} statements',moved))
+    return out
+
+
+def numeric_evidence(p, symbol, check):
+    from .evidence import conversion_values, object_jump_tables
+    if not hasattr(check, '_numeric_values'):
+        sym=p.resolve(symbol)
+        check._numeric_values=conversion_values(p,sym.module,check._rows[0],
+            object_jump_tables(p.target_object_for(sym),sym.name,p,sym.module))
+    return check._numeric_values
+
+
+def conversion_arguments(p, symbol, body, check):
+    """Replace a leaked encoding bias using a witnessed integer value at calls."""
+    from . import fixup_source as source
+    from .sdkimport import masked
+    from .signatures import recovered, Signature, parameter
+    code = masked(body); span = source._function_body_span(code, p.resolve(symbol).name)
+    if not span:
+        return []
+    typed = numeric_evidence(p,symbol,check)
+    if not any(typed.get('calls', {}).values()):
+        return []
+    _, variables = source.declared_types(code, span[0])
+    index = recovered(p); calls = source.call_sites(body)
+    target = [stuck._fmt(r) for r in check._rows[0]]
+    target_calls = {}
+    for i, line in enumerate(target):
+        call = re.fullmatch(r'bl (\w+)', line)
+        if call:
+            target_calls.setdefault(call[1], []).append(i)
+    pool = {(a, b): value for a, b, value in pool_scalar_reads(p, symbol, body, check)}
+
+    def resolve(a, b):
+        for _ in range(12):
+            while a < b and code[a].isspace(): a += 1
+            while b > a and code[b - 1].isspace(): b -= 1
+            name = re.fullmatch(r'\w+', code[a:b])
+            rounded = re.fullmatch(r'\((?:f32|f64|float|double)\)\s*(\w+)',code[a:b])
+            if rounded and variables.get(rounded[1],'').strip() in ('f32','f64','float','double'):
+                name = re.fullmatch(r'\w+',rounded[1])
+            previous = source.reaching_assignment(code, name[0], a, span[1]) if name else None
+            if not previous:
+                return a, b
+            a, b = previous
+        return a, b
+
+    def conversions(value):
+        if value[0] == 'conversion':
+            return [value]
+        return [c for part in value[1:] if isinstance(part, tuple) for c in conversions(part)]
+
+    witnesses, missing, precision = [], [], []
+    for callee, sites in target_calls.items():
+        uses = [c for c in calls if c[0] == callee and span[1] <= c[1] < span[2]]
+        prototypes = [c for c in calls if c[0] == callee and c[1] < span[0]]
+        if len(uses) != len(sites) or len(prototypes) != 1:
+            continue
+        types = dict(index.types); types.update(source.declared_types(code, span[0])[0])
+        params = [parameter(code[a:b], types) for a, b in prototypes[0][3]]
+        if not params or None in params or '...' in params:
+            continue
+        slots = index.registers(Signature('void', tuple(params)))
+        if not slots or len(slots) != len(params):
+            continue
+        for row, (_, start, end, args) in zip(sites, uses):
+            if len(args) != len(slots):
+                continue
+            for (reg, ty), (a, b) in zip(slots, args):
+                lo, hi = resolve(a, b)
+                expression = code[lo:hi]
+                if reg.startswith('r'):
+                    value = re.fullmatch(r'\s*(?:\([\w *]+\)\s*)*(\w+)\s*', expression)
+                    if not value or value[1] not in variables:
+                        continue
+                    current = reg
+                    for prior in range(row - 1, max(-1, row - 32), -1):
+                        line = target[prior]
+                        if line.startswith('b'):
+                            break
+                        move = re.fullmatch(r'mr '+current+r', (r\d+)', line)
+                        if move:
+                            current = move[1]
+                        elif re.match(r'(?!st|cmp|mt)\w+[.]? '+current+r',', line):
+                            break
+                    if current != reg:
+                        witnesses.append((row, current, value[1], start))
+                    continue
+                value = typed['calls'].get(row, {}).get(reg)
+                found = conversions(value) if value else []
+                if len(found) != 1:
+                    continue
+                conversion = found[0]; integer = conversion[3]
+                if integer[0] != 'read':
+                    continue
+                cast = list(re.finditer(r'\((f32|f64|float|double)\)\s*(?:\((s32|u32|int|unsigned int)\)\s*)?(\w+)\b', expression))
+                cast = [m for m in cast if variables.get(m[3], '').strip() in INT_TYPES]
+                if len(cast) == 1:
+                    m = cast[0]; witnesses.append((row, integer[2], m[3], start))
+                    if value[0] == 'conversion' and m[1] != conversion[1]:
+                        precision.append((lo + m.start(1), lo + m.end(1), conversion[1]))
+                literal = pool.get((lo, hi), expression)
+                try:
+                    bias = float(literal.rstrip('fF')) in (4503599627370496.0, 4503601774854144.0)
+                except ValueError:
+                    bias = False
+                if value[0] == 'conversion' and bias:
+                    missing.append((row, reg, a, b, conversion, start))
+    edits = []
+    for row, _, a, b, conversion, start in missing:
+        wanted = conversion[3][2]; choices = set()
+        for witness_row, register, var, position in witnesses:
+            if register != wanted or not source.initialized_local(code, var, start, span[1]):
+                continue
+            lower, upper = sorted((witness_row, row))
+            if any(re.match(r'(?!st|cmp|mt)\w+[.]? '+wanted+r',', line) for line in target[lower + 1:upper]):
+                continue
+            lower, upper = sorted((position, start))
+            if re.search(r'\b'+re.escape(var)+r'\s*(?:=(?!=)|[+*/&|^-]=|\+\+|--)|&\s*\b'+re.escape(var)+r'\b', code[lower:upper]):
+                continue
+            choices.add(var)
+        if len(choices) == 1:
+            edits.append((a, b, f'({conversion[1]})({conversion[2]}){next(iter(choices))}'))
+    out = []
+    for label, changes in (('retail conversion arguments', edits), ('retail conversion precision', precision)):
+        if changes:
+            for group in [changes] + ([[edit] for edit in changes] if len(changes) > 1 else []):
+                text = body
+                for a, b, value in sorted(set(group), reverse=True):
+                    text = text[:a] + value + text[b:]
+                out.append((label + f' ({len(group)} sites)', text))
+    return list(dict.fromkeys(out))
+
+
+def scalar_lifetimes(p, symbol, body, check):
+    """Give proven double loads and loop invariants their own scalar lifetime."""
+    from . import fixup_source as source
+    from .sdkimport import masked
+    code = masked(body); span = source._function_body_span(code, p.resolve(symbol).name)
+    if not span:
+        return []
+    _, variables = source.declared_types(code, span[0])
+    reads = pool_scalar_reads(p, symbol, body, check)
+    pool = {(a, b): value for a, b, value in reads}
+    assignments = list(re.finditer(r'(?m)^([ \t]*)(\w+)\s*=(?!=)\s*([^;{}\n]+);', code[span[1]:span[2]]))
+    groups = []
+    for assignment in assignments:
+        var = assignment[2]
+        if variables.get(var, '').strip() not in ('f32', 'float'):
+            continue
+        a, b = span[1] + assignment.start(), span[1] + assignment.end()
+        lo, hi = span[1] + assignment.start(3), span[1] + assignment.end(3)
+        while code[hi - 1].isspace(): hi -= 1
+        literal = pool.get((lo, hi))
+        if literal is None or literal.endswith(('f', 'F')):
+            continue
+        if float(literal) in (4503599627370496.0,4503601774854144.0):
+            continue
+        # Only straight-line uses are rewritten. The old variable remains
+        # initialized for any outgoing branch, with its original rounding.
+        end = b
+        for following in re.finditer(r'\s*([^;{}]+);', code[b:span[2]]):
+            if b + following.start() != end:
+                break
+            statement = following[1]
+            if (re.search(r'\b(?:if|else|while|for|do|switch|return|goto|break|continue|case)\b|:', statement)
+                    or re.search(r'\b'+re.escape(var)+r'\s*(?:=(?!=)|[+*/&|^-]=|\+\+|--)|&\s*\b'+re.escape(var)+r'\b', statement)):
+                break
+            end = b + following.end()
+        uses = list(re.finditer(r'\b'+re.escape(var)+r'\b', code[b:end]))
+        if not uses or re.search(r'&\s*\b'+re.escape(var)+r'\b', code[span[1]:span[2]]):
+            continue
+        fresh = 'fzgx_double_' + str(a)
+        if re.search(r'\b'+fresh+r'\b', code):
+            continue
+        changes = [(a, b, f'{assignment[1]}{fresh} = {body[lo:hi]};\n{assignment[1]}{var} = (f32){fresh};')]
+        changes += [(b + m.start(), b + m.end(), fresh) for m in uses]
+        groups.append((f'f64 {fresh};', changes))
+    out = []
+    # Keep interacting sites together as well as individual sites, without
+    # permitting overlapping edits or a global replacement of a reused local.
+    disjoint = []
+    last = -1
+    for group in groups:
+        if group[1][0][0] >= last:
+            disjoint.append(group); last = max(b for _, b, _ in group[1])
+    for selected in ([disjoint] if disjoint else []) + [[g] for g in groups]:
+        text = body
+        for a, b, value in sorted([e for _, edits in selected for e in edits], reverse=True):
+            text = text[:a] + value + text[b:]
+        text = text[:span[1]] + '\n    ' + '\n    '.join(decl for decl, _ in selected) + text[span[1]:]
+        out.append((f'retail double lifetimes ({len(selected)} sites)', text))
+    typed = numeric_evidence(p,symbol,check)
+    constants = set()
+    target = check._rows[0]
+    for i, values in typed.get('comparisons', {}).items():
+        address = int(target[i]['instruction']['address'])
+        if any(r.get('instruction', {}).get('branch_dest') is not None and int(r['instruction']['branch_dest']) < address
+               for r in target[i + 1:i + 4]):
+            constants.update(v[1] for v in values if v and v[0] == 'literal')
+    for call, start, end, args in source.call_sites(body):
+        if call != 'while' or not span[1] <= start < span[2] or len(args) != 1:
+            continue
+        condition = re.fullmatch(r'\s*(.+?)\s*(>=|<=|>|<|==|!=)\s*(\w+)\s*', code[args[0][0]:args[0][1]])
+        if not condition or condition[3] not in variables:
+            continue
+        var = condition[3]; previous = source.reaching_assignment(code, var, start, span[1])
+        if previous not in pool:
+            continue
+        literal = pool[previous]
+        try:
+            raw = struct.pack('>f' if literal.endswith(('f','F')) else '>d', float(literal.rstrip('fF'))).hex()
+        except (ValueError, OverflowError):
+            continue
+        if raw not in constants:
+            continue
+        opening = code.find('{', end)
+        if opening < 0 or code[end:opening].strip():
+            continue
+        depth, stop = 1, opening + 1
+        while stop < span[2] and depth:
+            depth += (code[stop] == '{') - (code[stop] == '}'); stop += 1
+        if not re.search(r'\b'+re.escape(var)+r'\s*=(?!=)', code[opening:stop]):
+            continue
+        fresh = 'fzgx_invariant_' + str(start)
+        if re.search(r'\b'+fresh+r'\b', code):
+            continue
+        lo, hi = args[0][0] + condition.start(3), args[0][0] + condition.end(3)
+        text = body[:lo] + fresh + body[hi:]
+        text = text[:start] + fresh + ' = ' + body[previous[0]:previous[1]] + ';\n    ' + text[start:]
+        text = text[:span[1]] + '\n    f64 ' + fresh + ';' + text[span[1]:]
+        out.append(('retail loop invariant ' + var, text))
+    return list(dict.fromkeys(out))
+
+
+def call_result_types(p, symbol, body, check):
+    from . import fixup_source as source
+    from .sdkimport import masked
+    code=masked(body);span=source._function_body_span(code,p.resolve(symbol).name)
+    if not span:
+        return []
+    locals_={name:(a,b,ty) for a,b,ty,name,dims in source._locals(body,span) if not dims}
+    prototypes={m[2]:m[1] for m in re.finditer(r'\bextern\s+(f32|f64|float|double)\s+(\w+)\s*\(',code[:span[0]])}
+    target=[stuck._fmt(row) for row in check._rows[0]]
+    eligible=set()
+    for i,line in enumerate(target):
+        call=re.fullmatch(r'bl (\w+)',line)
+        if not call or call[1] not in prototypes:
+            continue
+        for following in target[i+1:i+16]:
+            if following.startswith(('b','fctiw')):
+                break
+            if re.match(r'f\w+ (?:cr\d+|f\d+),.*\bf1\b',following):
+                eligible.add(call[1]);break
+            if re.match(r'\w+ f1,',following):
+                break
+    edits=[]
+    for callee,start,_,_ in source.call_sites(body):
+        if callee not in eligible or not span[1]<=start<span[2]:
+            continue
+        prefix=code[code.rfind('\n',span[1],start)+1:start]
+        assignment=re.fullmatch(r'\s*(\w+)\s*=\s*',prefix)
+        if not assignment or assignment[1] not in locals_:
+            continue
+        var=assignment[1];a,b,ty=locals_[var]
+        if ty not in INT_TYPES or len(re.findall(r'\b'+var+r'\s*=(?!=)',code[span[1]:span[2]]))!=1 or re.search(r'&\s*\b'+var+r'\b',code[span[1]:span[2]]):
+            continue
+        declaration=body[a:b];match=re.search(r'\b'+re.escape(ty)+r'\b',declaration)
+        edits.append((a+match.start(),a+match.end(),prototypes[callee]))
+    out=[]
+    for group in ([edits]+[[e] for e in edits] if edits else []):
+        text=body
+        for a,b,ty in sorted(set(group),reverse=True):
+            text=text[:a]+ty+text[b:]
+        out.append((f'retail call result types ({len(group)} sites)',text))
+    return list(dict.fromkeys(out))
+
+
+def floating_expressions(p, symbol, body, check):
+    """Recover square/FMA grouping and conversion rounding at estimate inputs."""
+    from . import fixup_source as source
+    from .sdkimport import masked
+    code = masked(body); name = p.resolve(symbol).name
+    target = [stuck._fmt(row) for row in check._rows[0]]
+    square_fma = False
+    for i, line in enumerate(target):
+        square = re.fullmatch(r'fmul (f\d+), (f\d+), \2', line)
+        if not square:
+            continue
+        for later in target[i + 1:i + 9]:
+            if re.match(r'fnmsub\s', later) and square[1] in later.split(', ')[1:]:
+                square_fma = True; break
+            if later.startswith('b') or re.match(r'\w+ '+square[1]+',', later):
+                break
+    groups = {}
+    if square_fma:
+        operations = []; source.commutations(body, name, operations)
+        multiply = [op for op in operations if op['op'] == '*']
+        for outer in multiply:
+            lo, hi = outer['left']
+            child = next((op for op in multiply if lo <= op['start'] and op['end'] <= hi
+                          and not body[lo:op['start']].strip(' (\n\t') and not body[op['end']:hi].strip(' )\n\t')), None)
+            if not child:
+                continue
+            x, y, z = [body[a:b] for a,b in (child['left'], child['right'], outer['right'])]
+            if re.fullmatch(r'\w+', y.strip()) and y.strip() == z.strip():
+                groups.setdefault('square', []).append((outer['start'], outer['end'], f'(({x}) * (({y}) * ({z})))'))
+    typed = numeric_evidence(p,symbol,check)
+    estimates = list(typed.get('estimates', {}).values())
+    calls = [c for c in source.call_sites(body) if c[0] == '__frsqrte' and len(c[3]) == 1
+             and source._function_body_span(code, name)[1] <= c[1] < source._function_body_span(code, name)[2]]
+    if len(calls) == len(estimates):
+        for (_, _, _, args), value in zip(calls, estimates):
+            if not value or value[:2] != ('conversion', 'f32'):
+                continue
+            a,b = args[0]; old = code[a:b].strip()
+            if not re.match(r'^\((?:f64|double)\)', old) or re.search(r'\+\+|--|(?<![=!<>])=(?!=)', old):
+                continue
+            new = re.sub(r'^\((?:f64|double)\)', '(f32)', old)
+            span = source._function_body_span(code, name)
+            edits = [(m.start(), m.end(), new) for m in re.finditer(re.escape(old), code)
+                     if span[1] <= m.start() and m.end() <= span[2]]
+            groups.setdefault('conversion', []).extend(edits)
+    out = []
+    for label, edits in list(groups.items()) + ([('combined', [e for edits in groups.values() for e in edits])] if len(groups)>1 else []):
+        # Parent expression and cast edits overlap. Apply the cast inside the
+        # replacement expression, rather than splicing overlapping source spans.
+        changes = sorted(set(edits), key=lambda e:(e[0],-e[1]))
+        merged = []
+        for a,b,value in changes:
+            if merged and a < merged[-1][1]:
+                lo,hi,outer = merged[-1]
+                if b <= hi and code[a:b] in outer:
+                    merged[-1] = (lo,hi,outer.replace(code[a:b],value))
+                continue
+            merged.append((a,b,value))
+        text = body
+        for a,b,value in reversed(merged):
+            text = text[:a]+value+text[b:]
+        if text != body:
+            out.append(('retail floating expression '+label,text))
+    return out
+
+
+def aggregate_initializers(p, symbol, body, check):
+    """Restore named aggregate bytes using their recovered field types."""
+    from .sdkimport import masked
+    from .signatures import record_layouts
+    from .dataimport import payload, record_initializer
+    code = masked(body); span = _function_span(code, p.resolve(symbol).name)
+    if not span or re.search(r'#pragma\s+(?:pack|options\s+align)\b', code):
+        return []
+    layouts, sizes = record_layouts(code, span[0]); out = []
+    for declaration in re.finditer(r'\b(?:static\s+)?const\s+struct\s+(\w+)\s+(\w+)\s*=\s*\{', code[:span[0]]):
+        typ, name = declaration[1], declaration[2]
+        sym = p.find_symbol(name, p.resolve(symbol).module)
+        if not sym or typ not in layouts or sizes[typ][0] != sym.size:
+            continue
+        start = declaration.end() - 1; end, depth = start + 1, 1
+        while end < span[0] and depth:
+            depth += (code[end] == '{') - (code[end] == '}'); end += 1
+        if depth:
+            continue
+        try:
+            raw, relocs = payload(p, sym)
+            if relocs:
+                continue
+            initializer = record_initializer(raw, layouts[typ], layouts, sizes)
+        except (ValueError, KeyError):
+            continue
+        text = body[:start] + initializer + body[end:]
+        if text != body:
+            out.append(('retail aggregate initializer ' + name, text))
+    return out
+
+
+def native_pool_objects(p, symbol, body, check):
+    """Split oversized external views into owned objects and typed interior atoms."""
+    from .sdkimport import masked
+    from .signatures import record_layouts
+    from .dataimport import BASIC, number, payload
+    code = masked(body); sym = p.resolve(symbol); span = _function_span(code, sym.name)
+    if not span or re.search(r'#pragma\s+(?:pack|options\s+align)\b',code):
+        return []
+    layouts,sizes = record_layouts(code,span[0]); out=[]
+    for declaration in re.finditer(r'\bextern\s+struct\s+(\w+)\s+(\w+)\s*;',code[:span[0]]):
+        typ,anchor=declaration[1],declaration[2]; owner=p.find_symbol(anchor,sym.module)
+        if not owner or owner.module!=sym.module or owner.section not in ('.data','.rodata') or typ not in layouts:
+            continue
+        fields=[f for f in layouts[typ] if not f[0].startswith('pad_')]
+        if not fields or sizes[typ][0]<=owner.size:
+            continue
+        limit=owner.addr+sizes[typ][0]
+        objects=sorted((s for s in p.symbols(sym.module).values() if s.kind=='object' and s.section==owner.section
+                        and owner.addr<=s.addr),key=lambda s:(s.addr,-s.size))
+        table=next((s.addr for s in objects if s.name.startswith('jumptable_') and s.addr>=limit),None)
+        if table is not None and table-owner.addr<=0x10000:
+            limit=table
+        selected=[];cursor=owner.addr
+        for obj in objects:
+            if obj.addr>=limit:
+                break
+            if obj.addr<cursor or not obj.size:
+                continue
+            if obj.addr!=cursor or obj.name.startswith('jumptable_'):
+                break
+            selected.append(obj);cursor=obj.addr+obj.size
+        if cursor<limit or not selected:
+            continue
+        roots={anchor:'.'}; assignments=[]
+        for assignment in re.finditer(r'(?m)^[ \t]*(\w+)\s*=\s*&'+re.escape(anchor)+r'\s*;',code[span[0]:span[1]]):
+            root=assignment[1]
+            if len(re.findall(r'\b'+re.escape(root)+r'\s*=(?!=)',code[span[0]:span[1]]))==1:
+                roots[root]='->';assignments.append((span[0]+assignment.start(),span[0]+assignment.end(),''))
+        atoms={};valid=True
+        for field,kind,offset,width,dims in fields:
+            extent=width*math.prod(dims or (1,));address=owner.addr+offset
+            parent=next((o for o in selected if o.addr<=address and address+extent<=o.addr+o.size),None)
+            if kind not in BASIC or BASIC[kind][0]!=width or not parent or len(dims)>1 or extent<=0:
+                valid=False;break
+            delta=address-parent.addr
+            name=parent.name if not delta else parent.name+f'__fzgx_offset_{delta:X}'
+            atoms[address]=(address+extent,name,kind,dims,field)
+        if not valid:
+            continue
+        definitions=[];replacements={}
+        try:
+            for obj in selected:
+                if obj.name!=anchor and re.search(r'\b'+re.escape(obj.name)+r'\b',code):
+                    raise ValueError('another declaration already owns this pool object')
+                data,relocs=payload(p,obj)
+                if relocs:
+                    raise ValueError('pointer-bearing pool needs symbolic relocation recovery')
+                cuts=sorted({obj.addr,obj.addr+obj.size}|{x for a,v in atoms.items() for x in (a,v[0]) if obj.addr<=x<=obj.addr+obj.size})
+                for lo,hi in zip(cuts,cuts[1:]):
+                    raw=data[lo-obj.addr:hi-obj.addr];atom=atoms.get(lo)
+                    if atom and atom[0]==hi:
+                        _,name,kind,dims,field=atom
+                        values=[number(raw[i:i+BASIC[kind][0]],kind) for i in range(0,len(raw),BASIC[kind][0])]
+                        declaration_=kind+' '+name+('['+str(dims[0])+']' if dims else '')
+                        initializer='{'+','.join(values)+'}' if dims else values[0]
+                        replacements[field]=name
+                    else:
+                        delta=lo-obj.addr;name=obj.name if not delta else obj.name+f'__fzgx_offset_{delta:X}'
+                        declaration_=f'u8 {name}[{len(raw)}]';initializer='{'+','.join(f'0x{x:02X}' for x in raw)+'}'
+                    definitions.append(('const ' if owner.section=='.rodata' else '')+declaration_+' = '+initializer+';')
+        except (ValueError,KeyError):
+            continue
+        edits=list(assignments)
+        for root,operator in roots.items():
+            for use in re.finditer(r'\b'+re.escape(root)+re.escape(operator)+r'(\w+)',code[span[0]:span[1]]):
+                if use[1] not in replacements:
+                    valid=False;break
+                edits.append((span[0]+use.start(),span[0]+use.end(),replacements[use[1]]))
+        text=body
+        for a,b,value in sorted(edits,reverse=True):
+            text=text[:a]+value+text[b:]
+        # Any remaining use of the old base needs its own address/lifetime proof.
+        remaining=masked(text[span[0]:])
+        if any(re.search(r'\b'+re.escape(root)+r'\b', re.sub(r'\bstruct\s+\w+\s*\*\s*'+re.escape(root)+r'\s*;','',remaining)) for root in roots):
+            continue
+        if valid:
+            text=text[:declaration.start()]+'\n'.join(definitions)+text[declaration.end():]
+            out.append(('recover native shared-pool objects '+anchor,text))
+    return out
+
+
+def stack_object_boundaries(p, symbol, body, check):
+    """Split a lifted array at proven compiler conversion scratch storage."""
+    from . import fixup_source as source
+    from .sdkimport import masked
+    from .evidence import assembly_rows
+    from .lift import integer_float_pairs
+    code = masked(body); span = source._function_body_span(code, p.resolve(symbol).name)
+    if not span:
+        return []
+    rows = assembly_rows(p.function_asm(p.resolve(symbol).module)[p.resolve(symbol).name])
+    addresses = {r['instruction']['address']:i for i,r in enumerate(rows)}
+    ins, labels = [], {}
+    for row in rows:
+        instruction = row['instruction']; op, _, args = instruction['formatted'].partition(' ')
+        args = [a.strip() for a in args.split(',')]
+        if instruction.get('branch_dest') in addresses:
+            labels[args[-1]] = addresses[instruction['branch_dest']]
+        ins.append((op,args))
+    pairs = integer_float_pairs(ins,labels)
+    scratch = {int(ins[i][1][1].split('(')[0],0) for i in pairs}
+    if not scratch:
+        return []
+    escapes = {int(args[2],0) for op,args in ins if op=='addi' and len(args)==3 and args[1]=='r1'
+               and re.fullmatch(r'0x[\da-f]+|\d+',args[2])}
+    out = []
+    for start,end,ty,name,dims in source._locals(body,span):
+        local = re.fullmatch(r'loc_([\dA-F]+)',name)
+        array = re.fullmatch(r'struct\s*\{\s*(u32|s32|f32)\s+(\w+)\[(\d+)\];\s*\}',ty.strip())
+        if not local or not array or dims:
+            continue
+        base, count = int(local[1],16), int(array[3])
+        cuts = sorted(o for o in scratch if base < o < base+count*4 and (o-base)%4==0)
+        if base not in escapes or not cuts:
+            continue
+        cut = cuts[0]; index = (cut-base)//4; tail = name+'_tail'
+        if re.search(r'\b'+tail+r'\b',code):
+            continue
+        # Pointer arithmetic/casts over the inferred whole object would need
+        # their own extent proof. Array element uses have exact known bounds.
+        uses = list(re.finditer(r'\b'+re.escape(name)+r'\b',code[end:span[2]]))
+        edits = []; valid = True
+        for use in uses:
+            a = end+use.start(); b = end+use.end()
+            element = re.match(r'\.'+re.escape(array[2])+r'\[(\d+)\]',code[b:])
+            if element:
+                slot = int(element[1])
+                if slot >= count:
+                    valid = False; break
+                if slot >= index:
+                    edits.append((a,b+element.end(),f'{tail}[{slot-index}]'))
+            elif re.search(r'\*\s*\)\s*&\s*$',code[max(span[1],a-48):a]) or code[b:b+1] in '.[':
+                valid = False; break
+        if not valid or not edits:
+            continue
+        declaration = f'    struct {{ {array[1]} {array[2]}[{index}]; }} {name};\n    {array[1]} {tail}[{count-index}];\n'
+        text = body
+        for a,b,value in reversed(edits):
+            text = text[:a]+value+text[b:]
+        text = text[:start]+declaration+text[end:]
+        out.append((f'retail stack object boundary {name} at {cut:#x}',text))
     return out
 
 

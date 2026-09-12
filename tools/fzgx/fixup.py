@@ -12,6 +12,7 @@ import json
 import re
 from pathlib import Path
 import shlex
+import struct
 import time
 
 from . import fixup_evidence as evidence, fixup_source as source, mwgraph, oracle
@@ -25,10 +26,10 @@ def digest(value):
 class Engine:
     def __init__(self, project, output, verbose=False):
         self.project, self.output, self.verbose = project, output, verbose
-        self.generator_sha256 = digest(Path(__file__).read_bytes() + Path(source.__file__).read_bytes() + Path(evidence.__file__).read_bytes() + Path(mwgraph.__file__).read_bytes() + (ROOT/'tools/fzgx/signatures.py').read_bytes())
+        self.generator_sha256 = digest(Path(__file__).read_bytes() + Path(source.__file__).read_bytes() + Path(evidence.__file__).read_bytes() + Path(mwgraph.__file__).read_bytes() + b''.join((ROOT/'tools/fzgx'/name).read_bytes() for name in ('signatures.py','evidence.py','dataimport.py','lift.py')))
         output.mkdir(parents=True, exist_ok=True)
         self.headers = mwgraph.header_fingerprint(ROOT, project.version)
-        self.environment = digest(('aligned-word-distance-v1' + self.headers + ''.join(digest((ROOT/'tools/fzgx'/f).read_bytes()) for f in
+        self.environment = digest(('typed-frontier-v2' + self.headers + ''.join(digest((ROOT/'tools/fzgx'/f).read_bytes()) for f in
             ('oracle.py', 'poolfix.py', 'project.py', 'regflow.py', 'evidence.py')) +
             digest((ROOT/'config'/project.version/'ldscript.tpl').read_bytes())).encode())
         self.cache_path = output / 'cache.json'
@@ -96,11 +97,14 @@ class Engine:
                 self.words[row['id']] = words
                 row.update(object=str(obj) if obj else None, score=source.fitness(target, words)[0] if words else -1,
                            bit_errors=(sum((a^b).bit_count() for a,b in zip(target,words))+32*abs(len(target)-len(words))) if words else 10**9)
+                row['word_errors'] = source.distance(target, words) if words else None
+                row['aligned_word_percent'] = row['score']
+                row['response_sha256'] = self.response_hash(obj, words) if obj else None
                 if row['score'] == 100:
                     check = self.check(row)
                     row['matched'] = bool(check.matched or check.matched_pool)
                     row['binding_score'] = check.percent_adjusted
-                self.cache[row['id']] = {k:row[k] for k in ('object','score','bit_errors','matched','binding_score') if k in row}
+                self.cache[row['id']] = {k:row[k] for k in ('object','score','bit_errors','matched','binding_score','word_errors','aligned_word_percent','response_sha256') if k in row}
             if time.monotonic()-progress >= 10:
                 self.cache_path.write_text(json.dumps(self.cache))
                 self.emit({'stage': 'compile', 'compiled': self.compiled, 'cached': self.cached})
@@ -108,7 +112,7 @@ class Engine:
         self.compile_seconds += time.monotonic()-tick
         self.cache_path.write_text(json.dumps(self.cache))
         for row in rows:
-            row.update({k:v for k,v in unique[row['id']].items() if k in ('object','score','bit_errors','matched','binding_score')})
+            row.update({k:v for k,v in unique[row['id']].items() if k in ('object','score','bit_errors','matched','binding_score','word_errors','aligned_word_percent','response_sha256')})
             row.pop('frame_layout_only',None)
             target=self.targets[row['symbol']][1];words=self.words.get(row['id'])
             if words and len(words)==len(target) and row['score']<100:
@@ -159,7 +163,58 @@ class Engine:
             self.checks[row['id']] = oracle._diff(self.project, sym.module, sym.name, '', 0,
                                                 target=self.targets[row['symbol']][0], base=Path(row['object']))
         result = self.checks[row['id']]
-        row['percent'] = max(result.percent, result.percent_adjusted) if result.ok else 0
+        row.update(percent=result.percent if result.ok else 0,
+                   raw_percent=result.percent if result.ok else 0,
+                   percent_adjusted=result.percent_adjusted if result.ok else 0,
+                   differing_rows=result.differing_rows, instruction_rows=result.instruction_rows,
+                   value_conflicts=len(result.value_flow), pool_rows=result.pool_rows)
+        return result
+
+    def response_hash(self, obj, words):
+        """Identical code with different data or bindings is a different response."""
+        from .poolfix import Elf
+        elf = Elf(obj.read_bytes()); symbols = elf.symbols()
+        sections = []
+        for section in elf.sections:
+            if section['flags'] & 2 and section['name'] != '.text':
+                payload = bytes(elf.data[section['offset']:section['offset'] + section['size']]).hex() if section['type'] != 8 else ''
+                sections.append((section['name'], section['size'], payload))
+            elif section['type'] == 4:
+                bindings = []
+                for offset in range(section['offset'], section['offset'] + section['size'], 12):
+                    at, info, addend = struct.unpack_from('>IIi', elf.data, offset)
+                    sym = symbols[info >> 8]
+                    bindings.append((at, info & 255, sym['name'], addend))
+                sections.append((section['name'], bindings))
+        return digest(json.dumps([words, sections]).encode())
+
+    def frontier(self, history, beam):
+        groups = defaultdict(list)
+        winners = {r['symbol'] for r in history if r.get('matched')}
+        for row in history:
+            if row['symbol'] not in winners and row.get('object'):
+                groups[row['symbol']].append(row)
+        result = defaultdict(list)
+        for symbol, rows in groups.items():
+            by_words = sorted(rows, key=lambda r:(r['word_errors'], -r['score'], r['bit_errors'], r['id']))
+            measured = [r for r in rows if 'raw_percent' in r]
+            preferred = []
+            bridges = [r for r in rows if any(r.get(k) for k in ('value_flow_fixed','argument_flow_fixed','pool_layout_fixed','frame_layout_only'))]
+            if bridges:
+                preferred.append(min(bridges, key=lambda r:(-r.get('pool_coverage',0), r['word_errors'], -r['score'])))
+            preferred.append(by_words[0])
+            if measured:
+                preferred.append(min(measured,key=lambda r:(r['differing_rows'], -r['raw_percent'],r['id'])))
+                preferred.append(max(measured,key=lambda r:(r['raw_percent'], -r['differing_rows'],r['id'])))
+            preferred += sorted(rows,key=lambda r:(-r['score'],r['bit_errors'],r['id']))
+            shapes = set()
+            for row in preferred:
+                shape = row['response_sha256']
+                if shape in shapes:
+                    continue
+                shapes.add(shape); result[symbol].append(row)
+                if len(result[symbol]) == beam:
+                    break
         return result
 
     def proposals(self, row, capture=None, max_orders=50000):
@@ -169,6 +224,13 @@ class Engine:
         operators = {}
         check = self.check(row)
         if check.ok:
+            yield from evidence.aggregate_initializers(self.project, row['symbol'], body, check)
+            yield from evidence.native_pool_objects(self.project, row['symbol'], body, check)
+            yield from evidence.conversion_arguments(self.project, row['symbol'], body, check)
+            yield from evidence.call_result_types(self.project, row['symbol'], body, check)
+            yield from evidence.floating_expressions(self.project, row['symbol'], body, check)
+            yield from evidence.scalar_lifetimes(self.project, row['symbol'], body, check)
+            yield from evidence.stack_object_boundaries(self.project, row['symbol'], body, check)
             families.append(evidence.candidates(self.project, row['symbol'], body, check))
             targeted = [[c for c in families[0] if c[0].startswith(('retail scalar flag masks', 'retail format argument', 'retail call argument', 'retail call parameter', 'retail argument order:', 'retail float branch', 'retail zero comparison', 'bind recovered shared-pool', 'retain recovered shared-pool', 'recover native shared-pool', 'lifetime reload', 'lifetime ordered', 'lifetime shared-pool'))],
                         source.address_expressions(body, name), source.pointer_lifetimes(body, name), source.through_local(body, name),
@@ -277,6 +339,9 @@ class Engine:
     def run(self, rows, rounds=2, beam=3, max_candidates=80, budget_s=None, captures=None):
         start=time.monotonic(); history=list(rows); seen={r['id'] for r in rows}; initial={}
         self.evaluate(rows)
+        for row in rows:
+            if row.get('object'):
+                self.check(row)
         self.emit({'stage': 'baseline', 'functions': len({r['symbol'] for r in rows}),
                    'variants': len(rows), 'compiled': self.compiled, 'cached': self.cached})
         self.save(history, stats=[], start=start)
@@ -286,24 +351,7 @@ class Engine:
         for step in range(rounds):
             if budget_s is not None and time.monotonic()-start >= budget_s:
                 break
-            winners={r['symbol'] for r in history if r.get('matched')}
-            frontier=defaultdict(list); shapes=defaultdict(set)
-            pool_bridges = {}
-            for row in history:
-                if row.get('pool_layout_fixed') and (row['symbol'] not in pool_bridges or
-                        (row['pool_coverage'],row['score']) > (pool_bridges[row['symbol']]['pool_coverage'],pool_bridges[row['symbol']]['score'])):
-                    pool_bridges[row['symbol']] = row
-            for row in sorted(history,key=lambda r:(not (r.get('value_flow_fixed',False) or r.get('argument_flow_fixed',False) or r.get('frame_layout_only',False)),
-                    pool_bridges.get(r['symbol'],{}).get('id') != r['id'],
-                    -r['score'],-r.get('binding_score',0),r['bit_errors'],r['id'])):
-                symbol=row['symbol']; words=self.words.get(row['id'])
-                if symbol in winners or not words or len(frontier[symbol])>=beam:
-                    continue
-                # Same instructions can hide different literal/relocation data.
-                shape=(tuple(words), row.get('binding_score',0))
-                if shape in shapes[symbol]:
-                    continue
-                shapes[symbol].add(shape);frontier[symbol].append(row)
+            frontier=self.frontier(history,beam)
             if captures is not None:
                 self.refresh_captures(frontier,captures)
             pending=[]; parents={}; generated=time.monotonic()
@@ -324,6 +372,9 @@ class Engine:
                 break
             generation_seconds=time.monotonic()-generated
             self.evaluate(pending)
+            for row in pending:
+                if row.get('object') and row['label'].startswith(('retail conversion','retail floating','retail loop','retail double','retail call result','retail aggregate','recover native shared-pool objects')):
+                    self.check(row)
             # Fixing a wrong stored value can initially worsen register numbers.
             # Retain that bridge for the allocator pass instead of immediately
             # discarding it in favor of the semantically wrong high-score seed.
@@ -376,9 +427,8 @@ class Engine:
             best.setdefault(r['symbol'],r)
         for row in best.values():
             if row['score'] >= 0:
-                result = self.check(row)
-                row['percent'] = max(result.percent, result.percent_adjusted) if result.ok else 0
-        report=dict(generator_sha256=self.generator_sha256, records=history, best=best, rounds=stats, compiled=self.compiled,cached=self.cached,
+                self.check(row)
+        report=dict(generator_sha256=self.generator_sha256, records=history, best=best, frontier=dict(self.frontier(history,3)), rounds=stats, compiled=self.compiled,cached=self.cached,
                     compile_seconds=self.compile_seconds,seconds=time.monotonic()-start,environment=self.environment)
         (self.output/'report.json').write_text(json.dumps(report))
         return report
@@ -507,6 +557,43 @@ def replay_archive(path):
     archive=json.loads(gzip.decompress(path.read_bytes()))
     if archive.get('format')=='fzgx-mwcc-graphs-v1':
         return mwgraph.replay_archive(path)
+    if archive.get('format')=='fzgx-source-repairs-v1':
+        from .lift import lift_total
+        project=Project();engine=Engine(project,STATE_DIR/'fixup'/'replay'/path.name)
+        reproduced=[]
+        with oracle.build_lock():
+            for record in archive['records']:
+                symbol=record['symbol']
+                if digest(record['body'].encode())!=record['sha256']:
+                    raise ValueError(symbol+': archived body hash mismatch')
+                if record['generator']=='fzgx lift':
+                    sym=project.resolve(symbol)
+                    body=lift_total(project,sym.module,sym.name,max_ins=sym.size//4+10)
+                else:
+                    body=record['seed']
+                    if digest(body.encode())!=record['seed_sha256']:
+                        raise ValueError(symbol+': archived seed hash mismatch')
+                    for step in record['recipe']:
+                        if digest(body.encode())!=step['input_sha256']:
+                            raise ValueError(symbol+': recipe input hash mismatch')
+                        row=engine.record(symbol,body,record['mw'],record['flags'])
+                        engine.evaluate([row])
+                        if not row.get('object'):
+                            raise ValueError(symbol+': recipe input no longer compiles')
+                        body=next((text for label,text in engine.proposals(row)
+                                   if label==step['label'] and digest(text.encode())==step['output_sha256']),None)
+                        if body is None:
+                            raise ValueError(symbol+': cannot reproduce '+step['label'])
+                if body is None or digest(body.encode())!=record['sha256']:
+                    raise ValueError(symbol+': generated body hash mismatch')
+                row=engine.record(symbol,body,record['mw'],record['flags'])
+                engine.evaluate([row])
+                if not row.get('object'):
+                    raise ValueError(symbol+': reproduced body no longer compiles')
+                engine.check(row);reproduced.append(row)
+        result=dict(reproduced=len(reproduced),records=reproduced)
+        (engine.output/'replay.json').write_text(json.dumps(result))
+        print(json.dumps({'reproduced':len(reproduced)}));return result
     for symbol,record in archive['repairs'].items():
         body=record['seed']
         if digest(body.encode())!=record['seed_sha256']:

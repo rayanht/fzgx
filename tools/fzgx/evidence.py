@@ -10,15 +10,16 @@ MEMORY = re.compile(r'(.+)\((r\d+)\)$')
 WIDTH = {'lfs': 4, 'lfd': 8, 'lwz': 4, 'lhz': 2, 'lha': 2, 'lbz': 1}
 
 
-def memory_loads(rows, tables=None, addresses=False):
+def memory_loads(rows, tables=None, addresses=False, flow=None):
     """Follow symbolic bases through the CFG, intersecting facts at every join.
 
     Results use aligned-row indices so target and candidate accesses can be
     compared without confusing object addresses with the diff's row offsets.
     """
     tables = tables or {}
-    instructions = {i: row['instruction'] for i, row in enumerate(rows)
-                    if row.get('instruction', {}).get('address') is not None}
+    # Objdiff omits zero-valued protobuf fields, including address zero.
+    instructions = {i: {'address':0, **row['instruction']} for i, row in enumerate(rows)
+                    if row.get('instruction', {}).get('formatted')}
     indices = list(instructions)
     if not indices:
         return {}
@@ -63,12 +64,13 @@ def memory_loads(rows, tables=None, addresses=False):
         if addresses and value and value[2] is False and op in ('addi','li'):
             loads[i] = dict(symbol=value[0],offset=value[1],width=0,op=op,
                             address=int(ins['address']))
-        if op in WIDTH and len(args) == 2 and (mem := MEMORY.fullmatch(args[1])):
-            base = before.get(mem[2])
+        if op in WIDTH and len(args) == 2:
+            mem = MEMORY.fullmatch(args[1])
+            base = before.get(mem[2]) if mem else None
             location = None
             if symbolic and (rel[3] == 'sda21' or (base and base[:2] == symbolic[:2] and base[2])):
                 location = symbolic[:2]
-            elif base and not base[2] and re.fullmatch(r'-?(?:0x[\da-f]+|\d+)', mem[1]):
+            elif mem and base and not base[2] and re.fullmatch(r'-?(?:0x[\da-f]+|\d+)', mem[1]):
                 location = (base[0], base[1] + int(mem[1], 0))
             if location:
                 loads[i] = dict(symbol=location[0], offset=location[1], width=WIDTH[op], op=op,
@@ -102,6 +104,8 @@ def memory_loads(rows, tables=None, addresses=False):
                 # arm. Relocated tables, however, preserve dominating pool bases.
                 successors = indices
                 after = {}
+        if flow is not None:
+            flow[i] = (successors, op == 'bctr' and successors == indices)
         for nxt in successors:
             old = incoming.get(nxt)
             merged = after if old is None else {k: v for k, v in old.items() if after.get(k) == v}
@@ -157,6 +161,102 @@ def assembly_rows(fn):
             ins['branch_dest'] = int(branch[1], 16)
         rows.append(dict(instruction=ins))
     return rows
+
+
+def conversion_values(project, module, rows, tables=None):
+    """Typed int-to-FP values at observable uses, including the actual bias bytes.
+
+    Definition identities are finite, so loops converge without expanding
+    expressions. Conflicting paths lose the fact instead of choosing one arm.
+    """
+    from .lift import integer_float_pairs
+    present = [(i, {'address':0, **row['instruction']}) for i, row in enumerate(rows)
+               if row.get('instruction', {}).get('formatted')]
+    addresses = {int(ins['address']): n for n, (_, ins) in enumerate(present) if ins.get('address') is not None}
+    ins, labels = [], {}
+    for _, row in present:
+        parts = row['formatted'].split(None, 1)
+        args = [a.strip() for a in parts[1].split(',')] if len(parts) > 1 else []
+        if row.get('branch_dest') is not None and int(row['branch_dest']) in addresses:
+            labels[args[-1]] = addresses[int(row['branch_dest'])]
+        ins.append((parts[0].rstrip('+-'), args))
+    if not ins:
+        return {}
+    flow = {}
+    loads = memory_loads(rows, tables, flow=flow)
+    positions = {i:n for n,(i,_) in enumerate(present)}
+    edges = [[positions[j] for j in flow.get(i, ([],False))[0] if j in positions] for i,_ in present]
+    pairs = integer_float_pairs(ins, labels, edges)
+    stores = {n for pair in pairs.values() for n in pair}
+    incoming = {0: {f'r{r}': ('entry', f'r{r}') for r in range(3, 11)}}
+    queue = deque([0])
+    result, produced, comparisons, estimates = {}, {}, {}, {}
+    while queue:
+        n = queue.popleft(); before = incoming[n]; after = dict(before)
+        op, args = ins[n]; row_index = present[n][0]
+        value = None
+        produced.pop(row_index, None)
+        if args:
+            if op in ('fcmpu', 'fcmpo'):
+                comparisons[row_index] = tuple(before.get(reg) for reg in args[-2:])
+            if op == 'frsqrte':
+                estimates[row_index] = before.get(args[1])
+            if op in ('mr', 'fmr'):
+                value = before.get(args[1])
+            elif op == 'xoris' and args[2] in ('0x8000', '32768'):
+                value = ('signed-word', ('read', n, args[1]))
+            elif n in pairs:
+                word = before.get('store:' + str(pairs[n][1]))
+                if word:
+                    value = ('encoded', word)
+            elif row_index in loads and op in ('lfs', 'lfd'):
+                load = loads[row_index]
+                raw = retail_bytes(project, module, load['symbol'], load['offset'], load['width'])
+                if raw:
+                    value = ('literal', raw.hex())
+            elif op in ('fsub', 'fsubs'):
+                encoded, bias = before.get(args[1]), before.get(args[2])
+                if encoded and encoded[0] == 'encoded' and bias and bias[0] == 'literal':
+                    word = encoded[1]; signed = word[0] == 'signed-word'
+                    expected = '4330000080000000' if signed else '4330000000000000'
+                    if bias[1] == expected:
+                        value = ('conversion', 'f32' if op == 'fsubs' else 'f64',
+                                 's32' if signed else 'u32', word[1] if signed else word)
+                        produced[row_index] = value
+            elif op == 'frsp':
+                previous = before.get(args[1])
+                if previous and previous[0] == 'conversion':
+                    value = ('conversion', 'f32', *previous[2:])
+                elif previous and previous[0] == 'arithmetic':
+                    value = ('rounded', 'f32', previous)
+            if value is None and op in ('fadd', 'fsub'):
+                left, right = before.get(args[1]), before.get(args[2])
+                if left and right and {left[0], right[0]} == {'conversion', 'literal'}:
+                    value = ('arithmetic', op, left, right)
+            if n in stores:
+                after['store:' + str(n)] = before.get(args[0], ('definition', n, args[0]))
+            if op in ('bl', 'bctrl', 'blrl'):
+                result[row_index] = {r: v for r, v in before.items() if re.fullmatch(r'f[1-8]', r) and v[0] in ('conversion', 'arithmetic', 'rounded')}
+                if not (args and re.fullmatch(r'_(save|rest)(gpr|fpr)_\d+', args[0])):
+                    for reg in list(after):
+                        if reg.startswith('store:') or re.fullmatch(r'r(?:0|[3-9]|1[0-2])|f(?:\d|1[0-3])', reg):
+                            after.pop(reg)
+                    after['r3'] = ('definition', n, 'r3')
+            elif not op.startswith(('st', 'cmp', 'fcmp', 'b', 'mt')) and re.fullmatch(r'[rf]\d+', args[0]):
+                after.pop(args[0], None)
+                if value is not None:
+                    after[args[0]] = value
+                elif args[0].startswith('r'):
+                    after[args[0]] = ('definition', n, args[0])
+        if flow.get(row_index, ([],False))[1]:
+            after = {}
+        for nxt in edges[n]:
+            old = incoming.get(nxt)
+            merged = after if old is None else {k: v for k, v in old.items() if after.get(k) == v}
+            if old != merged:
+                incoming[nxt] = dict(merged); queue.append(nxt)
+    return dict(calls=result, conversions=produced, comparisons=comparisons, estimates=estimates,
+                pairs={present[n][0]:tuple(present[store][0] for store in pair) for n,pair in pairs.items()})
 
 
 def retail_bytes(project, module, name, offset, width):

@@ -641,6 +641,42 @@ def call_sites(text):
     return sorted(calls,key=lambda call:call[1])
 
 
+def reaching_assignment(code, name, before, lower=0):
+    """A scalar definition in the same straight-line region as its use.
+
+    Deliberately stop at control flow or an address escape. Callers may inspect
+    the expression, but must not move a load or a side effect to the use site.
+    """
+    region = code[lower:before]
+    pattern = re.compile(r'(?m)^[ \t]*' + re.escape(name) + r'\s*=(?!=)\s*([^;{}\n]+);')
+    definitions = list(pattern.finditer(region))
+    if not definitions:
+        return None
+    match = definitions[-1]
+    suffix = region[match.end():]
+    if (re.search(r'[{}]|\b(?:if|else|while|for|do|switch|goto|case|break|continue|return)\b', suffix)
+            or re.search(r'&\s*\b'+re.escape(name)+r'\b|\b'+re.escape(name)+r'\s*(?:[+*/&|^-]=|\+\+|--)', suffix)):
+        return None
+    return lower + match.start(1), lower + match.end(1)
+
+
+def initialized_local(code, name, before, lower):
+    """Require an assignment in an enclosing block, not solely a sibling arm."""
+    scopes, scope = [], ()
+    definitions = []
+    pattern = r'[{}]|(?m:^[ \t]*)\b' + re.escape(name) + r'\s*=(?!=)[^;{}\n]+;'
+    for token in re.finditer(pattern, code[lower:before]):
+        if token[0] == '{':
+            scopes.append(token.start()); scope = tuple(scopes)
+        elif token[0] == '}':
+            if scopes:
+                scopes.pop()
+            scope = tuple(scopes)
+        else:
+            definitions.append(scope)
+    return any(scope[:len(parent)] == parent for parent in definitions)
+
+
 def _pair_proto(text: str, callee: str, idx: int) -> Optional[str]:
     """The callee's extern prototype with parameters idx and idx+1 (both 32-bit ints) as one u64."""
     m = re.search(rf"^extern ([\w ]+?\*?) {re.escape(callee)}\(([^)]*)\);$", text, re.M)
@@ -1737,8 +1773,13 @@ def declared_types(code, end):
         elif record['alias'] and record['parent'] is None:
             instances[record['alias']] = record['kind']+' '+record['key']
     variables = {}
-    for decl in re.finditer(r'('+TYPE+r')\s*(?:(?<=\*)|\s)(\w+)\s*(?=[,;=)\[])', code):
+    type_names = set(fields) | {'void','char','short','int','long','float','double','u8','s8','u16','s16','u32','s32','u64','s64','f32','f64','BOOL'}
+    type_names.update(re.findall(r'\btypedef\s+[^;{}]+?\b([A-Za-z_]\w*)\s*(?:\[[^]]*\])?\s*;',code))
+    for decl in re.finditer(r'('+TYPE+r')\s*(?:(?<=\*)|\s)([A-Za-z_]\w*)\s*(?=[,;=)\[])', code):
         if re.search(r'\b(?:return|else|case|default|break|continue|goto|if|for|switch|while|do|sizeof)\b',decl[1]):
+            continue
+        typ = re.sub(r'\b(?:extern|static|register|const|volatile|signed|unsigned)\b|\*','',decl[1]).strip()
+        if typ not in type_names and not re.fullmatch(r'(?:struct|union|enum)\s+\w+',typ):
             continue
         variables[decl[2]] = decl[1]+(' *' if code[decl.end():].startswith('[') else '')
     variables.update(instances)

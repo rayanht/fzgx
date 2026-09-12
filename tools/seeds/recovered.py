@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import gzip
 import json
 import sys
 from collections import defaultdict
@@ -20,8 +21,13 @@ def digest(body):
 
 
 def percent(record):
-    return max((v for k in ('percent', 'percent_adjusted', 'adjusted', 'score', 'best')
-                if isinstance(v := record.get(k), (int, float))), default=0)
+    # These measures have different denominators. A binding-adjusted row score
+    # must not silently replace objdiff's raw similarity in saved seed ranking.
+    for key in ('raw_percent','percent','percent_adjusted','adjusted','best','score'):
+        value=record.get(key)
+        if isinstance(value,(int,float)):
+            return value
+    return 0
 
 
 class SavedCandidates:
@@ -62,6 +68,7 @@ class SavedCandidates:
             return
         self.candidates[symbol].append(dict(
             body=body, percent=score, sha256=sha, origin=origin,
+            **{k:record[k] for k in ('raw_percent','percent_adjusted','aligned_word_percent','word_errors','differing_rows','instruction_rows') if k in record},
             original_path=str(path) if path else None,
             mw=record.get('mw') or record.get('mw_version'),
             flags=record.get('flags') or record.get('extra_cflags'),
@@ -112,6 +119,14 @@ class SavedCandidates:
             for record in records:
                 if 'percent' in record and 'symbol' in record:
                     self.add(record['symbol'], {**record, 'path': record['source']}, str(path.relative_to(ROOT)))
+
+        for path in sorted((ROOT/'state/repairs').glob('*.json.gz')):
+            data=json.loads(gzip.decompress(path.read_bytes()))
+            # Source archives are portable; allocator captures use another
+            # schema and contain no directly ranked C records.
+            for record in data.get('records',[]):
+                if isinstance(record,dict) and record.get('symbol') and record.get('body'):
+                    self.add(record['symbol'],record,str(path.relative_to(ROOT)))
 
         # Only compile-result stores: donor discovery/fuzzy scores measure opcode
         # similarity, not how closely an owned C reconstruction compiles.

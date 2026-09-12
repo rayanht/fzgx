@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import json
 import re
+from collections import deque
 from typing import Dict, List, Optional, Tuple
 
 from .project import ROOT, Project
@@ -54,43 +55,124 @@ def _hw_blocks():
 
 HW_BLOCKS = _hw_blocks()
 
-def integer_float_pairs(ins, labels):
-    """Find conversion scratch stores by their reaching definitions, in either store order."""
-    constants, stores, pairs, raw_reads = {}, {}, {}, set()
-    boundaries = set(labels.values())
+def instruction_edges(ins, labels):
+    edges = []
     for i, (mn, args) in enumerate(ins):
-        if i in boundaries:
+        mn = mn.rstrip('+-')
+        dest = labels.get(args[-1]) if args else None
+        following = [i + 1] if i + 1 < len(ins) else []
+        if mn in ('blr', 'bctr'):
+            following = []
+        elif mn.startswith('b') and mn not in ('bl', 'bctrl', 'blrl'):
+            if mn == 'b':
+                following = []
+            if dest is not None and dest < len(ins):
+                following.append(dest)
+        edges.append(following)
+    return edges
+
+
+def integer_float_pairs(ins, labels, edges=None):
+    """Prove both scratch words, preserving callee-saved constants across calls.
+
+    A label is not a clobber. Intersect reaching definitions at joins instead;
+    clearing every register at each call used to lose the shared 0x4330 word.
+    """
+    if not ins:
+        return {}
+    unknown_switch = edges is None and any(mn == 'bctr' for mn, _ in ins)
+    edges = edges if edges is not None else instruction_edges(ins, labels)
+    stack_escapes = any(args and args[0] not in ('r1','r11') and mn not in LOAD_T
+                        and not mn.startswith(('st','cmp','fcmp','mt','b'))
+                        and any(re.search(r'\br1\b',arg) for arg in args[1:]) for mn,args in ins)
+    incoming, queue = {0: ({}, {})}, deque([0])
+    # Unknown switch edges must not inherit a constant from one switch arm.
+    if unknown_switch:
+        for i in labels.values():
+            if i < len(ins):
+                incoming[i] = ({}, {}); queue.append(i)
+    while queue:
+        i = queue.popleft()
+        constants, stores = map(dict, incoming[i])
+        mn, args = ins[i]
+        if args:
+            mem = MEM_RE.fullmatch(args[1]) if len(args) > 1 else None
+            if mn.startswith('st'):
+                if mem and mem[2] == 'r1' and re.fullmatch(r'-?(?:0x[0-9a-f]+|\d+)', mem[1]) and mn in WIDTH:
+                    off, width = _imm(mem[1]), WIDTH[mn]
+                    for byte in range(off, off + width):
+                        stores.pop(byte, None)
+                    if mn == 'stw':
+                        for byte in range(off, off + 4):
+                            stores[byte] = (i, constants.get(args[0]) == 0x43300000, off)
+                elif stack_escapes or mem and mem[2] == 'r1':
+                    stores.clear()
+            value = None
+            if mn in ('li', 'lis') and re.fullmatch(r'-?(?:0x[0-9a-f]+|\d+)', args[1]):
+                value = _imm(args[1]) if mn == 'li' else (_imm(args[1]) & 0xffff) << 16
+            elif mn == 'mr':
+                value = constants.get(args[1])
+            if not mn.startswith(('st', 'cmp', 'fcmp', 'mt', 'b')):
+                constants.pop(args[0], None)
+                if value is not None:
+                    constants[args[0]] = value
+            if mn in ('bl', 'bctrl', 'blrl'):
+                if not (mn == 'bl' and re.fullmatch(r'_(save|rest)(gpr|fpr)_\d+', args[0])):
+                    stores.clear()
+                    for n in (0, *range(3, 13)):
+                        constants.pop(f'r{n}', None)
+            if mn == 'lmw':
+                for n in range(int(args[0][1:]), 32):
+                    constants.pop(f'r{n}', None)
+            if mn.endswith('u') and mem:
+                constants.pop(mem[2], None)
+        if mn == 'bctr' and len(edges[i]) == len(ins):
             constants.clear(); stores.clear()
-        if mn.startswith('b'):
-            constants.clear(); stores.clear()
-            continue
-        if not args:
-            continue
+        for nxt in edges[i]:
+            old = incoming.get(nxt)
+            merged = (constants, stores) if old is None else tuple(
+                {k: v for k, v in previous.items() if current.get(k) == v}
+                for previous, current in zip(old, (constants, stores)))
+            if old != merged:
+                incoming[nxt] = tuple(map(dict, merged)); queue.append(nxt)
+    pairs, raw_reads = {}, set()
+    for i, (_, stores) in incoming.items():
+        mn, args = ins[i]
         mem = MEM_RE.fullmatch(args[1]) if len(args) > 1 else None
-        if mem and mem[2] == 'r1' and re.fullmatch(r'-?(?:0x[0-9a-f]+|\d+)', mem[1]):
-            off = _imm(mem[1])
-            if mn in STORE_T:
-                width = WIDTH[mn]
-                for byte in range(off, off + width):
-                    stores.pop(byte, None)
-                if mn == 'stw':
-                    for byte in range(off, off + 4):
-                        stores[byte] = (i, constants.get(args[0]) == 0x43300000, off)
-            elif mn in LOAD_T:
-                width = WIDTH.get(mn, WIDTH.get(mn[:-1]))
-                if width is None:
-                    continue
-                high, low = stores.get(off), stores.get(off + 4)
-                if mn == 'lfd' and high and low and high[1] and high[2] == off and low[2] == off + 4:
-                    pairs[i] = (high[0], low[0])
-                else:
-                    raw_reads.update(stores[byte][0] for byte in range(off, off + width) if byte in stores)
-        if mn == 'lis' and re.fullmatch(r'-?(?:0x[0-9a-f]+|\d+)', args[1]):
-            constants[args[0]] = (_imm(args[1]) & 0xffff) << 16
-        elif mn == 'mr' and args[1] in constants:
-            constants[args[0]] = constants[args[1]]
-        elif mn not in STORE_T and not mn.startswith(('st', 'cmp', 'mt')):
-            constants.pop(args[0], None)
+        if mn not in LOAD_T or not mem or mem[2] != 'r1':
+            continue
+        off = _imm(mem[1]); width = WIDTH.get(mn, WIDTH.get(mn[:-1]))
+        if width is None:
+            continue
+        high, low = stores.get(off), stores.get(off + 4)
+        if (mn == 'lfd' and high and low and high[1] and high[2] == off and low[2] == off + 4
+                and all(stores.get(byte) == high for byte in range(off, off + 4))
+                and all(stores.get(byte) == low for byte in range(off + 4, off + 8))):
+            pairs[i] = (high[0], low[0])
+        else:
+            raw_reads.update(stores[byte][0] for byte in range(off, off + width) if byte in stores)
+    # A raw read can follow a join or a call where the must-definition map
+    # became unknown. Backward may-liveness still sees that observable use.
+    read_bytes, write_bytes = [], []
+    for i,(mn,args) in enumerate(ins):
+        mem = MEM_RE.fullmatch(args[1]) if len(args)>1 else None
+        width = WIDTH.get(mn,WIDTH.get(mn[:-1]))
+        region = set()
+        if mem and mem[2]=='r1' and width and re.fullmatch(r'-?(?:0x[0-9a-f]+|\d+)',mem[1]):
+            off=_imm(mem[1]);region=set(range(off,off+width))
+        read_bytes.append(region if mn in LOAD_T and i not in pairs else set())
+        write_bytes.append(region if mn in STORE_T else set())
+    live=[set() for _ in ins];changed=True
+    while changed:
+        changed=False
+        for i in reversed(range(len(ins))):
+            value=read_bytes[i]|(set().union(*(live[n] for n in edges[i]))-write_bytes[i])
+            if value!=live[i]:
+                live[i]=value;changed=True
+    for pair in pairs.values():
+        for store in pair:
+            if write_bytes[store] & set().union(*(live[n] for n in edges[store])):
+                raw_reads.add(store)
     return {load: pair for load, pair in pairs.items() if not raw_reads.intersection(pair)}
 
 
@@ -709,8 +791,13 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
     magic_div: Dict[str, Tuple[str, int]] = {}  # register holding mulhwu(x, magic) -> (x, magic)
     pending_div: Dict[int, Tuple[str, str]] = {}  # index of the idiom's last instruction -> (register, quotient expression)
     signed_shift_values = {}
-    int_float_loads = integer_float_pairs(ins, LABELS[0])
+    from .evidence import assembly_rows, conversion_values, jump_tables
+    retail_function = p.function_asm(module)[name]
+    retail_rows = assembly_rows(retail_function)
+    numeric = conversion_values(p, module, retail_rows, jump_tables(p,retail_function)) if len(retail_rows) == len(ins) else {}
+    int_float_loads, conversions = numeric.get('pairs',{}), numeric.get('conversions',{})
     int_float_stores = {store for pair in int_float_loads.values() for store in pair}
+    int_float_last_use = {store:max(load for load,pair in int_float_loads.items() if store in pair) for store in int_float_stores}
     int_float_values = {}
     conv_slots: Dict[int, Tuple[str, Optional[str]]] = {}  # stack slot -> int/float conversion in progress
 
@@ -769,6 +856,8 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
 
     def read_later(idx: int, r: str) -> bool:
         """Is r read after instruction idx before being written again (a call reads r3..r10)?"""
+        if live_after is not None and 0 <= idx < len(live_after):
+            return r in live_after[idx]
         for j in range(idx + 1, len(ins)):
             mn_, a_ = ins[j]
             if reads(j, r):
@@ -833,6 +922,58 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
             params.append(reg); ptypes[reg] = typ
             regs[reg] = f"arg{len(params) - 1}"; rtype[reg] = typ
     call_types = []
+    live_after = None
+    edges = instruction_edges(ins, labels)
+    for index, (mn_, _) in enumerate(ins):
+        if mn_ == 'bctr':
+            edges[index] = sorted({j for j in labels.values() if j < len(ins)})
+    read_sets, write_sets = [], []
+    volatile = {f'r{n}' for n in (0, *range(3, 13))} | {f'f{n}' for n in range(14)}
+    for mn_, args_ in ins:
+        if mn_ in ('bl', 'bctrl', 'blrl'):
+            sig = signature_index.get(module, args_[0], signature_source) if mn_ == 'bl' and args_ else None
+            slots = signature_index.registers(sig) if sig else None
+            call_reads = {reg for reg, _ in slots} if slots is not None else {f'r{n}' for n in range(3, 11)} | {f'f{n}' for n in range(1, 9)}
+            helper = mn_ == 'bl' and args_ and re.fullmatch(r'_(save|rest)(gpr|fpr)_\d+', args_[0])
+            read_sets.append(set() if helper else call_reads)
+            write_sets.append(set() if helper else volatile)
+        else:
+            writes_ = {args_[0]} if args_ and re.fullmatch(r'[rf]\d+', args_[0]) and not mn_.startswith(('st', 'cmp', 'fcmp', 'b', 'mt')) else set()
+            reads_ = set(re.findall(r'\b[rf]\d+\b', ','.join(args_[1:] if writes_ else args_)))
+            if mn_ == 'blr':
+                reads_ |= {'r3', 'f1'}
+            if mn_.rstrip('.') in ('xor', 'subf') and len(args_) == 3 and args_[1] == args_[2]:
+                reads_.clear()
+            if mn_ == 'rlwimi' and args_:
+                reads_.add(args_[0])
+            read_sets.append(reads_); write_sets.append(writes_)
+    live = [set() for _ in ins]
+    changed = True
+    while changed:
+        changed = False
+        for index in reversed(range(len(ins))):
+            value = read_sets[index] | (set().union(*(live[n] for n in edges[index])) - write_sets[index])
+            if value != live[index]:
+                live[index] = value; changed = True
+    live_after = [set().union(*(live[n] for n in successors)) for successors in edges]
+    bias_only_loads = set()
+    for index,(mn_,args_) in enumerate(ins):
+        if mn_ != 'lfd' or not args_:
+            continue
+        reg=args_[0];pending=list(edges[index]);visited=set();used=False;valid=True
+        while pending:
+            at=pending.pop()
+            if at in visited:
+                continue
+            visited.add(at)
+            if reg in read_sets[at]:
+                if at not in conversions or ins[at][1][2] != reg:
+                    valid=False;break
+                used=True
+            if reg not in write_sets[at]:
+                pending.extend(edges[at])
+        if valid and used:
+            bias_only_loads.add(index)
 
     def typed_access(base, offset, access):
         typ = rtype.get(base, "")
@@ -1198,6 +1339,39 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
 
     carried_until: Dict[str, int] = {}
 
+    def preserve_aliases(owner, local, at):
+        # A copied register is a value snapshot, even when its C expression is
+        # just the other register's local. Never let a later assignment change it.
+        for reg, expression in list(regs.items()):
+            if (reg != owner and expression and re.search(rf'\b{re.escape(local)}\b', expression)
+                    and read_later(at, reg)):
+                temp = f'v{len(temps)}'
+                if expression.startswith(('__I2D__','__XORIS__','__FCTIWZ__')):
+                    typ = next(d.rsplit(' ',1)[0] for d in temps if d.endswith(' '+local+';'))
+                    temps.append(f'{typ} {temp};'); stmts.append(f'{temp} = {local};')
+                    regs[reg] = re.sub(rf'\b{re.escape(local)}\b',temp,expression)
+                    continue
+                temps.append(f"{rtype.get(reg, 'u32')} {temp};")
+                stmts.append(f'{temp} = {expression};')
+                regs[reg] = temp
+        for store, expression in list(int_float_values.items()):
+            if int_float_last_use[store] > at and re.search(rf'\b{re.escape(local)}\b',expression):
+                typ = next(d.rsplit(' ',1)[0] for d in temps if d.endswith(' '+local+';'))
+                temp=f'v{len(temps)}';temps.append(f'{typ} {temp};');stmts.append(f'{temp} = {local};')
+                int_float_values[store] = re.sub(rf'\b{re.escape(local)}\b',temp,expression)
+
+    def preserve_loop_constants(written, at):
+        for reg in sorted(written):
+            if reg in carried:
+                local = carried[reg]
+                # Freeze outside the loop, before its condition is emitted.
+                for other, expression in list(regs.items()):
+                    if (other not in written and expression and re.search(rf'\b{re.escape(local)}\b', expression)
+                            and read_later(at, other)):
+                        temp = f'v{len(temps)}'
+                        temps.append(f"{rtype.get(other, 'u32')} {temp};")
+                        stmts.append(f'{temp} = {expression};'); regs[other] = temp
+
     def promote_written(i0: int, region_end: int) -> None:
         """Every register the region (i0, region_end) writes and code after it may read is a
         local: its writes become statements inside the branches, reads after use the local."""
@@ -1259,6 +1433,7 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
             stmts.append(f"{tn} = {init};")
             regs[r_] = tn; carried[r_] = tn
             carried_until[r_] = max(carried_until.get(r_, 0), k_ + 1)
+        preserve_loop_constants(written_in, b_ - 1)
     for i, (mn, a) in enumerate(ins):
         n_open, n_stmts = len(open_ifs), len(stmts)
         try:
@@ -1292,6 +1467,8 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                     e_ = regs.get(r_)
                     if e_.startswith(("__I2D__", "__XORIS__", "__FCTIWZ__")):
                         continue  # Publish the converted value, not the compiler's scratch encoding.
+                    if def_idx.get(r_) in bias_only_loads:
+                        continue  # The bias is part of a conversion, not a C scalar lifetime.
                     typ = rtype.get(r_, 'u32')
                     declared = next((d.rsplit(' ', 1)[0] for d in temps if d.endswith(' ' + tn + ';')), typ)
                     if (r_.startswith('r') and signature_index.category(declared) == 'pointer'
@@ -1299,6 +1476,12 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                         temps[temps.index(f'{declared} {tn};')] = f'u32 {tn};'
                         carried_words.add(tn)
                     if r_.startswith('f'):
+                        if typ in ('f64', 'double') and declared in ('f32', 'float'):
+                            temps[temps.index(f'{declared} {tn};')] = f'f64 {tn};'
+                            for si, statement in enumerate(stmts):
+                                if statement.startswith(tn + ' = '):
+                                    stmts[si] = f'{tn} = (f32)({statement[len(tn) + 3:-1]});'
+                            declared = 'f64'
                         if (typ == VECTOR) != (declared == VECTOR):
                             # Never assign an eight-byte vector into the scalar
                             # local chosen before this register was repurposed.
@@ -1315,10 +1498,9 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                         e_ = f"(u32){e_}"  # a register reused for an address: the local is an integer
                     # another register still holds an expression over the old value: that value
                     # is a temporary of its own before the local changes
-                    for r2, e2 in list(regs.items()):
-                        if r2 != r_ and e2 and e2 != tn and re.search(rf"\b{re.escape(tn)}\b", e2) and read_later(i - 1, r2):
-                            t2 = f"v{len(temps)}"; temps.append(f"{rtype.get(r2, 'u32')} {t2};")
-                            stmts.append(f"{t2} = {e2};"); regs[r2] = t2
+                    preserve_aliases(r_, tn, i - 1)
+                    if typ in ('f32', 'float') and declared in ('f64', 'double'):
+                        e_ = f'(f32)({e_})'
                     stmts.append(f"{tn} = {e_};"); regs[r_] = tn
             # a register an if-region carried is its own again after the region: a later reuse
             # of the register is not an assignment to the local (the region's last write was
@@ -1510,6 +1692,7 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                     stmts.append(f"{tn} = {init};")
                     regs[r_] = tn; carried[r_] = tn
                     carried_until[r_] = max(carried_until.get(r_, 0), k_ + 1)
+                preserve_loop_constants(written_in, i)
                 # the test, evaluated on the pre-loop state, gives the condition
                 saved_regs, saved_rtype, saved_len = dict(regs), dict(rtype), len(stmts)
                 cond_expr = None
@@ -2182,16 +2365,33 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                 op = {"fmuls": "*", "fadds": "+", "fsubs": "-", "fdivs": "/", "fmul": "*", "fadd": "+", "fsub": "-", "fdiv": "/"}[mn]
                 t = "f32" if mn.endswith("s") else "f64"
                 m_ = re.fullmatch(r"__I2D__\((.+), (signed|unsigned)\)", regs.get(a[1], ""))
-                if m_ and op == "-":
+                if m_ and op == "-" and i in conversions:
                     cast = "(s32)" if m_.group(2) == "signed" else "(u32)"
                     regs[a[0]] = f"({t}){cast}{m_.group(1)}"; rtype[a[0]] = t
                     written_since_call.discard(a[2])  # not an argument; later conversions may reuse the bias
                     continue
-                regs[a[0]] = f"({use(a[1])} {op} {use(a[2])})"; rtype[a[0]] = t; continue
-            if mn in ("fmadds", "fmadd"):
-                regs[a[0]] = f"(({use(a[1])} * {use(a[2])}) + {use(a[3])})"; rtype[a[0]] = "f32" if mn.endswith("s") else "f64"; continue
-            if mn in ("fmsubs", "fmsub"):
-                regs[a[0]] = f"(({use(a[1])} * {use(a[2])}) - {use(a[3])})"; rtype[a[0]] = "f32" if mn.endswith("s") else "f64"; continue
+                if m_:
+                    raise Give('integer conversion has no proven retail bias subtraction')
+                left, right = use(a[1]), use(a[2])
+                if t == 'f64':
+                    left, right = f'(f64)({left})', f'(f64)({right})'
+                regs[a[0]] = f"({t})({left} {op} {right})"; rtype[a[0]] = t; continue
+            if mn in ('fmadd','fmadds','fmsub','fmsubs','fnmsub','fnmsubs','fnmadd','fnmadds'):
+                t = 'f32' if mn.endswith('s') else 'f64'
+                left,right,addend = (use(reg) for reg in a[1:])
+                if t == 'f64':
+                    left,right,addend = (f'(f64)({value})' for value in (left,right,addend))
+                product = f'({left} * {right})'
+                expression = (f'{addend} - {product}' if mn.startswith('fnmsub') else
+                              f'-({product} + {addend})' if mn.startswith('fnmadd') else
+                              f'{product} - {addend}' if mn.startswith('fmsub') else f'{product} + {addend}')
+                regs[a[0]] = f'({t})({expression})'
+                rtype[a[0]] = t; continue
+            if mn in ('fabs', 'fnabs', 'frsqrte'):
+                intrinsic = '__frsqrte' if mn == 'frsqrte' else '__fabs'
+                externs[intrinsic] = f'extern f64 {intrinsic}(f64);'
+                regs[a[0]] = ('-' if mn == 'fnabs' else '') + f'{intrinsic}({use(a[1])})'
+                rtype[a[0]] = 'f64'; continue
             if mn == "fmr":
                 # Scalar fmr does not establish the paired upper lane.
                 regs[a[0]] = use(a[1]); rtype[a[0]] = "f32" if rtype.get(a[1]) == VECTOR else rtype.get(a[1], "f32"); continue

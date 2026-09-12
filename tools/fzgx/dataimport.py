@@ -164,6 +164,33 @@ def number(raw, kind):
     return str(value) + ('LL' if len(raw) == 8 else '')
 
 
+def record_initializer(data, fields, layouts, sizes):
+    """Decode recovered record fields without inventing values for padding/pointers."""
+    from .signatures import record_tag
+    covered = bytearray(len(data)); values = []
+    for name, typ, offset, width, dims in fields:
+        typ = re.sub(r'\b(?:const|volatile)\b', '', typ).strip()
+        count = math.prod(dims) if dims else 1
+        end = offset + width * count
+        if count <= 0 or end > len(data) or any(covered[offset:end]):
+            raise ValueError('overlapping, flexible, or out-of-bounds record field')
+        covered[offset:end] = b'\1' * (end - offset)
+        def element(raw):
+            if typ in BASIC and BASIC[typ][0] == width:
+                return number(raw, typ)
+            tag = record_tag(typ)
+            if '*' not in typ and tag in layouts and sizes[tag][0] == width:
+                return record_initializer(raw, layouts[tag], layouts, sizes)
+            raise ValueError('record field needs a recovered scalar or record type')
+        items = [element(data[i:i+width]) for i in range(offset, end, width)]
+        for length in reversed(dims):
+            items = ['{' + ', '.join(items[i:i+length]) + '}' for i in range(0, len(items), length)]
+        values.append(items[0])
+    if any(value and not covered[i] for i, value in enumerate(data)):
+        raise ValueError('nonzero record padding needs an explicit recovered field')
+    return '{\n    ' + ',\n    '.join(values) + '\n}'
+
+
 def string_grid(data, spec):
     """A measured layout recipe; every cell must prove terminator and padding."""
     fields, values, offset = [], [], 0
