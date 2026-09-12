@@ -6209,3 +6209,36 @@ rel/main_rel/phys/fn_1_E4A38.c:
 
 rel/main_rel/bg_win/fn_1_15C0AC.c:
 	.text       start:0x0015C0AC end:0x0015C35C align:4
+
+rel/main_rel/stcoli/fn_1_24F10.c:
+	.text       start:0x00024F10 end:0x00025004 align:4
+
+rel/main_rel/stcoli/fn_1_2A41C.c:
+	.text       start:0x0002A41C end:0x0002A500 align:4
+
+rel/main_rel/effect/fn_1_59B00.c:
+	.text       start:0x00059B00 end:0x00059B90 align:4
+
+rel/main_rel/effect/fn_1_5B6F4.c:
+	.text       start:0x0005B6F4 end:0x0005B780 align:4
+
+rel/main_rel/effect/fn_1_5BF70.c:
+	.text       start:0x0005BF70 end:0x0005BFF0 align:4
+
+rel/main_rel/effect/fn_1_60734.c:
+	.text       start:0x00060734 end:0x00060880 align:4
+
+rel/main_rel/effect/fn_1_61D08.c:
+	.text       start:0x00061D08 end:0x00061E60 align:4
+
+rel/main_rel/effect/fn_1_66254.c:
+	.text       start:0x00066254 end:0x000662D4 align:4
+
+rel/main_rel/effect_car/fn_1_6F288.c:
+	.text       start:0x0006F288 end:0x0006F404 align:4
+
+rel/main_rel/car/fn_1_87238.c:
+	.text       start:0x00087238 end:0x00087448 align:4
+
+rel/main_rel/memcard/fn_1_BF600.c:
+	.text       start:0x000BF600 end:0x000BF700 align:4

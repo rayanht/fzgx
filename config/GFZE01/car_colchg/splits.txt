@@ -92,3 +92,6 @@ rel/car_colchg/car_colchg/fn_9_5D8.c:
 
 rel/car_colchg/_prolog/_prolog.c:
 	.text       start:0x00000000 end:0x00000298 align:4
+
+rel/car_colchg/car_colchg/colchg_chgcol_disp.c:
+	.text       start:0x00001890 end:0x00001A20 align:4

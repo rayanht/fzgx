@@ -577,6 +577,87 @@ void fn_9_1124(void)
 }
 /* fzgx:end fn_9_1124 */
 
+/* fzgx:begin colchg_chgcol_disp */
+extern u8 lbl_9_data_178[20];
+extern u8 lbl_9_bss_14[200];
+extern u8 lbl_1_rodata_26F8[88];
+extern void fn_9_120C(void);
+extern void fn_9_1310(void);
+
+void fn_1_496FC(void *, f32, f32);
+void fn_1_4AE0C(const char *, ...);
+void fn_1_8D3F8(void *, void *, void (*)(void), void *);
+
+typedef struct {
+    u8 pad_0[0x8];
+    f32 value_8;
+    f32 value_c;
+    u8 pad_10[0x48];
+} ChgColDispData;
+
+#pragma opt_lifetimes off
+#pragma section code_type ".fzgxpool"
+__declspec(section ".fzgxpool") static void fzgx_pool_prime1(void) {
+    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */
+    s = 0.0f;
+    s = 0.25f;
+}
+static const u32 fzgx_pool_table2[3] = {0x00000000, 0x00000000, 0x00000000};  /* fzgx-allow: A1 retail pool bytes */
+__declspec(section ".fzgxpool") static void fzgx_pool_keep2(void) { const u32 *volatile cp; cp = fzgx_pool_table2; }  /* fzgx-allow: S2 pool primer sink */
+__declspec(section ".fzgxpool") static void fzgx_pool_prime3(void) {
+    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */
+    s = 160.0f;
+    s = 50.0f;
+    s = -10.0f;
+    s = 182.04444885253906f;
+    s = 2.0f;
+    s = 1.0f;
+}
+static const u32 fzgx_pool_table4[1] = {0x00000000};  /* fzgx-allow: A1 retail pool bytes */
+__declspec(section ".fzgxpool") static void fzgx_pool_keep4(void) { const u32 *volatile cp; cp = fzgx_pool_table4; }  /* fzgx-allow: S2 pool primer sink */
+__declspec(section ".fzgxpool") static void fzgx_pool_prime5(void) {
+    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */
+    d = 4503599627370496.0;
+    s = 250.0f;
+    s = 255.0f;
+    s = 0.5f;
+    s = 480.0f;
+    d = 4503601774854144.0;
+}
+#pragma section code_type ".text"
+void colchg_chgcol_disp(void *car) {
+    ChgColDispData data;
+    u8 *entry;
+    f32 value_a;
+    f32 value_b;
+    f32 value_c;
+    s16 i;
+
+    i = lbl_9_bss_8->unk_0;
+    fn_1_496FC(lbl_9_bss_8, 160.0f, 50.0f);
+    fn_1_4AE0C((const char *)lbl_9_data_178);
+    value_a = 255.0f;
+    value_b = 0.5f;
+    value_c = 480.0f;
+    entry = ((i * 0x440) + ((u8 *)car));
+    i = 0;
+    for (; i < 2; i++) {
+        data = *(ChgColDispData *)lbl_1_rodata_26F8;
+        data.value_c = value_a;
+        data.value_8 = value_c * (i % 2) * value_b;
+        switch (i) {
+        case 0:
+            fn_1_8D3F8(lbl_9_bss_14 + i * 100, &data, fn_9_120C, entry);
+            break;
+        case 1:
+            fn_1_8D3F8(lbl_9_bss_14 + i * 100, &data, fn_9_1310, entry);
+            break;
+        }
+    }
+}
+#pragma opt_lifetimes reset
+/* fzgx:end colchg_chgcol_disp */
+
 /* fzgx:begin colchg_ezsel_disp */
 void colchg_ezsel_disp(void) {
     u8 buffer[0x20];

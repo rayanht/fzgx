@@ -45,6 +45,22 @@
   },
   {
     "module": "car_colchg",
+    "source": "rel/car_colchg/car_colchg/colchg_chgcol_disp.c",
+    "symbols": [
+      "colchg_chgcol_disp"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/car_colchg/car_colchg.c",
+    "pool": {
+      "...rodata.0": "lbl_9_rodata_0",
+      "@15": "lbl_9_rodata_14",
+      "@16": "lbl_9_rodata_18"
+    }
+  },
+  {
+    "module": "car_colchg",
     "source": "rel/car_colchg/car_colchg/colchg_chgcol_init.c",
     "symbols": [
       "colchg_chgcol_init"
@@ -2309,6 +2325,22 @@
     "mw_version": null,
     "extra_cflags": [],
     "tu": "rel/interview/interview.c"
+  },
+  {
+    "module": "interview",
+    "source": "rel/interview/interview/fn_17_8E68.c",
+    "symbols": [
+      "fn_17_8E68"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/interview/interview.c",
+    "pool": {
+      "...rodata.0": "lbl_17_rodata_0",
+      "@48": "lbl_17_rodata_68",
+      "@35": "lbl_17_rodata_3C"
+    }
   },
   {
     "module": "main",
@@ -30586,6 +30618,22 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/car/fn_1_87238.c",
+    "symbols": [
+      "fn_1_87238"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/car.c",
+    "pool": {
+      "...rodata.0": "lbl_1_rodata_3508",
+      "@16": "lbl_1_rodata_3518",
+      "@35": "lbl_1_rodata_3530"
+    }
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/car/fn_1_875B4.c",
     "symbols": [
       "fn_1_875B4"
@@ -33273,6 +33321,22 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/effect/fn_1_59B00.c",
+    "symbols": [
+      "fn_1_59B00"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/effect.c",
+    "pool": {
+      "...rodata.0": "lbl_1_rodata_2950",
+      "@16": "lbl_1_rodata_2988",
+      "@13": "lbl_1_rodata_2978"
+    }
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/effect/fn_1_59CC4.c",
     "symbols": [
       "fn_1_59CC4"
@@ -33372,6 +33436,20 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/effect/fn_1_5B6F4.c",
+    "symbols": [
+      "fn_1_5B6F4"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/effect.c",
+    "pool": {
+      "...rodata.0": "lbl_1_rodata_2950"
+    }
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/effect/fn_1_5B780.c",
     "symbols": [
       "fn_1_5B780"
@@ -33394,6 +33472,20 @@
     "mw_version": null,
     "extra_cflags": [],
     "tu": "rel/main_rel/effect.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/effect/fn_1_5BF70.c",
+    "symbols": [
+      "fn_1_5BF70"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/effect.c",
+    "pool": {
+      "...rodata.0": "lbl_1_rodata_2950"
+    }
   },
   {
     "module": "main_rel",
@@ -33601,6 +33693,21 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/effect/fn_1_60734.c",
+    "symbols": [
+      "fn_1_60734"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/effect.c",
+    "pool": {
+      "...rodata.0": "lbl_1_rodata_2950",
+      "@5": "lbl_1_rodata_2950"
+    }
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/effect/fn_1_60C70.c",
     "symbols": [
       "fn_1_60C70"
@@ -33719,6 +33826,21 @@
     "mw_version": null,
     "extra_cflags": [],
     "tu": "rel/main_rel/effect.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/effect/fn_1_61D08.c",
+    "symbols": [
+      "fn_1_61D08"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/effect.c",
+    "pool": {
+      "...rodata.0": "lbl_1_rodata_2950",
+      "@27": "lbl_1_rodata_29A4"
+    }
   },
   {
     "module": "main_rel",
@@ -33986,6 +34108,21 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/effect/fn_1_66254.c",
+    "symbols": [
+      "fn_1_66254"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/effect.c",
+    "pool": {
+      "...rodata.0": "lbl_1_rodata_2950",
+      "@27": "lbl_1_rodata_29A4"
+    }
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/effect/fn_1_662D4.c",
     "symbols": [
       "fn_1_662D4"
@@ -34115,6 +34252,20 @@
     "mw_version": null,
     "extra_cflags": [],
     "tu": "rel/main_rel/effect_car.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/effect_car/fn_1_6F288.c",
+    "symbols": [
+      "fn_1_6F288"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/effect_car.c",
+    "pool": {
+      "...rodata.0": "lbl_1_rodata_2D70"
+    }
   },
   {
     "module": "main_rel",
@@ -40352,6 +40503,21 @@
     "tu": "rel/main_rel/memcard.c",
     "pool": {
       "@7": "lbl_1_rodata_4CB0"
+    }
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/memcard/fn_1_BF600.c",
+    "symbols": [
+      "fn_1_BF600"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/memcard.c",
+    "pool": {
+      "...rodata.0": "lbl_1_rodata_4AE0",
+      "@10": "lbl_1_rodata_4CB0"
     }
   },
   {
@@ -47503,6 +47669,22 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/stcoli/fn_1_24F10.c",
+    "symbols": [
+      "fn_1_24F10"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/stcoli.c",
+    "pool": {
+      "...rodata.0": "lbl_1_rodata_840",
+      "@13": "lbl_1_rodata_860",
+      "@8": "lbl_1_rodata_84C"
+    }
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/stcoli/fn_1_25004.c",
     "symbols": [
       "fn_1_25004"
@@ -47586,6 +47768,23 @@
     "mw_version": null,
     "extra_cflags": [],
     "tu": "rel/main_rel/stcoli.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/stcoli/fn_1_2A41C.c",
+    "symbols": [
+      "fn_1_2A41C"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/stcoli.c",
+    "pool": {
+      "...rodata.0": "lbl_1_rodata_840",
+      "@10": "lbl_1_rodata_854",
+      "@13": "lbl_1_rodata_860",
+      "@12": "lbl_1_rodata_85C"
+    }
   },
   {
     "module": "main_rel",
