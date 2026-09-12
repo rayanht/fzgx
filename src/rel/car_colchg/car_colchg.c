@@ -1,5 +1,7 @@
 #include "types.h"
 #include "rel/car_colchg/globals.h"
+#include "rel/car_colchg/car_colchg.h"
+
 
 extern void colchg_menu_disp(void);
 void fn_1_426C(s16);
@@ -178,13 +180,15 @@ void colchg_selcar_init(void) {
 }
 /* fzgx:end colchg_selcar_init */
 
-/* fzgx:begin fn_9_5D8 noprologue */
+/* fzgx:begin fn_9_5D8 */
 #include "types.h"
 #include "rel/car_colchg/globals.h"
 
-extern struct Struct_lbl_1_bss_D58 lbl_1_bss_D58;
-extern s16 lbl_1_bss_96A;
-extern s16 *lbl_1_data_1FB6C[];
+
+
+
+
+
 s32 fn_1_4C10(void);
 
 struct ColchgState {
@@ -213,7 +217,7 @@ void fn_9_5D8(void) {
     if (fn_1_4C10() == 0) {
         state = (struct ColchgState *)&lbl_1_bss_D58;
         if ((state->flags_8 >> 9) & 1) {
-            lbl_1_bss_96A = 0x72;
+            (*(s16 *)&lbl_1_bss_96A) = 0x72;
         }
         delta = 0;
         if ((((struct ColchgVolFlags *)&lbl_1_bss_D58)->flags_10 & 1) ||
@@ -230,9 +234,9 @@ void fn_9_5D8(void) {
             *selection = value > 40 ? 0 : value < 0 ? 40 : value;
         }
         selection = &lbl_9_bss_8->unk_0;
-        entry = lbl_1_data_1FB6C[*selection];
+        entry = (*(s16 * (*)[])&lbl_1_data_1FB6C)[*selection];
         if (((state->flags_8 >> 8) & 1) && *entry != -1) {
-            lbl_1_bss_96A = 0x76;
+            (*(s16 *)&lbl_1_bss_96A) = 0x76;
         }
     }
 }
@@ -413,7 +417,7 @@ void colchg_ezsel_init(void) {
 }
 /* fzgx:end colchg_ezsel_init */
 
-/* fzgx:begin fn_9_E4C noprologue */
+/* fzgx:begin fn_9_E4C */
 #include "types.h"
 #include "rel/car_colchg/globals.h"
 
@@ -425,8 +429,9 @@ struct ColchgState {
     volatile u16 input_b; // Input state may be updated between reads.
 };
 
-extern struct ColchgState lbl_1_bss_D58;
-extern u16 lbl_1_bss_96A;
+
+
+
 s32 fn_1_4C10(void);
 
 void fn_9_E4C(void) {
@@ -434,16 +439,16 @@ void fn_9_E4C(void) {
     s8 change;
 
     if (fn_1_4C10() == 0) {
-        state = &lbl_1_bss_D58;
+        state = &(*(struct ColchgState *)&lbl_1_bss_D58);
         if ((state->flags >> 9) & 1) {
             lbl_1_bss_96A = 0x72;
         }
         change = 0;
-        if ((lbl_1_bss_D58.input_a & 1) || (lbl_1_bss_D58.input_b & 1)) {
+        if (((*(struct ColchgState *)&lbl_1_bss_D58).input_a & 1) || ((*(struct ColchgState *)&lbl_1_bss_D58).input_b & 1)) {
             change = -1;
         }
-        if (((lbl_1_bss_D58.input_a >> 1) & 1) ||
-            ((lbl_1_bss_D58.input_b >> 1) & 1)) {
+        if ((((*(struct ColchgState *)&lbl_1_bss_D58).input_a >> 1) & 1) ||
+            (((*(struct ColchgState *)&lbl_1_bss_D58).input_b >> 1) & 1)) {
             change++;
         }
         if (change != 0) {
