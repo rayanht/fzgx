@@ -2204,5 +2204,371 @@
     ],
     "link": "verified",
     "commit": "c19385d"
+  },
+  "fn_1_C268": {
+    "seed_symbol": "fn_1_C268",
+    "generator": "fzgx fixup",
+    "transform": "recover native shared-pool literals with opt_strength_reduction off",
+    "seed": "#include \"types.h\"\n#include \"rel/main_rel/camera.h\"\n\nextern f64 lbl_1_rodata_4A8[7];\nextern void OSReport(const char *format, ...);\n\n#pragma opt_common_subs off\nvoid fn_1_C268(s32 arg) {\n    if (lbl_1_rodata_4A8[0] == lbl_1_bss_10D8.unk_1C) {\n        OSReport((char *)lbl_1_data_4144, lbl_1_bss_10D8.unk_4,\n                 lbl_1_bss_10D8.unk_8, lbl_1_bss_10D8.unk_C,\n                 lbl_1_bss_10D8.unk_28, lbl_1_bss_10D8.unk_2C,\n                 lbl_1_bss_10D8.unk_30, lbl_1_bss_10D8.unk_20, arg,\n                 lbl_1_bss_10D8.unk_1C);\n    } else {\n        OSReport((char *)lbl_1_data_4198, lbl_1_bss_10D8.unk_4,\n                 lbl_1_bss_10D8.unk_8, lbl_1_bss_10D8.unk_C,\n                 lbl_1_bss_10D8.unk_28, lbl_1_bss_10D8.unk_2C,\n                 lbl_1_bss_10D8.unk_30, lbl_1_bss_10D8.unk_20, arg,\n                 lbl_1_bss_10D8.unk_1C);\n    }\n}\n#pragma opt_common_subs reset\n\n",
+    "seed_sha256": "5f31c3e2230269dc89b1efd35f53eb35ec5982412b0ce85f7864e954af012fb2",
+    "generated_sha256": "db0ea50b7ba898b1e22107767ae93c40d664331b5f69b918d7c2ca50f6106b41",
+    "generated_source": "#include \"types.h\"\n#include \"rel/main_rel/camera.h\"\n\nextern f64 lbl_1_rodata_4A8[7];\nextern void OSReport(const char *format, ...);\n\n#pragma opt_common_subs off\n#pragma opt_strength_reduction off\nvoid fn_1_C268(s32 arg) {\n    if ((55.0) == lbl_1_bss_10D8.unk_1C) {\n        OSReport((char *)lbl_1_data_4144, lbl_1_bss_10D8.unk_4,\n                 lbl_1_bss_10D8.unk_8, lbl_1_bss_10D8.unk_C,\n                 lbl_1_bss_10D8.unk_28, lbl_1_bss_10D8.unk_2C,\n                 lbl_1_bss_10D8.unk_30, lbl_1_bss_10D8.unk_20, arg,\n                 lbl_1_bss_10D8.unk_1C);\n    } else {\n        OSReport((char *)lbl_1_data_4198, lbl_1_bss_10D8.unk_4,\n                 lbl_1_bss_10D8.unk_8, lbl_1_bss_10D8.unk_C,\n                 lbl_1_bss_10D8.unk_28, lbl_1_bss_10D8.unk_2C,\n                 lbl_1_bss_10D8.unk_30, lbl_1_bss_10D8.unk_20, arg,\n                 lbl_1_bss_10D8.unk_1C);\n    }\n}\n#pragma opt_strength_reduction reset\n\n#pragma opt_common_subs reset\n\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "rel/main_rel/camera/fn_1_C268.c",
+    "bytes": 156,
+    "headers_sha256": "59c58c5597445adedf1e8aff6a5c4d27df0fb511858d9e103a06abc8190def99",
+    "oracle_sha256": "44c39531032971919278ad67b577baf0d79d7f454c70fc3b315f57db86e04db0",
+    "recipe": [
+      {
+        "label": "recover native shared-pool literals with opt_strength_reduction off",
+        "input_sha256": "5f31c3e2230269dc89b1efd35f53eb35ec5982412b0ce85f7864e954af012fb2",
+        "output_sha256": "db0ea50b7ba898b1e22107767ae93c40d664331b5f69b918d7c2ca50f6106b41"
+      }
+    ],
+    "link": "verified",
+    "commit": "063357c"
+  },
+  "fn_8003E9EC": {
+    "seed_symbol": "fn_8003E9EC",
+    "generator": "fzgx fixup",
+    "transform": "lifetime store address at 1384",
+    "seed": "#include \"types.h\"\n\nstruct fn_8003E9EC_lbl_8012B658 {\n    u8 pad_0[0xC];\n    f32 unk_C;\n    u8 pad_10[0x8];\n    f32 unk_18;\n    u8 pad_1C[0x4];\n    f32 unk_20;\n    u8 pad_24[0x4];\n    f32 unk_28;\n    f32 unk_2C;\n    u8 pad_30[0x4];\n    f32 unk_34;\n    f32 unk_38;\n    f32 unk_3C;\n    u8 pad_40[0xC];\n    f32 unk_4C;\n    u8 pad_50[0xC];\n    f32 unk_5C;\n    u8 pad_60[0x24];\n    f32 unk_84;\n    u8 pad_88[0x4];\n    f32 unk_8C;\n};\n\nextern f32 lbl_801A6C64;\nextern const f32 lbl_801A71C8;\nextern const f64 lbl_801A71D0;\nextern struct fn_8003E9EC_lbl_8012B658 lbl_8012B658;\nextern void fn_80015B24(void *);\nextern u8 lbl_80178C18[144];\nextern u32 lbl_801A6C54;\nextern u32 lbl_801A6C60;\nextern u32 lbl_801A6C68;\nextern u32 lbl_801A6C74;\n/* fzgx-allow: A1 SDK absolute-addressed OS clock globals */\nu32 __OSBusClock : (0x80000000 + 0xF8);\nu32 __OSCoreClock : (0x80000000 + 0xFC);\n\nvoid fn_8003E9EC(u32 arg0) {\n    f32 v;\n    f32 w;\n    struct fn_8003E9EC_lbl_8012B658 *p;\n    u32 counter;\n\n    p = (struct fn_8003E9EC_lbl_8012B658 *)&lbl_8012B658;\n    fn_80015B24(&lbl_80178C18);\n    counter = lbl_801A6C54;\n    lbl_801A6C74 = arg0;\n    lbl_801A6C60 = __OSCoreClock / 60 * 3;\n    lbl_801A6C64 = (f32)(u32)((counter + 1) * 7);\n    lbl_801A6C68 = __OSBusClock / 120;\n    v = lbl_801A6C64;\n    p->unk_5C = v;\n    p->unk_4C = v;\n    p->unk_3C = v;\n    p->unk_34 = v;\n    p->unk_2C = v;\n    p->unk_C = v;\n    w = lbl_801A71C8;\n    p->unk_38 = w;\n    p->unk_28 = w;\n    p->unk_20 = w;\n    p->unk_18 = w;\n    p->unk_84 = (f32)(u32)((counter + 2) * 19);\n    p->unk_8C = p->unk_84;\n}\n",
+    "seed_sha256": "dc7b044613ac93d08c47ac190b771753ddadd640f3962a38604423e8e767f9b9",
+    "generated_sha256": "4a855fba8f30b6c5ca73af0608cce15127c7ad5f0adbda245b66f2e3c840f95f",
+    "generated_source": "#include \"types.h\"\n\nstruct fn_8003E9EC_lbl_8012B658 {\n    u8 pad_0[0xC];\n    f32 unk_C;\n    u8 pad_10[0x8];\n    f32 unk_18;\n    u8 pad_1C[0x4];\n    f32 unk_20;\n    u8 pad_24[0x4];\n    f32 unk_28;\n    f32 unk_2C;\n    u8 pad_30[0x4];\n    f32 unk_34;\n    f32 unk_38;\n    f32 unk_3C;\n    u8 pad_40[0xC];\n    f32 unk_4C;\n    u8 pad_50[0xC];\n    f32 unk_5C;\n    u8 pad_60[0x24];\n    f32 unk_84;\n    u8 pad_88[0x4];\n    f32 unk_8C;\n};\n\nextern f32 lbl_801A6C64;\nextern const f32 lbl_801A71C8;\nextern const f64 lbl_801A71D0;\nextern struct fn_8003E9EC_lbl_8012B658 lbl_8012B658;\nextern void fn_80015B24(void *);\nextern u8 lbl_80178C18[144];\nextern u32 lbl_801A6C54;\nextern u32 lbl_801A6C60;\nextern u32 lbl_801A6C68;\nextern u32 lbl_801A6C74;\n/* fzgx-allow: A1 SDK absolute-addressed OS clock globals */\nu32 __OSBusClock : (0x80000000 + 0xF8);\nu32 __OSCoreClock : (0x80000000 + 0xFC);\n\n#pragma opt_propagation off\nvoid fn_8003E9EC(u32 arg0) {\n    f32 *fzgx_value;\n    f32 v;\n    f32 w;\n    struct fn_8003E9EC_lbl_8012B658 *p;\n    u32 counter;\n\n    p = (struct fn_8003E9EC_lbl_8012B658 *)&lbl_8012B658;\n    fn_80015B24(&lbl_80178C18);\n    counter = lbl_801A6C54;\n    lbl_801A6C74 = arg0;\n    lbl_801A6C60 = __OSCoreClock / 60 * 3;\n    lbl_801A6C64 = (f32)(u32)((counter + 1) * 7);\n    lbl_801A6C68 = __OSBusClock / 120;\n    v = lbl_801A6C64;\n    p->unk_5C = v;\n    p->unk_4C = v;\n    p->unk_3C = v;\n    p->unk_34 = v;\n    fzgx_value = &(p->unk_2C);\n    *fzgx_value = v;\n    p->unk_C = v;\n    w = (616.0f);\n    p->unk_38 = (616.0f);\n    p->unk_28 = (616.0f);\n    p->unk_20 = (616.0f);\n    p->unk_18 = (616.0f);\n    p->unk_84 = (f32)(u32)((counter + 2) * 19);\n    p->unk_8C = p->unk_84;\n}\n#pragma opt_propagation reset\n\n",
+    "compiler": "GC/1.2.5n",
+    "flags": "",
+    "source": "dol/fn_8003E9EC.c",
+    "bytes": 248,
+    "headers_sha256": "59c58c5597445adedf1e8aff6a5c4d27df0fb511858d9e103a06abc8190def99",
+    "oracle_sha256": "44c39531032971919278ad67b577baf0d79d7f454c70fc3b315f57db86e04db0",
+    "recipe": [
+      {
+        "label": "recover native shared-pool literals with opt_propagation off",
+        "input_sha256": "dc7b044613ac93d08c47ac190b771753ddadd640f3962a38604423e8e767f9b9",
+        "output_sha256": "5173232c21e23a113682d2553bb121656c9a985de8a0dd0ef6fb6f62474a6ab4"
+      },
+      {
+        "label": "lifetime store address at 1384",
+        "input_sha256": "5173232c21e23a113682d2553bb121656c9a985de8a0dd0ef6fb6f62474a6ab4",
+        "output_sha256": "4a855fba8f30b6c5ca73af0608cce15127c7ad5f0adbda245b66f2e3c840f95f"
+      }
+    ],
+    "link": "verified",
+    "commit": "063357c"
+  },
+  "option:_prolog": {
+    "seed_symbol": "option:_prolog",
+    "generator": "fzgx fixup",
+    "transform": "retail argument order: hoist arg 0 of fn_1_45D0 at every site with opt_propagation off",
+    "seed": "#include \"types.h\"\nstruct _prolog_lbl_4_bss_0 {\n    u8 pad_0[0x4];\n    u32 unk_4;\n    u32 unk_8;\n    u8 unk_C;\n    u8 unk_D;\n    u8 unk_E;\n};\nstruct _prolog_data {\n    u8 pad_0[0x1250];\n};\nstruct _prolog_lbl_801A6410 {\n    u32 unk_0;\n};\nstruct _prolog_lbl_1_bss_970 {\n    u32 unk_0;\n    u8 unk_4;\n};\nstruct _prolog_lbl_1_bss_71684 {\n    u32 unk_0;\n};\nstruct _prolog_lbl_1_bss_6EAD0 {\n    u32 unk_0;\n};\nextern struct _prolog_lbl_1_bss_6EAD0 lbl_1_bss_6EAD0;\nextern struct _prolog_lbl_1_bss_71684 lbl_1_bss_71684;\nextern struct _prolog_lbl_1_bss_970 lbl_1_bss_970;\nextern struct _prolog_lbl_4_bss_0 lbl_4_bss_0;\nextern struct _prolog_lbl_801A6410 lbl_801A6410;\nextern u16 lbl_1_bss_96A;\nextern u32 lbl_1_bss_7167C;\nextern u32 lbl_1_bss_71680;\nextern u8 lbl_4_data_0[];\nextern s32 fn_1_45D0(u32, u32, u32, u32);\nextern u32 fn_1_3CF0(u32, u32);\nextern u32 fn_1_435C(u32);\nextern s32 fn_1_3F8C(u32, u32, u32, u32);\nextern void fn_1_411A4(u32);\nextern u32 fn_1_479F0(s16);\nextern void fn_1_48418(int);\nextern void fn_1_159440(int, int);\nextern u32 fn_8004CD70(u32, u32, u32);\n\ns32 fn_1_A176C(u32, s32);                   /* extern */\nextern s32 fn_1_133DBC;\nextern s32 fn_1_134AD4;\nextern s32 fn_4_250;\nextern s32 fn_4_800;\nextern s32 fn_4_894;\nextern s32 fn_4_9B0;\n\nvoid _prolog(void) {\n    struct _prolog_lbl_4_bss_0 *bss;\n    struct _prolog_data *data;\n\n    bss = &lbl_4_bss_0;\n    data = (struct _prolog_data *)lbl_4_data_0;\n\n    bss->unk_4 = fn_1_45D0(lbl_801A6410.unk_0, 0xE3CU, (u32)((u8 *)data + 0x1218), 0x320U);\n    bss->unk_8 = fn_1_45D0(lbl_801A6410.unk_0, 0xE3CU, (u32)((u8 *)data + 0x1218), 0x321U);\n    fn_1_3CF0(bss->unk_4, 0x40U);\n    fn_1_3CF0(bss->unk_8, 0x40U);\n    fn_1_435C(bss->unk_4);\n    fn_1_435C(bss->unk_8);\n    fn_1_3F8C((u32)((u8 *)data + 0x1224), (u32)(&fn_1_133DBC), 0U, 0x11U);\n    fn_1_3F8C((u32)((u8 *)data + 0x1238), (u32)(&fn_1_134AD4), 0U, 0x11U);\n    fn_1_3F8C((u32)((u8 *)data + 0x124C), (u32)(&fn_4_250), 0U, 0x11U);\n    lbl_1_bss_970.unk_0 = 0;\n    lbl_1_bss_970.unk_4 = 0;\n    bss->unk_C = 0;\n    bss->unk_D = 0;\n    lbl_1_bss_96A = 0x4B;\n    bss->unk_E = 0;\n    lbl_1_bss_7167C = (u32)(&fn_4_800);\n    lbl_1_bss_71680 = (u32)(&fn_4_894);\n    lbl_1_bss_71684.unk_0 = (u32)(&fn_4_9B0);\n    fn_1_411A4(1U);\n    fn_1_479F0(3);\n    fn_1_48418(2);\n    fn_1_159440(2, 0);\n    if ((u32) lbl_1_bss_6EAD0.unk_0 != 0) {\n        if ((u32) (*(u32 *)((u8 *)(lbl_1_bss_6EAD0.unk_0) + 0)) == 0) {\n            (*(u32 *)((u8 *)(lbl_1_bss_6EAD0.unk_0) + 0)) = fn_8004CD70(2U, lbl_1_bss_6EAD0.unk_0 + 0x10, 0x25124U);\n        }\n        if ((u32) (*(u32 *)((u8 *)(lbl_1_bss_6EAD0.unk_0) + 4)) == 0) {\n            (*(u32 *)((u8 *)(lbl_1_bss_6EAD0.unk_0) + 4)) = fn_8004CD70(2U, lbl_1_bss_6EAD0.unk_0 + 0x4A258, 0x25124U);\n        }\n        fn_1_A176C(*(u32 *)((u8 *)(lbl_1_bss_6EAD0.unk_0) + 0), 0x37);\n    }\n}\n",
+    "seed_sha256": "db83b3757ad6c790bbafb0b58721c0a0f72056e28540f9c008d5c65369f83c9d",
+    "generated_sha256": "15a08e12fad4b9d07019d16dd6bdf96b976a0d34eb951a4aed89af905a7e28df",
+    "generated_source": "#include \"types.h\"\nstruct _prolog_lbl_4_bss_0 {\n    u8 pad_0[0x4];\n    u32 unk_4;\n    u32 unk_8;\n    u8 unk_C;\n    u8 unk_D;\n    u8 unk_E;\n};\nstruct _prolog_data {\n    u8 pad_0[0x1250];\n};\nstruct _prolog_lbl_801A6410 {\n    u32 unk_0;\n};\nstruct _prolog_lbl_1_bss_970 {\n    u32 unk_0;\n    u8 unk_4;\n};\nstruct _prolog_lbl_1_bss_71684 {\n    u32 unk_0;\n};\nstruct _prolog_lbl_1_bss_6EAD0 {\n    u32 unk_0;\n};\nextern struct _prolog_lbl_1_bss_6EAD0 lbl_1_bss_6EAD0;\nextern struct _prolog_lbl_1_bss_71684 lbl_1_bss_71684;\nextern struct _prolog_lbl_1_bss_970 lbl_1_bss_970;\nextern struct _prolog_lbl_4_bss_0 lbl_4_bss_0;\nextern struct _prolog_lbl_801A6410 lbl_801A6410;\nextern u16 lbl_1_bss_96A;\nextern u32 lbl_1_bss_7167C;\nextern u32 lbl_1_bss_71680;\nextern u8 lbl_4_data_0[];\nextern s32 fn_1_45D0(u32, u32, u32, u32);\nextern u32 fn_1_3CF0(u32, u32);\nextern u32 fn_1_435C(u32);\nextern s32 fn_1_3F8C(u32, u32, u32, u32);\nextern void fn_1_411A4(u32);\nextern u32 fn_1_479F0(s16);\nextern void fn_1_48418(int);\nextern void fn_1_159440(int, int);\nextern u32 fn_8004CD70(u32, u32, u32);\n\ns32 fn_1_A176C(u32, s32);                   /* extern */\nextern s32 fn_1_133DBC;\nextern s32 fn_1_134AD4;\nextern s32 fn_4_250;\nextern s32 fn_4_800;\nextern s32 fn_4_894;\nextern s32 fn_4_9B0;\n\n#pragma opt_common_subs off\n#pragma opt_propagation off\nvoid _prolog(void) {\n    struct _prolog_lbl_4_bss_0 *bss;\n    struct _prolog_data *data;\n    u32 lab_t0;\n    u32 lab_t0_;\n\n    bss = &lbl_4_bss_0;\n    data = (struct _prolog_data *)lbl_4_data_0;\n\n    lab_t0 = lbl_801A6410.unk_0;\n    lab_t0_ = lab_t0;\n    bss->unk_4 = fn_1_45D0(lab_t0_, 0xE3CU, (u32)((u8 *)data + 0x1218), 0x320U);\n    lab_t0 = lbl_801A6410.unk_0;\n    lab_t0_ = lab_t0;\n    bss->unk_8 = fn_1_45D0(lab_t0_, 0xE3CU, (u32)((u8 *)data + 0x1218), 0x321U);\n    fn_1_3CF0(bss->unk_4, 0x40U);\n    fn_1_3CF0(bss->unk_8, 0x40U);\n    fn_1_435C(bss->unk_4);\n    fn_1_435C(bss->unk_8);\n    fn_1_3F8C((u32)((u8 *)data + 0x1224), (u32)(&fn_1_133DBC), 0U, 0x11U);\n    fn_1_3F8C((u32)((u8 *)data + 0x1238), (u32)(&fn_1_134AD4), 0U, 0x11U);\n    fn_1_3F8C((u32)((u8 *)data + 0x124C), (u32)(&fn_4_250), 0U, 0x11U);\n    lbl_1_bss_970.unk_0 = 0;\n    lbl_1_bss_970.unk_4 = 0;\n    bss->unk_C = 0;\n    bss->unk_D = 0;\n    lbl_1_bss_96A = 0x4B;\n    bss->unk_E = 0;\n    lbl_1_bss_7167C = (u32)(&fn_4_800);\n    lbl_1_bss_71680 = (u32)(&fn_4_894);\n    lbl_1_bss_71684.unk_0 = (u32)(&fn_4_9B0);\n    fn_1_411A4(1U);\n    fn_1_479F0(3);\n    fn_1_48418(2);\n    fn_1_159440(2, 0);\n    if ((u32) lbl_1_bss_6EAD0.unk_0 != 0) {\n        if ((u32) (*(u32 *)((u8 *)(lbl_1_bss_6EAD0.unk_0) + 0)) == 0) {\n            (*(u32 *)((u8 *)(lbl_1_bss_6EAD0.unk_0) + 0)) = fn_8004CD70(2U, lbl_1_bss_6EAD0.unk_0 + 0x10, 0x25124U);\n        }\n        if ((u32) (*(u32 *)((u8 *)(lbl_1_bss_6EAD0.unk_0) + 4)) == 0) {\n            (*(u32 *)((u8 *)(lbl_1_bss_6EAD0.unk_0) + 4)) = fn_8004CD70(2U, lbl_1_bss_6EAD0.unk_0 + 0x4A258, 0x25124U);\n        }\n        fn_1_A176C(*(u32 *)((u8 *)(lbl_1_bss_6EAD0.unk_0) + 0), 0x37);\n    }\n}\n#pragma opt_propagation reset\n\n#pragma opt_common_subs reset\n\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "rel/option/_prolog/_prolog.c",
+    "bytes": 520,
+    "headers_sha256": "59c58c5597445adedf1e8aff6a5c4d27df0fb511858d9e103a06abc8190def99",
+    "oracle_sha256": "44c39531032971919278ad67b577baf0d79d7f454c70fc3b315f57db86e04db0",
+    "recipe": [
+      {
+        "label": "retail argument order: hoist arg 0 of fn_1_45D0 at every site with opt_common_subs off",
+        "input_sha256": "db83b3757ad6c790bbafb0b58721c0a0f72056e28540f9c008d5c65369f83c9d",
+        "output_sha256": "6add5a01e2501afe395e277c7b0cb6f7028698ba8a779e61aaad2fdfb6d4be51"
+      },
+      {
+        "label": "retail argument order: hoist arg 0 of fn_1_45D0 at every site with opt_propagation off",
+        "input_sha256": "6add5a01e2501afe395e277c7b0cb6f7028698ba8a779e61aaad2fdfb6d4be51",
+        "output_sha256": "15a08e12fad4b9d07019d16dd6bdf96b976a0d34eb951a4aed89af905a7e28df"
+      }
+    ],
+    "link": "verified",
+    "commit": "063357c"
+  },
+  "fn_7_1134": {
+    "seed_symbol": "fn_7_1134",
+    "generator": "fzgx fixup",
+    "transform": "retail argument order: hoist arg 1 of fn_1_4A00 at every site with opt_dead_assignments off",
+    "seed": "#include \"types.h\"\n\nstruct fn_7_1134_state {\n    u8 pad_0[0x4];\n    s32 unk_4;\n    u8 pad_8[0x8];\n    s8 *unk_10;\n    u8 pad_14[0x8];\n    u32 unk_1C;\n    u8 pad_20[0x8];\n    s32 unk_28;\n    s32 unk_2C;\n    s32 unk_30;\n    u8 pad_34[0x8];\n    s32 unk_3C;\n    s32 unk_40;\n};\n\nstruct fn_7_1134_entry {\n    u8 pad_0[0x8];\n    u16 flags;\n    u8 pad_A[0xA];\n};\n\nextern u32 lbl_7_bss_0[];\nextern u16 lbl_1_bss_96A;\nextern struct fn_7_1134_entry lbl_1_bss_9F8[];\n\nextern u32 fn_7_33F0(void);\nextern int fn_1_4C10(void);\nextern u32 fn_1_4A00(u32, u32, u32);\nextern void fn_1_A2D84(u32);\n\n#pragma opt_common_subs off\nstatic inline void fn_7_1134_store(s32 *destination, s32 value) { *destination = value; }\nvoid fn_7_1134(void) {\n    struct fn_7_1134_state *p;\n    s32 sum;\n    u32 val;\n    u32 lab_t2;\n\n    p = (struct fn_7_1134_state *)&lbl_7_bss_0;\n    fn_7_33F0();\n\n    if (p->unk_2C != 0) {\n        sum = p->unk_28 + p->unk_2C;\n        p->unk_28 = sum;\n        if (sum > 200) {\n            p->unk_28 = 200;\n            p->unk_2C = 0;\n            p->unk_3C = 360;\n            p->unk_40 = -4;\n        } else if (sum < 0) {\n            fn_7_1134_store(&(p->unk_28), 0);\n            p->unk_2C = 0;\n        } else {\n            return;\n        }\n    }\n\n    if (p->unk_40 != 0) {\n        sum = p->unk_3C + p->unk_40;\n        p->unk_3C = sum;\n        if (sum < -101) {\n            p->unk_3C = -101;\n            p->unk_40 = 0;\n        }\n    }\n\n    if (fn_1_4C10() != 0) {\n        return;\n    }\n\n    if (p->unk_4 == 1) {\n        val = 0x8a;\n        if (4 == p->unk_30) {\n            val = 0x87;\n        }\n        lbl_1_bss_96A = val;\n        return;\n    } else if (p->unk_4 == 0) {\n        if (p->unk_3C == -101) {\n            if ((lbl_1_bss_9F8[(*((p->unk_10) + (2)))].flags >> 8) & 1) {\n                u32 arg = p->unk_1C;\n                p->unk_4 = 0x20;\n                p->unk_2C = -10;\n                p->unk_30 = 3;\n                lab_t2 = arg;\n                fn_1_4A00(0, 0x1e, lab_t2);\n                fn_1_A2D84(0xa9010100);\n                return;\n            }\n        }\n        if ((lbl_1_bss_9F8[(*((p->unk_10) + (2)))].flags >> 9) & 1) {\n            u32 arg = p->unk_1C;\n            p->unk_4 = 0x20;\n            p->unk_2C = -10;\n            p->unk_30 = 4;\n            fn_1_4A00(0, 0x1e, arg);\n            fn_1_A2D84(0xa9010200);\n        }\n    }\n}\n#pragma opt_common_subs reset\n\n",
+    "seed_sha256": "2c4f0ce84dd9c01d5a3321a18b6ef0c0daaab076c229c57d60cf30d55b3fc6fc",
+    "generated_sha256": "7090ee3c3750813a88fecaceecfe27d1b9eb7113de2f392c13b4629cdb6efac4",
+    "generated_source": "#include \"types.h\"\n\nstruct fn_7_1134_state {\n    u8 pad_0[0x4];\n    s32 unk_4;\n    u8 pad_8[0x8];\n    s8 *unk_10;\n    u8 pad_14[0x8];\n    u32 unk_1C;\n    u8 pad_20[0x8];\n    s32 unk_28;\n    s32 unk_2C;\n    s32 unk_30;\n    u8 pad_34[0x8];\n    s32 unk_3C;\n    s32 unk_40;\n};\n\nstruct fn_7_1134_entry {\n    u8 pad_0[0x8];\n    u16 flags;\n    u8 pad_A[0xA];\n};\n\nextern u32 lbl_7_bss_0[];\nextern u16 lbl_1_bss_96A;\nextern struct fn_7_1134_entry lbl_1_bss_9F8[];\n\nextern u32 fn_7_33F0(void);\nextern int fn_1_4C10(void);\nextern u32 fn_1_4A00(u32, u32, u32);\nextern void fn_1_A2D84(u32);\n\n#pragma opt_common_subs off\nstatic inline void fn_7_1134_store(s32 *destination, s32 value) { *destination = value; }\n#pragma opt_dead_assignments off\nvoid fn_7_1134(void) {\n    struct fn_7_1134_state *p;\n    s32 sum;\n    u32 val;\n    u32 lab_t2;\n    u32 lab_t1;\n\n    p = (struct fn_7_1134_state *)&lbl_7_bss_0;\n    fn_7_33F0();\n\n    if (p->unk_2C != 0) {\n        sum = p->unk_28 + p->unk_2C;\n        p->unk_28 = sum;\n        if (sum > 200) {\n            p->unk_28 = 200;\n            p->unk_2C = 0;\n            p->unk_3C = 360;\n            p->unk_40 = -4;\n        } else if (sum < 0) {\n            fn_7_1134_store(&(p->unk_28), 0);\n            p->unk_2C = 0;\n        } else {\n            return;\n        }\n    }\n\n    if (p->unk_40 != 0) {\n        sum = p->unk_3C + p->unk_40;\n        p->unk_3C = sum;\n        if (sum < -101) {\n            p->unk_3C = -101;\n            p->unk_40 = 0;\n        }\n    }\n\n    if (fn_1_4C10() != 0) {\n        return;\n    }\n\n    if (p->unk_4 == 1) {\n        val = 0x8a;\n        if (4 == p->unk_30) {\n            val = 0x87;\n        }\n        lbl_1_bss_96A = val;\n        return;\n    } else if (p->unk_4 == 0) {\n        if (p->unk_3C == -101) {\n            if ((lbl_1_bss_9F8[(*((p->unk_10) + (2)))].flags >> 8) & 1) {\n                u32 arg = p->unk_1C;\n                p->unk_4 = 0x20;\n                p->unk_2C = -10;\n                p->unk_30 = 3;\n                lab_t2 = arg;\n                lab_t1 = 0x1e;\n                fn_1_4A00(0, lab_t1, lab_t2);\n                fn_1_A2D84(0xa9010100);\n                return;\n            }\n        }\n        if ((lbl_1_bss_9F8[(*((p->unk_10) + (2)))].flags >> 9) & 1) {\n            u32 arg = p->unk_1C;\n            p->unk_4 = 0x20;\n            p->unk_2C = -10;\n            p->unk_30 = 4;\n            lab_t1 = 0x1e;\n            fn_1_4A00(0, lab_t1, arg);\n            fn_1_A2D84(0xa9010200);\n        }\n    }\n}\n#pragma opt_dead_assignments reset\n\n#pragma opt_common_subs reset\n\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "rel/story/story_mode/fn_7_1134.c",
+    "bytes": 456,
+    "headers_sha256": "59c58c5597445adedf1e8aff6a5c4d27df0fb511858d9e103a06abc8190def99",
+    "oracle_sha256": "44c39531032971919278ad67b577baf0d79d7f454c70fc3b315f57db86e04db0",
+    "recipe": [
+      {
+        "label": "retail argument order: hoist arg 1 of fn_1_4A00 at every site with opt_dead_assignments off",
+        "input_sha256": "2c4f0ce84dd9c01d5a3321a18b6ef0c0daaab076c229c57d60cf30d55b3fc6fc",
+        "output_sha256": "7090ee3c3750813a88fecaceecfe27d1b9eb7113de2f392c13b4629cdb6efac4"
+      }
+    ],
+    "link": "verified",
+    "commit": "063357c"
+  },
+  "fn_8_1C18": {
+    "seed_symbol": "fn_8_1C18",
+    "generator": "fzgx fixup",
+    "transform": "recover native shared-pool literals with opt_loop_invariants off",
+    "seed": "#include \"types.h\"\n\nstruct fn_8_1C18_lbl_8_bss_0 {\n    u8 pad_0[0x2];\n    u8 unk_2;\n    u8 pad_3[0x221];\n    s16 unk_224;\n    u8 pad_226[0x12];\n    u32 unk_238;\n};\n\nextern f32 lbl_8_rodata_C;\nextern struct fn_8_1C18_lbl_8_bss_0 lbl_8_bss_0;\nextern u32 fn_1_4706C(void);\nextern u32 fn_1_4A00(u32, u32, u32);\nextern u32 fn_1_9A958(u32, u32);\nextern u32 lbl_1_bss_970;\nextern void fn_1_7B084(void *, int);\nextern void fn_8006CE1C(f32);\n\nvoid fn_8_1C18(void) {\n    struct fn_8_1C18_lbl_8_bss_0 *p_lbl_8_bss_0;\n    p_lbl_8_bss_0 = (struct fn_8_1C18_lbl_8_bss_0 *)&lbl_8_bss_0;\n    fn_8006CE1C(lbl_8_rodata_C);\n    fn_1_4A00(1, 15, p_lbl_8_bss_0->unk_238);\n    lbl_1_bss_970 = 600;\n    fn_1_4706C();\n    fn_1_7B084((void *)p_lbl_8_bss_0->unk_224, 0);\n    fn_1_9A958(p_lbl_8_bss_0->unk_224, 0);\n    p_lbl_8_bss_0->unk_2 = 1;\n}\n",
+    "seed_sha256": "70a611632efb1ff9e65483f828b0968711249e5fe947d4ac1a8f5cd8112709c7",
+    "generated_sha256": "b677fd270ffe6c4abd1aed4b5bc853813e96b2bb7a1d1144c837fbaec8faf745",
+    "generated_source": "#include \"types.h\"\n\nstruct fn_8_1C18_lbl_8_bss_0 {\n    u8 pad_0[0x2];\n    u8 unk_2;\n    u8 pad_3[0x221];\n    s16 unk_224;\n    u8 pad_226[0x12];\n    u32 unk_238;\n};\n\nextern f32 lbl_8_rodata_C;\nextern struct fn_8_1C18_lbl_8_bss_0 lbl_8_bss_0;\nextern u32 fn_1_4706C(void);\nextern u32 fn_1_4A00(u32, u32, u32);\nextern u32 fn_1_9A958(u32, u32);\nextern u32 lbl_1_bss_970;\nextern void fn_1_7B084(void *, int);\nextern void fn_8006CE1C(f32);\n\n#pragma opt_loop_invariants off\nvoid fn_8_1C18(void) {\n    struct fn_8_1C18_lbl_8_bss_0 *p_lbl_8_bss_0;\n    p_lbl_8_bss_0 = (struct fn_8_1C18_lbl_8_bss_0 *)&lbl_8_bss_0;\n    fn_8006CE1C((0.0f));\n    fn_1_4A00(1, 15, p_lbl_8_bss_0->unk_238);\n    lbl_1_bss_970 = 600;\n    fn_1_4706C();\n    fn_1_7B084((void *)p_lbl_8_bss_0->unk_224, 0);\n    fn_1_9A958(p_lbl_8_bss_0->unk_224, 0);\n    p_lbl_8_bss_0->unk_2 = 1;\n}\n#pragma opt_loop_invariants reset\n\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "rel/title/title/fn_8_1C18.c",
+    "bytes": 120,
+    "headers_sha256": "59c58c5597445adedf1e8aff6a5c4d27df0fb511858d9e103a06abc8190def99",
+    "oracle_sha256": "44c39531032971919278ad67b577baf0d79d7f454c70fc3b315f57db86e04db0",
+    "recipe": [
+      {
+        "label": "recover native shared-pool literals with opt_loop_invariants off",
+        "input_sha256": "70a611632efb1ff9e65483f828b0968711249e5fe947d4ac1a8f5cd8112709c7",
+        "output_sha256": "b677fd270ffe6c4abd1aed4b5bc853813e96b2bb7a1d1144c837fbaec8faf745"
+      }
+    ],
+    "link": "verified",
+    "commit": "063357c"
+  },
+  "fn_1_4AF10": {
+    "seed_symbol": "fn_1_4AF10",
+    "generator": "fzgx fixup",
+    "transform": "recover native shared-pool literals with opt_pointer_analysis off",
+    "seed": "#include \"types.h\"\n\nstruct fn_1_4AF10_lbl_1_bss_3E058 {\n    u32 unk_0;\n};\n\nextern f32 lbl_1_bss_3E05C;\nextern f32 lbl_1_rodata_10C0;\nextern struct fn_1_4AF10_lbl_1_bss_3E058 lbl_1_bss_3E058;\nextern void fn_1_4A0D8(const char *);\n\nvoid fn_1_4AF10(u32 arg0) {\n    u32 v0;\n    v0 = lbl_1_bss_3E058.unk_0;\n    lbl_1_bss_3E05C = lbl_1_rodata_10C0;\n    lbl_1_bss_3E058.unk_0 = 1;\n    fn_1_4A0D8((const char *)arg0);\n    lbl_1_bss_3E058.unk_0 = v0;\n}\n",
+    "seed_sha256": "a1457f4f6e3af4c6a4d6fbcceb8da5ae28c56e563a4c1ed94929dd51237d83cb",
+    "generated_sha256": "6340ea8d7f2c9b33a51dc3c2d607ba18b0fbb28a7760dcf9f5be66945ed6ed7c",
+    "generated_source": "#include \"types.h\"\n\nstruct fn_1_4AF10_lbl_1_bss_3E058 {\n    u32 unk_0;\n};\n\nextern f32 lbl_1_bss_3E05C;\nextern f32 lbl_1_rodata_10C0;\nextern struct fn_1_4AF10_lbl_1_bss_3E058 lbl_1_bss_3E058;\nextern void fn_1_4A0D8(const char *);\n\n#pragma opt_pointer_analysis off\nvoid fn_1_4AF10(u32 arg0) {\n    u32 v0;\n    v0 = lbl_1_bss_3E058.unk_0;\n    lbl_1_bss_3E05C = (0.0f);\n    lbl_1_bss_3E058.unk_0 = 1;\n    fn_1_4A0D8((const char *)arg0);\n    lbl_1_bss_3E058.unk_0 = v0;\n}\n#pragma opt_pointer_analysis reset\n\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "rel/main_rel/font/fn_1_4AF10.c",
+    "bytes": 84,
+    "headers_sha256": "59c58c5597445adedf1e8aff6a5c4d27df0fb511858d9e103a06abc8190def99",
+    "oracle_sha256": "44c39531032971919278ad67b577baf0d79d7f454c70fc3b315f57db86e04db0",
+    "recipe": [
+      {
+        "label": "recover native shared-pool literals with opt_pointer_analysis off",
+        "input_sha256": "a1457f4f6e3af4c6a4d6fbcceb8da5ae28c56e563a4c1ed94929dd51237d83cb",
+        "output_sha256": "6340ea8d7f2c9b33a51dc3c2d607ba18b0fbb28a7760dcf9f5be66945ed6ed7c"
+      }
+    ],
+    "link": "verified",
+    "commit": "063357c"
+  },
+  "fn_4_250": {
+    "seed_symbol": "fn_4_250",
+    "generator": "fzgx fixup",
+    "transform": "recover native shared-pool literals with opt_lifetimes off",
+    "seed": "#include \"types.h\"\n#include \"font.h\"\n\nstruct fn_4_250_Copy88 { u32 a[22]; };\nstruct fn_4_250_lbl_4_rodata_0 {\n    f32 unk_0;\n    f32 unk_4;\n    f32 unk_8;\n};\n\nextern int fn_1_4F734(FontDrawPacket *);\nextern struct fn_4_250_lbl_4_rodata_0 lbl_4_rodata_0;\nextern u32 lbl_1_rodata_26F8;\n\nvoid fn_4_250(void) {\n    f32 v0;\n    f32 v1;\n    FontDrawPacket loc_8;\n    /* frame */\n    loc_8 = *(FontDrawPacket *)&lbl_1_rodata_26F8;\n    v0 = lbl_4_rodata_0.unk_0;\n    v1 = lbl_4_rodata_0.unk_4;\n    loc_8.image = (0x10000 - 28668);\n    loc_8.x = v0;\n    loc_8.y = v1;\n    loc_8.z = lbl_4_rodata_0.unk_8;\n    loc_8.flags = 10;\n    fn_1_4F734((FontDrawPacket *)&loc_8);\n}\n",
+    "seed_sha256": "35c0b8911c085ab7c4f1054d6620565fbd85eb93fd2904d11e8360a12cf06be1",
+    "generated_sha256": "42b56fd2806cfaf37c1b646a823b4f8e5c52d4a0a8d1078a066af24a8446daa8",
+    "generated_source": "#include \"types.h\"\n#include \"font.h\"\n\nstruct fn_4_250_Copy88 { u32 a[22]; };\nstruct fn_4_250_lbl_4_rodata_0 {\n    f32 unk_0;\n    f32 unk_4;\n    f32 unk_8;\n};\n\nextern int fn_1_4F734(FontDrawPacket *);\nextern struct fn_4_250_lbl_4_rodata_0 lbl_4_rodata_0;\nextern u32 lbl_1_rodata_26F8;\n\n#pragma opt_lifetimes off\nvoid fn_4_250(void) {\n    f32 v0;\n    f32 v1;\n    FontDrawPacket loc_8;\n    /* frame */\n    loc_8 = *(FontDrawPacket *)&lbl_1_rodata_26F8;\n    v0 = (167.0f);\n    v1 = (38.0f);\n    loc_8.image = (0x10000 - 28668);\n    loc_8.x = v0;\n    loc_8.y = v1;\n    loc_8.z = (0.5f);\n    loc_8.flags = 10;\n    fn_1_4F734((FontDrawPacket *)&loc_8);\n}\n#pragma opt_lifetimes reset\n\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "rel/option/_prolog/fn_4_250.c",
+    "bytes": 132,
+    "headers_sha256": "59c58c5597445adedf1e8aff6a5c4d27df0fb511858d9e103a06abc8190def99",
+    "oracle_sha256": "44c39531032971919278ad67b577baf0d79d7f454c70fc3b315f57db86e04db0",
+    "recipe": [
+      {
+        "label": "recover native shared-pool literals with opt_lifetimes off",
+        "input_sha256": "35c0b8911c085ab7c4f1054d6620565fbd85eb93fd2904d11e8360a12cf06be1",
+        "output_sha256": "42b56fd2806cfaf37c1b646a823b4f8e5c52d4a0a8d1078a066af24a8446daa8"
+      }
+    ],
+    "link": "verified",
+    "commit": "063357c"
+  },
+  "fn_1_AAEB0": {
+    "seed_symbol": "fn_1_AAEB0",
+    "generator": "fzgx fixup",
+    "transform": "address typed base at every site (u32) with opt_propagation off",
+    "seed": "#include \"types.h\"\n\nstruct fn_1_AAEB0_Arg0 {\n    u8 unk_0;\n    u8 pad_1[0x4];\n    u8 unk_5;\n    u8 pad_6[0x1E];\n    u32 unk_24;\n};\nstruct fn_1_AAEB0_lbl_1_data_35AC8 {\n    u8 pad_0[0x6AC4];\n    u32 unk_6AC4[1];\n};\n\nextern struct fn_1_AAEB0_lbl_1_data_35AC8 lbl_1_data_35AC8;\nextern void OSPanic(const char *, int, const char *, ...);\nextern void OSReport(const char *, ...);\n\nvoid fn_1_AAEB0(struct fn_1_AAEB0_Arg0 *arg0) {\n    struct fn_1_AAEB0_lbl_1_data_35AC8 *p_lbl_1_data_35AC8;\n    p_lbl_1_data_35AC8 = (struct fn_1_AAEB0_lbl_1_data_35AC8 *)&lbl_1_data_35AC8;\n    OSReport((const char *)(u32)((u8 *)(u32)p_lbl_1_data_35AC8 + 28000), arg0->unk_0, *(u32 *)((u8 *)arg0->unk_24 + 4), p_lbl_1_data_35AC8->unk_6AC4[arg0->unk_5]);\n    OSPanic((const char *)(u32)((u8 *)(u32)p_lbl_1_data_35AC8 + 27888), 1322, (const char *)(u32)((u8 *)(u32)p_lbl_1_data_35AC8 + 28044));\n}\n",
+    "seed_sha256": "c41b1b956b2862cce8d12e9a69bf420d17de854bb7ee6f67eb168b87ef9b0655",
+    "generated_sha256": "b2b1709670b1dd7856040f0268a83e81e202a85b620b9d884c8e334b578b8c63",
+    "generated_source": "#include \"types.h\"\n\nstruct fn_1_AAEB0_Arg0 {\n    u8 unk_0;\n    u8 pad_1[0x4];\n    u8 unk_5;\n    u8 pad_6[0x1E];\n    u32 unk_24;\n};\nstruct fn_1_AAEB0_lbl_1_data_35AC8 {\n    u8 pad_0[0x6AC4];\n    u32 unk_6AC4[1];\n};\n\nextern struct fn_1_AAEB0_lbl_1_data_35AC8 lbl_1_data_35AC8;\nextern void OSPanic(const char *, int, const char *, ...);\nextern void OSReport(const char *, ...);\n\nstatic inline u32 *fn_1_AAEB0_array_read(u32 *array) { return array; }\n#pragma opt_propagation off\nvoid fn_1_AAEB0(struct fn_1_AAEB0_Arg0 *arg0) {\n    struct fn_1_AAEB0_lbl_1_data_35AC8 *p_lbl_1_data_35AC8;\n    p_lbl_1_data_35AC8 = (struct fn_1_AAEB0_lbl_1_data_35AC8 *)&lbl_1_data_35AC8;\n    OSReport((const char *)(u32)((u8 *)(u32)p_lbl_1_data_35AC8 + 28000), arg0->unk_0, *(u32 *)((u8 *)arg0->unk_24 + 4), fn_1_AAEB0_array_read(p_lbl_1_data_35AC8->unk_6AC4)[arg0->unk_5]);\n    OSPanic((const char *)(u32)((u8 *)(u32)p_lbl_1_data_35AC8 + 27888), 1322, (const char *)(u32)((u8 *)(u32)p_lbl_1_data_35AC8 + 28044));\n}\n#pragma opt_propagation reset\n\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "rel/main_rel/driver/fn_1_AAEB0.c",
+    "bytes": 104,
+    "headers_sha256": "59c58c5597445adedf1e8aff6a5c4d27df0fb511858d9e103a06abc8190def99",
+    "oracle_sha256": "44c39531032971919278ad67b577baf0d79d7f454c70fc3b315f57db86e04db0",
+    "recipe": [
+      {
+        "label": "address typed base at every site (u32) with opt_propagation off",
+        "input_sha256": "c41b1b956b2862cce8d12e9a69bf420d17de854bb7ee6f67eb168b87ef9b0655",
+        "output_sha256": "b2b1709670b1dd7856040f0268a83e81e202a85b620b9d884c8e334b578b8c63"
+      }
+    ],
+    "link": "verified",
+    "commit": "063357c"
+  },
+  "fn_12_3A9A0": {
+    "seed_symbol": "fn_12_3A9A0",
+    "generator": "fzgx fixup",
+    "transform": "opt_lifetimes off",
+    "seed": "#include \"types.h\"\ntypedef struct Sig_fn_12_3A9A0_MovieObject {\n    u8 pad04[0x4];\n    s32 state;\n    u8 pad08[0x58];\n    s32 value;\n} Sig_fn_12_3A9A0_MovieObject;\ntypedef struct Sig_fn_12_2CC24_MovieModuleState {\n    u8 _pad_0[0x44];\n    u32 field_44;\n} Sig_fn_12_2CC24_MovieModuleState;\ntypedef struct Sig_fn_12_2CD44_MovieModuleState {\n    u8 _pad_0[0x44];\n    u32 field_44;\n    u32 field_48;\n} Sig_fn_12_2CD44_MovieModuleState;\n\nextern int fn_12_2CC24(Sig_fn_12_2CC24_MovieModuleState *);\nextern u32 fn_12_2CD44(Sig_fn_12_2CD44_MovieModuleState *);\nextern u32 fn_12_3AE84(u32);\nextern u32 lbl_12_bss_1CC60;\n\nu32 fn_12_3A9A0(Sig_fn_12_3A9A0_MovieObject * arg0) {\n    u32 v0;\n    u32 v1;\n    int t0;\n    u32 t1;\n    u32 t2;\n    v0 = *(u32 *)((u8 *)arg0 + 64);\n    ((Sig_fn_12_3A9A0_MovieObject *)(arg0))->value = 1;\n    v1 = (u32)(arg0);\n    if (((Sig_fn_12_3A9A0_MovieObject *)(arg0))->state != 1) {\n    v1 = 0;\n    ((Sig_fn_12_3A9A0_MovieObject *)(arg0))->value = 0;\n    } else {\n    v1 = v0;\n    lbl_12_bss_1CC60 = (u32)(arg0);\n    *(u32 *)((u8 *)arg0 + 100) = 1;\n    t0 = fn_12_2CC24((Sig_fn_12_2CC24_MovieModuleState *)v1);\n    v1 = t0;\n    v1 = 0;\n    *(u32 *)((u8 *)arg0 + 100) = v1;\n    if ((s32)*(u32 *)((u8 *)arg0 + 8) == 0) {\n    *(u32 *)((u8 *)arg0 + 104) = v1;\n    } else {\n    v1 = (u32)(arg0);\n    *(u32 *)((u8 *)arg0 + 104) = 1;\n    t1 = fn_12_3AE84(v1);\n    v1 = t1;\n    }\n    v1 = v0;\n    ((Sig_fn_12_3A9A0_MovieObject *)(arg0))->value = 0;\n    t2 = fn_12_2CD44((Sig_fn_12_2CD44_MovieModuleState *)v1);\n    v1 = t2;\n    v1 = ((u32)((1 - v1) | (v1 - 1)) >> 31);\n    }\n    return v1;\n}\n",
+    "seed_sha256": "b6ca2d969ca9ca37d42047c859fafa622f46a72f25cb161539c7e4ca97bbda54",
+    "generated_sha256": "00e9ff1f474064ed07a3294fa48c50f3d92ee40f6043dad85a424d548cd4c438",
+    "generated_source": "#include \"types.h\"\ntypedef struct Sig_fn_12_3A9A0_MovieObject {\n    u8 pad04[0x4];\n    s32 state;\n    u8 pad08[0x58];\n    s32 value;\n} Sig_fn_12_3A9A0_MovieObject;\ntypedef struct Sig_fn_12_2CC24_MovieModuleState {\n    u8 _pad_0[0x44];\n    u32 field_44;\n} Sig_fn_12_2CC24_MovieModuleState;\ntypedef struct Sig_fn_12_2CD44_MovieModuleState {\n    u8 _pad_0[0x44];\n    u32 field_44;\n    u32 field_48;\n} Sig_fn_12_2CD44_MovieModuleState;\n\nextern int fn_12_2CC24(Sig_fn_12_2CC24_MovieModuleState *);\nextern u32 fn_12_2CD44(Sig_fn_12_2CD44_MovieModuleState *);\nextern u32 fn_12_3AE84(u32);\nextern u32 lbl_12_bss_1CC60;\n\n#pragma opt_dead_assignments off\n#pragma opt_lifetimes off\nu32 fn_12_3A9A0(Sig_fn_12_3A9A0_MovieObject * arg0) {\n    u32 v0;\n    u32 v1;\n    int t0;\n    u32 t1;\n    u32 t2;\n    v0 = *(u32 *)((u8 *)arg0 + 64);\n    ((Sig_fn_12_3A9A0_MovieObject *)(arg0))->value = 1;\n    v1 = (u32)(arg0);\n    if (((Sig_fn_12_3A9A0_MovieObject *)(arg0))->state != 1) {\n    v1 = 0;\n    ((Sig_fn_12_3A9A0_MovieObject *)(arg0))->value = 0;\n    } else {\n    v1 = v0;\n    lbl_12_bss_1CC60 = (u32)(arg0);\n    *(u32 *)((u8 *)arg0 + 100) = 1;\n    t0 = fn_12_2CC24((Sig_fn_12_2CC24_MovieModuleState *)v1);\n    v1 = t0;\n    v1 = 0;\n    *(u32 *)((u8 *)arg0 + 100) = v1;\n    if ((s32)*(u32 *)((u8 *)arg0 + 8) == 0) {\n    *(u32 *)((u8 *)arg0 + 104) = v1;\n    } else {\n    v1 = (u32)(arg0);\n    *(u32 *)((u8 *)arg0 + 104) = 1;\n    t1 = fn_12_3AE84(v1);\n    v1 = t1;\n    }\n    v1 = v0;\n    ((Sig_fn_12_3A9A0_MovieObject *)(arg0))->value = 0;\n    t2 = fn_12_2CD44((Sig_fn_12_2CD44_MovieModuleState *)v1);\n    v1 = t2;\n    v1 = ((u32)((1 - v1) | (v1 - 1)) >> 31);\n    }\n    return v1;\n}\n#pragma opt_lifetimes reset\n\n#pragma opt_dead_assignments reset\n\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "rel/movie_module/fn_12_3A9A0.c",
+    "bytes": 184,
+    "headers_sha256": "59c58c5597445adedf1e8aff6a5c4d27df0fb511858d9e103a06abc8190def99",
+    "oracle_sha256": "44c39531032971919278ad67b577baf0d79d7f454c70fc3b315f57db86e04db0",
+    "recipe": [
+      {
+        "label": "opt_dead_assignments off",
+        "input_sha256": "b6ca2d969ca9ca37d42047c859fafa622f46a72f25cb161539c7e4ca97bbda54",
+        "output_sha256": "3351af654f574c58bc38c06380be302ff4a2adeee516047c50731bd20dd6c8f9"
+      },
+      {
+        "label": "opt_lifetimes off",
+        "input_sha256": "3351af654f574c58bc38c06380be302ff4a2adeee516047c50731bd20dd6c8f9",
+        "output_sha256": "00e9ff1f474064ed07a3294fa48c50f3d92ee40f6043dad85a424d548cd4c438"
+      }
+    ],
+    "link": "verified",
+    "commit": "063357c"
+  },
+  "fn_1_12A080": {
+    "seed_symbol": "fn_1_12A080",
+    "generator": "fzgx fixup",
+    "transform": "lifetime pointer pool_lbl_1_rodata_8068->unk_50 at every site with opt_common_subs off",
+    "seed": "#include \"types.h\"\n\ntypedef struct Sig_fn_80015EE8_Fn80015EE8Out {\n    f32 f0;\n    f32 f1;\n    f32 f2;\n    f32 f3;\n    f32 f4;\n    f32 f5;\n    f32 f6;\n    f32 f7;\n    f32 f8;\n    f32 f9;\n    f32 f10;\n    f32 f11;\n    f32 f12;\n    f32 f13;\n    f32 f14;\n    f32 f15;\n} Sig_fn_80015EE8_Fn80015EE8Out;\n\nextern void fn_80015EE8(Sig_fn_80015EE8_Fn80015EE8Out *, f32, f32, f32, f32, f32, f32);\nextern void fn_800737E4(void *, s32);\nextern void fn_80074918(u8, s32, u8);\n\nvoid fn_1_12A080(void) {\n    Sig_fn_80015EE8_Fn80015EE8Out out;\n\n    fn_80015EE8(&out, 0.0f, 480.0f, 0.0f, 640.0f, 0.1f, 90000.0f);\n    fn_800737E4(&out, 1);\n    fn_80074918(1, 3, 1);\n}\n",
+    "seed_sha256": "52dd0b72d78974592258c9aab93ae3a2a4116747517237886b56cdbef9302819",
+    "generated_sha256": "ee456b1b6d9597e4386965dc1a37245754777fa6d6db6c593f593bcb6ae27c4f",
+    "generated_source": "#include \"types.h\"\n\nextern const struct fn_1_12A080_lbl_1_rodata_8068_pool {\n    f32 unk_0;\n    u8 pad_4[0x4C];\n    f32 unk_50;\n    u8 pad_54[0x84];\n    f32 unk_D8;\n    f32 unk_DC;\n    f32 unk_E0;\n} lbl_1_rodata_8068;\n\ntypedef struct Sig_fn_80015EE8_Fn80015EE8Out {\n    f32 f0;\n    f32 f1;\n    f32 f2;\n    f32 f3;\n    f32 f4;\n    f32 f5;\n    f32 f6;\n    f32 f7;\n    f32 f8;\n    f32 f9;\n    f32 f10;\n    f32 f11;\n    f32 f12;\n    f32 f13;\n    f32 f14;\n    f32 f15;\n} Sig_fn_80015EE8_Fn80015EE8Out;\n\nextern void fn_80015EE8(Sig_fn_80015EE8_Fn80015EE8Out *, f32, f32, f32, f32, f32, f32);\nextern void fn_800737E4(void *, s32);\nextern void fn_80074918(u8, s32, u8);\n\n#pragma opt_propagation off\n#pragma opt_common_subs off\nvoid fn_1_12A080(void) {\n    f32 fzgx_live;\n    struct fn_1_12A080_lbl_1_rodata_8068_pool *pool_lbl_1_rodata_8068 = (struct fn_1_12A080_lbl_1_rodata_8068_pool *)&lbl_1_rodata_8068;\n    Sig_fn_80015EE8_Fn80015EE8Out out;\n\n    fzgx_live = pool_lbl_1_rodata_8068->unk_50;\n    fn_80015EE8(&out, pool_lbl_1_rodata_8068->unk_0, fzgx_live, pool_lbl_1_rodata_8068->unk_0, pool_lbl_1_rodata_8068->unk_D8, pool_lbl_1_rodata_8068->unk_DC, pool_lbl_1_rodata_8068->unk_E0);\n    fn_800737E4(&out, 1);\n    fn_80074918(1, 3, 1);\n}\n#pragma opt_common_subs reset\n\n#pragma opt_propagation reset\n\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "rel/main_rel/accessory/fn_1_12A080.c",
+    "bytes": 96,
+    "headers_sha256": "59c58c5597445adedf1e8aff6a5c4d27df0fb511858d9e103a06abc8190def99",
+    "oracle_sha256": "44c39531032971919278ad67b577baf0d79d7f454c70fc3b315f57db86e04db0",
+    "recipe": [
+      {
+        "label": "retain recovered shared-pool bases with opt_propagation off",
+        "input_sha256": "52dd0b72d78974592258c9aab93ae3a2a4116747517237886b56cdbef9302819",
+        "output_sha256": "b61a3a20646b2b12d3580a3d8da9f90e55eaef32d297b067e8ab3750a679925d"
+      },
+      {
+        "label": "lifetime pointer pool_lbl_1_rodata_8068->unk_50 at every site with opt_common_subs off",
+        "input_sha256": "b61a3a20646b2b12d3580a3d8da9f90e55eaef32d297b067e8ab3750a679925d",
+        "output_sha256": "ee456b1b6d9597e4386965dc1a37245754777fa6d6db6c593f593bcb6ae27c4f"
+      }
+    ],
+    "link": "verified",
+    "commit": "063357c"
+  },
+  "fn_12_86B8": {
+    "seed_symbol": "fn_12_86B8",
+    "generator": "fzgx fixup",
+    "transform": "retail argument order: hoist arg 2 of fn_12_847C at every site with opt_propagation on",
+    "seed": "#include \"types.h\"\nstruct fn_12_86B8_Arg0 {\n    u8 pad_0[0x118];\n    u32 unk_118;\n};\nextern u32 fn_12_847C(void *, u32, void *, void *, void *);\nextern u32 fn_12_80BC(u32, void *, u32);\n\n\nvoid fn_12_86B8(void *arg0) {\n    u32 temp_r3;\n    s32 sp8;\n    void *temp_r31;\n    void *temp_r30;\n    u32 field_118;\n\n    temp_r31 = (void *)((u8 *)(arg0) + 0x234);\n    temp_r30 = (void *)((u8 *)(arg0) + 0x110);\n    fn_12_847C((void *)(arg0), (u32)(*(u32 *)((u8 *)(arg0) + 280)), (void *)(&sp8), (void *)(temp_r31), (void *)((u8 *)(arg0) + 0x2C0));\n    fn_12_847C((void *)(arg0), (u32)(*(u32 *)((u8 *)(temp_r30) + 12)), (void *)(&sp8), (void *)((u8 *)(temp_r31) + 0x10), (void *)((u8 *)(arg0) + 0x2E4));\n    temp_r3 = *(u32 *)((u8 *)(arg0) + 596);\n    (*(u32 *)((u8 *)(arg0) + 596)) = (u32) (temp_r3 + 0x180);\n    fn_12_80BC((u32)(temp_r3), (void *)(temp_r30), (u32)(*(u32 *)((u8 *)(arg0) + 788)));\n}\n",
+    "seed_sha256": "8ba3fedcaef7b850bc6391c27cb601a323e8bb92656856550c5d076148027212",
+    "generated_sha256": "9ed753abca5eb92554c4e889c089404b98e77c08506f6a6849afca5e0c209fe9",
+    "generated_source": "#include \"types.h\"\nstruct fn_12_86B8_Arg0 {\n    u8 pad_0[0x118];\n    u32 unk_118;\n};\nextern u32 fn_12_847C(void *, u32, void *, void *, void *);\nextern u32 fn_12_80BC(u32, void *, u32);\n\n\n#pragma opt_propagation on\nvoid fn_12_86B8(void *arg0) {\n    u32 temp_r3;\n    s32 sp8;\n    void *temp_r31;\n    void *temp_r30;\n    u32 field_118;\n    void * lab_t2;\n    void * lab_t2_;\n\n    temp_r31 = (void *)((u8 *)(arg0) + 0x234);\n    temp_r30 = (void *)((u8 *)(arg0) + 0x110);\n    lab_t2 = (void *)(&sp8);\n    lab_t2_ = lab_t2;\n    fn_12_847C((void *)(arg0), (u32)(*(u32 *)((u8 *)(arg0) + 280)), lab_t2_, (void *)(temp_r31), (void *)((u8 *)(arg0) + 0x2C0));\n    lab_t2 = (void *)(&sp8);\n    lab_t2_ = lab_t2;\n    fn_12_847C((void *)(arg0), (u32)(*(u32 *)((u8 *)(temp_r30) + 12)), lab_t2_, (void *)((u8 *)(temp_r31) + 0x10), (void *)((u8 *)(arg0) + 0x2E4));\n    temp_r3 = *(u32 *)((u8 *)(arg0) + 596);\n    (*(u32 *)((u8 *)(arg0) + 596)) = (u32) (temp_r3 + 0x180);\n    fn_12_80BC((u32)(temp_r3), (void *)(temp_r30), (u32)(*(u32 *)((u8 *)(arg0) + 788)));\n}\n#pragma opt_propagation reset\n\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "rel/movie_module/fn_12_86B8.c",
+    "bytes": 132,
+    "headers_sha256": "59c58c5597445adedf1e8aff6a5c4d27df0fb511858d9e103a06abc8190def99",
+    "oracle_sha256": "44c39531032971919278ad67b577baf0d79d7f454c70fc3b315f57db86e04db0",
+    "recipe": [
+      {
+        "label": "retail argument order: hoist arg 2 of fn_12_847C at every site with opt_propagation off",
+        "input_sha256": "8ba3fedcaef7b850bc6391c27cb601a323e8bb92656856550c5d076148027212",
+        "output_sha256": "9e69e7400261e14090515d06bddc9bac18c64b70d6cd0751f9c5e3bb91774c2a"
+      },
+      {
+        "label": "retail argument order: hoist arg 2 of fn_12_847C at every site with opt_propagation on",
+        "input_sha256": "9e69e7400261e14090515d06bddc9bac18c64b70d6cd0751f9c5e3bb91774c2a",
+        "output_sha256": "9ed753abca5eb92554c4e889c089404b98e77c08506f6a6849afca5e0c209fe9"
+      }
+    ],
+    "link": "verified",
+    "commit": "063357c"
+  },
+  "fn_1_4CD8": {
+    "seed_symbol": "fn_1_4CD8",
+    "generator": "fzgx fixup",
+    "transform": "lifetime store address at 319",
+    "seed": "#include \"types.h\"\n\nstruct fn_1_4CD8_lbl_1_data_2CDC {\n    u8 pad_0[0x8];\n    u32 unk_8;\n};\n\nextern f32 lbl_1_rodata_16C;\nextern struct fn_1_4CD8_lbl_1_data_2CDC lbl_1_data_2CDC;\nextern u32 lbl_1_data_2CD8;\nextern void fn_8006CE1C(f32);\n\nvoid fn_1_4CD8(void) {\n    fn_8006CE1C(lbl_1_rodata_16C);\n    lbl_1_data_2CDC.unk_8 = lbl_1_data_2CD8;\n}\n",
+    "seed_sha256": "f176b6e2e999f8ffba5ae26a4d8d6890c425b2ca801bb4b7ba1972290fbcce29",
+    "generated_sha256": "fbb1f6178249b90707cdfa090858d6bc43bf485e27b9be5875ffd193dcc368dd",
+    "generated_source": "#include \"types.h\"\n\nstruct fn_1_4CD8_lbl_1_data_2CDC {\n    u8 pad_0[0x8];\n    u32 unk_8;\n};\n\nextern f32 lbl_1_rodata_16C;\nextern struct fn_1_4CD8_lbl_1_data_2CDC lbl_1_data_2CDC;\nextern u32 lbl_1_data_2CD8;\nextern void fn_8006CE1C(f32);\n\n#pragma opt_dead_assignments off\nvoid fn_1_4CD8(void) {\n    u32 *fzgx_value;\n    fn_8006CE1C((0.0f));\n    fzgx_value = &(lbl_1_data_2CDC.unk_8);\n    *fzgx_value = lbl_1_data_2CD8;\n}\n#pragma opt_dead_assignments reset\n\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "rel/main_rel/alloc/fn_1_4CD8.c",
+    "bytes": 60,
+    "headers_sha256": "59c58c5597445adedf1e8aff6a5c4d27df0fb511858d9e103a06abc8190def99",
+    "oracle_sha256": "44c39531032971919278ad67b577baf0d79d7f454c70fc3b315f57db86e04db0",
+    "recipe": [
+      {
+        "label": "recover native shared-pool literals with opt_dead_assignments off",
+        "input_sha256": "f176b6e2e999f8ffba5ae26a4d8d6890c425b2ca801bb4b7ba1972290fbcce29",
+        "output_sha256": "4190ba5cef99c8aeb59b512d8f0fac0b5cbf44c13b7b81d56eb914122f18a4e2"
+      },
+      {
+        "label": "lifetime store address at 319",
+        "input_sha256": "4190ba5cef99c8aeb59b512d8f0fac0b5cbf44c13b7b81d56eb914122f18a4e2",
+        "output_sha256": "fbb1f6178249b90707cdfa090858d6bc43bf485e27b9be5875ffd193dcc368dd"
+      }
+    ],
+    "link": "verified",
+    "commit": "063357c"
+  },
+  "fn_8007CF18": {
+    "seed_symbol": "fn_8007CF18",
+    "generator": "fzgx fixup",
+    "transform": "document verified control flow",
+    "seed": "#include \"types.h\"\n\ntypedef struct decimal {\n    char sign;\n    char reserved;\n    s16 exp;\n    struct {\n        u8 length;\n        u8 text[36];\n        u8 round;\n    } sig;\n} decimal;\n\nextern char lbl_80094ED8[];\nextern void fn_8007E69C(decimal *, const decimal *, const decimal *);\n\nstatic inline void __dorounddecup(decimal *d, int digits) {\n    u8 *b = d->sig.text;\n    u8 *i = b + digits - 1;\n    while (1) {\n        if (*i < 9) {\n            *i += 1;\n            break;\n        }\n        if (i == b) {\n            *i = 1;\n            d->exp++;\n            break;\n        }\n        *i-- = 0;\n    }\n}\n\nstatic inline void __dec_parse(decimal *d, char *s) {\n    char c;\n    char *q;\n    int i = 0;\n\n    while (i < 36 && *s)\n        d->sig.text[i++] = *s++ - '0';\n    d->sig.length = i;\n    c = *s;\n    if (c == 0)\n        return;\n    if (c < 5)\n        return;\n    /* the >5 path and the 5-with-nonzero-tail path share one round-up tail */\n    if (c > 5)\n        goto round;\n    for (q = s + 1; *q; q++)\n        /* any nonzero digit after the 5 forces a round up */\n        if (*q != '0')\n            goto round;\n    if ((d->sig.text[i - 1] & 1) == 0)\n        return;\nround:\n    __dorounddecup(d, d->sig.length);\n}\n\nstatic inline void __dec_str(decimal *d, int exp, char *s) {\n    d->exp = exp;\n    d->sign = 0;\n    __dec_parse(d, s);\n}\n\n#pragma opt_dead_assignments off\nvoid fn_8007CF18(decimal *d, s32 n) {\n    decimal tmp;\n    decimal save;\n\n    switch (n) {\n    case -64:\n        __dec_str(d, -20, &lbl_80094ED8[37]);\n        return;\n    case -53:\n        __dec_str(d, -16, &lbl_80094ED8[83]);\n        return;\n    case -32:\n        __dec_str(d, -10, &lbl_80094ED8[122]);\n        return;\n    case -16:\n        __dec_str(d, -5, &lbl_80094ED8[146]);\n        return;\n    case -8:\n        __dec_str(d, -3, &lbl_80094ED8[159]);\n        return;\n    case -7:\n        __dec_str(d, -3, &lbl_80094ED8[166]);\n        return;\n    case -6:\n        __dec_str(d, -2, &lbl_80094ED8[172]);\n        return;\n    case -5:\n        __dec_str(d, -2, &lbl_80094ED8[178]);\n        return;\n    case -4:\n        __dec_str(d, -2, &lbl_80094ED8[183]);\n        return;\n    case -3:\n        __dec_str(d, -1, &lbl_80094ED8[187]);\n        return;\n    case -2:\n        __dec_str(d, -1, &lbl_80094ED8[191]);\n        return;\n    case -1:\n        __dec_str(d, -1, &lbl_80094ED8[194]);\n        return;\n    case 0:\n        __dec_str(d, 0, &lbl_80094ED8[196]);\n        return;\n    case 1:\n        __dec_str(d, 0, &lbl_80094ED8[198]);\n        return;\n    case 2:\n        __dec_str(d, 0, &lbl_80094ED8[200]);\n        return;\n    case 3:\n        __dec_str(d, 0, &lbl_80094ED8[202]);\n        return;\n    case 4:\n        __dec_str(d, 1, &lbl_80094ED8[204]);\n        return;\n    case 5:\n        __dec_str(d, 1, &lbl_80094ED8[207]);\n        return;\n    case 6:\n        __dec_str(d, 1, &lbl_80094ED8[210]);\n        return;\n    case 7:\n        __dec_str(d, 2, &lbl_80094ED8[213]);\n        return;\n    case 8:\n        __dec_str(d, 2, &lbl_80094ED8[217]);\n        return;\n    default:\n        fn_8007CF18(&tmp, n / 2);\n        fn_8007E69C(d, &tmp, &tmp);\n        if (((1) & (n))) {\n            save = *d;\n            if (n > 0) {\n                tmp.exp = 0;\n                tmp.sign = 0;\n                __dec_parse(&tmp, &\"179769313486231580793729011405303420\"[198]);\n            } else {\n                char *p;\n                tmp.sign = 0;\n                p = &\"179769313486231580793729011405303420\"[194];\n                tmp.exp = -1;\n                __dec_parse(&tmp, p);\n            }\n            fn_8007E69C(d, &save, &tmp);\n        }\n        return;\n    }\n}\n#pragma opt_dead_assignments reset\n\n",
+    "seed_sha256": "b262e56c43e324dfb17904f9d755e2816cfdfb3d5f68acfea94aa260029f70a6",
+    "generated_sha256": "61234cbb1eaba73b0ffde972323810fda68d66ff063ab9ac3ac60d8811f32fe7",
+    "generated_source": "#include \"types.h\"\n\ntypedef struct decimal {\n    char sign;\n    char reserved;\n    s16 exp;\n    struct {\n        u8 length;\n        u8 text[36];\n        u8 round;\n    } sig;\n} decimal;\n\nextern char lbl_80094ED8[];\nextern void fn_8007E69C(decimal *, const decimal *, const decimal *);\n\nstatic inline void __dorounddecup(decimal *d, int digits) {\n    u8 *b = d->sig.text;\n    u8 *i = b + digits - 1;\n    while (1) {\n        if (*i < 9) {\n            *i += 1;\n            break;\n        }\n        if (i == b) {\n            *i = 1;\n            d->exp++;\n            break;\n        }\n        *i-- = 0;\n    }\n}\n\nstatic inline void __dec_parse(decimal *d, char *s) {\n    char c;\n    char *q;\n    int i = 0;\n\n    while (i < 36 && *s)\n        d->sig.text[i++] = *s++ - '0';\n    d->sig.length = i;\n    c = *s;\n    if (c == 0)\n        return;\n    if (c < 5)\n        return;\n    /* the >5 path and the 5-with-nonzero-tail path share one round-up tail */\n    if (c > 5)\n        goto round; /* Keep the verified branch to round. */\n    for (q = s + 1; *q; q++)\n        /* any nonzero digit after the 5 forces a round up */\n        if (*q != '0')\n            goto round; /* Keep the verified branch to round. */\n    if ((d->sig.text[i - 1] & 1) == 0)\n        return;\nround:\n    __dorounddecup(d, d->sig.length);\n}\n\nstatic inline void __dec_str(decimal *d, int exp, char *s) {\n    d->exp = exp;\n    d->sign = 0;\n    __dec_parse(d, s);\n}\n\n#pragma opt_dead_assignments off\nvoid fn_8007CF18(decimal *d, s32 n) {\n    decimal tmp;\n    decimal save;\n\n    switch (n) {\n    case -64:\n        __dec_str(d, -20, &lbl_80094ED8[37]);\n        return;\n    case -53:\n        __dec_str(d, -16, &lbl_80094ED8[83]);\n        return;\n    case -32:\n        __dec_str(d, -10, &lbl_80094ED8[122]);\n        return;\n    case -16:\n        __dec_str(d, -5, &lbl_80094ED8[146]);\n        return;\n    case -8:\n        __dec_str(d, -3, &lbl_80094ED8[159]);\n        return;\n    case -7:\n        __dec_str(d, -3, &lbl_80094ED8[166]);\n        return;\n    case -6:\n        __dec_str(d, -2, &lbl_80094ED8[172]);\n        return;\n    case -5:\n        __dec_str(d, -2, &lbl_80094ED8[178]);\n        return;\n    case -4:\n        __dec_str(d, -2, &lbl_80094ED8[183]);\n        return;\n    case -3:\n        __dec_str(d, -1, &lbl_80094ED8[187]);\n        return;\n    case -2:\n        __dec_str(d, -1, &lbl_80094ED8[191]);\n        return;\n    case -1:\n        __dec_str(d, -1, &lbl_80094ED8[194]);\n        return;\n    case 0:\n        __dec_str(d, 0, &lbl_80094ED8[196]);\n        return;\n    case 1:\n        __dec_str(d, 0, &lbl_80094ED8[198]);\n        return;\n    case 2:\n        __dec_str(d, 0, &lbl_80094ED8[200]);\n        return;\n    case 3:\n        __dec_str(d, 0, &lbl_80094ED8[202]);\n        return;\n    case 4:\n        __dec_str(d, 1, &lbl_80094ED8[204]);\n        return;\n    case 5:\n        __dec_str(d, 1, &lbl_80094ED8[207]);\n        return;\n    case 6:\n        __dec_str(d, 1, &lbl_80094ED8[210]);\n        return;\n    case 7:\n        __dec_str(d, 2, &lbl_80094ED8[213]);\n        return;\n    case 8:\n        __dec_str(d, 2, &lbl_80094ED8[217]);\n        return;\n    default:\n        fn_8007CF18(&tmp, n / 2);\n        fn_8007E69C(d, &tmp, &tmp);\n        if (((1) & (n))) {\n            save = *d;\n            if (n > 0) {\n                tmp.exp = 0;\n                tmp.sign = 0;\n                __dec_parse(&tmp, &\"179769313486231580793729011405303420\"[198]);\n            } else {\n                char *p;\n                tmp.sign = 0;\n                p = &\"179769313486231580793729011405303420\"[194];\n                tmp.exp = -1;\n                __dec_parse(&tmp, p);\n            }\n            fn_8007E69C(d, &save, &tmp);\n        }\n        return;\n    }\n}\n#pragma opt_dead_assignments reset\n\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "dol/fn_8007CF18.c",
+    "bytes": 6020,
+    "headers_sha256": "59c58c5597445adedf1e8aff6a5c4d27df0fb511858d9e103a06abc8190def99",
+    "oracle_sha256": "44c39531032971919278ad67b577baf0d79d7f454c70fc3b315f57db86e04db0",
+    "recipe": [
+      {
+        "label": "document verified control flow",
+        "input_sha256": "b262e56c43e324dfb17904f9d755e2816cfdfb3d5f68acfea94aa260029f70a6",
+        "output_sha256": "61234cbb1eaba73b0ffde972323810fda68d66ff063ab9ac3ac60d8811f32fe7"
+      }
+    ],
+    "link": "verified",
+    "commit": "063357c"
+  },
+  "fn_1_9AA2C": {
+    "seed_symbol": "fn_1_9AA2C",
+    "generator": "fzgx fixup",
+    "transform": "lifetime accessor data->entries at every site",
+    "seed": "#include \"types.h\"\n\nstruct fn_1_9AA2C_data {\n    u8 pad0[0xEB4];\n    void *entries[0x58];\n    u8 indices[1];\n    u8 pad1[0x1A9B];\n    char string_a[0xC];\n    char string_b[0x4];\n    char string_c[0x4];\n};\n\nextern struct fn_1_9AA2C_data lbl_1_data_2A0C0;\nextern void sprintf(void *buffer, const char *format, const char *arg, ...);\nextern void fn_1_46DC4(void *buffer);\n\n#pragma opt_dead_assignments off\nvoid fn_1_9AA2C(int index) {\n    struct fn_1_9AA2C_data *data = &lbl_1_data_2A0C0;\n    u8 *indices = data->indices;\n    void *entry = data->entries[indices[index]];\n    u8 buffer_b[0x20];\n    u8 buffer_a[0x20];\n\n    if (entry != 0) {\n        sprintf(buffer_b, data->string_a, data->string_b, entry);\n        sprintf(buffer_a, data->string_c, data->string_b, entry);\n        fn_1_46DC4(buffer_b);\n        fn_1_46DC4(buffer_a);\n    }\n}\n#pragma opt_dead_assignments reset\n\n",
+    "seed_sha256": "2fda4c8cbce969fb1b1f6f68a5c074872ffc2082d706d21f0a16d2f497483b74",
+    "generated_sha256": "966d130cde851212cb5bf2b098edbaebf47419a24177294d5841f5459f1e9073",
+    "generated_source": "#include \"types.h\"\n\nstruct fn_1_9AA2C_data {\n    u8 pad0[0xEB4];\n    void *entries[0x58];\n    u8 indices[1];\n    u8 pad1[0x1A9B];\n    char string_a[0xC];\n    char string_b[0x4];\n    char string_c[0x4];\n};\n\nextern struct fn_1_9AA2C_data lbl_1_data_2A0C0;\nextern void sprintf(void *buffer, const char *format, const char *arg, ...);\nextern void fn_1_46DC4(void *buffer);\n\n#pragma opt_dead_assignments off\nstatic inline void * * fn_1_9AA2C_read_pointer(struct fn_1_9AA2C_data * owner) { return owner->entries; }\nvoid fn_1_9AA2C(int index) {\n    struct fn_1_9AA2C_data *data = &lbl_1_data_2A0C0;\n    u8 *indices = data->indices;\n    void *entry = fn_1_9AA2C_read_pointer(data)[indices[index]];\n    u8 buffer_b[0x20];\n    u8 buffer_a[0x20];\n\n    if (entry != 0) {\n        sprintf(buffer_b, data->string_a, data->string_b, entry);\n        sprintf(buffer_a, data->string_c, data->string_b, entry);\n        fn_1_46DC4(buffer_b);\n        fn_1_46DC4(buffer_a);\n    }\n}\n#pragma opt_dead_assignments reset\n\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "rel/main_rel/burner/fn_1_9AA2C.c",
+    "bytes": 144,
+    "headers_sha256": "59c58c5597445adedf1e8aff6a5c4d27df0fb511858d9e103a06abc8190def99",
+    "oracle_sha256": "44c39531032971919278ad67b577baf0d79d7f454c70fc3b315f57db86e04db0",
+    "recipe": [
+      {
+        "label": "lifetime accessor data->entries at every site",
+        "input_sha256": "2fda4c8cbce969fb1b1f6f68a5c074872ffc2082d706d21f0a16d2f497483b74",
+        "output_sha256": "966d130cde851212cb5bf2b098edbaebf47419a24177294d5841f5459f1e9073"
+      }
+    ],
+    "link": "verified",
+    "commit": "063357c"
   }
 }
