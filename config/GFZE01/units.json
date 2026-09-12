@@ -40660,6 +40660,20 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/phys/fn_1_E4A38.c",
+    "symbols": [
+      "fn_1_E4A38"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/phys.c",
+    "pool": {
+      "@48": "lbl_1_rodata_6800"
+    }
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/phys/fn_1_E50F0.c",
     "symbols": [
       "fn_1_E50F0"
