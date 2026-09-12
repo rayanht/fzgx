@@ -13,6 +13,15 @@ extern u32 lbl_1_bss_26C60;
 extern void fn_13_3FC(void);
 extern u32 fn_1_3F038(void);
 extern u32 lbl_13_bss_40;
+extern u8 lbl_13_bss_3C;
+extern u32 lbl_1_bss_7167C;
+extern u32 lbl_1_bss_71680;
+extern u32 lbl_1_bss_71684;
+extern u16 lbl_1_bss_96A;
+extern void fn_13_AFC(void);
+extern void fn_13_B00(void);
+extern void fn_13_B08(void);
+extern void fn_1_A8F78(void);
 
 /* fzgx:begin fn_13_A40 */
 // fn_13_A40: returns a constant.
@@ -44,16 +53,6 @@ void fn_13_A6C(struct fn_13_A6C_Arg0 *arg0) {
 /* fzgx:end fn_13_A6C */
 
 /* fzgx:begin _prolog */
-extern u32 lbl_1_bss_7167C;
-extern u32 lbl_1_bss_71680;
-extern u32 lbl_1_bss_71684;
-extern u16 lbl_1_bss_96A;
-extern u8 lbl_13_bss_3C;
-extern void fn_13_AFC(void);
-extern void fn_13_B00(void);
-extern void fn_13_B08(void);
-extern void fn_1_A8F78(void);
-
 void _prolog(void) {
     lbl_1_bss_7167C = (u32)fn_13_AFC;
     lbl_1_bss_71680 = (u32)fn_13_B00;
@@ -120,9 +119,6 @@ void fn_13_B78(void) {
 /* fzgx:end fn_13_B78 */
 
 /* fzgx:begin fn_13_B7C */
-extern struct fn_13_B7C_lbl_13_bss_3C lbl_13_bss_3C;
-extern u16 lbl_1_bss_96A;
-
 struct fn_13_B7C_lbl_13_bss_3C {
     u8 unk_0;
 };
@@ -131,7 +127,7 @@ void fn_13_B7C(void) {
     u32 t0;
     t0 = fn_1_3F038();
     if ((s32)t0 != 0) {
-    lbl_13_bss_3C.unk_0 = 1;
+    (*(struct fn_13_B7C_lbl_13_bss_3C *)&lbl_13_bss_3C).unk_0 = 1;
     lbl_1_bss_96A = 169;
     lbl_13_bss_40 = 167;
     }
