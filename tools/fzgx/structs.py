@@ -455,7 +455,7 @@ def tu_header(p: Project, module: str, tu: str, min_refs: int = 2) -> str:
     for name, n in cnt.most_common():
         sd = syms[name]
         own = sd.section == ".data" and d_lo <= sd.addr < d_hi
-        if (n >= min_refs or own) and not re.search(rf"\b{re.escape(name)};", shared_text):
+        if (n >= min_refs or own) and not re.search(rf"\b{re.escape(name)}\s*(?:\[[^\]]*\]\s*)*;", shared_text):
             picks.append((name, n, own))
     guard = f"REL_{module.upper()}_{stem.upper()}_H"
     out = [f"#ifndef {guard}", f"#define {guard}", "", '#include "types.h"', f'#include "{p.module_src_prefix(module)}/globals.h"', "",
@@ -507,16 +507,25 @@ def write_header(p, module: str, tu: Optional[str] = None, min_refs: int = 20) -
     """Generate one header (globals.h or the TU's), write it, and prove every field offset under
     MWCC. Returns "" on success or the self-check failure text."""
     import subprocess
+    if tu and not (Path('include') / p.module_src_prefix(module) / 'globals.h').exists():
+        error = write_header(p, module, min_refs=min_refs)
+        if error:
+            return error
     text = tu_header(p, module, tu) if tu else header(p, module, min_refs)
     out = Path("include") / p.module_src_prefix(module) / (f"{tu.rsplit('.', 1)[0]}.h" if tu else "globals.h")
     out.parent.mkdir(parents=True, exist_ok=True)
+    previous = out.read_bytes() if out.exists() else None
     out.write_text(text)
     chk = Path(".fzgx") / "header_selfcheck.c"
     chk.write_text(selfcheck(text, f"{p.module_src_prefix(module)}/{out.name}"))
     cp = subprocess.run(["build/tools/wibo", "build/compilers/GC/1.3.2/mwcceppc.exe", "-nodefaults", "-proc", "gekko",
                          "-i", "include", "-c", str(chk), "-o", str(chk.with_suffix(".o"))], text=True, capture_output=True)
     if cp.returncode != 0:
-        return "\n".join(l for l in (cp.stdout + cp.stderr).splitlines() if "check_" in l or "Error" in l)[:3000] or "self-check failed"
+        if previous is None:
+            out.unlink()
+        else:
+            out.write_bytes(previous)
+        return (cp.stdout + cp.stderr)[-3000:] or "self-check failed"
     return ""
 
 

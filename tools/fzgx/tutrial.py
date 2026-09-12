@@ -11,17 +11,11 @@ pool-bound functions start matching only there.
 
 from __future__ import annotations
 
-import json
-import shlex
-import subprocess
 from pathlib import Path
 from typing import Dict, List, Optional
 
 from .project import ROOT, Project
 from . import oracle, tufile
-
-OBJDIFF = ROOT / "build" / "tools" / "objdiff-cli"
-
 
 def compile_tu(p: Project, tu_source: str, extra_blocks: Optional[Dict[str, str]] = None) -> tuple:
     """Compile the TU file (optionally with extra function bodies appended) as one object.
@@ -59,17 +53,8 @@ def score(p: Project, tu_source: str, obj: Path) -> Dict[str, Optional[float]]:
         if not target or not target.exists():
             out[b.name] = None
             continue
-        cp = subprocess.run([str(OBJDIFF), "diff", "-1", str(target), "-2", str(obj), "-o", "-", "--format", "json"],
-                            cwd=ROOT, text=True, capture_output=True, timeout=120)
-        if cp.returncode != 0:
-            out[b.name] = None
-            continue
-        data = json.loads(cp.stdout)
-        pct = None
-        for s in data.get("left", {}).get("symbols", []):
-            if s.get("name") == b.name and "match_percent" in s:
-                pct = float(s["match_percent"])
-        out[b.name] = pct
+        check = oracle._diff(p, module, b.name, '', 0, target=target, base=obj)
+        out[b.name] = (100.0 if check.matched or check.matched_pool else check.percent) if check.ok else None
     return out
 
 

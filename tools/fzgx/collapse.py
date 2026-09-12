@@ -78,26 +78,23 @@ def _exclusive_symbols(p: Project, module: str, funcs: List[str]) -> Dict[str, L
 def _pool_map(p: Project, module: str, funcs: List[str], obj: Path) -> Dict[str, str]:
     """private literal symbol -> retail pooled symbol, over every function of the TU object."""
     out: Dict[str, str] = {}
+    symbols = p.symbols(module)
     for name in funcs:
         sym = p.symbols(module).get(name)
         target = p.target_object_for(sym) if sym else None
         if target is None:
             continue
-        cp = oracle.run([str(oracle.OBJDIFF), "diff", "-1", str(target), "-2", str(obj), "-o", "-", "--format", "json", name])
-        if cp.returncode != 0:
+        check = oracle._diff(p, module, name, '', 0, target=target, base=obj)
+        if not check.ok or not (check.matched or check.matched_pool):
             continue
-        try:
-            data = json.loads(cp.stdout)
-        except ValueError:
-            continue
-        left, right = data.get("left", {}), data.get("right", {})
-        l = next((s_ for s_ in left.get("symbols", []) if s_.get("name") == name), None)
-        r = next((s_ for s_ in right.get("symbols", []) if s_.get("name") == name), None)
-        if l is None or r is None:
-            continue
-        _, pairs = oracle._pool_rows(p, module, left, right, l.get("instructions", []), r.get("instructions", []))
-        for private, pooled, _desc in pairs:
-            out.setdefault(private, pooled)
+        for private, pooled, _desc in check._pool_pairs:
+            base, offset = poolfix.binding_target(pooled)
+            anchor = symbols.get(base)
+            if anchor and anchor.scope == 'local':
+                pooled = f'{anchor.name}_{anchor.addr:08X}' + (f'+0x{offset:X}' if offset else '')
+            if private in out and out[private] != pooled:
+                raise ValueError(f'{module}: inconsistent pool binding for {private}')
+            out[private] = pooled
     return out
 
 
@@ -118,7 +115,10 @@ def plan(p: Project, tu_source: str) -> Dict[str, object]:
     # the TU's private literals that retail pooled elsewhere (the 2^52 int-to-double constant,
     # shared floats): the same retarget the per-function units get (units.json `pool`, applied
     # by the mwcc_pool rule), so the private .rodata disappears and needs no placement
-    pool = _pool_map(p, module, funcs, obj)
+    try:
+        pool = _pool_map(p, module, funcs, obj)
+    except ValueError as error:
+        return {'ok': False, 'error': str(error)}
     if pool:
         fixed = obj.with_name(obj.stem + ".pool.o")
         shutil.copy(obj, fixed)

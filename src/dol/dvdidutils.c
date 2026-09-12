@@ -1,6 +1,8 @@
 #include <types.h>
 #include <dolphin/dvd.h>
 
+BOOL DVDCompareDiskID(DVDDiskID *id1, DVDDiskID *id2);
+
 int strncmp(const char *, const char *, size_t);
 
 BOOL DVDCompareDiskID(DVDDiskID *id1, DVDDiskID *id2) {

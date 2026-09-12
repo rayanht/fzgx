@@ -1,5 +1,5 @@
 {
- "generated": 1789227592,
+ "generated": 1789229432,
  "functions": [
   {
    "symbol": "car_colchg:_prolog",
@@ -10642,7 +10642,7 @@
   {
    "symbol": "OSGetFontEncode",
    "module": "main",
-   "unit": "dol/OSGetFontEncode.c",
+   "unit": "dol/OSFont.c",
    "addr": 2147536344,
    "size": 88,
    "status": "matched",
@@ -15304,7 +15304,7 @@
   {
    "symbol": "DVDCompareDiskID",
    "module": "main",
-   "unit": "dol/DVDCompareDiskID.c",
+   "unit": "dol/dvdidutils.c",
    "addr": 2147590644,
    "size": 248,
    "status": "matched",
@@ -15340,7 +15340,7 @@
   {
    "symbol": "cb",
    "module": "main",
-   "unit": "dol/cb.c",
+   "unit": "dol/fstload.c",
    "addr": 2147590940,
    "size": 216,
    "status": "matched",
@@ -15358,7 +15358,7 @@
   {
    "symbol": "__fstLoad",
    "module": "main",
-   "unit": "dol/__fstLoad.c",
+   "unit": "dol/fstload.c",
    "addr": 2147591156,
    "size": 360,
    "status": "matched",
@@ -24142,7 +24142,7 @@
   {
    "symbol": "fn_80038A18",
    "module": "main",
-   "unit": "dol/fn_80038A18.c",
+   "unit": "dol/GXDisplayList.c",
    "addr": 2147715608,
    "size": 112,
    "status": "matched",
@@ -42070,7 +42070,7 @@
   {
    "symbol": "__stdio_atexit",
    "module": "main",
-   "unit": "dol/__stdio_atexit.c",
+   "unit": "dol/misc_io.c",
    "addr": 2148009596,
    "size": 16,
    "status": "matched",
@@ -42790,7 +42790,7 @@
   {
    "symbol": "fwide",
    "module": "main",
-   "unit": "dol/fwide.c",
+   "unit": "dol/wchar_io.c",
    "addr": 2148030692,
    "size": 136,
    "status": "matched",

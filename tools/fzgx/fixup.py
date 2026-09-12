@@ -231,6 +231,7 @@ class Engine:
             yield from evidence.floating_expressions(self.project, row['symbol'], body, check)
             yield from evidence.scalar_lifetimes(self.project, row['symbol'], body, check)
             yield from evidence.stack_object_boundaries(self.project, row['symbol'], body, check)
+            yield from evidence.optimizer_pragmas(body, name)
             families.append(evidence.candidates(self.project, row['symbol'], body, check))
             targeted = [[c for c in families[0] if c[0].startswith(('retail scalar flag masks', 'retail format argument', 'retail call argument', 'retail call parameter', 'retail argument order:', 'retail float branch', 'retail zero comparison', 'bind recovered shared-pool', 'retain recovered shared-pool', 'recover native shared-pool', 'lifetime reload', 'lifetime ordered', 'lifetime shared-pool'))],
                         source.address_expressions(body, name), source.pointer_lifetimes(body, name), source.through_local(body, name),

@@ -90,6 +90,79 @@
       ],
       "sdk": "mkdd",
       "source": "libs/dolphin/os/OSAudioSystem.c"
+    },
+    {
+      "file": "dvdidutils.c",
+      "text": [
+        2147590644,
+        2147590892
+      ],
+      "functions": [
+        "DVDCompareDiskID"
+      ],
+      "sdk": "mkdd",
+      "source": "libs/dolphin/dvd/dvdidutils.c"
+    },
+    {
+      "file": "misc_io.c",
+      "text": [
+        2148009596,
+        2148009612
+      ],
+      "functions": [
+        "__stdio_atexit"
+      ],
+      "sdk": "tww",
+      "source": "src/PowerPC_EABI_Support/MSL/MSL_C/MSL_Common/Src/misc_io.c"
+    },
+    {
+      "file": "wchar_io.c",
+      "text": [
+        2148030692,
+        2148030828
+      ],
+      "functions": [
+        "fwide"
+      ],
+      "sdk": "tww",
+      "source": "src/PowerPC_EABI_Support/MSL/MSL_C/MSL_Common/Src/wchar_io.c"
+    },
+    {
+      "file": "GXDisplayList.c",
+      "text": [
+        2147715608,
+        2147715720
+      ],
+      "functions": [
+        "fn_80038A18"
+      ],
+      "sdk": "tww",
+      "source": "src/dolphin/gx/GXDisplayList.c"
+    },
+    {
+      "file": "fstload.c",
+      "text": [
+        2147590940,
+        2147591516
+      ],
+      "functions": [
+        "cb",
+        "__fstLoad"
+      ],
+      "sdk": "mkdd",
+      "source": "libs/dolphin/dvd/emu_level2/fstload.c"
+    },
+    {
+      "file": "OSFont.c",
+      "text": [
+        2147536344,
+        2147536432
+      ],
+      "functions": [
+        "OSGetFontEncode"
+      ],
+      "sdk": "mkdd",
+      "source": "libs/dolphin/os/OSFont.c"
     }
   ]
 }

@@ -63,6 +63,83 @@ def _idents(text: str) -> Set[str]:
     return set(re.findall(r"[A-Za-z_]\w*", text))
 
 
+def object_views(p: Project, tf: tufile.TuFile) -> List[str]:
+    """Bind conflicting object declarations once, retaining each block's typed access.
+
+    A scalar and a recovered record can describe the same retail storage. Dropping
+    either declaration changes its user's loads; casting the lvalue preserves them.
+    The normal per-block oracle still decides whether these rewrites may be kept.
+    """
+    from .fixup_source import TYPE
+    from .sdkimport import masked
+
+    pattern = re.compile(r'^\s*extern\s+(' + TYPE + r')\s*\b([A-Za-z_]\w*)'
+                         r'\s*((?:\[[^\]\n]*\]\s*)*)\s*;', re.M)
+    canonical, seen = {}, set()
+
+    def declarations(text):
+        return list(pattern.finditer(masked(text)))
+
+    def headers(text):
+        for rel in re.findall(r'^\s*#\s*include\s+"([^"]+)"', text, re.M):
+            path = ROOT / 'include' / rel
+            if path in seen or not path.exists():
+                continue
+            seen.add(path)
+            content = path.read_text()
+            headers(content)
+            for m in declarations(content):
+                canonical.setdefault(m[2], (m[1].strip(), m[3].strip()))
+
+    headers(tf.prologue)
+    for m in declarations(tf.prologue):
+        canonical.setdefault(m[2], (m[1].strip(), m[3].strip()))
+    variants = {}
+    for b in tf.blocks:
+        for m in declarations(b.body):
+            variants.setdefault(m[2], set()).add((m[1].strip(), m[3].strip()))
+    conflicts = {n for n, types in variants.items()
+                 if len(types | ({canonical[n]} if n in canonical else set())) > 1}
+    additions = []
+    for name in sorted(conflicts):
+        sym = p.resolve(name)
+        if sym is None or sym.kind != 'object':
+            continue
+        if name not in canonical:
+            typ, dims = min(variants[name], key=lambda t: (bool(re.search(r'\b(?:struct|union)\b', t[0])), t))
+            canonical[name] = typ, dims
+            additions.append(f'extern {typ} {name}{dims};')
+    repaired = []
+    for b in tf.blocks:
+        code = masked(b.body)
+        edits = []
+        for m in declarations(b.body):
+            name, typ, dims = m[2], m[1].strip(), m[3].strip()
+            if name not in conflicts or name not in canonical:
+                continue
+            # Only declaration-free uses are rewritten. Local shadowing and
+            # preprocessor definitions need scope analysis beyond this pass.
+            tail = code[m.end():]
+            if re.search(r'\b(?:' + TYPE + r')\s+\b' + re.escape(name) + r'\s*(?:[;=,)]|\[)', tail):
+                continue
+            if re.search(r'^\s*#.*\b' + re.escape(name) + r'\b', code, re.M):
+                continue
+            edits.append((m.start(), m.end(), '\n'))
+            if (typ, dims) != canonical[name]:
+                pointer = f'{typ} (*){dims}' if dims else f'{typ} *'
+                for use in re.finditer(r'\b' + re.escape(name) + r'\b', tail):
+                    at = m.end() + use.start()
+                    if re.search(r'(?:\.|->)\s*$', code[:at]):
+                        continue
+                    edits.append((at, m.end() + use.end(), f'(*({pointer})&{name})'))
+                repaired.append(name)
+        for start, end, replacement in sorted(edits, reverse=True):
+            b.body = b.body[:start] + replacement + b.body[end:]
+    if additions:
+        tf.prologue = tf.prologue.rstrip() + '\n' + '\n'.join(additions) + '\n'
+    return sorted(set(repaired))
+
+
 def isolate_typedefs(tf: tufile.TuFile, header_typedefs: Set[str]) -> List[Tuple[str, str, str]]:
     """Prefix colliding private typedef/tag names with the block's function name. Returns
     (block, old, new) renames applied (in memory)."""
@@ -145,6 +222,7 @@ def reconcile_tu(p: Project, tu_source: str, v) -> Dict[str, object]:
 
     # 2. private typedefs that collide
     out["renamed"] = len(isolate_typedefs(tf, header_typedefs))
+    out["object_views"] = object_views(p, tf)
 
     # 3. declarations, symbol by symbol
     definitions: Dict[str, str] = {}
@@ -207,6 +285,28 @@ def reconcile_tu(p: Project, tu_source: str, v) -> Dict[str, object]:
     tf.prologue = render_prologue()
     first = verdicts([b.name for b in tf.blocks])
     failing = [b.name for b in tf.blocks if b.name in units and not first.get(b.name)]
+    # Complete TUs can expose allocation changes once their object declarations
+    # agree. Repair that compile environment with the existing engine before
+    # misclassifying every declaration used by the block as contested.
+    from . import collapse, fixup, oracle
+    entry = collapse._tu_entry(p, module, tu_source)
+    complete = entry and all(units.get(n, {}).get('status') == 'matching' for n in entry['functions'])
+    if complete:
+        for bname in list(failing):
+            b = tf.get(bname)
+            gen = tufile.write_gen(p, units[bname], tf)
+            base = oracle.check_many(p, [(f'{module}:{bname}', gen)], 12)[f'{module}:{bname}']
+            if not base.ok:
+                continue
+            repair = fixup.try_fix(p, f'{module}:{bname}', gen.read_text(), base=base, max_candidates=1024)
+            prefix = tf.prologue + '\n'
+            if repair.get('matched') and repair['body'].startswith(prefix):
+                b.body = repair['body'][len(prefix):]
+                declarations = '\n'.join(ln for _, ln in _decls(original[bname]))
+                original[bname] = declarations + '\n' + b.body
+                if verify([bname]):
+                    failing.remove(bname)
+                    out.setdefault('repaired', []).append(bname)
     # phase B: for a failing block, try the other candidates of the symbols it uses, one symbol at a time
     for bname in failing:
         b = tf.get(bname)

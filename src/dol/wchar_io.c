@@ -69,6 +69,8 @@ typedef struct _FILE {
     struct _FILE *next_file;
 } FILE;
 
+int fwide(FILE *file, int mode);
+
 int fwide(FILE *file, int mode) {
     if (file == 0 || file->file_mode.file_kind == __closed_file) {
         return 0;

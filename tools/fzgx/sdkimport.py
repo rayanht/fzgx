@@ -1062,6 +1062,7 @@ def consolidate(p: Project, library: str) -> dict:
                 continue
             previous_source = tu_path.read_text() if tu_path.exists() else None
             tpath = p.module_config_dir('main') / 'tus.json'
+            previous_tus = tpath.read_bytes() if tpath.exists() else None
             tus = json.loads(tpath.read_text()) if tpath.exists() else {'module': 'main', 'tus': []}
             entry = {'file': stem + '.c', 'text': [lo, hi], 'functions': [s.name for s in members],
                      'sdk': sdk, 'source': source}
@@ -1073,6 +1074,10 @@ def consolidate(p: Project, library: str) -> dict:
             collapsed = collapse.collapse(p, tu_source)
             if not collapsed['ok']:
                 p.save_units(units)
+                if previous_tus is None:
+                    tpath.unlink(missing_ok=True)
+                else:
+                    tpath.write_bytes(previous_tus)
                 if previous_source is None:
                     tu_path.unlink()
                 else:

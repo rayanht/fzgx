@@ -62,6 +62,8 @@ class Verifier:
         h = hashlib.sha256()
         for f in sorted((ROOT / "include").rglob("*.h")):
             h.update(f.read_bytes())
+        for name in ('oracle.py', 'poolfix.py', 'regflow.py'):
+            h.update((ROOT / 'tools/fzgx' / name).read_bytes())
         self.env = h.hexdigest()[:16]
 
     def _key(self, u: dict, kind: str) -> str:

@@ -692,9 +692,6 @@ dol/__kill_critical_regions.c:
 dol/fn_8007ED90.c:
 	.text       start:0x8007ED90 end:0x8007EDB4
 
-dol/__stdio_atexit.c:
-	.text       start:0x8008067C end:0x8008068C
-
 dol/fn_8008068C.c:
 	.text       start:0x8008068C end:0x8008069C
 
@@ -2246,9 +2243,6 @@ dol/fn_800365A0.c:
 dol/fn_800377C8.c:
 	.text       start:0x800377C8 end:0x800377F8 align:4
 
-dol/fn_80038A18.c:
-	.text       start:0x80038A18 end:0x80038A88 align:4
-
 dol/fn_80038CFC.c:
 	.text       start:0x80038CFC end:0x80038D34 align:4
 
@@ -3735,12 +3729,6 @@ dol/__DVDPrepareResetAsync.c:
 dol/__DVDCheckWaitingQueue.c:
 	.text       start:0x80019FA4 end:0x80019FFC align:4
 
-dol/DVDCompareDiskID.c:
-	.text       start:0x8001A1F4 end:0x8001A2EC align:4
-
-dol/cb.c:
-	.text       start:0x8001A31C end:0x8001A3F4 align:4
-
 dol/DVDLowClearCallback.c:
 	.text       start:0x80016D64 end:0x80016D7C align:4
 
@@ -3996,17 +3984,11 @@ dol/AIInit.c:
 dol/__AI_SRC_INIT.c:
 	.text       start:0x8001E600 end:0x8001E7E4 align:4
 
-dol/fwide.c:
-	.text       start:0x800858E4 end:0x8008596C align:4
-
 dol/IsCard.c:
 	.text       start:0x8002D6B0 end:0x8002D77C align:4
 
 dol/GXSetTevOrder.c:
 	.text       start:0x800375F0 end:0x800377C8 align:4
-
-dol/OSGetFontEncode.c:
-	.text       start:0x8000CDD8 end:0x8000CE30 align:4
 
 dol/setVerticalRegs.c:
 	.text       start:0x8001B28C end:0x8001B42C align:4
@@ -5058,9 +5040,6 @@ dol/fn_8003B930.c:
 dol/VIGetTvFormat.c:
 	.text       start:0x8001C01C end:0x8001C084 align:4
 
-dol/__fstLoad.c:
-	.text       start:0x8001A3F4 end:0x8001A55C align:4
-
 dol/SIGetType.c:
 	.text       start:0x80012D0C end:0x80012ED0 align:4
 
@@ -5201,3 +5180,21 @@ dol/fn_8003E9EC.c:
 
 dol/fn_8007CF18.c:
 	.text       start:0x8007CF18 end:0x8007E69C align:4
+
+dol/dvdidutils.c:
+	.text       start:0x8001A1F4 end:0x8001A2EC align:4
+
+dol/misc_io.c:
+	.text       start:0x8008067C end:0x8008068C align:4
+
+dol/wchar_io.c:
+	.text       start:0x800858E4 end:0x8008596C align:4
+
+dol/GXDisplayList.c:
+	.text       start:0x80038A18 end:0x80038A88 align:4
+
+dol/fstload.c:
+	.text       start:0x8001A31C end:0x8001A55C align:4
+
+dol/OSFont.c:
+	.text       start:0x8000CDD8 end:0x8000CE30 align:4

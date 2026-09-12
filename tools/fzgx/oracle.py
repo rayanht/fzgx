@@ -278,6 +278,7 @@ def _diff(project: Project, module: str, symbol: str, unit: str, max_diff_lines:
                     f"retail target does not match its module binding: {module}:{symbol}"))
         cp = run([str(OBJDIFF), "diff", "-1", str(target), "-2", str(base), "-o", "-", "--format", "json", symbol])
     else:
+        base = _base_object(project, unit)
         cp = run([str(OBJDIFF), "diff", "-p", str(ROOT), "-u", unit, "-o", "-", "--format", "json"])
     if cp.returncode != 0:
         return CheckResult(False, symbol, unit, error=(cp.stderr or cp.stdout).strip()[-4000:])
@@ -708,8 +709,9 @@ def _pool_rows(project: Project, module: str, left: dict, right: dict,
         if not s or s.kind != "object" or s.section not in (".rodata", ".sdata2", ".data", ".sdata"):
             continue
         private_name = rsym.get('name', '')
-        if not (private_name.startswith('@') or ('$' in private_name and '$' in s.name
-                and private_name.split('$')[0] == s.name.split('$')[0])):
+        own = objects.get(private_name)
+        local_static = '$' in private_name and own and own['info'] >> 4 == 0
+        if not (private_name.startswith('@') or local_static):
             continue
         # Private initializer objects include strings and aggregates, not just
         # floating literals. Verify the complete object, including padding, and
