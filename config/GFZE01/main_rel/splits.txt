@@ -6200,3 +6200,6 @@ rel/main_rel/memcard/fn_1_ABB4C.c:
 
 rel/main_rel/memcard/fn_1_B277C.c:
 	.text       start:0x000B277C end:0x000B38F4 align:4
+
+rel/main_rel/sel_static_disp/fn_1_134EE4.c:
+	.text       start:0x00134EE4 end:0x00135894 align:4
