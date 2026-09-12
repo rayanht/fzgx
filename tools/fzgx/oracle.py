@@ -757,6 +757,11 @@ def _pool_rows(project: Project, module: str, left: dict, right: dict,
         address = s.addr + int(lrel.get('addend') or 0) - int(rrel.get('addend') or 0)
         anchor = s if address == s.addr else next((t for t in syms.values()
                     if t.section == s.section and t.addr == address and t.kind == 'object'), None)
+        interior = 0
+        if anchor is None and s.addr < address < s.end:
+            # a literal inside a coarse retail pool object (objdiff resolves a displacement off
+            # the pool base to the object plus an offset): bind to the object with an addend
+            anchor, interior = s, address - s.addr
         if anchor is None:
             continue
         if module == 'main':
@@ -771,7 +776,7 @@ def _pool_rows(project: Project, module: str, left: dict, right: dict,
             retail = raw[offset:offset + len(ours)] if raw is not None and offset >= 0 else None
         if not ours or ours != retail:
             continue
-        lname = anchor.name
+        lname = anchor.name if not interior else f"{anchor.name}+0x{interior:X}"
         rows.add(i)
         pair = (rsym["name"], lname, f"{lname}=initializer[{len(ours)}]")
         if pair not in pairs:
