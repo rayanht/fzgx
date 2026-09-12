@@ -1,10 +1,18 @@
 #include "types.h"
 #include "rel/main_rel/globals.h"
 #include "rel/main_rel/bg_for.h"
+extern void OSPanic(const char *, int, const char *, ...);
+extern struct fn_1_DCE60_lbl_1_rodata_6750 lbl_1_rodata_6750;
+extern void lbl_8006DAEC(void);
+extern void lbl_8006DD14(void *, void *);
+extern void fn_1_A7024(f32, f32, f32, f32);
+extern void fn_8006F1F0(void *, void *, void *);
+extern void lbl_8006DB74(void *);
+extern void lbl_8006DCDC(void);
+extern void lbl_8006DB30(void);
+extern void fn_1_E1408(void *, void *);
 
 /* fzgx:begin fn_1_DCBF4 */
-extern void OSPanic(const char *, int, const char *, ...);
-
 #pragma opt_dead_assignments off
 s32 fn_1_DCBF4(s32 value, s32 data) {
     Obj_1_data_2A7E0_At3C *obj;
@@ -114,8 +122,6 @@ struct fn_1_DCE60_lbl_1_rodata_6750 {
     f32 unk_2C;
 };
 
-extern struct fn_1_DCE60_lbl_1_rodata_6750 lbl_1_rodata_6750;
-
 #pragma opt_propagation off
 f32 fn_1_DCE60(struct fn_1_DCE60_Arg0 *arg0, f32 arg1) {
     u32 v0;
@@ -144,23 +150,15 @@ f32 fn_1_DCE60(struct fn_1_DCE60_Arg0 *arg0, f32 arg1) {
 /* fzgx:end fn_1_DCE60 */
 
 /* fzgx:begin fn_1_DCED0 */
-extern void lbl_8006DAEC(void);
-extern void lbl_8006DD14(void *, void *);
-extern void fn_1_A7024(f32, f32, f32, f32);
-extern void fn_8006F1F0(void *, void *, void *);
-extern void lbl_8006DB74(void *);
-extern void lbl_8006DCDC(void);
-extern void lbl_8006DB30(void);
-
-typedef struct Vec3 {
+typedef struct fn_1_DCED0_Vec3 {
     u32 x;
     u32 y;
     u32 z;
-} Vec3;
+} fn_1_DCED0_Vec3;
 
 typedef struct BgForObject {
-    Vec3 value00;
-    Vec3 value0c;
+    fn_1_DCED0_Vec3 value00;
+    fn_1_DCED0_Vec3 value0c;
     u8 unk18[0xc];
     u32 value24;
     u8 unk28[0x8];
@@ -185,22 +183,22 @@ void fn_1_DCED0(BgForObject *object) {
 /* fzgx:end fn_1_DCED0 */
 
 /* fzgx:begin fn_1_DCF54 */
-typedef struct Vec3 {
+typedef struct fn_1_DCF54_Vec3 {
     u32 x;
     u32 y;
     u32 z;
-} Vec3;
+} fn_1_DCF54_Vec3;
 
 typedef struct State {
-    Vec3 a;
+    fn_1_DCF54_Vec3 a;
     u8 pad[12];
-    Vec3 b;
-    Vec3 c;
+    fn_1_DCF54_Vec3 b;
+    fn_1_DCF54_Vec3 c;
 } State;
 
 extern State lbl_1_bss_7ADE8;
 
-void fn_1_DCF54(Vec3 *a, Vec3 *b, Vec3 *c) {
+void fn_1_DCF54(fn_1_DCF54_Vec3 *a, fn_1_DCF54_Vec3 *b, fn_1_DCF54_Vec3 *c) {
     lbl_1_bss_7ADE8.a = *a;
     lbl_1_bss_7ADE8.b = *b;
     lbl_1_bss_7ADE8.c = *c;
@@ -208,8 +206,6 @@ void fn_1_DCF54(Vec3 *a, Vec3 *b, Vec3 *c) {
 /* fzgx:end fn_1_DCF54 */
 
 /* fzgx:begin fn_1_E1934 */
-extern void fn_1_E1408(void *, void *);
-
 typedef struct {
     u8 pad0[0x8];
     s16 field8;

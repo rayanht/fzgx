@@ -14,15 +14,20 @@ extern void fn_1_1502BC(void *, void *, void *);
 
 extern void fn_80083DB0(void* arg0, u32 arg1);
 extern void fn_1_801F8(s16 arg0, void* arg1);
-
-/* fzgx:begin fn_1_7C13C noprologue */
-#include "types.h"
-
 extern const f32 lbl_1_rodata_33AC;
-extern u8 lbl_1_data_1EF5C[128];
-extern u8 *lbl_801A6410;
-
 extern void *fn_1_4630(void *arg0, u32 arg1, void *arg2, u32 arg3);
+extern const f32 lbl_1_rodata_33B0[84];
+extern void *memset(void *dst, int value, u32 size);
+extern void fn_1_46B4(void *arg0, void *arg1, u8 *arg2, s32 arg3);
+extern void fn_1_7F954(void *arg0, s32 arg1);
+extern void fn_1_49614(void);
+extern const f32 lbl_1_rodata_33A8;
+extern void fn_80071ED4(s32 arg0, f32 arg1, f32 arg2);
+extern void fn_80072014(void *arg0);
+extern void fn_800720B0(s32 arg0);
+
+/* fzgx:begin fn_1_7C13C */
+#include "types.h"
 
 typedef struct {
     u8 pad_32c[0x32c];
@@ -46,7 +51,7 @@ void fn_1_7C13C(Fn17C13CEntry *arg0) {
     value = 100.0f;
     p = arg0;
     for (i = 0; i < 0x29; i++) {
-        p->field_32c = fn_1_4630(lbl_801A6410, 0x620, lbl_1_data_1EF5C, 0x58);
+        p->field_32c = fn_1_4630((*(u8 * *)&lbl_801A6410), 0x620, (*(u8 (*)[128])&lbl_1_data_1EF5C), 0x58);
         ((Fn17C13CObject *)p->field_32c)->field_6 = (u16)i;
         ((Fn17C13CObject *)p->field_32c)->field_4 = (u16)i;
         ((Fn17C13CObject *)p->field_32c)->field_184 = value;
@@ -56,19 +61,13 @@ void fn_1_7C13C(Fn17C13CEntry *arg0) {
 /* fzgx:end fn_1_7C13C */
 
 /* fzgx:begin fn_1_7C1E8 */
-extern const f32 lbl_1_rodata_33B0[84];
-extern u8 lbl_1_data_1EF5C[128];
-extern void *lbl_801A6410;
-extern void *fn_1_4630(void *arg0, int arg1, void *arg2, int arg3);
-extern void *memset(void *dst, int value, u32 size);
-
 void fn_1_7C1E8(void *out) {
     u8 *p;
     s8 i;
 
     p = (u8 *)out;
     for (i = 0; i < 2; i++) {
-        *(u32 *)p = (u32)fn_1_4630(lbl_801A6410, 4, lbl_1_data_1EF5C, 0x68);
+        *(u32 *)p = (u32)fn_1_4630(lbl_801A6410, 4, (*(u8 (*)[128])&lbl_1_data_1EF5C), 0x68);
         memset(*(void **)p, 0xff, 4);
         *(f32 *)(p + 4) = lbl_1_rodata_33B0[0];
         *(u16 *)(p + 8) = 0xE000;
@@ -106,13 +105,6 @@ void fn_1_7D694(Object *obj) {
 /* fzgx:end fn_1_7D694 */
 
 /* fzgx:begin fn_1_7E7A4 */
-extern u8 lbl_1_data_1EF5C[128];
-extern void fn_1_46B4(void *arg0, void *arg1, u8 *arg2, s32 arg3);
-extern void fn_1_7F954(void *arg0, s32 arg1);
-extern void fn_1_49614(void);
-extern const f32 lbl_1_rodata_33A8;
-extern void *lbl_801A6410;
-
 typedef struct Fn1_7E7A4Data {
     void *field_0;
     u8 pad_4[8];
@@ -130,7 +122,7 @@ void fn_1_7E7A4(Fn1_7E7A4Data *arg0) {
         fn_1_46B4(
             lbl_801A6410,
             *(void **)(((((((0x32c) + ((u8 *)arg0->field_0)))) + ((offset))))),
-            lbl_1_data_1EF5C,
+            (*(u8 (*)[128])&lbl_1_data_1EF5C),
             0x313);
     }
 
@@ -140,13 +132,13 @@ void fn_1_7E7A4(Fn1_7E7A4Data *arg0) {
         fn_1_46B4(
             lbl_801A6410,
             *(void **)((u8 *)arg0->field_1c + i * 0xc),
-            lbl_1_data_1EF5C,
+            (*(u8 (*)[128])&lbl_1_data_1EF5C),
             0x321);
     }
 
-    fn_1_46B4(lbl_801A6410, arg0->field_18, lbl_1_data_1EF5C, 0x324);
-    fn_1_46B4(lbl_801A6410, arg0->field_c, lbl_1_data_1EF5C, 0x325);
-    fn_1_46B4(lbl_801A6410, arg0, lbl_1_data_1EF5C, 0x326);
+    fn_1_46B4(lbl_801A6410, arg0->field_18, (*(u8 (*)[128])&lbl_1_data_1EF5C), 0x324);
+    fn_1_46B4(lbl_801A6410, arg0->field_c, (*(u8 (*)[128])&lbl_1_data_1EF5C), 0x325);
+    fn_1_46B4(lbl_801A6410, arg0, (*(u8 (*)[128])&lbl_1_data_1EF5C), 0x326);
     fn_1_49614();
     fn_80074D68(lbl_1_rodata_33A8, lbl_1_rodata_33A8, lbl_1_rodata_33A8);
     fn_80074D78(1);
@@ -163,10 +155,6 @@ void fn_1_7EAE8(void) {
 /* fzgx:end fn_1_7EAE8 */
 
 /* fzgx:begin fn_1_7EB0C */
-extern void fn_80071ED4(s32 arg0, f32 arg1, f32 arg2);
-extern void fn_80072014(void *arg0);
-extern void fn_800720B0(s32 arg0);
-
 typedef struct {
     s8 unk_0;
 } SignedByteView;

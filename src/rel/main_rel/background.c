@@ -356,7 +356,7 @@ void fn_1_9E5B8(Obj_1_bss_6EA80_Target *node) {
 }
 /* fzgx:end fn_1_9E5B8 */
 
-/* fzgx:begin fn_1_9EDE8 noprologue */
+/* fzgx:begin fn_1_9EDE8 */
 #include "dolphin/hw_regs.h"
 #include "types.h"
 #include "dolphin/types.h"

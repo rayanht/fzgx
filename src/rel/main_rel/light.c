@@ -13,6 +13,7 @@ extern u8 fn_1_816E8(void *, u8);
 extern const f32 lbl_1_rodata_33A8;
 extern void fn_1_495D8(int, int, f32);
 extern void fn_1_495FC(void);
+extern void OSPanic(const char *, int, const char *, ...);
 
 /* fzgx:begin fn_1_7BCCC */
 typedef struct {
@@ -30,7 +31,6 @@ typedef struct {
     u32 unk_20;
 } Fn17BCCCState;
 
-extern void OSPanic(const char *, int, const char *, ...);
 extern void fn_80074D28(Triple_80074D28 *);
 
 void fn_1_7BCCC(Triple_80074D28 *arg0) {

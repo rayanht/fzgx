@@ -12,13 +12,15 @@ extern void fn_1_A6870(u32 *);
 extern void fn_1_A5F44(void);
 extern s32 fn_1_A6480(void);
 
-/* fzgx:begin fn_1_A5C98 noprologue */
+/* fzgx:begin fn_1_A5C98 */
 #include "types.h"
 
 extern u32 lbl_1_bss_6F5C0;
 extern u8 lbl_1_bss_6F5C4[44];
-extern u8 lbl_1_data_34140[84];
-extern char lbl_1_data_34194[31];
+
+
+
+
 extern u8 *lbl_801A6410;
 
 extern void OSUnlink(void *);
@@ -41,15 +43,15 @@ void fn_1_A5C98(Fn1A5C98Object *self) {
         v1 = (u32)lbl_1_bss_6F5C4;
         v1 = (u32)((u8 *)v1 + (lbl_1_bss_6F5C0 << 2));
         if (*(u32 *)((u8 *)v1 - 4) != (u32)self) {
-            OSPanic(lbl_1_data_34140, 0x78, lbl_1_data_34194);
+            OSPanic((*(u8 (*)[84])&lbl_1_data_34140), 0x78, (*(char (*)[31])&lbl_1_data_34194));
         }
 
         lbl_1_bss_6F5C0--;
 
         if (self->unk4 != 0) {
-            fn_1_46B4(lbl_801A6410, self->unk4, lbl_1_data_34140, 0x7b);
+            fn_1_46B4(lbl_801A6410, self->unk4, (*(u8 (*)[84])&lbl_1_data_34140), 0x7b);
         }
-        fn_1_46B4(lbl_801A6410, self->unk0, lbl_1_data_34140, 0x7c);
+        fn_1_46B4(lbl_801A6410, self->unk0, (*(u8 (*)[84])&lbl_1_data_34140), 0x7c);
 
         self->unk0 = 0;
         self->unk4 = 0;
@@ -85,12 +87,13 @@ s32 fn_1_A5DC4(void) {
 }
 /* fzgx:end fn_1_A5DC4 */
 
-/* fzgx:begin fn_1_A5DEC noprologue */
+/* fzgx:begin fn_1_A5DEC */
 #include "types.h"
 #include "dolphin/os/OSTime.h"
 
-extern u16 lbl_1_bss_9F8;
-extern u32 lbl_1_data_341B8;
+
+
+
 extern u32 VIGetDTVStatus(void);
 extern void fn_1_3308(void);
 extern OSTick OSGetTick(void);
@@ -108,14 +111,14 @@ void fn_1_A5DEC(void) {
             temp_r28 = (__OSBusClock >> 2) / 1000;
         } while ((u32) ((OSGetTick() / temp_r28) - (temp_r29 / temp_r28)) < 0x1F4U);
         fn_1_3308();
-        if ((((u16) (*(u16 *)((u8 *)(&lbl_1_bss_9F8) + 0)) >> 9U) & 1) || (((u16) (*(u16 *)((u8 *)(&lbl_1_bss_9F8) + 20)) >> 9U) & 1) || (((u16) (*(u16 *)((u8 *)(&lbl_1_bss_9F8) + 40)) >> 9U) & 1) || (((u16) (*(u16 *)((u8 *)(&lbl_1_bss_9F8) + 60)) >> 9U) & 1) || (OSGetProgressiveMode() != 0)) {
-            (*(s32 *)((u8 *)((*(u32 *)((u8 *)(&lbl_1_data_341B8) + 0))) + 0)) = 1;
+        if ((((u16) (*(u16 *)((u8 *)(&(*(u16 *)&lbl_1_bss_9F8)) + 0)) >> 9U) & 1) || (((u16) (*(u16 *)((u8 *)(&(*(u16 *)&lbl_1_bss_9F8)) + 20)) >> 9U) & 1) || (((u16) (*(u16 *)((u8 *)(&(*(u16 *)&lbl_1_bss_9F8)) + 40)) >> 9U) & 1) || (((u16) (*(u16 *)((u8 *)(&(*(u16 *)&lbl_1_bss_9F8)) + 60)) >> 9U) & 1) || (OSGetProgressiveMode() != 0)) {
+            (*(s32 *)((u8 *)((*(u32 *)((u8 *)(&(*(u32 *)&lbl_1_data_341B8)) + 0))) + 0)) = 1;
             return;
         }
-        (*(s32 *)((u8 *)((*(u32 *)((u8 *)(&lbl_1_data_341B8) + 0))) + 0)) = 0;
+        (*(s32 *)((u8 *)((*(u32 *)((u8 *)(&(*(u32 *)&lbl_1_data_341B8)) + 0))) + 0)) = 0;
         return;
     }
-    (*(s32 *)((u8 *)((*(u32 *)((u8 *)(&lbl_1_data_341B8) + 0))) + 0)) = 0;
+    (*(s32 *)((u8 *)((*(u32 *)((u8 *)(&(*(u32 *)&lbl_1_data_341B8)) + 0))) + 0)) = 0;
 }
 /* fzgx:end fn_1_A5DEC */
 
@@ -160,20 +163,21 @@ s32 fn_1_A66FC(s32 value) {
 }
 /* fzgx:end fn_1_A66FC */
 
-/* fzgx:begin fn_1_A67E8 noprologue */
+/* fzgx:begin fn_1_A67E8 */
 #include "types.h"
 
 struct fn_1_A67E8_lbl_1_bss_6F5F0 {
     u32 unk_0;
 };
-extern struct fn_1_A67E8_lbl_1_bss_6F5F0 lbl_1_bss_6F5F0;
+
+
 extern void fn_1_A6870(u32 *);
 
 void fn_1_A67E8(void) {
     s32 var_r0;
     s32 temp_r3;
 
-    temp_r3 = lbl_1_bss_6F5F0.unk_0 + 1;
+    temp_r3 = (*(struct fn_1_A67E8_lbl_1_bss_6F5F0 *)&lbl_1_bss_6F5F0).unk_0 + 1;
     if (temp_r3 > 3) {
         var_r0 = 0;
     } else {
@@ -182,8 +186,8 @@ void fn_1_A67E8(void) {
             var_r0 = temp_r3;
         }
     }
-    lbl_1_bss_6F5F0.unk_0 = (u32) var_r0;
-    fn_1_A6870((u32 *)(&lbl_1_bss_6F5F0.unk_0));
+    (*(struct fn_1_A67E8_lbl_1_bss_6F5F0 *)&lbl_1_bss_6F5F0).unk_0 = (u32) var_r0;
+    fn_1_A6870((u32 *)(&(*(struct fn_1_A67E8_lbl_1_bss_6F5F0 *)&lbl_1_bss_6F5F0).unk_0));
 }
 /* fzgx:end fn_1_A67E8 */
 

@@ -48,6 +48,16 @@ extern u32 fn_80008EC8(u32, u32, u32);
 extern u32 fn_800793D4(u32, u32, u32);
 extern struct fn_1_48B0_lbl_801A6CF8 lbl_801A6CF8;
 extern u32 lbl_801A6CFC;
+extern struct fn_1_44B4_lbl_1_bss_DB8 lbl_1_bss_DB8;
+extern struct fn_1_4438_lbl_1_bss_DC4 lbl_1_bss_DC4;
+extern u8 lbl_1_bss_8E6B0[308];
+extern void fn_1_14FCE4(void *data, s32 value);
+extern struct fn_1_798_slot lbl_1_bss_8E7E4[];
+extern u8 lbl_1_bss_AA0[336];
+extern u8 lbl_1_rodata_108[88];
+extern u32 fn_80008BA8(void *, void *, u32);
+extern void fn_1_3BDC(u32 arg0);
+extern u32 fn_1_3C18(s32);
 
 /* fzgx:begin fn_1_634 */
 struct fn_1_634_lbl_1_bss_54 {
@@ -154,7 +164,6 @@ void fn_1_6D4(struct fn_1_6D4_Data *data) {
 
 /* fzgx:begin fn_1_798 noprologue */
 #include "types.h"
-#include "rel/main_rel/globals.h"
 
 struct fn_1_798_slot {
     u8 unk_0[8];
@@ -483,10 +492,7 @@ void fn_1_3238(void) {
 /* fzgx:end fn_1_3238 */
 
 /* fzgx:begin fn_1_3B34 */
-extern u8 lbl_1_bss_AA0[336];
-extern u8 lbl_1_rodata_108[88];
 extern u32 fn_80008BEC(void *, u32, u32);
-extern u32 fn_80008BA8(void *, void *, u32);
 
 void fn_1_3B34(void) {
     u32 i;
@@ -611,7 +617,8 @@ s32 fn_1_3F8C(u32 arg3, u32 arg0, u32 arg1, u32 index) {
 /* fzgx:end fn_1_3F8C */
 
 /* fzgx:begin fn_1_4010 */
-extern u32 lbl_1_bss_DAC;
+
+
 
 // Store a value in the indexed entry of the active table.
 u32 fn_1_4010(u32 arg0, u32 arg1) {
@@ -623,10 +630,10 @@ u32 fn_1_4010(u32 arg0, u32 arg1) {
 }
 /* fzgx:end fn_1_4010 */
 
-/* fzgx:begin fn_1_4030 noprologue */
+/* fzgx:begin fn_1_4030 */
 #include "types.h"
 
-extern struct fn_1_4030_lbl_1_bss_DA8 lbl_1_bss_DA8;
+
 
 struct fn_1_4030_lbl_1_bss_DA8 {
     u32 unk_0;
@@ -636,7 +643,7 @@ u32 fn_1_4030(u32 arg0) {
     u32 v0;
     u32 v1;
     u32 v2;
-    v0 = *(u32 *)((u8 *)lbl_1_bss_DA8.unk_0 + 8);
+    v0 = *(u32 *)((u8 *)(*(struct fn_1_4030_lbl_1_bss_DA8 *)&lbl_1_bss_DA8).unk_0 + 8);
     v1 = *(u32 *)((u8 *)v0 + 0);
     v2 = arg0;
     if (v1 == 0) {
@@ -650,7 +657,8 @@ u32 fn_1_4030(u32 arg0) {
 /* fzgx:end fn_1_4030 */
 
 /* fzgx:begin fn_1_4060 */
-extern u32 lbl_1_bss_DA8;
+
+
 
 u32 fn_1_4060(void) {
     u32 *base;
@@ -663,7 +671,7 @@ u32 fn_1_4060(void) {
 }
 /* fzgx:end fn_1_4060 */
 
-/* fzgx:begin fn_1_407C noprologue */
+/* fzgx:begin fn_1_407C */
 #include "types.h"
 
 typedef u32 (*fn_1_407C_Fn0)(u32);
@@ -673,12 +681,8 @@ struct fn_1_407C_lbl_1_bss_DAC {
 struct fn_1_407C_lbl_1_bss_DA8 {
     u32 unk_0;
 };
-extern struct fn_1_407C_lbl_1_bss_DA8 lbl_1_bss_DA8;
-extern struct fn_1_407C_lbl_1_bss_DAC lbl_1_bss_DAC;
-extern void fn_1_3BDC(u32);
-extern u32 fn_1_3C18(s32);
-extern void fn_1_43A4(void);
 
+extern void fn_1_43A4(void);
 
 void fn_1_407C(s32 arg_sp0) {
     u32 var_r31;
@@ -690,7 +694,7 @@ void fn_1_407C(s32 arg_sp0) {
     s32 (*temp_r23)(s32);
 
     var_r27 = 0;
-    temp_r30 = lbl_1_bss_DAC.unk_0;
+    temp_r30 = (*(struct fn_1_407C_lbl_1_bss_DAC *)&lbl_1_bss_DAC).unk_0;
     var_r31 = temp_r30;
     temp_r29 = *(s32 *)((u8 *)(temp_r30) + 16);
     temp_r28 = (u8) (*(s32 *)((u8 *)(temp_r30) + 20));
@@ -700,15 +704,15 @@ void fn_1_407C(s32 arg_sp0) {
             while (var_r24 != NULL) {
                 temp_r23 = (s32 (*)(s32))(*(s32 (**)(s32))((u8 *)(var_r24) + 0));
                 (*(void **)((u8 *)(temp_r30) + 8)) = (void *)(var_r24);
-                lbl_1_bss_DAC.unk_0 = temp_r30;
-                lbl_1_bss_DA8.unk_0 = temp_r30;
+                (*(struct fn_1_407C_lbl_1_bss_DAC *)&lbl_1_bss_DAC).unk_0 = temp_r30;
+                (*(struct fn_1_407C_lbl_1_bss_DA8 *)&lbl_1_bss_DA8).unk_0 = temp_r30;
                 if (((temp_r28 == 0) || ((u8) (temp_r28 & (*(s32 *)((u8 *)(var_r24) + 20))) != 0)) && (temp_r23 != NULL)) {
                     fn_1_3BDC(5U);
                     temp_r23(*(s32 *)((u8 *)(var_r24) + 4));
                     (*(s32 *)((u8 *)(var_r24) + 28)) = (s32) ((*(s32 *)((u8 *)(var_r24) + 28)) + fn_1_3C18(5));
                 }
-                lbl_1_bss_DAC.unk_0 = temp_r30;
-                lbl_1_bss_DA8.unk_0 = temp_r30;
+                (*(struct fn_1_407C_lbl_1_bss_DAC *)&lbl_1_bss_DAC).unk_0 = temp_r30;
+                (*(struct fn_1_407C_lbl_1_bss_DA8 *)&lbl_1_bss_DA8).unk_0 = temp_r30;
                 if ((void *) (*(void **)((u8 *)(temp_r30) + 8)) == var_r24) {
                     var_r24 = (void *)(*(void **)((u8 *)(var_r24) + 8));
                     if (temp_r23 == NULL) {
@@ -723,8 +727,8 @@ void fn_1_407C(s32 arg_sp0) {
         var_r31 += 4;
     } while (var_r27 < 0x20);
     (*(void **)((u8 *)(temp_r30) + 8)) = (void *)(NULL);
-    lbl_1_bss_DAC.unk_0 = temp_r30;
-    lbl_1_bss_DA8.unk_0 = 0;
+    (*(struct fn_1_407C_lbl_1_bss_DAC *)&lbl_1_bss_DAC).unk_0 = temp_r30;
+    (*(struct fn_1_407C_lbl_1_bss_DA8 *)&lbl_1_bss_DA8).unk_0 = 0;
 }
 /* fzgx:end fn_1_407C */
 
@@ -795,7 +799,8 @@ void fn_1_41A8(void) {
 /* fzgx:end fn_1_41A8 */
 
 /* fzgx:begin fn_1_4310 */
-extern u32 lbl_1_bss_DAC;
+
+
 
 // Store the value in the shared state object's field.
 void fn_1_4310(u32 arg0) {
@@ -804,7 +809,8 @@ void fn_1_4310(u32 arg0) {
 /* fzgx:end fn_1_4310 */
 
 /* fzgx:begin fn_1_4324 */
-extern u32 lbl_1_bss_DAC;
+
+
 
 // Store the current value in the shared state block.
 void fn_1_4324(u32 arg0) {
@@ -822,7 +828,7 @@ struct fn_1_4338_root {
     struct fn_1_4338_target *unk_0;
 };
 
-extern u32 lbl_1_bss_DAC;
+
 
 // Return the value stored in the pointed-to object's field at offset 0x14.
 u32 fn_1_4338(void) {
@@ -840,7 +846,8 @@ u32 fn_1_434C(void) {
 /* fzgx:end fn_1_434C */
 
 /* fzgx:begin fn_1_435C */
-extern u32 lbl_1_bss_DAC;
+
+
 
 u32 fn_1_435C(u32 value) {
     u32 old;
@@ -882,7 +889,7 @@ void fn_1_4374(Node **list, Node *node) {
 }
 /* fzgx:end fn_1_4374 */
 
-/* fzgx:begin fn_1_43A4 noprologue */
+/* fzgx:begin fn_1_43A4 */
 #include "types.h"
 
 typedef struct ListNode ListNode;
@@ -900,13 +907,13 @@ typedef struct ListManager {
     ListNode *current;
 } ListManager;
 
-extern ListManager *lbl_1_bss_DA8;
+
 
 #pragma opt_propagation off
 void fn_1_43A4(void) {
     ListNode *next;
     ListNode *prev;
-    ListManager *manager = lbl_1_bss_DA8;
+    ListManager *manager = (*(ListManager * *)&lbl_1_bss_DA8);
     ListNode *node = manager->current;
     ListNode *head;
 
@@ -991,19 +998,21 @@ void fn_1_446C(void) {
 /* fzgx:end fn_1_446C */
 
 /* fzgx:begin fn_1_44A4 */
-extern struct fn_1_44A4_lbl_1_bss_DC4 lbl_1_bss_DC4;
+
+
 
 struct fn_1_44A4_lbl_1_bss_DC4 {
     u32 unk_0;
 };
 
 u32 fn_1_44A4(void) {
-    return lbl_1_bss_DC4.unk_0;
+    return (*(struct fn_1_44A4_lbl_1_bss_DC4 *)&lbl_1_bss_DC4).unk_0;
 }
 /* fzgx:end fn_1_44A4 */
 
 /* fzgx:begin fn_1_44B4 */
-extern struct fn_1_44B4_lbl_1_bss_DB8 lbl_1_bss_DB8;
+
+
 extern u32 OSGetArenaHi(void);
 extern u32 OSGetArenaLo(void);
 extern u32 fn_80008F60(u32, u32);
@@ -1236,12 +1245,13 @@ s32 fn_1_48B0(u32 arg0, u32 arg1) {
 }
 /* fzgx:end fn_1_48B0 */
 
-/* fzgx:begin fn_1_48E8 noprologue */
+/* fzgx:begin fn_1_48E8 */
 #include "types.h"
 #include "rel/main_rel/globals.h"
 
 extern u32 lbl_801A6CFC;
-extern u32 lbl_801A6CF8;
+
+
 
 #pragma opt_propagation off
 s32 fn_1_48E8(u32 arg0, u32 arg1) {
@@ -1256,7 +1266,7 @@ s32 fn_1_48E8(u32 arg0, u32 arg1) {
     step = ((value - 1) / arg1) + 1;
     result = arg1 * step;
     total = result + arg0;
-    if (total > lbl_801A6CF8) {
+    if (total > (*(u32 *)&lbl_801A6CF8)) {
         return 0;
     }
     *counter = total;

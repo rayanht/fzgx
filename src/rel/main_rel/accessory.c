@@ -13,6 +13,41 @@ extern s32 fn_1_86678(s32 arg);
 extern u32 lbl_1_bss_897AC[1741];
 extern u32 lbl_1_bss_897A4;
 extern u32 lbl_1_bss_897A8;
+extern void * lbl_801A6410;
+extern void lbl_8006DAEC(void);
+extern void lbl_8006DBE4(void);
+extern void lbl_8006E1B0(void *, void *);
+extern void lbl_8006DC20(void);
+extern const f64 lbl_1_rodata_7BF8;
+extern void fn_80008BA8(void *dst, void *src, int size);
+extern void *fn_1_45D0(void *manager, int type, void *data, int code);
+extern void fn_1_105744(void);
+extern void fn_1_106DB4(void);
+extern void fn_1_9D0EC(u32, u32, void*, void*);
+extern void fn_1_103AA8(void);
+extern u32 lbl_1_bss_85288[2];
+extern void fn_1_103AD4(void);
+extern void fn_1_105768(void);
+extern void fn_1_9E5B8(void *);
+extern f32 lbl_1_rodata_7B58[40];
+extern u8 lbl_1_rodata_8058[16];
+extern int mathutil_mtxA_rotate_z__fzgx_offset_C();
+extern struct fn_1_129D9C_system *lbl_801A6D00;
+extern void lbl_8006DCA4(void);
+extern void lbl_8006E1C0(void *, void *);
+extern void lbl_8006DFC4(void *);
+extern void lbl_8006D7B0(void);
+extern void lbl_8006D668(void *);
+extern void lbl_8006E0B4(f32, f32, f32);
+extern void lbl_8006E14C(f32);
+extern void lbl_8006DB74(void *);
+extern void fn_80072558(void);
+extern void fn_80083DB0(void *, void *);
+extern void *fn_1_55210(void *);
+extern void *fn_1_548AC(u32);
+extern void *fn_1_5448C(void *);
+extern void fn_1_5489C(void *, void *);
+extern void fn_1_12A0E0(void);
 
 /* fzgx:begin fn_1_108870 */
 #include "rel/main_rel/accessory.h"
@@ -21,14 +56,14 @@ typedef struct {
     u8 pad_0[0xc];
     u32 unk_c;
     u8 pad_10[0x58];
-} AccessoryEntry;
+} fn_1_108870_AccessoryEntry;
 
-AccessoryEntry *fn_1_108870(void) {
+fn_1_108870_AccessoryEntry *fn_1_108870(void) {
     u32 i;
 
     for (i = 0; i < 0x46; i++) {
-        if (((AccessoryEntry *)&lbl_1_bss_86ED0)[i].unk_c == 0) {
-            return &((AccessoryEntry *)&lbl_1_bss_86ED0)[i];
+        if (((fn_1_108870_AccessoryEntry *)&lbl_1_bss_86ED0)[i].unk_c == 0) {
+            return &((fn_1_108870_AccessoryEntry *)&lbl_1_bss_86ED0)[i];
         }
     }
     return 0;
@@ -42,13 +77,13 @@ typedef struct {
     u8 pad_0[0xc];
     u32 unk_c;
     u8 pad_10[0x58];
-} AccessoryEntry;
+} fn_1_1088B8_AccessoryEntry;
 
 void fn_1_1088B8(void *arg) {
     u32 i;
 
     for (i = 0; i < 0x46; i++) {
-        AccessoryEntry *entry = ((AccessoryEntry *)&lbl_1_bss_86ED0) + i;
+        fn_1_1088B8_AccessoryEntry *entry = ((fn_1_1088B8_AccessoryEntry *)&lbl_1_bss_86ED0) + i;
         if (entry->unk_c == (u32)arg) {
             fn_1_108920(entry);
         }
@@ -146,20 +181,20 @@ typedef struct {
         u8 pad_0[8];
         u8 *unk_8;
     } *unk_150;
-} AccessoryData;
+} fn_1_109114_AccessoryData;
 
 typedef struct {
     u8 pad_0[0x8];
     u32 unk_8;
-    AccessoryData *unk_C;
+    fn_1_109114_AccessoryData *unk_C;
     void *unk_10;
     u8 pad_14[4];
     u32 unk_18;
     u8 pad_1C[8];
     u8 *unk_24;
-} AccessoryObject;
+} fn_1_109114_AccessoryObject;
 
-void fn_1_109114(AccessoryObject *self) {
+void fn_1_109114(fn_1_109114_AccessoryObject *self) {
     void *base;
     u16 *item;
     int entry_index;
@@ -197,12 +232,7 @@ void fn_1_10B7D8(void *accessory) {
 /* fzgx:begin fn_1_10C7B4 */
 extern void *fn_80077B14(void *);
 extern void lbl_8006DBAC(void *);
-extern void lbl_8006DAEC(void);
-extern void lbl_8006DBE4(void);
-extern void lbl_8006E1B0(void *, void *);
-extern void lbl_8006DC20(void);
 extern void fn_8006E250(void *, void *);
-extern const f64 lbl_1_rodata_7BF8;
 
 typedef struct {
     u8 pad_0[0x150];
@@ -210,19 +240,19 @@ typedef struct {
         u8 pad_0[8];
         u8 *unk_8;
     } *unk_150;
-} AccessoryData;
+} fn_1_10C7B4_AccessoryData;
 
 typedef struct {
     u8 unk_0;
     u8 pad_1[7];
     u32 unk_8;
-    AccessoryData *unk_C;
+    fn_1_10C7B4_AccessoryData *unk_C;
     void *unk_10;
     u8 pad_14[4];
     u32 unk_18;
     u8 pad_1C[8];
     u8 *unk_24;
-} AccessoryObject;
+} fn_1_10C7B4_AccessoryObject;
 
 typedef union {
     u32 raw;
@@ -249,7 +279,7 @@ typedef struct {
     f32 unk_3C;
 } AccessoryItem;
 
-void fn_1_10C7B4(AccessoryObject *self) {
+void fn_1_10C7B4(fn_1_10C7B4_AccessoryObject *self) {
     if (self != 0) {
         if (self->unk_10 != 0) {
             fn_80077B14(self->unk_10);
@@ -464,19 +494,19 @@ typedef struct {
     f32 value;
     u8 pad_14[0x2c];
     f32 result;
-} AccessoryEntry;
+} fn_1_125CE8_AccessoryEntry;
 
 typedef struct {
     u8 pad_0[0x18];
     u32 count;
     u8 pad_1c[0x08];
-    AccessoryEntry *entries;
-} AccessoryData;
+    fn_1_125CE8_AccessoryEntry *entries;
+} fn_1_125CE8_AccessoryData;
 
-void fn_1_125CE8(AccessoryData *data) {
+void fn_1_125CE8(fn_1_125CE8_AccessoryData *data) {
     f32 *constants;
     u32 i;
-    AccessoryEntry *entry;
+    fn_1_125CE8_AccessoryEntry *entry;
     f32 min_value;
     f32 max_value;
     f32 range;
@@ -575,10 +605,7 @@ void fn_1_127FB8(Fn127FB8Object *obj) {
 /* fzgx:end fn_1_127FB8 */
 
 /* fzgx:begin fn_1_128884 */
-extern void fn_80008BA8(void *dst, void *src, int size);
-extern void *fn_1_45D0(void *manager, int type, void *data, int code);
 extern void fn_1_46B4(void *manager, void *object, void *data, int code);
-extern void *lbl_801A6410;
 
 void fn_1_128884(void *arg0, void *arg1, int type) {
     u8 tmp1[0x44];
@@ -614,18 +641,7 @@ void fn_1_128884(void *arg0, void *arg1, int type) {
 /* fzgx:begin fn_1_1289BC */
 #include "rel/main_rel/cloth.h"
 
-extern void fn_1_105744(void);
-extern void fn_1_106DB4(void);
-extern void fn_1_9D0EC(u32, u32, void*, void*);
-extern void fn_1_103AA8(void);
-extern u32 lbl_1_bss_85288[2];
-extern void fn_1_103AD4(void);
-extern void fn_1_105768(void);
-extern void fn_1_9E5B8(void *);
-extern struct fn_1_10240C_lbl_801A6410 lbl_801A6410;
-extern u32 fn_1_45D0(u32, u32, void *, u32);
 extern u32 fn_1_46B4(u32, u32, void *, u32);
-extern u32 fn_80008BA8(u32, u32, u32);
 
 typedef struct Point1024C4 {
     u8 pad[0x10];
@@ -644,8 +660,6 @@ f32 fn_1_1289BC(const Point1024C4 *a, const Point1024C4 *b) {
 /* fzgx:end fn_1_1289BC */
 
 /* fzgx:begin fn_1_128AAC */
-extern f32 lbl_1_rodata_7B58[40];
-
 f32 fn_1_128AAC(s32 exponent, f32 value) {
     s32 sign;
     s32 n;
@@ -703,8 +717,6 @@ u8 fn_1_128DD8(u8 value) {
 /* fzgx:end fn_1_128DD8 */
 
 /* fzgx:begin fn_1_128E10 */
-extern u8 lbl_1_rodata_8058[16];
-
 #pragma pack(push, 1)
 typedef struct {
     u32 word_0;
@@ -773,11 +785,9 @@ void fn_1_128E8C(u32 unused, FnData *data) {
 }
 /* fzgx:end fn_1_128E8C */
 
-/* fzgx:begin fn_1_129D9C noprologue */
+/* fzgx:begin fn_1_129D9C */
 #include "types.h"
 #include "rel/main_rel/accessory.h"
-
-extern int mathutil_mtxA_rotate_z__fzgx_offset_C();
 
 struct fn_1_129D9C_rodata {
     f32 unk_0;
@@ -819,23 +829,7 @@ struct fn_1_129D9C_chain {
 };
 
 extern struct fn_1_129D9C_rodata lbl_1_rodata_8068;
-extern struct fn_1_129D9C_system *lbl_801A6D00;
-extern void lbl_8006DCA4(void);
-extern void lbl_8006E1C0(void *, void *);
-extern void lbl_8006DFC4(void *);
 extern void lbl_8006DBAC(void *);
-extern void lbl_8006D7B0(void);
-extern void lbl_8006D668(void *);
-extern void lbl_8006E0B4(f32, f32, f32);
-extern void lbl_8006E14C(f32);
-extern void lbl_8006DB74(void *);
-extern void fn_80072558(void);
-extern void fn_80083DB0(void *, void *);
-extern void *fn_1_55210(void *);
-extern void *fn_1_548AC(u32);
-extern void *fn_1_5448C(void *);
-extern void fn_1_5489C(void *, void *);
-extern void fn_1_12A0E0(void);
 
 #pragma opt_common_subs off
 void fn_1_129D9C(void *arg0, struct fn_1_129D9C_vec *arg1, struct fn_1_129D9C_obj *arg2,

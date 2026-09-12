@@ -22,6 +22,11 @@ extern u32 lbl_1_bss_7AD00;
 extern u32 lbl_1_bss_7AD04;
 extern u32 lbl_1_bss_7AD08[7];
 extern u32 lbl_1_bss_7AD24[9];
+extern u32 lbl_801A6CE0;
+extern u32 lbl_801A6CFC;
+extern void* fn_1_48E8(u32, u32);
+extern void OSLink(void*, void*);
+extern void OSReport(char*, ...);
 
 /* fzgx:begin fn_1_D1780 */
 void fn_1_D1780(void) {
@@ -170,7 +175,7 @@ u32 fn_1_D2FB0(void) {
 }
 /* fzgx:end fn_1_D2FB0 */
 
-/* fzgx:begin fn_1_D3020 noprologue */
+/* fzgx:begin fn_1_D3020 */
 #include "types.h"
 
 typedef struct LocalData {
@@ -190,17 +195,9 @@ typedef struct Allocated {
     void (*init)(void);
 } Allocated;
 
-extern u32 lbl_801A6CE0;
-extern u32 lbl_801A6CFC;
-extern char lbl_1_data_3DB58[51];
-extern char lbl_1_data_3DB8C[51];
-
 extern int DVDOpen(void*, LocalData*);
-extern void* fn_1_48E8(u32, u32);
 extern int fn_80006354(LocalData*, void*, u32, u32);
-extern void OSLink(void*, void*);
 extern void DVDClose(LocalData*);
-extern void OSReport(char*, ...);
 
 void fn_1_D3020(void* unused, Output* output) {
     LocalData local;
@@ -220,7 +217,7 @@ void fn_1_D3020(void* unused, Output* output) {
         object = fn_1_48E8(size, 0x20);
         output->data = object;
     } else {
-        OSReport(lbl_1_data_3DB58);
+        OSReport((*(char (*)[51])&lbl_1_data_3DB58));
         return;
     }
     if (fn_80006354(&local, output->data, size, 0) != 0) {
@@ -234,7 +231,7 @@ void fn_1_D3020(void* unused, Output* output) {
         object = output->data;
         object->init();
     } else {
-        OSReport(lbl_1_data_3DB8C);
+        OSReport((*(char (*)[51])&lbl_1_data_3DB8C));
         output->data = 0;
     }
     DVDClose(&local);

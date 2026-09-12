@@ -13,6 +13,9 @@ extern void fn_1_15E220(u8 *value);
 extern void fn_1_3F8C(void *, void *, u8 *, s32);
 extern u32 lbl_1_bss_8FEA0;
 extern u8 lbl_1_bss_8FE7C;
+extern u32 strlen(const char *str);
+extern s32 fn_8006FC1C(const char *a, const char *b);
+extern void fn_1_15E1E8(u8 *value);
 
 /* fzgx:begin fn_1_15B970 */
 typedef struct {
@@ -61,7 +64,7 @@ void fn_1_15B970(WinObject *obj) {
 }
 /* fzgx:end fn_1_15B970 */
 
-/* fzgx:begin fn_1_15BA78 noprologue */
+/* fzgx:begin fn_1_15BA78 */
 #include "types.h"
 
 typedef struct {
@@ -71,10 +74,6 @@ typedef struct {
     u32 results_offset;
 } StringTable;
 
-extern StringTable *lbl_1_bss_8F8D0;
-extern u32 strlen(const char *str);
-extern s32 fn_8006FC1C(const char *a, const char *b);
-
 #pragma opt_common_subs off
 char *fn_1_15BA78(char *name) {
     struct { StringTable * value; } table;
@@ -82,7 +81,7 @@ char *fn_1_15BA78(char *name) {
     struct { u32 value; } entry_offset;
     struct { u32 value; } name_length;
 
-    { StringTable * __reg_value_table = lbl_1_bss_8F8D0; table.value = __reg_value_table; }
+    { StringTable * __reg_value_table = (*(StringTable * *)&lbl_1_bss_8F8D0); table.value = __reg_value_table; }
     if (table.value == 0) {
         return name;
     }
@@ -363,7 +362,6 @@ void fn_1_15E260(s32 index) {
 
 /* fzgx:begin fn_1_15E330 */
 extern void *fn_1_435C(void *arg);
-extern void fn_1_15E1E8(u8 *arg);
 extern void fn_1_3F8C(void *arg0, void *arg1, u8 *arg2, s32 arg3);
 
 void fn_1_15E330(s32 index, u32 value, void *arg) {
@@ -440,7 +438,6 @@ void fn_1_15E5E4(s32 index, void *arg) {
 
 /* fzgx:begin fn_1_15E688 */
 extern void *fn_1_435C(void *arg);
-extern void fn_1_15E1E8(u8 *arg);
 extern void fn_1_3F8C(void *arg0, void *arg1, u8 *arg2, s32 arg3);
 
 void fn_1_15E688(s32 index, u32 value, u8 state, void *arg) {

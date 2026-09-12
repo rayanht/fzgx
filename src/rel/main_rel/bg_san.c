@@ -30,10 +30,18 @@ extern f32 lbl_1_rodata_6644[35];
 extern void lbl_8006DCA4(void *data);
 extern void fn_1_DB53C(void);
 extern void fn_1_103264(void *, void *);
+extern void OSPanic(const char *, int, const char *, ...);
+extern struct fn_1_DA6A8_lbl_801A6410 lbl_801A6410;
+extern void * fn_80077B64(struct Sig_fn_80077B64_fn_80077B64_Arg0 *);
+extern s32 fn_80077B14(struct Sig_fn_80077B14_fn_80077B14_Arg0 *);
+extern void fn_1_46B4(u32, u32, const char *, int);
+extern f32 lbl_1_rodata_6628;
+extern void fn_1_FB87C(u32 *, u32);
+extern u32 fn_1_FBFE4();
+extern void fn_1_FB96C(int);
+extern u32 fn_1_105AB8(u32, u32);
 
 /* fzgx:begin fn_1_D8FC4 */
-extern void OSPanic(const char *, int, const char *, ...);
-
 typedef struct {
     u32 unk_0;
     u8 pad_4[0x4];
@@ -94,7 +102,7 @@ s32 fn_1_D8FC4(s32 arg0, s32 arg1) {
 }
 /* fzgx:end fn_1_D8FC4 */
 
-/* fzgx:begin fn_1_DA6A8 noprologue */
+/* fzgx:begin fn_1_DA6A8 */
 #include "types.h"
 
 struct Sig_fn_80077B64_fn_80077B64_Arg0 {
@@ -113,11 +121,6 @@ struct fn_1_DA6A8_Copy12 { u32 a[3]; };
 struct fn_1_DA6A8_lbl_801A6410 {
     u32 unk_0;
 };
-extern struct fn_1_DA6A8_lbl_801A6410 lbl_801A6410;
-extern u32 lbl_1_data_3DC50;
-extern void * fn_80077B64(struct Sig_fn_80077B64_fn_80077B64_Arg0 *);
-extern s32 fn_80077B14(struct Sig_fn_80077B14_fn_80077B14_Arg0 *);
-extern void fn_1_46B4(u32, u32, const char *, int);
 
 struct FzgxCopy_12 { u32 words[3]; };
 void fn_1_DA6A8(void *arg0, struct Sig_fn_80077B64_fn_80077B64_Arg0 *arg1) {
@@ -144,15 +147,15 @@ void fn_1_DA6A8(void *arg0, struct Sig_fn_80077B64_fn_80077B64_Arg0 *arg1) {
                     }
         temp_r4 = *(u32 *)((u8 *)(arg0) + 20);
         if (temp_r4 != 0) {
-            fn_1_46B4(lbl_801A6410.unk_0, temp_r4, (const char *)((s8 *) &lbl_1_data_3DC50), 0x6B6);
+            fn_1_46B4(lbl_801A6410.unk_0, temp_r4, (const char *)((s8 *) &(*(u32 *)&lbl_1_data_3DC50)), 0x6B6);
         }
         temp_r4_2 = *(u32 *)((u8 *)(arg0) + 24);
         if (temp_r4_2 != 0) {
-            fn_1_46B4(lbl_801A6410.unk_0, temp_r4_2, (const char *)((s8 *) &lbl_1_data_3DC50), 0x6B9);
+            fn_1_46B4(lbl_801A6410.unk_0, temp_r4_2, (const char *)((s8 *) &(*(u32 *)&lbl_1_data_3DC50)), 0x6B9);
         }
         temp_r4_3 = *(u32 *)((u8 *)(arg0) + 28);
         if (temp_r4_3 != 0) {
-            fn_1_46B4(lbl_801A6410.unk_0, temp_r4_3, (const char *)((s8 *) &lbl_1_data_3DC50), 0x6BC);
+            fn_1_46B4(lbl_801A6410.unk_0, temp_r4_3, (const char *)((s8 *) &(*(u32 *)&lbl_1_data_3DC50)), 0x6BC);
         }
     }
 }
@@ -354,11 +357,9 @@ void fn_1_DAD6C(void) {
 }
 /* fzgx:end fn_1_DAD6C */
 
-/* fzgx:begin fn_1_DADA8 noprologue */
+/* fzgx:begin fn_1_DADA8 */
 #include "types.h"
 
-extern struct fn_1_DADA8_lbl_1_data_2A7E0 lbl_1_data_2A7E0;
-extern u32 fn_1_105AB8(u32, u32);
 extern u32 fn_1_58C4(void);
 extern u32 fn_1_5948(u32);
 extern u32 fn_1_627C(u32);
@@ -372,7 +373,7 @@ void fn_1_DADA8(void) {
     u32 v0;
     s32 v1;
     u32 t0;
-    v0 = lbl_1_data_2A7E0.unk_3C;
+    v0 = (*(struct fn_1_DADA8_lbl_1_data_2A7E0 *)&lbl_1_data_2A7E0).unk_3C;
     t0 = fn_1_58C4();
     v1 = 0;
     while (v1 < (s32)t0) {
@@ -509,7 +510,6 @@ typedef struct BgSanAllocation {
 } BgSanAllocation;
 
 extern u32 fn_1_58C4(Obj_1_data_2A7E0 *object);
-extern void lbl_8006DCA4(void *data);
 extern void *fn_1_5448C(BgSanPosition *position);
 extern void fn_1_DB53C(void);
 

@@ -26,6 +26,8 @@ extern void fn_1_E174(void);
 extern void fn_1_F3D0(LiveCamera *);
 s32 fn_1_3FC28(void);
 void fn_1_3EF14(u32 *);
+extern f32 lbl_1_rodata_16C;
+extern void fn_8006CE1C(f32);
 
 /* fzgx:begin fn_1_4928 */
 typedef struct {
@@ -100,7 +102,7 @@ void fn_1_4CC0(void) {
 }
 /* fzgx:end fn_1_4CC0 */
 
-/* fzgx:begin fn_1_4CD8 noprologue */
+/* fzgx:begin fn_1_4CD8 */
 #include "types.h"
 
 struct fn_1_4CD8_lbl_1_data_2CDC {
@@ -108,16 +110,11 @@ struct fn_1_4CD8_lbl_1_data_2CDC {
     u32 unk_8;
 };
 
-extern f32 lbl_1_rodata_16C;
-extern struct fn_1_4CD8_lbl_1_data_2CDC lbl_1_data_2CDC;
-extern u32 lbl_1_data_2CD8;
-extern void fn_8006CE1C(f32);
-
 #pragma opt_dead_assignments off
 void fn_1_4CD8(void) {
     u32 *fzgx_value;
     fn_8006CE1C((0.0f));
-    fzgx_value = &(lbl_1_data_2CDC.unk_8);
+    fzgx_value = &((*(struct fn_1_4CD8_lbl_1_data_2CDC *)&lbl_1_data_2CDC).unk_8);
     *fzgx_value = lbl_1_data_2CD8;
 }
 #pragma opt_dead_assignments reset

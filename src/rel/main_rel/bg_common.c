@@ -24,6 +24,14 @@ extern void fn_1_1088B8(void *arg);
 extern void lbl_8006DBAC(void *arg);
 extern void lbl_8006E1B0(void *arg0, void *arg1);
 extern void fn_1_107F74(void *arg0, int arg1);
+extern u32 lbl_801A6410;
+extern u32 lbl_1_data_3F284[2];
+extern s32 OSIsThreadTerminated(void *arg0);
+extern void OSCancelThread(void *arg0);
+extern void fn_1_46B4(s32 arg0, s32 arg1, u8 *arg2, s32 arg3);
+extern void fn_1_469BC(void);
+extern void fn_1_466B0(s32 arg0, s32 arg1);
+extern u32 lbl_1_bss_85288[2];
 
 /* fzgx:begin fn_1_103AA8 */
 // Initializes the background-common state and its update callback.
@@ -144,15 +152,6 @@ void fn_1_1067A8(void *arg0, f32 arg1, f32 arg2) {
 /* fzgx:end fn_1_1067A8 */
 
 /* fzgx:begin fn_1_106B68 */
-extern u32 lbl_801A6410;
-extern u32 lbl_1_data_3F284[2];
-extern u8 lbl_1_data_3F34C[12];
-extern s32 OSIsThreadTerminated(void *arg0);
-extern void OSCancelThread(void *arg0);
-extern void fn_1_46B4(s32 arg0, s32 arg1, u8 *arg2, s32 arg3);
-extern void fn_1_469BC(void);
-extern void fn_1_466B0(s32 arg0, s32 arg1);
-
 void fn_1_106B68(void) {
     u32 *data;
     Obj_1_bss_85280 *base;
@@ -165,15 +164,15 @@ void fn_1_106B68(void) {
     }
 
     data = lbl_1_data_3F284;
-    fn_1_46B4(lbl_801A6410, data[1], lbl_1_data_3F34C, 0x8a5);
-    fn_1_46B4(lbl_801A6410, data[0], lbl_1_data_3F34C, 0x8a6);
+    fn_1_46B4(lbl_801A6410, data[1], (*(u8 (*)[12])&lbl_1_data_3F34C), 0x8a5);
+    fn_1_46B4(lbl_801A6410, data[0], (*(u8 (*)[12])&lbl_1_data_3F34C), 0x8a6);
 
     data[1] = 0;
     data[0] = 0;
-    fn_1_46B4(lbl_801A6410, base->unk_0, lbl_1_data_3F34C, 0x8a9);
+    fn_1_46B4(lbl_801A6410, base->unk_0, (*(u8 (*)[12])&lbl_1_data_3F34C), 0x8a9);
 
     base->unk_0 = 0;
-    fn_1_46B4(lbl_801A6410, base->unk_4, lbl_1_data_3F34C, 0x8ab);
+    fn_1_46B4(lbl_801A6410, base->unk_4, (*(u8 (*)[12])&lbl_1_data_3F34C), 0x8ab);
     base->unk_4 = 0;
     fn_1_469BC();
 
@@ -188,9 +187,6 @@ void fn_1_106B68(void) {
 /* fzgx:end fn_1_106B68 */
 
 /* fzgx:begin fn_1_106DB4 */
-extern u8 jumptable_1_data_3F408[28];
-extern u32 lbl_1_bss_85288[2];
-
 s32 fn_1_106DB4(u32 arg0, u32 arg1) {
     volatile u32 *counter;  /* fzgx: count is re-read after each store in the retail loop */
     u8 *entry;

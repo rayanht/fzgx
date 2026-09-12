@@ -36,6 +36,14 @@ extern u32 lbl_801A6410[];
 extern void fn_1_46B4(u32, Obj_1_bss_8EF20_At0 *, u8 *, u32);
 extern Obj_1_bss_8EF20_At0 *fn_1_4630(u32, u32, u8 *, u32);
 extern void fn_1_1569E8(void *entry);
+extern void fn_1_12EF80(s16 value, s16 *out_0, s16 *out_1);
+extern s32 fn_1_156218(u32 arg, void *out0, void *out1, void *out2);
+extern u32 lbl_1_bss_8F3FC[9];
+extern void fn_1_159804(int index, Obj_1_data_4C810 *entry);
+extern void fn_1_4811C(s16 value);
+extern void fn_1_48004(s16 value, u32 arg);
+extern u32 lbl_1_rodata_DAF8[16];
+extern void fn_1_9A508(void);
 
 /* fzgx:begin fn_1_1554D0 */
 // Rebuild the ranking object when the previous one has been consumed.
@@ -129,9 +137,6 @@ void fn_1_155FA8(u32 value) {
 /* fzgx:end fn_1_155FA8 */
 
 /* fzgx:begin fn_1_156198 */
-extern s32 fn_1_156218(u32 arg, void *out0, void *out1, void *out2);
-extern u32 lbl_1_bss_8F3FC[9];
-
 u32 *fn_1_156198(u32 arg0) {
     u32 v0;
     u32 v1;
@@ -524,13 +529,12 @@ void fn_1_156884(s32 index) {
 
 /* fzgx:begin fn_1_1568C4 noprologue */
 #include "types.h"
-#include "rel/main_rel/globals.h"
 
 typedef struct {
     u32 flags;
     u32 value;
     u32 key;
-} RankingState;
+} fn_1_1568C4_RankingState;
 
 typedef struct {
     u8 field8;
@@ -544,17 +548,17 @@ typedef struct {
     u16 field18;
     u16 field1A;
     u8 _pad1C[0x14];
-} RankingConfig;
+} fn_1_1568C4_RankingConfig;
 
-extern s32 fn_8006B55C(u32, u32 *, RankingConfig *);
-extern s32 fn_8006B628(u32, RankingConfig *);
+extern s32 fn_8006B55C(u32, u32 *, fn_1_1568C4_RankingConfig *);
+extern s32 fn_8006B628(u32, fn_1_1568C4_RankingConfig *);
 extern s32 fn_8006B6F8(u32);
 
 #pragma opt_propagation off
-void fn_1_1568C4(RankingState *state) {
+void fn_1_1568C4(fn_1_1568C4_RankingState *state) {
     u32 value;
     s32 success = 0;
-    RankingConfig config;
+    fn_1_1568C4_RankingConfig config;
     u32 key;
 
     key = 7;
@@ -717,7 +721,7 @@ typedef struct {
     f32 value40;
     u8 _pad44[8];
     u8 enabled4c;
-} RankingState;
+} fn_1_157358_RankingState;
 
 typedef struct {
     u8 type;
@@ -738,7 +742,7 @@ typedef struct {
 
 #pragma opt_propagation off
 #pragma opt_common_subs off
-void fn_1_157358(RankingState *state) {
+void fn_1_157358(fn_1_157358_RankingState *state) {
     f32 *table = lbl_1_rodata_D8C8;
     f32 value;
     Packet packet;
@@ -818,7 +822,7 @@ typedef struct {
     void *owner;
     u8 _pad08[0x1c];
     u32 value;
-} RankingState;
+} fn_1_1574E0_RankingState;
 
 typedef struct {
     u8 type;
@@ -835,13 +839,13 @@ typedef struct {
     u32 value1c;
     u8 value20;
     u8 value21;
-} RankingConfig;
+} fn_1_1574E0_RankingConfig;
 
-void fn_1_1574E0(RankingState *state) {
+void fn_1_1574E0(fn_1_1574E0_RankingState *state) {
     u32 value = state->value;
 
     if (value + 0x10000u == 0xffffu) {
-        RankingConfig config;
+        fn_1_1574E0_RankingConfig config;
         void *owner;
 
         config.type = 2;
@@ -883,7 +887,7 @@ typedef struct {
     u32 value;
     u8 _pad2c[0x20];
     u8 state;
-} RankingState;
+} fn_1_157598_RankingState;
 
 typedef struct {
     u8 type;
@@ -900,14 +904,14 @@ typedef struct {
     u32 value1c;
     u8 value20;
     u8 value21;
-} RankingConfig;
+} fn_1_157598_RankingConfig;
 
 #pragma opt_dead_assignments off
-void fn_1_157598(RankingState *state) {
+void fn_1_157598(fn_1_157598_RankingState *state) {
     s32 success;
     u32 value;
     void *owner;
-    RankingConfig config;
+    fn_1_157598_RankingConfig config;
     success = 0;
 
     if (!(state->state & 0x40)) {
@@ -1192,10 +1196,6 @@ void fn_1_1594AC(int index, int flag) {
 /* fzgx:end fn_1_1594AC */
 
 /* fzgx:begin fn_1_159588 */
-extern void fn_1_159804(int index, Obj_1_data_4C810 *entry);
-extern void fn_1_4811C(s16 value);
-extern void fn_1_48004(s16 value, u32 arg);
-
 typedef struct {
     u8 pad_0[8];
     s16 values[16];
@@ -1353,9 +1353,6 @@ void fn_1_15B428(void) {
 /* fzgx:end fn_1_15B428 */
 
 /* fzgx:begin fn_1_15B42C */
-extern u32 lbl_1_rodata_DAF8[16];
-extern void fn_1_9A508(void);
-
 typedef struct {
     u32 unk_0;
     u32 unk_4;

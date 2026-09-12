@@ -7,6 +7,9 @@ extern void fn_1_4A00(s32, s32, u32);
 extern s8 fn_1_A5DC4(void);
 extern const f32 lbl_1_rodata_49F8;
 extern f32 lbl_1_rodata_49FC[11];
+extern f32 fn_1_A6FE8(void);
+extern void fn_1_A714C(f32 *, f32 *, f32 *, f32 *);
+extern u32 lbl_1_bss_6F5F0;
 
 /* fzgx:begin fn_1_A6870 */
 typedef enum {
@@ -71,9 +74,7 @@ extern const f32 lbl_1_rodata_49DC;
 extern const f64 lbl_1_rodata_49E0;
 
 extern void fn_1_54DCC(u8 *);
-extern f32 fn_1_A6FE8(void);
 extern void fn_1_549F4(void *, void *, f32, f32, f32, f32);
-extern void fn_1_A714C(f32 *, f32 *, f32 *, f32 *);
 extern void fn_1_A7024(f32, f32, f32, f32);
 extern u32 VIGetTvFormat(void);
 extern u32 OSGetProgressiveMode(void);
@@ -90,7 +91,6 @@ extern void fn_80074188(u32, u32, u32, u32);
 extern void fn_80034ECC(Sig_fn_80034ECC_GXBool, void *, Sig_fn_80034ECC_GXBool, void *);
 extern u32 lbl_1_data_3431C;
 extern u8 lbl_1_data_34324[0x20];
-extern u32 lbl_1_bss_6F5F0;
 extern u8 lbl_801A66B0[];
 
 void fn_1_A6870(u32 *arg0) {
@@ -306,11 +306,12 @@ void fn_1_A71CC(void) {
 }
 /* fzgx:end fn_1_A71CC */
 
-/* fzgx:begin fn_1_A722C noprologue */
+/* fzgx:begin fn_1_A722C */
 #include "types.h"
 
-extern u32 lbl_1_bss_6F620[6];
-extern u32 lbl_1_bss_6F608[6];
+
+
+
 extern void fn_80072378(void);
 
 typedef struct {
@@ -325,8 +326,8 @@ typedef struct {
 void fn_1_A722C(void) {
     fn_80072378();
 
-    *(Copy_1_A722C *)&lbl_1_bss_6F608 =
-        *(Copy_1_A722C *)&lbl_1_bss_6F620;
+    *(Copy_1_A722C *)&(*(u32 (*)[6])&lbl_1_bss_6F608) =
+        *(Copy_1_A722C *)&(*(u32 (*)[6])&lbl_1_bss_6F620);
 }
 /* fzgx:end fn_1_A722C */
 

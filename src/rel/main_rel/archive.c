@@ -35,6 +35,24 @@ extern s32 lbl_1_bss_8CA44[10];
 
 extern void OSPanic(u8 *arg0, s32 arg1, u8 *arg2, ...);
 extern void fn_1_435C();
+extern s32 fn_1_45730(void *arg0, void *arg1);
+extern s32 fn_1_45B2C(void *arg0);
+extern void *fn_1_45D0(u32 arg0, u32 arg1, void *arg2, u32 arg3);
+extern void fn_1_458A0(void *arg0, void *arg1, u32 arg2, u32 arg3);
+extern void fn_1_45850(void *arg0);
+extern void fn_8006A9B4(void *arg0, void *arg1);
+extern void fn_80006E10(void *arg0);
+extern u32 fn_1_12DAEC(u32, u32, u32, void *, u32, u32, u32);
+extern u32 fn_1_12C524(u32);
+extern void fn_1_12C000(void *arg, s16 count);
+extern void fn_1_8CED0(void *arg, u16 a, u16 b);
+extern void fn_1_8D0A4(void *arg);
+extern s16 fn_1_12C930(s16 arg);
+extern u8 lbl_1_data_20D1C[180];
+extern u8 lbl_1_bss_8B4EC[128];
+extern void fn_80083DB0(void *arg0, char *arg1);
+extern void strcat(void *arg0, void *arg1);
+extern s32 fn_1_F89E4(u8 value);
 
 /* fzgx:begin fn_1_12A2D0 */
 extern void OSPanic(u8 *arg0, s32 arg1, u8 *arg2, ...);
@@ -220,9 +238,6 @@ struct fn_1_12AB38_state {
     s32 unk_8;
     u8 entries[1];
 };
-
-extern void fn_8006A9B4(void *arg0, void *arg1);
-extern void fn_80006E10(void *arg0);
 
 #pragma opt_propagation off
 #pragma opt_common_subs off
@@ -453,7 +468,7 @@ void fn_1_12B3F8(void *arg0, void *arg1, void *arg2, u32 arg3, u32 arg4, s32 *ar
 }
 /* fzgx:end fn_1_12B3F8 */
 
-/* fzgx:begin fn_1_12BF7C noprologue */
+/* fzgx:begin fn_1_12BF7C */
 #include "types.h"
 
 typedef struct {
@@ -461,15 +476,11 @@ typedef struct {
     u32 unk94;
 } GlobalState;
 
-extern GlobalState lbl_1_bss_8B3A0;
-extern void fn_1_8CED0(void *arg, u16 a, u16 b);
-extern void fn_1_8D0A4(void *arg);
-
 void fn_1_12BF7C(void *arg, s16 count, u32 a, u32 b) {
     u8 *p;
     s16 i;
 
-    if ((lbl_1_bss_8B3A0.unk94 & 0x80000000) == 0) {
+    if (((*(GlobalState *)&lbl_1_bss_8B3A0).unk94 & 0x80000000) == 0) {
         p = (u8 *)arg;
         i = 0;
         while (i < count) {
@@ -590,8 +601,6 @@ void fn_1_12C6BC(void *arg) {
 /* fzgx:end fn_1_12C6BC */
 
 /* fzgx:begin fn_1_12C710 */
-extern s16 fn_1_12C930(s16 arg);
-
 s16 fn_1_12C710(int arg) {
     s16 i;
 
@@ -623,13 +632,13 @@ typedef struct {
     u8 pad6[0x819a];
     u8 value;
     u8 pad_a1[0x1f];
-} FnEntry;
+} fn_1_12C7B8_FnEntry;
 
-extern FnEntry *fn_1_12F118(void);
-extern FnEntry *fn_1_36AD0(void);
+extern fn_1_12C7B8_FnEntry *fn_1_12F118(void);
+extern fn_1_12C7B8_FnEntry *fn_1_36AD0(void);
 
 s16 fn_1_12C7B8(s16 arg) {
-    FnEntry *table;
+    fn_1_12C7B8_FnEntry *table;
     s16 i;
 
     if (arg < 0x29) {
@@ -670,13 +679,13 @@ typedef struct {
     u8 pad6[0x819a];
     u8 value;
     u8 pad_a1[0x1f];
-} FnEntry;
+} fn_1_12CB04_FnEntry;
 
-extern FnEntry *fn_1_12F118(void);
-extern FnEntry *fn_1_36AD0(void);
+extern fn_1_12CB04_FnEntry *fn_1_12F118(void);
+extern fn_1_12CB04_FnEntry *fn_1_36AD0(void);
 
 static inline s16 fn_1_12CB04_inline(s16 arg) {
-    FnEntry *table;
+    fn_1_12CB04_FnEntry *table;
     s16 i;
 
     if (arg < 0x29) {
@@ -730,13 +739,13 @@ typedef struct {
     u8 pad6[0x819a];
     u8 value;
     u8 pad_a1[0x1f];
-} FnEntry;
+} fn_1_12CCB0_FnEntry;
 
-extern FnEntry *fn_1_12F118(void);
-extern FnEntry *fn_1_36AD0(void);
+extern fn_1_12CCB0_FnEntry *fn_1_12F118(void);
+extern fn_1_12CCB0_FnEntry *fn_1_36AD0(void);
 
 static inline s16 fn_1_12C7B8(s16 arg) {
-    FnEntry *table;
+    fn_1_12CCB0_FnEntry *table;
     s16 i;
 
     if (arg < 0x29) {
@@ -791,22 +800,15 @@ s16 fn_1_12CCB0(s16 arg0, s16 arg1) {
 }
 /* fzgx:end fn_1_12CCB0 */
 
-/* fzgx:begin fn_1_12D254 noprologue */
+/* fzgx:begin fn_1_12D254 */
 #include "types.h"
-
-extern u8 lbl_1_data_20D1C[180];
-extern char lbl_1_data_40798[9];
-extern u8 lbl_1_bss_8B4EC[128];
-
-extern void fn_80083DB0(void *arg0, char *arg1);
-extern void strcat(void *arg0, void *arg1);
 
 #pragma opt_propagation off
 u8 *fn_1_12D254(s32 arg0, s32 arg1) {
     char *base;
     void *value;
 
-    base = lbl_1_data_40798;
+    base = (*(char (*)[9])&lbl_1_data_40798);
     value = ((void **)lbl_1_data_20D1C)[arg0];
     fn_80083DB0(lbl_1_bss_8B4EC, base + 0x324);
     strcat(lbl_1_bss_8B4EC, value);
@@ -874,14 +876,14 @@ typedef struct {
     u8 pad6[0x819a];
     u8 value;
     u8 pad_a1[0x1f];
-} FnEntry;
+} fn_1_12ECA8_FnEntry;
 
-extern FnEntry *fn_1_12F118(void);
-extern FnEntry *fn_1_36AD0(void);
+extern fn_1_12ECA8_FnEntry *fn_1_12F118(void);
+extern fn_1_12ECA8_FnEntry *fn_1_36AD0(void);
 
 #pragma opt_common_subs off
 static inline s16 fn_1_12ECA8_lookup(s16 arg) {
-    FnEntry *table;
+    fn_1_12ECA8_FnEntry *table;
     s16 i;
 
     if (arg < 0x29) {
@@ -990,7 +992,6 @@ typedef struct {
 } EntryTable;
 
 extern EntryTable lbl_1_rodata_8338;
-extern s32 fn_1_F89E4(u8 value);
 
 s16 fn_1_12F028(s16 value) {
     EntryTable table;
@@ -1267,7 +1268,7 @@ void fn_1_131050(u32 value, u32 state) {
 }
 /* fzgx:end fn_1_131050 */
 
-/* fzgx:begin fn_1_131084 noprologue */
+/* fzgx:begin fn_1_131084 */
 #include "types.h"
 
 struct fn_1_131084_lbl_1_bss_8CA40 {
@@ -1280,11 +1281,11 @@ struct fn_1_131084_lbl_1_bss_8CA40 {
     u32 unk_2C;
 };
 
-extern struct fn_1_131084_lbl_1_bss_8CA40 lbl_1_bss_8CA40;
+
 
 void fn_1_131084(u32 arg0, u32 arg1) {
     struct fn_1_131084_lbl_1_bss_8CA40 *p_lbl_1_bss_8CA40;
-    p_lbl_1_bss_8CA40 = (struct fn_1_131084_lbl_1_bss_8CA40 *)&lbl_1_bss_8CA40;
+    p_lbl_1_bss_8CA40 = (struct fn_1_131084_lbl_1_bss_8CA40 *)&(*(struct fn_1_131084_lbl_1_bss_8CA40 *)&lbl_1_bss_8CA40);
     if (arg0 == 0) { return; }
 {
     u32 v0;
@@ -1298,7 +1299,7 @@ void fn_1_131084(u32 arg0, u32 arg1) {
 }
 /* fzgx:end fn_1_131084 */
 
-/* fzgx:begin fn_1_1310B8 noprologue */
+/* fzgx:begin fn_1_1310B8 */
 #include "types.h"
 
 struct State {
@@ -1309,14 +1310,14 @@ struct State {
     u32 unk_2C;
 };
 
-extern struct State lbl_1_bss_8CA40;
+
 
 #pragma peephole off
 void fn_1_1310B8(void) {
     struct State *state;
     u32 status;
 
-    state = &lbl_1_bss_8CA40;
+    state = &(*(struct State *)&lbl_1_bss_8CA40);
     status = state->unk_0;
     if ((s32)status != -1) {
         return;

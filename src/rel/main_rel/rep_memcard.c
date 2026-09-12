@@ -21,6 +21,9 @@ extern void fn_1_4966C(f32, f32);
 extern int fn_1_FA638(void);
 extern void fn_1_4AF64(void *, ...);
 extern void fn_1_49614(void);
+extern const f64 lbl_1_rodata_D5B0;
+extern f64 fn_80083E84(u8 *text);
+extern s32 atoi(u8 *text);
 
 /* fzgx:begin fn_1_154CC4 */
 void fn_1_154CC4(u32 arg0) {

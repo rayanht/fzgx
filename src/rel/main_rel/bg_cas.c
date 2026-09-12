@@ -35,10 +35,19 @@ extern void fn_1_9AD54(void);
 extern void fn_1_9AD88(void);
 extern void fn_1_10069C(Obj_1_data_2A7E0_At3C *);
 extern void fn_1_FF038(Obj_1_data_2A7E0_At3C *);
+extern const f64 lbl_1_rodata_760C;
+extern void OSPanic(const char *, int, const char *, ...);
+extern void lbl_8006D758(void);
+extern void lbl_8006E13C(void *);
+extern void lbl_8006E0A4(void *);
+extern void fn_80008BA8(void *, void *, u32);
+extern u8 lbl_1_bss_851E0[36];
+extern void fn_1_7F230(void *, s32, f32);
+extern void fn_1_FFC60(Obj_1_data_2A7E0_At3C *arg0);
+extern void fn_1_FEC7C(void *object);
+extern const f32 lbl_1_rodata_76A8;
 
 /* fzgx:begin fn_1_FB798 */
-extern void OSPanic(const char *, int, const char *, ...);
-
 int fn_1_FB798(int mode, u32 *value) {
     Obj_1_data_2A7E0_At3C *entry = lbl_1_data_2A7E0.unk_3C;
 
@@ -146,9 +155,6 @@ void fn_1_FB9DC(int index) {
 /* fzgx:end fn_1_FB9DC */
 
 /* fzgx:begin fn_1_FBEA8 */
-extern void lbl_8006D758(void);
-extern void lbl_8006E13C(void *);
-extern void lbl_8006E0A4(void *);
 extern void lbl_8006DB74(void *);
 
 void fn_1_FBEA8(void) {
@@ -210,14 +216,9 @@ void fn_1_FC4E0(void *arg0, int arg1) {
 
 /* fzgx:begin fn_1_FC51C */
 extern void fn_1_FC60C(void);
-extern void fn_80008BA8(void *, void *, u32);
 extern void DCFlushRange(void *, u32);
 extern void GXInitTexObj(void *, void *, u32, u32, u32, u32, u32, u32);
 extern void GXInitTexObjLOD(void *, f32, f32, f32, u32, u32, u32, u32, u32);
-
-extern u8 lbl_1_bss_851E0[36];
-extern u8 lbl_1_bss_85204[32];
-extern const f64 lbl_1_rodata_760C;
 
 #pragma opt_common_subs off
 void fn_1_FC51C(void) {
@@ -237,8 +238,8 @@ void fn_1_FC51C(void) {
     fn_80008BA8(lbl_1_bss_851E0 + 0x18, lbl_1_bss_851E0, 8);
     DCFlushRange(lbl_1_bss_851E0, 0x20);
 
-    GXInitTexObj(lbl_1_bss_85204, lbl_1_bss_851E0, 8, 4, 1, 0, 0, 0);
-    GXInitTexObjLOD(lbl_1_bss_85204,
+    GXInitTexObj((*(u8 (*)[32])&lbl_1_bss_85204), lbl_1_bss_851E0, 8, 4, 1, 0, 0, 0);
+    GXInitTexObjLOD((*(u8 (*)[32])&lbl_1_bss_85204),
                 *(const f32 *)&lbl_1_rodata_760C,
                 *(const f32 *)&lbl_1_rodata_760C,
                 *(const f32 *)&lbl_1_rodata_760C,
@@ -249,7 +250,8 @@ void fn_1_FC51C(void) {
 
 /* fzgx:begin fn_1_FC60C */
 extern u8 lbl_1_bss_850E0[256];
-extern f32 lbl_1_rodata_760C[2];
+
+
 extern u32 GXGetTexBufferSize(u16, u16, u32, u8, u8);
 extern void GXInitTexObj(void *, void *, u16, u16, u32, u32, u32, u8);
 extern void GXInitTexObjLOD(void *, u32, u32, f32, f32, f32, u8, u8, u32);
@@ -276,8 +278,8 @@ void fn_1_FC60C(void) {
     }
 
     GXInitTexObj(tex, buf, 0x10, 0x10, 1, 0, 1, 0);
-    GXInitTexObjLOD(tex, 0, 0, lbl_1_rodata_760C[0], lbl_1_rodata_760C[0],
-                    lbl_1_rodata_760C[0], 0, 0, 0);
+    GXInitTexObjLOD(tex, 0, 0, (*(f32 (*)[2])&lbl_1_rodata_760C)[0], (*(f32 (*)[2])&lbl_1_rodata_760C)[0],
+                    (*(f32 (*)[2])&lbl_1_rodata_760C)[0], 0, 0, 0);
     DCFlushRange(buf, size);
 }
 #pragma opt_common_subs reset
@@ -303,7 +305,6 @@ extern int fn_1_FCF50(void);
 extern void *fn_1_563B8(void *);
 extern f32 lbl_1_rodata_761C[13];
 extern void fn_1_7EB8C(void *, f32);
-extern void fn_1_7F230(void *, s32, f32);
 extern void lbl_8006DB74(void *);
 extern void lbl_8006DBAC(void *);
 extern void fn_1_FD3A8(void);
@@ -334,15 +335,15 @@ extern void fn_1_FF038(Obj_1_data_2A7E0_At3C *);
 
 typedef struct {
     void *value;
-} Fn1FD27CArg0;
+} fn_1_FD1D4_Fn1FD27CArg0;
 
 typedef struct {
     u8 pad[0x40f0];
     void *value;
-} Fn1FD27CArg1;
+} fn_1_FD1D4_Fn1FD27CArg1;
 
-void fn_1_FD1D4(Fn1FD27CArg0 *arg0, Fn1FD27CArg1 *arg1) {
-    Fn1FD27CArg1 *persistent;
+void fn_1_FD1D4(fn_1_FD1D4_Fn1FD27CArg0 *arg0, fn_1_FD1D4_Fn1FD27CArg1 *arg1) {
+    fn_1_FD1D4_Fn1FD27CArg1 *persistent;
     void *value;
     void *result;
     s16 mode;
@@ -368,15 +369,15 @@ void fn_1_FD1D4(Fn1FD27CArg0 *arg0, Fn1FD27CArg1 *arg1) {
 /* fzgx:begin fn_1_FD27C */
 typedef struct {
     void *value;
-} Fn1FD27CArg0;
+} fn_1_FD27C_Fn1FD27CArg0;
 
 typedef struct {
     u8 pad[0x40f0];
     void *value;
-} Fn1FD27CArg1;
+} fn_1_FD27C_Fn1FD27CArg1;
 
-void fn_1_FD27C(Fn1FD27CArg0 *arg0, Fn1FD27CArg1 *arg1) {
-    Fn1FD27CArg1 *persistent;
+void fn_1_FD27C(fn_1_FD27C_Fn1FD27CArg0 *arg0, fn_1_FD27C_Fn1FD27CArg1 *arg1) {
+    fn_1_FD27C_Fn1FD27CArg1 *persistent;
     void *value;
     void *result;
     s16 mode;
@@ -442,9 +443,6 @@ void fn_1_FE5E0(void) {
 
 /* fzgx:begin fn_1_FE5E4 */
 extern void fn_1_9A508(Obj_1_data_2A7E0 *arg0);
-extern void fn_1_FFC60(Obj_1_data_2A7E0_At3C *arg0);
-extern void fn_1_FEC7C(Obj_1_data_2A7E0_At3C *arg0);
-extern const f32 lbl_1_rodata_76A8;
 
 typedef struct {
     u8 pad_0[0x1B1E4];

@@ -21,6 +21,13 @@ extern void fn_1_4F724(void);
 extern u8 lbl_1_bss_3E024[52];
 extern char lbl_1_data_1A3AC[5];
 extern void fn_80083DB0(void *arg0, void *arg1);
+extern u32 fn_80006CE4(u32);
+extern void *fn_80006DE8(void *);
+extern u32 lbl_801A6410;
+extern void *fn_1_4630(u32 arg0, u32 arg1, u8 *arg2, u32 arg3);
+extern void *fn_1_46B4(u32 arg0, void *arg1, u8 *arg2, u32 arg3);
+extern void strcat(void *arg0, void *arg1);
+extern void fn_1_48004(s32 value, s32 arg);
 
 /* fzgx:begin fn_1_45730 noprologue */
 #include "types.h"
@@ -84,8 +91,6 @@ struct fn_1_45850_Arg0 {
     u32 unk_0;
 };
 
-extern u32 fn_80006CE4(u32);
-
 u32 fn_1_45850(struct fn_1_45850_Arg0 *arg0) {
     u32 v0;
     u32 t0;
@@ -138,8 +143,6 @@ typedef struct Fn145B2CData {
     u8 pad[0x54];
     void *value;
 } Fn145B2CData;
-
-extern void *fn_80006DE8(void *);
 
 void *fn_1_45B2C(Fn145B2CData *data) {
     void *result;
@@ -209,17 +212,17 @@ typedef struct {
     u32 unk_4;
     u32 unk_8;
     u32 unk_C;
-} LoadEntry;
+} fn_1_45D78_LoadEntry;
 
 int fn_1_45D78(u32 start, u32 size, u32 *out_end, s32 mode) {
     u32 limit;
-    LoadEntry *entry;
+    fn_1_45D78_LoadEntry *entry;
     u32 i;
     u32 total;
     u32 end;
 
     limit = start + size;
-    entry = (LoadEntry *)&lbl_1_bss_384D8;
+    entry = (fn_1_45D78_LoadEntry *)&lbl_1_bss_384D8;
     total = -1;
     for (i = 0; i < 0x400; i++, entry++) {
         if (entry->unk_0 != 0) {
@@ -269,13 +272,8 @@ typedef struct Fn464BCObject {
     u8 *unk_10;
 } Fn464BCObject;
 
-extern u32 lbl_801A6410;
-extern u8 lbl_1_data_6730[76];
 extern u16 lbl_1_data_67CC;
-extern void *fn_1_4630(u32 arg0, u32 arg1, u8 *arg2, u32 arg3);
-extern void *fn_1_46B4(u32 arg0, void *arg1, u8 *arg2, u32 arg3);
 extern void fn_80083DB0(void *arg0, void *arg1);
-extern void strcat(void *arg0, void *arg1);
 
 void fn_1_464BC(Fn464BCObject *object, u32 index, void *arg2, void *arg3) {
     void *result;
@@ -286,7 +284,7 @@ void fn_1_464BC(Fn464BCObject *object, u32 index, void *arg2, void *arg3) {
 
     base = object->unk_04;
     entry = &base[index];
-    result = fn_1_4630(lbl_801A6410, (u32)arg3, lbl_1_data_6730, 0x3f4);
+    result = fn_1_4630(lbl_801A6410, (u32)arg3, (*(u8 (*)[76])&lbl_1_data_6730), 0x3f4);
     value = entry->unk_00;
     fn_80083DB0(arg2, object->unk_10 + (value & 0x00ffffff));
 
@@ -304,7 +302,7 @@ void fn_1_464BC(Fn464BCObject *object, u32 index, void *arg2, void *arg3) {
         }
     }
 
-    fn_1_46B4(lbl_801A6410, result, lbl_1_data_6730, 0x402);
+    fn_1_46B4(lbl_801A6410, result, (*(u8 (*)[76])&lbl_1_data_6730), 0x402);
 }
 /* fzgx:end fn_1_464BC */
 
@@ -538,10 +536,10 @@ u32 fn_1_47184(void) {
 }
 /* fzgx:end fn_1_47184 */
 
-/* fzgx:begin fn_1_471A0 noprologue */
+/* fzgx:begin fn_1_471A0 */
 #include "types.h"
 
-extern u32 lbl_1_bss_384D8[5632];
+
 
 u32 fn_1_471A0(void) {
     u32 *p;
@@ -549,7 +547,7 @@ u32 fn_1_471A0(void) {
     u32 total;
 
     total = 0;
-    p = lbl_1_bss_384D8;
+    p = (*(u32 (*)[5632])&lbl_1_bss_384D8);
     for (i = 0; i < 0x400; i++, p += 4) {
         if ((p[0] & 0x64000000) != 0) {
             total += p[3];
@@ -559,10 +557,10 @@ u32 fn_1_471A0(void) {
 }
 /* fzgx:end fn_1_471A0 */
 
-/* fzgx:begin fn_1_47268 noprologue */
+/* fzgx:begin fn_1_47268 */
 #include "types.h"
 
-extern u32 lbl_1_bss_384D8[];
+
 
 u32 fn_1_47268(void) {
     u32 *p;
@@ -570,7 +568,7 @@ u32 fn_1_47268(void) {
     u32 total;
 
     total = 0;
-    p = lbl_1_bss_384D8;
+    p = (*(u32 (*)[])&lbl_1_bss_384D8);
     for (i = 0; i < 0x400; i++, p += 4) {
         if ((p[0] & 0x10000000) != 0) {
             total += p[3];
@@ -592,8 +590,6 @@ void fn_1_479B0(void) {
 /* fzgx:end fn_1_479B0 */
 
 /* fzgx:begin fn_1_479F0 */
-extern void fn_1_48004(s32 value, s32 arg);
-
 void fn_1_479F0(s16 index) {
     s32 *entry;
     s32 i;

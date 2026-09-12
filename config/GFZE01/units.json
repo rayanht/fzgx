@@ -35900,7 +35900,7 @@
     "extra_cflags": [],
     "tu": "rel/main_rel/font.c",
     "pool": {
-      "@10": "lbl_1_rodata_2778"
+      "@9": "lbl_1_rodata_2778"
     }
   },
   {
@@ -36126,7 +36126,7 @@
     "extra_cflags": [],
     "tu": "rel/main_rel/font.c",
     "pool": {
-      "@17": "lbl_1_rodata_2878"
+      "@16": "lbl_1_rodata_2878"
     }
   },
   {

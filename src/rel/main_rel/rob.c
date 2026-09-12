@@ -343,6 +343,8 @@ s16 fn_1_97F1C(Fn197F1CObject *object, s16 index) {
 /* fzgx:begin fn_1_97F80 noprologue */
 #include "types.h"
 
+extern u32 lbl_801A6410;
+
 typedef struct Fn197F80Object Fn197F80Object;
 struct Fn197F80Object {
     u8 unk_000[0x488];
@@ -357,7 +359,8 @@ struct Fn197F80Object {
 };
 
 extern u32 lbl_1_data_209C0;
-extern u32 lbl_801A6410;
+
+
 
 extern void *fn_80083970(const char *, const char *);
 extern void sprintf(char *, const char *, ...);

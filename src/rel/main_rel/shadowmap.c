@@ -17,20 +17,40 @@ extern void fn_80074788(u32);
 
 extern void *lbl_801A6410;
 extern void fn_1_46B4(void *, void *, unsigned char *, int);
-
-/* fzgx:begin fn_1_5672C noprologue */
-#include "types.h"
-
 extern f32 lbl_1_rodata_28B4[16];
-extern char lbl_1_data_1C660[12];
-extern void *lbl_801A6410;
-
 extern void *GXGetTexBufferSize(int, int, int, int, int);
 extern void *fn_1_45D0(void *, int, char *, int);
 extern void GXInitTexObj(void *, void *, int, int, int, int, int, int);
 extern void GXInitTexObjLOD(void *, int, int, f32, f32, f32, int, int, int);
+extern void fn_80073778(void *, u32);
+extern void fn_800724C8(void);
+extern void fn_800745A4(u32, s32, s32, s32, s32, s32);
+extern void fn_80072AB0(s32, s32, s32);
+extern u32 fn_800371F8(u32, void *);
+extern void fn_80072C24(s32, s32, s32, s32, s32);
+extern void fn_80072D64(s32, s32, s32, s32, u8, s32);
+extern void fn_80072CC4(s32, s32, s32, s32, s32);
+extern void fn_80072E20(s32, s32, s32, s32, u8, s32);
+extern void fn_80072864(u32);
+extern void GXSetAlphaCompare(u32, u32, u32, u32, u32);
+extern void fn_80074918(u8, s32, u8);
+extern void lbl_8006D758(void);
+extern void GXLoadPosMtxImm(void *arg0, int arg1);
+extern void fn_8003462C(u32 size, u32 heap, u32 alignment);
+extern void *lbl_801A6D00;
+extern f32 lbl_1_rodata_28F4[23];
+extern void fn_1_57DC0(void);
+extern void *fn_1_548AC(u32 size);
+extern void *fn_1_5448C(void *arg);
+extern void fn_1_57E84(void);
+extern void fn_1_5489C(void *arg0, void *arg1);
+extern void lbl_8006DB74(void *arg);
+extern void fn_80008BA8(void *dst, void *src, u32 size);
 
-typedef struct ShadowMapEntry {
+/* fzgx:begin fn_1_5672C */
+#include "types.h"
+
+typedef struct fn_1_5672C_ShadowMapEntry {
     int field_00;
     int field_04;
     f32 field_08;
@@ -39,12 +59,12 @@ typedef struct ShadowMapEntry {
     void *field_40;
     int field_44;
     int field_48;
-} ShadowMapEntry;
+} fn_1_5672C_ShadowMapEntry;
 
-void fn_1_5672C(ShadowMapEntry *entries, int count) {
+void fn_1_5672C(fn_1_5672C_ShadowMapEntry *entries, int count) {
     void *buffer;
     int i;
-    ShadowMapEntry *entry;
+    fn_1_5672C_ShadowMapEntry *entry;
     f32 zero = lbl_1_rodata_28B4[0];
 
     entry = entries;
@@ -54,8 +74,8 @@ void fn_1_5672C(ShadowMapEntry *entries, int count) {
         entry->field_00 = 0;
         entry->field_04 = 0;
         entry->field_08 = zero;
-        entry->field_3c = fn_1_45D0(lbl_801A6410, 0x20, lbl_1_data_1C660, 0x67);
-        entry->field_40 = fn_1_45D0(lbl_801A6410, (int)buffer, lbl_1_data_1C660, 0x68);
+        entry->field_3c = fn_1_45D0(lbl_801A6410, 0x20, (*(char (*)[12])&lbl_1_data_1C660), 0x67);
+        entry->field_40 = fn_1_45D0(lbl_801A6410, (int)buffer, (*(char (*)[12])&lbl_1_data_1C660), 0x68);
         entry->field_44 = 0;
         entry->field_48 = 0;
         GXInitTexObj(entry->field_3c, entry->field_40, 0x40, 0x40, 0, 0, 0, 0);
@@ -68,17 +88,17 @@ void fn_1_5672C(ShadowMapEntry *entries, int count) {
 /* fzgx:end fn_1_5672C */
 
 /* fzgx:begin fn_1_56858 */
-typedef struct ShadowMapEntry {
+typedef struct fn_1_56858_ShadowMapEntry {
     char pad_00[0x3c];
     void *unk_3c;
     void *unk_40;
     char pad_44[0x08];
-} ShadowMapEntry;
+} fn_1_56858_ShadowMapEntry;
 
 // Register each entry's resources, then clear it for reuse.
-void fn_1_56858(ShadowMapEntry *entries, u32 count) {
+void fn_1_56858(fn_1_56858_ShadowMapEntry *entries, u32 count) {
     u32 index;
-    ShadowMapEntry *current_entry;
+    fn_1_56858_ShadowMapEntry *current_entry;
 
     for (index = 0, current_entry = entries; index < count;
          index++, current_entry++) {
@@ -102,58 +122,29 @@ void fn_1_568EC(ShadowMap *map, u32 value0, u32 value1) {
 }
 /* fzgx:end fn_1_568EC */
 
-/* fzgx:begin fn_1_571E8 noprologue */
+/* fzgx:begin fn_1_571E8 */
 #include "types.h"
 
-extern void fn_80073778(void *, u32);
-extern void fn_800724C8(void);
-extern void fn_8007245C(u32);
-extern void fn_80074788(u32);
-extern void fn_80074660(u32);
-extern void fn_80073678(u32);
-extern void fn_80073898(u32);
-extern void fn_80073C6C(s32);
-extern void fn_800745A4(u32, s32, s32, s32, s32, s32);
-extern void fn_800734A8(u32, s32, s32, s32);
-extern void fn_80072AB0(s32, s32, s32);
-extern u32 fn_800371F8(u32, void *);
-extern void fn_80072C24(s32, s32, s32, s32, s32);
-extern void fn_80072D64(s32, s32, s32, s32, u8, s32);
-extern void fn_80072CC4(s32, s32, s32, s32, s32);
-extern void fn_80072E20(s32, s32, s32, s32, u8, s32);
-extern void fn_800720B0(u32);
-extern void fn_80072864(u32);
-extern void GXSetAlphaCompare(u32, u32, u32, u32, u32);
-extern void fn_800728A8(s32, s32, s32, s32);
-extern void fn_80074918(u8, s32, u8);
-extern void lbl_8006D758(void);
-extern void GXLoadPosMtxImm(void *, u32);
-extern void fn_8003462C(u32, u32, u32);
-
-extern void *lbl_801A6D00;
-extern f32 lbl_1_rodata_28B4[16];
-extern f32 lbl_1_rodata_28F4[23];
-
-typedef union GXFifo {
+typedef union fn_1_571E8_GXFifo {
     volatile f32 f32; /* write-gather FIFO: writes have side effects */
     volatile u8 u8;   /* write-gather FIFO: writes have side effects */
-} GXFifo;
+} fn_1_571E8_GXFifo;
 
 enum { GX_FIFO_ADDR = 0xCC008000 }; /* fzgx-allow: A1 GX write-gather FIFO hardware address */
-#define GXWGFifo (*(GXFifo *)GX_FIFO_ADDR)
+#define GXWGFifo (*(fn_1_571E8_GXFifo *)GX_FIFO_ADDR)
 
-typedef struct Vec3 {
+typedef struct fn_1_571E8_Vec3 {
     f32 x;
     f32 y;
     f32 z;
-} Vec3;
+} fn_1_571E8_Vec3;
 
 typedef struct fn_1_571E8_Arg0 {
     u8 pad_0[8];
-    Vec3 p0;
-    Vec3 p1;
-    Vec3 p2;
-    Vec3 p3;
+    fn_1_571E8_Vec3 p0;
+    fn_1_571E8_Vec3 p1;
+    fn_1_571E8_Vec3 p2;
+    fn_1_571E8_Vec3 p3;
     u32 unk_38;
     u32 unk_3C;
     u32 unk_40;
@@ -258,26 +249,21 @@ void fn_1_57720(u32 value_1, u32 value_2, u32 value_3, u32 value_4) {
 /* fzgx:end fn_1_57720 */
 
 /* fzgx:begin fn_1_5773C */
-extern void fn_1_57DC0(void);
-extern void fn_8003462C(u32 size, u32 heap, u32 alignment);
-extern void GXLoadPosMtxImm(void *arg0, int arg1);
-extern void *lbl_801A6D00;
-
-typedef union GXFifo {
+typedef union fn_1_5773C_GXFifo {
     volatile f32 f32; /* write-gather FIFO: writes have side effects */
     volatile u8 u8;   /* write-gather FIFO: writes have side effects */
-} GXFifo;
+} fn_1_5773C_GXFifo;
 
 enum { GX_FIFO_ADDR = 0xCC008000 }; /* fzgx-allow: A1 GX write-gather FIFO hardware address */
-#define GXWGFifo (*(GXFifo *)GX_FIFO_ADDR)
+#define GXWGFifo (*(fn_1_5773C_GXFifo *)GX_FIFO_ADDR)
 
-typedef struct Vec3 {
+typedef struct fn_1_5773C_Vec3 {
     f32 x;
     f32 y;
     f32 z;
-} Vec3;
+} fn_1_5773C_Vec3;
 
-void fn_1_5773C(Vec3 *arg0, Vec3 *arg1, u8 *arg2) {
+void fn_1_5773C(fn_1_5773C_Vec3 *arg0, fn_1_5773C_Vec3 *arg1, u8 *arg2) {
     u32 color;
     f32 y;
     f32 z;
@@ -337,12 +323,6 @@ typedef struct {
     Fn1_57BBC_ArgBlock unk_10;
 } Fn1_57BBC_Data;
 
-extern void *fn_1_548AC(u32 size);
-extern void *fn_1_5448C(void *arg);
-extern void fn_1_57E84(void);
-extern void fn_1_5489C(void *arg0, void *arg1);
-extern void lbl_8006DB74(void *arg);
-
 void fn_1_57BBC(Fn1_57BBC_ArgBlock *arg0, Fn1_57BBC_ArgBlock *arg1) {
     Fn1_57BBC_Object *object;
     Fn1_57BBC_Data *data;
@@ -382,13 +362,6 @@ typedef struct {
     void *unk_40;
     Obj_1_data_1C670 unk_44;
 } Fn1_57CD0_Object;
-
-extern void *fn_1_548AC(u32 size);
-extern void *fn_1_5448C(void *arg);
-extern void fn_1_57E84(void);
-extern void fn_1_5489C(void *arg0, void *arg1);
-extern void fn_80008BA8(void *dst, void *src, u32 size);
-extern void lbl_8006DB74(void *arg);
 
 void fn_1_57CD0(u32 value, void *arg) {
     u32 size;

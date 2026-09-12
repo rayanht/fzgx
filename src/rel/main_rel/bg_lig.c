@@ -29,10 +29,18 @@ extern void fn_1_D8D58(Obj_1_data_2A7E0_At3C *obj, Obj_1_data_2A7E0_At3C *arg);
 extern void fn_1_D9D8C(Obj_1_bss_7AD78 *obj, u32 arg, s32 index);
 extern void fn_1_DA3A0(Obj_1_bss_7AD78 *obj);
 extern void fn_1_E87FC(void);
+extern void OSPanic(const char *file, int line, const char *msg, ...);
+extern struct fn_1_D66F8_lbl_801A66A0 lbl_801A66A0;
+extern u32 lbl_1_rodata_6358;
+extern void fn_1_4404(void);
+extern u32 fn_1_DA6A8(void *, u32);
+extern void fn_80008BEC(void *, int, u32);
+extern void fn_1_446C(void);
+extern void fn_1_76BF8(void);
+extern void fn_1_72648(void);
 
 /* fzgx:begin fn_1_D5C70 */
 extern int fn_1_58C4(void);
-extern void OSPanic(const char *file, int line, const char *msg, ...);
 
 typedef struct {
     u32 unk0;
@@ -211,8 +219,6 @@ struct fn_1_D66F8_Arg2 {
 struct fn_1_D66F8_lbl_801A66A0 {
     u32 unk_0;
 };
-extern struct fn_1_D66F8_lbl_801A66A0 lbl_801A66A0;
-extern u32 lbl_1_rodata_6358;
 
 void fn_1_D66F8(u8 arg0, u8 *arg1, s8 *arg2) {
     u32 sp8;
@@ -259,7 +265,8 @@ extern void fn_1_9AD88(void);
 extern void *memset(void *dst, int value, u32 size);
 extern void fn_1_D7EF4(void *, u32);
 extern f32 lbl_1_rodata_6594[];
-extern f32 lbl_1_rodata_6524[];
+
+
 extern void lbl_8006DCA4(void);
 extern s32 fn_1_54E34(void *obj, f32 value);
 extern void *fn_1_54448(s32 value);
@@ -322,7 +329,7 @@ void fn_1_D74C4(void) {
 }
 /* fzgx:end fn_1_D74C4 */
 
-/* fzgx:begin fn_1_D75CC noprologue */
+/* fzgx:begin fn_1_D75CC */
 #include "types.h"
 
 typedef struct {
@@ -339,14 +346,7 @@ struct fn_1_D75CC_lbl_1_data_2A7E0 {
     u8 pad_0[0x3C];
     u32 unk_3C;
 };
-extern struct fn_1_D75CC_lbl_1_data_2A7E0 lbl_1_data_2A7E0;
-extern u32 lbl_1_bss_7AD78;
-extern void fn_1_4404(void);
-extern u32 fn_1_DA6A8(void *, u32);
-extern void fn_80008BEC(void *, int, u32);
-extern void fn_1_446C(void);
-extern void fn_1_76BF8(void);
-extern void fn_1_72648(void);
+
 extern void fn_1_D8D08(Sig_fn_1_D8D08_LigContainer *);
 
 void fn_1_D75CC(void) {
@@ -355,17 +355,17 @@ void fn_1_D75CC(void) {
     u32 temp_r4;
     u32 temp_r4_2;
 
-    temp_r30 = lbl_1_data_2A7E0.unk_3C;
+    temp_r30 = (*(struct fn_1_D75CC_lbl_1_data_2A7E0 *)&lbl_1_data_2A7E0).unk_3C;
     fn_1_4404();
     temp_r4 = *(u32 *)((u8 *)(temp_r30) + 7256);
     if (temp_r4 != 0) {
-        fn_1_DA6A8((void *)(&lbl_1_bss_7AD78), temp_r4);
-        fn_80008BEC((void *)(&lbl_1_bss_7AD78), 0, 0x20U);
+        fn_1_DA6A8((void *)(&(*(u32 *)&lbl_1_bss_7AD78)), temp_r4);
+        fn_80008BEC((void *)(&(*(u32 *)&lbl_1_bss_7AD78)), 0, 0x20U);
         (*(u32 *)((u8 *)(temp_r30) + 7256)) = 0U;
     }
     temp_r4_2 = *(u32 *)((u8 *)(temp_r30) + 7260);
     if (temp_r4_2 != 0) {
-        temp_r31 = (u32 *)((u8 *)(&lbl_1_bss_7AD78) + 0x20);
+        temp_r31 = (u32 *)((u8 *)(&(*(u32 *)&lbl_1_bss_7AD78)) + 0x20);
         fn_1_DA6A8((void *)(temp_r31), temp_r4_2);
         fn_80008BEC((void *)(temp_r31), 0, 0x20U);
         (*(u32 *)((u8 *)(temp_r30) + 7260)) = 0U;
@@ -434,6 +434,8 @@ void fn_1_D79E4(void *obj) {
 /* fzgx:begin fn_1_D7B7C noprologue */
 #include "types.h"
 
+extern f32 lbl_1_rodata_6524[];
+
 typedef struct {
     u8 pad0[0x24];
     f32 value;
@@ -449,7 +451,8 @@ typedef struct {
 } LigEvent;
 
 extern void lbl_8006DCA4(void);
-extern f32 lbl_1_rodata_6524[28];
+
+
 extern s32 fn_1_54E34(LigEntry *entry, f32 value);
 extern void *fn_1_5448C(LigEntry *entry);
 extern LigEvent *fn_1_548AC(s32 size);
@@ -467,7 +470,7 @@ void fn_1_D7B7C(LigEntry *base) {
     for (i = 0; i < 0x14; i++) {
         entry = base + i + 1;
         if (entry->count > 0 &&
-            fn_1_54E34(entry, lbl_1_rodata_6524[0] * entry->value)) {
+            fn_1_54E34(entry, (*(f32 (*)[28])&lbl_1_rodata_6524)[0] * entry->value)) {
             data = fn_1_5448C(entry);
             event = fn_1_548AC(0xc);
             if (event != 0) {

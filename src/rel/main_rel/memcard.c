@@ -47,6 +47,8 @@ extern u8 lbl_1_bss_772C8[66];
 extern u32 fn_1_4630(void *heap, u32 size, void *file, s32 line);
 extern s32 fn_8002FC14(s32 chan, void *fileName);
 extern s32 fn_80030338(s32 chan, void *oldName, void *newName);
+extern const f64 lbl_1_rodata_4CB8;
+extern void fn_1_C36EC(void);
 
 /* fzgx:begin fn_1_AB478 */
 #include "rel/main_rel/memcard.h"
@@ -721,14 +723,16 @@ void fn_1_ABE14(Fn1ABE14Arg *arg) {
 }
 /* fzgx:end fn_1_ABE14 */
 
-/* fzgx:begin fn_1_ABE88 noprologue */
+/* fzgx:begin fn_1_ABE88 */
 #include "types.h"
 
 struct fn_1_ABE88_Arg0 {
     u8 unk_0;
 };
-extern f64 lbl_1_rodata_4CB0;
-extern f64 lbl_1_rodata_4CB8;
+
+
+
+
 extern u32 CARDGetResultCode(u32);
 extern u32 fn_8002C0A0(u32);
 
@@ -817,8 +821,9 @@ typedef struct Fn1AC000Target {
     f32 ratio;
 } Fn1AC000Target;
 
-extern const f64 lbl_1_rodata_4CB8;
-extern const f64 lbl_1_rodata_4CB0;
+
+
+
 extern u32 CARDGetResultCode(u32);
 extern u32 fn_8002C0A0(u32);
 
@@ -846,40 +851,24 @@ void fn_1_AC000(Fn1AC000Target *target) {
 
 /* fzgx:begin fn_1_AC12C */
 extern int fn_1_45D0(void *arg0, int arg1, Obj_1_data_3C7B8 *arg2, int arg3);
-extern void fn_1_AB45C(void);
 extern void CARDMountAsync(u8, u32, void (*)(void), s32);
 extern int CARDGetSerialNo(u8 value, void *data);
 extern void CARDCheckAsync(u8 byte_val, int value);
 extern void CARDFormatAsync(u8 byte, int value);
-extern const f64 lbl_1_rodata_4CB0;
+
 extern void fn_80083DB0(void *dst, void *src);
 extern void strcat(void *dst, void *src);
-extern void CARDDeleteAsync(u8 byte, void *data, int arg);
-extern s32 CARDFreeBlocks(u8 byte_val, void *arg1, void *arg2);
 extern s32 CARDOpen(u8 byte_val, void *arg1, void *arg2);
 extern void CARDFastDeleteAsync(u8 byte_val, void *arg, s32 zero);
 extern void CARDCreateAsync(u8 byte_val, void *arg1, void *arg2, void *arg3, u32 arg4);
-extern void CARDSetStatusAsync(u8 id, void *arg, void *data, int zero);
-extern void CARDRenameAsync(u8 id, void *data1, void *data2, int zero);
-extern void CARDReadAsync(void *arg0, void *arg1, void *arg2, int arg3, int arg4);
-extern const f64 lbl_1_rodata_4CC8;
-extern void fn_80030754(u8 value, void *data, int size, int mode);
-extern u8 lbl_1_bss_71810[161];
-extern u8 lbl_1_bss_718B8;
-extern u8 lbl_1_bss_718B9[7];
-extern int fn_8002A744(void);
 extern void fn_8002A74C(u16 value);
-extern int fn_8002DFE0(int arg0, u32 arg1, int arg2);
 extern int CARDCheck(int arg0);
-extern void fn_1_484CC(u32);
 extern void fn_80008BEC(void *dst, s32 value, s32 size);
 extern void fn_1_AA6D8(s32 arg0, u32 arg1, void *arg2);
-extern void fn_1_F755C(u8 value);
 extern void fn_1_A6840(u8 value);
 extern void OSPanic(void *arg0, u32 arg1, ...);
 extern void fn_1_F79C8(void);
 extern void strncpy(void *arg0, void *arg1, int arg2);
-extern u32 lbl_1_bss_77310[28];
 extern u32 lbl_1_bss_7730C;
 
 typedef struct MemcardRequestState {
@@ -889,20 +878,20 @@ typedef struct MemcardRequestState {
     void *data;
 } MemcardRequestState;
 
-typedef struct MemcardRequest {
+typedef struct fn_1_AC12C_MemcardRequest {
     u8 id;
     u8 pad_01[0xF];
     u8 buffer[0x14];
     MemcardRequestState *state;
     u8 pad_28[0x8];
     void *result;
-} MemcardRequest;
+} fn_1_AC12C_MemcardRequest;
 
 extern void *fn_8002C0A0(u8 id);
 extern void CARDWriteAsync(void *dst, void *src, int size, int zero, int flags);
 
 // Initializes the request state, records the backing resource, and starts its transfer.
-void fn_1_AC12C(MemcardRequest *request) {
+void fn_1_AC12C(fn_1_AC12C_MemcardRequest *request) {
     request->state->value = 300;
     request->result = fn_8002C0A0(request->id);
     CARDWriteAsync(request->buffer, request->state->data, 0x4000, 0, 0);
@@ -935,8 +924,9 @@ typedef struct Fn1AC188Target {
     f32 value;
 } Fn1AC188Target;
 
-extern const f64 lbl_1_rodata_4CB8;
-extern const f64 lbl_1_rodata_4CB0;
+
+
+
 extern const f32 lbl_1_rodata_4CC0;
 extern const f32 lbl_1_rodata_4CC4;
 
@@ -1137,7 +1127,7 @@ void fn_1_AC4C4(Fn1AC4C4Target *target) {
 }
 /* fzgx:end fn_1_AC4C4 */
 
-/* fzgx:begin fn_1_AC53C noprologue */
+/* fzgx:begin fn_1_AC53C */
 #include "types.h"
 
 struct fn_1_AC53C_Arg0 {
@@ -1150,9 +1140,12 @@ struct fn_1_AC53C_lbl_801A6410 {
 struct fn_1_AC53C_lbl_1_bss_716C0 {
     u8 unk_0;
 };
-extern struct fn_1_AC53C_lbl_1_bss_716C0 lbl_1_bss_716C0;
-extern struct fn_1_AC53C_lbl_801A6410 lbl_801A6410;
-extern u32 lbl_1_data_3C7B8;
+
+
+
+
+
+
 extern s32 CARDUnmount(void *);
 extern void fn_1_46B4(u32, u32, const char *, int);
 
@@ -1168,7 +1161,7 @@ void fn_1_AC53C(void *arg0) {
         do {
 
         } while (CARDUnmount((void *)((void *)((*(u8 *)((u8 *)(arg0) + 0))))) == -1);
-        fn_1_46B4(lbl_801A6410.unk_0, *(u32 *)((u8 *)(arg0) + 12), (const char *)((s8 *) &lbl_1_data_3C7B8), 0x3C8);
+        fn_1_46B4((*(struct fn_1_AC53C_lbl_801A6410 *)&lbl_801A6410).unk_0, *(u32 *)((u8 *)(arg0) + 12), (const char *)((s8 *) &(*(u32 *)&lbl_1_data_3C7B8)), 0x3C8);
         (*(s8 *)((u8 *)(arg0) + 7)) = 0;
         (*(u32 *)((u8 *)(arg0) + 12)) = 0U;
         temp_r3 = (void *)(*(void **)((u8 *)(arg0) + 36));
@@ -1182,19 +1175,19 @@ void fn_1_AC53C(void *arg0) {
     }
     temp_r5 = (void *)(*(void **)((u8 *)(arg0) + 36));
     if (!((*(s32 *)((u8 *)(temp_r5) + 8)) & 0x20)) {
-        fn_1_46B4(lbl_801A6410.unk_0, *(u32 *)((u8 *)(temp_r5) + 148), (const char *)((s8 *) &lbl_1_data_3C7B8), 0x3D4);
+        fn_1_46B4((*(struct fn_1_AC53C_lbl_801A6410 *)&lbl_801A6410).unk_0, *(u32 *)((u8 *)(temp_r5) + 148), (const char *)((s8 *) &(*(u32 *)&lbl_1_data_3C7B8)), 0x3D4);
     }
     if ((u8) (*(u8 *)((u8 *)(arg0) + 2)) == 4) {
-        if ((u8) lbl_1_bss_716C0.unk_0 != 0) {
+        if ((u8) (*(struct fn_1_AC53C_lbl_1_bss_716C0 *)&lbl_1_bss_716C0).unk_0 != 0) {
             temp_r6 = (void *)(*(void **)((u8 *)(arg0) + 36));
             temp_r5_2 = *(u32 *)((u8 *)(temp_r6) + 148);
             (*(u32 *)((u8 *)(temp_r6) + 148)) = (u32) (*(u32 *)((u8 *)(temp_r6) + 220));
             (*(u32 *)((u8 *)(temp_r6) + 220)) = temp_r5_2;
-            lbl_1_bss_716C0.unk_0 = 0;
+            (*(struct fn_1_AC53C_lbl_1_bss_716C0 *)&lbl_1_bss_716C0).unk_0 = 0;
         }
         temp_r4 = *(u32 *)((u8 *)((*(void **)((u8 *)(arg0) + 36))) + 220);
         if (temp_r4 != 0) {
-            fn_1_46B4(lbl_801A6410.unk_0, temp_r4, (const char *)((s8 *) &lbl_1_data_3C7B8), 0x3DE);
+            fn_1_46B4((*(struct fn_1_AC53C_lbl_801A6410 *)&lbl_801A6410).unk_0, temp_r4, (const char *)((s8 *) &(*(u32 *)&lbl_1_data_3C7B8)), 0x3DE);
             (*(u32 *)((u8 *)((*(void **)((u8 *)(arg0) + 36))) + 220)) = 0U;
         }
     }
@@ -1287,7 +1280,7 @@ void fn_1_AC74C(void *r3) {
 }
 /* fzgx:end fn_1_AC74C */
 
-/* fzgx:begin fn_1_AC79C noprologue */
+/* fzgx:begin fn_1_AC79C */
 #include "types.h"
 
 struct fn_1_AC79C_Arg0 {
@@ -1300,9 +1293,12 @@ struct fn_1_AC79C_lbl_801A6410 {
 struct fn_1_AC79C_lbl_1_bss_716C0 {
     u8 unk_0;
 };
-extern struct fn_1_AC79C_lbl_1_bss_716C0 lbl_1_bss_716C0;
-extern struct fn_1_AC79C_lbl_801A6410 lbl_801A6410;
-extern u32 lbl_1_data_3C7B8;
+
+
+
+
+
+
 extern s32 CARDUnmount(void *);
 extern void fn_1_46B4(u32, u32, const char *, int);
 
@@ -1318,7 +1314,7 @@ void fn_1_AC79C(void *arg0) {
         do {
 
         } while (CARDUnmount((void *)((void *)((*(u8 *)((u8 *)(arg0) + 0))))) == -1);
-        fn_1_46B4(lbl_801A6410.unk_0, *(u32 *)((u8 *)(arg0) + 12), (const char *)((s8 *) &lbl_1_data_3C7B8), 0x3C8);
+        fn_1_46B4((*(struct fn_1_AC79C_lbl_801A6410 *)&lbl_801A6410).unk_0, *(u32 *)((u8 *)(arg0) + 12), (const char *)((s8 *) &(*(u32 *)&lbl_1_data_3C7B8)), 0x3C8);
         (*(s8 *)((u8 *)(arg0) + 7)) = 0;
         (*(u32 *)((u8 *)(arg0) + 12)) = 0U;
         temp_r3 = (void *)(*(void **)((u8 *)(arg0) + 36));
@@ -1332,19 +1328,19 @@ void fn_1_AC79C(void *arg0) {
     }
     temp_r5 = (void *)(*(void **)((u8 *)(arg0) + 36));
     if (!((*(s32 *)((u8 *)(temp_r5) + 8)) & 0x20)) {
-        fn_1_46B4(lbl_801A6410.unk_0, *(u32 *)((u8 *)(temp_r5) + 148), (const char *)((s8 *) &lbl_1_data_3C7B8), 0x3D4);
+        fn_1_46B4((*(struct fn_1_AC79C_lbl_801A6410 *)&lbl_801A6410).unk_0, *(u32 *)((u8 *)(temp_r5) + 148), (const char *)((s8 *) &(*(u32 *)&lbl_1_data_3C7B8)), 0x3D4);
     }
     if ((u8) (*(u8 *)((u8 *)(arg0) + 2)) == 4) {
-        if ((u8) lbl_1_bss_716C0.unk_0 != 0) {
+        if ((u8) (*(struct fn_1_AC79C_lbl_1_bss_716C0 *)&lbl_1_bss_716C0).unk_0 != 0) {
             temp_r6 = (void *)(*(void **)((u8 *)(arg0) + 36));
             temp_r5_2 = *(u32 *)((u8 *)(temp_r6) + 148);
             (*(u32 *)((u8 *)(temp_r6) + 148)) = (u32) (*(u32 *)((u8 *)(temp_r6) + 220));
             (*(u32 *)((u8 *)(temp_r6) + 220)) = temp_r5_2;
-            lbl_1_bss_716C0.unk_0 = 0;
+            (*(struct fn_1_AC79C_lbl_1_bss_716C0 *)&lbl_1_bss_716C0).unk_0 = 0;
         }
         temp_r4 = *(u32 *)((u8 *)((*(void **)((u8 *)(arg0) + 36))) + 220);
         if (temp_r4 != 0) {
-            fn_1_46B4(lbl_801A6410.unk_0, temp_r4, (const char *)((s8 *) &lbl_1_data_3C7B8), 0x3DE);
+            fn_1_46B4((*(struct fn_1_AC79C_lbl_801A6410 *)&lbl_801A6410).unk_0, temp_r4, (const char *)((s8 *) &(*(u32 *)&lbl_1_data_3C7B8)), 0x3DE);
             (*(u32 *)((u8 *)((*(void **)((u8 *)(arg0) + 36))) + 220)) = 0U;
         }
     }
@@ -1485,7 +1481,7 @@ void fn_1_ACA1C(fn_1_ACA1C_MemCardState *state) {
 }
 /* fzgx:end fn_1_ACA1C */
 
-/* fzgx:begin fn_1_ACA78 noprologue */
+/* fzgx:begin fn_1_ACA78 */
 #include "types.h"
 
 struct fn_1_ACA78_Arg0 {
@@ -1498,10 +1494,14 @@ struct fn_1_ACA78_lbl_801A6410 {
 struct fn_1_ACA78_lbl_1_bss_716C0 {
     u8 unk_0;
 };
-extern s16 lbl_1_bss_960;
-extern struct fn_1_ACA78_lbl_1_bss_716C0 lbl_1_bss_716C0;
-extern struct fn_1_ACA78_lbl_801A6410 lbl_801A6410;
-extern u32 lbl_1_data_3C7B8;
+
+
+
+
+
+
+
+
 extern s32 CARDUnmount(s32);
 extern void fn_1_46B4(u32, u32, const char *, int);
 extern s32 fn_1_B7EF8(void);
@@ -1526,7 +1526,7 @@ void fn_1_ACA78(void *arg0) {
         do {
 
         } while (CARDUnmount((s32) (*(u8 *)((u8 *)(arg0) + 0))) == -1);
-        fn_1_46B4(lbl_801A6410.unk_0, *(u32 *)((u8 *)(arg0) + 12), (const char *)((s8 *) &lbl_1_data_3C7B8), 0x3C8);
+        fn_1_46B4((*(struct fn_1_ACA78_lbl_801A6410 *)&lbl_801A6410).unk_0, *(u32 *)((u8 *)(arg0) + 12), (const char *)((s8 *) &(*(u32 *)&lbl_1_data_3C7B8)), 0x3C8);
         (*(s8 *)((u8 *)(arg0) + 7)) = 0;
         (*(u32 *)((u8 *)(arg0) + 12)) = 0U;
         temp_r3 = (void *)(*(void **)((u8 *)(arg0) + 36));
@@ -1540,19 +1540,19 @@ void fn_1_ACA78(void *arg0) {
     }
     temp_r5 = (void *)(*(void **)((u8 *)(arg0) + 36));
     if (!((*(s32 *)((u8 *)(temp_r5) + 8)) & 0x20)) {
-        fn_1_46B4(lbl_801A6410.unk_0, *(u32 *)((u8 *)(temp_r5) + 148), (const char *)((s8 *) &lbl_1_data_3C7B8), 0x3D4);
+        fn_1_46B4((*(struct fn_1_ACA78_lbl_801A6410 *)&lbl_801A6410).unk_0, *(u32 *)((u8 *)(temp_r5) + 148), (const char *)((s8 *) &(*(u32 *)&lbl_1_data_3C7B8)), 0x3D4);
     }
     if ((u8) (*(u8 *)((u8 *)(arg0) + 2)) == 4) {
-        if ((u8) lbl_1_bss_716C0.unk_0 != 0) {
+        if ((u8) (*(struct fn_1_ACA78_lbl_1_bss_716C0 *)&lbl_1_bss_716C0).unk_0 != 0) {
             temp_r6 = (void *)(*(void **)((u8 *)(arg0) + 36));
             temp_r5_2 = *(u32 *)((u8 *)(temp_r6) + 148);
             (*(u32 *)((u8 *)(temp_r6) + 148)) = (u32) (*(u32 *)((u8 *)(temp_r6) + 220));
             (*(u32 *)((u8 *)(temp_r6) + 220)) = temp_r5_2;
-            lbl_1_bss_716C0.unk_0 = 0;
+            (*(struct fn_1_ACA78_lbl_1_bss_716C0 *)&lbl_1_bss_716C0).unk_0 = 0;
         }
         temp_r4 = *(u32 *)((u8 *)((*(void **)((u8 *)(arg0) + 36))) + 220);
         if (temp_r4 != 0) {
-            fn_1_46B4(lbl_801A6410.unk_0, temp_r4, (const char *)((s8 *) &lbl_1_data_3C7B8), 0x3DE);
+            fn_1_46B4((*(struct fn_1_ACA78_lbl_801A6410 *)&lbl_801A6410).unk_0, temp_r4, (const char *)((s8 *) &(*(u32 *)&lbl_1_data_3C7B8)), 0x3DE);
             (*(u32 *)((u8 *)((*(void **)((u8 *)(arg0) + 36))) + 220)) = 0U;
         }
     }
@@ -1573,12 +1573,12 @@ void fn_1_ACA78(void *arg0) {
         temp_r3_3 = (void *)(*(void **)((u8 *)(arg0) + 36));
         (*(s32 *)((u8 *)(temp_r3_3) + 8)) = (s32) ((*(s32 *)((u8 *)(temp_r3_3) + 8)) & 0xFFFFFFFB);
         if (var_r30 == 0) {
-            if ((s16) (*(s16 *)((u8 *)(&lbl_1_bss_960) + 0)) == 1) {
+            if ((s16) (*(s16 *)((u8 *)(&(*(s16 *)&lbl_1_bss_960)) + 0)) == 1) {
                 (*(s16 *)((u8 *)(arg0) + 8)) = 0x63;
             } else {
                 (*(s16 *)((u8 *)(arg0) + 8)) = 0x61;
             }
-        } else if ((s16) (*(s16 *)((u8 *)(&lbl_1_bss_960) + 0)) == 1) {
+        } else if ((s16) (*(s16 *)((u8 *)(&(*(s16 *)&lbl_1_bss_960)) + 0)) == 1) {
             (*(s16 *)((u8 *)(arg0) + 8)) = 0x64;
         } else {
             (*(s16 *)((u8 *)(arg0) + 8)) = 0x62;
@@ -1925,40 +1925,24 @@ void fn_1_AD168(Fn1AD168Obj *obj) {
 
 /* fzgx:begin fn_1_AD1AC */
 extern int fn_1_45D0(void *arg0, int arg1, Obj_1_data_3C7B8 *arg2, int arg3);
-extern void fn_1_AB45C(void);
 extern void CARDMountAsync(u8, u32, void (*)(void), s32);
 extern int CARDGetSerialNo(u8 value, void *data);
 extern void CARDCheckAsync(u8 byte_val, int value);
 extern void CARDFormatAsync(u8 byte, int value);
-extern const f64 lbl_1_rodata_4CB0;
+
 extern void fn_80083DB0(void *dst, void *src);
 extern void strcat(void *dst, void *src);
-extern void CARDDeleteAsync(u8 byte, void *data, int arg);
-extern s32 CARDFreeBlocks(u8 byte_val, void *arg1, void *arg2);
 extern s32 CARDOpen(u8 byte_val, void *arg1, void *arg2);
 extern void CARDFastDeleteAsync(u8 byte_val, void *arg, s32 zero);
 extern void CARDCreateAsync(u8 byte_val, void *arg1, void *arg2, void *arg3, u32 arg4);
-extern void CARDSetStatusAsync(u8 id, void *arg, void *data, int zero);
-extern void CARDRenameAsync(u8 id, void *data1, void *data2, int zero);
-extern void CARDReadAsync(void *arg0, void *arg1, void *arg2, int arg3, int arg4);
-extern const f64 lbl_1_rodata_4CC8;
-extern void fn_80030754(u8 value, void *data, int size, int mode);
-extern u8 lbl_1_bss_71810[161];
-extern u8 lbl_1_bss_718B8;
-extern u8 lbl_1_bss_718B9[7];
-extern int fn_8002A744(void);
 extern void fn_8002A74C(u16 value);
-extern int fn_8002DFE0(int arg0, u32 arg1, int arg2);
 extern int CARDCheck(int arg0);
-extern void fn_1_484CC(u32);
 extern void fn_80008BEC(void *dst, s32 value, s32 size);
 extern void fn_1_AA6D8(s32 arg0, u32 arg1, void *arg2);
-extern void fn_1_F755C(u8 value);
 extern void fn_1_A6840(u8 value);
 extern void OSPanic(void *arg0, u32 arg1, ...);
 extern void fn_1_F79C8(void);
 extern void strncpy(void *arg0, void *arg1, int arg2);
-extern u32 lbl_1_bss_77310[28];
 extern u32 lbl_1_bss_7730C;
 
 typedef struct Fn1AD1ACOutput {
@@ -4446,7 +4430,7 @@ void fn_1_BC29C(void) {
 }
 /* fzgx:end fn_1_BC29C */
 
-/* fzgx:begin fn_1_BF520 noprologue */
+/* fzgx:begin fn_1_BF520 */
 #include "types.h"
 
 struct fn_1_BF520_Arg4 {
@@ -4458,7 +4442,8 @@ struct fn_1_BF520_lbl_1_rodata_4CB0 {
 };
 extern f32 lbl_1_rodata_4D18;
 extern f32 lbl_1_rodata_5080;
-extern struct fn_1_BF520_lbl_1_rodata_4CB0 lbl_1_rodata_4CB0;
+
+
 extern u32 lbl_1_rodata_26F8;
 extern void fn_1_50164(f32, f32, f32, f32, void *);
 
@@ -4477,7 +4462,7 @@ void fn_1_BF520(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u32 *arg4) {
 }
 /* fzgx:end fn_1_BF520 */
 
-/* fzgx:begin fn_1_C0510 noprologue */
+/* fzgx:begin fn_1_C0510 */
 #include "types.h"
 
 typedef struct {
@@ -4491,7 +4476,8 @@ typedef struct {
 
 extern u64 OSGetTime(void);
 extern u64 __div2i(u64, u32, u32);
-extern u8 lbl_1_bss_77380[];
+
+
 extern u32 lbl_1_bss_7AB90[36];
 extern void fn_1_C062C(Fn1C0510Obj *, void *, void *);
 extern void fn_1_C0B0C(Fn1C0510Obj *, void *, void *);
@@ -4509,13 +4495,13 @@ void fn_1_C0510(Fn1C0510Obj *obj) {
     lbl_1_bss_7AB90[0] = __div2i(time, 0, (*(u32 *)0x800000F8) >> 2);  /* fzgx-allow: A1,A2 unnamed OS/hardware memory */
 
     if (obj->first != -1 && obj->second != -1) {
-        first = lbl_1_bss_77380 + obj->first * 0x1800 + obj->second * 0x30;
+        first = (*(u8 (*)[])&lbl_1_bss_77380) + obj->first * 0x1800 + obj->second * 0x30;
     } else {
         first = 0;
     }
 
     if (obj->third != -1 && obj->fourth != -1) {
-        second = lbl_1_bss_77380 + obj->third * 0x1800 + obj->fourth * 0x30;
+        second = (*(u8 (*)[])&lbl_1_bss_77380) + obj->third * 0x1800 + obj->fourth * 0x30;
     } else {
         second = 0;
     }
@@ -4584,8 +4570,6 @@ void fn_1_C23CC(void *base0, u32 stride0, u32 arg2, void *base1,
 /* fzgx:end fn_1_C23CC */
 
 /* fzgx:begin fn_1_C2454 */
-extern void fn_1_C36EC(void);
-
 void fn_1_C2454(void) {
     u8 *state = (u8 *)&lbl_1_bss_716C0 + 0x10000;
 

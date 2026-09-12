@@ -5,14 +5,14 @@
 extern u16 lbl_1_bss_6EA94;
 extern struct fn_1_9F870_lbl_801A6410 lbl_801A6410;
 extern u32 fn_1_46B4(u32, u32, void *, u32);
+extern u32 fn_1_45D0(u32, u32, void *, u32);
+extern void fn_80008BA8(void *, const void *, u32);
+extern u32 lbl_1_bss_6EA90;
 
-/* fzgx:begin fn_1_9F7DC noprologue */
+/* fzgx:begin fn_1_9F7DC */
 #include "types.h"
 #include "rel/main_rel/globals.h"
 #include "rel/main_rel/ptclput.h"
-
-extern struct fn_1_9F7DC_lbl_801A6410 lbl_801A6410;
-extern u32 fn_1_45D0(u32, u32, void *, u32);
 
 struct fn_1_9F7DC_lbl_1_bss_6EA88 {
     u32 unk_0;
@@ -28,11 +28,11 @@ void fn_1_9F7DC(void) {
     p_lbl_1_bss_6EA88 = (struct fn_1_9F7DC_lbl_1_bss_6EA88 *)&lbl_1_bss_6EA88;
 
     p_lbl_1_bss_6EA88->unk_0 =
-        fn_1_45D0(lbl_801A6410.unk_0, 0x4000, &lbl_1_data_2CD20, 0x4c1);
+        fn_1_45D0((*(struct fn_1_9F7DC_lbl_801A6410 *)&lbl_801A6410).unk_0, 0x4000, &lbl_1_data_2CD20, 0x4c1);
     p_lbl_1_bss_6EA88->unk_4 =
-        fn_1_45D0(lbl_801A6410.unk_0, 0x4000, &lbl_1_data_2CD20, 0x4c2);
+        fn_1_45D0((*(struct fn_1_9F7DC_lbl_801A6410 *)&lbl_801A6410).unk_0, 0x4000, &lbl_1_data_2CD20, 0x4c2);
     p_lbl_1_bss_6EA88->unk_8 =
-        fn_1_45D0(lbl_801A6410.unk_0, 0x1800, &lbl_1_data_2CD20, 0x4c3);
+        fn_1_45D0((*(struct fn_1_9F7DC_lbl_801A6410 *)&lbl_801A6410).unk_0, 0x1800, &lbl_1_data_2CD20, 0x4c3);
 }
 /* fzgx:end fn_1_9F7DC */
 
@@ -65,8 +65,6 @@ void fn_1_9F8FC(void) {
 /* fzgx:end fn_1_9F8FC */
 
 /* fzgx:begin fn_1_9F914 */
-extern void fn_80008BA8(void *, const void *, u32);
-
 int fn_1_9F914(const void *src0, const void *src1) {
     Obj_1_bss_6EA88 *obj = &lbl_1_bss_6EA88;
 
@@ -93,9 +91,6 @@ struct fn_1_9F9A4_Blk {
     u32 w4;
     u32 w5;
 };
-
-extern u32 lbl_1_bss_6EA90;
-extern u16 lbl_1_bss_6EA96;
 
 s32 fn_1_9F9A4(u32 arg0) {
     u16 v0;

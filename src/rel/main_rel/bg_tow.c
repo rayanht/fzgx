@@ -11,6 +11,10 @@ extern void fn_1_1596DC(s32 arg0);
 extern void fn_1_484CC(s32 arg0);
 extern void fn_1_BC310(Obj_1_bss_8EDA4 *arg0);
 extern void fn_1_C0510(u32 *arg0, u32 arg1, u32 arg2);
+extern u32 fn_1_426C(u32);
+extern u32 fn_1_46B4(u32, u32, u32, u32);
+extern u32 fn_1_B9C0C(void);
+extern u32 lbl_801A6410;
 
 /* fzgx:begin fn_1_154708 noprologue */
 #include "types.h"
@@ -60,7 +64,7 @@ void fn_1_154708(u32 arg0) {
 }
 /* fzgx:end fn_1_154708 */
 
-/* fzgx:begin fn_1_1547FC noprologue */
+/* fzgx:begin fn_1_1547FC */
 #include "types.h"
 
 struct fn_1_1547FC_lbl_1_data_49A18 {
@@ -77,13 +81,7 @@ struct fn_1_1547FC_lbl_1_bss_8ED90 {
     u32 unk_C;
 };
 
-extern struct fn_1_1547FC_lbl_1_bss_8ED90 lbl_1_bss_8ED90;
-extern struct fn_1_1547FC_lbl_1_data_49A18 lbl_1_data_49A18;
-extern u32 fn_1_426C(u32);
 extern u32 fn_1_435C(u32);
-extern u32 fn_1_46B4(u32, u32, u32, u32);
-extern u32 fn_1_B9C0C(void);
-extern u32 lbl_801A6410;
 
 s32 fn_1_1547FC(u32 arg0, u32 arg1, u32 arg2, u32 arg3) {
     struct fn_1_1547FC_lbl_1_data_49A18 *p_lbl_1_data_49A18;
@@ -95,8 +93,8 @@ s32 fn_1_1547FC(u32 arg0, u32 arg1, u32 arg2, u32 arg3) {
     u32 v4;
     s32 v5;
     u32 t0, t1, t2, t3;
-    p_lbl_1_bss_8ED90 = (struct fn_1_1547FC_lbl_1_bss_8ED90 *)&lbl_1_bss_8ED90;
-    p_lbl_1_data_49A18 = &lbl_1_data_49A18;
+    p_lbl_1_bss_8ED90 = (struct fn_1_1547FC_lbl_1_bss_8ED90 *)&(*(struct fn_1_1547FC_lbl_1_bss_8ED90 *)&lbl_1_bss_8ED90);
+    p_lbl_1_data_49A18 = &(*(struct fn_1_1547FC_lbl_1_data_49A18 *)&lbl_1_data_49A18);
     t0 = fn_1_B9C0C();
     v0 = p_lbl_1_bss_8ED90->unk_0;
     v1 = t0;
@@ -199,11 +197,12 @@ void fn_1_1549B8(void) {
 }
 /* fzgx:end fn_1_1549B8 */
 
-/* fzgx:begin fn_1_154C84 noprologue */
+/* fzgx:begin fn_1_154C84 */
 #include "types.h"
 
 extern u32 lbl_1_data_49AB0;
-extern u32 lbl_1_data_49AB4;
+
+
 
 s32 fn_1_154C84(void) {
     u32 v0;
@@ -211,7 +210,7 @@ s32 fn_1_154C84(void) {
     v0 = 0;
     return v0;
     }
-    if ((s32)lbl_1_data_49AB0 != -1 || (s32)lbl_1_data_49AB4 != -1) {
+    if ((s32)lbl_1_data_49AB0 != -1 || (s32)(*(u32 *)&lbl_1_data_49AB4) != -1) {
     v0 = 1;
     return v0;
     }

@@ -13,6 +13,23 @@ extern u32 OSIsThreadTerminated(u8 *);
 
 extern void fn_1_6DD0(void *);
 extern u32 *fn_1_1289C(u32 *);
+extern s32 fn_1_4C10(void);
+extern s32 fn_1_40BB4(void);
+extern s32 fn_1_F2F34(void);
+extern u32 fn_1_F45A4(void);
+extern u32 fn_1_F4594(void);
+extern f32 lbl_1_rodata_4E0[5];
+extern f32 lbl_1_bss_1160[403];
+extern void fn_1_5370(s32, s16);
+extern f32 lbl_1_rodata_4F4[19];
+extern const f64 lbl_1_rodata_548[2];
+extern u32 lbl_801A63C0;
+extern void fn_1_8636C(s16, void *);
+extern void fn_1_862A8(s16, void *);
+extern void lbl_8006DC6C(void *);
+extern void lbl_8006E1B0(void *, void *);
+extern s32 lbl_8006D24C(f32, f32);
+extern int sprintf(char *, const char *, ...);
 
 /* fzgx:begin fn_1_DA34 */
 // Reports the camera source location and message used by this routine.
@@ -258,9 +275,6 @@ void fn_1_101D0(Fn_1_101D0_State *self) {
 
 /* fzgx:begin fn_1_10268 */
 extern u32 fn_80008E30(u32);
-extern f32 lbl_1_rodata_4E0[5];
-extern f32 lbl_1_rodata_4F4[19];
-extern const f64 lbl_1_rodata_548[2];
 
 typedef struct {
     f32 unk_0;
@@ -334,7 +348,7 @@ void fn_1_10268(Camera_1_10268 *arg) {
 }
 /* fzgx:end fn_1_10268 */
 
-/* fzgx:begin fn_1_11ABC noprologue */
+/* fzgx:begin fn_1_11ABC */
 #include "dolphin/hw_regs.h"
 #include "types.h"
 
@@ -371,16 +385,8 @@ typedef struct {
     f32 unk_7C;
 } LiveCamera;
 
-extern u32 lbl_801A63C0;
-extern CameraData lbl_1_data_4AA0[];
-
 extern void fn_1_862D4(s16, Vec3 *);
-extern void fn_1_8636C(s16, void *);
-extern void fn_1_862A8(s16, void *);
-extern void lbl_8006DC6C(void *);
-extern void lbl_8006E1B0(void *, void *);
 extern void fn_8006E2B0(void *, Vec3 *);
-extern s32 lbl_8006D24C(f32, f32);
 
 #pragma opt_propagation off
 void fn_1_11ABC(LiveCamera *camera) {
@@ -404,7 +410,7 @@ void fn_1_11ABC(LiveCamera *camera) {
     fn_1_8636C(camera->unk_6, &camera->unk_7C);
     fn_1_862A8(camera->unk_6, &camera->unk_70);
 
-    camera->unk_34 = lbl_1_data_4AA0[camera->unk_4].v;
+    camera->unk_34 = (*(CameraData (*)[])&lbl_1_data_4AA0)[camera->unk_4].v;
 
     {
         f32 m2, m1, m0;
@@ -440,8 +446,6 @@ extern u32 OSIsThreadTerminated(u8 *);
 
 extern void fn_1_6DD0(void *);
 extern u32 *fn_1_1289C(u32 *);
-
-extern int sprintf(char *, const char *, ...);
 
 // Prints the live-camera status text for the current camera event.
 #pragma opt_common_subs off

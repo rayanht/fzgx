@@ -123,7 +123,8 @@ u32 fn_1_1317B4(void) {
 
 /* fzgx:begin fn_1_1317C4 */
 extern u32 lbl_801A6410;
-extern u8 lbl_1_data_40EA4[84];
+
+
 extern u32 fn_1_4630(u32 arg0, u32 arg1, u8 *arg2, u32 arg3);
 extern void fn_80008BEC(void *arg0, u32 arg1, u32 arg2);
 extern s32 fn_1_B7E98(s32 arg0);
@@ -142,7 +143,7 @@ void fn_1_1317C4(void) {
     MemcardRequest request;
 
     lbl_1_bss_8E384.unk_0 = fn_1_4630(
-        lbl_801A6410, 0x20700, lbl_1_data_40EA4, 0x1f3);
+        lbl_801A6410, 0x20700, (*(u8 (*)[84])&lbl_1_data_40EA4), 0x1f3);
 
     fn_80008BEC(&request, 0, 0x24);
     request.unk_4 = 4;

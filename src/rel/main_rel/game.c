@@ -97,9 +97,18 @@ extern void fn_1_41134(void *unused, char *value);
 extern void fn_1_411D4(u32 index, char *message);
 extern u32 fn_800075AC(u32, u32, u32);
 extern u32 GXGetTexBufferSize(u32, u32, u32, u32, u32);
+extern u32 lbl_1_bss_25B84;
+extern void fn_1_817C0(void);
+extern u32 lbl_1_bss_381FC;
+extern void fn_1_EB080(int arg0);
+extern s64 OSGetTime(void);
+extern u32 lbl_1_bss_3C08[2];
+extern u8 lbl_1_A9011300;
+extern u8 lbl_1_A9011100;
+extern u8 lbl_1_A9011000;
+extern void fn_1_A2DC4(u32);
 
 /* fzgx:begin fn_1_33890 */
-extern u32 lbl_1_bss_25B84;
 extern u16 lbl_1_bss_25B98;
 
 typedef struct {
@@ -256,12 +265,7 @@ void fn_1_36ADC(void) {
 /* fzgx:end fn_1_36ADC */
 
 /* fzgx:begin fn_1_3A2C4 */
-extern void fn_1_817C0(void);
-extern u32 lbl_1_bss_381FC;
-extern void fn_1_EB080(int arg0);
-extern Obj_1_bss_3C30 lbl_1_bss_3C30;
 extern u8 lbl_1_bss_38200;
-extern s64 OSGetTime(void);
 
 void fn_1_3A2C4(void) {
     s64 time;
@@ -508,20 +512,21 @@ s32 fn_1_3F164(void) {
 }
 /* fzgx:end fn_1_3F164 */
 
-/* fzgx:begin fn_1_3F1AC noprologue */
+/* fzgx:begin fn_1_3F1AC */
 #include "types.h"
 
-extern u32 lbl_1_bss_3C30[];
-extern u8 lbl_1_bss_3C12;
+
+
+
 
 u32 fn_1_3F1AC(u32 arg0) {
     u32 v0;
     v0 = arg0;
-    if (lbl_1_bss_3C12 == 0) {
+    if ((*(u8 *)&lbl_1_bss_3C12) == 0) {
     v0 = 0;
     return v0;
     }
-    return ((lbl_1_bss_3C30[0] >> 1) & 0x1);
+    return (((*(u32 (*)[])&lbl_1_bss_3C30)[0] >> 1) & 0x1);
 }
 /* fzgx:end fn_1_3F1AC */
 
@@ -755,18 +760,18 @@ void fn_1_3F8D0(void) {
 }
 /* fzgx:end fn_1_3F8D0 */
 
-/* fzgx:begin fn_1_3FBF4 noprologue */
+/* fzgx:begin fn_1_3FBF4 */
 #include "types.h"
 
-extern u32 lbl_1_bss_3C30;
+
 
 void fn_1_3FBF4(u32 arg0) {
     u32 v0;
-    v0 = (lbl_1_bss_3C30 & 0xFFFFFFFD);
+    v0 = ((*(u32 *)&lbl_1_bss_3C30) & 0xFFFFFFFD);
     if ((s32)arg0 != 0) {
-    v0 = (lbl_1_bss_3C30 | 2);
+    v0 = ((*(u32 *)&lbl_1_bss_3C30) | 2);
     }
-    lbl_1_bss_3C30 = v0;
+    (*(u32 *)&lbl_1_bss_3C30) = v0;
 }
 /* fzgx:end fn_1_3FBF4 */
 
@@ -824,8 +829,6 @@ u32 fn_1_3FC9C(void) {
 /* fzgx:end fn_1_3FC9C */
 
 /* fzgx:begin fn_1_3FCB0 */
-extern u32 lbl_1_bss_3C08[2];
-
 static inline u32 fn_1_3FCB0_operand(u32 left, u32 right) { left &= right; return left; }
 #pragma opt_propagation off
 void fn_1_3FCB0(s32 value) {
@@ -837,10 +840,10 @@ void fn_1_3FCB0(s32 value) {
 #pragma opt_propagation reset
 /* fzgx:end fn_1_3FCB0 */
 
-/* fzgx:begin fn_1_3FCF8 noprologue */
+/* fzgx:begin fn_1_3FCF8 */
 #include "types.h"
 
-extern struct fn_1_3FCF8_lbl_1_bss_3C30 lbl_1_bss_3C30;
+
 extern u32 fn_800075AC(u32, u32, u32);
 
 struct fn_1_3FCF8_lbl_1_bss_3C30 {
@@ -859,15 +862,15 @@ u32 fn_1_3FCF8(void) {
     u32 v0;
     u32 v1;
     u32 t0;
-    lbl_1_bss_3C30.unk_1480 = 0;
-    lbl_1_bss_3C30.unk_1478 = 0;
-    lbl_1_bss_3C30.unk_1484 = 0;
-    lbl_1_bss_3C30.unk_147A = 0;
-    lbl_1_bss_3C30.unk_1488 = 0;
-    lbl_1_bss_3C30.unk_147C = 0;
-    lbl_1_bss_3C30.unk_148C = 0;
-    lbl_1_bss_3C30.unk_147E = 0;
-    v1 = (u32)&lbl_1_bss_3C30;
+    (*(struct fn_1_3FCF8_lbl_1_bss_3C30 *)&lbl_1_bss_3C30).unk_1480 = 0;
+    (*(struct fn_1_3FCF8_lbl_1_bss_3C30 *)&lbl_1_bss_3C30).unk_1478 = 0;
+    (*(struct fn_1_3FCF8_lbl_1_bss_3C30 *)&lbl_1_bss_3C30).unk_1484 = 0;
+    (*(struct fn_1_3FCF8_lbl_1_bss_3C30 *)&lbl_1_bss_3C30).unk_147A = 0;
+    (*(struct fn_1_3FCF8_lbl_1_bss_3C30 *)&lbl_1_bss_3C30).unk_1488 = 0;
+    (*(struct fn_1_3FCF8_lbl_1_bss_3C30 *)&lbl_1_bss_3C30).unk_147C = 0;
+    (*(struct fn_1_3FCF8_lbl_1_bss_3C30 *)&lbl_1_bss_3C30).unk_148C = 0;
+    (*(struct fn_1_3FCF8_lbl_1_bss_3C30 *)&lbl_1_bss_3C30).unk_147E = 0;
+    v1 = (u32)&(*(struct fn_1_3FCF8_lbl_1_bss_3C30 *)&lbl_1_bss_3C30);
     for (v0 = 5; v0 != 0; v0--) {
     *(u8 *)((u8 *)v1 + 343) = 0;
     *(u8 *)((u8 *)v1 + 220) = 0;
@@ -1144,10 +1147,6 @@ typedef struct {
 } Fn40710Config;
 
 extern Fn40710Config lbl_1_rodata_BD8;
-extern u8 lbl_1_A9011300;
-extern u8 lbl_1_A9011100;
-extern u8 lbl_1_A9011000;
-extern void fn_1_A2DC4(u32);
 
 void fn_1_40710(Fn40710Object *obj) {
     Fn40710Object *self = obj;

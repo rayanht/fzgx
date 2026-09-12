@@ -50,7 +50,8 @@ struct fn_1_6400_lbl_801A6410 {
 };
 extern struct fn_1_6400_lbl_801A6410 lbl_801A6410;
 extern u32 fn_1_46B4(u32, u32, void *, u32);
-extern u8 lbl_1_data_3318[180];
+
+
 
 typedef struct {
     u32 unk_0;
@@ -63,9 +64,9 @@ void fn_1_6400(void) {
     F68State *state;
 
     state = (F68State *)&lbl_1_bss_F68;
-    fn_1_46B4(lbl_801A6410.unk_0, state->unk_8, lbl_1_data_3318, 0x396);
-    fn_1_46B4(lbl_801A6410.unk_0, state->unk_4, lbl_1_data_3318, 0x397);
-    fn_1_46B4(lbl_801A6410.unk_0, state->unk_0, lbl_1_data_3318, 0x398);
+    fn_1_46B4(lbl_801A6410.unk_0, state->unk_8, (*(u8 (*)[180])&lbl_1_data_3318), 0x396);
+    fn_1_46B4(lbl_801A6410.unk_0, state->unk_4, (*(u8 (*)[180])&lbl_1_data_3318), 0x397);
+    fn_1_46B4(lbl_801A6410.unk_0, state->unk_0, (*(u8 (*)[180])&lbl_1_data_3318), 0x398);
     state->unk_8 = 0;
     state->unk_4 = 0;
     state->unk_0 = 0;
@@ -188,7 +189,7 @@ void camera_update_state(__typeof__(lbl_1_bss_F68) state) {
 }
 /* fzgx:end camera_update_state */
 
-/* fzgx:begin fn_1_681C noprologue */
+/* fzgx:begin fn_1_681C */
 #include "types.h"
 
 struct fn_1_681C_Copy12 {
@@ -214,11 +215,11 @@ struct fn_1_681C_Globals {
     struct fn_1_681C_Other *other;
 };
 
-extern struct fn_1_681C_Globals lbl_1_bss_F68;
+
 
 #pragma peephole off
 void fn_1_681C(u32 index, u32 *output) {
-    struct fn_1_681C_Globals *globals = &lbl_1_bss_F68;
+    struct fn_1_681C_Globals *globals = &(*(struct fn_1_681C_Globals *)&lbl_1_bss_F68);
     u32 state = globals->state;
     s8 mode;
 
@@ -241,7 +242,7 @@ void fn_1_681C(u32 index, u32 *output) {
 #pragma peephole reset
 /* fzgx:end fn_1_681C */
 
-/* fzgx:begin fn_1_6898 noprologue */
+/* fzgx:begin fn_1_6898 */
 #include "types.h"
 
 struct fn_1_6898_Copy12 {
@@ -267,11 +268,11 @@ struct fn_1_6898_Globals {
     struct fn_1_6898_Other *other;
 };
 
-extern struct fn_1_6898_Globals lbl_1_bss_F68;
+
 
 #pragma peephole off
 void fn_1_6898(u32 index, u32 *output) {
-    struct fn_1_6898_Globals *globals = &lbl_1_bss_F68;
+    struct fn_1_6898_Globals *globals = &(*(struct fn_1_6898_Globals *)&lbl_1_bss_F68);
     u32 state = globals->state;
     s8 mode;
 
@@ -294,7 +295,7 @@ void fn_1_6898(u32 index, u32 *output) {
 #pragma peephole reset
 /* fzgx:end fn_1_6898 */
 
-/* fzgx:begin fn_1_6914 noprologue */
+/* fzgx:begin fn_1_6914 */
 #include "types.h"
 
 struct fn_1_6914_Copy12 {
@@ -320,11 +321,11 @@ struct fn_1_6914_Globals {
     struct fn_1_6914_Other *other;
 };
 
-extern struct fn_1_6914_Globals lbl_1_bss_F68;
+
 
 #pragma peephole off
 void fn_1_6914(u32 index, u32 *output) {
-    struct fn_1_6914_Globals *globals = &lbl_1_bss_F68;
+    struct fn_1_6914_Globals *globals = &(*(struct fn_1_6914_Globals *)&lbl_1_bss_F68);
     u32 state = globals->state;
     s8 mode;
 
@@ -347,7 +348,7 @@ void fn_1_6914(u32 index, u32 *output) {
 #pragma peephole reset
 /* fzgx:end fn_1_6914 */
 
-/* fzgx:begin fn_1_6990 noprologue */
+/* fzgx:begin fn_1_6990 */
 #include "types.h"
 
 struct fn_1_6990_Copy12 {
@@ -373,11 +374,11 @@ struct fn_1_6990_Globals {
     struct fn_1_6990_Other *other;
 };
 
-extern struct fn_1_6990_Globals lbl_1_bss_F68;
+
 
 #pragma peephole off
 void fn_1_6990(u32 index, u32 *output) {
-    struct fn_1_6990_Globals *globals = &lbl_1_bss_F68;
+    struct fn_1_6990_Globals *globals = &(*(struct fn_1_6990_Globals *)&lbl_1_bss_F68);
     u32 state = globals->state;
     s8 mode;
 
@@ -749,7 +750,7 @@ void fn_1_847C(s8 mode) {
 #pragma opt_propagation reset
 /* fzgx:end fn_1_847C */
 
-/* fzgx:begin fn_1_857C noprologue */
+/* fzgx:begin fn_1_857C */
 #include "types.h"
 
 typedef struct {
@@ -768,12 +769,14 @@ typedef struct {
     u8 unk_4D;
     u8 pad_4E[2];
     u32 unk_50;
-} CameraState;
+} fn_1_857C_CameraState;
 
 extern u32 lbl_1_bss_7ADE8[40];
 extern void *lbl_1_data_3310;
-extern CameraState *lbl_1_bss_F68;
-extern char lbl_1_data_35FC[14];
+
+
+
+
 
 extern void fn_1_A6FE8(void);
 extern void fn_1_DCE60(void *);
@@ -786,14 +789,14 @@ void fn_1_857C(void) {
     s16 index;
     s16 result;
 
-    lbl_1_bss_F68->unk_48 = 0xb;
+    (*(fn_1_857C_CameraState * *)&lbl_1_bss_F68)->unk_48 = 0xb;
     lbl_1_data_3310 = lbl_1_bss_7ADE8;
     fn_1_A6FE8();
     fn_1_DCE60(lbl_1_data_3310);
-    fn_1_435C(lbl_1_bss_F68->unk_50);
-    result = fn_1_3F8C(lbl_1_data_35FC, fn_1_DCED0, lbl_1_data_3310, 0x14);
+    fn_1_435C((*(fn_1_857C_CameraState * *)&lbl_1_bss_F68)->unk_50);
+    result = fn_1_3F8C((*(char (*)[14])&lbl_1_data_35FC), fn_1_DCED0, lbl_1_data_3310, 0x14);
     {
-        CameraState *camera = lbl_1_bss_F68;
+        fn_1_857C_CameraState *camera = (*(fn_1_857C_CameraState * *)&lbl_1_bss_F68);
         index = camera->unk_22;
         camera->unk_22 = index + 1;
         camera->entries[index] = result;
@@ -1034,15 +1037,15 @@ GameCameraEntry *game_camera_get(void) {
 }
 /* fzgx:end game_camera_get */
 
-/* fzgx:begin fn_1_8B10 noprologue */
+/* fzgx:begin fn_1_8B10 */
 #include "types.h"
 
-typedef struct CameraObject {
+typedef struct fn_1_8B10_CameraObject {
     s16 pad_00;
     s16 kind;
     u8 pad_04[0xA0];
     s16 index;
-} CameraObject;
+} fn_1_8B10_CameraObject;
 
 typedef struct CameraTarget {
     u8 pad_000[0x394];
@@ -1055,7 +1058,7 @@ typedef struct CameraData {
     f32 y;
 } CameraData;
 
-typedef struct CameraEntry {
+typedef struct fn_1_8B10_CameraEntry {
     f32 x;
     f32 y;
     s16 flags0;
@@ -1068,7 +1071,7 @@ typedef struct CameraEntry {
     f32 y2;
     s16 flags2;
     u8 pad_22[2];
-} CameraEntry;
+} fn_1_8B10_CameraEntry;
 
 typedef struct CameraOutput {
     f32 x0;
@@ -1088,9 +1091,10 @@ extern CameraTarget *fn_1_868C0(s8 index);
 extern s8 fn_1_A5DC4(void);
 extern const f32 lbl_1_rodata_200;
 extern const f32 lbl_1_rodata_204;
-extern CameraEntry lbl_1_data_36EC[];
 
-void fn_1_8B10(CameraObject *camera, CameraOutput *output) {
+
+
+void fn_1_8B10(fn_1_8B10_CameraObject *camera, CameraOutput *output) {
     CameraTarget *target;
     CameraData *data;
 
@@ -1106,15 +1110,15 @@ void fn_1_8B10(CameraObject *camera, CameraOutput *output) {
         output->y2 = data->y;
         output->flags2 = 0x1AAA;
     } else {
-        output->x0 = lbl_1_data_36EC[camera->index].x;
-        output->y0 = lbl_1_data_36EC[camera->index].y;
-        output->flags0 = lbl_1_data_36EC[camera->index].flags0;
-        output->x1 = lbl_1_data_36EC[camera->index].x1;
-        output->y1 = lbl_1_data_36EC[camera->index].y1;
-        output->flags1 = lbl_1_data_36EC[camera->index].flags1;
-        output->x2 = lbl_1_data_36EC[camera->index].x2;
-        output->y2 = lbl_1_data_36EC[camera->index].y2;
-        output->flags2 = lbl_1_data_36EC[camera->index].flags2;
+        output->x0 = (*(fn_1_8B10_CameraEntry (*)[])&lbl_1_data_36EC)[camera->index].x;
+        output->y0 = (*(fn_1_8B10_CameraEntry (*)[])&lbl_1_data_36EC)[camera->index].y;
+        output->flags0 = (*(fn_1_8B10_CameraEntry (*)[])&lbl_1_data_36EC)[camera->index].flags0;
+        output->x1 = (*(fn_1_8B10_CameraEntry (*)[])&lbl_1_data_36EC)[camera->index].x1;
+        output->y1 = (*(fn_1_8B10_CameraEntry (*)[])&lbl_1_data_36EC)[camera->index].y1;
+        output->flags1 = (*(fn_1_8B10_CameraEntry (*)[])&lbl_1_data_36EC)[camera->index].flags1;
+        output->x2 = (*(fn_1_8B10_CameraEntry (*)[])&lbl_1_data_36EC)[camera->index].x2;
+        output->y2 = (*(fn_1_8B10_CameraEntry (*)[])&lbl_1_data_36EC)[camera->index].y2;
+        output->flags2 = (*(fn_1_8B10_CameraEntry (*)[])&lbl_1_data_36EC)[camera->index].flags2;
 
         if (fn_1_A5DC4() != 0) {
             f32 adjust;
@@ -1286,16 +1290,16 @@ typedef struct CameraStateLocal {
     f32 unk_DC;
 } CameraStateLocal;
 
-typedef struct CameraObject {
+typedef struct camera_get_target_orientation_CameraObject {
     u8 pad_49c[0x49c];
     Transform *unk_49C;
-} CameraObject;
+} camera_get_target_orientation_CameraObject;
 
 extern Transform *lbl_801A6D00;
 extern CameraStateLocal *lbl_801A66CC;
 
 // Updates the camera orientation from the active target transform.
-f32 camera_get_target_orientation(CameraObject *camera) {
+f32 camera_get_target_orientation(camera_get_target_orientation_CameraObject *camera) {
     Transform *target = camera->unk_49C;
 
     if (target == 0) {

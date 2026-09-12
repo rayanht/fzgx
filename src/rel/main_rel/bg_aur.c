@@ -29,6 +29,9 @@ extern void fn_80008BEC(void *arg0, u32 arg1, u32 arg2);
 extern void fn_1_153AF8(u32 *entries);
 extern void fn_1_153D48(void *background);
 extern void fn_1_9A508(void);
+extern u8 lbl_1_rodata_D048[1200];
+extern int fn_1_8D690(s16 value);
+extern int fn_1_8D72C(s16 value);
 
 /* fzgx:begin fn_1_151AF0 */
 int fn_1_151AF0(void *arg0, int mode, void *arg2, void *arg3, void *arg4, void *arg5) {
@@ -65,8 +68,6 @@ void fn_1_151BDC(u32 value) {
 
 /* fzgx:begin fn_1_151BE8 */
 struct fn_1_151BE8_Copy1200 { u32 a[75][4]; };
-
-extern u8 lbl_1_rodata_D048[1200];
 
 u32 fn_1_151BE8(s16 arg0, s16 arg1) {
     struct fn_1_151BE8_Copy1200 loc_8;
@@ -202,9 +203,6 @@ typedef struct {
     u8 pad_2[0x2];
     u32 unk_4;
 } Entry_151EF8;
-
-extern int fn_1_8D690(s16 value);
-extern int fn_1_8D72C(s16 value);
 
 void fn_1_151EF8(s16 *values, s16 value_count, Entry_151EF8 *entries,
                  s16 group_count, s16 group_size) {

@@ -52,8 +52,20 @@ extern int fn_1_3FC58(void);
 extern void *memcpy(void *, const void *, u32);
 extern const f32 lbl_1_rodata_29A4;
 extern f64 lbl_1_rodata_2988;
+extern const f32 lbl_1_rodata_2AA0[21];
+extern u32 fn_1_620C8(void *);
+extern const f32 lbl_1_rodata_2950;
+extern f32 fn_1_8652C(s16);
+extern void fn_1_557C4(void *);
+extern void fn_1_56000(u8, u8, u8);
+extern void fn_1_5621C(f32, f32, f32, f32);
+extern void lbl_8006E14C(f32);
+extern const f32 lbl_1_rodata_29C0;
+extern const f32 lbl_1_rodata_29F0;
+extern u32 fn_1_58C4(void);
+extern const f64 lbl_1_rodata_2954;
 
-/* fzgx:begin fn_1_58C6C noprologue */
+/* fzgx:begin fn_1_58C6C */
 #include "types.h"
 
 struct fn_1_58C6C_lbl_1_bss_6C848_T {
@@ -72,10 +84,6 @@ struct fn_1_58C6C_lbl_1_bss_6C84C_T {
     u8 pad_E[0xC];
     u16 unk_1A;
 };
-extern struct fn_1_58C6C_lbl_1_bss_6C848_T *lbl_1_bss_6C848;
-extern struct fn_1_58C6C_lbl_1_bss_6C84C_T *lbl_1_bss_6C84C;
-extern u32 fn_1_620C8(void *);
-
 
 void fn_1_58C6C(void) {
     struct fn_1_58C6C_lbl_1_bss_6C848_T *var_r31;
@@ -84,7 +92,7 @@ void fn_1_58C6C(void) {
     struct fn_1_58C6C_lbl_1_bss_6C84C_T *var_r31_2;
 
     var_r30 = 0xBE;
-    var_r31 = (struct fn_1_58C6C_lbl_1_bss_6C848_T *)(*(struct fn_1_58C6C_lbl_1_bss_6C848_T **)((u8 *)(&lbl_1_bss_6C848) + 0));
+    var_r31 = (struct fn_1_58C6C_lbl_1_bss_6C848_T *)(*(struct fn_1_58C6C_lbl_1_bss_6C848_T **)((u8 *)(&(*(struct fn_1_58C6C_lbl_1_bss_6C848_T * *)&lbl_1_bss_6C848)) + 0));
     do {
         if (((s16) var_r31->unk_C == 0x19) && ((s8) var_r31->unk_0 != 0) && ((s32) var_r31->unk_1A != 0) && !(var_r31->unk_8 & 0x80000000)) {
             fn_1_620C8((void *)(var_r31));
@@ -93,7 +101,7 @@ void fn_1_58C6C(void) {
         var_r31 = (struct fn_1_58C6C_lbl_1_bss_6C848_T *)((u8 *)(var_r31) + 0xE8);
     } while (var_r30 > 0);
     var_r30_2 = 0xC8;
-    var_r31_2 = (struct fn_1_58C6C_lbl_1_bss_6C84C_T *)(*(struct fn_1_58C6C_lbl_1_bss_6C84C_T **)((u8 *)(&lbl_1_bss_6C84C) + 0));
+    var_r31_2 = (struct fn_1_58C6C_lbl_1_bss_6C84C_T *)(*(struct fn_1_58C6C_lbl_1_bss_6C84C_T **)((u8 *)(&(*(struct fn_1_58C6C_lbl_1_bss_6C84C_T * *)&lbl_1_bss_6C84C)) + 0));
     do {
         if (((s16) var_r31_2->unk_C == 0x19) && ((s8) var_r31_2->unk_0 != 0) && ((s32) var_r31_2->unk_1A != 0) && !(var_r31_2->unk_8 & 0x80000000)) {
             fn_1_620C8((void *)(var_r31_2));
@@ -229,7 +237,8 @@ slot_found:
 /* fzgx:end fn_1_58E3C */
 
 /* fzgx:begin fn_1_58F50 */
-extern u8 lbl_1_data_1D1D8[276];
+
+
 
 typedef struct {
     u8 unk_0;
@@ -239,11 +248,11 @@ typedef struct {
     u8 pad_6[6];
     s16 unk_C;
     u8 pad_E[0xDA];
-} EffectEntry;
+} fn_1_58F50_EffectEntry;
 
 /* Allocate an effect entry, initialize it, and return its sequence number. */
 s16 fn_1_58F50(const void *source) {
-    EffectEntry *entry;
+    fn_1_58F50_EffectEntry *entry;
     s32 index;
     u8 *cursor;
 
@@ -270,11 +279,11 @@ found:
         return -1;
     }
 
-    entry = (EffectEntry *)(*(u8 **)&lbl_1_bss_6C848) + index;
+    entry = (fn_1_58F50_EffectEntry *)(*(u8 **)&lbl_1_bss_6C848) + index;
     memcpy(entry, source, 0xe8);
     entry->unk_0 = 1;
     entry->unk_2 = index;
-    ((void (*)(void *))(*(u32 *)(lbl_1_data_1D1D8 + (entry->unk_C << 2))))(entry);
+    ((void (*)(void *))(*(u32 *)((*(u8 (*)[276])&lbl_1_data_1D1D8) + (entry->unk_C << 2))))(entry);
 
     entry->unk_4 = lbl_1_bss_6C850.unk_0;
     lbl_1_bss_6C850.unk_0++;
@@ -479,9 +488,7 @@ void fn_1_59510(void) {
 /* fzgx:end fn_1_59510 */
 
 /* fzgx:begin fn_1_59514 */
-extern const f32 lbl_1_rodata_2950;
 extern u32 lbl_1_data_1D628;
-extern f32 fn_1_8652C(s16);
 
 void fn_1_59514(void *obj) {
     if (*(s32 *)((u8 *)obj + 0x10) == 0) {
@@ -551,7 +558,7 @@ void fn_1_5B074(void) {
 }
 /* fzgx:end fn_1_5B074 */
 
-/* fzgx:begin fn_1_5B30C noprologue */
+/* fzgx:begin fn_1_5B30C */
 #include "types.h"
 
 struct fn_1_5B30C_Arg0 {
@@ -559,14 +566,9 @@ struct fn_1_5B30C_Arg0 {
     u32 unk_34;
 };
 
-extern f32 lbl_1_rodata_2978;
 extern s32 fn_1_54E34(void *, f32);
-extern void fn_1_557C4(void *);
-extern void fn_1_56000(u8, u8, u8);
-extern void fn_1_5621C(f32, f32, f32, f32);
 extern void lbl_8006D7B0(void);
 extern void lbl_8006D9D8(void *);
-extern void lbl_8006E14C(f32);
 extern void mathutil_mtxA_rotate_z(int);
 
 void fn_1_5B30C(struct fn_1_5B30C_Arg0 *arg0) {
@@ -589,7 +591,7 @@ void fn_1_5B30C(struct fn_1_5B30C_Arg0 *arg0) {
     fn_1_56000(v1, 3, 0);
     v1 = v0;
     fn_1_557C4((void *)v1);
-    v2 = lbl_1_rodata_2978;
+    v2 = (*(f32 *)&lbl_1_rodata_2978);
     fn_1_5621C(v2, v2, v2, v2);
     v1 = 1;
     fn_1_56000(v1, 3, 1);
@@ -922,7 +924,7 @@ void fn_1_60170(fn_1_60170_FZeroObject *object) {
 }
 /* fzgx:end fn_1_60170 */
 
-/* fzgx:begin fn_1_601B4 noprologue */
+/* fzgx:begin fn_1_601B4 */
 #include "types.h"
 #include "rel/main_rel/effect.h"
 
@@ -941,9 +943,6 @@ typedef struct {
     f32 unk_b4;
 } EffectState;
 
-extern const f32 lbl_1_rodata_29C0;
-extern const f32 lbl_1_rodata_29F0;
-extern const f64 lbl_1_rodata_2988;
 extern u32 lbl_1_bss_6C86C;
 
 void fn_1_601B4(EffectState *effect) {
@@ -1049,7 +1048,6 @@ void fn_1_61CE8(void) {
 
 /* fzgx:begin fn_1_61E60 noprologue */
 #include "types.h"
-#include "rel/main_rel/globals.h"
 
 extern u8 lbl_1_data_1D62C[0x94];
 extern void *lbl_801A6410;
@@ -1211,8 +1209,6 @@ typedef struct Effect_63518 {
     u16 unkae;
     u16 unkb0;
 } Effect_63518;
-
-extern u32 fn_1_58C4(void);
 
 void fn_1_63518(Effect_63518 *effect) {
     Effect_63518_vec *dst;
@@ -1512,15 +1508,15 @@ void fn_1_65B58(void) {
 /* fzgx:end fn_1_65B58 */
 
 /* fzgx:begin fn_1_65E58 */
-typedef struct Effect {
+typedef struct fn_1_65E58_Effect {
     u8 _pad_00[0x10];
     int field_10;
     u8 _pad_14[0x4];
     s16 field_18;
     u8 _pad_1a[0x9e];
-} Effect;
+} fn_1_65E58_Effect;
 
-void fn_1_65E58(Effect *effect) {
+void fn_1_65E58(fn_1_65E58_Effect *effect) {
     effect->field_10 = 10;
     fn_1_8636C(effect->field_18, (u8 *)effect + 0xb8);
 }
@@ -1539,8 +1535,6 @@ void fn_1_662D4(void) {
 /* fzgx:end fn_1_662D4 */
 
 /* fzgx:begin fn_1_67414 */
-extern const f64 lbl_1_rodata_2954;
-
 struct fn_1_67414_Arg0 {
     u8 pad_0[0x10];
     u32 unk_10;

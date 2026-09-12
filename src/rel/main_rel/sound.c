@@ -58,6 +58,7 @@ extern void fn_1_44A4(void);
 extern void *fn_80008E84();
 extern u32 fn_1_45D0(void *arg0, void *arg1, u32 *arg2, int arg3);
 extern void fn_80063094(s32 arg0, void *arg1, s32 arg2);
+extern void fn_80065D70(int);
 
 /* fzgx:begin fn_1_9FE74 */
 // Initialize the sound resource and register it with the sound system.
@@ -235,21 +236,21 @@ enum {
     ADDR_A0000400 = 0xA0000400
 };
 
-typedef struct SoundState {
+typedef struct fn_1_A0C68_SoundState {
     u8 pad_2e[0x2e];
     u8 unk_2e;
     u8 pad_74c[0x74c - 0x2f];
     u8 unk_74c[0x50];
     u8 pad_7ac[0x7ac - 0x79c];
     u8 unk_7ac;
-} SoundState;
+} fn_1_A0C68_SoundState;
 
 // Initialize the sound resources once the sound system is enabled.
 void fn_1_A0C68(void) {
-    SoundState *state;
+    fn_1_A0C68_SoundState *state;
     s32 i;
 
-    state = (SoundState *)&lbl_1_bss_6EA98;
+    state = (fn_1_A0C68_SoundState *)&lbl_1_bss_6EA98;
     if (state->unk_2e != 0) {
         fn_1_A2DF4(0x10, (void *)ADDR_A6000000, 0);
         fn_1_A2DF4(0x10, (void *)ADDR_A5100000, 0);
@@ -265,15 +266,13 @@ void fn_1_A0C68(void) {
 }
 /* fzgx:end fn_1_A0C68 */
 
-/* fzgx:begin fn_1_A116C noprologue */
+/* fzgx:begin fn_1_A116C */
 #include "types.h"
 
-extern s16 lbl_1_bss_960;
 extern s16 lbl_1_bss_962;
-extern void fn_80065D70(int);
 
 void fn_1_A116C(void) {
-    switch (lbl_1_bss_960) {
+    switch ((*(s16 *)&lbl_1_bss_960)) {
     case 2:
     case 8:
     case 9:
@@ -723,10 +722,10 @@ void fn_1_A5330(u8 value, s16 index) {
 }
 /* fzgx:end fn_1_A5330 */
 
-/* fzgx:begin fn_1_A5344 noprologue */
+/* fzgx:begin fn_1_A5344 */
 #include "types.h"
 
-extern u8 lbl_1_bss_6EA98[];
+
 extern void fn_80067898(u32 value);
 
 #pragma opt_dead_assignments off
@@ -734,20 +733,20 @@ void fn_1_A5344(u8 value, s16 index) {
     u8 *table;
     s32 i;
 
-    table = lbl_1_bss_6EA98 + 0x984;
+    table = (*(u8 (*)[])&lbl_1_bss_6EA98) + 0x984;
     if (table[index] > value) {
         for (i = 0; i < (s32)(table[index] - value); i++) {
             if ((value - i) % 10 == 0 &&
-                lbl_1_bss_6EA98[0x740] == 0 &&
-                *(u32 *)(lbl_1_bss_6EA98 + 0x744) <= 0x2d) {
+                (*(u8 (*)[])&lbl_1_bss_6EA98)[0x740] == 0 &&
+                *(u32 *)((*(u8 (*)[])&lbl_1_bss_6EA98) + 0x744) <= 0x2d) {
                 fn_80067898(0xa9010300);
             }
         }
     } else if (table[index] < value) {
         for (i = 0; i < (s32)(value - table[index]); i++) {
             if ((value - i) % 10 == 0 &&
-                lbl_1_bss_6EA98[0x740] == 0 &&
-                *(u32 *)(lbl_1_bss_6EA98 + 0x744) <= 0x2d) {
+                (*(u8 (*)[])&lbl_1_bss_6EA98)[0x740] == 0 &&
+                *(u32 *)((*(u8 (*)[])&lbl_1_bss_6EA98) + 0x744) <= 0x2d) {
                 fn_80067898(0xa9010300);
             }
         }

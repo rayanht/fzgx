@@ -11,6 +11,16 @@ extern void lbl_8006DBAC(void *value);
 extern void fn_1_449A8(void *vector);
 extern void lbl_8006DB74(void *value);
 extern u32 lbl_1_bss_384CC;
+extern struct fn_1_41850_lbl_801A6410 lbl_801A6410;
+extern void fn_1_46B4(u32, void *, const char *, int);
+extern const f64 lbl_1_rodata_F40;
+extern const f32 lbl_1_rodata_F34;
+extern const f32 lbl_1_rodata_F30;
+extern const f64 lbl_1_rodata_F48;
+extern const f32 lbl_1_rodata_F38;
+extern void fn_8006E5FC(void *);
+extern const f32 lbl_1_rodata_F50;
+extern const f32 lbl_1_rodata_F54;
 
 /* fzgx:begin fn_1_41850 */
 struct fn_1_41850_Arg0 {
@@ -26,10 +36,6 @@ struct fn_1_41850_Node {
     u8 pad_2c[0x4];
     void *next;
 };
-extern struct fn_1_41850_lbl_801A6410 lbl_801A6410;
-extern u8 lbl_1_data_6720[];
-extern void fn_1_46B4(u32, void *, const char *, int);
-
 
 void fn_1_41850(void *arg0, s32 arg_sp0) {
     void *temp_r4;
@@ -57,56 +63,56 @@ void fn_1_41850(void *arg0, s32 arg_sp0) {
             while (var_r27 < (s32) (*(u16 *)((u8 *)(arg0) + 16))) {
                 temp_r4 = (void *)(((struct fn_1_41850_Node *)(*(void **)((u8 *)(arg0) + 12)))[var_r27].unk_28);
                 if (temp_r4 != NULL) {
-                    fn_1_46B4((u32)(lbl_801A6410.unk_0), (void *)(temp_r4), (const char *)((s8 *) lbl_1_data_6720), (s32)(0x123));
+                    fn_1_46B4((u32)(lbl_801A6410.unk_0), (void *)(temp_r4), (const char *)((s8 *) (*(u8 (*)[])&lbl_1_data_6720)), (s32)(0x123));
                 }
                 var_r28 += 0x34;
                 var_r27 += 1;
                             }
             temp_r4_2 = (void *)(*(void **)((u8 *)(arg0) + 20));
             if (temp_r4_2 != NULL) {
-                fn_1_46B4((u32)(lbl_801A6410.unk_0), (void *)(temp_r4_2), (const char *)((s8 *) lbl_1_data_6720), (s32)(0x125));
+                fn_1_46B4((u32)(lbl_801A6410.unk_0), (void *)(temp_r4_2), (const char *)((s8 *) (*(u8 (*)[])&lbl_1_data_6720)), (s32)(0x125));
             }
             temp_r4_3 = (void *)(*(void **)((u8 *)(arg0) + 32));
             if (temp_r4_3 != NULL) {
-                fn_1_46B4((u32)(lbl_801A6410.unk_0), (void *)(temp_r4_3), (const char *)((s8 *) lbl_1_data_6720), (s32)(0x126));
+                fn_1_46B4((u32)(lbl_801A6410.unk_0), (void *)(temp_r4_3), (const char *)((s8 *) (*(u8 (*)[])&lbl_1_data_6720)), (s32)(0x126));
             }
         }
-        fn_1_46B4((u32)(lbl_801A6410.unk_0), (void *)(*(void **)((u8 *)(arg0) + 12)), (const char *)((s8 *) lbl_1_data_6720), (s32)(0x128));
+        fn_1_46B4((u32)(lbl_801A6410.unk_0), (void *)(*(void **)((u8 *)(arg0) + 12)), (const char *)((s8 *) (*(u8 (*)[])&lbl_1_data_6720)), (s32)(0x128));
     } else {
         var_r27_2 = (void *)(*(void **)((u8 *)(arg0) + 12));
         while (var_r27_2 != NULL) {
             temp_r4_4 = (void *)(*(void **)((u8 *)(var_r27_2) + 40));
             temp_r28 = (void *)(*(void **)((u8 *)(var_r27_2) + 48));
             if (temp_r4_4 != NULL) {
-                fn_1_46B4((u32)(lbl_801A6410.unk_0), (void *)(temp_r4_4), (const char *)((s8 *) lbl_1_data_6720), (s32)(0x12E));
+                fn_1_46B4((u32)(lbl_801A6410.unk_0), (void *)(temp_r4_4), (const char *)((s8 *) (*(u8 (*)[])&lbl_1_data_6720)), (s32)(0x12E));
             }
-            fn_1_46B4((u32)(lbl_801A6410.unk_0), (void *)(var_r27_2), (const char *)((s8 *) lbl_1_data_6720), (s32)(0x12F));
+            fn_1_46B4((u32)(lbl_801A6410.unk_0), (void *)(var_r27_2), (const char *)((s8 *) (*(u8 (*)[])&lbl_1_data_6720)), (s32)(0x12F));
             var_r27_2 = (void *)(temp_r28);
                     }
         temp_r4_5 = (void *)(*(void **)((u8 *)(arg0) + 32));
         if (temp_r4_5 != NULL) {
-            fn_1_46B4((u32)(lbl_801A6410.unk_0), (void *)(temp_r4_5), (const char *)((s8 *) lbl_1_data_6720), (s32)(0x131));
+            fn_1_46B4((u32)(lbl_801A6410.unk_0), (void *)(temp_r4_5), (const char *)((s8 *) (*(u8 (*)[])&lbl_1_data_6720)), (s32)(0x131));
         }
     }
     temp_r4_6 = (void *)(*(void **)((u8 *)(arg0) + 40));
     if (temp_r4_6 != NULL) {
-        fn_1_46B4((u32)(lbl_801A6410.unk_0), (void *)(temp_r4_6), (const char *)((s8 *) lbl_1_data_6720), (s32)(0x133));
+        fn_1_46B4((u32)(lbl_801A6410.unk_0), (void *)(temp_r4_6), (const char *)((s8 *) (*(u8 (*)[])&lbl_1_data_6720)), (s32)(0x133));
     }
     temp_r4_7 = (void *)(*(void **)((u8 *)(arg0) + 52));
     if (temp_r4_7 != NULL) {
-        fn_1_46B4((u32)(lbl_801A6410.unk_0), (void *)(temp_r4_7), (const char *)((s8 *) lbl_1_data_6720), (s32)(0x10B));
+        fn_1_46B4((u32)(lbl_801A6410.unk_0), (void *)(temp_r4_7), (const char *)((s8 *) (*(u8 (*)[])&lbl_1_data_6720)), (s32)(0x10B));
     }
     temp_r4_8 = (void *)(*(void **)((u8 *)(arg0) + 56));
     if (temp_r4_8 != NULL) {
-        fn_1_46B4((u32)(lbl_801A6410.unk_0), (void *)(temp_r4_8), (const char *)((s8 *) lbl_1_data_6720), (s32)(0x10C));
+        fn_1_46B4((u32)(lbl_801A6410.unk_0), (void *)(temp_r4_8), (const char *)((s8 *) (*(u8 (*)[])&lbl_1_data_6720)), (s32)(0x10C));
     }
     temp_r4_9 = (void *)(*(void **)((u8 *)(arg0) + 44));
     if (temp_r4_9 != NULL) {
-        fn_1_46B4((u32)(lbl_801A6410.unk_0), (void *)(temp_r4_9), (const char *)((s8 *) lbl_1_data_6720), (s32)(0x10D));
+        fn_1_46B4((u32)(lbl_801A6410.unk_0), (void *)(temp_r4_9), (const char *)((s8 *) (*(u8 (*)[])&lbl_1_data_6720)), (s32)(0x10D));
     }
     temp_r4_10 = (void *)(*(void **)((u8 *)(arg0) + 48));
     if (temp_r4_10 != NULL) {
-        fn_1_46B4((u32)(lbl_801A6410.unk_0), (void *)(temp_r4_10), (const char *)((s8 *) lbl_1_data_6720), (s32)(0x10E));
+        fn_1_46B4((u32)(lbl_801A6410.unk_0), (void *)(temp_r4_10), (const char *)((s8 *) (*(u8 (*)[])&lbl_1_data_6720)), (s32)(0x10E));
     }
     (*(void **)((u8 *)(arg0) + 52)) = (void *)(NULL);
     (*(s8 *)((u8 *)(arg0) + 39)) = 0;
@@ -117,9 +123,9 @@ void fn_1_41850(void *arg0, s32 arg_sp0) {
     (*(s8 *)((u8 *)(arg0) + 76)) = 0;
     temp_r4_11 = (void *)(*(void **)((u8 *)(arg0) + 8));
     if ((temp_r4_11 != NULL) && !((*(u16 *)((u8 *)(arg0) + 2)) & 2)) {
-        fn_1_46B4((u32)(lbl_801A6410.unk_0), (void *)(temp_r4_11), (const char *)((s8 *) lbl_1_data_6720), (s32)(0x137));
+        fn_1_46B4((u32)(lbl_801A6410.unk_0), (void *)(temp_r4_11), (const char *)((s8 *) (*(u8 (*)[])&lbl_1_data_6720)), (s32)(0x137));
     }
-    fn_1_46B4((u32)(lbl_801A6410.unk_0), (void *)(arg0), (const char *)((s8 *) lbl_1_data_6720), (s32)(0x138));
+    fn_1_46B4((u32)(lbl_801A6410.unk_0), (void *)(arg0), (const char *)((s8 *) (*(u8 (*)[])&lbl_1_data_6720)), (s32)(0x138));
 }
 /* fzgx:end fn_1_41850 */
 
@@ -161,7 +167,7 @@ void *fn_1_41B18(Object *obj, s32 unused, s32 index) {
 /* fzgx:end fn_1_41B18 */
 
 /* fzgx:begin fn_1_41BDC */
-typedef struct MotasglistData {
+typedef struct fn_1_41BDC_MotasglistData {
     u8 pad_00[0x26];
     u8 count;
     u8 pad_27;
@@ -170,9 +176,9 @@ typedef struct MotasglistData {
     void *fallback;
     u8 pad_38[0x14];
     u8 fallback_base;
-} MotasglistData;
+} fn_1_41BDC_MotasglistData;
 
-void *fn_1_41BDC(MotasglistData *data, s32 index) {
+void *fn_1_41BDC(fn_1_41BDC_MotasglistData *data, s32 index) {
     if (index < data->count) {
         return (u8 *)data->entries + index * 0xc;
     }
@@ -186,12 +192,6 @@ void *fn_1_41BDC(MotasglistData *data, s32 index) {
 /* fzgx:end fn_1_41BDC */
 
 /* fzgx:begin fn_1_41E34 */
-extern const f64 lbl_1_rodata_F40;
-extern const f32 lbl_1_rodata_F34;
-extern const f32 lbl_1_rodata_F30;
-extern const f64 lbl_1_rodata_F48;
-extern const f32 lbl_1_rodata_F38;
-
 typedef struct MotasglistEntry {
     u16 value;
     u16 frame;
@@ -206,13 +206,13 @@ typedef struct MotasglistObject {
     f32 value;
 } MotasglistObject;
 
-typedef struct MotasglistData {
+typedef struct fn_1_41E34_MotasglistData {
     u8 pad0[8];
     MotasglistObject *object;
     u8 padC[0x20];
     MotasglistEntry *entries_a;
     MotasglistEntry *entries_b;
-} MotasglistData;
+} fn_1_41E34_MotasglistData;
 
 typedef struct MotasglistResult {
     u16 first;
@@ -221,7 +221,7 @@ typedef struct MotasglistResult {
     u16 third;
 } MotasglistResult;
 
-void fn_1_41E34(MotasglistData *data, u32 index, MotasglistResult *result) {
+void fn_1_41E34(fn_1_41E34_MotasglistData *data, u32 index, MotasglistResult *result) {
     MotasglistEntry *entry_a = &data->entries_a[index];
     MotasglistEntry *entry_b = &data->entries_b[index];
     f32 delta;
@@ -375,10 +375,6 @@ typedef struct Fn142E74Object {
     u16 flags40;
 } Fn142E74Object;
 
-extern void lbl_8006DAEC(void);
-extern void lbl_8006DBAC(void *);
-extern void fn_8006E5FC(void *);
-extern void lbl_8006DB30(void);
 extern void fn_1_438AC(Fn142E74Object *object, Fn142E74Entry *entry, s32 arg2);
 extern void fn_1_433E0(Fn142E74Object *object);
 extern void fn_1_4300C(Fn142E74Object *object);
@@ -568,9 +564,6 @@ struct fn_1_4322C_Arg0 {
     f32 unk_C;
     f32 unk_10;
 };
-
-extern const f32 lbl_1_rodata_F50;
-extern const f32 lbl_1_rodata_F54;
 
 void fn_1_4322C(struct fn_1_4322C_Arg0 *arg0) {
     const f32 *value;
