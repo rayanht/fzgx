@@ -1,5 +1,5 @@
 {
- "generated": 1789250152,
+ "generated": 1789253204,
  "functions": [
   {
    "symbol": "car_colchg:_prolog",
@@ -97078,20 +97078,20 @@
   {
    "symbol": "fn_1_134EE4",
    "module": "main_rel",
-   "unit": null,
+   "unit": "rel/main_rel/sel_static_disp/fn_1_134EE4.c",
    "addr": 1265380,
    "size": 2480,
-   "status": "unmatched",
-   "attempts": 1,
+   "status": "matched",
+   "attempts": 2,
    "best_percent": 89.65,
    "claimed_by": null,
    "claimed_at": null,
    "claim_ttl": null,
-   "matched_commit": null,
+   "matched_commit": "e743a52",
    "blocked_issue": null,
    "blocked_reason": null,
    "prev_status": null,
-   "link_state": null
+   "link_state": "verified"
   },
   {
    "symbol": "fn_1_135894",
@@ -464347,6 +464347,25 @@
    "cost_usd": 0.0,
    "outcome": "matched",
    "notes": "manual inline slot displacement ((u8 *)ctx->unk_24->unk_DC)[ctx->unk_2D * 0x30 - 0x30]",
+   "best_body_path": null,
+   "stale_checks": 0,
+   "best_in_attempt": 0.0
+  },
+  {
+   "id": 17517,
+   "symbol": "fn_1_134EE4",
+   "agent": "deterministic-fixup",
+   "harness": "fixup",
+   "model": null,
+   "started": 1789252751,
+   "ended": 1789252751,
+   "checks": 0,
+   "final_percent": null,
+   "tokens_in": 0,
+   "tokens_out": 0,
+   "cost_usd": 0.0,
+   "outcome": "matched",
+   "notes": "manual preheader order var_r25,var_r26,var_r28.value,var_r27.value",
    "best_body_path": null,
    "stale_checks": 0,
    "best_in_attempt": 0.0

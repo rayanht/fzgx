@@ -1693,7 +1693,7 @@ def zero_conditions(body, name, diffs):
 
 
 def float_conditions(body, name, diffs):
-    """Recover which clamp arm receives unordered floating comparisons."""
+    """Recover ordered comparisons and the arm receiving unordered values."""
     if not any(t.startswith('cror ') or o.startswith('cror ') for t,o in diffs):
         return []
     from .fixup_source import call_sites, declared_types, member_type
@@ -1702,20 +1702,55 @@ def float_conditions(body, name, diffs):
     if not span:
         return []
     fields,variables=declared_types(code,span[0]);out=[]
+    ordered={}
+    for target,ours in diffs:
+        if target==ours:continue
+        merge=re.fullmatch(r'cror eq, (lt|gt), eq',target)
+        if merge:
+            operator='<=' if merge[1]=='lt' else '>='
+            ordered[operator]=ordered.get(operator,0)+1
+    def floating(expression):
+        if re.search(r'\(\s*(?:f32|float|f64|double)\s*\)',expression):return True
+        while expression.startswith('(') and expression.endswith(')'):
+            depth=0
+            for i,ch in enumerate(expression):
+                depth+=(ch=='(')-(ch==')')
+                if depth==0:break
+            if i!=len(expression)-1:break
+            expression=expression[1:-1].strip()
+        return member_type(expression,fields,variables) in ('f32','float','f64','double')
+    equality_sites=[]
     opposite={'<':'>=','<=':'>','>':'<=','>=':'<'}
     for callee,start,end,args in call_sites(code):
         if callee!='if' or len(args)!=1 or not span[0]<=start<end<=span[1]:
             continue
+        # An omitted CR merge can turn <= into == in an old lift. These
+        # atoms also occur in compound conditions and need no paired else arm.
+        a,b=args[0]
+        for atom in re.finditer(r'([^&|]+?)\s+(==)\s+([^&|]+)',code[a:b]):
+            if any(floating(atom[i].strip()) for i in (1,3)):
+                equality_sites.append((a+atom.start(2),a+atom.end(2)))
         a,b=args[0];comparison=re.fullmatch(r'\s*(.+?)\s+(<=|>=|<|>)\s+(.+?)\s*',code[a:b])
         arms=re.match(r'(\s*\{)([^{}]*)(\}\s*else\s*\{)([^{}]*)(\})',code[end:span[1]])
         if not comparison or not arms:
             continue
-        if not any(member_type(comparison[i],fields,variables) in ('f32','float','f64','double') for i in (1,3)):
+        if not any(floating(comparison[i].strip()) for i in (1,3)):
             continue
         condition=body[a:a+comparison.start(2)]+opposite[comparison[2]]+body[a+comparison.end(2):b]
         text=(body[:a]+condition+body[b:end+arms.start(2)]+body[end+arms.start(4):end+arms.end(4)]
               +body[end+arms.end(2):end+arms.start(4)]+body[end+arms.start(2):end+arms.end(2)]+body[end+arms.end(4):])
         out.append((f'retail float branch {comparison[2]}->{opposite[comparison[2]]} at {a}',text))
+    for operator in sorted(ordered):
+        groups=[[site] for site in equality_sites]
+        count=ordered[operator]
+        if 1<count<len(equality_sites):
+            groups+=list(itertools.islice(itertools.combinations(equality_sites,count),32))
+        if len(equality_sites)>1:groups.append(equality_sites)
+        for sites in groups:
+            text=body
+            for a,b in reversed(sites):text=text[:a]+operator+text[b:]
+            label=','.join(str(a) for a,_ in sites)
+            out.append((f'retail ordered float comparison ==->{operator} at {label}',text))
     return out
 
 

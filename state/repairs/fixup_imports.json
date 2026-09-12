@@ -3709,5 +3709,203 @@
     ],
     "link": "verified",
     "commit": "4fda38a"
+  },
+  "fn_1_134EE4": {
+    "seed_symbol": "fn_1_134EE4",
+    "generator": "fzgx fixup",
+    "transform": "manual preheader order var_r25,var_r26,var_r28.value,var_r27.value",
+    "seed": "#include \"types.h\"\n#include \"font.h\"\n\nextern const f32 lbl_1_rodata_861C;\nextern const f32 lbl_1_rodata_8890;\nextern const f32 lbl_1_rodata_8894;\nextern const f32 lbl_1_rodata_8898;\nextern const f32 lbl_1_rodata_889C;\nextern const f32 lbl_1_rodata_8674;\nextern const f32 lbl_1_rodata_85F0;\nextern const f32 lbl_1_rodata_88A0;\nextern const f32 lbl_1_rodata_88A4;\nextern const f32 lbl_1_rodata_88A8;\nextern const f32 lbl_1_rodata_88AC;\nextern const f32 lbl_1_rodata_88B0;\nextern const f32 lbl_1_rodata_86C8;\nextern const f32 lbl_1_rodata_88B4;\nextern const f32 lbl_1_rodata_8844;\nextern const f32 lbl_1_rodata_884C;\nextern const f32 lbl_1_rodata_88B8;\nextern const f64 lbl_1_rodata_8600;\nextern f32 lbl_1_rodata_26F8[22];\nextern const u32 lbl_1_rodata_8860[6];\nextern const u32 lbl_1_rodata_8878[6];\n\nextern int fn_1_4F734(FontDrawPacket *);\nextern s8 fn_1_A5DC4(void);\nextern u16 fn_1_486C4(u32);\nextern u16 fn_1_48690(u32);\nextern void fn_1_51678(FontDrawPacket *, u32, s16, s16, s16, s16);\nextern void fn_1_52070(u32);\n\n#pragma opt_strength_reduction off\nvoid fn_1_134EE4(s32 arg0, s32 arg1, s32 arg2, f32 farg0) {\n    FontDrawPacket packet;\n    u32 sp20[6];\n    u32 sp8[6];\n    s32 var_r25;\n    s32 var_r26;\n    struct { u32 * value; } var_r28;\n    struct { u32 * value; } var_r27;\n    s16 temp_r21;\n    s16 temp_r22;\n    s16 temp_r24;\n    f32 temp_f30;\n    f32 temp_f31;\n    f32 temp_f28;\n    s16 lab_t4;\n    FontDrawPacket * lab_t0;\n    FontDrawPacket * lab_t0_;\n\n    packet = *(FontDrawPacket *)lbl_1_rodata_26F8;\n    packet.image = (arg1 != 0) ? 0x9E03 : 0x9B00;\n    packet.x = lbl_1_rodata_861C;\n    packet.y = lbl_1_rodata_8890;\n    packet.z = lbl_1_rodata_8894;\n    fn_1_4F734(&packet);\n    if (arg0 != 0) {\n        packet = *(FontDrawPacket *)lbl_1_rodata_26F8;\n        packet.image = 0x9C02;\n        packet.x = (f32)(fn_1_A5DC4() ? 0x48 : 0x58);\n        packet.y = lbl_1_rodata_8898;\n        packet.z = lbl_1_rodata_889C;\n        *(u32 *)((u8 *)&packet + 0x30) = 0xA;\n        fn_1_4F734(&packet);\n        packet = *(FontDrawPacket *)lbl_1_rodata_26F8;\n        packet.image = 0x9C03;\n        packet.x = lbl_1_rodata_8674 - (f32)(fn_1_A5DC4() ? 0x48 : 0x58);\n        packet.y = lbl_1_rodata_8898;\n        packet.z = lbl_1_rodata_889C;\n        *(u32 *)((u8 *)&packet + 0x30) = 0xA;\n        fn_1_4F734(&packet);\n        if (farg0 < lbl_1_rodata_85F0) {\n            packet = *(FontDrawPacket *)lbl_1_rodata_26F8;\n            packet.image = 0x9C00;\n            packet.x = (f32)((fn_1_A5DC4() ? 0x48 : 0x58) - 0x39);\n            packet.y = lbl_1_rodata_8898;\n            packet.z = lbl_1_rodata_88A0;\n            *(u32 *)((u8 *)&packet + 0x30) = 9;\n            fn_1_4F734(&packet);\n            packet = *(FontDrawPacket *)lbl_1_rodata_26F8;\n            packet.image = 0x9C01;\n            packet.x = (f32)((fn_1_A5DC4() ? 0x48 : 0x58) + 0x3A);\n            packet.y = lbl_1_rodata_8898;\n            packet.z = lbl_1_rodata_88A4;\n            *(u32 *)((u8 *)&packet + 0x30) = 0xB;\n            fn_1_4F734(&packet);\n            packet = *(FontDrawPacket *)lbl_1_rodata_26F8;\n            packet.image = 0x9C00;\n            packet.x = lbl_1_rodata_88A8 +\n                       ((lbl_1_rodata_8674 - (f32)(fn_1_A5DC4() ? 0x48 : 0x58)) -\n                        lbl_1_rodata_88AC);\n            packet.y = lbl_1_rodata_8898;\n            packet.z = lbl_1_rodata_88A0;\n            *(u32 *)((u8 *)&packet + 0x30) = 9;\n            fn_1_4F734(&packet);\n            packet = *(FontDrawPacket *)lbl_1_rodata_26F8;\n            packet.image = 0x9C01;\n            packet.x = lbl_1_rodata_88B0 +\n                       ((lbl_1_rodata_8674 - (f32)(fn_1_A5DC4() ? 0x48 : 0x58)) -\n                        lbl_1_rodata_88AC);\n            packet.y = lbl_1_rodata_8898;\n            packet.z = lbl_1_rodata_88A4;\n            *(u32 *)((u8 *)&packet + 0x30) = 0xB;\n            fn_1_4F734(&packet);\n        }\n    }\n    if (fn_1_A5DC4() != 0) {\n        if (arg2 != 0) {\n            packet = *(FontDrawPacket *)lbl_1_rodata_26F8;\n            packet.image = 0x9B02;\n            temp_r21 = fn_1_486C4(0x9B02);\n            lab_t0 = &packet;\n            lab_t0_ = lab_t0;\n            fn_1_51678(lab_t0_, packet.image, 0, 0, (fn_1_48690(packet.image) >> 1) & 0x7FFF, temp_r21);\n            packet.x = lbl_1_rodata_8844;\n            packet.y = lbl_1_rodata_86C8;\n            packet.z = lbl_1_rodata_88B4;\n            fn_1_4F734(&packet);\n            packet = *(FontDrawPacket *)lbl_1_rodata_26F8;\n            packet.image = 0x9B02;\n            lab_t0 = &packet;\n            lab_t0_ = lab_t0;\n            fn_1_51678(lab_t0_, packet.image, 0, 0, 0xA, fn_1_486C4(0x9B02));\n            packet.x = lbl_1_rodata_861C;\n            packet.y = lbl_1_rodata_86C8;\n            packet.z = lbl_1_rodata_88B4;\n            fn_1_4F734(&packet);\n            packet = *(FontDrawPacket *)lbl_1_rodata_26F8;\n            packet.image = 0x9B02;\n            temp_r22 = fn_1_486C4(0x9B02);\n            temp_r21 = (fn_1_48690(packet.image) >> 1) & 0x7FFF;\n            lab_t0 = &packet;\n            lab_t0_ = lab_t0;\n            fn_1_51678(lab_t0_, packet.image, (fn_1_48690(packet.image) >> 1) & 0x7FFF, 0, temp_r21, temp_r22);\n            packet.x = lbl_1_rodata_884C;\n            packet.y = lbl_1_rodata_86C8;\n            packet.z = lbl_1_rodata_88B4;\n            *(u32 *)((u8 *)&packet + 0x30) = 7;\n            fn_1_4F734(&packet);\n            packet = *(FontDrawPacket *)lbl_1_rodata_26F8;\n            packet.image = 0x9B02;\n            lab_t0 = &packet;\n            lab_t0_ = lab_t0;\n            fn_1_51678(lab_t0_, packet.image, 0, 0, 0xA, fn_1_486C4(0x9B02));\n            packet.x = lbl_1_rodata_8674;\n            packet.y = lbl_1_rodata_86C8;\n            packet.z = lbl_1_rodata_88B4;\n            *(u32 *)((u8 *)&packet + 0x30) = 7;\n            fn_1_4F734(&packet);\n        }\n        sp20[0] = lbl_1_rodata_8860[0];\n        sp20[1] = lbl_1_rodata_8860[1];\n        sp20[2] = lbl_1_rodata_8860[2];\n        sp20[3] = lbl_1_rodata_8860[3];\n        sp20[4] = lbl_1_rodata_8860[4];\n        sp20[5] = lbl_1_rodata_8860[5];\n        sp8[0] = lbl_1_rodata_8878[0];\n        sp8[1] = lbl_1_rodata_8878[1];\n        sp8[2] = lbl_1_rodata_8878[2];\n        sp8[3] = lbl_1_rodata_8878[3];\n        sp8[4] = lbl_1_rodata_8878[4];\n        sp8[5] = lbl_1_rodata_8878[5];\n        temp_f28 = lbl_1_rodata_8844;\n        temp_f30 = lbl_1_rodata_88B8;\n        temp_f31 = lbl_1_rodata_884C;\n        var_r25 = 0x0;\n        var_r26 = 0;\n        var_r27.value = sp20;\n        var_r28.value = sp8;\n        do {\n            packet = *(FontDrawPacket *)lbl_1_rodata_26F8;\n            packet.image = 0x9B01;\n            lab_t0 = &packet;\n            lab_t0_ = lab_t0;\n            fn_1_51678(lab_t0_, packet.image, 0, var_r27.value[0], (fn_1_48690(0x9B01) >> 1) & 0x7FFF, var_r28.value[0]);\n            packet.x = temp_f28;\n            packet.y = (f32)var_r25;\n            packet.z = temp_f30;\n            fn_1_4F734(&packet);\n            packet = *(FontDrawPacket *)lbl_1_rodata_26F8;\n            packet.image = 0x9B01;\n            lab_t4 = (fn_1_48690(0x9B01) >> 1) & 0x7FFF;\n            lab_t0 = &packet;\n            lab_t0_ = lab_t0;\n            fn_1_51678(lab_t0_, packet.image, (fn_1_48690(0x9B01) >> 1) & 0x7FFF, var_r27.value[0], lab_t4, var_r28.value[0]);\n            packet.x = temp_f31;\n            packet.y = (f32)var_r25;\n            packet.z = temp_f30;\n            *(u32 *)((u8 *)&packet + 0x30) = 7;\n            fn_1_4F734(&packet);\n            var_r26 += 1;\n            var_r27.value += 1;\n            var_r25 += var_r28.value[0];\n            var_r28.value += 1;\n        } while (var_r26 < 6);\n        fn_1_52070(0x140);\n    }\n}\n#pragma opt_strength_reduction reset\n\n",
+    "seed_sha256": "0978b0aecd2bfbd1130324cbd2026f09bb2a5f74d346d5ce133dc159cb021d8c",
+    "generated_sha256": "02f7b9cc366cc401756f3147526c74e11b037e9e95746b9e0df9312391acca98",
+    "generated_source": "#include \"types.h\"\n#include \"font.h\"\n\nextern const f32 lbl_1_rodata_861C;\nextern const f32 lbl_1_rodata_8890;\nextern const f32 lbl_1_rodata_8894;\nextern const f32 lbl_1_rodata_8898;\nextern const f32 lbl_1_rodata_889C;\nextern const f32 lbl_1_rodata_8674;\nextern const f32 lbl_1_rodata_85F0;\nextern const f32 lbl_1_rodata_88A0;\nextern const f32 lbl_1_rodata_88A4;\nextern const f32 lbl_1_rodata_88A8;\nextern const f32 lbl_1_rodata_88AC;\nextern const f32 lbl_1_rodata_88B0;\nextern const f32 lbl_1_rodata_86C8;\nextern const f32 lbl_1_rodata_88B4;\nextern const f32 lbl_1_rodata_8844;\nextern const f32 lbl_1_rodata_884C;\nextern const f32 lbl_1_rodata_88B8;\nextern const f64 lbl_1_rodata_8600;\nextern f32 lbl_1_rodata_26F8[22];\nextern const u32 lbl_1_rodata_8860[6];\nextern const u32 lbl_1_rodata_8878[6];\n\nextern int fn_1_4F734(FontDrawPacket *);\nextern s8 fn_1_A5DC4(void);\nextern u16 fn_1_486C4(u32);\nextern u16 fn_1_48690(u32);\nextern void fn_1_51678(FontDrawPacket *, u32, s16, s16, s16, s16);\nextern void fn_1_52070(u32);\n\n#pragma opt_strength_reduction on\nvoid fn_1_134EE4(s32 arg0, s32 arg1, s32 arg2, f32 farg0) {\n    FontDrawPacket packet;\n    s16 temp_r21;\n    s16 temp_r22;\n    s16 temp_r24;\n    f32 temp_f30;\n    f32 temp_f31;\n    f32 temp_f28;\n    FontDrawPacket * lab_t0;\n    FontDrawPacket * lab_t0_;\n\n    packet = *(FontDrawPacket *)lbl_1_rodata_26F8;\n    packet.image = (arg1 != 0) ? 0x9E03 : 0x9B00;\n    packet.x = lbl_1_rodata_861C;\n    packet.y = lbl_1_rodata_8890;\n    packet.z = lbl_1_rodata_8894;\n    fn_1_4F734(&packet);\n    if (arg0 != 0) {\n        packet = *(FontDrawPacket *)lbl_1_rodata_26F8;\n        packet.image = 0x9C02;\n        packet.x = (f32)(fn_1_A5DC4() ? 0x48 : 0x58);\n        packet.y = lbl_1_rodata_8898;\n        packet.z = lbl_1_rodata_889C;\n        *(u32 *)((u8 *)&packet + 0x30) = 0xA;\n        fn_1_4F734(&packet);\n        packet = *(FontDrawPacket *)lbl_1_rodata_26F8;\n        packet.image = 0x9C03;\n        packet.x = lbl_1_rodata_8674 - (f32)(fn_1_A5DC4() ? 0x48 : 0x58);\n        packet.y = lbl_1_rodata_8898;\n        packet.z = lbl_1_rodata_889C;\n        *(u32 *)((u8 *)&packet + 0x30) = 0xA;\n        fn_1_4F734(&packet);\n        if (farg0 < lbl_1_rodata_85F0) {\n            packet = *(FontDrawPacket *)lbl_1_rodata_26F8;\n            packet.image = 0x9C00;\n            packet.x = (f32)((fn_1_A5DC4() ? 0x48 : 0x58) - 0x39);\n            packet.y = lbl_1_rodata_8898;\n            packet.z = lbl_1_rodata_88A0;\n            *(u32 *)((u8 *)&packet + 0x30) = 9;\n            fn_1_4F734(&packet);\n            packet = *(FontDrawPacket *)lbl_1_rodata_26F8;\n            packet.image = 0x9C01;\n            packet.x = (f32)((fn_1_A5DC4() ? 0x48 : 0x58) + 0x3A);\n            packet.y = lbl_1_rodata_8898;\n            packet.z = lbl_1_rodata_88A4;\n            *(u32 *)((u8 *)&packet + 0x30) = 0xB;\n            fn_1_4F734(&packet);\n            packet = *(FontDrawPacket *)lbl_1_rodata_26F8;\n            packet.image = 0x9C00;\n            packet.x = lbl_1_rodata_88A8 +\n                       ((lbl_1_rodata_8674 - (f32)(fn_1_A5DC4() ? 0x48 : 0x58)) -\n                        lbl_1_rodata_88AC);\n            packet.y = lbl_1_rodata_8898;\n            packet.z = lbl_1_rodata_88A0;\n            *(u32 *)((u8 *)&packet + 0x30) = 9;\n            fn_1_4F734(&packet);\n            packet = *(FontDrawPacket *)lbl_1_rodata_26F8;\n            packet.image = 0x9C01;\n            packet.x = lbl_1_rodata_88B0 +\n                       ((lbl_1_rodata_8674 - (f32)(fn_1_A5DC4() ? 0x48 : 0x58)) -\n                        lbl_1_rodata_88AC);\n            packet.y = lbl_1_rodata_8898;\n            packet.z = lbl_1_rodata_88A4;\n            *(u32 *)((u8 *)&packet + 0x30) = 0xB;\n            fn_1_4F734(&packet);\n        }\n    }\n    if (fn_1_A5DC4() != 0) {\n        if (arg2 != 0) {\n            packet = *(FontDrawPacket *)lbl_1_rodata_26F8;\n            packet.image = 0x9B02;\n            temp_r21 = fn_1_486C4(0x9B02);\n            lab_t0 = &packet;\n            lab_t0_ = lab_t0;\n            fn_1_51678(lab_t0_, packet.image, 0, 0, (fn_1_48690(packet.image) >> 1) & 0x7FFF, temp_r21);\n            packet.x = lbl_1_rodata_8844;\n            packet.y = lbl_1_rodata_86C8;\n            packet.z = lbl_1_rodata_88B4;\n            fn_1_4F734(&packet);\n            packet = *(FontDrawPacket *)lbl_1_rodata_26F8;\n            packet.image = 0x9B02;\n            lab_t0 = &packet;\n            lab_t0_ = lab_t0;\n            fn_1_51678(lab_t0_, packet.image, 0, 0, 0xA, fn_1_486C4(0x9B02));\n            packet.x = lbl_1_rodata_861C;\n            packet.y = lbl_1_rodata_86C8;\n            packet.z = lbl_1_rodata_88B4;\n            fn_1_4F734(&packet);\n            packet = *(FontDrawPacket *)lbl_1_rodata_26F8;\n            packet.image = 0x9B02;\n            temp_r22 = fn_1_486C4(0x9B02);\n            temp_r21 = (fn_1_48690(packet.image) >> 1) & 0x7FFF;\n            lab_t0 = &packet;\n            lab_t0_ = lab_t0;\n            fn_1_51678(lab_t0_, packet.image, (fn_1_48690(packet.image) >> 1) & 0x7FFF, 0, temp_r21, temp_r22);\n            packet.x = lbl_1_rodata_884C;\n            packet.y = lbl_1_rodata_86C8;\n            packet.z = lbl_1_rodata_88B4;\n            *(u32 *)((u8 *)&packet + 0x30) = 7;\n            fn_1_4F734(&packet);\n            packet = *(FontDrawPacket *)lbl_1_rodata_26F8;\n            packet.image = 0x9B02;\n            lab_t0 = &packet;\n            lab_t0_ = lab_t0;\n            fn_1_51678(lab_t0_, packet.image, 0, 0, 0xA, fn_1_486C4(0x9B02));\n            packet.x = lbl_1_rodata_8674;\n            packet.y = lbl_1_rodata_86C8;\n            packet.z = lbl_1_rodata_88B4;\n            *(u32 *)((u8 *)&packet + 0x30) = 7;\n            fn_1_4F734(&packet);\n        }\n{\n    s32 var_r26;\n    s32 var_r25;\n    struct { u32 * value; } var_r28;\n    struct { u32 * value; } var_r27;\n        u32 sp20[6] = {0x0, 0x18, 0x18, 0x18, 0x18, 0x28};\n        u32 sp8[6] = {0x18, 0x10, 0x10, 0x10, 0x10, 0x20};\n        var_r25 = 0x152;\n        var_r26 = 0;\n        var_r28.value = sp8;\n        var_r27.value = sp20;\n        for (; var_r26 < 6; var_r26++) {\n            packet = *(FontDrawPacket *)lbl_1_rodata_26F8;\n            packet.image = 0x9B01;\n            lab_t0 = &packet;\n            lab_t0_ = lab_t0;\n            fn_1_51678(lab_t0_, packet.image, 0, var_r27.value[0], (fn_1_48690(packet.image) >> 1) & 0x7FFF, var_r28.value[0]);\n            packet.x = lbl_1_rodata_8844;\n            packet.y = (f32)var_r25;\n            packet.z = lbl_1_rodata_88B8;\n            fn_1_4F734(&packet);\n            packet = *(FontDrawPacket *)lbl_1_rodata_26F8;\n            packet.image = 0x9B01;\n            arg0 = (s16)((fn_1_48690(packet.image) >> 1) & 0x7FFF);\n            lab_t0 = &packet;\n            lab_t0_ = lab_t0;\n            fn_1_51678(lab_t0_, packet.image, (fn_1_48690(packet.image) >> 1) & 0x7FFF, var_r27.value[0], arg0, var_r28.value[0]);\n            packet.x = lbl_1_rodata_884C;\n            packet.y = (f32)var_r25;\n            packet.z = lbl_1_rodata_88B8;\n            *(u32 *)((u8 *)&packet + 0x30) = 7;\n            fn_1_4F734(&packet);\n            var_r27.value += 1;\n            var_r25 += var_r28.value[0];\n            var_r28.value += 1;\n        }\n}\n        fn_1_52070(0x140);\n    }\n}\n#pragma opt_strength_reduction reset\n\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "rel/main_rel/sel_static_disp/fn_1_134EE4.c",
+    "bytes": 2480,
+    "headers_sha256": "f9f5e84c1423bef39ec206906b9b67f385818e424c01f7582cef703630a3eba9",
+    "oracle_sha256": "2e996ebb6485e6c925f54f77df3da5b518adeeb4580e7aad68ac7874ad2808b1",
+    "recipe": [
+      {
+        "label": "manual layout starting Y 0x152 strength reduction on",
+        "input_sha256": "0978b0aecd2bfbd1130324cbd2026f09bb2a5f74d346d5ce133dc159cb021d8c",
+        "output_sha256": "5b5a3867f63c9365c45e3739af7e1eec1662596b13b742750d68051d7123b3b2",
+        "input_symbol": "fn_1_134EE4",
+        "output_symbol": "fn_1_134EE4",
+        "edits": [
+          [
+            1053,
+            1055,
+            "n"
+          ],
+          [
+            6432,
+            6433,
+            "152"
+          ]
+        ]
+      },
+      {
+        "label": "manual loop values (True, True, False)",
+        "input_sha256": "5b5a3867f63c9365c45e3739af7e1eec1662596b13b742750d68051d7123b3b2",
+        "output_sha256": "8a1d9c7deead7b424b5308d5c4dfc4e94e4f179ff805c6668b35431c8a353b82",
+        "input_symbol": "fn_1_134EE4",
+        "output_symbol": "fn_1_134EE4",
+        "edits": [
+          [
+            6297,
+            6411,
+            ""
+          ],
+          [
+            6762,
+            6836,
+            "packet.image) >> 1) & 0x7FFF, var_r28.value[0]);\n            packet.x = lbl_1_rodata_8844"
+          ],
+          [
+            6898,
+            6906,
+            "lbl_1_rodata_88B8"
+          ],
+          [
+            7068,
+            7074,
+            "packet.image"
+          ],
+          [
+            7210,
+            7310,
+            "packet.image) >> 1) & 0x7FFF, var_r27.value[0], lab_t4, var_r28.value[0]);\n            packet.x = lbl_1_rodata_884C"
+          ],
+          [
+            7372,
+            7380,
+            "lbl_1_rodata_88B8"
+          ]
+        ]
+      },
+      {
+        "label": "manual local tables (True, False, True)",
+        "input_sha256": "8a1d9c7deead7b424b5308d5c4dfc4e94e4f179ff805c6668b35431c8a353b82",
+        "output_sha256": "f73ebbca1ef04d692e998dc7b63759f438832a81af59f95445ffcde0e8c16bf2",
+        "input_symbol": "fn_1_134EE4",
+        "output_symbol": "fn_1_134EE4",
+        "edits": [
+          [
+            1142,
+            1283,
+            ""
+          ],
+          [
+            1391,
+            1407,
+            ""
+          ],
+          [
+            5823,
+            6295,
+            "{\n    s32 var_r25;\n    s32 var_r26;\n    struct { u32 * value; } var_r28;\n    struct { u32 * value; } var_r27;\n    s16 lab_t4;\n        u32 sp20[6] = {0x0, 0x18, 0x18, 0x18, 0x18, 0x28};\n        u32 sp8[6] = {0x18, 0x10, 0x10, 0x10, 0x10, 0x20}"
+          ],
+          [
+            6322,
+            6343,
+            ""
+          ],
+          [
+            6410,
+            6412,
+            "for (var_r26 = 0; var_r26 < 6; var_r26++)"
+          ],
+          [
+            7403,
+            7429,
+            ""
+          ],
+          [
+            7543,
+            7564,
+            "\n}"
+          ]
+        ]
+      },
+      {
+        "label": "manual loop register homes var_r26,var_r25,var_r28.value,var_r27.value width=arg0",
+        "input_sha256": "f73ebbca1ef04d692e998dc7b63759f438832a81af59f95445ffcde0e8c16bf2",
+        "output_sha256": "03917a89232f4005e5dcd97d2fbb4b95db74e015d1c20167d76ebab027a1304b",
+        "input_symbol": "fn_1_134EE4",
+        "output_symbol": "fn_1_134EE4",
+        "edits": [
+          [
+            5776,
+            5792,
+            ""
+          ],
+          [
+            5910,
+            5910,
+            "        var_r26 = 0;\n"
+          ],
+          [
+            5935,
+            5935,
+            "        var_r28.value = sp8;\n"
+          ],
+          [
+            5973,
+            6018,
+            "for ("
+          ],
+          [
+            6588,
+            6637,
+            "arg0 = (s16)((fn_1_48690(packet.image) >> 1) & 0x7FFF)"
+          ],
+          [
+            6805,
+            6811,
+            "arg0"
+          ]
+        ]
+      },
+      {
+        "label": "manual counter declarations (True, 's32', 's32')",
+        "input_sha256": "03917a89232f4005e5dcd97d2fbb4b95db74e015d1c20167d76ebab027a1304b",
+        "output_sha256": "5a162aefc4e5e9098a2156c3cb6b3ebfb40a6c8301e81c596eadef393e3ae06e",
+        "input_symbol": "fn_1_134EE4",
+        "output_symbol": "fn_1_134EE4",
+        "edits": [
+          [
+            5668,
+            5668,
+            "    s32 var_r26;\n"
+          ],
+          [
+            5685,
+            5702,
+            ""
+          ]
+        ]
+      },
+      {
+        "label": "manual preheader order var_r25,var_r26,var_r28.value,var_r27.value",
+        "input_sha256": "5a162aefc4e5e9098a2156c3cb6b3ebfb40a6c8301e81c596eadef393e3ae06e",
+        "output_sha256": "02f7b9cc366cc401756f3147526c74e11b037e9e95746b9e0df9312391acca98",
+        "input_symbol": "fn_1_134EE4",
+        "output_symbol": "fn_1_134EE4",
+        "edits": [
+          [
+            5894,
+            5894,
+            "        var_r25 = 0x152;\n"
+          ],
+          [
+            5915,
+            5940,
+            ""
+          ]
+        ]
+      }
+    ],
+    "link": "verified",
+    "commit": "e743a52"
   }
 }
