@@ -133,7 +133,8 @@ class Engine:
             if row.get('matched') and row.get('object'):
                 from .poolfix import Elf
                 elf = Elf(Path(row['object']).read_bytes())
-                extras = [s['name'] for s in elf.symbols() if s['info'] & 15 == 2 and s['shndx'] and s['size'] and s['name'] != sym.name]
+                extras = [s['name'] for s in elf.symbols() if s['info'] & 15 == 2 and s['shndx'] and s['size'] and s['name'] != sym.name
+                          and not (0 < s['shndx'] < len(elf.sections) and elf.sections[s['shndx']]['name'] == '.fzgxpool')]
                 if extras:
                     row.update(matched=False, object_matched=True, extra_helpers=extras)
             if row.get('matched') and row.get('object'):
@@ -273,6 +274,7 @@ class Engine:
         if check.ok:
             yield from evidence.aggregate_initializers(self.project, row['symbol'], body, check)
             yield from evidence.native_pool_objects(self.project, row['symbol'], body, check)
+            yield from evidence.shared_pool_primer(self.project, row['symbol'], body, check)
             if re.search(r'(?m)^\s*#define\b', body):
                 # Pool fields passed through macro parameters only have a
                 # concrete type and offset after the selected compiler expands them.

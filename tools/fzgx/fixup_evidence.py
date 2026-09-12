@@ -2656,3 +2656,156 @@ def first_divergence(p: Project, sym, target, obj) -> Optional[Tuple[int, Option
     if len(l) != len(r):
         return min(len(l), len(r)), None, len(l)
     return None
+
+
+_POOL_WIDTHS = {}
+
+
+def _pool_widths(p, module, pool_name):
+    """offset -> load width for every `lf[sd]/lwz...` through a base register holding
+    `pool_name`, over the whole module's retail disassembly (cached)."""
+    key = (module, pool_name)
+    if key in _POOL_WIDTHS:
+        return _POOL_WIDTHS[key]
+    widths = {}
+    for fn in p.function_asm(module).values():
+        lines = [ln.split(': ', 1)[1] for ln in fn.asm if ': ' in ln]
+        regs = set()
+        for ln in lines:
+            m = re.match(r'addi (r\d+), r\d+, ' + re.escape(pool_name) + r'(?:\+0x[0-9A-Fa-f]+)?@l$', ln)
+            if m:
+                regs.add(m.group(1))
+        if not regs:
+            continue
+        for ln in lines:
+            m = re.match(r'(lfs|lfd|lwz|lha|lhz|lbz|stw|stfs|stfd) [rf]\d+, (-?0x[0-9a-f]+|-?\d+)\((r\d+)\)$', ln)
+            if m and m.group(3) in regs:
+                off = int(m.group(2), 0)
+                if off >= 0:
+                    w = 8 if m.group(1) in ('lfd', 'stfd') else 4
+                    widths[off] = max(widths.get(off, 0), w)
+    _POOL_WIDTHS[key] = widths
+    return widths
+
+
+def shared_pool_primer(p, symbol, body, check):
+    """Retail addresses a translation unit's literal pool through one base register: the pool
+    is laid out in first-use order across the whole TU, so a per-function unit's own pool never
+    has the same offsets and every `lfs f, off(rB)` differs. A primer reproduces retail's pool
+    layout ahead of the function: dummy functions in a section the linker ignores (`.fzgxpool`)
+    reference each pooled literal in retail address order, tables between them are private
+    `static const` objects; the function's own literals then dedupe onto retail's offsets and
+    MWCC's own conversion constants land where retail had them. `poolfix.apply` drops the
+    primer section and the private pool at integration; the link places nothing extra."""
+    import struct as _struct, math as _math
+    sym = p.resolve(symbol)
+    if sym is None or 'fzgx_pool_prime' in body or '__declspec(section' in body or not getattr(check, '_rows', None):
+        return []
+    lrows, rrows = check._rows
+    lfmt = [((r.get('instruction') or {}).get('formatted') or '') for r in lrows]
+    rfmt = [((r.get('instruction') or {}).get('formatted') or '') for r in rrows]
+    if not any('...rodata' in t for t in rfmt):
+        return []  # the body does not use native literals yet (recover native shared-pool literals first)
+    syms = p.symbols(sym.module)
+    bases = {}
+    for t in lfmt:
+        m = re.match(r'addi (r\d+), r\d+, (\w+)(?:\+0x[0-9A-Fa-f]+)?@l$', t)
+        if m and m.group(2) in syms and syms[m.group(2)].section == '.rodata' and syms[m.group(2)].kind == 'object':
+            bases[m.group(1)] = syms[m.group(2)]
+    out = []
+    for reg, pool in bases.items():
+        widths = {}
+        for t in lfmt:
+            m = re.match(r'(lfs|lfd|lwz|lha|lhz|lbz) [rf]\d+, (-?0x[0-9a-f]+|-?\d+)\(' + reg + r'\)$', t)
+            if m:
+                off = int(m.group(2), 0)
+                if off >= 0:
+                    widths[off] = 8 if m.group(1) == 'lfd' else 4
+        if len(widths) < 2:
+            continue
+        end = (max(o + w for o, w in widths.items()) + 7) & ~7
+        # the pool's element types come from every function of the module that addresses it:
+        # another function's double must not be read as a float and a zero (the float would
+        # dedupe with an equal literal and shift everything after it)
+        for o, w in _pool_widths(p, sym.module, pool.name).items():
+            if o < end:
+                widths.setdefault(o, w)
+        if sym.module == 'main':
+            raw = next((data[pool.addr - base:pool.addr - base + end] for base, data in p._rel_layout('main').values()
+                        if base <= pool.addr and pool.addr + end <= base + len(data)), None)
+        else:
+            sec = p._raw_section(sym.module, pool.section); base = p._section_base(sym.module, pool.section)
+            raw = sec[pool.addr - base:pool.addr - base + end] if sec is not None else None
+        if not raw or len(raw) < end:
+            continue
+        own_offsets = {o for o in widths if any(re.match(r'(lfs|lfd) f\d+, ' + (hex(o) if o >= 10 else str(o)) + r'\(' + reg + r'\)$', t) for t in lfmt)}
+        for o, s_ in ((x.addr - pool.addr, x) for x in syms.values() if x.kind == 'object' and x.section == pool.section
+                      and pool.addr <= x.addr < pool.addr + end):
+            if s_.attrs.get('data') == 'double' and o % 8 == 0:
+                widths.setdefault(o, 8)
+        def cls(off):
+            if widths.get(off) == 8:
+                return 'D'
+            w = raw[off:off + 4]
+            if w == b'\0\0\0\0':
+                return 'Z'
+            v = _struct.unpack('>f', w)[0]
+            return 'F' if _math.isfinite(v) and 1e-6 <= abs(v) <= 1e7 else 'N'
+        kinds = {off: cls(off) for off in range(0, end, 4)}
+        for _ in range(3):  # zero words beside table words belong to the table
+            for off in range(0, end, 4):
+                if kinds[off] == 'Z' and (kinds.get(off - 4) == 'N' or kinds.get(off + 4) == 'N'):
+                    kinds[off] = 'N'
+        # MWCC dedupes a literal within one compile unit; retail's rodata block spans the TU's
+        # units, so equal values recur. A repeat is raw table bytes unless this function loads
+        # it, in which case the earlier copy becomes the table word instead.
+        seen = {}
+        for off in sorted(kinds):
+            k = kinds[off]
+            if k not in ('F', 'Z', 'D') or (k == 'D' and off % 8) or (k != 'D' and kinds.get(off - 4) == 'D' and (off - 4) % 8 == 0 and widths.get(off - 4) == 8):
+                continue
+            key = (k, bytes(raw[off:off + (8 if k == 'D' else 4)]))
+            if key in seen:
+                if off in own_offsets and seen[key] not in own_offsets:
+                    kinds[seen[key]] = 'N'; seen[key] = off
+                else:
+                    kinds[off] = 'N'
+            else:
+                seen[key] = off
+        def flit(v):
+            t = repr(v)
+            return t if ('.' in t or 'e' in t) else t + '.0'
+        segments = []
+        off = 0
+        while off < end:
+            k = kinds[off]
+            if k == 'N':
+                start = off
+                while off < end and kinds[off] == 'N':
+                    off += 4
+                segments.append(('table', raw[start:off]))
+            else:
+                if k == 'D':
+                    use = f"d = {flit(_struct.unpack('>d', raw[off:off + 8])[0])};"; off += 8
+                else:
+                    use = f"s = {flit(_struct.unpack('>f', raw[off:off + 4])[0])}f;"; off += 4
+                if segments and segments[-1][0] == 'lits':
+                    segments[-1][1].append(use)
+                else:
+                    segments.append(('lits', [use]))
+        parts = ['#pragma section code_type ".fzgxpool"']
+        for n, (k, v) in enumerate(segments, 1):
+            if k == 'lits':
+                parts.append(f'__declspec(section ".fzgxpool") static void fzgx_pool_prime{n}(void) {{\n    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */\n    ' + '\n    '.join(v) + '\n}')
+            else:
+                words = [_struct.unpack('>I', v[i:i + 4])[0] for i in range(0, len(v), 4)]
+                parts.append(f'static const u32 fzgx_pool_table{n}[{len(words)}] = {{' + ', '.join(f'0x{w:08X}' for w in words) + '};  /* fzgx-allow: A1 retail pool bytes */')
+                parts.append(f'__declspec(section ".fzgxpool") static void fzgx_pool_keep{n}(void) {{ const u32 *volatile cp; cp = fzgx_pool_table{n}; }}  /* fzgx-allow: S2 pool primer sink */')
+        parts.append('#pragma section code_type ".text"')
+        primer = '\n'.join(parts) + '\n'
+        m = re.search(r'^[\w \*]+?\b' + re.escape(sym.name) + r'\s*\([^;{]*\)\s*\{', body, re.M)
+        if not m:
+            continue
+        text = body[:m.start()] + primer + body[m.start():]
+        out.append((f'prime shared-pool layout ({pool.name}, {end:#x} bytes)', text))
+    return out

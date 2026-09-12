@@ -723,14 +723,18 @@ def _pool_rows(project: Project, module: str, left: dict, right: dict,
         private_name = rsym.get('name', '')
         own = objects.get(private_name)
         local_static = '$' in private_name and own and own['info'] >> 4 == 0
-        if not (private_name.startswith('@') or local_static):
+        # `...rodata.0`: the whole literal pool addressed through one base register (MWCC
+        # CSEs the pool address when a function uses many constants); the primed pool
+        # (fixup_evidence.shared_pool_primer) lays it out exactly like retail's
+        anonymous = bool(re.fullmatch(r'\.\.\.\w+\.\d+', private_name)) and own is not None and elf is not None
+        if not (private_name.startswith('@') or local_static or anonymous):
             continue
         # Private initializer objects include strings and aggregates, not just
         # floating literals. Verify the complete object, including padding, and
         # reject pointer-bearing data whose bytes alone cannot prove equality.
         own = objects.get(rsym['name'])
         if own and elf:
-            if not 0 < own['shndx'] < len(elf.sections) or not own['size']:
+            if not 0 < own['shndx'] < len(elf.sections) or (not own['size'] and not anonymous):
                 continue
             section = elf.sections[own['shndx']]
             if section['name'] not in ('.rodata', '.sdata2', '.data', '.sdata'):
@@ -740,7 +744,12 @@ def _pool_rows(project: Project, module: str, left: dict, right: dict,
                        for off in range(rel['offset'], rel['offset'] + rel['size'], 12)) for rel in elf.sections):
                 continue
             start = section['offset'] + own['value']
-            ours = bytes(elf.data[start:start + own['size']])
+            size = own['size']
+            if anonymous:
+                # up to the end of the last object in the section (tail padding is not retail's)
+                size = max((o['value'] + o['size'] for o in objects.values()
+                            if o['shndx'] == own['shndx'] and o['size']), default=section['size']) - own['value']
+            ours = bytes(elf.data[start:start + size])
         else:
             ours = b''.join(base64.b64decode(d.get('data', '')) for d in rsym.get('data_diff', []))
             if len(ours) not in (4, 8):

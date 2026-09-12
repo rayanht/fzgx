@@ -372,6 +372,19 @@ Rules that hold for everyone:
   submit.lock then the build lock; after a failed incremental build it establishes a
   known-good baseline before bisection. Never wrap verify in another submit.lock.
 
+- Shared literal pools (2026-09-12): 819 unmatched functions (1.15 MB, over half the remaining
+  bytes) address their float constants through one base register into the TU's literal pool,
+  which MWCC lays out in first-use order across the whole TU (dedupe is per compile unit, so
+  dtk's rodata blocks carry repeats). A per-function unit never reproduces those offsets, so
+  `fixup_evidence.shared_pool_primer` primes the unit's pool: dummy functions in `.fzgxpool` (a
+  section mwld ignores) reference every pooled literal in retail address order, raw table
+  bytes and repeats become private `static const` words, and the function's own literals and
+  MWCC's conversion constants dedupe onto retail's offsets. The oracle binds the anonymous
+  `...rodata.N` pool to the retail symbol (`oracle._pool_rows`), `poolfix.apply` drops the
+  primer section and the private pool at integration, the extras rule ignores `.fzgxpool`.
+  Pool element types come from every function of the module that addresses the pool
+  (`_pool_widths`). It needs the body in native-literal form (`recover native shared-pool
+  literals` runs first). 14 landed the day it was built.
 - Near-miss fixup must preserve a proven store-value correction in its search
   frontier even when register differences initially lower its word score. Value-flow
   diagnostics invalidate unsupported regions locally; mixed diffs must not disable

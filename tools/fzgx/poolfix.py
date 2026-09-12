@@ -205,6 +205,25 @@ class Elf:
                 self._write_shdr(rs)
         return True
 
+    def drop_section(self, name: str) -> bool:
+        """Empty a section and the relocations applied to it (the pool primer's code section:
+        mwld ignores it, but its relocations must not reach the private pool it references)."""
+        sec = self.section(name)
+        if sec is None:
+            return False
+        for s in self.symbols():
+            if s["shndx"] == sec["index"]:
+                self.data[s['off'] + 4:s['off'] + 16] = struct.pack('>IIBBH', 0, 0, 0, 0, SHN_UNDEF)
+        sec["size"] = 0
+        sec["addralign"] = 1
+        sec["flags"] = 0
+        self._write_shdr(sec)
+        for rs in self.sections:
+            if rs["type"] == SHT_RELA and rs["info"] == sec["index"]:
+                rs["size"] = 0
+                self._write_shdr(rs)
+        return True
+
     def drop_private_rodata(self, private_names: List[str], section_name: str = '.rodata') -> bool:
         """Empty .rodata when every object symbol in it was retargeted; else leave it."""
         ro = self.section(section_name)
@@ -212,7 +231,8 @@ class Elf:
             return True
         others = [s for s in self.symbols()
                   if s["shndx"] == ro["index"] and (s["info"] & 0xF) == STT_OBJECT and s["name"] not in private_names]
-        if any(not s['name'].startswith('@') for s in others):
+        # the pool primer's tables (fzgx_pool_table*) are private pool bytes like the `@` literals
+        if any(not s['name'].startswith(('@', 'fzgx_pool_')) for s in others):
             return False
         # MWCC can retain unused initializer objects after optimizing their
         # consumers away. Drop them only when no relocation (including one via
@@ -245,6 +265,7 @@ def apply(obj: Path, mapping: Dict[str, str]) -> Dict[str, object]:
                       and elf.sections[s['shndx']]['name'] in ('.sdata', '.sdata2', '.bss', '.sbss')}
     # both kinds become references to the retail symbol (the data unit that owns the retail
     # range keeps the bytes); our private copies are dropped with their section
+    elf.drop_section('.fzgxpool')  # the pool primer (see fixup_evidence.shared_pool_primer)
     done, skipped = elf.retarget(mapping)
     emptied = (elf.drop_private_rodata(list(pooled)) if pooled else True) and (elf.drop_private_data(data_names) if data_names else True)
     for name in sorted(small_sections):
