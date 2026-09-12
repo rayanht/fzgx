@@ -119,3 +119,6 @@ rel/profile/_epilog.c:
 
 rel/profile/fn_16_6B24.c:
 	.text       start:0x00006B24 end:0x00006CD8 align:4
+
+rel/profile/fn_16_5F18.c:
+	.text       start:0x00005F18 end:0x0000607C align:4
