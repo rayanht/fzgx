@@ -555,6 +555,30 @@ u32 fn_1_4AEC0(u32 value) {
 }
 /* fzgx:end fn_1_4AEC0 */
 
+/* fzgx:begin fn_1_4AF10 noprologue */
+#include "types.h"
+
+struct fn_1_4AF10_lbl_1_bss_3E058 {
+    u32 unk_0;
+};
+
+extern f32 lbl_1_bss_3E05C;
+extern f32 lbl_1_rodata_10C0;
+extern struct fn_1_4AF10_lbl_1_bss_3E058 lbl_1_bss_3E058;
+extern void fn_1_4A0D8(const char *);
+
+#pragma opt_pointer_analysis off
+void fn_1_4AF10(u32 arg0) {
+    u32 v0;
+    v0 = lbl_1_bss_3E058.unk_0;
+    lbl_1_bss_3E05C = (0.0f);
+    lbl_1_bss_3E058.unk_0 = 1;
+    fn_1_4A0D8((const char *)arg0);
+    lbl_1_bss_3E058.unk_0 = v0;
+}
+#pragma opt_pointer_analysis reset
+/* fzgx:end fn_1_4AF10 */
+
 /* fzgx:begin fn_1_4AF64 */
 typedef struct {
     u32 gpr_offset;

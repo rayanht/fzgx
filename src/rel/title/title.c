@@ -370,6 +370,40 @@ void fn_8_1C14(void) {
 }
 /* fzgx:end fn_8_1C14 */
 
+/* fzgx:begin fn_8_1C18 */
+struct fn_8_1C18_lbl_8_bss_0 {
+    u8 pad_0[0x2];
+    u8 unk_2;
+    u8 pad_3[0x221];
+    s16 unk_224;
+    u8 pad_226[0x12];
+    u32 unk_238;
+};
+
+extern f32 lbl_8_rodata_C;
+extern struct fn_8_1C18_lbl_8_bss_0 lbl_8_bss_0;
+extern u32 fn_1_4706C(void);
+extern u32 fn_1_4A00(u32, u32, u32);
+extern u32 fn_1_9A958(u32, u32);
+extern u32 lbl_1_bss_970;
+extern void fn_1_7B084(void *, int);
+extern void fn_8006CE1C(f32);
+
+#pragma opt_loop_invariants off
+void fn_8_1C18(void) {
+    struct fn_8_1C18_lbl_8_bss_0 *p_lbl_8_bss_0;
+    p_lbl_8_bss_0 = (struct fn_8_1C18_lbl_8_bss_0 *)&lbl_8_bss_0;
+    fn_8006CE1C((0.0f));
+    fn_1_4A00(1, 15, p_lbl_8_bss_0->unk_238);
+    lbl_1_bss_970 = 600;
+    fn_1_4706C();
+    fn_1_7B084((void *)p_lbl_8_bss_0->unk_224, 0);
+    fn_1_9A958(p_lbl_8_bss_0->unk_224, 0);
+    p_lbl_8_bss_0->unk_2 = 1;
+}
+#pragma opt_loop_invariants reset
+/* fzgx:end fn_8_1C18 */
+
 /* fzgx:begin fn_8_1F64 */
 extern u8 lbl_8_bss_2;
 

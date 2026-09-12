@@ -800,6 +800,36 @@ void fn_1_AA538(void) {
 }
 /* fzgx:end fn_1_AA538 */
 
+/* fzgx:begin fn_1_AAEB0 noprologue */
+#include "types.h"
+
+struct fn_1_AAEB0_Arg0 {
+    u8 unk_0;
+    u8 pad_1[0x4];
+    u8 unk_5;
+    u8 pad_6[0x1E];
+    u32 unk_24;
+};
+struct fn_1_AAEB0_lbl_1_data_35AC8 {
+    u8 pad_0[0x6AC4];
+    u32 unk_6AC4[1];
+};
+
+extern struct fn_1_AAEB0_lbl_1_data_35AC8 lbl_1_data_35AC8;
+extern void OSPanic(const char *, int, const char *, ...);
+extern void OSReport(const char *, ...);
+
+static inline u32 *fn_1_AAEB0_array_read(u32 *array) { return array; }
+#pragma opt_propagation off
+void fn_1_AAEB0(struct fn_1_AAEB0_Arg0 *arg0) {
+    struct fn_1_AAEB0_lbl_1_data_35AC8 *p_lbl_1_data_35AC8;
+    p_lbl_1_data_35AC8 = (struct fn_1_AAEB0_lbl_1_data_35AC8 *)&lbl_1_data_35AC8;
+    OSReport((const char *)(u32)((u8 *)(u32)p_lbl_1_data_35AC8 + 28000), arg0->unk_0, *(u32 *)((u8 *)arg0->unk_24 + 4), fn_1_AAEB0_array_read(p_lbl_1_data_35AC8->unk_6AC4)[arg0->unk_5]);
+    OSPanic((const char *)(u32)((u8 *)(u32)p_lbl_1_data_35AC8 + 27888), 1322, (const char *)(u32)((u8 *)(u32)p_lbl_1_data_35AC8 + 28044));
+}
+#pragma opt_propagation reset
+/* fzgx:end fn_1_AAEB0 */
+
 /* fzgx:begin fn_1_AAF18 */
 // fn_1_AAF18: empty in retail (single blr).
 void fn_1_AAF18(void) {

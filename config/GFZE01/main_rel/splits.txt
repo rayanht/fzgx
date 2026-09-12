@@ -6152,3 +6152,21 @@ rel/main_rel/custom_memcard/fn_1_132FB4.c:
 
 rel/main_rel/screen_effect/fn_1_729F8.c:
 	.text       start:0x000729F8 end:0x00075D84 align:4
+
+rel/main_rel/camera/fn_1_C268.c:
+	.text       start:0x0000C268 end:0x0000C304 align:4
+
+rel/main_rel/font/fn_1_4AF10.c:
+	.text       start:0x0004AF10 end:0x0004AF64 align:4
+
+rel/main_rel/driver/fn_1_AAEB0.c:
+	.text       start:0x000AAEB0 end:0x000AAF18 align:4
+
+rel/main_rel/accessory/fn_1_12A080.c:
+	.text       start:0x0012A080 end:0x0012A0E0 align:4
+
+rel/main_rel/alloc/fn_1_4CD8.c:
+	.text       start:0x00004CD8 end:0x00004D14 align:4
+
+rel/main_rel/burner/fn_1_9AA2C.c:
+	.text       start:0x0009AA2C end:0x0009AABC align:4

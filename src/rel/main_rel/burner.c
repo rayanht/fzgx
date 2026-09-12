@@ -559,6 +559,42 @@ void fn_1_9A7A8(u32 *value) {
 }
 /* fzgx:end fn_1_9A7A8 */
 
+/* fzgx:begin fn_1_9AA2C noprologue */
+#include "types.h"
+
+struct fn_1_9AA2C_data {
+    u8 pad0[0xEB4];
+    void *entries[0x58];
+    u8 indices[1];
+    u8 pad1[0x1A9B];
+    char string_a[0xC];
+    char string_b[0x4];
+    char string_c[0x4];
+};
+
+extern struct fn_1_9AA2C_data lbl_1_data_2A0C0;
+extern void sprintf(void *buffer, const char *format, const char *arg, ...);
+extern void fn_1_46DC4(void *buffer);
+
+#pragma opt_dead_assignments off
+static inline void * * fn_1_9AA2C_read_pointer(struct fn_1_9AA2C_data * owner) { return owner->entries; }
+void fn_1_9AA2C(int index) {
+    struct fn_1_9AA2C_data *data = &lbl_1_data_2A0C0;
+    u8 *indices = data->indices;
+    void *entry = fn_1_9AA2C_read_pointer(data)[indices[index]];
+    u8 buffer_b[0x20];
+    u8 buffer_a[0x20];
+
+    if (entry != 0) {
+        sprintf(buffer_b, data->string_a, data->string_b, entry);
+        sprintf(buffer_a, data->string_c, data->string_b, entry);
+        fn_1_46DC4(buffer_b);
+        fn_1_46DC4(buffer_a);
+    }
+}
+#pragma opt_dead_assignments reset
+/* fzgx:end fn_1_9AA2C */
+
 /* fzgx:begin fn_1_9AD20 */
 void fn_1_9AD20(void) {
     fn_1_9AF80(lbl_1_bss_3BE0->unk_54, lbl_1_bss_3BE0->unk_48, 1);

@@ -52,6 +52,145 @@ extern u32 fn_1_407C(u32);
 extern u32 fn_1_426C(u32);
 extern void fn_4_AB90(void);
 
+/* fzgx:begin fn_4_250 */
+#include "font.h"
+
+struct fn_4_250_Copy88 { u32 a[22]; };
+struct fn_4_250_lbl_4_rodata_0 {
+    f32 unk_0;
+    f32 unk_4;
+    f32 unk_8;
+};
+
+extern int fn_1_4F734(FontDrawPacket *);
+extern struct fn_4_250_lbl_4_rodata_0 lbl_4_rodata_0;
+extern u32 lbl_1_rodata_26F8;
+
+#pragma opt_lifetimes off
+void fn_4_250(void) {
+    f32 v0;
+    f32 v1;
+    FontDrawPacket loc_8;
+    /* frame */
+    loc_8 = *(FontDrawPacket *)&lbl_1_rodata_26F8;
+    v0 = (167.0f);
+    v1 = (38.0f);
+    loc_8.image = (0x10000 - 28668);
+    loc_8.x = v0;
+    loc_8.y = v1;
+    loc_8.z = (0.5f);
+    loc_8.flags = 10;
+    fn_1_4F734((FontDrawPacket *)&loc_8);
+}
+#pragma opt_lifetimes reset
+/* fzgx:end fn_4_250 */
+
+/* fzgx:begin _prolog noprologue */
+#include "types.h"
+
+struct _prolog_lbl_4_bss_0 {
+    u8 pad_0[0x4];
+    u32 unk_4;
+    u32 unk_8;
+    u8 unk_C;
+    u8 unk_D;
+    u8 unk_E;
+};
+struct _prolog_data {
+    u8 pad_0[0x1250];
+};
+struct _prolog_lbl_801A6410 {
+    u32 unk_0;
+};
+struct _prolog_lbl_1_bss_970 {
+    u32 unk_0;
+    u8 unk_4;
+};
+struct _prolog_lbl_1_bss_71684 {
+    u32 unk_0;
+};
+struct _prolog_lbl_1_bss_6EAD0 {
+    u32 unk_0;
+};
+extern struct _prolog_lbl_1_bss_6EAD0 lbl_1_bss_6EAD0;
+extern struct _prolog_lbl_1_bss_71684 lbl_1_bss_71684;
+extern struct _prolog_lbl_1_bss_970 lbl_1_bss_970;
+extern struct _prolog_lbl_4_bss_0 lbl_4_bss_0;
+extern struct _prolog_lbl_801A6410 lbl_801A6410;
+extern u16 lbl_1_bss_96A;
+extern u32 lbl_1_bss_7167C;
+extern u32 lbl_1_bss_71680;
+extern u8 lbl_4_data_0[];
+extern s32 fn_1_45D0(u32, u32, u32, u32);
+extern u32 fn_1_3CF0(u32, u32);
+extern u32 fn_1_435C(u32);
+extern s32 fn_1_3F8C(u32, u32, u32, u32);
+extern void fn_1_411A4(u32);
+extern u32 fn_1_479F0(s16);
+extern void fn_1_48418(int);
+extern void fn_1_159440(int, int);
+extern u32 fn_8004CD70(u32, u32, u32);
+
+s32 fn_1_A176C(u32, s32);                   /* extern */
+extern s32 fn_1_133DBC;
+extern s32 fn_1_134AD4;
+extern s32 fn_4_250;
+extern s32 fn_4_800;
+extern s32 fn_4_894;
+extern s32 fn_4_9B0;
+
+#pragma opt_common_subs off
+#pragma opt_propagation off
+void _prolog(void) {
+    struct _prolog_lbl_4_bss_0 *bss;
+    struct _prolog_data *data;
+    u32 lab_t0;
+    u32 lab_t0_;
+
+    bss = &lbl_4_bss_0;
+    data = (struct _prolog_data *)lbl_4_data_0;
+
+    lab_t0 = lbl_801A6410.unk_0;
+    lab_t0_ = lab_t0;
+    bss->unk_4 = fn_1_45D0(lab_t0_, 0xE3CU, (u32)((u8 *)data + 0x1218), 0x320U);
+    lab_t0 = lbl_801A6410.unk_0;
+    lab_t0_ = lab_t0;
+    bss->unk_8 = fn_1_45D0(lab_t0_, 0xE3CU, (u32)((u8 *)data + 0x1218), 0x321U);
+    fn_1_3CF0(bss->unk_4, 0x40U);
+    fn_1_3CF0(bss->unk_8, 0x40U);
+    fn_1_435C(bss->unk_4);
+    fn_1_435C(bss->unk_8);
+    fn_1_3F8C((u32)((u8 *)data + 0x1224), (u32)(&fn_1_133DBC), 0U, 0x11U);
+    fn_1_3F8C((u32)((u8 *)data + 0x1238), (u32)(&fn_1_134AD4), 0U, 0x11U);
+    fn_1_3F8C((u32)((u8 *)data + 0x124C), (u32)(&fn_4_250), 0U, 0x11U);
+    lbl_1_bss_970.unk_0 = 0;
+    lbl_1_bss_970.unk_4 = 0;
+    bss->unk_C = 0;
+    bss->unk_D = 0;
+    lbl_1_bss_96A = 0x4B;
+    bss->unk_E = 0;
+    lbl_1_bss_7167C = (u32)(&fn_4_800);
+    lbl_1_bss_71680 = (u32)(&fn_4_894);
+    lbl_1_bss_71684.unk_0 = (u32)(&fn_4_9B0);
+    fn_1_411A4(1U);
+    fn_1_479F0(3);
+    fn_1_48418(2);
+    fn_1_159440(2, 0);
+    if ((u32) lbl_1_bss_6EAD0.unk_0 != 0) {
+        if ((u32) (*(u32 *)((u8 *)(lbl_1_bss_6EAD0.unk_0) + 0)) == 0) {
+            (*(u32 *)((u8 *)(lbl_1_bss_6EAD0.unk_0) + 0)) = fn_8004CD70(2U, lbl_1_bss_6EAD0.unk_0 + 0x10, 0x25124U);
+        }
+        if ((u32) (*(u32 *)((u8 *)(lbl_1_bss_6EAD0.unk_0) + 4)) == 0) {
+            (*(u32 *)((u8 *)(lbl_1_bss_6EAD0.unk_0) + 4)) = fn_8004CD70(2U, lbl_1_bss_6EAD0.unk_0 + 0x4A258, 0x25124U);
+        }
+        fn_1_A176C(*(u32 *)((u8 *)(lbl_1_bss_6EAD0.unk_0) + 0), 0x37);
+    }
+}
+#pragma opt_propagation reset
+
+#pragma opt_common_subs reset
+/* fzgx:end _prolog */
+
 /* fzgx:begin fn_4_800 */
 extern u8 lbl_4_bss_2;
 extern u32 lbl_4_bss_8;

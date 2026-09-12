@@ -931,6 +931,57 @@ void fn_1_129D9C(void *arg0, struct fn_1_129D9C_vec *arg1, struct fn_1_129D9C_ob
 #pragma opt_common_subs reset
 /* fzgx:end fn_1_129D9C */
 
+/* fzgx:begin fn_1_12A080 */
+extern const struct fn_1_12A080_lbl_1_rodata_8068_pool {
+    f32 unk_0;
+    u8 pad_4[0x4C];
+    f32 unk_50;
+    u8 pad_54[0x84];
+    f32 unk_D8;
+    f32 unk_DC;
+    f32 unk_E0;
+} lbl_1_rodata_8068;
+
+typedef struct Sig_fn_80015EE8_Fn80015EE8Out {
+    f32 f0;
+    f32 f1;
+    f32 f2;
+    f32 f3;
+    f32 f4;
+    f32 f5;
+    f32 f6;
+    f32 f7;
+    f32 f8;
+    f32 f9;
+    f32 f10;
+    f32 f11;
+    f32 f12;
+    f32 f13;
+    f32 f14;
+    f32 f15;
+} Sig_fn_80015EE8_Fn80015EE8Out;
+
+extern void fn_80015EE8(Sig_fn_80015EE8_Fn80015EE8Out *, f32, f32, f32, f32, f32, f32);
+extern void fn_800737E4(void *, s32);
+extern void fn_80074918(u8, s32, u8);
+
+#pragma opt_propagation off
+#pragma opt_common_subs off
+void fn_1_12A080(void) {
+    f32 fzgx_live;
+    struct fn_1_12A080_lbl_1_rodata_8068_pool *pool_lbl_1_rodata_8068 = (struct fn_1_12A080_lbl_1_rodata_8068_pool *)&lbl_1_rodata_8068;
+    Sig_fn_80015EE8_Fn80015EE8Out out;
+
+    fzgx_live = pool_lbl_1_rodata_8068->unk_50;
+    fn_80015EE8(&out, pool_lbl_1_rodata_8068->unk_0, fzgx_live, pool_lbl_1_rodata_8068->unk_0, pool_lbl_1_rodata_8068->unk_D8, pool_lbl_1_rodata_8068->unk_DC, pool_lbl_1_rodata_8068->unk_E0);
+    fn_800737E4(&out, 1);
+    fn_80074918(1, 3, 1);
+}
+#pragma opt_common_subs reset
+
+#pragma opt_propagation reset
+/* fzgx:end fn_1_12A080 */
+
 /* fzgx:begin fn_1_12A24C */
 s8 fn_1_12A24C(s8 arg) {
     if ((s8)fn_1_86678((s32)arg) == -1) {

@@ -100,6 +100,29 @@ void fn_1_4CC0(void) {
 }
 /* fzgx:end fn_1_4CC0 */
 
+/* fzgx:begin fn_1_4CD8 noprologue */
+#include "types.h"
+
+struct fn_1_4CD8_lbl_1_data_2CDC {
+    u8 pad_0[0x8];
+    u32 unk_8;
+};
+
+extern f32 lbl_1_rodata_16C;
+extern struct fn_1_4CD8_lbl_1_data_2CDC lbl_1_data_2CDC;
+extern u32 lbl_1_data_2CD8;
+extern void fn_8006CE1C(f32);
+
+#pragma opt_dead_assignments off
+void fn_1_4CD8(void) {
+    u32 *fzgx_value;
+    fn_8006CE1C((0.0f));
+    fzgx_value = &(lbl_1_data_2CDC.unk_8);
+    *fzgx_value = lbl_1_data_2CD8;
+}
+#pragma opt_dead_assignments reset
+/* fzgx:end fn_1_4CD8 */
+
 /* fzgx:begin fn_1_4D14 pool */
 typedef struct Fn14D14Data {
     u8 value0;

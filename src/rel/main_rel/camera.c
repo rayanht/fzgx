@@ -1414,6 +1414,35 @@ void camera_report_position(void) {
 }
 /* fzgx:end camera_report_position */
 
+/* fzgx:begin fn_1_C268 noprologue */
+#include "types.h"
+#include "rel/main_rel/camera.h"
+
+extern f64 lbl_1_rodata_4A8[7];
+extern void OSReport(const char *format, ...);
+
+#pragma opt_common_subs off
+#pragma opt_strength_reduction off
+void fn_1_C268(s32 arg) {
+    if ((55.0) == lbl_1_bss_10D8.unk_1C) {
+        OSReport((char *)lbl_1_data_4144, lbl_1_bss_10D8.unk_4,
+                 lbl_1_bss_10D8.unk_8, lbl_1_bss_10D8.unk_C,
+                 lbl_1_bss_10D8.unk_28, lbl_1_bss_10D8.unk_2C,
+                 lbl_1_bss_10D8.unk_30, lbl_1_bss_10D8.unk_20, arg,
+                 lbl_1_bss_10D8.unk_1C);
+    } else {
+        OSReport((char *)lbl_1_data_4198, lbl_1_bss_10D8.unk_4,
+                 lbl_1_bss_10D8.unk_8, lbl_1_bss_10D8.unk_C,
+                 lbl_1_bss_10D8.unk_28, lbl_1_bss_10D8.unk_2C,
+                 lbl_1_bss_10D8.unk_30, lbl_1_bss_10D8.unk_20, arg,
+                 lbl_1_bss_10D8.unk_1C);
+    }
+}
+#pragma opt_strength_reduction reset
+
+#pragma opt_common_subs reset
+/* fzgx:end fn_1_C268 */
+
 /* fzgx:begin fn_1_C304 */
 // Reports the camera parameters and caller-supplied value for debugging.
 void fn_1_C304(s32 arg) {
