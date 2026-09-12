@@ -214,6 +214,132 @@ void fn_1_15BEBC(u16 mask, Obj_1_bss_8F8E0 *state) {
 }
 /* fzgx:end fn_1_15BEBC */
 
+/* fzgx:begin fn_1_15C0AC */
+typedef struct {
+    u8 unk_0;
+    u8 unk_1;
+    u8 unk_2;
+    u8 unk_3;
+    u16 unk_4;
+    u16 unk_6;
+} WinEntry;
+
+#pragma opt_loop_invariants off
+void fn_1_15C0AC(void) {
+    u8 *in;
+    struct { WinEntry * value; } out;
+    u16 a;
+    u16 b;
+    u32 i;
+
+    { WinEntry * __reg_value_out = (WinEntry *)&lbl_1_bss_8F8E0; out.value = __reg_value_out; }
+    in = (u8 *)&lbl_1_bss_9F8;
+    for (i = 0; i < 4; i++) {
+        a = 0;
+        b = 0;
+        if (((1) & ((*(volatile u16 *)(in + 8) >> 4)))) {  /* fzgx-allow: S2 memory-mapped register */
+            a |= 1;
+        }
+        if ((*(volatile u16 *)(in + 8) >> 10) & 1) {  /* fzgx-allow: S2 memory-mapped register */
+            a |= 2;
+        }
+        if ((*(volatile u16 *)(in + 8) >> 11) & 1) {  /* fzgx-allow: S2 memory-mapped register */
+            a |= 4;
+        }
+        if (*(volatile u16 *)(in + 8) & 1) {  /* fzgx-allow: S2 memory-mapped register */
+            a |= 8;
+        }
+        if ((*(volatile u16 *)(in + 8) >> 1) & 1) {  /* fzgx-allow: S2 memory-mapped register */
+            a |= 0x10;
+        }
+        if ((*(volatile u16 *)(in + 8) >> 8) & 1) {  /* fzgx-allow: S2 memory-mapped register */
+            a |= 0x20;
+        }
+        if ((*(volatile u16 *)(in + 10) >> 7) & 1) {  /* fzgx-allow: S2 memory-mapped register */
+            a |= 0x100;
+        }
+        if ((*(volatile u16 *)(in + 10) >> 6) & 1) {  /* fzgx-allow: S2 memory-mapped register */
+            a |= 0x200;
+        }
+        if ((*(volatile u16 *)(in + 10) >> 4) & 1) {  /* fzgx-allow: S2 memory-mapped register */
+            a |= 0x400;
+        }
+        if ((*(volatile u16 *)(in + 10) >> 5) & 1) {  /* fzgx-allow: S2 memory-mapped register */
+            a |= 0x800;
+        }
+        if ((*(volatile u16 *)(in + 8) >> 6) & 1) {  /* fzgx-allow: S2 memory-mapped register */
+            a |= 0x40;
+        }
+        if ((*(volatile u16 *)(in + 8) >> 5) & 1) {  /* fzgx-allow: S2 memory-mapped register */
+            a |= 0x80;
+        }
+        if ((*(volatile u16 *)(in + 0) >> 4) & 1) {  /* fzgx-allow: S2 memory-mapped register */
+            b |= 1;
+        }
+        if ((*(volatile u16 *)(in + 0) >> 10) & 1) {  /* fzgx-allow: S2 memory-mapped register */
+            b |= 2;
+        }
+        if ((*(volatile u16 *)(in + 0) >> 11) & 1) {  /* fzgx-allow: S2 memory-mapped register */
+            b |= 4;
+        }
+        if (*(volatile u16 *)(in + 0) & 1) {  /* fzgx-allow: S2 memory-mapped register */
+            b |= 8;
+        }
+        if ((*(volatile u16 *)(in + 0) >> 1) & 1) {  /* fzgx-allow: S2 memory-mapped register */
+            b |= 0x10;
+        }
+        if ((*(volatile u16 *)(in + 0) >> 8) & 1) {  /* fzgx-allow: S2 memory-mapped register */
+            b |= 0x20;
+        }
+        if ((*(volatile u16 *)(in + 2) >> 7) & 1) {  /* fzgx-allow: S2 memory-mapped register */
+            b |= 0x100;
+        }
+        if ((*(volatile u16 *)(in + 2) >> 6) & 1) {  /* fzgx-allow: S2 memory-mapped register */
+            b |= 0x200;
+        }
+        if ((*(volatile u16 *)(in + 2) >> 4) & 1) {  /* fzgx-allow: S2 memory-mapped register */
+            b |= 0x400;
+        }
+        if ((*(volatile u16 *)(in + 2) >> 5) & 1) {  /* fzgx-allow: S2 memory-mapped register */
+            b |= 0x800;
+        }
+        if ((*(volatile u16 *)(in + 0) >> 6) & 1) {  /* fzgx-allow: S2 memory-mapped register */
+            b |= 0x40;
+        }
+        if ((*(volatile u16 *)(in + 0) >> 5) & 1) {  /* fzgx-allow: S2 memory-mapped register */
+            b |= 0x80;
+        }
+        if ((a ^ b) != 0 && ((a & out.value->unk_4) == 0 || out.value->unk_1 >= 0xa)) {
+            a = 0;
+        }
+        if (a != 0) {
+            out.value->unk_0 = out.value->unk_2;
+            out.value->unk_2 = 0;
+            out.value->unk_1 = 0;
+        } else {
+            u8 t = out.value->unk_2;
+            out.value->unk_2 = t + (((u32)t - 0x78) >> 31);
+            if (b != 0) {
+                u8 t2 = out.value->unk_1;
+                out.value->unk_1 = t2 + (((u32)t2 - 0x78) >> 31);
+            } else {
+                out.value->unk_1 = 0;
+            }
+        }
+        {
+            u16 t3 = out.value->unk_4;
+            if (t3 != b) {
+                out.value->unk_6 = t3;
+                out.value->unk_4 = b;
+            }
+        }
+        out.value++;
+        in += 0x14;
+    } while (--i);
+}
+#pragma opt_loop_invariants reset
+/* fzgx:end fn_1_15C0AC */
+
 /* fzgx:begin fn_1_15C35C */
 s32 fn_1_15C35C(s32 a, s32 b, s32 c, s32 d) {
     return a * b - c + d;
