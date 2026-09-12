@@ -29,7 +29,7 @@ class Engine:
         self.generator_sha256 = digest(Path(__file__).read_bytes() + Path(source.__file__).read_bytes() + Path(evidence.__file__).read_bytes() + Path(mwgraph.__file__).read_bytes() + b''.join((ROOT/'tools/fzgx'/name).read_bytes() for name in ('signatures.py','evidence.py','dataimport.py','lift.py')))
         output.mkdir(parents=True, exist_ok=True)
         self.headers = mwgraph.header_fingerprint(ROOT, project.version)
-        self.environment = digest(('typed-frontier-v2' + self.headers + ''.join(digest((ROOT/'tools/fzgx'/f).read_bytes()) for f in
+        self.environment = digest(('region-frontier-v1' + self.headers + ''.join(digest((ROOT/'tools/fzgx'/f).read_bytes()) for f in
             ('oracle.py', 'poolfix.py', 'project.py', 'regflow.py', 'evidence.py')) +
             digest((ROOT/'config'/project.version/'ldscript.tpl').read_bytes())).encode())
         self.cache_path = output / 'cache.json'
@@ -98,13 +98,14 @@ class Engine:
                 row.update(object=str(obj) if obj else None, score=source.fitness(target, words)[0] if words else -1,
                            bit_errors=(sum((a^b).bit_count() for a,b in zip(target,words))+32*abs(len(target)-len(words))) if words else 10**9)
                 row['word_errors'] = source.distance(target, words) if words else None
+                row['shape_errors'] = source.distance(source.instruction_shapes(target),source.instruction_shapes(words)) if words else None
                 row['aligned_word_percent'] = row['score']
                 row['response_sha256'] = self.response_hash(obj, words) if obj else None
                 if row['score'] == 100:
                     check = self.check(row)
                     row['matched'] = bool(check.matched or check.matched_pool)
                     row['binding_score'] = check.percent_adjusted
-                self.cache[row['id']] = {k:row[k] for k in ('object','score','bit_errors','matched','binding_score','word_errors','aligned_word_percent','response_sha256') if k in row}
+                self.cache[row['id']] = {k:row[k] for k in ('object','score','bit_errors','matched','binding_score','word_errors','shape_errors','aligned_word_percent','response_sha256') if k in row}
             if time.monotonic()-progress >= 10:
                 self.cache_path.write_text(json.dumps(self.cache))
                 self.emit({'stage': 'compile', 'compiled': self.compiled, 'cached': self.cached})
@@ -112,7 +113,7 @@ class Engine:
         self.compile_seconds += time.monotonic()-tick
         self.cache_path.write_text(json.dumps(self.cache))
         for row in rows:
-            row.update({k:v for k,v in unique[row['id']].items() if k in ('object','score','bit_errors','matched','binding_score','word_errors','aligned_word_percent','response_sha256')})
+            row.update({k:v for k,v in unique[row['id']].items() if k in ('object','score','bit_errors','matched','binding_score','word_errors','shape_errors','aligned_word_percent','response_sha256')})
             row.pop('frame_layout_only',None)
             target=self.targets[row['symbol']][1];words=self.words.get(row['id'])
             if words and len(words)==len(target) and row['score']<100:
@@ -168,6 +169,9 @@ class Engine:
                    percent_adjusted=result.percent_adjusted if result.ok else 0,
                    differing_rows=result.differing_rows, instruction_rows=result.instruction_rows,
                    value_conflicts=len(result.value_flow), pool_rows=result.pool_rows)
+        if result.ok:
+            from .regflow import region_scores
+            row['regions']=region_scores(*result._rows,getattr(result,'_accepted_rows',()))
         return result
 
     def response_hash(self, obj, words):
@@ -199,6 +203,21 @@ class Engine:
             by_words = sorted(rows, key=lambda r:(r['word_errors'], -r['score'], r['bit_errors'], r['id']))
             measured = [r for r in rows if 'raw_percent' in r]
             preferred = []
+            measured_regions=[r for r in measured if r.get('regions')]
+            region_winners={}
+            for candidate in measured_regions:
+                for key,score in candidate['regions'].items():
+                    previous=region_winners.get(key)
+                    if previous is None or (tuple(score),candidate['word_errors'])<(tuple(previous['regions'][key]),previous['word_errors']):
+                        region_winners[key]=candidate
+            reference=by_words[0].get('regions',{})
+            benefits=defaultdict(int)
+            for key,winner in region_winners.items():
+                if key in reference and (tuple(winner['regions'][key][:2])<tuple(reference[key][:2])
+                        or (not winner['regions'][key][2] and reference[key][2])):
+                    benefits[winner['id']]+=1
+            preferred.extend(sorted((r for r in measured_regions if r['id'] in benefits),
+                                    key=lambda r:(-benefits[r['id']],r['shape_errors'],r['word_errors']))[:max(1,beam-2)])
             bridges = [r for r in rows if any(r.get(k) for k in ('value_flow_fixed','argument_flow_fixed','pool_layout_fixed','frame_layout_only'))]
             if bridges:
                 preferred.append(min(bridges, key=lambda r:(-r.get('pool_coverage',0), r['word_errors'], -r['score'])))
@@ -223,6 +242,21 @@ class Engine:
         families = []
         operators = {}
         check = self.check(row)
+        if check.ok:
+            yield from evidence.relocation_bindings(body, check)
+        if row.get('score') == 100:
+            if row.get('source_lint') and (check.matched or check.matched_pool):
+                yield from source.annotate_verified_branches(body, row['source_lint'])
+            yield from source.inline_helpers(body,name)
+            for helper in row.get('extra_helpers', []):
+                if self.project.find_symbol(helper, self.project.resolve(row['symbol']).module):
+                    yield from source.external_helper(body,helper)
+                    yield from source.split_helper_calls(body,helper)
+        if capture:
+            constraints = source.web_constraints(capture, self.targets[row['symbol']][1], self.words[row['id']],check)
+            decls, _ = source.declaration_candidates(body, name, capture, constraints, max_orders)
+            yield from [('graph declaration-order',t) for t in decls]
+            yield from source.carrier_candidates(body,name,capture,constraints)
         if check.ok:
             yield from evidence.aggregate_initializers(self.project, row['symbol'], body, check)
             yield from evidence.native_pool_objects(self.project, row['symbol'], body, check)
@@ -279,23 +313,6 @@ class Engine:
                     if i<8:
                         for policy,combined in evidence.optimizer_pragmas(text,name):
                             yield label+' with '+policy,combined
-        if row.get('score') == 100:
-            if row.get('source_lint') and (check.matched or check.matched_pool):
-                yield from source.annotate_verified_branches(body, row['source_lint'])
-            yield from source.inline_helpers(body,name)
-            for helper in row.get('extra_helpers', []):
-                if self.project.find_symbol(helper, self.project.resolve(row['symbol']).module):
-                    yield from source.external_helper(body,helper)
-                    yield from source.split_helper_calls(body,helper)
-            if families:
-                yield from families[0][:8]
-        if capture:
-            constraints = source.web_constraints(capture, self.targets[row['symbol']][1], self.words[row['id']])
-            decls, _ = source.declaration_candidates(body, name, capture, constraints, max_orders)
-            # Allocator-derived edits have measured higher yield than spelling
-            # probes; do not bury them behind already-exhausted generic families.
-            yield from [('graph declaration-order',t) for t in decls]
-            yield from source.carrier_candidates(body,name,capture,constraints)
         families.extend([source.missing_values(body,name), source.expression_trees(body,name),
                          source.commutations(body,name), source.probes(body,name,64),
                          [(family+': '+label,text) for family,label,text in source.all_rewrites(body,name)]])
@@ -355,7 +372,7 @@ class Engine:
             frontier=self.frontier(history,beam)
             if captures is not None:
                 self.refresh_captures(frontier,captures)
-            pending=[]; parents={}; generated=time.monotonic()
+            pending=[]; parents={}; generated=time.monotonic();progress=generated
             for symbol, seeds in frontier.items():
                 for seed in seeds:
                     if budget_s is not None and time.monotonic()-start >= budget_s:
@@ -369,13 +386,23 @@ class Engine:
                         seen.add(row['id']); pending.append(row);parents[seed['id']]=seed;count+=1
                         if count>=max_candidates:
                             break
+                    if time.monotonic()-progress>=10:
+                        self.emit({'stage':'generate','symbol':symbol,'candidates':len(pending)})
+                        progress=time.monotonic()
             if not pending:
                 break
             generation_seconds=time.monotonic()-generated
             self.evaluate(pending)
-            for row in pending:
-                if row.get('object') and row['label'].startswith(('retail conversion','retail floating','retail loop','retail double','retail call result','retail aggregate','recover native shared-pool objects')):
+            progress=time.monotonic()
+            for index,row in enumerate(pending):
+                if row.get('object') and (row['label'].startswith(('retail conversion','retail floating','retail loop','retail double','retail call result','retail aggregate','recover native shared-pool objects','recover native BSS','region '))
+                        or row['shape_errors']<parents[row['parent']]['shape_errors']
+                        or source.closes_region(self.targets[row['symbol']][1],self.words[row['parent']],
+                                                self.words[row['id']],parents[row['parent']].get('regions',{}))):
                     self.check(row)
+                if time.monotonic()-progress>=10:
+                    self.emit({'stage':'regions','processed':index+1,'candidates':len(pending)})
+                    progress=time.monotonic()
             # Fixing a wrong stored value can initially worsen register numbers.
             # Retain that bridge for the allocator pass instead of immediately
             # discarding it in favor of the semantically wrong high-score seed.
@@ -399,17 +426,20 @@ class Engine:
                 if conflicts and not flow['value_flow'] and conflicts <= set(flow['equivalent_rows']):
                     row['value_flow_fixed'] = True
             # Compose observed independent bit repairs; no private compile loop.
-            responses=defaultdict(list)
+            responses=defaultdict(list);regional=defaultdict(list)
             for row in pending:
-                responses[row['parent']].append((row['label'],Path(row['source']).read_text(),self.words.get(row['id'])))
+                body=Path(row['source']).read_text()
+                responses[row['parent']].append((row['label'],body,self.words.get(row['id'])))
+                if row.get('regions'):
+                    regional[row['parent']].append((row['label'],body,row['regions']))
             combined=[]
             for parent, values in responses.items():
                 seed=parents[parent]; body=Path(seed['source']).read_text(); target=self.targets[seed['symbol']][1]; baseline=self.words[parent]
-                if len(baseline)!=len(target):
-                    continue
-                choices=source.linear_compositions(body,target,baseline,values)
-                greedy=source.compose(body,target,baseline,values)
-                if greedy: choices.append(greedy)
+                choices=source.region_compositions(body,seed.get('regions',{}),regional[parent])
+                if len(baseline)==len(target):
+                    choices+=source.linear_compositions(body,target,baseline,values)
+                    greedy=source.compose(body,target,baseline,values)
+                    if greedy: choices.append(greedy)
                 for label,text in choices:
                     row=self.record(seed['symbol'],text,seed['mw'],seed['flags'],label=label,parent=parent,seed=seed.get('seed',parent))
                     if row['id'] not in seen:
@@ -714,6 +744,8 @@ def command(p,args):
         # remain in report.json rather than separate per-algorithm stores.
         best={s:r for s,r in report['best'].items() if r['score']>=0 and not r.get('matched')}
         (output/'inputs.json').write_text(json.dumps(best))
+        seeds={r['id']:r for r in [*best.values(),*(r for group in report['frontier'].values() for r in group)]}
+        (output/'prepared.json').write_text(json.dumps({'records':list(seeds.values())}))
         (output/'results.json').write_text(json.dumps({s:{'baseline':{'object':r['object'],'pure':'unclassified'}} for s,r in best.items()}))
     if args.apply:
         by_id={r['id']:r for r in report['records']};inputs={};functions=[]

@@ -2713,6 +2713,83 @@ u32 fn_1_14D6D8(s16 index) {
 }
 /* fzgx:end fn_1_14D6D8 */
 
+/* fzgx:begin fn_1_14D728 noprologue */
+#include "types.h"
+
+extern u8 lbl_1_rodata_9B04[300];
+extern char lbl_1_data_43E78[10];
+extern void sprintf(char *dst, const char *fmt, ...);
+extern void *fn_1_12ADA0(char *dst, void *arg);
+extern void fn_1_8019C(void *arg);
+extern void fn_1_12A7C4(const char *src, char *dst, int size);
+extern u8 lbl_8015B200[256];
+extern size_t strlen(const char *str);
+
+typedef struct { u32 values[75]; } InitTable;
+typedef struct {
+    s16 indices[2];
+    u8 pad8[4];
+    u32 flags;
+} Source;
+typedef struct {
+    s16 index;
+    u8 pad2[0x1e];
+    char text[0x320];
+    void *object;
+    void *handle[4];
+} Display;
+
+static inline u32 fn_1_14D728_array_read(u32 *array, s32 index) { return array[index]; }
+#pragma opt_dead_assignments on
+static inline u8 fn_1_14D728_array_read_(u8 *array, s32 index) { return array[index]; }
+void fn_1_14D728(Source *source, Display *displays) {
+    char * data = lbl_1_data_43E78;
+    InitTable table;
+    struct { Display * value; } current;
+    Source * base;
+    struct { s16 * value; } index_ptr;
+    s16 group;
+
+    table = *(InitTable *)lbl_1_rodata_9B04;
+    base = source;
+    index_ptr.value = source->indices;
+    current.value = displays;
+
+    for (group = 0; group < 3u; group++) {
+        s16 index = *index_ptr.value;
+        current.value->index = index;
+        if (index != -1) {
+            s16 slot;
+            s16 pos;
+            for (pos = 0; pos < strlen((char *)fn_1_14D728_array_read(table.values, index)); pos++) {
+                u8 *p = (u8 *)fn_1_14D728_array_read(table.values, index);
+                u8 c = fn_1_14D728_array_read_(p, pos);
+                p[pos] = (c == -1) ? -1 : fn_1_14D728_array_read_(lbl_8015B200, c);
+            }
+            for (slot = 0; slot < 4; slot++) {
+                if (current.value->handle[slot] == 0 && (base->flags & (1 << slot)) != 0) {
+                    char buffer[0x20];
+                    if (slot == 0)
+                        sprintf(buffer, data + 0x1338, fn_1_14D728_array_read(table.values, index), slot);
+                    else
+                        sprintf(buffer, data + 0x1348, fn_1_14D728_array_read(table.values, index), slot + 1);
+                    current.value->handle[slot] = fn_1_12ADA0(buffer, current.value->object);
+                    fn_1_8019C(((slot)[current.value->handle]));
+                }
+            }
+            {
+                char buffer[0x20];
+                sprintf(buffer, data + 0x135c, fn_1_14D728_array_read(table.values, index));
+                fn_1_12A7C4(buffer, (char *)current.value + 0x20, 0x320);
+            }
+        }
+        index_ptr.value++;
+        current.value = (Display *)((u8 *)current.value + 0x360);
+    }
+}
+#pragma opt_dead_assignments reset
+/* fzgx:end fn_1_14D728 */
+
 /* fzgx:begin fn_1_14D8DC */
 extern void *fn_1_12AB38(void *arg0);
 extern void *fn_1_D3884(void *arg0);

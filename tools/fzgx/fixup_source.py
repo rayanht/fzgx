@@ -1218,6 +1218,63 @@ def compose(body, target, baseline, responses):
     return ' + '.join(chosen), body
 
 
+def region_compositions(body, baseline, responses):
+    """Combine disjoint C edits with measured improvements in different blocks.
+
+    Register renumbering and changed instruction counts are allowed. The full
+    compiler oracle decides whether the source edits actually compose.
+    """
+    choices=[]
+    for label,text,regions in responses:
+        if set(regions)!=set(baseline):
+            continue
+        fixed={key for key,score in regions.items() if tuple(score[:2])<tuple(baseline[key][:2])
+               or (not score[2] and baseline[key][2])}
+        worsened={key for key,score in regions.items() if tuple(score[:2])>tuple(baseline[key][:2])}
+        if fixed and not worsened:
+            choices.append((fixed,label,edits(body,text)))
+    result=[]
+    for rotate in range(min(4,len(choices))):
+        remaining=choices[rotate:]+choices[:rotate];covered=set();patches=[];labels=[]
+        while remaining:
+            remaining.sort(key=lambda r:-len(r[0]-covered))
+            fixed,label,changes=remaining.pop(0)
+            if not fixed-covered:
+                break
+            if any(max(a,c)<=min(b,d) for a,b,_ in changes for c,d,_ in patches):
+                continue
+            covered.update(fixed);patches.extend(changes);labels.append(label)
+        if len(labels)<2:
+            continue
+        text=body
+        for a,b,replacement in sorted(patches,reverse=True):text=text[:a]+replacement+text[b:]
+        result.append(('region composition: '+' + '.join(labels),text))
+    return list(dict.fromkeys(result))
+
+
+def closes_region(target, baseline, words, regions):
+    # Cheap shortlist for register-only block repairs. The aligned object diff
+    # still has to confirm the block, its relocations and all other effects.
+    if len(target)!=len(baseline) or len(target)!=len(words):
+        return False
+    starts=sorted(int(key)//4 for key in regions)
+    return any(target[a:b]==words[a:b] and target[a:b]!=baseline[a:b]
+               for a,b in zip(starts,starts[1:]+[len(target)]))
+
+
+def instruction_shapes(words):
+    """Opcode identities for the cheap prefilter; these are never match proof."""
+    result=[]
+    for word in words:
+        primary=word>>26;extra=0
+        if primary in (19,31):extra=(word>>1)&1023
+        elif primary in (59,63):
+            extra=(word>>1)&31
+            if extra not in (18,20,21,22,23,25,28,29,30,31):extra=(word>>1)&1023
+        result.append((primary<<10)|extra)
+    return result
+
+
 def linear_compositions(body, target, baseline, responses):
     """Solve the measured bit responses over GF(2), including cancelling effects.
 
@@ -1290,7 +1347,15 @@ def decode(words):
             for i in md.disasm(b''.join(w.to_bytes(4, 'big') for w in words), 0)]
 
 
-def web_constraints(captures, target, ours):
+def final_allocations(captures):
+    # Spilling restarts allocation with new virtual registers. Only the last
+    # pass of each bank describes the webs that reach the emitted function.
+    final = {c['before']['register_class']: i for i, c in enumerate(captures)}
+    return [c for i, c in enumerate(captures) if final[c['before']['register_class']] == i]
+
+
+def web_constraints(captures, target, ours, check=None):
+    captures = final_allocations(captures)
     original, retail = decode(ours), decode(target)
     if len(original) != len(ours) or len(retail) != len(target):
         return {'status': 'instruction-shape'}
@@ -1299,6 +1364,20 @@ def web_constraints(captures, target, ours):
                                               b=[shape(r) for r in retail], autojunk=False)
     retail_rows = {block.a + i: block.b + i for block in retail_alignment.get_matching_blocks()
                    for i in range(block.size)}
+    if check is not None:
+        # Objdiff aligns control-flow changes before the allocator projection.
+        # Re-aligning flat opcode strings can join repeated switch arms instead.
+        ti=oi=0;aligned={}
+        for left,right in zip(*check._rows):
+            has_left=bool(left.get('instruction',{}).get('formatted'))
+            has_right=bool(right.get('instruction',{}).get('formatted'))
+            relocations=[side.get('instruction',{}).get('relocation',{}).get('type_name') for side in (left,right)]
+            if (has_left and has_right and oi<len(original) and ti<len(retail) and shape(original[oi])==shape(retail[ti])
+                    and all(r in (None,'R_PPC_NONE') for r in relocations)):
+                aligned[oi]=ti
+            ti+=has_left;oi+=has_right
+        if ti==len(retail) and oi==len(original):
+            retail_rows=aligned
     nodes = {c['before']['register_class']: {n['virtual_register']: n for n in c['after']['nodes']}
              for c in captures}
     def root(cls, register):
@@ -1312,8 +1391,12 @@ def web_constraints(captures, target, ours):
     def physical(cls, register):
         register = root(cls, register)
         return register if register < 32 else nodes[cls][register]['physical_register']
-    pcode = max((c.get('pcode', []) for c in captures), key=len)
+    pcode = captures[-1]['pcode']
     keys, origins = [], []
+    displacement_ops={'addi','addis','lbz','lhz','lha','lwz','lfs','lfd','stb','sth','stw','stfs','stfd'}
+    def emitted_key(row):
+        literals=tuple(int(m[0],0) for m in re.finditer(r'(?<![\w.])-?(?:0x[\da-f]+|\d+)\b',row[2])) if row[0] in displacement_ops else ()
+        return row[0],row[1],literals
     for instruction in pcode:
         operands, regs = [], []
         for a in instruction['operands']:
@@ -1326,14 +1409,22 @@ def web_constraints(captures, target, ours):
         name = mnemonic(instruction['mnemonic'])
         if name in ('mr', 'fmr') and len(regs) == 2 and regs[0] == regs[1]:
             continue
-        keys.append((name, tuple(regs)))
+        literals=[]
+        if name in displacement_ops:
+            for operand in instruction['operands']:
+                raw=bytes.fromhex(operand['raw'])
+                if operand['class'] is None and int.from_bytes(raw[:2],'little')==2:
+                    literals.append(int.from_bytes(raw[2:6],'little',signed=True))
+        keys.append((name, tuple(regs),tuple(literals)))
         origins.append(operands)
-    matching = difflib.SequenceMatcher(a=keys, b=[r[:2] for r in original], autojunk=False)
+    matching = difflib.SequenceMatcher(a=[r[:2] for r in keys], b=[r[:2] for r in original], autojunk=False)
     domains, alternatives, anchors = defaultdict(set), [], []
     for block in matching.get_matching_blocks():
         for offset in range(block.size):
             row, index = block.b + offset, block.a + offset
             if row not in retail_rows:
+                continue
+            if keys[index][2] and keys[index][2]!=emitted_key(original[row])[2]:
                 continue
             name, registers, operand_text = retail[retail_rows[row]]
             if name != original[row][0] or len(registers) != len(origins[index]):
@@ -1373,17 +1464,7 @@ def web_constraints(captures, target, ours):
 def scalar_locals(body, span):
     # Carriers from a previous repair are fixed aggregate declarations; keep
     # scanning so remaining scalars can be repaired in the next captured graph.
-    result = []
-    for match in re.finditer(r'[^\n]*\n', body[span[1]:span[2]]):
-        line = match[0]
-        if not line.strip() or re.fullmatch(r'\s*struct \{ [^{};]+ value; \} \w+(?: = \{ .* \})?;\s*', line):
-            continue
-        decl = DECL_RE.match(line.rstrip('\n'))
-        if not decl:
-            break
-        start = span[1] + match.start()
-        result.append((start, start + len(line), decl[1], decl[2], decl[3]))
-    return result
+    return [local for local in _locals(body,span) if '{' not in local[2]]
 
 
 def annotate_verified_branches(body, findings):
@@ -1406,12 +1487,11 @@ def declaration_candidates(body, name, captures, constraints, max_orders=50000):
     """Evaluate declaration orders in the actual graph, with no compile loop."""
     if constraints['status'] != 'web-hypothesis' or constraints['operand_order_rows']:
         return [], {'status': constraints['status'], 'orders': 0}
+    captures = final_allocations(captures)
     span = _function_body_span(body, name)
     if span is None:
         return [], {'status': 'no-body', 'orders': 0}
     locals_ = scalar_locals(body, span)
-    if any(_init_of(body[a:b]) for a, b, *_ in locals_):
-        return [], {'status': 'initialized-declarations', 'orders': 0}
     by_name = defaultdict(list)
     for capture in captures:
         cls = capture['before']['register_class']
@@ -1421,8 +1501,8 @@ def declaration_candidates(body, name, captures, constraints, max_orders=50000):
     if all(all(next(n['physical_register'] for n in c['after']['nodes'] if n['virtual_register'] == r) == color
                    for r, color in constraints['desired'][c['before']['register_class']].items()) for c in captures):
         return [], {'status': 'no-allocation-difference', 'orders': 0}
-    movable = [(i, by_name[n][0]) for i, (_, _, _, n, dims) in enumerate(locals_)
-               if not dims and len(by_name.get(n, [])) == 1]
+    movable = [(i, by_name[n][0]) for i, (a, b, _, n, dims) in enumerate(locals_)
+               if not dims and _init_of(body[a:b]) is None and len(by_name.get(n, [])) == 1]
     if len(movable) < 2:
         return [], {'status': 'no-movable-stratum', 'orders': 0}
     slots = {cls: sorted((r for _, (bank, r) in movable if bank == cls), reverse=True)
@@ -1495,6 +1575,7 @@ def carrier_candidates(body, name, captures, constraints):
     span = _function_body_span(body, name)
     if span is None or constraints['status'] != 'web-hypothesis':
         return []
+    captures = final_allocations(captures)
     locals_ = scalar_locals(body, span)
     implicated = set()
     for capture in captures:
@@ -1512,6 +1593,9 @@ def carrier_candidates(body, name, captures, constraints):
     # assignments instead of mistaking the temporary's @name for a C local.
     assignments = []
     local_names = {l[3] for l in locals_}
+    for a,b,typ,var,dims in locals_:
+        if _init_of(body[a:b]) is not None:
+            assignments.append((body.count('\n',0,a)+1,body.count('\n',0,b)+1,var))
     for match in re.finditer(r'^\s*(\w+)\s*=(?!=)[^;{}]+;', body[span[1]:span[2]], re.M):
         if match[1] not in local_names:
             continue

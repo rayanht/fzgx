@@ -5198,3 +5198,9 @@ dol/fstload.c:
 
 dol/OSFont.c:
 	.text       start:0x8000CDD8 end:0x8000CE30 align:4
+
+dol/fn_8004683C.c:
+	.text       start:0x8004683C end:0x800469A4 align:4
+
+dol/__OSReboot.c:
+	.text       start:0x8000EB10 end:0x8000EE50 align:4

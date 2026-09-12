@@ -78,6 +78,8 @@ SECTIONS
     __gUnknown800030E3 = 0x800030E3;
     /* Retail labels sharing a C function entry. */
     __OSDBJUMPEND = __OSSetExceptionHandler;
+    /* SDK absolute globals; configure.py generates their C constants. */
+    __OSRebootBuffer = 0x81300000;
 }
 
 FORCEACTIVE

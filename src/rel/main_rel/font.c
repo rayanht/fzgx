@@ -386,9 +386,6 @@ u32 fn_1_49794(u32 c) {
 /* fzgx:end fn_1_49794 */
 
 /* fzgx:begin fn_1_499BC */
-
-
-
 u16 fn_1_499BC(const u8 *value) {
     u16 result;
     s32 i;
@@ -1014,8 +1011,6 @@ void fn_1_4DEC0(void) {
 /* fzgx:end fn_1_4DEC0 */
 
 /* fzgx:begin fn_1_4DF60 */
-
-
 extern const f32 lbl_1_rodata_2750;
 
 typedef struct {
@@ -2484,6 +2479,85 @@ void **fn_1_54448(s32 arg0) {
 }
 /* fzgx:end fn_1_54448 */
 
+/* fzgx:begin fn_1_5448C noprologue */
+#include "types.h"
+
+typedef struct {
+    u8 pad_0[0x30];
+    u8 *table;
+    s32 count;
+    f32 value_38;
+    f32 clamp_3c;
+    u8 pad_40[4];
+    u8 *current;
+    u8 *maximum;
+    f32 value_4c;
+} FontGlobals;
+
+typedef struct {
+    f32 x;
+    f32 y;
+    f32 z;
+} Vec3;
+
+extern FontGlobals *lbl_801A66CC;
+extern const f32 lbl_1_rodata_2870;
+extern const f64 lbl_1_rodata_2878;
+extern void lbl_8006E1B0(void *arg, Vec3 *out);
+extern f32 lbl_8006D0B4(f32 value);
+
+#pragma opt_common_subs on
+static inline f32 fn_1_5448C_read_pointer(FontGlobals * owner) { return owner->value_4c; }
+u32 fn_1_5448C(void *arg, u32 lab_unused0, u32 lab_unused1, u32 lab_unused2) {
+    f32 fzgx_live_;
+    f32 fzgx_live;
+    Vec3 vec;
+    f32 clamp;
+    f32 sum;
+    f32 distance;
+    s32 index;
+    u8 *entry;
+    FontGlobals *state;
+
+    lbl_8006E1B0(arg, &vec);
+    state = lbl_801A66CC;
+    clamp = state->clamp_3c;
+    fzgx_live = vec.z;
+    vec.z = -fzgx_live;
+    if (vec.z < clamp) {
+        vec.z = clamp;
+    }
+
+    sum = vec.x * vec.x;
+    fzgx_live_ = vec.y;
+    sum += fzgx_live_ * fzgx_live_;
+    fzgx_live = vec.z;
+    sum += fzgx_live * fzgx_live;
+    distance = lbl_8006D0B4(sum);
+    state = lbl_801A66CC;
+    distance = state->value_38 + distance - clamp;
+
+    if (distance < (0.0f)) {
+        index = 0;
+    } else {
+        index = (s32)((f32)state->count * distance / (distance + fn_1_5448C_read_pointer(state)));
+        if (index >= state->count) {
+            index = state->count - 1;
+        }
+    }
+
+    entry = state->table + (index << 3);
+    if (state->current > entry) {
+        state->current = entry;
+    }
+    if (lbl_801A66CC->maximum < entry) {
+        lbl_801A66CC->maximum = entry;
+    }
+    return (u32)entry;
+}
+#pragma opt_common_subs reset
+/* fzgx:end fn_1_5448C */
+
 /* fzgx:begin fn_1_545B8 */
 typedef struct fn_1_545B8_manager {
     u8 unk_00[0x30];
@@ -2572,9 +2646,6 @@ void fn_1_547F8(fn_1_547F8_node *node) {
 /* fzgx:end fn_1_547F8 */
 
 /* fzgx:begin fn_1_54848 */
-
-
-
 typedef struct fn_1_54848_FontState {
     u8 pad_1a0[0x1a0];
     u32 unk_1a0;

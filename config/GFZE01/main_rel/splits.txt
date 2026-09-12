@@ -6170,3 +6170,24 @@ rel/main_rel/alloc/fn_1_4CD8.c:
 
 rel/main_rel/burner/fn_1_9AA2C.c:
 	.text       start:0x0009AA2C end:0x0009AABC align:4
+
+rel/main_rel/font/fn_1_5448C.c:
+	.text       start:0x0005448C end:0x000545B8 align:4
+
+rel/main_rel/bg_lig/fn_1_D7274.c:
+	.text       start:0x000D7274 end:0x000D744C align:4
+
+rel/main_rel/enemy_ctrl/fn_1_CFF94.c:
+	.text       start:0x000CFF94 end:0x000D01B0 align:4
+
+rel/main_rel/screen_effect/fn_1_791B0.c:
+	.text       start:0x000791B0 end:0x0007926C align:4
+
+rel/main_rel/sel_static_disp/fn_1_14D728.c:
+	.text       start:0x0014D728 end:0x0014D8DC align:4
+
+rel/main_rel/phys/fn_1_E1C10.c:
+	.text       start:0x000E1C10 end:0x000E1E9C align:4
+
+rel/main_rel/_prolog/fn_1_E9C.c:
+	.text       start:0x00000E9C end:0x00000ECC align:4

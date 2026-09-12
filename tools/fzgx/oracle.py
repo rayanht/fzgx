@@ -310,7 +310,12 @@ def _diff(project: Project, module: str, symbol: str, unit: str, max_diff_lines:
         # The flow walker invalidates unsupported regions itself. A different
         # opcode elsewhere must not hide a known wrong store in a supported one.
         from . import regflow
-        flow = regflow.analyse_rows(lrows, rrows)
+        from .evidence import object_jump_tables
+        symbol_info=project.find_symbol(symbol,module)
+        retail_object=target or (project.target_object_for(symbol_info) if symbol_info else None)
+        tables=(object_jump_tables(retail_object,symbol,project,module),object_jump_tables(base,symbol)) if retail_object and base else None
+        flow = regflow.analyse_rows(lrows, rrows, tables)
+        res._flow=flow
         res.value_flow = flow['value_flow']
         res.operand_order = flow['operand_order']
         if symbol not in right_syms:
@@ -543,6 +548,13 @@ def _data_pool_rows(project, module, obj, left, right, lrows, rrows, section_nam
         actual = next((raw[address - base:address - base + len(payload)]
                        for base, raw in regions
                        if base <= address and address + len(payload) <= base + len(raw)), None)
+        if (target.section in ('.bss','.sbss') and not any(payload)
+                and address >= min(s.addr for s in project.symbols(module).values() if s.section==target.section)
+                and address+len(payload) <= max(s.end for s in project.symbols(module).values() if s.section==target.section)):
+            # Explicit zero initializers preserve MWCC declaration order. Their
+            # private copies can bind BSS only after every named object below
+            # proves the same module, offset and bounds; no memory is moved.
+            actual = bytes(len(payload))
         if payload != actual:
             continue
         named = []

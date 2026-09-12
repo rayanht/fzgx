@@ -265,6 +265,43 @@ void fn_1_E78(void) {
 }
 /* fzgx:end fn_1_E78 */
 
+/* fzgx:begin fn_1_E9C noprologue */
+#include "types.h"
+
+struct fn_1_E9C_lbl_1_bss_960 {
+    u16 unk_0;
+    u16 unk_2;
+    u16 unk_4;
+    u16 unk_6;
+    u16 unk_8;
+    u16 unk_A;
+    u32 unk_C;
+};
+
+extern struct fn_1_E9C_lbl_1_bss_960 lbl_1_bss_960;
+
+#pragma peephole off
+#pragma opt_propagation off
+#pragma opt_common_subs off
+void fn_1_E9C(void) {
+    s8 value = -1;
+    u8 *state = (u8 *)&lbl_1_bss_960;
+
+    *(u16 *)(state + 0) = value;
+    *(u16 *)(state + 2) = value;
+    *(u16 *)(state + 4) = value;
+    *(u16 *)(state + 6) = value;
+    *(u16 *)(state + 8) = 0;
+    *(u16 *)(state + 0xa) = value;
+    *(u32 *)(state + 0xc) = 0;
+}
+#pragma opt_common_subs reset
+
+#pragma opt_propagation reset
+
+#pragma peephole reset
+/* fzgx:end fn_1_E9C */
+
 /* fzgx:begin fn_1_1280 */
 void fn_1_1280(u32 arg0) {
     lbl_1_bss_96C = arg0;
@@ -617,9 +654,6 @@ s32 fn_1_3F8C(u32 arg3, u32 arg0, u32 arg1, u32 index) {
 /* fzgx:end fn_1_3F8C */
 
 /* fzgx:begin fn_1_4010 */
-
-
-
 // Store a value in the indexed entry of the active table.
 u32 fn_1_4010(u32 arg0, u32 arg1) {
     u32 *table = (u32 *)lbl_1_bss_DAC;
@@ -657,9 +691,6 @@ u32 fn_1_4030(u32 arg0) {
 /* fzgx:end fn_1_4030 */
 
 /* fzgx:begin fn_1_4060 */
-
-
-
 u32 fn_1_4060(void) {
     u32 *base;
     u32 *slot;
@@ -799,9 +830,6 @@ void fn_1_41A8(void) {
 /* fzgx:end fn_1_41A8 */
 
 /* fzgx:begin fn_1_4310 */
-
-
-
 // Store the value in the shared state object's field.
 void fn_1_4310(u32 arg0) {
     *(u32 *)((u8 *)lbl_1_bss_DAC + 16) = arg0;
@@ -809,9 +837,6 @@ void fn_1_4310(u32 arg0) {
 /* fzgx:end fn_1_4310 */
 
 /* fzgx:begin fn_1_4324 */
-
-
-
 // Store the current value in the shared state block.
 void fn_1_4324(u32 arg0) {
     *(u32 *)((u8 *)lbl_1_bss_DAC + 20) = arg0;
@@ -846,9 +871,6 @@ u32 fn_1_434C(void) {
 /* fzgx:end fn_1_434C */
 
 /* fzgx:begin fn_1_435C */
-
-
-
 u32 fn_1_435C(u32 value) {
     u32 old;
 
@@ -998,9 +1020,6 @@ void fn_1_446C(void) {
 /* fzgx:end fn_1_446C */
 
 /* fzgx:begin fn_1_44A4 */
-
-
-
 struct fn_1_44A4_lbl_1_bss_DC4 {
     u32 unk_0;
 };
@@ -1011,8 +1030,6 @@ u32 fn_1_44A4(void) {
 /* fzgx:end fn_1_44A4 */
 
 /* fzgx:begin fn_1_44B4 */
-
-
 extern u32 OSGetArenaHi(void);
 extern u32 OSGetArenaLo(void);
 extern u32 fn_80008F60(u32, u32);

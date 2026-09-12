@@ -1011,7 +1011,7 @@ def native_pool_objects(p, symbol, body, check):
     code = masked(body); sym = p.resolve(symbol); span = _function_span(code, sym.name)
     if not span or re.search(r'#pragma\s+(?:pack|options\s+align)\b',code):
         return []
-    layouts,sizes = record_layouts(code,span[0]); out=[]
+    layouts,sizes = record_layouts(code,span[0]); out=native_bss_objects(p,symbol,body,check)
     for declaration in re.finditer(r'\bextern\s+struct\s+(\w+)\s+(\w+)\s*;',code[:span[0]]):
         typ,anchor=declaration[1],declaration[2]; owner=p.find_symbol(anchor,sym.module)
         if not owner or owner.module!=sym.module or owner.section not in ('.data','.rodata') or typ not in layouts:
@@ -1091,6 +1091,99 @@ def native_pool_objects(p, symbol, body, check):
         if valid:
             text=text[:declaration.start()]+'\n'.join(definitions)+text[declaration.end():]
             out.append(('recover native shared-pool objects '+anchor,text))
+    return out
+
+
+def native_bss_objects(p, symbol, body, check):
+    """Recover separate retail objects hidden by an oversized private BSS view."""
+    from .sdkimport import masked
+    from .signatures import record_layouts, record_tag
+    code=masked(body);sym=p.resolve(symbol);span=_function_span(code,sym.name)
+    if not span:
+        return []
+    layouts,sizes=record_layouts(code,span[0]);out=[]
+    for declaration in re.finditer(r'\bextern\s+((?:struct\s+)?\w+)\s+(\w+)\s*;',code[:span[0]]):
+        typ,anchor=declaration[1],declaration[2];tag=record_tag(typ);owner=p.find_symbol(anchor,sym.module)
+        if not owner or owner.section!='.bss' or tag not in layouts or sizes[tag][0]<=owner.size:
+            continue
+        used=[f for f in layouts[tag] if not f[0].startswith('pad')]
+        if not used:
+            continue
+        limit=owner.addr+max(off+width*math.prod(dims or (1,)) for _,_,off,width,dims in used)
+        objects=sorted((s for s in p.symbols(sym.module).values() if s.kind=='object' and s.section==owner.section
+                        and owner.addr<=s.addr<limit and s.size),key=lambda s:s.addr)
+        if not objects or objects[0].name!=anchor or any(a.end>b.addr for a,b in zip(objects,objects[1:])):
+            continue
+        groups={obj.name:[] for obj in objects};valid=True
+        for field,kind,offset,width,dims in used:
+            address=owner.addr+offset;extent=width*math.prod(dims or (1,))
+            obj=next((s for s in objects if s.addr<=address and address+extent<=s.end),None)
+            if not obj:
+                valid=False;break
+            groups[obj.name].append((field,kind,address-obj.addr,width,dims))
+        if not valid:
+            continue
+        roots={anchor:'.'};edits=[];boundary_edits=[]
+        for assignment in re.finditer(r'\b(\w+)\s*=\s*&'+re.escape(anchor)+r'\s*;',code[span[0]:span[1]]):
+            root=assignment[1]
+            if len(re.findall(r'\b'+re.escape(root)+r'\s*=(?!=)',code[span[0]:span[1]]))==1:
+                roots[root]='->'
+                # Preserve its declaration when this was an initialized local.
+                edits.append((span[0]+assignment.start(),span[0]+assignment.end(),root+';'))
+                boundary_edits.append((span[0]+assignment.start(),span[0]+assignment.end(),root+' = ('+typ+' *)&'+anchor+';'))
+        definitions=[];replacements={}
+        for obj in objects:
+            if obj.name!=anchor and re.search(r'\b'+re.escape(obj.name)+r'\b',code):
+                valid=False;break
+            fields=groups[obj.name]
+            if not fields:
+                if obj.addr%4:
+                    definitions.extend('u8 '+(obj.name if not i else obj.name+f'__fzgx_offset_{i:X}')+';'
+                                       for i in range(obj.size))
+                else:
+                    definitions.append(f'u8 {obj.name}[{obj.size}];')
+                continue
+            if len(fields)==1:
+                field,kind,offset,width,dims=fields[0]
+                if offset==0 and width*math.prod(dims or (1,))==obj.size:
+                    definitions.append(kind+' '+obj.name+''.join('['+str(n)+']' for n in dims)+';')
+                    replacements[field]=obj.name
+                    continue
+            cursor=0;members=[]
+            for field,kind,offset,width,dims in fields:
+                if offset>cursor:members.append(f'u8 fzgx_pad_{cursor:X}[{offset-cursor}];')
+                members.append(kind+' '+field+''.join('['+str(n)+']' for n in dims)+';')
+                cursor=offset+width*math.prod(dims or (1,));replacements[field]=obj.name+'.'+field
+            if cursor<obj.size:members.append(f'u8 fzgx_pad_{cursor:X}[{obj.size-cursor}];')
+            definitions.append('struct { '+' '.join(members)+' } '+obj.name+';')
+        if not valid:
+            continue
+        boundary_fields={field for obj in objects for field,kind,offset,width,dims in groups[obj.name]
+                         if offset==0 and obj.name!=anchor}
+        for root,operator in roots.items():
+            for use in re.finditer(r'\b'+re.escape(root)+re.escape(operator)+r'(\w+)',code[span[0]:span[1]]):
+                if use[1] not in replacements:
+                    valid=False;break
+                edits.append((span[0]+use.start(),span[0]+use.end(),replacements[use[1]]))
+            for use in re.finditer(r'&\s*\b'+re.escape(root)+re.escape(operator)+r'(\w+)',code[span[0]:span[1]]):
+                if use[1] in boundary_fields:
+                    boundary_edits.append((span[0]+use.start(),span[0]+use.end(),'&'+replacements[use[1]]))
+        if not valid:
+            continue
+        text=body
+        for a,b,value in sorted(edits,reverse=True):text=text[:a]+value+text[b:]
+        remaining=masked(text[_function_span(masked(text),sym.name)[0]:])
+        # Replacing the pool is safe only when every old view has been resolved.
+        if any(re.search(r'\b'+re.escape(root)+r'\b',re.sub(r'\b'+re.escape(typ)+r'\s*\*\s*'+re.escape(root)+r'\s*;','',remaining)) for root in roots):
+            continue
+        decls='#pragma explicit_zero_data on\n'+'\n'.join(d[:-1]+' = {0};' for d in definitions)+'\n#pragma explicit_zero_data reset'
+        out.append(('recover native BSS objects '+anchor+' initialized',
+                    text[:declaration.start()]+decls+text[declaration.end():]))
+        if boundary_edits and not re.search(r'\b'+re.escape(anchor)+r'\s*\.',code[span[0]:span[1]]):
+            partial=body
+            for a,b,value in sorted(boundary_edits,reverse=True):partial=partial[:a]+value+partial[b:]
+            out.append(('recover native BSS boundaries '+anchor,
+                        partial[:declaration.start()]+decls+partial[declaration.end():]))
     return out
 
 
@@ -2097,6 +2190,68 @@ def reload_lvalues(body, name, diffs, missing_globals=()):
 
 
 
+def relocation_bindings(body, base):
+    lrows, rrows = base._rows
+    diffs = [(stuck._fmt(a), stuck._fmt(b)) for a, b in zip(lrows, rrows)
+             if (a.get("diff_kind") or "DIFF_NONE") != "DIFF_NONE"]
+    candidates = []
+    from .sdkimport import masked
+    # SDK fixed buffers use the same address definition as the linker. Keep
+    # constant folding while replacing anonymous addresses in recovered C.
+    constants={}
+    for name,address in oracle.abs_symbols().items():
+        constants.setdefault(address,name)
+    edits=[]
+    for token in re.finditer(r'\b0[xX][\da-fA-F]+[uUlL]*\b',masked(body)):
+        address=int(token[0].rstrip('uUlL'),16)
+        if address in constants:
+            edits.append((token.start(),token.end(),'FZGX_ADDR_'+constants[address]))
+    if edits:
+        text=body
+        for a,b,value in reversed(edits):text=text[:a]+value+text[b:]
+        if not re.search(r'#include\s*[<"]sdk_addresses.h[>"]',text):
+            text='#include "sdk_addresses.h"\n'+text
+        candidates.append(('bind SDK fixed addresses',text))
+    # wrong callee / wrong data symbol: the same instruction with a different relocation target.
+    # The retail name is known; the body names ours verbatim, so the substitution is exact.
+    subs: Dict[str, str] = {}
+    for t, o in diffs:
+        if not t or not o or t.split()[0] != o.split()[0]:
+            continue
+        mt = re.findall(r"\b([A-Za-z_]\w*)(?=@|$|\b)", re.sub(r"^\S+\s+", "", t))
+        mo = re.findall(r"\b([A-Za-z_]\w*)(?=@|$|\b)", re.sub(r"^\S+\s+", "", o))
+        tn = [x for x in mt if not re.fullmatch(r"[rf]\d+|cr\d|lt|gt|eq|so|ha|l|sda21", x)]
+        on = [x for x in mo if not re.fullmatch(r"[rf]\d+|cr\d|lt|gt|eq|so|ha|l|sda21", x)]
+        if len(tn) == 1 and len(on) == 1 and tn[0] != on[0] and not on[0].startswith("@"):
+            if re.sub(r"\b" + re.escape(on[0]) + r"\b", tn[0], o) == t:
+                subs.setdefault(on[0], tn[0])
+    # a hardware register block under an invented name: retail's `lis rX, 0xcc00` / `addi rX, rX,
+    # 0xNNNN` literal pair against ours `SYM@ha` / `SYM@l` names the address; the link script's
+    # canonical symbol for it (config/<v>/ldscript.tpl) is what the oracle accepts
+    abs_by_addr: Dict[int, str] = {}
+    for name_, addr_ in oracle.abs_symbols().items():
+        abs_by_addr.setdefault(addr_, name_)
+    for (t1, o1), (t2, o2) in zip(diffs, diffs[1:]):
+        m1 = re.match(r"lis r\d+, (0x[0-9a-f]+)$", t1 or ""); n1 = re.match(r"lis r\d+, (\w+)@ha$", o1 or "")
+        m2 = re.match(r"(addi|ori) r\d+, r\d+, (-?0x[0-9a-f]+|-?\d+)$", t2 or ""); n2 = re.match(r"(?:addi|ori) r\d+, r\d+, (\w+)@l$", o2 or "")
+        if not (m1 and n1 and m2 and n2 and n1.group(1) == n2.group(1)):
+            continue
+        hi, lo = int(m1.group(1), 16), int(m2.group(2), 0)
+        addr = ((hi << 16) + lo) & 0xFFFFFFFF if m2.group(1) == "addi" else (hi << 16) | lo
+        canon = abs_by_addr.get(addr)
+        if canon and canon != n1.group(1):
+            subs.setdefault(n1.group(1), canon)
+    for ours, retail in subs.items():
+        if re.search(rf"\b{re.escape(ours)}\b", body) and not re.search(rf"\b{re.escape(retail)}\b", body):
+            candidates.append((f"symbol {ours} -> {retail}", re.sub(rf"\b{re.escape(ours)}\b", retail, body)))
+    if len(subs) > 1:
+        text = body
+        for ours, retail in subs.items():
+            text = re.sub(rf"\b{re.escape(ours)}\b", retail, text)
+        candidates.append(("all symbol substitutions", text))
+    return sorted(candidates, key=lambda c: c[0] != 'all symbol substitutions')
+
+
 def candidates(p: Project, symbol: str, body: str, base: oracle.CheckResult):
     sym = p.resolve(symbol)
     counts = _kinds(base)
@@ -2178,43 +2333,6 @@ def candidates(p: Project, symbol: str, body: str, base: oracle.CheckResult):
                 for alt in alts[:4]:
                     candidates.append((f"{n}: {mine[n]} -> {alt}", body.replace(mine[n], alt, 1)))
     candidates += literals[3:]
-    # wrong callee / wrong data symbol: the same instruction with a different relocation target.
-    # The retail name is known; the body names ours verbatim, so the substitution is exact.
-    subs: Dict[str, str] = {}
-    for t, o in diffs:
-        if not t or not o or t.split()[0] != o.split()[0]:
-            continue
-        mt = re.findall(r"\b([A-Za-z_]\w*)(?=@|$|\b)", re.sub(r"^\S+\s+", "", t))
-        mo = re.findall(r"\b([A-Za-z_]\w*)(?=@|$|\b)", re.sub(r"^\S+\s+", "", o))
-        tn = [x for x in mt if not re.fullmatch(r"[rf]\d+|cr\d|lt|gt|eq|so|ha|l|sda21", x)]
-        on = [x for x in mo if not re.fullmatch(r"[rf]\d+|cr\d|lt|gt|eq|so|ha|l|sda21", x)]
-        if len(tn) == 1 and len(on) == 1 and tn[0] != on[0] and not on[0].startswith("@"):
-            if re.sub(r"\b" + re.escape(on[0]) + r"\b", tn[0], o) == t:
-                subs.setdefault(on[0], tn[0])
-    # a hardware register block under an invented name: retail's `lis rX, 0xcc00` / `addi rX, rX,
-    # 0xNNNN` literal pair against ours `SYM@ha` / `SYM@l` names the address; the link script's
-    # canonical symbol for it (config/<v>/ldscript.tpl) is what the oracle accepts
-    abs_by_addr: Dict[int, str] = {}
-    for name_, addr_ in oracle.abs_symbols().items():
-        abs_by_addr.setdefault(addr_, name_)
-    for (t1, o1), (t2, o2) in zip(diffs, diffs[1:]):
-        m1 = re.match(r"lis r\d+, (0x[0-9a-f]+)$", t1 or ""); n1 = re.match(r"lis r\d+, (\w+)@ha$", o1 or "")
-        m2 = re.match(r"(addi|ori) r\d+, r\d+, (-?0x[0-9a-f]+|-?\d+)$", t2 or ""); n2 = re.match(r"(?:addi|ori) r\d+, r\d+, (\w+)@l$", o2 or "")
-        if not (m1 and n1 and m2 and n2 and n1.group(1) == n2.group(1)):
-            continue
-        hi, lo = int(m1.group(1), 16), int(m2.group(2), 0)
-        addr = ((hi << 16) + lo) & 0xFFFFFFFF if m2.group(1) == "addi" else (hi << 16) | lo
-        canon = abs_by_addr.get(addr)
-        if canon and canon != n1.group(1):
-            subs.setdefault(n1.group(1), canon)
-    for ours, retail in subs.items():
-        if re.search(rf"\b{re.escape(ours)}\b", body) and not re.search(rf"\b{re.escape(retail)}\b", body):
-            candidates.append((f"symbol {ours} -> {retail}", re.sub(rf"\b{re.escape(ours)}\b", retail, body)))
-    if len(subs) > 1:
-        text = body
-        for ours, retail in subs.items():
-            text = re.sub(rf"\b{re.escape(ours)}\b", retail, text)
-        candidates.append(("all symbol substitutions", text))
     # float vs double: fsubs/fsub, frsp rows come from f32/f64 declarations and literal suffixes
     if any((t.split()[0] if t else "") in FLOAT_PAIRS or (o.split()[0] if o else "") in FLOAT_PAIRS or "frsp" in (t + o) for t, o in diffs):
         for a, b in (("f64", "f32"), ("f32", "f64"), ("double", "float"), ("float", "double")):

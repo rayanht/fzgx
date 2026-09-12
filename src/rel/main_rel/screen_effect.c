@@ -1719,6 +1719,49 @@ void fn_1_79100(void) {
 }
 /* fzgx:end fn_1_79100 */
 
+/* fzgx:begin fn_1_791B0 */
+typedef struct {
+    Obj_1_bss_6D778_At0 *unk_0;
+    const u8 *unk_4;
+} ScreenEffectEntry;
+
+typedef struct {
+    s32 count;
+    u8 pad_4[0x4];
+    ScreenEffectEntry *entries;
+} ScreenEffectTable;
+
+static inline ScreenEffectEntry *fn_1_791B0_array_read(ScreenEffectEntry *array) { return array; }
+#pragma opt_common_subs off
+void fn_1_791B0(void) {
+    struct { s32 value; } i;
+    ScreenEffectTable *table;
+
+    lbl_1_bss_6D778.unk_0 = 0;
+    if (lbl_1_data_1DFA4.unk_8 < 0) {
+        return;
+    }
+
+    table = (ScreenEffectTable *)lbl_1_bss_6D774;
+    if (table == 0) {
+        return;
+    }
+
+    for (i.value = 0; i.value < table->count; i.value++) {
+        if (fn_1_791B0_array_read(table->entries)[i.value].unk_4[0] == 'C' &&
+            fn_1_791B0_array_read(table->entries)[i.value].unk_4[3] == '_' &&
+            fn_1_791B0_array_read(table->entries)[i.value].unk_4[4] == 'M' &&
+            fn_1_791B0_array_read(table->entries)[i.value].unk_4[5] == 'A' &&
+            fn_1_791B0_array_read(table->entries)[i.value].unk_4[6] == 'P' &&
+            fn_1_791B0_array_read(table->entries)[i.value].unk_4[7] == '\0') {
+            lbl_1_bss_6D778.unk_0 = fn_1_791B0_array_read(table->entries)[i.value].unk_0;
+            return;
+        }
+    }
+}
+#pragma opt_common_subs reset
+/* fzgx:end fn_1_791B0 */
+
 /* fzgx:begin fn_1_79810 */
 typedef struct {
     f32 unk_0;

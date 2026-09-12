@@ -46,6 +46,163 @@ extern void fn_1_9C724(void);
 extern void fn_1_DD890(void *);
 extern void fn_1_9CC40(void);
 
+/* fzgx:begin fn_1_E1C10 noprologue */
+#include "types.h"
+#include "rel/main_rel/globals.h"
+
+typedef struct {
+    u8 pad_0[0x8];
+    s16 unk_8;
+    s16 unk_A;
+    u8 pad_C[0x19C];
+} Elem1A8;
+
+typedef struct {
+    u32 unk_0;
+    s16 unk_4;
+    u8 pad_6[0x2];
+    u32 unk_8;
+    s16 unk_C;
+    u8 pad_E[0x2];
+    u32 unk_10;
+    s16 unk_14;
+    u8 pad_16[0x2];
+    u32 unk_18;
+    s16 unk_1C;
+    u8 pad_1E[0x2];
+    u32 unk_20;
+    s16 unk_24;
+    u8 pad_26[0x2];
+    u32 unk_28;
+    s16 unk_2C;
+    u8 pad_2E[0x2];
+} State7AE88;
+
+extern State7AE88 lbl_1_bss_7AE88;
+extern u32 fn_1_4630(u32, u32, u8 *, u32);
+extern u32 lbl_801A6410;
+extern u8 lbl_1_data_3DDB4[];
+
+#pragma opt_common_subs off
+void fn_1_E1C10(void) {
+    s16 fzgx_value_;
+    s16 kind;
+    struct { s16 value; } i;
+    s16 count;
+    struct { Elem1A8 * value; } cursor;
+    Elem1A8 *ptr;
+    State7AE88 *base;
+    s16 *fzgx_value;
+
+    base = &lbl_1_bss_7AE88;
+
+    count = base->unk_4;
+    ptr = (Elem1A8 *)base->unk_0;
+    if ((count != 0) && (ptr == 0)) {
+        ptr = (Elem1A8 *)fn_1_4630(lbl_801A6410, (u32)(count * 0x1A8),
+                                   lbl_1_data_3DDB4, 0x7b7);
+        cursor.value = ptr;
+        i.value = 0;
+        kind = 0;
+        while (i.value < count) {
+            cursor.value->unk_A = kind;
+            cursor.value->unk_8 = i.value;
+            i.value++;
+            cursor.value++;
+        }
+    }
+    base->unk_0 = (u32)ptr;
+
+    count = base->unk_C;
+    ptr = (Elem1A8 *)base->unk_8;
+    if ((count != 0) && (ptr == 0)) {
+        ptr = (Elem1A8 *)fn_1_4630(lbl_801A6410, (u32)(count * 0x1A8),
+                                   lbl_1_data_3DDB4, 0x7b7);
+        cursor.value = ptr;
+        i.value = 0;
+        kind = 1;
+        while (i.value < count) {
+            cursor.value->unk_A = kind;
+            fzgx_value_ = i.value;
+            cursor.value->unk_8 = fzgx_value_;
+            i.value++;
+            cursor.value++;
+        }
+    }
+    base->unk_8 = (u32)ptr;
+
+    count = base->unk_14;
+    ptr = (Elem1A8 *)base->unk_10;
+    if ((count != 0) && (ptr == 0)) {
+        ptr = (Elem1A8 *)fn_1_4630(lbl_801A6410, (u32)(count * 0x1A8),
+                                   lbl_1_data_3DDB4, 0x7b7);
+        cursor.value = ptr;
+        i.value = 0;
+        kind = 2;
+        while (i.value < count) {
+            cursor.value->unk_A = kind;
+            cursor.value->unk_8 = i.value;
+            i.value++;
+            cursor.value++;
+        }
+    }
+    base->unk_10 = (u32)ptr;
+
+    count = base->unk_1C;
+    ptr = (Elem1A8 *)base->unk_18;
+    if ((count != 0) && (ptr == 0)) {
+        ptr = (Elem1A8 *)fn_1_4630(lbl_801A6410, (u32)(count * 0x1A8),
+                                   lbl_1_data_3DDB4, 0x7b7);
+        cursor.value = ptr;
+        i.value = 0;
+        kind = 3;
+        while (i.value < count) {
+            fzgx_value = &(cursor.value->unk_A);
+            *fzgx_value = kind;
+            cursor.value->unk_8 = i.value;
+            i.value++;
+            cursor.value++;
+        }
+    }
+    base->unk_18 = (u32)ptr;
+
+    count = base->unk_24;
+    ptr = (Elem1A8 *)base->unk_20;
+    if ((count != 0) && (ptr == 0)) {
+        ptr = (Elem1A8 *)fn_1_4630(lbl_801A6410, (u32)(count * 0x1A8),
+                                   lbl_1_data_3DDB4, 0x7b7);
+        cursor.value = ptr;
+        i.value = 0;
+        kind = 4;
+        while (i.value < count) {
+            cursor.value->unk_A = kind;
+            cursor.value->unk_8 = i.value;
+            i.value++;
+            cursor.value++;
+        }
+    }
+    base->unk_20 = (u32)ptr;
+
+    count = base->unk_2C;
+    ptr = (Elem1A8 *)base->unk_28;
+    if ((count != 0) && (ptr == 0)) {
+        ptr = (Elem1A8 *)fn_1_4630(lbl_801A6410, (u32)(count * 0x1A8),
+                                   lbl_1_data_3DDB4, 0x7b7);
+        cursor.value = ptr;
+        i.value = 0;
+        kind = 5;
+        while (i.value < count) {
+            cursor.value->unk_A = kind;
+            cursor.value->unk_8 = i.value;
+            i.value++;
+            cursor.value++;
+        }
+    }
+    base->unk_28 = (u32)ptr;
+}
+#pragma opt_common_subs reset
+/* fzgx:end fn_1_E1C10 */
+
 /* fzgx:begin fn_1_E38D4 */
 extern s16 fn_1_E5430(s16);
 extern void *fn_1_E54A8(s16, s16);

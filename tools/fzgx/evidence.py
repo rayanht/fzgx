@@ -23,7 +23,7 @@ def memory_loads(rows, tables=None, addresses=False, flow=None):
     indices = list(instructions)
     if not indices:
         return {}
-    addresses = {int(ins['address']): i for i, ins in instructions.items()}
+    locations = {int(ins['address']): i for i, ins in instructions.items()}
     following = dict(zip(indices, indices[1:]))
     incoming = {indices[0]: {}}
     pending = deque([indices[0]])
@@ -93,12 +93,12 @@ def memory_loads(rows, tables=None, addresses=False, flow=None):
         if i in following and op not in ('b', 'bctr', 'blr'):
             successors.append(following[i])
         dest = ins.get('branch_dest')
-        if dest is not None and not call and int(dest) in addresses:
-            successors.append(addresses[int(dest)])
+        if dest is not None and not call and int(dest) in locations:
+            successors.append(locations[int(dest)])
         if op == 'bctr':
             table = before.get('ctr')
             if table and table[2] == 'table' and table[0] in tables:
-                successors = [addresses[a] for a in tables[table[0]] if a in addresses]
+                successors = [locations[a] for a in tables[table[0]] if a in locations]
             else:
                 # Unknown successors must not inherit a guessed base from one
                 # arm. Relocated tables, however, preserve dominating pool bases.

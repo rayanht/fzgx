@@ -194,7 +194,7 @@ def analyse(p: Project, symbol: str, path: str, res: Optional[oracle.CheckResult
              if (a.get("diff_kind") or "DIFF_NONE") != "DIFF_NONE" or (b.get("diff_kind") or "DIFF_NONE") != "DIFF_NONE"]
     pure = _pure(counts, lrows, rrows)
     from . import regflow
-    flow = regflow.analyse_rows(lrows, rrows)
+    flow = getattr(res,'_flow',None) or regflow.analyse_rows(lrows, rrows)
     if pure == 'regalloc' and flow['value_flow']:
         pure = 'value-flow'
     return {"symbol": symbol, "ok": True, "percent": res.percent, "percent_adjusted": res.percent_adjusted,

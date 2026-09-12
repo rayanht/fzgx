@@ -250,6 +250,95 @@ void fn_1_D720C(void) {
 }
 /* fzgx:end fn_1_D720C */
 
+/* fzgx:begin fn_1_D7274 noprologue */
+#include "rel/main_rel/bg_lig.h"
+
+extern s32 fn_1_58C4(void);
+extern void fn_1_9A508(void);
+extern f32 lbl_1_rodata_64A0[33];
+extern void fn_1_D79E4(Obj_1_data_2A7E0_At3C *);
+extern u8 fn_1_5300(void);
+extern void fn_1_77B80(u32);
+extern void fn_1_76BF8(void);
+extern void fn_1_72648(void);
+extern void fn_1_D8CA8(Obj_1_data_2A7E0_At3C *);
+extern void fn_1_4404(void);
+extern void fn_1_DA6A8(void *, u32);
+extern void fn_1_D9224(void *, u32);
+extern void fn_1_446C(void);
+extern void fn_1_D9D8C(void *, u32, s32);
+extern void fn_1_DA3A0(void *);
+extern void fn_80008BEC(void *, u32, u32);
+
+#pragma opt_dead_assignments off
+#pragma opt_pointer_analysis on
+void fn_1_D7274(void) {
+    Obj_1_data_2A7E0_At3C *obj;
+    Obj_1_bss_7AD78 *state;
+    Obj_1_bss_7AD78 *state2;
+    s32 i;
+    s32 mode;
+
+    mode = fn_1_58C4();
+    obj = lbl_1_data_2A7E0.unk_3C;
+    obj->unk_6D4 = 0;
+    fn_1_9A508();
+    obj->unk_6C0 = (0.0f);
+    fn_1_D79E4(obj);
+
+    if (obj->unk_6CC != 0
+        && (mode == 1 || (mode == 2 && fn_1_5300() == 1))) {
+        fn_1_77B80(obj->unk_6CC);
+    } else {
+        fn_1_76BF8();
+        fn_1_72648();
+    }
+
+    fn_1_D8CA8(obj);
+    fn_1_4404();
+
+    if (lbl_1_bss_7AD78.unk_14 != 0) {
+        fn_1_DA6A8(&lbl_1_bss_7AD78, obj->unk_1C58);
+        fn_80008BEC(&lbl_1_bss_7AD78, 0, 0x20);
+    }
+
+    if (lbl_1_bss_7AD78.unk_34 != 0) {
+        state = &lbl_1_bss_7AD78;
+        state2 = (Obj_1_bss_7AD78 *)((u8 *)state + 0x20);
+        fn_1_DA6A8(state2, obj->unk_1C5C);
+        fn_80008BEC(state2, 0, 0x20);
+    }
+
+    if (obj->unk_1C58 != 0) {
+        fn_80008BEC(&lbl_1_bss_7AD78, 0, 0x20);
+        fn_1_D9224(&lbl_1_bss_7AD78, obj->unk_1C58);
+    }
+
+    if (obj->unk_1C5C) {
+        state2 = (Obj_1_bss_7AD78 *)((u8 *)&lbl_1_bss_7AD78 + 0x20);
+        fn_80008BEC(state2, 0, 0x20);
+        fn_1_D9224(state2, obj->unk_1C5C);
+    }
+
+    fn_1_446C();
+    state = &lbl_1_bss_7AD78;
+    state2 = (Obj_1_bss_7AD78 *)((u8 *)state + 0x20);
+    for (i = 0; i < 0x78; i++) {
+        if (obj->unk_1C58 != 0) {
+            fn_1_D9D8C(state, obj->unk_1C58, 0);
+            fn_1_DA3A0((&lbl_1_bss_7AD78));
+        }
+        if (obj->unk_1C5C != 0) {
+            fn_1_D9D8C(state2, obj->unk_1C5C, 1);
+            fn_1_DA3A0(state2);
+        }
+    }
+}
+#pragma opt_pointer_analysis reset
+
+#pragma opt_dead_assignments reset
+/* fzgx:end fn_1_D7274 */
+
 /* fzgx:begin fn_1_D744C */
 extern void fn_80008BA8(void *arg0, void *arg1, int arg2);
 extern u32 lbl_1_rodata_6490[4];

@@ -952,10 +952,6 @@ void fn_1_CD51C(void *object) {
 /* fzgx:end fn_1_CD51C */
 
 /* fzgx:begin fn_1_CD6C0 */
-
-
-
-
 extern u16 fn_1_8664C(void *object);
 extern void *fn_1_8627C(void *object);
 extern u32 fn_1_864E8(void *object);
@@ -1169,6 +1165,93 @@ void fn_1_CFA4C(u32 arg0, u32 arg1) {
     fn_1_520CC();
 }
 /* fzgx:end fn_1_CFA4C */
+
+/* fzgx:begin fn_1_CFF94 noprologue */
+#include "types.h"
+#include "font.h"
+
+struct fn_1_CFF94_Copy88 { u32 a[22]; };
+
+extern const f32 lbl_1_rodata_5DCC;
+extern const f32 lbl_1_rodata_6050;
+extern const f64 lbl_1_rodata_5C00;
+extern int fn_1_4F734(FontDrawPacket *);
+extern u32 lbl_1_bss_3C30;
+extern u32 lbl_1_data_3D630;
+extern f32 lbl_1_rodata_26F8[22];
+extern u32 lbl_801A66B4;
+extern void fn_1_49410(void);
+extern void fn_1_494DC(s16);
+extern void fn_1_4954C(f32);
+extern void fn_1_495A0(f32);
+extern void fn_1_495C8(u8);
+extern void fn_1_496FC(f32, f32);
+extern void fn_1_4AE0C(const char *, ...);
+
+#pragma opt_strength_reduction off
+#pragma opt_common_subs off
+void fn_1_CFF94(u32 arg0, s16 arg1, f32 arg2) {
+    s32 v6;
+    s16 v6s;
+    s32 v7;
+    s32 v8;
+    FontDrawPacket loc_8;
+
+    arg0 = arg0;
+    if (arg1 == 0) {
+        return;
+    }
+    v6 = 28;
+    if (*(u8 *)((u8 *)&lbl_1_bss_3C30 + 5) != 2) {
+        v6 = 60;
+    }
+    if ((s32)lbl_801A66B4 == 5) {
+        if (arg1 >= 10) {
+            v7 = 50;
+        } else {
+            v7 = 0;
+        }
+    } else {
+        if (arg1 >= 10) {
+            v7 = -25;
+        } else {
+            v7 = -29;
+        }
+    }
+    loc_8 = *(FontDrawPacket *)&lbl_1_rodata_26F8;
+    loc_8.image = 0xBB01;
+    ((f32 *)&loc_8)[0xB] = arg2;
+    ((u32 *)&loc_8)[0xC] = 10;
+    loc_8.x = (f32)(s32)(529 - (s16)v7);
+    v6s = (s16)v6;
+    loc_8.y = (f32)(s32)(((360) + (v6s)));
+    loc_8.z = (3.0f);
+    fn_1_4F734((FontDrawPacket *)&loc_8);
+    if ((s32)lbl_801A66B4 == 5) {
+        if (arg1 >= 10) {
+            v8 = 27;
+        } else {
+            v8 = 0;
+        }
+    } else {
+        if (arg1 >= 10) {
+            v8 = 133;
+        } else {
+            v8 = 106;
+        }
+    }
+    fn_1_49410();
+    fn_1_494DC(0x28);
+    fn_1_496FC((f32)(s32)(590 - (s16)v8), (f32)(s32)(((355) + (v6s))));
+    fn_1_495C8(9);
+    fn_1_4954C((4.0f));
+    fn_1_495A0(arg2);
+    fn_1_4AE0C((const char *)&lbl_1_data_3D630, arg1);
+}
+#pragma opt_common_subs reset
+
+#pragma opt_strength_reduction reset
+/* fzgx:end fn_1_CFF94 */
 
 /* fzgx:begin fn_1_D01B0 noprologue */
 #include "types.h"
