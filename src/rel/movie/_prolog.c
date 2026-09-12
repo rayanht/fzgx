@@ -1,10 +1,35 @@
 #include "types.h"
+#include "rel/movie/globals.h"
+extern u32 lbl_5_bss_0[8];
+extern struct fn_5_200_lbl_1_bss_970 lbl_1_bss_970;
+extern u32 fn_1_3CC4(u32);
+extern u32 fn_1_407C(u32);
+extern u32 fn_1_435C(u32);
+extern const f32 lbl_5_rodata_0;
+extern void fn_8006CE1C(f32);
+extern void fn_1_3C78(void);
+extern void fn_1_157940(void);
+extern void fn_1_41A8(u32);
+extern void fn_1_A0AA4(void);
+extern void fn_1_47A60(u32);
+extern void fn_800068F4(u32);
+extern void fn_80006904(u32);
+extern void fn_1_A5C98(void *);
+extern s16 lbl_1_bss_962;
+extern struct fn_5_320_lbl_5_data_40 lbl_5_data_40;
+extern u32 lbl_1_bss_71688;
+extern u32 lbl_1_bss_7168C;
+extern u32 fn_1_412A0(u32);
+extern u32 fn_1_48140(u32);
+extern u8 lbl_5_bss_5F;
+extern u8 lbl_5_bss_61;
+extern u32 fn_5_3C44(void);
+extern u8 lbl_5_bss_40;
 
 /* fzgx:begin fn_5_200 */
 struct fn_5_200_lbl_1_bss_970 {
     u32 unk_0;
 };
-extern struct fn_5_200_lbl_1_bss_970 lbl_1_bss_970;
 
 void fn_5_200(void) {
     if ((s32) lbl_1_bss_970.unk_0 > 0) {
@@ -14,11 +39,6 @@ void fn_5_200(void) {
 /* fzgx:end fn_5_200 */
 
 /* fzgx:begin fn_5_220 */
-extern struct fn_5_220_lbl_5_bss_0 lbl_5_bss_0;
-extern u32 fn_1_3CC4(u32);
-extern u32 fn_1_407C(u32);
-extern u32 fn_1_435C(u32);
-
 struct fn_5_220_lbl_5_bss_0 {
     u8 pad_0[0x28];
     u32 unk_28;
@@ -30,7 +50,7 @@ struct fn_5_220_lbl_5_bss_0 {
 void fn_5_220(void) {
     struct fn_5_220_lbl_5_bss_0 *p_lbl_5_bss_0;
     u32 t0, t2, t3, t5, t7;
-    p_lbl_5_bss_0 = (struct fn_5_220_lbl_5_bss_0 *)&lbl_5_bss_0;
+    p_lbl_5_bss_0 = (struct fn_5_220_lbl_5_bss_0 *)&(*(struct fn_5_220_lbl_5_bss_0 *)&lbl_5_bss_0);
     t0 = fn_1_435C(p_lbl_5_bss_0->unk_28);
     fn_1_407C(t0);
     t2 = fn_1_435C(p_lbl_5_bss_0->unk_30);
@@ -44,20 +64,6 @@ void fn_5_220(void) {
 /* fzgx:end fn_5_220 */
 
 /* fzgx:begin _epilog */
-extern const f32 lbl_5_rodata_0;
-extern u32 lbl_5_bss_0[8];
-
-extern void fn_8006CE1C(f32);
-extern void fn_1_3C78(void);
-extern void fn_1_157940(void);
-extern u32 fn_1_435C(u32);
-extern void fn_1_41A8(u32);
-extern void fn_1_A0AA4(void);
-extern void fn_1_47A60(u32);
-extern void fn_800068F4(u32);
-extern void fn_80006904(u32);
-extern void fn_1_A5C98(void *);
-
 struct epilog_bss {
     u8 pad_0[0x20];
     u32 unk_20;
@@ -107,11 +113,6 @@ struct fn_5_320_lbl_5_data_40 {
     struct fn_5_320_lbl_5_data_40_0_E44 unk_0[1];
 };
 
-extern s16 lbl_1_bss_962;
-extern struct fn_5_320_lbl_5_data_40 lbl_5_data_40;
-extern u32 lbl_1_bss_71688;
-extern u32 lbl_1_bss_7168C;
-
 void fn_5_320(void) {
     s32 i;
     struct fn_5_320_lbl_5_data_40_0_E44 *p;
@@ -128,11 +129,6 @@ void fn_5_320(void) {
 /* fzgx:end fn_5_320 */
 
 /* fzgx:begin fn_5_684 */
-extern u32 fn_1_412A0(u32);
-extern u32 fn_1_48140(u32);
-extern u8 lbl_5_bss_5F;
-extern u8 lbl_5_bss_61;
-
 void fn_5_684(void) {
     if ((s8)lbl_5_bss_5F != 0) {
     fn_1_48140(154);
@@ -147,11 +143,6 @@ void fn_5_684(void) {
 /* fzgx:end fn_5_684 */
 
 /* fzgx:begin fn_5_13B0 */
-extern u32 fn_1_412A0(u32);
-extern u32 fn_1_48140(u32);
-extern u32 fn_5_3C44(void);
-extern u8 lbl_5_bss_40;
-
 void fn_5_13B0(void) {
     if ((s8)lbl_5_bss_40 != -2) {
     fn_5_3C44();
@@ -172,13 +163,13 @@ struct fn_5_3BF8_lbl_5_bss_0 {
     u8 unk_41;
 };
 
-extern struct fn_5_3BF8_lbl_5_bss_0 lbl_5_bss_0;
+
 
 void fn_5_3BF8(void) {
     struct fn_5_3BF8_lbl_5_bss_0 *p_lbl_5_bss_0;
     u32 v0;
     u32 v1;
-    p_lbl_5_bss_0 = (struct fn_5_3BF8_lbl_5_bss_0 *)&lbl_5_bss_0;
+    p_lbl_5_bss_0 = (struct fn_5_3BF8_lbl_5_bss_0 *)&(*(struct fn_5_3BF8_lbl_5_bss_0 *)&lbl_5_bss_0);
     v0 = p_lbl_5_bss_0->unk_0;
     v1 = *(u32 *)v0;
     ((fn_5_3BF8_Fn0)*(u32 *)((u8 *)v1 + 28))(v0);

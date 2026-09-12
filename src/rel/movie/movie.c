@@ -1,11 +1,15 @@
 #include "types.h"
+#include "rel/movie/globals.h"
+#include "rel/movie/movie.h"
+extern u32 lbl_5_bss_AF4;
+extern s32 fn_80082928(char *, const char *, ...);
+extern char *strchr(const char *, int);
+extern s8 lbl_5_bss_5D;
+extern u32 lbl_5_bss_20;
 
 /* fzgx:begin fn_5_3E54 */
-extern u32 lbl_5_bss_AF4;
-extern u32 lbl_5_bss_B90;
-
 void fn_5_3E54(u32 arg0) {
-    lbl_5_bss_B90 = *(u32 *)((u8 *)&lbl_5_bss_AF4 + ((s8)arg0 << 2));
+    (*(u32 *)&lbl_5_bss_B90) = *(u32 *)((u8 *)&lbl_5_bss_AF4 + ((s8)arg0 << 2));
 }
 /* fzgx:end fn_5_3E54 */
 
@@ -16,12 +20,6 @@ struct fn_5_3E74_Arg0 {
     u8 unk_10[0x100];
 };
 
-extern s32 fn_80082928(char *, const char *, ...);
-extern u32 lbl_5_bss_B90;
-extern char lbl_5_data_1784[];
-extern char *strchr(const char *, int);
-extern s8 lbl_5_bss_5D;
-
 u32 fn_5_3E74(struct fn_5_3E74_Arg0 *arg0) {
     u32 v1;
     s32 v3;
@@ -30,10 +28,10 @@ u32 fn_5_3E74(struct fn_5_3E74_Arg0 *arg0) {
 
     v1 = 0;
     v3 = 0;
-    fn_80082928((char *)lbl_5_bss_B90, lbl_5_data_1784, arg0, (u8 *)arg0 + 4,
+    fn_80082928((char *)(*(u32 *)&lbl_5_bss_B90), (*(char (*)[])&lbl_5_data_1784), arg0, (u8 *)arg0 + 4,
                 (u8 *)arg0 + 8, (u8 *)arg0 + 12, (u8 *)arg0 + 16);
     if (arg0->unk_0 == -1) {
-        lbl_5_bss_B90 = 0;
+        (*(u32 *)&lbl_5_bss_B90) = 0;
     } else {
         i = 0;
         while ((c = arg0->unk_10[i]) != '*' && i < 255) {
@@ -48,7 +46,7 @@ u32 fn_5_3E74(struct fn_5_3E74_Arg0 *arg0) {
             }
         }
         arg0->unk_10[i] = 0;
-        lbl_5_bss_B90 = (u32)strchr((const char *)lbl_5_bss_B90, '\n') + 1;
+        (*(u32 *)&lbl_5_bss_B90) = (u32)strchr((const char *)(*(u32 *)&lbl_5_bss_B90), '\n') + 1;
     }
     if (lbl_5_bss_5D == 5) {
         v1 = (v1 >> 1) & 0x7f;
@@ -64,15 +62,12 @@ struct fn_5_3F94_lbl_5_bss_0 {
     u32 unk_0;
 };
 
-extern struct fn_5_3F94_lbl_5_bss_0 lbl_5_bss_0;
-extern u32 lbl_5_bss_20;
-
 void fn_5_3F94(void) {
     u32 v0;
     if (lbl_5_bss_20 != 0) {
     ((fn_5_3F94_Fn0)lbl_5_bss_20)();
     }
-    v0 = lbl_5_bss_0.unk_0;
+    v0 = (*(struct fn_5_3F94_lbl_5_bss_0 *)&lbl_5_bss_0).unk_0;
     if (v0 != 0) {
     ((fn_5_3F94_Fn1)*(u32 *)((u8 *)*(u32 *)((u8 *)v0 + 0) + 40))(v0, 1);
     }
@@ -89,12 +84,12 @@ struct fn_5_3FF0_lbl_5_bss_0 {
     u32 unk_24;
 };
 
-extern struct fn_5_3FF0_lbl_5_bss_0 lbl_5_bss_0;
+
 
 void fn_5_3FF0(void) {
     struct fn_5_3FF0_lbl_5_bss_0 *p_lbl_5_bss_0;
     u32 v0;
-    p_lbl_5_bss_0 = (struct fn_5_3FF0_lbl_5_bss_0 *)&lbl_5_bss_0;
+    p_lbl_5_bss_0 = (struct fn_5_3FF0_lbl_5_bss_0 *)&(*(struct fn_5_3FF0_lbl_5_bss_0 *)&lbl_5_bss_0);
     if (p_lbl_5_bss_0->unk_20 != 0) {
         ((fn_5_3FF0_Fn0)p_lbl_5_bss_0->unk_24)();
     }
