@@ -1,4 +1,6 @@
 #include "types.h"
+#include "rel/replay/globals.h"
+
 extern u32 fn_1_D0790(void);
 extern u32 lbl_13_bss_38;
 extern int fn_13_A40(void);

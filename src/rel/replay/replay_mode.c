@@ -1,5 +1,16 @@
 #include "types.h"
+#include "rel/replay/globals.h"
 #include "rel/replay/replay_mode.h"
+extern struct fn_13_E8C_lbl_801A63D0 lbl_801A63D0;
+extern u32 fn_1_1547FC(u32);
+extern u32 fn_1_154D84(u32);
+extern u32 fn_1_1596DC(u32);
+extern u32 fn_1_412A0(u32);
+extern u32 fn_1_47A60(u32);
+extern u32 fn_1_484CC(u32);
+extern u32 fn_1_A0AA4(u32);
+extern u32 lbl_13_bss_4C;
+extern u32 lbl_13_bss_50;
 
 /* fzgx:begin fn_13_BCC noprologue */
 #include "types.h"
@@ -174,19 +185,10 @@ void fn_13_CDC(u32 arg0) {
 }
 /* fzgx:end fn_13_CDC */
 
-/* fzgx:begin fn_13_E8C noprologue */
+/* fzgx:begin fn_13_E8C */
 #include "types.h"
 
 extern struct fn_13_E8C_lbl_1_bss_960 lbl_1_bss_960;
-extern struct fn_13_E8C_lbl_801A63D0 lbl_801A63D0;
-extern u32 fn_1_1547FC(u32);
-extern u32 fn_1_154D84(u32);
-extern u32 fn_1_1596DC(u32);
-extern u32 fn_1_412A0(u32);
-extern u32 fn_1_47A60(u32);
-extern u32 fn_1_484CC(u32);
-extern u32 fn_1_A0AA4(u32);
-extern u32 lbl_13_bss_4C;
 
 struct fn_13_E8C_lbl_1_bss_960 {
     s16 unk_0;
@@ -208,10 +210,8 @@ void fn_13_E8C(void) {
 }
 /* fzgx:end fn_13_E8C */
 
-/* fzgx:begin fn_13_EF0 noprologue */
+/* fzgx:begin fn_13_EF0 */
 #include "types.h"
-
-extern u32 lbl_13_bss_50;
 
 void fn_13_EF0(void) {
     lbl_13_bss_50 = 3;
@@ -268,7 +268,7 @@ void fn_13_F00(void) {
 }
 /* fzgx:end fn_13_F00 */
 
-/* fzgx:begin fn_13_FA8 noprologue */
+/* fzgx:begin fn_13_FA8 */
 #include "types.h"
 
 // fn_13_FA8: empty in retail (single blr).
