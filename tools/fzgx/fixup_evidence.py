@@ -2683,7 +2683,9 @@ def _pool_widths(p, module, pool_name):
                 off = int(m.group(2), 0)
                 if off >= 0:
                     w = 8 if m.group(1) in ('lfd', 'stfd') else 4
-                    widths[off] = max(widths.get(off, 0), w)
+                    kind = 'f' if m.group(1) in ('lfs', 'lfd', 'stfs', 'stfd') else 'i'
+                    prev = widths.get(off)
+                    widths[off] = (kind if prev is None or prev[0] == 'i' else prev[0], max(w, prev[1] if prev else 0))
     _POOL_WIDTHS[key] = widths
     return widths
 
@@ -2714,22 +2716,29 @@ def shared_pool_primer(p, symbol, body, check):
             bases[m.group(1)] = syms[m.group(2)]
     out = []
     for reg, pool in bases.items():
-        widths = {}
+        own = {}  # offset -> (kind, width) from this function's loads
         for t in lfmt:
             m = re.match(r'(lfs|lfd|lwz|lha|lhz|lbz) [rf]\d+, (-?0x[0-9a-f]+|-?\d+)\(' + reg + r'\)$', t)
             if m:
                 off = int(m.group(2), 0)
                 if off >= 0:
-                    widths[off] = 8 if m.group(1) == 'lfd' else 4
-        if len(widths) < 2:
+                    own[off] = ('f' if m.group(1) in ('lfs', 'lfd') else 'i', 8 if m.group(1) == 'lfd' else 4)
+        if len(own) < 2:
             continue
-        end = (max(o + w for o, w in widths.items()) + 7) & ~7
+        end = (max(o + w for o, (k, w) in own.items()) + 7) & ~7
         # the pool's element types come from every function of the module that addresses it:
         # another function's double must not be read as a float and a zero (the float would
-        # dedupe with an equal literal and shift everything after it)
-        for o, w in _pool_widths(p, sym.module, pool.name).items():
+        # dedupe with an equal literal and shift everything after it), and a word only ever
+        # loaded as an integer is table data whatever its bits look like
+        widths = dict(own)
+        for o, kw in _pool_widths(p, sym.module, pool.name).items():
             if o < end:
-                widths.setdefault(o, w)
+                widths.setdefault(o, kw)
+        own_offsets = {o for o, (k, w) in own.items() if k == 'f'}
+        for o, s_ in ((x.addr - pool.addr, x) for x in syms.values() if x.kind == 'object' and x.section == pool.section
+                      and pool.addr <= x.addr < pool.addr + end):
+            if s_.attrs.get('data') == 'double' and o % 8 == 0:
+                widths.setdefault(o, ('f', 8))
         if sym.module == 'main':
             raw = next((data[pool.addr - base:pool.addr - base + end] for base, data in p._rel_layout('main').values()
                         if base <= pool.addr and pool.addr + end <= base + len(data)), None)
@@ -2738,23 +2747,24 @@ def shared_pool_primer(p, symbol, body, check):
             raw = sec[pool.addr - base:pool.addr - base + end] if sec is not None else None
         if not raw or len(raw) < end:
             continue
-        own_offsets = {o for o in widths if any(re.match(r'(lfs|lfd) f\d+, ' + (hex(o) if o >= 10 else str(o)) + r'\(' + reg + r'\)$', t) for t in lfmt)}
-        for o, s_ in ((x.addr - pool.addr, x) for x in syms.values() if x.kind == 'object' and x.section == pool.section
-                      and pool.addr <= x.addr < pool.addr + end):
-            if s_.attrs.get('data') == 'double' and o % 8 == 0:
-                widths.setdefault(o, 8)
         def cls(off):
-            if widths.get(off) == 8:
+            kw = widths.get(off)
+            if kw and kw[0] == 'i':
+                return 'N'
+            if kw and kw[1] == 8:
                 return 'D'
             w = raw[off:off + 4]
             if w == b'\0\0\0\0':
                 return 'Z'
             v = _struct.unpack('>f', w)[0]
+            if kw and kw[0] == 'f':
+                return 'F' if _math.isfinite(v) else 'N'
             return 'F' if _math.isfinite(v) and 1e-6 <= abs(v) <= 1e7 else 'N'
         kinds = {off: cls(off) for off in range(0, end, 4)}
-        for _ in range(3):  # zero words beside table words belong to the table
+        floats = {o for o, kw in widths.items() if kw[0] == 'f'}
+        for _ in range(3):  # zero words beside table words belong to the table, unless loaded as a float
             for off in range(0, end, 4):
-                if kinds[off] == 'Z' and (kinds.get(off - 4) == 'N' or kinds.get(off + 4) == 'N'):
+                if kinds[off] == 'Z' and off not in floats and (kinds.get(off - 4) == 'N' or kinds.get(off + 4) == 'N'):
                     kinds[off] = 'N'
         # MWCC dedupes a literal within one compile unit; retail's rodata block spans the TU's
         # units, so equal values recur. A repeat is raw table bytes unless this function loads
@@ -2762,7 +2772,7 @@ def shared_pool_primer(p, symbol, body, check):
         seen = {}
         for off in sorted(kinds):
             k = kinds[off]
-            if k not in ('F', 'Z', 'D') or (k == 'D' and off % 8) or (k != 'D' and kinds.get(off - 4) == 'D' and (off - 4) % 8 == 0 and widths.get(off - 4) == 8):
+            if k not in ('F', 'Z', 'D') or (k == 'D' and off % 8) or (k != 'D' and kinds.get(off - 4) == 'D' and (off - 4) % 8 == 0 and (widths.get(off - 4) or ('', 0))[1] == 8):
                 continue
             key = (k, bytes(raw[off:off + (8 if k == 'D' else 4)]))
             if key in seen:
@@ -2806,6 +2816,10 @@ def shared_pool_primer(p, symbol, body, check):
         m = re.search(r'^[\w \*]+?\b' + re.escape(sym.name) + r'\s*\([^;{]*\)\s*\{', body, re.M)
         if not m:
             continue
-        text = body[:m.start()] + primer + body[m.start():]
+        # ahead of every file-scope definition: a static const object of the body is pool data
+        # too, and MWCC lays the section out in definition order
+        includes = list(re.finditer(r'^#include[^\n]*\n', body[:m.start()], re.M))
+        at = includes[-1].end() if includes else 0
+        text = body[:at] + primer + body[at:]
         out.append((f'prime shared-pool layout ({pool.name}, {end:#x} bytes)', text))
     return out
