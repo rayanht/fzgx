@@ -1,13 +1,29 @@
 #include "types.h"
-extern struct Fn10Data lbl_10_bss_0;
+#include "rel/sel/globals.h"
+
 extern int fn_1_152970(int, int, int, int, struct Fn10Data *, int, int);
 extern u32 lbl_10_bss_49384;
-extern u32 lbl_10_bss_49388;
 extern void fn_1_435C(u32);
 extern void fn_1_407C(void);
 extern void fn_1_3CC4(void);
+extern int fn_1_4C10(void);
+extern struct Fn10834State lbl_1_bss_8B3A0;
+extern struct Fn10834Status lbl_1_bss_962;
+extern u16 lbl_1_bss_968;
+extern void fn_10_CFDC(void);
+extern void fn_1_12C060(void *);
+extern void fn_1_A266C(void);
+extern u32 lbl_10_bss_14;
+extern struct Fn10834Event lbl_1_bss_9C;
+extern u8 lbl_1_bss_8CA28;
+extern void fn_1_A2D84(u32);
 
-/* fzgx:begin fn_10_0 */
+/* fzgx:begin fn_10_0 noprologue */
+#include "types.h"
+
+extern struct Fn10Data lbl_10_bss_0;
+extern int fn_1_152970(int, int, int, int, struct Fn10Data *, int, int);
+
 struct Fn10Data {
     u8 pad[0x18];
     s16 value_18;
@@ -42,18 +58,6 @@ struct Fn10834Event {
     u8 pad_6[2];
     u32 value_8;
 };
-
-extern int fn_1_4C10(void);
-extern struct Fn10834State lbl_1_bss_8B3A0;
-extern struct Fn10834Status lbl_1_bss_962;
-extern u16 lbl_1_bss_968;
-extern void fn_10_CFDC(void);
-extern void fn_1_12C060(void *);
-extern void fn_1_A266C(void);
-extern u32 lbl_10_bss_14;
-extern struct Fn10834Event lbl_1_bss_9C;
-extern u8 lbl_1_bss_8CA28;
-extern void fn_1_A2D84(u32);
 
 void fn_10_834(void) {
     struct Fn10834State *state;
