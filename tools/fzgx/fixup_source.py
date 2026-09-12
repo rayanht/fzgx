@@ -459,14 +459,53 @@ def perturbations(body: str, name: str) -> List[Tuple[str, str, str]]:
         s0 = span[1] + m.start(); e0 = span[1] + m.end()
         out.append(("commute", f"{a_} {op} {b_} -> {b_} {op} {a_}", body[:s0] + f"({b_} {op} {a_})" + body[e0:]))
     # 12. swap two adjacent statements that share no identifier (independent: order is free)
+    from .dataimport import BASIC
+    _, variables = declared_types(body,span[0])
+    layouts = record_layouts(body,span[0],variables)
     stmts_ = [(m.start() + span[1], m.end() + span[1], m.group(0)) for m in re.finditer(r"^[ \t]*[^\n{}]+;\n", body[span[1]:span[2]], re.M)]
     for (s1, e1, t1), (s2, e2, t2) in zip(stmts_, stmts_[1:]):
         if e1 != s2:
             continue
         ids1 = set(re.findall(r"[A-Za-z_]\w*", t1)); ids2 = set(re.findall(r"[A-Za-z_]\w*", t2))
-        if ids1 & ids2 or "(" in t1 and "(" in t2:  # shared names or two calls: order carries meaning
+        shared=ids1 & ids2
+        for root in tuple(shared):
+            accesses=[]
+            for text in (t1,t2):
+                pattern=r'\b'+re.escape(root)+r'(?:(?:->|\.)\w+)+'
+                members=re.findall(pattern,text)
+                if not members or re.search(r'\b'+re.escape(root)+r'\b',re.sub(pattern,'',text)):break
+                ranges=[]
+                for expression in members:
+                    layout=member_layout(expression,layouts,variables)
+                    if not layout or layout[0]!=root or layout[3] is not None:break
+                    typ=layout[2].strip();width=4 if '*' in typ else BASIC.get(typ,(0,))[0]
+                    if not width or 'volatile' in typ:break
+                    ranges.append((layout[1],layout[1]+width))
+                if len(ranges)!=len(members):break
+                accesses.append(ranges)
+            if len(accesses)==2 and all(b<=c or d<=a for a,b in accesses[0] for c,d in accesses[1]):shared.remove(root)
+        if shared or "(" in t1 and "(" in t2:  # shared values or two calls: order carries meaning
             continue
         out.append(("stmt-swap", f"swap `{t1.strip()[:30]}` / `{t2.strip()[:30]}`", body[:s1] + t2 + t1 + body[e2:]))
+    pure=set()
+    for helper in re.finditer(r'\bstatic\s+inline\s+'+TYPE+r'\s*(?:(?<=\*)|\s)(\w+)\([^;{}]*\)\s*\{',body[:span[0]]):
+        helper_span=_function_body_span(body,helper[1])
+        if not helper_span:continue
+        text=body[helper_span[1]:helper_span[2]]
+        locals_={r[3] for r in _locals(body,helper_span)}
+        writes=re.findall(r'\b(\w+(?:(?:->|\.)\w+)*)\s*=(?!=)',text)
+        if (not call_sites(text) and not re.search(r'volatile|\+\+|--|(?:^|;)\s*\*[^;]+=(?!=)',text)
+                and all('->' not in w and w.split('.')[0] in locals_ for w in writes)):pure.add(helper[1])
+    for (a,b,first),(c,d,second),(e,f,third) in zip(stmts_,stmts_[1:],stmts_[2:]):
+        if body[b:c].strip() or body[d:e].strip():continue
+        store=re.fullmatch(r'\s*(\w+(?:(?:->|\.)\w+)+)\s*=\s*(-?\d+|0x[0-9A-Fa-f]+)[uU]?;\s*',first)
+        load=re.fullmatch(r'\s*(\w+)\s*=\s*([^;]+);\s*',second)
+        address=re.fullmatch(r'\s*(\w+)\s*=\s*([^;]+);\s*',third)
+        if not store or not load or not address or '*' not in variables.get(address[1],''):continue
+        if re.search(r'\b'+re.escape(store[1])+r'\b',second+third) or re.search(r'\+\+|--|volatile',second+third):continue
+        if any(fn not in pure for fn,_,_,_ in call_sites(second+third)):continue
+        if re.search(r'\b'+re.escape(load[1])+r'\b',address[2]) and load[1]!=address[1]:
+            out.append(('stmt-swap',f'form address before store at {a}',body[:a]+second+third+first+body[f:]))
     # 13. struct layout: shift every field of a block-private struct by a small delta (front padding)
     for m in re.finditer(r"(?:typedef\s+)?struct\s+\w*\s*\{([^}]*)\}", body):
         inner = m.group(1)
@@ -909,7 +948,7 @@ def promoted_locals(body, name):
         if token[0]=='{':stack.append(at)
         elif stack:scopes.append((stack.pop(),at))
     out=[];groups={}
-    for decl in re.finditer(r'(?m)^[ \t]*(s8|u8|s16|u16|short|unsigned short|signed char|unsigned char)\s+(\w+)\s*;',code[span[1]:span[2]]):
+    for decl in re.finditer(r'(?m)^[ \t]*(s8|u8|s16|u16|short|unsigned short|signed char|unsigned char)\s+(\w+)\s*(?:=\s*([^;{}]+))?;',code[span[1]:span[2]]):
         a,b=span[1]+decl.start(),span[1]+decl.end();ty,var=decl[1],decl[2]
         enclosing=[(lo,hi) for lo,hi in scopes if lo<a<b<=hi]
         if not enclosing:continue
@@ -918,9 +957,14 @@ def promoted_locals(body, name):
         if re.search(r'&\s*'+ident,region) or re.search(ident+r'\s*(?:\+\+|--|[+*/&|^%-]=)|(?:\+\+|--)\s*'+ident,region):continue
         if re.search(TYPE+r'\s+'+re.escape(var)+r'\s*[;=]',region):continue
         assignments=list(re.finditer(ident+r'\s*=(?!=)\s*([^;{}]+);',region))
-        if not assignments:continue
+        if not assignments and decl[3] is None:continue
         new='s32' if ty in ('s8','s16','short','signed char') else 'u32'
         changes=[(span[1]+decl.start(1),span[1]+decl.end(1),new)]
+        if decl[3] is not None:
+            lo,hi=span[1]+decl.start(3),span[1]+decl.end(3)
+            narrow_load=re.fullmatch(r'\s*\(\s*\*\s*\(\s*'+re.escape(ty)+r'(?:\s+volatile)?\s*\*\s*\)\s*&\s*\([^();]+\)\s*\)\s*',code[lo:hi])
+            if not narrow_load:
+                changes.append((lo,hi,'('+ty+')('+body[lo:hi]+')'))
         changes.extend((b+m.start(1),b+m.end(1),'('+ty+')('+body[b+m.start(1):b+m.end(1)]+')') for m in assignments)
         text=body
         for x,y,value in sorted(changes,reverse=True):text=text[:x]+value+text[y:]
@@ -1078,9 +1122,8 @@ def _u64_family(body: str, name: str, span, inner: str) -> List[Tuple[str, str, 
     return out
 
 
-def all_rewrites(body: str, name: str, max_per_family: int = 16) -> List[Tuple[str, str, str]]:
-    """Every single-step rewrite, at most `max_per_family` of any one family (the declaration
-    permutations alone would be a hundred; the engine shares their candidate budget)."""
+def all_rewrites(body: str, name: str) -> List[Tuple[str, str, str]]:
+    """Expose every site; the engine owns the compilation budget."""
     out: List[Tuple[str, str, str]] = []
     for fn in (lambda b, n: perturbations(b, n),
                lambda b, n: [("regalloc", l, t) for l, t in rewrites(b, n)],
@@ -1089,33 +1132,25 @@ def all_rewrites(body: str, name: str, max_per_family: int = 16) -> List[Tuple[s
             out += fn(body, name)
         except Exception:
             continue
-    counts: Dict[str, int] = {}
-    kept = []
+    kept = list(out)
     by_fam: Dict[str, List[str]] = {}
     for fam, label, text in out:
-        counts[fam] = counts.get(fam, 0) + 1
         by_fam.setdefault(fam, []).append(text)
-        if counts[fam] <= max_per_family:
-            kept.append((fam, label, text))
     # every edit of a family applied together (the same fix at every site): the composition of
     # the per-site texts when their edits do not overlap
     for fam, texts in by_fam.items():
         if len(texts) < 2 or fam in ("decl-order", "regalloc", "param-count", "struct-pad"):
             continue
-        base_lines = body.splitlines(keepends=True)
-        merged = list(base_lines); ok = True; touched: set = set()
+        changes=[]
         for t in texts[:24]:
-            sm = difflib.SequenceMatcher(None, base_lines, t.splitlines(keepends=True), autojunk=False)
-            ops = [(tag, i1, i2, j1, j2) for tag, i1, i2, j1, j2 in sm.get_opcodes() if tag != "equal"]
-            if any(set(range(i1, max(i2, i1 + 1))) & touched for _, i1, i2, _, _ in ops):
+            ops=edits(body,t)
+            if any(a<max(d,c+1) and c<max(b,a+1) for a,b,_ in ops for c,d,_ in changes):
                 continue
-            tl = t.splitlines(keepends=True)
-            for tag, i1, i2, j1, j2 in reversed(ops):
-                merged[i1:i2] = tl[j1:j2]
-                touched.update(range(i1, max(i2, i1 + 1)))
-        text = "".join(merged)
+            changes.extend(ops)
+        text=body
+        for a,b,value in sorted(changes,reverse=True):text=text[:a]+value+text[b:]
         if text != body and text not in texts:
-            kept.append((fam, f"{fam} at every site", text))
+            kept.append((fam, f"{fam} compatible sites", text))
     return kept
 
 
@@ -1912,6 +1947,41 @@ def address_expressions(body, name):
     for declaration in re.finditer(r'('+TYPE+r')\s*(?:(?<=\*)|\s)(\w+)\s*\[[^\]]+\]\s*;', code[:span[0]]):
         members.setdefault(declaration[2], set()).add(declaration[1].strip())
     fields, variables = declared_types(code,span[0])
+    offset_home=(r'('+TYPE+r')\s*(?:(?<=\*)|\s)(\w+)\s*(?:=\s*|;\s*\2\s*=\s*)\(\s*\1\s*\)\s*(\w+)\s*;\s*'
+                 r'\2\s*=\s*(\w+)\s*\+\s*\(\s*s32\s*\)\s*\2\s*;\s*return\s+\2\s*;')
+    for match in re.finditer(offset_home,code[:span[0]]):
+        typ,var,offset,base=match.groups()
+        if '*' not in typ:continue
+        replacement=('struct { '+typ+' value; } '+var+';\n    '+var+'.value = ('+typ+')'+offset+';\n    '
+                     +var+'.value = '+base+' + (s32)'+var+'.value;\n    return '+var+'.value;')
+        out.append((f'address aggregate offset home at {match.start()}',body[:match.start()]+replacement+body[match.end():]))
+    # A dynamic displacement is a distinct live value in the original code.
+    # Keeping that boundary across inlining prevents a trailing constant from
+    # being distributed into every later field access.
+    for assignment in re.finditer(r'(?m)^[ \t]*(\w+)\s*=\s*([^;{}\n]+);',code[span[1]:span[2]]):
+        typ=variables.get(assignment[1],'').strip()
+        if '*' not in typ:continue
+        lo,hi=span[1]+assignment.start(2),span[1]+assignment.end(2)
+        rhs=body[lo:hi];depth=0;split=None
+        for i,ch in enumerate(rhs):
+            depth+=(ch=='(')-(ch==')')
+            if ch=='+' and depth==0:split=i
+        if split is None:continue
+        base,offset=rhs[:split].strip(),rhs[split+1:].strip()
+        if not re.search(r'[*/-]',offset) or re.search(r'\+\+|--|\b\w+\s*\(',offset):continue
+        helper=name+'_address_'+str(lo)
+        if re.search(r'\b'+helper+r'\b',code):continue
+        for reverse in (False,True):
+            for home in (False,True):
+                parameters=typ+' base, s32 offset' if not reverse else 's32 offset, '+typ+' base'
+                arguments=base+', '+offset if not reverse else offset+', '+base
+                expression='    return base + offset;\n'
+                if home:expression='    '+typ+' result;\n    result = ('+typ+')offset;\n    result = base + (s32)result;\n    return result;\n'
+                definition='static inline '+typ+' '+helper+'('+parameters+') {\n'+expression+'}\n'
+                text=body[:lo]+helper+'('+arguments+')'+body[hi:]
+                insertion=body.rfind('\n',0,span[0])+1
+                text=text[:insertion]+definition+text[insertion:]
+                out.append((f'address displacement at {lo} '+('offset-first' if reverse else 'base-first')+(' result home' if home else ''),text))
     aliases = dict(re.findall(r'(?m)^#define\s+(\w+)\s+(\w+)\s*$',code))
     typed = {}
     for site in sites:
@@ -2140,6 +2210,31 @@ def pointer_lifetimes(body, name):
     while more := {name for name,typ in aliases.items() if typ in pointers} - pointers:
         pointers.update(more)
     out = []
+    # A switch selected through a freshly loaded pointer already dominates
+    # each arm. Keep that value when an earlier repair redundantly reassigns
+    # it after stores to different fields of the same owner.
+    for control,start,end,args in call_sites(code):
+        if control!='switch' or len(args)!=1 or not span[1]<=start<end<span[2]:continue
+        selector=re.fullmatch(r'\s*(\w+)->\w+\s*',code[slice(*args[0])])
+        if not selector:continue
+        var=selector[1];before=code[span[1]:start]
+        init=re.search(r'\b'+re.escape(var)+r'\s*=\s*(\w+->\w+)\s*;\s*$',before)
+        if not init:continue
+        value=init[1];opening=re.match(r'\s*\{',code[end:])
+        if not opening:continue
+        closing=end+opening.end();depth=1
+        while closing<span[2] and depth:
+            depth+=(code[closing]=='{')-(code[closing]=='}');closing+=1
+        region=code[end:closing]
+        for reload in re.finditer(r'(?m)^[ \t]*'+re.escape(var)+r'\s*=\s*\(?'+re.escape(value)+r'\)?\s*;[^\S\n]*',region):
+            a,b=end+reload.start(),end+reload.end()
+            cases=list(re.finditer(r'\b(?:case\s+[^:]+|default)\s*:',code[end:a]))
+            if not cases:continue
+            prefix=code[end+cases[-1].end():a]
+            if re.search(r'\b\w+\s*\(|\b(?:if|switch|for|while|goto)\b|[}\[\]]',prefix):continue
+            writes=re.findall(r'([^;{}\n]+?)\s*=(?!=)',prefix)
+            if any((lhs:=w.strip())==var or lhs==value or not re.fullmatch(r'\w+|'+re.escape(value.split('->')[0])+r'->\w+',lhs) for w in writes):continue
+            out.append((f'lifetime retain switch pointer {var} at {a}',body[:a]+body[b:]))
     # An assignment at the first short-circuited read preserves its evaluation
     # point; hoisting the read before the condition can change both behavior
     # and the allocator's live ranges.

@@ -273,10 +273,20 @@ class Engine:
         if check.ok:
             yield from evidence.aggregate_initializers(self.project, row['symbol'], body, check)
             yield from evidence.native_pool_objects(self.project, row['symbol'], body, check)
+            if re.search(r'(?m)^\s*#define\b', body):
+                # Pool fields passed through macro parameters only have a
+                # concrete type and offset after the selected compiler expands them.
+                try:
+                    expanded = self.declarations.expand(row)
+                except (ValueError, OSError) as error:
+                    self.emit(dict(stage='pool-expansion-rejected',symbol=row['symbol'],error=str(error)))
+                else:
+                    yield from evidence.native_pool_objects(self.project, row['symbol'], expanded, check)
             yield from evidence.conversion_arguments(self.project, row['symbol'], body, check)
             yield from evidence.rotate_bit_tests(body, name, check)
             yield from evidence.call_result_types(self.project, row['symbol'], body, check)
             yield from evidence.floating_expressions(self.project, row['symbol'], body, check)
+            yield from evidence.encoded_conversions(self.project, row['symbol'], body, check)
             yield from evidence.scalar_lifetimes(self.project, row['symbol'], body, check)
             yield from evidence.stack_object_boundaries(self.project, row['symbol'], body, check)
             yield from evidence.optimizer_pragmas(body, name)
@@ -337,7 +347,12 @@ class Engine:
         for helper in re.findall(r'\bstatic\s+inline\s+[\w *]+?\b(\w+)\s*\([^;{}]*\)\s*\{', body):
             if helper == name:
                 continue
-            variants = source.commutations(body,helper) + source.probes(body,helper,64)
+            variants = (source.pointer_lifetimes(body,helper) + source.loop_lifetimes(body,helper)
+                        + source.initialization_orders(body,helper) + source.reuse_temporaries(body,helper)
+                        + source.commutations(body,helper) + source.probes(body,helper,64))
+            if capture:
+                helper_decls, _ = source.declaration_candidates(body,helper,capture,constraints,max_orders)
+                variants = source.carrier_candidates(body,helper,capture,constraints) + [('graph declaration-order',text) for text in helper_decls] + variants
             if operators:
                 variants = source.operand_lifetimes(body,helper,operators) + variants
             variants += [(family+': '+label,text) for family,label,text in source.all_rewrites(body,helper)]

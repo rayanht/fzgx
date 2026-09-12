@@ -567,6 +567,7 @@ def pool_scalar_reads(p, symbol, body, check):
     for name,owner in re.findall(r'(?m)^#define\s+(\w+)\s+(\w+)\s*$',code[:span[0]]):
         if owner in roots:
             roots[name] = roots[owner]
+            variables[name] = roots[owner][1]
     ranges, position, macro = [(span[0],span[1])], 0, None
     for line in code[:span[0]].splitlines(keepends=True):
         if line.lstrip().startswith('#define '):
@@ -576,7 +577,7 @@ def pool_scalar_reads(p, symbol, body, check):
             ranges.append((macro,position)); macro = None
     edits = []
     for name,(anchor,ty) in roots.items():
-        pattern = r'\b'+re.escape(name)+r'((?:(?:->|\.)\w+)*)(?:\s*\[([^]\n]+)\])?'
+        pattern = r'\b'+re.escape(name)+r'((?:\s*(?:->|\.)\s*\w+)*)(?:\s*\[([^]\n]+)\])?'
         for use in re.finditer(pattern,code):
             start,end = use.span()
             if not any(a<=start and end<=b for a,b in ranges):
@@ -590,7 +591,7 @@ def pool_scalar_reads(p, symbol, body, check):
                     or re.search(r'#\s*define\s+$',prefix)):
                 continue
             if use[1]:
-                field = member_layout(name+use[1],layouts,variables)
+                field = member_layout(name+re.sub(r'\s+','',use[1]),layouts,variables)
                 if not field or field[0]!=name:
                     continue
                 _,offset,element,count = field
@@ -1021,6 +1022,38 @@ def floating_expressions(p, symbol, body, check):
     return out
 
 
+def encoded_conversions(p, symbol, body, check):
+    """Recover compiler conversion scratch from an explicit lifted union."""
+    from .sdkimport import masked
+    code=masked(body);span=_function_span(code,p.resolve(symbol).name)
+    if not span:return []
+    constants={(a,b):value for a,b,value in pool_scalar_reads(p,symbol,body,check)}
+    out=[]
+    for declaration in re.finditer(r'\bunion\s*\{\s*(?:f64|double)\s+(\w+)\s*;\s*(?:u32|unsigned int)\s+(\w+)\s*\[2\]\s*;\s*\}\s*(\w+)\s*;',code[span[0]:span[1]]):
+        member,words,var=declaration.groups();base=span[0]
+        pattern=(r'\b'+re.escape(var)+r'\.'+re.escape(words)+r'\[1\]\s*=\s*(.+?)\s*\^\s*0x80000000[uU]?\s*;\s*'
+                 +re.escape(var)+r'\.'+re.escape(words)+r'\[0\]\s*=\s*0x43300000[uU]?\s*;')
+        assignments=list(re.finditer(pattern,code[base+declaration.end():span[1]],re.S))
+        if len(assignments)!=1:continue
+        assignment=assignments[0];a=base+declaration.end()+assignment.start();b=base+declaration.end()+assignment.end();value=assignment[1]
+        if re.search(r'[;{}]|\+\+|--|(?<![=!<>])=(?!=)',value):continue
+        read=re.search(r'\(\s*(f32|float|f64|double)\s*\)\s*\(\s*'+re.escape(var)+r'\.'+re.escape(member)+r'\s*-\s*([^();]+)\s*\)',code[b:span[1]])
+        if not read or ';' in code[b:b+read.start()]:continue
+        lo,hi=b+read.start(2),b+read.end(2)
+        while code[hi-1].isspace():hi-=1
+        bias=constants.get((lo,hi))
+        try:
+            if bias is None or float(bias.rstrip('fF'))!=4503601774854144.0:continue
+        except ValueError:continue
+        if len(re.findall(r'\b'+re.escape(var)+r'\b',code[base:span[1]]))!=4:continue
+        edits=[(base+declaration.start(),base+declaration.end(),''),(a,b,''),
+               (b+read.start(),b+read.end(),'('+read[1]+')(s32)('+value.strip()+')')]
+        text=body
+        for lo,hi,replacement in sorted(edits,reverse=True):text=text[:lo]+replacement+text[hi:]
+        out.append(('recover encoded integer conversion '+var,text))
+    return out
+
+
 def aggregate_initializers(p, symbol, body, check):
     """Restore named aggregate bytes using their recovered field types."""
     from .sdkimport import masked
@@ -1073,7 +1106,7 @@ def native_pool_objects(p, symbol, body, check):
         text=body[:lo]+f'struct {typ} *{root};\n{root} = &{anchor};'+body[hi:]
         text=text[:declaration.start()]+f'extern struct {typ} {anchor};'+text[declaration.end():]
         out.extend(native_pool_objects(p,symbol,text,check))
-    for declaration in re.finditer(r'\bextern\s+struct\s+(\w+)\s+(\w+)\s*;',code[:span[0]]):
+    for declaration in re.finditer(r'\bextern\s+(?:const\s+)?(?:struct\s+)?(\w+)\s+(\w+)\s*;',code[:span[0]]):
         typ,anchor=declaration[1],declaration[2]; owner=p.find_symbol(anchor,sym.module)
         if not owner or owner.module!=sym.module or owner.section not in ('.data','.rodata') or typ not in layouts:
             continue
@@ -1103,10 +1136,13 @@ def native_pool_objects(p, symbol, body, check):
         if cursor<limit or not selected:
             continue
         roots={anchor:'.'}; assignments=[]
-        for assignment in re.finditer(r'(?m)^[ \t]*(\w+)\s*=\s*&'+re.escape(anchor)+r'\s*;',code[span[0]:span[1]]):
+        for assignment in re.finditer(r'\b(\w+)\s*=\s*(?:\(\s*(?:struct\s+)?'+re.escape(typ)+r'\s*\*\s*\)\s*)?&'+re.escape(anchor)+r'\s*;',code[span[0]:span[1]]):
             root=assignment[1]
             if len(re.findall(r'\b'+re.escape(root)+r'\s*=(?!=)',code[span[0]:span[1]]))==1:
-                roots[root]='->';assignments.append((span[0]+assignment.start(),span[0]+assignment.end(),''))
+                a,b=span[0]+assignment.start(),span[0]+assignment.end()
+                prefix=code[code.rfind('\n',span[0],a)+1:a]
+                replacement=root+';' if re.fullmatch(r'\s*(?:struct\s+)?'+re.escape(typ)+r'\s*\*\s*',prefix) else ''
+                roots[root]='->';assignments.append((a,b,replacement))
         atoms={};valid=True
         for field,kind,offset,width,dims in fields:
             extent=width*math.prod(dims or (1,));address=owner.addr+offset
@@ -1143,18 +1179,21 @@ def native_pool_objects(p, symbol, body, check):
             continue
         edits=list(assignments)
         for root,operator in roots.items():
-            for use in re.finditer(r'\b'+re.escape(root)+re.escape(operator)+r'(\w+)',code[span[0]:span[1]]):
+            for use in re.finditer(r'\b'+re.escape(root)+r'\s*'+re.escape(operator)+r'\s*(\w+)',code[span[0]:span[1]]):
                 if use[1] not in replacements:
                     valid=False;break
                 edits.append((span[0]+use.start(),span[0]+use.end(),replacements[use[1]]))
-        text=body
-        for a,b,value in sorted(edits,reverse=True):
-            text=text[:a]+value+text[b:]
         # Any remaining use of the old base needs its own address/lifetime proof.
-        remaining=masked(text[span[0]:])
-        if any(re.search(r'\b'+re.escape(root)+r'\b', re.sub(r'\bstruct\s+\w+\s*\*\s*'+re.escape(root)+r'\s*;','',remaining)) for root in roots):
+        # Check the input spans: a recovered first atom can legitimately have
+        # the same name as the old aggregate anchor.
+        remaining=code
+        for a,b,_ in sorted(edits,reverse=True):remaining=remaining[:a]+' '*(b-a)+remaining[b:]
+        remaining=remaining[span[0]:span[1]]
+        if any(re.search(r'\b'+re.escape(root)+r'\b', re.sub(r'\b(?:struct\s+)?\w+\s*\*\s*'+re.escape(root)+r'\s*;|\b'+re.escape(root)+r'\s*;','',remaining)) for root in roots):
             continue
         if valid:
+            text=body
+            for a,b,value in sorted(edits,reverse=True):text=text[:a]+value+text[b:]
             text=text[:declaration.start()]+'\n'.join(definitions)+text[declaration.end():]
             out.append(('recover native shared-pool objects '+anchor,text))
     return out
@@ -2105,6 +2144,25 @@ def reload_lvalues(body, name, diffs, missing_globals=()):
         if m and not ours:
             offsets.setdefault(int(m[2],0), set()).add(m[1])
     out, pointers = [], {}
+    # Earlier repairs may have forced a read which is now redundant. Permit
+    # the compiler to cache it again only for a tool-annotated cast over an
+    # otherwise nonvolatile, type-identical field implicated by the diff.
+    changed_offsets={int(m[1],0) for _,ours in diffs
+                     if (m:=re.fullmatch(r'(?:lwz|lhz|lha|lbz|lfs|lfd) [rf]\d+, (0x[\da-f]+)\(r(?:[2-9]|[12]\d|3[01])\)',ours))}
+    reloads={}
+    pattern=r'\(\s*\*\s*\(\s*([\w *]+?)\s+volatile\s*\*\s*\)\s*&\s*\((\w+(?:(?:->|\.)\w+)+)\)\s*\)'
+    for match in re.finditer(pattern,code[span[0]:span[1]]):
+        a,b=span[0]+match.start(),span[0]+match.end();ty,expression=match.groups()
+        annotation=re.match(r'(\s*;)?\s*/\* Retail reloads (?:this field|the pointer between statements)\. \*/',body[b:])
+        actual=member_type(expression,fields,variables);layout=member_layout(expression,layouts,variables)
+        if (not annotation or not layout or layout[1] not in changed_offsets or 'volatile' in actual
+                or re.sub(r'\s+','',actual)!=re.sub(r'\s+','',ty)):continue
+        reloads.setdefault(expression,[]).append((a,b+annotation.end(),'('+expression+')'+(annotation[1] or '')))
+    for expression,sites in reloads.items():
+        for positions in [sites]+([[s] for s in sites] if len(sites)>1 else []):
+            text=body
+            for a,b,value in reversed(positions):text=text[:a]+value+text[b:]
+            out.append(('lifetime reload cached '+expression+' at '+('every site' if positions is sites else str(positions[0][0])),text))
     for offset in sorted(offsets,key=lambda n:(n==0,n)):
         field = re.compile(r'\b(unk_?0*'+format(offset,'x')+r')\b',re.I)
         expressions = list(re.finditer(r'\b\w+(?:(?:->|\.)\w+)+',code[span[0]:span[1]]))
