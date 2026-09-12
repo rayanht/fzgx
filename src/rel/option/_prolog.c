@@ -51,6 +51,11 @@ extern u32 fn_1_3CC4(u32);
 extern u32 fn_1_407C(u32);
 extern u32 fn_1_426C(u32);
 extern void fn_4_AB90(void);
+extern struct _prolog_lbl_1_bss_6EAD0 lbl_1_bss_6EAD0;
+extern struct fn_4_869C_lbl_1_bss_718E0 lbl_1_bss_718E0;
+extern s32 lbl_1_bss_970;
+extern u8 lbl_4_bss_2;
+extern u16 lbl_1_bss_968;
 
 /* fzgx:begin fn_4_250 */
 #include "font.h"
@@ -192,10 +197,6 @@ void _prolog(void) {
 /* fzgx:end _prolog */
 
 /* fzgx:begin fn_4_800 */
-extern u8 lbl_4_bss_2;
-extern u32 lbl_4_bss_8;
-extern s32 lbl_1_bss_970;
-extern u16 lbl_1_bss_968;
 extern u32 fn_1_4A00(u32, u32, u32);
 extern int fn_1_4C10(void);
 
@@ -240,13 +241,16 @@ void fn_4_894(void) {
 }
 /* fzgx:end fn_4_894 */
 
-/* fzgx:begin _epilog noprologue */
+/* fzgx:begin _epilog */
 #include "types.h"
 
 extern const f32 lbl_4_rodata_4C[45];
-extern struct option_epilog_lbl_4_bss_4 lbl_4_bss_4;
-extern struct option_epilog_lbl_4_bss_8 lbl_4_bss_8;
-extern struct option_epilog_lbl_1_bss_6EAD0 lbl_1_bss_6EAD0;
+
+
+
+
+
+
 extern void fn_8006CE1C(f32);
 extern void fn_1_1596DC(u32);
 extern void fn_1_484CC(u32);
@@ -279,23 +283,22 @@ void _epilog(void) {
     fn_1_47A60(3);
     fn_1_412A0(1);
     fn_1_3C78();
-    fn_1_435C(lbl_4_bss_4.unk_0);
+    fn_1_435C((*(struct option_epilog_lbl_4_bss_4 *)&lbl_4_bss_4).unk_0);
     fn_1_41A8();
-    fn_1_435C(lbl_4_bss_8.unk_0);
+    fn_1_435C((*(struct option_epilog_lbl_4_bss_8 *)&lbl_4_bss_8).unk_0);
     fn_1_41A8();
-    if (lbl_1_bss_6EAD0.unk_0 != 0) {
-        fn_8004BF0C(((struct option_epilog_object *)lbl_1_bss_6EAD0.unk_0)->unk_0, -999);
-        fn_8004BF0C(((struct option_epilog_object *)lbl_1_bss_6EAD0.unk_0)->unk_4, -999);
-        ADXT_Stop(((struct option_epilog_object *)lbl_1_bss_6EAD0.unk_0)->unk_0);
-        ADXT_Stop(((struct option_epilog_object *)lbl_1_bss_6EAD0.unk_0)->unk_4);
+    if ((*(struct option_epilog_lbl_1_bss_6EAD0 *)&lbl_1_bss_6EAD0).unk_0 != 0) {
+        fn_8004BF0C(((struct option_epilog_object *)(*(struct option_epilog_lbl_1_bss_6EAD0 *)&lbl_1_bss_6EAD0).unk_0)->unk_0, -999);
+        fn_8004BF0C(((struct option_epilog_object *)(*(struct option_epilog_lbl_1_bss_6EAD0 *)&lbl_1_bss_6EAD0).unk_0)->unk_4, -999);
+        ADXT_Stop(((struct option_epilog_object *)(*(struct option_epilog_lbl_1_bss_6EAD0 *)&lbl_1_bss_6EAD0).unk_0)->unk_0);
+        ADXT_Stop(((struct option_epilog_object *)(*(struct option_epilog_lbl_1_bss_6EAD0 *)&lbl_1_bss_6EAD0).unk_0)->unk_4);
     }
 }
 /* fzgx:end _epilog */
 
-/* fzgx:begin fn_4_9B0 noprologue */
+/* fzgx:begin fn_4_9B0 */
 #include "types.h"
 
-extern s16 lbl_1_bss_962;
 extern struct fn_4_9B0_lbl_4_data_1260 lbl_4_data_1260;
 extern u32 lbl_1_bss_71688;
 extern u32 lbl_1_bss_7168C;
@@ -354,7 +357,7 @@ void fn_4_D10(void) {
 }
 /* fzgx:end fn_4_D10 */
 
-/* fzgx:begin fn_4_D7C noprologue */
+/* fzgx:begin fn_4_D7C */
 #include "types.h"
 #include "rel/option/globals.h"
 
@@ -369,7 +372,8 @@ struct fn_4_D7C_lbl_1_bss_970 {
     s32 unk_0;
     u8 unk_4;
 };
-extern struct fn_4_D7C_lbl_1_bss_970 lbl_1_bss_970;
+
+
 
 struct fn_4_D7C_lbl_1_bss_6EAB4 {
     u32 unk_0;
@@ -380,7 +384,8 @@ struct fn_4_D7C_lbl_1_bss_9F8 {
     u8 pad_0[0x8];
     u16 unk_8;
 };
-extern struct fn_4_D7C_lbl_1_bss_9F8 lbl_1_bss_9F8;
+
+
 
 struct fn_4_D7C_lbl_4_data_144C {
     s16 unk_0;
@@ -393,7 +398,7 @@ void fn_4_D7C(void) {
     u32 v;
     struct fn_4_D7C_lbl_1_bss_6EAB4 *q;
 
-    p = (struct fn_4_D7C_lbl_1_bss_970 *)&lbl_1_bss_970;
+    p = (struct fn_4_D7C_lbl_1_bss_970 *)&(*(struct fn_4_D7C_lbl_1_bss_970 *)&lbl_1_bss_970);
     if (p->unk_0 <= 0) {
         if (lbl_4_bss_10.unk_0 != 0) {
             if (fn_1_4C10() == 0) {
@@ -403,13 +408,13 @@ void fn_4_D7C(void) {
             }
         } else {
             p->unk_4 = fn_4_0(p->unk_4, 0, 2, -1, 0);
-            if ((lbl_1_bss_9F8.unk_8 >> 9) & 1) {
+            if (((*(struct fn_4_D7C_lbl_1_bss_9F8 *)&lbl_1_bss_9F8).unk_8 >> 9) & 1) {
                 fn_1_A2D84(0xA9010200);
                 q = (struct fn_4_D7C_lbl_1_bss_6EAB4 *)&lbl_1_bss_6EAB4;
                 v = q->unk_0;
                 q->unk_0 = v | 0x2C;
-                lbl_1_bss_970.unk_0 = 1;
-            } else if ((lbl_1_bss_9F8.unk_8 >> 8) & 1) {
+                (*(struct fn_4_D7C_lbl_1_bss_970 *)&lbl_1_bss_970).unk_0 = 1;
+            } else if (((*(struct fn_4_D7C_lbl_1_bss_9F8 *)&lbl_1_bss_9F8).unk_8 >> 8) & 1) {
                 fn_1_A2D84(0xA9010100);
                 lbl_4_bss_10.unk_0 = lbl_4_data_144C[p->unk_4].unk_0;
                 fn_1_4A00(0, 15, lbl_4_bss_8);
@@ -561,8 +566,6 @@ void fn_4_4784(void) {
 /* fzgx:end fn_4_4784 */
 
 /* fzgx:begin fn_4_4B10 */
-extern u16 lbl_4_bss_0;
-extern u32 fn_1_F7308(void);
 extern u32 fn_1_435C(u32);
 
 struct fn_4_4B10_state {
@@ -760,8 +763,7 @@ void fn_4_7C38(void) {
 extern int fn_1_4C10(void);
 extern u16 lbl_1_bss_96A;
 extern u32 fn_4_0(u32, u32, u32, u32, u32);
-extern u32 lbl_1_bss_9F8;
-extern u8 lbl_4_data_2C58[84];
+
 extern void fn_1_1280(u32);
 extern void fn_1_A2D84(u32);
 
@@ -865,7 +867,7 @@ void fn_4_80EC(void) {
 }
 /* fzgx:end fn_4_80EC */
 
-/* fzgx:begin fn_4_8158 noprologue */
+/* fzgx:begin fn_4_8158 */
 #include "types.h"
 
 struct fn_4_8158_lbl_4_bss_0 {
@@ -878,11 +880,13 @@ struct fn_4_8158_lbl_4_bss_0 {
 };
 
 extern int fn_1_4C10(void);
-extern struct fn_4_8158_lbl_4_bss_0 lbl_4_bss_0;
+
+
 extern u16 lbl_1_bss_96A;
 extern u32 fn_1_4A00(u32, u32, u32);
 extern u32 fn_4_0(u32, u32, u32, u32, u32);
-extern u32 lbl_1_bss_9F8;
+
+
 extern u8 lbl_4_data_2D24[56];
 extern void fn_1_1280(u32);
 extern void fn_1_A2D84(u32);
@@ -892,7 +896,7 @@ void fn_4_8158(void) {
     u32 v0;
     u32 t0, t2, t5;
 
-    p_lbl_4_bss_0 = (struct fn_4_8158_lbl_4_bss_0 *)&lbl_4_bss_0;
+    p_lbl_4_bss_0 = (struct fn_4_8158_lbl_4_bss_0 *)&(*(struct fn_4_8158_lbl_4_bss_0 *)&lbl_4_bss_0);
     if (p_lbl_4_bss_0->unk_10 != 0) {
         t0 = fn_1_4C10();
         if ((s32)t0 == 0) {
@@ -1126,8 +1130,7 @@ void fn_4_89E4(void) {
 extern int fn_1_4C10(void);
 extern u16 lbl_1_bss_96A;
 extern void fn_1_1280(u32);
-extern u32 fn_4_ABB0(void);
-extern u32 lbl_4_bss_8;
+
 extern u32 fn_1_4A00(u32, u32, u32);
 
 /* Advance the option resource state and clear a completed selection. */
