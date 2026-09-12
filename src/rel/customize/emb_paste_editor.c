@@ -1,7 +1,18 @@
 #include "types.h"
+#include "rel/customize/globals.h"
+#include "rel/customize/emb_paste_editor.h"
+
+
 extern u8 lbl_3_bss_8F200[];
 extern void fn_1_FC414(void *, int);
 extern u8 lbl_3_bss_A1778[12];
+extern s16 lbl_1_bss_96A;
+extern void fn_1_4A00(int, int, u32);
+extern void fn_1_FDFF4(void);
+extern void fn_1_435C(u32);
+extern void fn_1_426C(s16);
+extern void fn_80008BA8(struct Sig_fn_8004E278_fn_8004E278_Arg0 *, u32, u32);
+extern void fn_80008BEC(struct Sig_fn_8004E278_fn_8004E278_Arg0 *, int, u32);
 
 /* fzgx:begin fn_3_1180C */
 struct Fn3State {
@@ -13,35 +24,27 @@ struct Fn3State {
     s16 mode;
 };
 
-extern struct Fn3State lbl_3_bss_7EDD8;
-extern s16 lbl_3_data_1A40[2];
-extern s16 lbl_1_bss_96A;
-
-extern void fn_1_4A00(int, int, u32);
-extern void fn_1_FDFF4(void);
-extern void fn_1_435C(u32);
-extern void fn_1_426C(s16);
-
 void fn_3_1180C(void) {
-    if (lbl_3_bss_7EDD8.mode == 0xf) {
-        fn_1_4A00(0, 0xf, lbl_3_bss_7EDD8.value);
-    } else if (lbl_3_bss_7EDD8.mode == 0) {
+    if ((*(struct Fn3State *)&lbl_3_bss_7EDD8).mode == 0xf) {
+        fn_1_4A00(0, 0xf, (*(struct Fn3State *)&lbl_3_bss_7EDD8).value);
+    } else if ((*(struct Fn3State *)&lbl_3_bss_7EDD8).mode == 0) {
         fn_1_FDFF4();
-        if (lbl_3_data_1A40[0] != -1) {
-            fn_1_435C(lbl_3_bss_7EDD8.value);
-            fn_1_426C(lbl_3_bss_7EDD8.field_a);
-            lbl_3_bss_7EDD8.field_a = -1;
-            lbl_1_bss_96A = lbl_3_data_1A40[0];
-            lbl_3_data_1A40[0] = -1;
+        if ((*(s16 (*)[2])&lbl_3_data_1A40)[0] != -1) {
+            fn_1_435C((*(struct Fn3State *)&lbl_3_bss_7EDD8).value);
+            fn_1_426C((*(struct Fn3State *)&lbl_3_bss_7EDD8).field_a);
+            (*(struct Fn3State *)&lbl_3_bss_7EDD8).field_a = -1;
+            lbl_1_bss_96A = (*(s16 (*)[2])&lbl_3_data_1A40)[0];
+            (*(s16 (*)[2])&lbl_3_data_1A40)[0] = -1;
         } else {
-            lbl_3_data_1A40[0] = 0x5f;
+            (*(s16 (*)[2])&lbl_3_data_1A40)[0] = 0x5f;
         }
     }
 }
 /* fzgx:end fn_3_1180C */
 
 /* fzgx:begin fn_3_11930 */
-extern u16 lbl_3_bss_7EDD8[52];
+
+
 
 struct PasteEntry {
     u8 pad[0x2c];
@@ -53,7 +56,7 @@ int fn_3_11930(void) {
     u8 * base;
 
     for (i = 0; i < 4; i++) {
-        struct PasteEntry *entry = (struct PasteEntry *)(((u8 *)lbl_3_bss_7EDD8) + i * 4);
+        struct PasteEntry *entry = (struct PasteEntry *)(((u8 *)(*(u16 (*)[52])&lbl_3_bss_7EDD8)) + i * 4);
         if (entry->active != 0) {
             return 1;
         }
@@ -63,10 +66,11 @@ int fn_3_11930(void) {
 /* fzgx:end fn_3_11930 */
 
 /* fzgx:begin fn_3_11974 */
-extern u16 lbl_3_bss_7EDD8[52];
+
+
 
 void fn_3_11974(void) {
-    u32 *fields = (u32 *)&lbl_3_bss_7EDD8;
+    u32 *fields = (u32 *)&(*(u16 (*)[52])&lbl_3_bss_7EDD8);
     fields[11] = 0;
     fields[12] = 0;
     fields[13] = 0;
@@ -78,10 +82,6 @@ void fn_3_11974(void) {
 struct Sig_fn_8004E278_fn_8004E278_Arg0 {
     u32 unk_0;
 };
-
-extern void fn_80008BA8(struct Sig_fn_8004E278_fn_8004E278_Arg0 *, u32, u32);
-extern void fn_80008BEC(struct Sig_fn_8004E278_fn_8004E278_Arg0 *, int, u32);
-
 
 void fn_3_11994(s16 arg0, s16 arg1, s32 arg2, s32 arg3, s32 arg_sp0) {
     s32 temp_r5;
@@ -112,34 +112,33 @@ struct Fn3State {
     u32 value1;
 };
 
-extern struct Fn3State lbl_3_bss_7EDD8;
-extern u8 lbl_3_bss_8F200[];
-extern void fn_1_FC414(void *, int);
-
 void fn_3_11F60(u32 value0, u32 value1) {
-    lbl_3_bss_7EDD8.value1 = value1;
-    lbl_3_bss_7EDD8.value0 = value0;
+    (*(struct Fn3State *)&lbl_3_bss_7EDD8).value1 = value1;
+    (*(struct Fn3State *)&lbl_3_bss_7EDD8).value0 = value0;
     fn_1_FC414(lbl_3_bss_8F200, 1);
 }
 /* fzgx:end fn_3_11F60 */
 
 /* fzgx:begin fn_3_11FA0 */
-extern u32 lbl_3_bss_7EDD8[26];
+
+
 
 void fn_3_11FA0(void) {
-    lbl_3_bss_7EDD8[0] = 0;
-    lbl_3_bss_7EDD8[1] = 0;
+    (*(u32 (*)[26])&lbl_3_bss_7EDD8)[0] = 0;
+    (*(u32 (*)[26])&lbl_3_bss_7EDD8)[1] = 0;
 }
 /* fzgx:end fn_3_11FA0 */
 
 /* fzgx:begin fn_3_11FB4 */
-extern u8 lbl_3_bss_7EDD8[0x68];
-extern u32 lbl_3_bss_7EDC0[3];
+
+
+
+
 
 void fn_3_11FB4(u8 value_47, u8 value_46, u32 value_7EDC0) {
-    lbl_3_bss_7EDD8[0x47] = value_47;
-    lbl_3_bss_7EDC0[0] = value_7EDC0;
-    lbl_3_bss_7EDD8[0x46] = value_46;
+    (*(u8 (*)[0x68])&lbl_3_bss_7EDD8)[0x47] = value_47;
+    (*(u32 (*)[3])&lbl_3_bss_7EDC0)[0] = value_7EDC0;
+    (*(u8 (*)[0x68])&lbl_3_bss_7EDD8)[0x46] = value_46;
 }
 /* fzgx:end fn_3_11FB4 */
 
@@ -231,13 +230,13 @@ typedef struct {
     u32 unk1c;
 } Fn3BssA1768;
 
-extern Fn3BssA1768 lbl_3_bss_A1768;
+
 
 void fn_3_1308C(u32 arg0, u32 arg1, u32 arg2) {
-    lbl_3_bss_A1768.unk14 = arg1;
-    lbl_3_bss_A1768.unk18 = arg2;
-    lbl_3_bss_A1768.unk4 = arg0;
-    lbl_3_bss_A1768.unk1c = arg0;
+    (*(Fn3BssA1768 *)&lbl_3_bss_A1768).unk14 = arg1;
+    (*(Fn3BssA1768 *)&lbl_3_bss_A1768).unk18 = arg2;
+    (*(Fn3BssA1768 *)&lbl_3_bss_A1768).unk4 = arg0;
+    (*(Fn3BssA1768 *)&lbl_3_bss_A1768).unk1c = arg0;
 }
 /* fzgx:end fn_3_1308C */
 
@@ -250,7 +249,7 @@ typedef struct {
     u32 value1c;
 } CustomizeState;
 
-extern u32 lbl_3_bss_A1768;
+
 
 void fn_3_130A8(void) {
     CustomizeState *state = (CustomizeState *)&lbl_3_bss_A1768;

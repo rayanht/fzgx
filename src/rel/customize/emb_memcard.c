@@ -1,4 +1,30 @@
 #include "types.h"
+#include "rel/customize/globals.h"
+#include "rel/customize/emb_memcard.h"
+
+
+extern u32 lbl_3_bss_7ED58[18];
+extern u32 lbl_801A6410;
+extern u32 lbl_3_data_1A18;
+extern u8 fn_1_B7C00(void);
+extern void fn_1_C1394(u32 *arg0);
+extern void fn_1_46B4(u32 arg0, u32 arg1, char *arg2, u32 arg3);
+extern u32 lbl_3_rodata_288[60];
+extern void lbl_8006DCA4(void);
+extern void lbl_8006E1D8(struct Vec3 *, f32, f32, f32);
+extern void fn_1_7BCCC(struct Vec3 *);
+extern void fn_80035680(struct GXLightObj *, f32, f32, f32);
+extern void fn_80035690(struct GXLightObj *, f32, f32, f32);
+extern void fn_80035420(struct GXLightObj *, f32, int);
+extern void fn_800356AC(struct GXLightObj *, u32 *);
+extern void GXInitLightDistAttn(struct GXLightObj *, f32, f32, int);
+extern void fn_1_7BB80(struct GXLightObj *, int);
+extern void fn_1_7BD6C(int);
+extern void fn_80074CF4(f32, f32, f32);
+
+/* fzgx:begin fn_3_C328 noprologue */
+#include "types.h"
+
 extern u32 lbl_3_bss_7ED58[18];
 extern u32 lbl_801A6410;
 extern char lbl_3_data_1A30[14];
@@ -6,9 +32,7 @@ extern u32 lbl_3_data_1A18;
 extern u8 fn_1_B7C00(void);
 extern void fn_1_C1394(u32 *arg0);
 extern void fn_1_46B4(u32 arg0, u32 arg1, char *arg2, u32 arg3);
-extern u8 lbl_3_data_2F78[240];
 
-/* fzgx:begin fn_3_C328 */
 void fn_3_C328(void) {
     u32 *state;
 
@@ -45,20 +69,6 @@ struct CustomizeData {
     u32 value1bc;
     f32 value1c0;
 };
-
-extern u32 lbl_3_rodata_288[60];
-
-extern void lbl_8006DCA4(void);
-extern void lbl_8006E1D8(struct Vec3 *, f32, f32, f32);
-extern void fn_1_7BCCC(struct Vec3 *);
-extern void fn_80035680(struct GXLightObj *, f32, f32, f32);
-extern void fn_80035690(struct GXLightObj *, f32, f32, f32);
-extern void fn_80035420(struct GXLightObj *, f32, int);
-extern void fn_800356AC(struct GXLightObj *, u32 *);
-extern void GXInitLightDistAttn(struct GXLightObj *, f32, f32, int);
-extern void fn_1_7BB80(struct GXLightObj *, int);
-extern void fn_1_7BD6C(int);
-extern void fn_80074CF4(f32, f32, f32);
 
 void fn_3_F878(void) {
     struct GXLightObj second;
@@ -115,8 +125,10 @@ u32 fn_3_11FD0(u32 index, u32 value) {
 /* fzgx:end fn_3_11FD0 */
 
 /* fzgx:begin fn_3_12E4C */
-extern u8 lbl_3_data_246C[2400];
-extern u32 lbl_3_data_1EEC[352];
+
+
+
+
 
 typedef struct { u32 x; u32 y; u32 z; } Vec3;
 typedef struct { u32 unused0; u32 unused1; Vec3 first; Vec3 second; } Data;
@@ -138,7 +150,7 @@ void fn_3_12E4C(Customize *self, u8 index, Vec3 *first, Vec3 *second) {
     u8 state;
 
     if (self->flags & 0x04000000) {
-        data = (Data *)lbl_3_data_246C;
+        data = (Data *)(*(u8 (*)[2400])&lbl_3_data_246C);
         data = (Data *)((u8 *)data +
                         ((u8)((self->indices)[(u32)index * 0x1b0]) << 5));
         *first = data->first;
@@ -149,25 +161,25 @@ void fn_3_12E4C(Customize *self, u8 index, Vec3 *first, Vec3 *second) {
     state = self->state;
     if (state == 4) {
         if (index != 0) {
-            data = (Data *)((u8 *)lbl_3_data_1EEC + 0x560);
+            data = (Data *)((u8 *)(*(u32 (*)[352])&lbl_3_data_1EEC) + 0x560);
             *first = data->first;
             *second = data->second;
             return;
         }
-        data = (Data *)((u8 *)lbl_3_data_1EEC + ((u8)state << 5));
+        data = (Data *)((u8 *)(*(u32 (*)[352])&lbl_3_data_1EEC) + ((u8)state << 5));
         *first = data->first;
         *second = data->second;
         return;
     }
 
     if ((u8)state == 0x28) {
-        special = (SpecialData *)((u8 *)lbl_3_data_1EEC + ((u8)index << 5));
+        special = (SpecialData *)((u8 *)(*(u32 (*)[352])&lbl_3_data_1EEC) + ((u8)index << 5));
         *first = special->first;
         *second = special->second;
         return;
     }
 
-    data = (Data *)((u8 *)lbl_3_data_1EEC + ((u8)state << 5));
+    data = (Data *)((u8 *)(*(u32 (*)[352])&lbl_3_data_1EEC) + ((u8)state << 5));
     *first = data->first;
     *second = data->second;
 }
