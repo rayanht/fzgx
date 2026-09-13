@@ -385,6 +385,22 @@ Rules that hold for everyone:
   Pool element types come from every function of the module that addresses the pool
   (`_pool_widths`). It needs the body in native-literal form (`recover native shared-pool
   literals` runs first). 14 landed the day it was built.
+- Retail TU section layout (2026-09-12): the near-miss shapes `addi rX, rBase, off` kept as a
+  pointer (even `addi r3, r31, 0x0`), `stb r0, 0x5c49(rBase)` and string arguments as
+  `addi r4, rBase, 0x8` come from MWCC addressing every object a TU defines in a section off one
+  base register: an object's address is materialized whenever a pointer value is needed and only
+  its offset 0 is addressed base-relative. A unit that declares the cluster as one extern struct
+  can never produce it, and no cast, pragma, inline helper or late-constant offset changes that.
+  `fixup_layout.tu_section_layout` defines the retail objects in the unit in retail order under
+  MWCC's file-scope rules (scalars at natural alignment, arrays 4-aligned, `.bss` objects emitted
+  in first-access order, string literals in first-use order; a primer in `.fzgxpool` with real
+  loads/calls fixes the order, stores to a volatile local are dropped). Layouts come from an MWCC
+  probe compile of the body's declarations. The oracle binds `...bss.N`/`...data.N` to the retail
+  symbols (a base may be smaller than dtk's symbol; names a module header declares with another
+  layout are defined as `fzgx_obj_<name>`). A single referenced object is addressed by name, so
+  when retail hoists a base the dtk symbol hides several objects: the split-per-field variant.
+  MWCC gives a named global r31 before an anonymous section base; that order is not reachable from
+  C. Per-block definitions still collide at `tu-check`; the TU pass must hoist them once.
 - Near-miss fixup must preserve a proven store-value correction in its search
   frontier even when register differences initially lower its word score. Value-flow
   diagnostics invalidate unsupported regions locally; mixed diffs must not disable

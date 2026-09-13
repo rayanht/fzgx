@@ -262,7 +262,8 @@ def tu_objects(p, symbol, text, mode, cache):
         if names:
             key = (tname, tuple(names))
             if key not in cache:
-                cache[key] = probe_layout(p, sym.module, prefix, tname if tname in prefix or tname in include_text() else 'struct ' + tname, names, decls, symbol)
+                is_alias = re.search(r"\}\s*%s\s*;|typedef\s+struct\s+\w+\s+%s\s*;" % (re.escape(tname), re.escape(tname)), prefix + include_text())
+                cache[key] = probe_layout(p, sym.module, prefix, tname if is_alias else 'struct ' + tname, names, decls, symbol)
             layout, err = cache[key]
             if layout is None:
                 notes.append(f'{tname}: probe failed: {err}'); return None, notes
@@ -298,8 +299,14 @@ def tu_objects(p, symbol, text, mode, cache):
                 notes.append(f'{fname}: crosses object {obj.name}'); return None, notes
             rec = per_obj.setdefault(obj.name, {'sym': obj, 'fields': {}})
             prev = rec['fields'].get(inner)
+            synthetic_name = fname.startswith(('fzgx_byte_', 'fzgx_u8_'))
             if prev and prev[0] != fname and decls[prev[0]] != decls[fname]:
-                notes.append(f'{fname}: conflicting field at {obj.name}+{inner:#x}'); return None, notes
+                if synthetic_name:
+                    pass  # a byte view of a real field shares the field's object slot
+                elif prev[0].startswith(('fzgx_byte_', 'fzgx_u8_')):
+                    rec['fields'][inner] = (fname, fsize, esize, ealign)
+                else:
+                    notes.append(f'{fname}: conflicting field at {obj.name}+{inner:#x}'); return None, notes
             rec['fields'].setdefault(inner, (fname, fsize, esize, ealign))
             rewrites.append((um, obj, inner, fname, idx, amp))
         last = max(r['sym'].end for r in per_obj.values())
@@ -420,8 +427,11 @@ def _diff_rows(r):
 
 
 
-def section_bytes(p, module, section):
+def section_bytes(p, module, section, addr=None):
     if module == 'main':
+        for base, raw in p._rel_layout('main').values():
+            if addr is not None and base <= addr < base + len(raw):
+                return base, raw
         return None
     sec = p._raw_section(module, section)
     base = p._section_base(module, section)
@@ -463,15 +473,16 @@ def string_at(raw, off):
 def string_run(p, symbol, text, cast=''):
     sym = p.resolve(symbol)
     syms = p.symbols(sym.module)
-    sb = section_bytes(p, sym.module, '.data')
+    first = next((syms[l] for l in re.findall(r"\b(lbl_\d+_data_[0-9A-F]+|lbl_[0-9A-F]{8})\b", text) if syms.get(l) and syms[l].section == '.data'), None)
+    sb = section_bytes(p, sym.module, '.data', first.addr if first else None)
     if sb is None:
-        return None, ['no raw .data (DOL not supported here)']
+        return None, ['no raw .data for this module']
     base_addr, raw = sb
     notes = []
     out = text
     uses = {}  # (addr) -> list of (span, replacement builder)
     # byte-pointer models: P = (u8 *)&LBL; ... ((u8 *)(u32)P + N) / (P + N) / P
-    for m in re.finditer(r"(\w+)\s*=\s*\(u8 \*\)\s*&(lbl_\d+_data_[0-9A-F]+)\s*;", out):
+    for m in re.finditer(r"(\w+)\s*=\s*\(u8 \*\)\s*&(lbl_\d+_data_[0-9A-F]+|lbl_[0-9A-F]{8})\s*;", out):
         pvar, lbl = m.group(1), m.group(2)
         out = out.replace(m.group(0), '')
         out = re.sub(r"\n[ \t]*u8\s*\*\s*%s\s*;" % re.escape(pvar), '', out)
@@ -491,7 +502,7 @@ def string_run(p, symbol, text, cast=''):
             return mm.group(0)
         addrs[a] = st[0]
         return c_literal(st[0])
-    pat = re.compile(r"(?:\((?:const )?(?:char|u8|void) \*\)\s*)?&?\b(lbl_\d+_data_[0-9A-F]+)\b(?:\s*\+\s*(0x[0-9A-Fa-f]+|\d+))?(?!\s*\[|\s*\.|\w)")
+    pat = re.compile(r"(?:\((?:const )?(?:char|u8|void) \*\)\s*)?&?\b(lbl_\d+_data_[0-9A-F]+|lbl_[0-9A-F]{8})\b(?:\s*\+\s*(0x[0-9A-Fa-f]+|\d+))?(?!\s*\[|\s*\.|\w)")
     fm0 = re.search(r"\n[^\n;{}]*\b%s\s*\([^;{}]*\)\s*\{" % re.escape(sym.name), out)
     if not fm0:
         return None, ['function definition not found']
@@ -513,7 +524,7 @@ def string_run(p, symbol, text, cast=''):
     # retail addresses the strings off the TU's first .data object: when that object starts
     # before the string run, the unit reproduces the bytes in between as a private pad
     pad = ''
-    bases = [syms[l] for l in set(re.findall(r"\b(lbl_\d+_data_[0-9A-F]+)\b", text)) if syms.get(l) and syms[l].section == '.data' and syms[l].addr < lo]
+    bases = [syms[l] for l in set(re.findall(r"\b(lbl_\d+_data_[0-9A-F]+|lbl_[0-9A-F]{8})\b", text)) if syms.get(l) and syms[l].section == '.data' and syms[l].addr < lo]
     if bases:
         b0 = min(bases, key=lambda s: s.addr)
         if lo - b0.addr > 0x4000:
@@ -528,7 +539,7 @@ def string_run(p, symbol, text, cast=''):
             return None, [f'string run broken at {a:#x}']
         run.append(st[0])
         a += st[1]
-    for lbl in set(re.findall(r"\b(lbl_\d+_data_[0-9A-F]+)\b", text)):
+    for lbl in set(re.findall(r"\b(lbl_\d+_data_[0-9A-F]+|lbl_[0-9A-F]{8})\b", text)):
         if syms.get(lbl) and lo <= syms[lbl].addr <= hi:
             out = re.sub(r"\n[^\n]*\bextern\b[^\n;]*\b%s\b[^\n;]*;" % re.escape(lbl), '', out)
     if not re.search(r"\bOSReport\s*\(", out.split('{')[0]) and 'extern void OSReport' not in out:
