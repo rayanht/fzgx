@@ -68,6 +68,88 @@ u32 fn_1_14DC4(void) {
 }
 /* fzgx:end fn_1_14DC4 */
 
+/* fzgx:begin fn_1_14DE8 */
+typedef struct {
+    s32 unk_0;
+    s32 unk_4;
+    s8 unk_8;
+    s8 unk_9;
+} StcoliEntry;
+
+typedef struct {
+    s32 count;
+    u8 *base;
+    u8 pad_8[4];
+} StcoliRecord;
+
+extern f32 lbl_1_rodata_6B0[6];
+extern u8 lbl_1_data_54B4[148];
+
+#pragma opt_loop_invariants off
+void fn_1_14DE8(u32 index) {
+    Obj_1_bss_3BE0_Target **manager;
+    f32 *constants;
+    StcoliEntry *entry;
+    StcoliRecord *record;
+    u8 *object;
+    s32 slot;
+    f32 zero;
+    f32 value;
+
+    constants = lbl_1_rodata_6B0;
+    manager = &lbl_1_bss_3BE0;
+    if (*manager == 0) {
+        return;
+    }
+    if (index >= 0x24) {
+        return;
+    }
+
+    entry = ((StcoliEntry **)lbl_1_data_54B4)[index];
+    if (entry == 0) {
+        return;
+    }
+
+    while (entry->unk_0 >= 0) {
+        record = (StcoliRecord *)(*manager)->unk_C + entry->unk_0;
+        if (entry->unk_4 >= record->count) {
+            return;
+        }
+
+        slot = entry->unk_4;
+        object = record->base + slot * 0x50;
+        if (entry->unk_8) {
+            if ((s32)index == 7) {
+                zero = constants[0];
+                value = constants[3];
+                *(f32 *)(object + 0x0C) = zero;
+                *(f32 *)(object + 0x10) = zero;
+                *(f32 *)(object + 0x14) = value;
+                *(f32 *)(object + 0x08) = -*(f32 *)(object + 0x20);
+            } else if (!*(s8 *)(object + 0x4C)) {
+                *(s8 *)(object + 0x4C) = 1;
+            }
+        }
+
+        if (entry->unk_9) {
+            if ((s32)index == 7) {
+                zero = constants[0];
+                value = constants[4];
+                *(f32 *)(object + 0x28) = zero;
+                *(f32 *)(object + 0x2C) = zero;
+                *(f32 *)(object + 0x30) = value;
+                *(f32 *)(object + 0x24) = *(f32 *)(object + 0x3C);
+            } else if (!*(s8 *)(object + 0x4D)) {
+                *(s8 *)(object + 0x4D) = 1;
+            }
+        }
+
+        entry++;
+    }
+}
+#pragma opt_loop_invariants reset
+/* fzgx:end fn_1_14DE8 */
+
 /* fzgx:begin fn_1_14F04 */
 u8 *fn_1_14F04(void) {
     return lbl_801A66CC + 0x1b0;

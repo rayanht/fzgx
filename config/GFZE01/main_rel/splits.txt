@@ -6323,3 +6323,6 @@ rel/main_rel/game/fn_1_412A0.c:
 
 rel/main_rel/_prolog/fn_1_3920.c:
 	.text       start:0x00003920 end:0x00003B34 align:4
+
+rel/main_rel/stcoli/fn_1_14DE8.c:
+	.text       start:0x00014DE8 end:0x00014F04 align:4
