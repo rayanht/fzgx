@@ -6353,3 +6353,6 @@ rel/main_rel/face/fn_1_D1C94.c:
 
 rel/main_rel/effect/fn_1_5F5C8.c:
 	.text       start:0x0005F5C8 end:0x0005F654 align:4
+
+rel/main_rel/memcard/fn_1_AD264.c:
+	.text       start:0x000AD264 end:0x000AEC34 align:4

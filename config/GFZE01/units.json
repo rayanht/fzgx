@@ -40609,6 +40609,18 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/memcard/fn_1_AD264.c",
+    "symbols": [
+      "fn_1_AD264"
+    ],
+    "status": "nonmatching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/memcard.c",
+    "pool": true
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/memcard/fn_1_AEC34.c",
     "symbols": [
       "fn_1_AEC34"
