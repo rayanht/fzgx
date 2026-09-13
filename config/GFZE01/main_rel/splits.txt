@@ -6359,3 +6359,6 @@ rel/main_rel/memcard/fn_1_AD264.c:
 
 rel/main_rel/memcard/fn_1_BF9C4.c:
 	.text       start:0x000BF9C4 end:0x000BFBF4 align:4
+
+rel/main_rel/game/fn_1_327F8.c:
+	.text       start:0x000327F8 end:0x00032A40 align:4
