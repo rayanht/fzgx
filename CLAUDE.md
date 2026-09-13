@@ -476,6 +476,15 @@ Rules that hold for everyone:
   0x12-byte entries (mnemonic pointer first; 1.2.5 used 0x10). Still needed for a 1.3.2 capture:
   the CodeGen_Generator stage points (register-coloring reconvergence 0x433df2 is known), the
   initial-object and coalesce-window words, and the reaching-definition table.
+  Also derived: the coalesce window is per class in 1.3.2, `gCoalesceFirst[class]` at
+  0x5e7fc8 + 4*class and `gCoalesceLast[class]` at 0x5e86a8 + 4*class (BeginCoalesceWindow analog
+  at 0x4fd570, Update/Close analogs at 0x4fd4b0 and 0x4fd520, the object allocators increment
+  0x5e8a7c[class] at 0x4fd6a8 and 0x57b03e/0x57b1a6), so the essential reader constants for a
+  coloring-only 1.3.2 capture (blocks, graph, coalesced roots, counts, coalesce ranges, opcode
+  table, SelectColors/AllocateRegisters breakpoints) are all known; only the initial-object-last
+  words (stratum labels) and the CodeGen stage points other than register coloring remain. The
+  port itself is a version-keyed copy of the recovery project's `allocator_snapshot.py` reader and
+  GDB driver under `tools/capture/` with these addresses and the 0x12-byte descriptor stride.
 - Engine speed (2026-09-12): `fzgx fixup` startup read 182,000 saved bodies and 700 MB of
   reports on every run (55 s); `seeds/recovered.py` now caches the collected candidates in
   `.fzgx/saved_candidates.pickle` keyed by a cheap fingerprint (check-archive directory mtimes,
