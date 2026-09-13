@@ -1178,7 +1178,9 @@ def compile_unit(project: Project, unit: str, unit_src: str,
     return subprocess.run(cmd, cwd=ROOT, text=True, capture_output=True, timeout=120)
 
 
-CANDIDATE_VERSIONS = ["GC/1.2.5", "GC/1.2.5n", "GC/1.3", "GC/1.3.2", "GC/2.0", "GC/2.5", "GC/2.7"]
+# 84 unmatched DOL functions (61 KB, the AX/MIX and other SDK libraries) carry the MWCC 1.0/1.1
+# prologue order (`mflr; stw r0, 4(r1); stwu`), which no later compiler emits
+CANDIDATE_VERSIONS = ["GC/1.2.5", "GC/1.2.5n", "GC/1.3", "GC/1.3.2", "GC/2.0", "GC/2.5", "GC/2.7", "GC/1.1", "GC/1.0"]
 
 
 def check_versions(project: Project, symbol: str, versions: List[str],

@@ -264,7 +264,8 @@ def compile_library(p: Project, sdk: str, roots: list, functions=False) -> dict:
         raise ValueError('no SDK C sources in the requested roots')
     directory = STATE_DIR / 'sourcealign/libraries' / sdk
     records, failures = [], []
-    for mw in ('GC/1.2.5n', 'GC/1.3.2'):
+    # the DOL's AX/MIX/DVD-era library functions carry the MWCC 1.1 prologue order
+    for mw in ('GC/1.2.5n', 'GC/1.3.2', 'GC/1.1'):
         origins = {source: source for source in sources}
         prepared = sources
         if functions:
