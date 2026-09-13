@@ -250,6 +250,94 @@ void fn_9_6F0(void) {
 }
 /* fzgx:end fn_9_6F0 */
 
+/* fzgx:begin colchg_selmate_init pool noprologue */
+#include "types.h"
+#include "rel/car_colchg/globals.h"
+
+extern u32 lbl_1_data_1FB6C[];
+extern void colchg_selmate_disp(void);
+void fn_1_435C(u32);
+s16 fn_1_3F8C(char *, void (*)(void), u32, s32);
+void fn_1_4A00(s32, s32, u32);
+
+struct ColchgSelmateState {
+    u32 unk0;
+    u32 unk4;
+    struct ColchgSelmateCurrent *current;
+    u32 unkC;
+    u32 unk10;
+    u8 pad14[0xC8];
+    s16 unkDC;
+    u16 padDE;
+    u32 unkE0;
+};
+
+struct ColchgSelmateCurrent {
+    s16 unk0;
+    s16 unk2;
+    s16 unk4;
+};
+
+struct ColchgSelmateEntry {
+    s16 unk0;
+    u8 pad2[6];
+    u32 unk8;
+};
+
+typedef struct lbl_9_bss_E0_t {
+    u32 unkE0;
+    u8 pad_4[0x4];
+} lbl_9_bss_E0_t;
+
+/* file-scope objects of the retail TU, in retail order: MWCC addresses them off one section base */
+u32 fzgx_obj_lbl_9_bss_0;
+u32 fzgx_obj_lbl_9_bss_4;
+struct ColchgSelmateCurrent *fzgx_obj_lbl_9_bss_8;
+u32 fzgx_obj_lbl_9_bss_C;
+u32 fzgx_obj_lbl_9_bss_10;
+u32 fzgx_obj_lbl_9_bss_14[50];
+s16 fzgx_obj_lbl_9_bss_DC;
+u16 lbl_9_bss_0_gap_DE;
+lbl_9_bss_E0_t fzgx_obj_lbl_9_bss_E0;
+
+#pragma section code_type ".fzgxpool"
+static void fzgx_bss_layout(void) {
+    volatile u8 s;  /* fzgx-allow: S2 layout primer sink: MWCC emits .bss objects in first-access order */
+    s = *(u8 *)&fzgx_obj_lbl_9_bss_0;
+    s = *(u8 *)&fzgx_obj_lbl_9_bss_4;
+    s = *(u8 *)&fzgx_obj_lbl_9_bss_8;
+    s = *(u8 *)&fzgx_obj_lbl_9_bss_C;
+    s = *(u8 *)&fzgx_obj_lbl_9_bss_10;
+    s = *(u8 *)&fzgx_obj_lbl_9_bss_14;
+    s = *(u8 *)&fzgx_obj_lbl_9_bss_DC;
+    s = *(u8 *)&lbl_9_bss_0_gap_DE;
+    s = *(u8 *)&fzgx_obj_lbl_9_bss_E0;
+}
+#pragma section code_type ".text"
+
+extern void OSReport(const char *, ...);
+#pragma section code_type ".fzgxpool"
+static void fzgx_string_layout(void) {
+    /* fzgx-allow: S2 layout primer: MWCC emits string literals in first-use order; the section is dropped at integration */
+    OSReport("colchg_selmate_disp");
+}
+#pragma section code_type ".text"
+
+void colchg_selmate_init(void) {
+    
+    struct ColchgSelmateEntry *entry = ((struct ColchgSelmateEntry **)lbl_1_data_1FB6C)[fzgx_obj_lbl_9_bss_8->unk0];
+
+    fn_1_435C(fzgx_obj_lbl_9_bss_10);
+    fzgx_obj_lbl_9_bss_DC = fn_1_3F8C("colchg_selmate_disp", colchg_selmate_disp, fzgx_obj_lbl_9_bss_4, 8);
+    {
+        u32 value = fzgx_obj_lbl_9_bss_10;
+        fn_1_4A00(1, 15, value);
+    }
+    fzgx_obj_lbl_9_bss_8->unk2 = entry[fzgx_obj_lbl_9_bss_8->unk4].unk0;
+    fzgx_obj_lbl_9_bss_E0.unkE0 = entry[fzgx_obj_lbl_9_bss_8->unk4].unk8;
+}
+/* fzgx:end colchg_selmate_init */
+
 /* fzgx:begin fn_9_7DC */
 #include "types.h"
 #include "rel/car_colchg/globals.h"

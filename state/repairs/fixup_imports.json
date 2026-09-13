@@ -4310,5 +4310,114 @@
     ],
     "link": "verified",
     "commit": "569b35f"
+  },
+  "colchg_selmate_init": {
+    "seed_symbol": "colchg_selmate_init",
+    "generator": "fzgx fixup",
+    "transform": "reproduce retail string run (dtk)",
+    "seed": "#include \"types.h\"\n#include \"rel/car_colchg/globals.h\"\n\nextern u32 lbl_9_bss_0;\nextern char lbl_9_data_54[20];\nextern u32 lbl_1_data_1FB6C[];\nextern void colchg_selmate_disp(void);\nvoid fn_1_435C(u32);\ns16 fn_1_3F8C(char *, void (*)(void), u32, s32);\nvoid fn_1_4A00(s32, s32, u32);\n\nstruct ColchgSelmateState {\n    u32 unk0;\n    u32 unk4;\n    struct ColchgSelmateCurrent *current;\n    u32 unkC;\n    u32 unk10;\n    u8 pad14[0xC8];\n    s16 unkDC;\n    u16 padDE;\n    u32 unkE0;\n};\n\nstruct ColchgSelmateCurrent {\n    s16 unk0;\n    s16 unk2;\n    s16 unk4;\n};\n\nstruct ColchgSelmateEntry {\n    s16 unk0;\n    u8 pad2[6];\n    u32 unk8;\n};\n\nvoid colchg_selmate_init(void) {\n    struct ColchgSelmateState *state = (struct ColchgSelmateState *)&lbl_9_bss_0;\n    struct ColchgSelmateEntry *entry = ((struct ColchgSelmateEntry **)lbl_1_data_1FB6C)[state->current->unk0];\n\n    fn_1_435C(state->unk10);\n    state->unkDC = fn_1_3F8C(lbl_9_data_54, colchg_selmate_disp, state->unk4, 8);\n    {\n        u32 value = state->unk10;\n        fn_1_4A00(1, 15, value);\n    }\n    state->current->unk2 = entry[state->current->unk4].unk0;\n    state->unkE0 = entry[state->current->unk4].unk8;\n}\n",
+    "seed_sha256": "e09b9389b9222d12a601a5823363ef37c361da69df3c5e4b5f70c73cc7b0df0e",
+    "generated_sha256": "590767058cf4f7012ac2f0160b8993762591b1076489721867266e58159e61a1",
+    "generated_source": "#include \"types.h\"\n#include \"rel/car_colchg/globals.h\"\n\nextern u32 lbl_1_data_1FB6C[];\nextern void colchg_selmate_disp(void);\nvoid fn_1_435C(u32);\ns16 fn_1_3F8C(char *, void (*)(void), u32, s32);\nvoid fn_1_4A00(s32, s32, u32);\n\nstruct ColchgSelmateState {\n    u32 unk0;\n    u32 unk4;\n    struct ColchgSelmateCurrent *current;\n    u32 unkC;\n    u32 unk10;\n    u8 pad14[0xC8];\n    s16 unkDC;\n    u16 padDE;\n    u32 unkE0;\n};\n\nstruct ColchgSelmateCurrent {\n    s16 unk0;\n    s16 unk2;\n    s16 unk4;\n};\n\nstruct ColchgSelmateEntry {\n    s16 unk0;\n    u8 pad2[6];\n    u32 unk8;\n};\n\ntypedef struct lbl_9_bss_E0_t {\n    u32 unkE0;\n    u8 pad_4[0x4];\n} lbl_9_bss_E0_t;\n\n/* file-scope objects of the retail TU, in retail order: MWCC addresses them off one section base */\nu32 fzgx_obj_lbl_9_bss_0;\nu32 fzgx_obj_lbl_9_bss_4;\nstruct ColchgSelmateCurrent *fzgx_obj_lbl_9_bss_8;\nu32 fzgx_obj_lbl_9_bss_C;\nu32 fzgx_obj_lbl_9_bss_10;\nu32 fzgx_obj_lbl_9_bss_14[50];\ns16 fzgx_obj_lbl_9_bss_DC;\nu16 lbl_9_bss_0_gap_DE;\nlbl_9_bss_E0_t fzgx_obj_lbl_9_bss_E0;\n\n#pragma section code_type \".fzgxpool\"\nstatic void fzgx_bss_layout(void) {\n    volatile u8 s;  /* fzgx-allow: S2 layout primer sink: MWCC emits .bss objects in first-access order */\n    s = *(u8 *)&fzgx_obj_lbl_9_bss_0;\n    s = *(u8 *)&fzgx_obj_lbl_9_bss_4;\n    s = *(u8 *)&fzgx_obj_lbl_9_bss_8;\n    s = *(u8 *)&fzgx_obj_lbl_9_bss_C;\n    s = *(u8 *)&fzgx_obj_lbl_9_bss_10;\n    s = *(u8 *)&fzgx_obj_lbl_9_bss_14;\n    s = *(u8 *)&fzgx_obj_lbl_9_bss_DC;\n    s = *(u8 *)&lbl_9_bss_0_gap_DE;\n    s = *(u8 *)&fzgx_obj_lbl_9_bss_E0;\n}\n#pragma section code_type \".text\"\n\nextern void OSReport(const char *, ...);\n#pragma section code_type \".fzgxpool\"\nstatic void fzgx_string_layout(void) {\n    /* fzgx-allow: S2 layout primer: MWCC emits string literals in first-use order; the section is dropped at integration */\n    OSReport(\"colchg_selmate_disp\");\n}\n#pragma section code_type \".text\"\n\nvoid colchg_selmate_init(void) {\n    \n    struct ColchgSelmateEntry *entry = ((struct ColchgSelmateEntry **)lbl_1_data_1FB6C)[fzgx_obj_lbl_9_bss_8->unk0];\n\n    fn_1_435C(fzgx_obj_lbl_9_bss_10);\n    fzgx_obj_lbl_9_bss_DC = fn_1_3F8C(\"colchg_selmate_disp\", colchg_selmate_disp, fzgx_obj_lbl_9_bss_4, 8);\n    {\n        u32 value = fzgx_obj_lbl_9_bss_10;\n        fn_1_4A00(1, 15, value);\n    }\n    fzgx_obj_lbl_9_bss_8->unk2 = entry[fzgx_obj_lbl_9_bss_8->unk4].unk0;\n    fzgx_obj_lbl_9_bss_E0.unkE0 = entry[fzgx_obj_lbl_9_bss_8->unk4].unk8;\n}\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "rel/car_colchg/car_colchg/colchg_selmate_init.c",
+    "bytes": 176,
+    "headers_sha256": "f9f5e84c1423bef39ec206906b9b67f385818e424c01f7582cef703630a3eba9",
+    "oracle_sha256": "871c3ab209ee9e59f98ee974f8dbecff3e9da3fc716288cd596f714e18864b09",
+    "recipe": [
+      {
+        "label": "reproduce retail string run (dtk)",
+        "input_sha256": "e09b9389b9222d12a601a5823363ef37c361da69df3c5e4b5f70c73cc7b0df0e",
+        "output_sha256": "590767058cf4f7012ac2f0160b8993762591b1076489721867266e58159e61a1",
+        "input_symbol": "colchg_selmate_init",
+        "output_symbol": "colchg_selmate_init",
+        "edits": [
+          [
+            56,
+            111,
+            ""
+          ],
+          [
+            631,
+            631,
+            "typedef struct lbl_9_bss_E0_t {\n    u32 unkE0;\n    u8 pad_4[0x4];\n} lbl_9_bss_E0_t;\n\n/* file-scope objects of the retail TU, in retail order: MWCC addresses them off one section base */\nu32 fzgx_obj_lbl_9_bss_0;\nu32 fzgx_obj_lbl_9_bss_4;\nstruct ColchgSelmateCurrent *fzgx_obj_lbl_9_bss_8;\nu32 fzgx_obj_lbl_9_bss_C;\nu32 fzgx_obj_lbl_9_bss_10;\nu32 fzgx_obj_lbl_9_bss_14[50];\ns16 fzgx_obj_lbl_9_bss_DC;\nu16 lbl_9_bss_0_gap_DE;\nlbl_9_bss_E0_t fzgx_obj_lbl_9_bss_E0;\n\n#pragma section code_type \".fzgxpool\"\nstatic void fzgx_bss_layout(void) {\n    volatile u8 s;  /* fzgx-allow: S2 layout primer sink: MWCC emits .bss objects in first-access order */\n    s = *(u8 *)&fzgx_obj_lbl_9_bss_0;\n    s = *(u8 *)&fzgx_obj_lbl_9_bss_4;\n    s = *(u8 *)&fzgx_obj_lbl_9_bss_8;\n    s = *(u8 *)&fzgx_obj_lbl_9_bss_C;\n    s = *(u8 *)&fzgx_obj_lbl_9_bss_10;\n    s = *(u8 *)&fzgx_obj_lbl_9_bss_14;\n    s = *(u8 *)&fzgx_obj_lbl_9_bss_DC;\n    s = *(u8 *)&lbl_9_bss_0_gap_DE;\n    s = *(u8 *)&fzgx_obj_lbl_9_bss_E0;\n}\n#pragma section code_type \".text\"\n\nextern void OSReport(const char *, ...);\n#pragma section code_type \".fzgxpool\"\nstatic void fzgx_string_layout(void) {\n    /* fzgx-allow: S2 layout primer: MWCC emits string literals in first-use order; the section is dropped at integration */\n    OSReport(\"colchg_selmate_disp\");\n}\n#pragma section code_type \".text\"\n\n"
+          ],
+          [
+            668,
+            848,
+            "\n    struct ColchgSelmateEntry *entry = ((struct ColchgSelmateEntry **)lbl_1_data_1FB6C)[fzgx_obj_lbl_9_bss_8"
+          ],
+          [
+            872,
+            962,
+            "fzgx_obj_lbl_9_bss_10);\n    fzgx_obj_lbl_9_bss_DC = fn_1_3F8C(\"colchg_selmate_disp\", colchg_selmate_disp, fzgx_obj_lbl_9_bss_"
+          ],
+          [
+            995,
+            1005,
+            "fzgx_obj_lbl_9_bss_"
+          ],
+          [
+            1052,
+            1148,
+            "fzgx_obj_lbl_9_bss_8->unk2 = entry[fzgx_obj_lbl_9_bss_8->unk4].unk0;\n    fzgx_obj_lbl_9_bss_E0.unkE0 = entry[fzgx_obj_lbl_9_bss_8"
+          ]
+        ]
+      }
+    ],
+    "link": "pending"
+  },
+  "fn_12_87FC": {
+    "seed_symbol": "fn_12_87FC",
+    "generator": "fzgx fixup",
+    "transform": "retail argument order: hoist arg 2 of fn_12_847C",
+    "seed": "#include \"types.h\"\n\ntypedef struct MovieModule {\n    u8 _pad0[0x110];\n    u32 field_110;\n    u8 _pad114[0x4];\n    u32 field_118;\n    u8 _pad11c[0x118];\n    u8 field_234[0x20];\n    u32 field_254;\n    u8 _pad258[0x68];\n    u8 field_2c0[0x54];\n    u32 field_314;\n} MovieModule;\n\nextern void fn_12_847C(void *, u32, void *, void *, void *);\nextern void fn_12_8344(u32, void *, u32);\nextern void fn_12_7E58(void *, void *, void *);\n\n#pragma opt_common_subs off\nvoid fn_12_87FC(MovieModule *module) {\n    u8 local[8];\n    u8 *field_234 = module->field_234;\n    u8 *field_110 = (u8 *)module + 0x110;\n    fn_12_847C(module, module->field_118, local, field_234,\n               (u8 *)module + 0x2c0);\n    {\n        u32 value = module->field_254;\n        module->field_254 = value + 0x180;\n        fn_12_8344(value, field_110, module->field_314);\n    }\n    fn_12_7E58(*(void **)(field_110 + 8), local, field_234 + 0x10);\n}\n#pragma opt_common_subs reset\n",
+    "seed_sha256": "02de0fbeb71da72c2178dd48d0c2b83c9f7598580e586dc193509d7fc820a2b8",
+    "generated_sha256": "22c6dc572dbfe48b53a419cc78a3058eac061be161014d9c82bf3890a2c88fca",
+    "generated_source": "#include \"types.h\"\n\ntypedef struct MovieModule {\n    u8 _pad0[0x110];\n    u32 field_110;\n    u8 _pad114[0x4];\n    u32 field_118;\n    u8 _pad11c[0x118];\n    u8 field_234[0x20];\n    u32 field_254;\n    u8 _pad258[0x68];\n    u8 field_2c0[0x54];\n    u32 field_314;\n} MovieModule;\n\nextern void fn_12_847C(void *, u32, void *, void *, void *);\nextern void fn_12_8344(u32, void *, u32);\nextern void fn_12_7E58(void *, void *, void *);\n\n#pragma opt_common_subs off\n#pragma opt_dead_assignments off\nvoid fn_12_87FC(MovieModule *module) {\n    u8 local[8];\n    u8 *field_234 = module->field_234;\n    u8 *field_110 = (u8 *)module + 0x110;\n    void * lab_t2;\n    lab_t2 = local;\n    fn_12_847C(module, module->field_118, lab_t2, field_234, (u8 *)module + 0x2c0);\n    {\n        u32 value = module->field_254;\n        module->field_254 = value + 0x180;\n        fn_12_8344(value, field_110, module->field_314);\n    }\n    fn_12_7E58(*(void **)(field_110 + 8), local, field_234 + 0x10);\n}\n#pragma opt_dead_assignments reset\n\n#pragma opt_common_subs reset\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "rel/movie_module/fn_12_87FC.c",
+    "bytes": 124,
+    "headers_sha256": "f9f5e84c1423bef39ec206906b9b67f385818e424c01f7582cef703630a3eba9",
+    "oracle_sha256": "871c3ab209ee9e59f98ee974f8dbecff3e9da3fc716288cd596f714e18864b09",
+    "recipe": [
+      {
+        "label": "opt_dead_assignments off",
+        "input_sha256": "02de0fbeb71da72c2178dd48d0c2b83c9f7598580e586dc193509d7fc820a2b8",
+        "output_sha256": "6f0b616b520e188f1f46846e5788b3e898c17927b777bfc3bcd945f525f1b998",
+        "input_symbol": "fn_12_87FC",
+        "output_symbol": "fn_12_87FC",
+        "edits": [
+          [
+            456,
+            456,
+            "#pragma opt_dead_assignments off\n"
+          ],
+          [
+            912,
+            912,
+            "#pragma opt_dead_assignments reset\n\n"
+          ]
+        ]
+      },
+      {
+        "label": "retail argument order: hoist arg 2 of fn_12_847C",
+        "input_sha256": "6f0b616b520e188f1f46846e5788b3e898c17927b777bfc3bcd945f525f1b998",
+        "output_sha256": "22c6dc572dbfe48b53a419cc78a3058eac061be161014d9c82bf3890a2c88fca",
+        "input_symbol": "fn_12_87FC",
+        "output_symbol": "fn_12_87FC",
+        "edits": [
+          [
+            630,
+            700,
+            "void * lab_t2;\n    lab_t2 = local;\n    fn_12_847C(module, module->field_118, lab_t2, field_234,"
+          ]
+        ]
+      }
+    ],
+    "link": "verified",
+    "commit": "0a3d9c7"
   }
 }
