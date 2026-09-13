@@ -26909,6 +26909,18 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/bg_cas/fn_1_FB87C.c",
+    "symbols": [
+      "fn_1_FB87C"
+    ],
+    "status": "nonmatching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/bg_cas.c",
+    "pool": true
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/bg_cas/fn_1_FB96C.c",
     "symbols": [
       "fn_1_FB96C"
@@ -26972,6 +26984,18 @@
     "mw_version": null,
     "extra_cflags": [],
     "tu": "rel/main_rel/bg_cas.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/bg_cas/fn_1_FC414.c",
+    "symbols": [
+      "fn_1_FC414"
+    ],
+    "status": "nonmatching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/bg_cas.c",
+    "pool": true
   },
   {
     "module": "main_rel",
@@ -38265,6 +38289,18 @@
     "mw_version": null,
     "extra_cflags": [],
     "tu": "rel/main_rel/ghost.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/ghost/fn_1_EF768.c",
+    "symbols": [
+      "fn_1_EF768"
+    ],
+    "status": "nonmatching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/ghost.c",
+    "pool": true
   },
   {
     "module": "main_rel",

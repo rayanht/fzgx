@@ -451,7 +451,9 @@ def _bss_base_rows(project, module, obj, left, right, lrows, rrows, function_nam
             continue
         lname = left['symbols'][lr['target_symbol']]['name']
         rname = right['symbols'][rr['target_symbol']]['name']
-        anchor, owned = symbols.get(rname), symbols.get(lname)
+        # a unit may define the retail TU's objects under an alias when the module header
+        # already declares the retail name with another layout
+        anchor, owned = symbols.get(rname), symbols.get(lname) or symbols.get('fzgx_obj_' + lname)
         if not anchor or not 0 < anchor['shndx'] < len(elf.sections):
             continue
         section = elf.sections[anchor['shndx']]

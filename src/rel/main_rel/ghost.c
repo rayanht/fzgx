@@ -306,6 +306,140 @@ void fn_1_EF764(void) {
 }
 /* fzgx:end fn_1_EF764 */
 
+/* fzgx:begin fn_1_EF768 pool noprologue */
+#include "types.h"
+#include "rel/main_rel/globals.h"
+#include "rel/main_rel/ghost.h"
+
+extern void fn_1_EE530(void);
+extern u32 fn_1_4630(u32, u32, const void *, u32);
+extern void fn_80008BA8(void *, const void *, u32);
+extern void fn_1_C0510(void *);
+extern void fn_1_46B4(u32, u32, void *, u32);
+extern u32 lbl_801A6410[];
+
+typedef struct {
+    u8 pad_0[8];
+    u32 unk_8;
+    u32 unk_c;
+    u32 unk_10;
+} Obj_3B34;
+
+typedef struct {
+    u8 pad_0[0x1c];
+    u32 unk_1c;
+    u8 pad_20[0xc];
+    u8 unk_2c[0x28];
+    u8 pad_54[0x13b0];
+    u32 unk_1404[0x7f];
+    u8 pad_1600[0x2534];
+    Obj_3B34 unk_3b34;
+} GhostState;
+
+typedef struct lbl_1_bss_7B19C_t {
+    u32 unk_1c;
+    u8 pad_4[0x4];
+} lbl_1_bss_7B19C_t;
+
+typedef struct lbl_1_bss_7B1AC_t {
+    u8 unk_2c[0x28];
+    u8 pad_28[0x13b0];
+} lbl_1_bss_7B1AC_t;
+
+typedef struct lbl_1_bss_7C584_t {
+    u32 unk_1404[0x7f];
+    u8 pad_1FC[0xc8];
+} lbl_1_bss_7C584_t;
+
+typedef struct lbl_1_bss_7ECB4_t {
+    Obj_3B34 unk_3b34;
+    u8 pad_14[0x34];
+} lbl_1_bss_7ECB4_t;
+
+/* file-scope objects of the retail TU, in retail order: MWCC addresses them off one section base */
+u32 fzgx_obj_lbl_1_bss_7B180[2];
+u32 fzgx_obj_lbl_1_bss_7B188[2];
+u32 lbl_1_bss_7B190[2];
+u32 lbl_1_bss_7B198;
+lbl_1_bss_7B19C_t lbl_1_bss_7B19C;
+u32 fzgx_obj_lbl_1_bss_7B1A4[2];
+lbl_1_bss_7B1AC_t fzgx_obj_lbl_1_bss_7B1AC;
+lbl_1_bss_7C584_t fzgx_obj_lbl_1_bss_7C584;
+u32 lbl_1_bss_7C848[2];
+u32 lbl_1_bss_7C850[3];
+u32 fzgx_obj_lbl_1_bss_7C85C[28];
+u8 lbl_1_bss_7C85C_fill_7C8CC;
+u8 lbl_1_bss_7C8CD;
+u16 lbl_1_bss_7C8CE;
+u32 lbl_1_bss_7C8CE_fill_7C8D0[17];
+u32 lbl_1_bss_7C914[13];
+u32 lbl_1_bss_7C948;
+u32 lbl_1_bss_7C94C[67];
+u32 lbl_1_bss_7CA58[2020];
+u32 fzgx_obj_lbl_1_bss_7E9E8[6];
+u32 lbl_1_bss_7EA00[14];
+u32 lbl_1_bss_7EA38[159];
+lbl_1_bss_7ECB4_t fzgx_obj_lbl_1_bss_7ECB4;
+
+#pragma section code_type ".fzgxpool"
+static void fzgx_bss_layout(void) {
+    volatile u8 s;  /* fzgx-allow: S2 layout primer sink: MWCC emits .bss objects in first-access order */
+    s = *(u8 *)&fzgx_obj_lbl_1_bss_7B180;
+    s = *(u8 *)&fzgx_obj_lbl_1_bss_7B188;
+    s = *(u8 *)&lbl_1_bss_7B190;
+    s = *(u8 *)&lbl_1_bss_7B198;
+    s = *(u8 *)&lbl_1_bss_7B19C;
+    s = *(u8 *)&fzgx_obj_lbl_1_bss_7B1A4;
+    s = *(u8 *)&fzgx_obj_lbl_1_bss_7B1AC;
+    s = *(u8 *)&fzgx_obj_lbl_1_bss_7C584;
+    s = *(u8 *)&lbl_1_bss_7C848;
+    s = *(u8 *)&lbl_1_bss_7C850;
+    s = *(u8 *)&fzgx_obj_lbl_1_bss_7C85C;
+    s = *(u8 *)&lbl_1_bss_7C85C_fill_7C8CC;
+    s = *(u8 *)&lbl_1_bss_7C8CD;
+    s = *(u8 *)&lbl_1_bss_7C8CE;
+    s = *(u8 *)&lbl_1_bss_7C8CE_fill_7C8D0;
+    s = *(u8 *)&lbl_1_bss_7C914;
+    s = *(u8 *)&lbl_1_bss_7C948;
+    s = *(u8 *)&lbl_1_bss_7C94C;
+    s = *(u8 *)&lbl_1_bss_7CA58;
+    s = *(u8 *)&fzgx_obj_lbl_1_bss_7E9E8;
+    s = *(u8 *)&lbl_1_bss_7EA00;
+    s = *(u8 *)&lbl_1_bss_7EA38;
+    s = *(u8 *)&fzgx_obj_lbl_1_bss_7ECB4;
+}
+#pragma section code_type ".text"
+
+void fn_1_EF768(void) {
+    u32 *p;
+    u32 i;
+    u32 v;
+    u32 h;
+    Obj_3B34 *o;
+
+    
+    fn_1_EE530();
+    h = fn_1_4630(lbl_801A6410[0], 0x3ea8, lbl_1_data_3E62C, 0xf14);
+    lbl_1_bss_7B19C.unk_1c = h;
+    fn_80008BA8((void *)h, fzgx_obj_lbl_1_bss_7B1AC.unk_2c, 0x28);
+    fn_80008BA8((void *)(lbl_1_bss_7B19C.unk_1c + 0x28), (const void *)fzgx_obj_lbl_1_bss_7C584.unk_1404[0], 0x3e80);
+    o = &fzgx_obj_lbl_1_bss_7ECB4.unk_3b34;
+    o->unk_8 = lbl_1_bss_7B19C.unk_1c;
+    o->unk_c = 0x3ea8;
+    o->unk_10 = 2;
+    fn_1_C0510(o);
+    p = fzgx_obj_lbl_1_bss_7C584.unk_1404;
+    for (i = 0; i < 0x7f; i++) {
+        v = p[i];
+        if (v != 0) {
+            fn_1_46B4(lbl_801A6410[0], v, lbl_1_data_3E62C, 0xf28);
+            p[i] = 0;
+        }
+    }
+    lbl_1_data_3E52C = 7;
+}
+/* fzgx:end fn_1_EF768 */
+
 /* fzgx:begin fn_1_EF85C */
 // fn_1_EF85C: empty in retail (single blr).
 void fn_1_EF85C(void) {

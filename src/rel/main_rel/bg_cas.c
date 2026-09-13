@@ -86,6 +86,95 @@ u8 *fn_1_FB870(void) {
 }
 /* fzgx:end fn_1_FB870 */
 
+/* fzgx:begin fn_1_FB87C pool */
+extern f32 lbl_1_rodata_7590[2];
+extern const f32 lbl_1_rodata_7598;
+extern void fn_80008BEC(void *dst, int value, int size);
+extern void GXInitTexObjLOD(void *texObj, int minFilter, int magFilter, f32 minLod,
+                            f32 maxLod, f32 lodBias, int biasClamp, int edgeLod, int maxAniso);
+
+typedef struct {
+    u8 unk_0[4];
+    u8 unk_4;
+    u8 unk_5[0x270 - 5];
+} Cas_1_Record;
+
+typedef struct {
+    u8 unk_0[4];
+    Cas_1_Record unk_4[5];
+    u8 unk_C34;
+    u32 unk_C38[1];
+} Cas_1_State;
+
+/* file-scope objects of the retail TU, in retail order: MWCC addresses them off one section base */
+u8 fzgx_obj_lbl_1_bss_84450;
+u8 lbl_1_bss_84450_gap_84451;
+u16 lbl_1_bss_84450_gap_84451_fill_84452;
+Cas_1_Record fzgx_obj_lbl_1_bss_84454[5];
+u8 lbl_1_bss_84454_C30;
+u8 lbl_1_bss_84454_fill_85085;
+u16 lbl_1_bss_84454_fill_85086;
+u32 lbl_1_bss_85088[1];
+u32 lbl_1_bss_85088_fill_8508C[13];
+u32 fzgx_obj_lbl_1_bss_850C0;
+u16 lbl_1_bss_850C0_fill_850C4;
+u16 fzgx_obj_lbl_1_bss_850C6;
+u32 lbl_1_bss_850C6_fill_850C8[3];
+
+#pragma section code_type ".fzgxpool"
+static void fzgx_bss_layout(void) {
+    volatile u8 s;  /* fzgx-allow: S2 layout primer sink: MWCC emits .bss objects in first-access order */
+    s = *(u8 *)&fzgx_obj_lbl_1_bss_84450;
+    s = *(u8 *)&lbl_1_bss_84450_gap_84451;
+    s = *(u8 *)&lbl_1_bss_84450_gap_84451_fill_84452;
+    s = *(u8 *)&fzgx_obj_lbl_1_bss_84454;
+    s = *(u8 *)&lbl_1_bss_84454_C30;
+    s = *(u8 *)&lbl_1_bss_84454_fill_85085;
+    s = *(u8 *)&lbl_1_bss_84454_fill_85086;
+    s = *(u8 *)&lbl_1_bss_85088;
+    s = *(u8 *)&lbl_1_bss_85088_fill_8508C;
+    s = *(u8 *)&fzgx_obj_lbl_1_bss_850C0;
+    s = *(u8 *)&lbl_1_bss_850C0_fill_850C4;
+    s = *(u8 *)&fzgx_obj_lbl_1_bss_850C6;
+    s = *(u8 *)&lbl_1_bss_850C6_fill_850C8;
+}
+#pragma section code_type ".text"
+
+void fn_1_FB87C(u32 *values, u8 count) {
+    u8 buf[5];
+    
+    u32 *src;
+    u32 *dst;
+    Cas_1_Record *rec;
+    int i;
+    volatile const f32 *zero; /* reloaded each iteration: the callee may write */
+
+    *(u32 *)buf = *(u32 *)lbl_1_rodata_7590;
+    buf[4] = ((u8 *)lbl_1_rodata_7590)[4];
+
+    fn_80008BEC(fzgx_obj_lbl_1_bss_84454, 0, 0xc30);
+
+    fzgx_obj_lbl_1_bss_84454[0].unk_4 = buf[0];
+    fzgx_obj_lbl_1_bss_84454[1].unk_4 = buf[1];
+    fzgx_obj_lbl_1_bss_84454[2].unk_4 = buf[2];
+    fzgx_obj_lbl_1_bss_84454[3].unk_4 = buf[3];
+    fzgx_obj_lbl_1_bss_84454[4].unk_4 = buf[4];
+    lbl_1_bss_84454_C30 = count;
+
+    dst = lbl_1_bss_85088;
+    src = values;
+    zero = &lbl_1_rodata_7598;
+    for (i = 0; i < lbl_1_bss_84454_C30; i++) {
+        f32 z = *zero;
+
+        *dst = *src;
+        GXInitTexObjLOD((void *)*dst, 1, 1, z, z, z, 0, 0, 0);
+        src++;
+        dst++;
+    }
+}
+/* fzgx:end fn_1_FB87C */
+
 /* fzgx:begin fn_1_FB96C */
 #include "rel/main_rel/bg_cas.h"
 
@@ -205,6 +294,77 @@ void fn_1_FC40C(void) {
 void fn_1_FC410(void) {
 }
 /* fzgx:end fn_1_FC410 */
+
+/* fzgx:begin fn_1_FC414 pool noprologue */
+#include "types.h"
+#include "rel/main_rel/bg_cas.h"
+
+extern const f32 lbl_1_rodata_7600;
+extern const f32 lbl_1_rodata_7604;
+
+extern void *GXGetTexBufferSize(int, int, int, int, int);
+extern void fn_80008BEC(void *, int, u32);
+extern void fn_1_FC4E0(void *, void *);
+extern void fn_1_FC51C(void);
+
+typedef struct {
+    u8 pad_0[0x10];
+    u32 unk_10;
+    f32 unk_14;
+    f32 unk_18;
+    u8 pad_1c[4];
+    u8 unk_20[0x100];
+    u8 unk_120[0x20];
+    u32 unk_140;
+} Fn1FC414Data;
+
+/* file-scope objects of the retail TU, in retail order: MWCC addresses them off one section base */
+u32 fzgx_obj_lbl_1_bss_850C0;
+u16 lbl_1_bss_850C0_fill_850C4;
+u16 lbl_1_bss_850C6_fill_850C6;
+u32 lbl_1_bss_850C6_fill_850C8[2];
+u32 lbl_1_bss_850C6_A;
+f32 fzgx_obj_lbl_1_bss_850D4;
+f32 fzgx_obj_lbl_1_bss_850D8;
+u32 lbl_1_bss_850D8_fill_850DC;
+u8 lbl_1_bss_850E0[0x100];
+u8 lbl_1_bss_851E0[0x20];
+u32 lbl_1_bss_851E0_20;
+
+#pragma section code_type ".fzgxpool"
+static void fzgx_bss_layout(void) {
+    volatile u8 s;  /* fzgx-allow: S2 layout primer sink: MWCC emits .bss objects in first-access order */
+    s = *(u8 *)&fzgx_obj_lbl_1_bss_850C0;
+    s = *(u8 *)&lbl_1_bss_850C0_fill_850C4;
+    s = *(u8 *)&lbl_1_bss_850C6_fill_850C6;
+    s = *(u8 *)&lbl_1_bss_850C6_fill_850C8;
+    s = *(u8 *)&lbl_1_bss_850C6_A;
+    s = *(u8 *)&fzgx_obj_lbl_1_bss_850D4;
+    s = *(u8 *)&fzgx_obj_lbl_1_bss_850D8;
+    s = *(u8 *)&lbl_1_bss_850D8_fill_850DC;
+    s = *(u8 *)&lbl_1_bss_850E0;
+    s = *(u8 *)&lbl_1_bss_851E0;
+    s = *(u8 *)&lbl_1_bss_851E0_20;
+}
+#pragma section code_type ".text"
+
+void fn_1_FC414(void *arg0, void *arg1) {
+    
+    f32 v14 = lbl_1_rodata_7600;
+    f32 v18 = lbl_1_rodata_7604;
+    void *buffer;
+
+    fzgx_obj_lbl_1_bss_850D4 = v14;
+    fzgx_obj_lbl_1_bss_850D8 = v18;
+    buffer = GXGetTexBufferSize(0x10, 0x10, 1, 0, 0);
+    fn_80008BEC(lbl_1_bss_850E0, 0, (u32)buffer);
+    fn_80008BEC(lbl_1_bss_851E0, 0, 0x20);
+    lbl_1_bss_851E0_20 = (u32)GXGetTexBufferSize(0x80, 0x80, 1, 0, 0);
+    fn_1_FC4E0(arg0, arg1);
+    lbl_1_bss_850C6_A = 0;
+    fn_1_FC51C();
+}
+/* fzgx:end fn_1_FC414 */
 
 /* fzgx:begin fn_1_FC4E0 */
 void fn_1_FC4E0(void *arg0, int arg1) {
