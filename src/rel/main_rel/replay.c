@@ -7,15 +7,6 @@ extern u32 OSGetTick(void);
 /* fzgx:begin fn_1_F2780 pool noprologue */
 #include "types.h"
 
-#define lbl_1_bss_7EFD0 fzgx_header_lbl_1_bss_7EFD0
-#define lbl_1_bss_7EFD4 fzgx_header_lbl_1_bss_7EFD4
-#define lbl_1_bss_7EFD8 fzgx_header_lbl_1_bss_7EFD8
-#define lbl_1_bss_7F01C fzgx_header_lbl_1_bss_7F01C
-#undef lbl_1_bss_7EFD0
-#undef lbl_1_bss_7EFD4
-#undef lbl_1_bss_7EFD8
-#undef lbl_1_bss_7F01C
-
 typedef struct State {
     u8 pad0[0x19];
     u8 byte19;
@@ -55,24 +46,24 @@ typedef struct lbl_1_bss_7F01C_t {
 } lbl_1_bss_7F01C_t;
 
 /* file-scope objects of the retail TU, in retail order: MWCC addresses them off one section base */
-u16 lbl_1_bss_7EFD0;
+u16 fzgx_obj_lbl_1_bss_7EFD0;
 u16 lbl_1_bss_7EFD0_gap_7EFD2;
-u8 lbl_1_bss_7EFD4;
+u8 fzgx_obj_lbl_1_bss_7EFD4;
 u8 lbl_1_bss_7EFD0_gap_7EFD5;
 u16 lbl_1_bss_7EFD0_gap_7EFD5_fill_7EFD6;
-State lbl_1_bss_7EFD8;
-lbl_1_bss_7F01C_t lbl_1_bss_7F01C;
+State fzgx_obj_lbl_1_bss_7EFD8;
+lbl_1_bss_7F01C_t fzgx_obj_lbl_1_bss_7F01C;
 
 #pragma section code_type ".fzgxpool"
 static void fzgx_bss_layout(void) {
     volatile u8 s;  /* fzgx-allow: S2 layout primer sink: MWCC emits .bss objects in first-access order */
-    s = *(u8 *)&lbl_1_bss_7EFD0;
+    s = *(u8 *)&fzgx_obj_lbl_1_bss_7EFD0;
     s = *(u8 *)&lbl_1_bss_7EFD0_gap_7EFD2;
-    s = *(u8 *)&lbl_1_bss_7EFD4;
+    s = *(u8 *)&fzgx_obj_lbl_1_bss_7EFD4;
     s = *(u8 *)&lbl_1_bss_7EFD0_gap_7EFD5;
     s = *(u8 *)&lbl_1_bss_7EFD0_gap_7EFD5_fill_7EFD6;
-    s = *(u8 *)&lbl_1_bss_7EFD8;
-    s = *(u8 *)&lbl_1_bss_7F01C;
+    s = *(u8 *)&fzgx_obj_lbl_1_bss_7EFD8;
+    s = *(u8 *)&fzgx_obj_lbl_1_bss_7F01C;
 }
 #pragma section code_type ".text"
 
@@ -81,12 +72,12 @@ void fn_1_F2780(void) {
     State *state;
 
     
-    state = &lbl_1_bss_7EFD8;
+    state = &fzgx_obj_lbl_1_bss_7EFD8;
     object = fn_1_4630(lbl_801A6410, (1 << 16) + 0x14c, lbl_1_data_3E8C8, 0x75);
     state->object = object;
-    *(u16 *)((u8 *)&lbl_1_bss_7F01C.fzgx_byte_4C) = 0;
+    *(u16 *)((u8 *)&fzgx_obj_lbl_1_bss_7F01C.fzgx_byte_4C) = 0;
     object->halfa0 = 0;
-    lbl_1_bss_7EFD4 = 0x29;
+    fzgx_obj_lbl_1_bss_7EFD4 = 0x29;
     state->byte19 = 0;
     state->byte1a = 1;
     state->byte1c = 0;
