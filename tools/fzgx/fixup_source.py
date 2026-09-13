@@ -302,10 +302,10 @@ def wrap_constant_pointers(body: str, name: str) -> List[Tuple[str, str]]:
         init = _init_of(body[s0:e0])
         assigns = re.findall(r'(?m)^\s*' + re.escape(nm) + r'\s*=\s*([^;]+);', inner)
         values = ([init] if init else []) + assigns
-        if not values or not all(re.fullmatch(r'\(?\s*(?:\(' + TYPE + r'\)\s*)?&?\s*([A-Za-z_]\w*)(?:\s*\+\s*0x[0-9A-Fa-f]+|\s*\+\s*\d+)?\s*\)?', v.strip()) for v in values):
-            continue
-        if not all(re.search(r'\b([A-Za-z_]\w*)\b', v.strip().lstrip('(&')).group(1) in globals_ for v in values):
-            continue
+        const_re = r'\(?\s*(?:\(' + TYPE + r'\)\s*)?&?\s*([A-Za-z_]\w*)(?:\s*\+\s*0x[0-9A-Fa-f]+|\s*\+\s*\d+)?\s*\)?'
+        first = re.fullmatch(const_re, values[0].strip()) if values else None
+        if not first or first.group(1) not in globals_:
+            continue  # the first definition must be a constant address; later ones may vary
         decl_line = body[s0:e0]
         base_type = typ.rstrip('* ').strip()
         stars = typ.count('*')
