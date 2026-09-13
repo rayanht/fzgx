@@ -453,6 +453,17 @@ Rules that hold for everyone:
   call, goes through the wrapper. Under 1.2.5n the compiler reloads a global after a volatile
   store unless the value sits in a local, and a dead first definition of that local is removed
   before numbering (a double definition cannot promote it).
+  Capture verdicts over the 23 remaining 1.2.5-class near-misses (`tools/capture/autotarget.py`
+  maps residual rows to webs, `source_rank_solver.py` decides): the replay reproduced every
+  capture; 9 residuals are proven unreachable by declaration order (compiler temporaries or
+  copy-region webs, which need the structural families), 8 unresolved by bounded search, none
+  closable by declaration order alone. Porting captures to GC/1.3.2: the 1.3.2 build is not
+  byte-similar to 1.2.5n even with address-masked patterns; anchors found from the dump strings
+  are the register-coloring call `call 0x5077b0` at 0x433dc6, the dump gate byte 0x5e90ec, the
+  post-coloring reconvergence 0x433df2, the scheduler call 0x500020 and the optimizer call
+  0x506e10, but 0x5077b0 has a different shape (five calls) from the 1.2.5 coordinator, so every
+  PCode/graph global and the operand layout must be re-derived before `allocator_snapshot.py`
+  can read a 1.3.2 process.
 - Engine speed (2026-09-12): `fzgx fixup` startup read 182,000 saved bodies and 700 MB of
   reports on every run (55 s); `seeds/recovered.py` now caches the collected candidates in
   `.fzgx/saved_candidates.pickle` keyed by a cheap fingerprint (check-archive directory mtimes,
