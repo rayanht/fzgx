@@ -133,6 +133,94 @@ void fn_1_A5EFC(void) {
 }
 /* fzgx:end fn_1_A5EFC */
 
+/* fzgx:begin fn_1_A6480 noprologue */
+#include "types.h"
+#include "rel/main_rel/globals.h"
+#include "rel/main_rel/relocation.h"
+
+struct fn_1_A6480_d58 {
+    u8 pad[8];
+    u16 unk_8;
+    u16 unk_A;
+};
+
+extern f32 lbl_1_rodata_49D8;
+extern struct fn_1_A6480_d58 lbl_1_bss_D58;
+extern void fn_8006CE1C(f32);
+extern u32 OSGetResetCode(void);
+extern void OSSetProgressiveMode(s32);
+extern void fn_80070620(s32);
+extern s32 fn_1_4C10(void);
+
+s32 fn_1_A6480(void) {
+    s32 var_r31;
+    s32 var_r30;
+    s32 temp_r29;
+    s8 sw;
+    struct fn_1_A6480_d58 *p;
+
+    p = &lbl_1_bss_D58;
+    var_r31 = 1;
+    if (!((*(u16 volatile *)&(lbl_1_bss_D58.unk_8)) /* Retail reloads this field. */ & 1) && !(lbl_1_bss_D58.unk_A & 1)) {
+        var_r31 = 0;
+    }
+    var_r30 = 1;
+    if (!((lbl_1_bss_D58.unk_8 >> 1) & 1) && !((lbl_1_bss_D58.unk_A >> 1) & 1)) {
+        var_r30 = 0;
+    }
+    temp_r29 = (p->unk_8 >> 8) & 1;
+    sw = lbl_1_data_341B8->unk_4;
+    switch (sw) {
+    case 0:
+        fn_8006CE1C(lbl_1_rodata_49D8);
+        if (((u32)__cntlzw((u32)((-2147483647 - 1) - OSGetResetCode())) >> 5) != 0) {
+            lbl_1_data_341B8->unk_4 = 2;
+        } else {
+            if (var_r31 != 0) {
+                lbl_1_data_341B8->unk_5 = 1;
+            } else if (var_r30 != 0) {
+                lbl_1_data_341B8->unk_5 = 0;
+            }
+            if ((--lbl_1_data_341B8->unk_6) <= 0 || temp_r29 != 0) {
+                lbl_1_data_341B8->unk_4 = 2;
+            }
+        }
+        break;
+    case 2:
+        if ((s32)lbl_1_data_341B8->unk_5 == 1) {
+            lbl_1_data_341B8->unk_6 = 0x64;
+            OSSetProgressiveMode(1);
+        } else {
+            lbl_1_data_341B8->unk_6 = 1;
+            OSSetProgressiveMode(0);
+        }
+        lbl_1_data_341B8->unk_4 = 3;
+        break;
+    case 3:
+        if (--lbl_1_data_341B8->unk_6 <= 0) {
+            lbl_1_data_341B8->unk_4 = 4;
+            lbl_1_data_341B8->unk_6 = 0x12C;
+        } else if (lbl_1_data_341B8->unk_6 == 0x46) {
+            fn_80070620(1);
+        }
+        break;
+    case 4:
+        if ((--lbl_1_data_341B8->unk_6) <= 0 || temp_r29 != 0) {
+            return 1;
+        }
+        break;
+    case 5:
+        if (fn_1_4C10() == 0) {
+            lbl_1_data_341B8->unk_4 = 0;
+            lbl_1_data_341B8->unk_5 = 1;
+            lbl_1_data_341B8->unk_6 = 0x258;
+        }
+        break;
+    }
+    return 0;
+}
+/* fzgx:end fn_1_A6480 */
+
 /* fzgx:begin fn_1_A66FC */
 // Records the reset state and performs the appropriate relocation startup or recovery.
 s32 fn_1_A66FC(s32 value) {

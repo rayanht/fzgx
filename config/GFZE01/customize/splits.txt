@@ -443,3 +443,9 @@ rel/customize/_prolog/fn_3_6F90.c:
 
 rel/customize/toolkit/fn_3_2BFB4.c:
 	.text       start:0x0002BFB4 end:0x0002C164 align:4
+
+rel/customize/toolkit/fn_3_2C164.c:
+	.text       start:0x0002C164 end:0x0002C290 align:4
+
+rel/customize/emb_memcard/fn_3_12910.c:
+	.text       start:0x00012910 end:0x00012B14 align:4

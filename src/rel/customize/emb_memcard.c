@@ -124,12 +124,79 @@ u32 fn_3_11FD0(u32 index, u32 value) {
 }
 /* fzgx:end fn_3_11FD0 */
 
+/* fzgx:begin fn_3_12910 noprologue */
+#include "types.h"
+
+struct fn_3_12910_tbl_ent {
+    u8 pad_0[0x8];
+    u32 unk_8;
+};
+struct fn_3_12910_glb {
+    u8 pad_0[0xC];
+    u32 unk_C;
+    u32 unk_10;
+    u8 pad_14[0xE];
+    s16 unk_22;
+    s16 unk_24;
+};
+
+extern u8 lbl_3_bss_7EDD8[52];
+extern u8 lbl_3_data_3234[168];
+
+#pragma opt_dead_assignments off
+void fn_3_12910(void) {
+    struct fn_3_12910_glb *p;
+    struct fn_3_12910_tbl_ent *t;
+    u32 f;
+    u32 idx;
+
+    t = (struct fn_3_12910_tbl_ent *)lbl_3_data_3234;
+    p = (struct fn_3_12910_glb *)lbl_3_bss_7EDD8;
+    idx = __cntlzw(p->unk_C);
+    ((void (*)(void))(*(u32 *)((u8 *)lbl_3_data_3234 + idx * 12 + 8)))();
+
+    f = p->unk_C;
+    if (!(f & 0x80000000)) {
+        if (f & 0x2000000) {
+            s32 v = ((struct fn_3_12910_glb *)lbl_3_bss_7EDD8)->unk_24 - 1;
+
+            ((struct fn_3_12910_glb *)lbl_3_bss_7EDD8)->unk_24 = (v < -15) ? -15 : ((v > 30) ? 30 : v);
+        } else if (f & 0x1000000) {
+            if (((struct fn_3_12910_glb *)lbl_3_bss_7EDD8)->unk_10 & 0x2000000) {
+                s32 v = ((struct fn_3_12910_glb *)lbl_3_bss_7EDD8)->unk_24 + 1;
+
+                ((struct fn_3_12910_glb *)lbl_3_bss_7EDD8)->unk_24 = (v < -15) ? -15 : ((v > 0) ? 0 : v);
+            } else {
+                s32 v = ((struct fn_3_12910_glb *)lbl_3_bss_7EDD8)->unk_24 - 1;
+
+                ((struct fn_3_12910_glb *)lbl_3_bss_7EDD8)->unk_24 = (v < 0) ? 0 : ((v > 30) ? 30 : v);
+            }
+        } else if (f & 0x400000) {
+            s32 v = ((struct fn_3_12910_glb *)lbl_3_bss_7EDD8)->unk_24 - 1;
+
+            ((struct fn_3_12910_glb *)lbl_3_bss_7EDD8)->unk_24 = (v < 0) ? 0 : ((v > 30) ? 30 : v);
+        } else if (!(f & 0x800000)) {
+            s32 v = ((struct fn_3_12910_glb *)lbl_3_bss_7EDD8)->unk_24 + 1;
+
+            ((struct fn_3_12910_glb *)lbl_3_bss_7EDD8)->unk_24 = (v < -15) ? -15 : ((v > 30) ? 30 : v);
+        }
+
+        f = p->unk_C;
+        if (f & 0x40000000) {
+            s32 v = ((struct fn_3_12910_glb *)lbl_3_bss_7EDD8)->unk_22 - 1;
+
+            ((struct fn_3_12910_glb *)lbl_3_bss_7EDD8)->unk_22 = (v < 0) ? 0 : ((v > 10) ? 10 : v);
+        } else if (f & 0x20000000) {
+            s32 v = ((struct fn_3_12910_glb *)lbl_3_bss_7EDD8)->unk_22 + 1;
+
+            ((struct fn_3_12910_glb *)lbl_3_bss_7EDD8)->unk_22 = (v < 0) ? 0 : ((v > 10) ? 10 : v);
+        }
+    }
+}
+#pragma opt_dead_assignments reset
+/* fzgx:end fn_3_12910 */
+
 /* fzgx:begin fn_3_12E4C */
-
-
-
-
-
 typedef struct { u32 x; u32 y; u32 z; } Vec3;
 typedef struct { u32 unused0; u32 unused1; Vec3 first; Vec3 second; } Data;
 typedef struct { u8 pad_000[0x508]; Vec3 first; Vec3 second; } SpecialData;

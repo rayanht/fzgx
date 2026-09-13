@@ -6326,3 +6326,30 @@ rel/main_rel/_prolog/fn_1_3920.c:
 
 rel/main_rel/stcoli/fn_1_14DE8.c:
 	.text       start:0x00014DE8 end:0x00014F04 align:4
+
+rel/main_rel/effect/fn_1_65424.c:
+	.text       start:0x00065424 end:0x000654B0 align:4
+
+rel/main_rel/effect/fn_1_5ABCC.c:
+	.text       start:0x0005ABCC end:0x0005AC48 align:4
+
+rel/main_rel/relocation/fn_1_A6480.c:
+	.text       start:0x000A6480 end:0x000A66FC align:4
+
+rel/main_rel/effect/fn_1_5C784.c:
+	.text       start:0x0005C784 end:0x0005C83C align:4
+
+rel/main_rel/_prolog/fn_1_814.c:
+	.text       start:0x00000814 end:0x000008D4 align:4
+
+rel/main_rel/effect/fn_1_64F2C.c:
+	.text       start:0x00064F2C end:0x00064FB8 align:4
+
+rel/main_rel/effect/fn_1_5B3D0.c:
+	.text       start:0x0005B3D0 end:0x0005B450 align:4
+
+rel/main_rel/face/fn_1_D1C94.c:
+	.text       start:0x000D1C94 end:0x000D1F88 align:4
+
+rel/main_rel/effect/fn_1_5F5C8.c:
+	.text       start:0x0005F5C8 end:0x0005F654 align:4

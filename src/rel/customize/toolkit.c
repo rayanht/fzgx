@@ -890,3 +890,78 @@ void fn_3_2BFB4(void) {
 }
 #pragma opt_propagation reset
 /* fzgx:end fn_3_2BFB4 */
+
+/* fzgx:begin fn_3_2C164 noprologue */
+#include "types.h"
+#include "font.h"
+
+struct fn_3_2C164_Copy88 { u32 a[22]; };
+struct fn_3_2C164_lbl_3_bss_F0 {
+    u8 pad_0[0x4];
+    s16 unk_4;
+    u8 pad_6[0x4];
+    s16 unk_A;
+};
+struct fn_3_2C164_lbl_3_rodata_768 {
+    u8 pad_0[0x22C];
+    f32 unk_22C;
+    u8 pad_230[0x1E8];
+    f32 unk_418;
+    u8 pad_41C[0x25C];
+    f32 unk_678;
+};
+struct fn_3_2C164_lbl_3_data_4648 {
+    u8 pad_0[0x498];
+    u32 unk_498[1];
+};
+
+extern int fn_1_4F734(FontDrawPacket *);
+extern struct fn_3_2C164_lbl_3_bss_F0 lbl_3_bss_F0;
+extern struct fn_3_2C164_lbl_3_data_4648 lbl_3_data_4648;
+extern struct fn_3_2C164_lbl_3_rodata_768 lbl_3_rodata_768;
+extern u32 fn_1_134AD4(void);
+extern u32 fn_1_13ABA8(u32);
+extern u32 fn_3_2B778(s16, u32, u32, u32, u32);
+extern u32 lbl_1_rodata_26F8;
+extern void fn_1_133DBC(void *);
+extern void fn_1_138120(void *);
+
+void fn_3_2C164(void) {
+    f32 fzgx_live;
+    struct fn_3_2C164_lbl_3_bss_F0 *p_lbl_3_bss_F0;
+    struct fn_3_2C164_lbl_3_rodata_768 *p_lbl_3_rodata_768;
+    s32 v0;
+    s32 v1;
+    f32 v2;
+    f32 v3;
+    FontDrawPacket loc_8;
+    /* frame */
+{
+    s32 fzgx_loop_v0_1245;
+    fzgx_loop_v0_1245 = 0;
+    v1 = 128;
+    p_lbl_3_rodata_768 = (struct fn_3_2C164_lbl_3_rodata_768 *)&lbl_3_rodata_768;
+    p_lbl_3_bss_F0 = (struct fn_3_2C164_lbl_3_bss_F0 *)&lbl_3_bss_F0;
+    while ((s16)fzgx_loop_v0_1245 < 3) {
+    fn_3_2B778((s16)v1, 236, 10, fzgx_loop_v0_1245, ((u32)__cntlzw(((s16)fzgx_loop_v0_1245 - p_lbl_3_bss_F0->unk_4)) >> 5));
+    v1 += 192;
+    fzgx_loop_v0_1245++;
+    }
+    v0 = fzgx_loop_v0_1245;
+}
+    fn_1_133DBC((void *)1);
+    fn_1_134AD4();
+    fn_1_13ABA8(0x28000000);
+    loc_8 = *(FontDrawPacket *)&lbl_1_rodata_26F8;
+    v2 = p_lbl_3_rodata_768->unk_678;
+    fzgx_live = p_lbl_3_rodata_768->unk_418;
+    v3 = fzgx_live;
+    loc_8.image = (0x10000 - 31485);
+    loc_8.x = v2;
+    loc_8.y = v3;
+    loc_8.z = p_lbl_3_rodata_768->unk_22C;
+    loc_8.flags = 10;
+    fn_1_4F734((FontDrawPacket *)&loc_8);
+    fn_1_138120((void *)lbl_3_data_4648.unk_498[lbl_3_bss_F0.unk_A]);
+}
+/* fzgx:end fn_3_2C164 */

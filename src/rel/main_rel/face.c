@@ -47,6 +47,174 @@ void fn_1_D17E8(void) {
 }
 /* fzgx:end fn_1_D17E8 */
 
+/* fzgx:begin fn_1_D1C94 noprologue */
+#include "types.h"
+
+extern u32 lbl_1_data_3D924;
+
+typedef struct {
+    u32 unk_0;
+    u32 unk_4;
+    u32 unk_8;
+    u8 unk_C;
+    u8 unk_D;
+    u8 pad_E[0x2];
+    s32 unk_10;
+} State_7ACD8;
+
+typedef struct {
+    u32 unk_0;
+    u32 unk_4;
+    u32 unk_8;
+    u8 pad_C[0x4];
+    u32 unk_10;
+    u32 unk_14;
+    u32 unk_18;
+    u32 unk_1C;
+    u8 pad_20[0x18];
+    u32 unk_38;
+    u32 unk_3C;
+    u8 pad_40[0x24];
+} Ent;
+
+extern State_7ACD8 lbl_1_bss_7ACD8;
+extern u32 fn_1_864E8(s32);
+extern s32 fn_1_D2E44(u32);
+extern s8 fn_1_86690(s8);
+extern s16 fn_1_12C7B8(s16);
+extern s32 fn_1_D123C(u32);
+extern s32 fn_1_3F440(u32);
+extern void fn_1_D2F50(void);
+extern void fn_1_D2F84(void);
+extern void fn_80071718(u32);
+extern void fn_800711A8(u32);
+
+void fn_1_D1C94(void) {
+    State_7ACD8 *p;
+    Ent *obj;
+    s32 count;
+    u32 mask;
+    s32 i;
+    s32 n;
+
+    p = (State_7ACD8 *)&lbl_1_bss_7ACD8;
+    if ((s32)lbl_1_data_3D924 != -1) {
+        fn_1_D2F50();
+        if (p->unk_10 != 0) {
+            u8 c = p->unk_C;
+            p->unk_D = c;
+            if (c > 4) {
+                p->unk_D = 4;
+            }
+        } else {
+            p->unk_D = 0;
+            mask = 0x20000880;
+            n = 0;
+            while ((u32)n < p->unk_C) {
+                if ((fn_1_864E8(n) & mask) == 0) {
+                    p->unk_D++;
+                }
+                n++;
+            }
+            if (p->unk_D > 6) {
+                p->unk_D = 6;
+            }
+        }
+
+        obj = (Ent *)p->unk_0;
+        i = 0;
+        while ((u32)i < p->unk_D) {
+            if (obj == 0) {
+                fn_1_D2F84();
+                return;
+            }
+            if (obj->unk_4 != 0xff) {
+                u32 off = (obj->unk_4 & 0xFF) << 2;
+                obj->unk_4 = obj->unk_4;
+                if (*(u32 *)(p->unk_8 + off) != 0) {
+                    fn_80071718(*(u32 *)(p->unk_8 + off));
+                    *(u32 *)(p->unk_8 + off) = 0;
+                }
+                if (*(u32 *)(p->unk_4 + off) != 0) {
+                    fn_800711A8(*(u32 *)(p->unk_4 + off));
+                    *(u32 *)(p->unk_4 + off) = 0;
+                }
+            }
+            i++;
+            obj++;
+        }
+
+        count = 0;
+        if (p->unk_10 != 0) {
+            i = 0;
+            obj = (Ent *)p->unk_0;
+            while ((u32)i < p->unk_D) {
+                u32 res = fn_1_D2E44(i);
+                if (obj == 0) {
+                    fn_1_D2F84();
+                    return;
+                }
+                if ((u32)count <= (u32)(p->unk_D - 1)) {
+                    u32 v = res & 0xFF;
+                    obj->unk_10 = v;
+                    obj->unk_14 = v;
+                    obj->unk_18 = i;
+                    obj->unk_4 = i;
+                    obj->unk_8 = (s16)fn_1_12C7B8(fn_1_86690((s8)i));
+                    obj->unk_3C = 0;
+                    obj->unk_38 = 0;
+                    obj->unk_1C = 20;
+                    if (fn_1_D123C(obj->unk_4 & 0xFF) != 0) {
+                        obj->unk_0 &= 0x7FFFFFFF;
+                    } else {
+                        obj->unk_0 |= 0x80000000;
+                    }
+                    count++;
+                    obj++;
+                }
+                i++;
+            }
+        } else {
+{
+    s32 fzgx_loop_i_3321;
+            obj = (Ent *)p->unk_0;
+            fzgx_loop_i_3321 = 0;
+            while ((u32)fzgx_loop_i_3321 < p->unk_C) {
+                u32 res = fn_1_D2E44(fzgx_loop_i_3321);
+                s32 lim;
+                if (obj == 0) {
+                    fn_1_D2F84();
+                    return;
+                }
+                lim = p->unk_D - 1;
+                if ((s32)(res & 0xFF) <= lim && (u32)count <= (u32)lim) {
+                    u32 v = res & 0xFF;
+                    obj->unk_10 = v;
+                    obj->unk_14 = v;
+                    obj->unk_18 = fn_1_3F440(res);
+                    obj->unk_4 = fzgx_loop_i_3321;
+                    obj->unk_8 = (s16)fn_1_12C7B8(fn_1_86690((s8)fzgx_loop_i_3321));
+                    obj->unk_3C = 0;
+                    obj->unk_38 = 0;
+                    obj->unk_1C = 20;
+                    if (fn_1_D123C(obj->unk_4 & 0xFF) != 0) {
+                        obj->unk_0 &= 0x7FFFFFFF;
+                    } else {
+                        obj->unk_0 |= 0x80000000;
+                    }
+                    count++;
+                    obj++;
+                }
+                fzgx_loop_i_3321++;
+            }
+    i = fzgx_loop_i_3321;
+}
+        }
+        fn_1_D2F84();
+    }
+}
+/* fzgx:end fn_1_D1C94 */
+
 /* fzgx:begin fn_1_D1F88 */
 void fn_1_D1F88(void) {
     Obj_1_bss_7ACD8_Target* state;
