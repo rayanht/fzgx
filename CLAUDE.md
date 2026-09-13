@@ -360,6 +360,22 @@ Rules that hold for everyone:
   generated-unit hash (`.fzgx/verify_cache.json`), so a pass over main.rel is ~30 s. The only
   agent task it emits is the fixed list of blocks that cannot compile under their prologue
   (one revise batch; a block that fails twice is blocked, never re-queued).
+- Compiler versions (2026-09-13): 84 unmatched DOL functions (61 KB: the AX/MIX libraries,
+  parts of OS/DVD/CARD, GXInit) carry the MWCC 1.0/1.1 prologue order (`mflr; lis; stw r0, 4(r1);
+  stwu`), which 1.2.5 and later never emit. `oracle.CANDIDATE_VERSIONS` and the sourcealign
+  donor profiles now include GC/1.1; ten of those bodies gained 6 to 43 points under it. MWCC 1.1
+  also reserves frame space for a declared local that later optimization removes (later versions
+  do not): a frame 8 bytes short of retail's means a missing local declaration.
+- Allocation rules measured with probe compiles (2026-09-12): callee-saved registers go to
+  variables in textual declaration order, highest register first, after the compiler's own
+  hoisted temporaries; block scope does not matter. An inlined static helper's locals share one
+  assignment across every inline site. Liveness is path-sensitive (a register dead on an
+  early-return path is reused there). An address-of-object CSE temp (retail `addi r4, r31, off`
+  reused for interior stores) is reproduced by direct member access, not by a pointer variable.
+  Int-to-float conversions get one 8-byte stack temp per source site; sibling branches share a
+  slot; conversions separated by calls reuse one slot; a macro that evaluates its argument twice
+  creates two sites (fn_3_1D338's clamp). FPR temps are numbered by IR creation order, which
+  follows source expression order.
 - Engine speed (2026-09-12): `fzgx fixup` startup read 182,000 saved bodies and 700 MB of
   reports on every run (55 s); `seeds/recovered.py` now caches the collected candidates in
   `.fzgx/saved_candidates.pickle` keyed by a cheap fingerprint (check-archive directory mtimes,
