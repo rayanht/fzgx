@@ -440,14 +440,19 @@ def variable_splits(body: str, name: str) -> List[Tuple[str, str]]:
         if dims:
             continue
         defs = [m for m in re.finditer(r'(?m)^[ \t]+' + re.escape(nm) + r'\s*=[^=]', inner)]
-        if len(defs) != 2:
+        if len(defs) < 2:
             continue
-        cut = defs[1].start()
-        tail = re.sub(r'\b' + re.escape(nm) + r'\b', nm + '_2', inner[cut:])
-        text = body[:top] + inner[:cut] + tail + body[span[2]:]
-        for label, pos in (("last", top), ("first", locs[0][0])):
-            out.append((f"split {nm} at its second definition, {nm}_2 declared {label}",
-                        text[:pos] + f"{indent}{declarator(typ.strip(), nm + '_2' + dims)};\n" + text[pos:]))
+        # split at the second and at the last definition: a reassigned local's later webs are
+        # numbered above every declared local, a fresh local declared at position P is not
+        # (fn_8003043C: the late result declared right after base takes r26 after base)
+        cuts = {defs[1].start(), defs[-1].start()}
+        for cut in sorted(cuts):
+            tail = re.sub(r'\b' + re.escape(nm) + r'\b', nm + '_2', inner[cut:])
+            text = body[:top] + inner[:cut] + tail + body[span[2]:]
+            positions = [("last", top)] + [(f"after {l[3]}", l[1]) for l in locs]
+            for label, pos in positions:
+                out.append((f"split {nm} at definition {sorted(cuts).index(cut) + 1}, {nm}_2 declared {label}",
+                            text[:pos] + f"{indent}{declarator(typ.strip(), nm + '_2' + dims)};\n" + text[pos:]))
     return out
 
 
