@@ -41023,6 +41023,24 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/memcard/fn_1_BF9C4.c",
+    "symbols": [
+      "fn_1_BF9C4"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/memcard.c",
+    "pool": {
+      "...rodata.0": "lbl_1_rodata_4AE0",
+      "@38": "lbl_1_rodata_4D1C",
+      "@9": "lbl_1_rodata_4CA8",
+      "@11": "lbl_1_rodata_4CB0",
+      "@13": "lbl_1_rodata_4CC0"
+    }
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/memcard/fn_1_BFCF8.c",
     "symbols": [
       "fn_1_BFCF8"
