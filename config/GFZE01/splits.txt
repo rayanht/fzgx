@@ -5234,3 +5234,6 @@ dol/TRKPostInterruptEvent.c:
 
 dol/fn_80076CD4.c:
 	.text       start:0x80076CD4 end:0x80077240 align:4
+
+dol/fn_8003043C.c:
+	.text       start:0x8003043C end:0x80030690 align:4
