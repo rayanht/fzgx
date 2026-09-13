@@ -11,7 +11,7 @@
 set -eu
 SYM=$1; BODY=$2; MODULE=$3; MW=${4:-GC/1.2.5n}; IDX=${5:-1}
 ROOT=/Users/rayan/fzgx
-OUT=$ROOT/.fzgx/capture/$SYM
+OUT=${FZGX_CAPTURE_DIR:-$ROOT/.fzgx/capture}/$SYM  # the VM mounts the repo read-only; point this at a writable mount
 mkdir -p "$OUT"
 cp "$BODY" "$OUT/$SYM.c"
 uv run python -c "
