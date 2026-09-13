@@ -376,6 +376,24 @@ Rules that hold for everyone:
   slot; conversions separated by calls reuse one slot; a macro that evaluates its argument twice
   creates two sites (fn_3_1D338's clamp). FPR temps are numbered by IR creation order, which
   follows source expression order.
+- Rules measured 2026-09-13 (probe compiles, see fn_12_2D888, fn_1_327F8, fn_80025A24, fn_8006A768):
+  under 1.2.5n/1.3.2 the callee-saved order follows the order in which variables are first
+  *defined*, not declared (`s32 c; s32 b; s32 a; a = ..; b = ..; c = ..` gives a r31). A constant
+  address assigned to a plain pointer (`char *s = table;`) is a rematerializable temp that takes
+  the lowest register; wrapping it in a one-member struct local (the lifter's `struct { T *value; }`)
+  keeps it a variable. A `u8` field read with an `(s8)` cast loads `lbz rT; extsb rD, rT`; a field
+  declared `s8` loads `lbz r3; extsb r3, r3` straight into the argument register; a u32 parameter
+  fed from an `s8` field needs `(u8)` to stay a bare lbz. `*q++ = v` keeps real pointer increments
+  (`addi r4, r4, 4`, merged pairwise) where `q[k]; q += 2` folds into displacements (MWCC 1.1).
+  An integer sum used as an address (`*(int *)(offset + entry + 0x9a0)` with `entry` a u32) emits
+  `addi r0, entry, 0x9a0; stwx v, offset, r0`; any pointer-typed spelling folds the constant onto
+  the offset instead. Three identical fill loops must reuse one counter for the stored zero to be
+  copied from the counter (`addi r3, r4, 0`) in every loop. Under GC/1.1 declaration and
+  assignment order never change callee-saved assignment; the order follows interference
+  structure (a table pointer read once or four-plus times takes r31, two or three reads put it
+  below the other pointers), so 1.1 near-misses with swapped r30/r31 are not fixable by reordering.
+  The `-use_lmw_stmw on` response closes stmw/lmw prologue rows in DOL and movie_module functions
+  and must be tried together with GC/1.3.2 before any source rewrite (fn_8004D8DC 98.2 -> 99.95).
 - Engine speed (2026-09-12): `fzgx fixup` startup read 182,000 saved bodies and 700 MB of
   reports on every run (55 s); `seeds/recovered.py` now caches the collected candidates in
   `.fzgx/saved_candidates.pickle` keyed by a cheap fingerprint (check-archive directory mtimes,
