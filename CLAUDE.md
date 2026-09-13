@@ -428,7 +428,18 @@ Rules that hold for everyone:
   fsubs/lfs against fsub/lfd (double promotion). The compiler's own IR dumper is a `ret` stub in
   every shipped build (`#pragma dumpir` and the gate byte do nothing); exact virtual-register
   numbers need the recovery project's sandboxed capture, which this machine cannot run (no
-  docker/qemu/gdb), so numbering is inferred from probes only.
+- Exact captures (2026-09-13): `tools/capture/capture.sh SYMBOL BODY.c MODULE [GC/1.2.5n]` runs the
+  compiler inside the `fzgx-capture` Lima VM (`tools/capture/fzgx-capture.yaml`: Debian arm64,
+  qemu-user, gdb-multiarch; separate from the recovery project's `mwcc-build` VM, never touch
+  that one) under a GDB stub with the recovery project's `allocator_snapshot.py`, writing every
+  PCode stage, the coloring graph before/after selection, creation events and the stack-frame
+  home list to `.fzgx/capture/SYMBOL/`. `vreg_map.py DIR 0001` prints vreg -> name/cluster/color;
+  `replay/simplify_replay.py DIR 0001` reproduces the compiler's colors exactly (38/38 on
+  fn_8003043C) and answers hypothesis questions. Only the 1.2.5/1.2.5n address set is known to
+  the scripts; 1.3.2 needs its own addresses. First validated loop: fn_8003043C's residual was the
+  reassigned `result` becoming a copy-region web (vr42) numbered above `base` (vr40), so it claimed
+  r27 before base claimed r26; a second local declared right after `base` put it in the named
+  region and matched. The `variable_splits` family now emits that shape.
 - Engine speed (2026-09-12): `fzgx fixup` startup read 182,000 saved bodies and 700 MB of
   reports on every run (55 s); `seeds/recovered.py` now caches the collected candidates in
   `.fzgx/saved_candidates.pickle` keyed by a cheap fingerprint (check-archive directory mtimes,
