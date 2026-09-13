@@ -437,12 +437,61 @@ def variable_splits(body: str, name: str) -> List[Tuple[str, str]]:
     return out
 
 
+
+SIGN_FLIP = {'s32': 'u32', 'u32': 's32', 'int': 'u32', 's16': 'u16', 'u16': 's16', 's8': 'u8', 'u8': 's8'}
+
+
+def signedness_flips(body: str, name: str) -> List[Tuple[str, str]]:
+    """A local's signedness flipped: `cmpwi` against `cmplwi`, `srawi` against `srwi`,
+    `extsh` against `clrlwi` are decided by the declared type, not the value."""
+    out: List[Tuple[str, str]] = []
+    a = _decl_anchor(body, name)
+    if not a:
+        return out
+    span, locs, top, indent = a
+    for s0, e0, typ, nm, dims in locs:
+        base = typ.strip()
+        if base not in SIGN_FLIP:
+            continue
+        line = body[s0:e0]
+        new_line = re.sub(r'\b' + re.escape(base) + r'\b', SIGN_FLIP[base], line, count=1)
+        out.append((f"{nm}: {base} -> {SIGN_FLIP[base]}", body[:s0] + new_line + body[e0:]))
+    return out
+
+
+def float_precision(body: str, name: str) -> List[Tuple[str, str]]:
+    """Single against double arithmetic: an unsuffixed literal in a float expression promotes
+    to double (`fsub` where retail has `fsubs`), and an `f64` local keeps a double temp where
+    retail computed in single precision; try the literal suffixes and f32 locals."""
+    out: List[Tuple[str, str]] = []
+    a = _decl_anchor(body, name)
+    if not a:
+        return out
+    span, locs, top, indent = a
+    inner = body[span[1]:span[2]]
+    lits = list(re.finditer(r'(?<![\w.])(\d+\.\d*|\.\d+)(?:[eE][+-]?\d+)?(?![\w.])', inner))
+    if lits:
+        text = inner
+        for m in reversed(lits):
+            text = text[:m.end()] + 'f' + text[m.end():]
+        out.append(("float literal suffixes at every site", body[:span[1]] + text + body[span[2]:]))
+        for m in lits[:8]:
+            out.append((f"float literal suffix at {m.group(0)}", body[:span[1]] + inner[:m.end()] + 'f' + inner[m.end():] + body[span[2]:]))
+    for s0, e0, typ, nm, dims in locs:
+        if typ.strip() in ('f64', 'double'):
+            line = body[s0:e0]
+            out.append((f"{nm}: f64 -> f32", body[:s0] + re.sub(r'\b(f64|double)\b', 'f32', line, count=1) + body[e0:]))
+            cast = re.sub(r'\(f64\)\s*', '', body[e0:span[2]])
+            out.append((f"{nm}: f64 -> f32 without double casts", body[:s0] + re.sub(r'\b(f64|double)\b', 'f32', line, count=1) + cast + body[span[2]:]))
+    return out
+
+
 def rewrites(body: str, name: str) -> List[Tuple[str, str]]:
     """Every single second-stage rewrite of a body."""
     out: List[Tuple[str, str]] = []
     for fn in (scope_moves, split_inits, hoists, through_local, return_values,
                call_results_to_locals, wrap_constant_pointers, decse_repeated_expressions,
-               scalar_carriers, dead_uses, variable_splits):
+               scalar_carriers, dead_uses, variable_splits, signedness_flips, float_precision):
         try:
             out += fn(body, name)
         except Exception:
