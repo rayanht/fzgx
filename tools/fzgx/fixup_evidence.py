@@ -2548,7 +2548,10 @@ def candidates(p: Project, symbol: str, body: str, base: oracle.CheckResult):
             # delta in the upper half, e.g. `== 0x1FFFF` (subis 1) where retail has 0x3FFFF (subis 3)
             delta = (retail_v - ours_v) << 16
             for lm in list(re.finditer(r"(?<![\w.])(0[xX][0-9A-Fa-f]+|\d+)(?![\w.])", body))[:64]:
-                L = int(lm.group(1), 0)
+                try:
+                    L = int(lm.group(1), 0)
+                except ValueError:
+                    continue  # a leading-zero decimal (`07`) is not a C literal Python parses with base 0
                 if L < 0x10000 or not ((L >> 16) & 0xFFFF == ours_v & 0xFFFF or ((L + 0x8000) >> 16) & 0xFFFF == ours_v & 0xFFFF):
                     continue
                 nv = L + delta
