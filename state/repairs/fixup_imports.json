@@ -4206,5 +4206,109 @@
     ],
     "link": "verified",
     "commit": "e543ea3"
+  },
+  "colchg_selmate_disp": {
+    "seed_symbol": "colchg_selmate_disp",
+    "generator": "fzgx fixup",
+    "transform": "expression-tree * at 2937",
+    "seed": "#include \"types.h\"\n#include \"rel/car_colchg/globals.h\"\n\ntypedef struct {\n    u8 pad_00[0x14];\n    f32 unk_14;\n    u8 pad_1c[0x20];\n    f32 unk_18;\n    f32 unk_3c;\n    f32 unk_40;\n    f32 unk_44;\n    f64 unk_48;\n} PoolRow;\nextern const PoolRow lbl_9_rodata_0;\n\ntypedef struct {\n    u8 pad_00[8];\n    f32 unk_08;\n    f32 unk_0c;\n    u8 pad_10[0x48];\n} SelmateBlk;\nextern const SelmateBlk lbl_1_rodata_26F8;\n\nextern u8 lbl_9_data_150[0x28];\nextern u8 lbl_9_bss_14[0xC8];\nextern struct Entry *lbl_1_data_1FB6C[];\n\nvoid fn_9_120C(void);\nvoid fn_9_1310(void);\nvoid fn_1_496FC(void *, f32, f32);\nvoid fn_1_4AE0C(const char *, ...);\nvoid fn_1_8D3F8(void *, void *, void (*)(void), void *);\n\ntypedef struct Entry Entry;\n\n#pragma opt_dead_assignments off\nvoid colchg_selmate_disp(u8 *car) {\n    u8 *widget;\n    f32 f30;\n    f32 f29;\n    f32 f28;\n    SelmateBlk local;\n    struct { s16 value; } i;\n    struct { struct Entry * value; } entry;\n    const PoolRow *pool;\n    s16 index;\n    f32 lab_t1;\n    f32 lab_t2;\n\n    pool = &lbl_9_rodata_0;\n    index = lbl_9_bss_8->unk_0;\n    lab_t1 = (160.0f);\n    lab_t2 = (50.0f);\n    fn_1_496FC(lbl_9_bss_8, lab_t1, lab_t2);\n    entry.value = lbl_1_data_1FB6C[lbl_9_bss_8->unk_0];\n    i.value = 0;\n    while (*(s16 *)entry.value != -1) {\n        entry.value = (struct Entry *)((u8 *)entry.value + 12);\n        i.value++;\n    }\n    fn_1_4AE0C((const char *)lbl_9_data_150, lbl_9_bss_8->unk_2, lbl_9_bss_8->unk_4, i.value - 1);\n    f28 = (255.0f);\n    f29 = (0.5f);\n    f30 = (480.0f);\n    for (i.value = 0; i.value < 2; i.value++) {\n        local = lbl_1_rodata_26F8;\n        local.unk_0c = f28;\n        local.unk_08 = (((f29) * ((f32)(i.value % 2))) * (f30));\n        switch (i.value) {\n        case 0:\n            fn_1_8D3F8(&lbl_9_bss_14[i.value * 0x64], &local, fn_9_120C, car + index * 0x440);\n            break;\n        case 1:\n            fn_1_8D3F8(&lbl_9_bss_14[i.value * 0x64], &local, fn_9_1310, car + index * 0x440);\n            break;\n        }\n    }\n}\n#pragma opt_dead_assignments reset\n\n",
+    "seed_sha256": "379fa84cffa559334c5136fdaa9edabff68f90aa1104aba103f780c5a9819c60",
+    "generated_sha256": "dff64448180c635282e21ec8577c35f11974075e06736211d92cc60fb262fdb9",
+    "generated_source": "#include \"types.h\"\n#include \"rel/car_colchg/globals.h\"\n#pragma section code_type \".fzgxpool\"\n__declspec(section \".fzgxpool\") static void fzgx_pool_prime1(void) {\n    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */\n    s = 0.0f;\n    s = 0.25f;\n}\nstatic const u32 fzgx_pool_table2[3] = {0x00000000, 0x00000000, 0x00000000};  /* fzgx-allow: A1 retail pool bytes */\n__declspec(section \".fzgxpool\") static void fzgx_pool_keep2(void) { const u32 *volatile cp; cp = fzgx_pool_table2; }  /* fzgx-allow: S2 pool primer sink */\n__declspec(section \".fzgxpool\") static void fzgx_pool_prime3(void) {\n    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */\n    s = 160.0f;\n    s = 50.0f;\n    s = -10.0f;\n    s = 182.04444885253906f;\n    s = 2.0f;\n    s = 1.0f;\n}\nstatic const u32 fzgx_pool_table4[1] = {0x00000000};  /* fzgx-allow: A1 retail pool bytes */\n__declspec(section \".fzgxpool\") static void fzgx_pool_keep4(void) { const u32 *volatile cp; cp = fzgx_pool_table4; }  /* fzgx-allow: S2 pool primer sink */\n__declspec(section \".fzgxpool\") static void fzgx_pool_prime5(void) {\n    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */\n    d = 4503599627370496.0;\n    s = 250.0f;\n    s = 255.0f;\n    s = 0.5f;\n    s = 480.0f;\n    d = 4503601774854144.0;\n}\n#pragma section code_type \".text\"\n\ntypedef struct {\n    u8 pad_00[0x14];\n    f32 unk_14;\n    u8 pad_1c[0x20];\n    f32 unk_18;\n    f32 unk_3c;\n    f32 unk_40;\n    f32 unk_44;\n    f64 unk_48;\n} PoolRow;\nextern const PoolRow lbl_9_rodata_0;\n\ntypedef struct {\n    u8 pad_00[8];\n    f32 unk_08;\n    f32 unk_0c;\n    u8 pad_10[0x48];\n} SelmateBlk;\nextern const SelmateBlk lbl_1_rodata_26F8;\n\nextern u8 lbl_9_data_150[0x28];\nextern u8 lbl_9_bss_14[0xC8];\nextern struct Entry *lbl_1_data_1FB6C[];\n\nvoid fn_9_120C(void);\nvoid fn_9_1310(void);\nvoid fn_1_496FC(void *, f32, f32);\nvoid fn_1_4AE0C(const char *, ...);\nvoid fn_1_8D3F8(void *, void *, void (*)(void), void *);\n\ntypedef struct Entry Entry;\n\n#pragma opt_dead_assignments on\nvoid colchg_selmate_disp(u8 *car) {\n    u8 *widget;\n    f32 f30;\n    f32 f29;\n    f32 f28;\n    SelmateBlk local;\n    struct { s16 value; } i;\n    struct { struct Entry * value; } entry;\n    const PoolRow *pool;\n    s16 index;\n    f32 lab_t1;\n    f32 lab_t2;\n\n    pool = &lbl_9_rodata_0;\n    index = lbl_9_bss_8->unk_0;\n    lab_t1 = (160.0f);\n    lab_t2 = (50.0f);\n    fn_1_496FC(lbl_9_bss_8, lab_t1, lab_t2);\n    entry.value = ((lbl_9_bss_8->unk_0)[lbl_1_data_1FB6C]);\n    i.value = 0;\n    while (*(s16 *)entry.value != -1) {\n        entry.value = (struct Entry *)((u8 *)entry.value + 12);\n        i.value++;\n    }\n    fn_1_4AE0C((const char *)lbl_9_data_150, lbl_9_bss_8->unk_2, lbl_9_bss_8->unk_4, i.value - 1);\n    f28 = (255.0f);\n    f29 = (0.5f);\n    f30 = (480.0f);\n    for (i.value = 0; i.value < 2; i.value++) {\n        local = lbl_1_rodata_26F8;\n        local.unk_0c = f28;\n        local.unk_08 = (((((f30)) * (((f32)(i.value % 2)))) * ((f29))));\n        switch (i.value) {\n        case 0:\n            fn_1_8D3F8(&lbl_9_bss_14[i.value * 0x64], &local, fn_9_120C, car + index * 0x440);\n            break;\n        case 1:\n            fn_1_8D3F8(&lbl_9_bss_14[i.value * 0x64], &local, fn_9_1310, car + index * 0x440);\n            break;\n        }\n    }\n}\n#pragma opt_dead_assignments reset\n\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "rel/car_colchg/car_colchg/colchg_selmate_disp.c",
+    "bytes": 472,
+    "headers_sha256": "f9f5e84c1423bef39ec206906b9b67f385818e424c01f7582cef703630a3eba9",
+    "oracle_sha256": "871c3ab209ee9e59f98ee974f8dbecff3e9da3fc716288cd596f714e18864b09",
+    "recipe": [
+      {
+        "label": "region composition: address index-first at every site with opt_dead_assignments on + prime shared-pool layout (lbl_9_rodata_0, 0x50 bytes)",
+        "input_sha256": "379fa84cffa559334c5136fdaa9edabff68f90aa1104aba103f780c5a9819c60",
+        "output_sha256": "6d4b81ed9b81ac1900917c81e7a5e8737ea1ee2b63d3cdcb4422a67134927a9f",
+        "input_symbol": "colchg_selmate_disp",
+        "output_symbol": "colchg_selmate_disp",
+        "edits": [
+          [
+            55,
+            55,
+            "#pragma section code_type \".fzgxpool\"\n__declspec(section \".fzgxpool\") static void fzgx_pool_prime1(void) {\n    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */\n    s = 0.0f;\n    s = 0.25f;\n}\nstatic const u32 fzgx_pool_table2[3] = {0x00000000, 0x00000000, 0x00000000};  /* fzgx-allow: A1 retail pool bytes */\n__declspec(section \".fzgxpool\") static void fzgx_pool_keep2(void) { const u32 *volatile cp; cp = fzgx_pool_table2; }  /* fzgx-allow: S2 pool primer sink */\n__declspec(section \".fzgxpool\") static void fzgx_pool_prime3(void) {\n    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */\n    s = 160.0f;\n    s = 50.0f;\n    s = -10.0f;\n    s = 182.04444885253906f;\n    s = 2.0f;\n    s = 1.0f;\n}\nstatic const u32 fzgx_pool_table4[1] = {0x00000000};  /* fzgx-allow: A1 retail pool bytes */\n__declspec(section \".fzgxpool\") static void fzgx_pool_keep4(void) { const u32 *volatile cp; cp = fzgx_pool_table4; }  /* fzgx-allow: S2 pool primer sink */\n__declspec(section \".fzgxpool\") static void fzgx_pool_prime5(void) {\n    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */\n    d = 4503599627370496.0;\n    s = 250.0f;\n    s = 255.0f;\n    s = 0.5f;\n    s = 480.0f;\n    d = 4503601774854144.0;\n}\n#pragma section code_type \".text\"\n"
+          ],
+          [
+            742,
+            744,
+            "n"
+          ],
+          [
+            1172,
+            1208,
+            "((lbl_9_bss_8->unk_0)[lbl_1_data_1FB6C])"
+          ]
+        ]
+      },
+      {
+        "label": "expression-tree * at 2937",
+        "input_sha256": "6d4b81ed9b81ac1900917c81e7a5e8737ea1ee2b63d3cdcb4422a67134927a9f",
+        "output_sha256": "dff64448180c635282e21ec8577c35f11974075e06736211d92cc60fb262fdb9",
+        "input_symbol": "colchg_selmate_disp",
+        "output_symbol": "colchg_selmate_disp",
+        "edits": [
+          [
+            2939,
+            2974,
+            "((f30)) * (((f32)(i.value % 2)))) * ((f29))"
+          ]
+        ]
+      }
+    ],
+    "link": "rejected"
+  },
+  "fn_10_3A98": {
+    "seed_symbol": "fn_10_3A98",
+    "generator": "fzgx fixup",
+    "transform": "lifetime pointer sel->slots at every site with opt_propagation off",
+    "seed": "#include \"types.h\"\n\ntypedef struct {\n    u8 pad[4];\n    u32 flags;\n} SelSlot;\n\ntypedef struct {\n    u8 pad[0x18];\n    s16 index_x;\n    s16 index_y;\n    SelSlot slots[][19];\n} SelState;\n\ntypedef struct {\n    u8 pad[0x94];\n    u32 flags;\n} GlobalState;\n\nextern GlobalState lbl_1_bss_8B3A0;\nextern SelState lbl_10_bss_0;\nextern u32 lbl_10_bss_3C0[74736];\nextern void fn_1_152970(s16 *, s16 *, s32, s32, SelSlot *, s16, s16);\n\nvoid fn_10_3A98(void) {\n    SelState *sel = &lbl_10_bss_0;\n    s16 slot_y;\n    s16 slot_x;\n    u32 state;\n\n    if (!(lbl_1_bss_8B3A0.flags & 0x40000000)) {\n        return;\n    }\n\n    state = *(u32 *)((u8 *)lbl_10_bss_3C0 + 0x40e00);\n    if (!(state & ((u32)1 << 31)) || !(state & 0x40000000)) {\n        return;\n    }\n\n    fn_1_152970(&slot_y, &slot_x, 0x31, 0, (SelSlot *)&sel->slots[0][0],\n                 sel->index_y, sel->index_x);\n    sel->slots[slot_y][slot_x].flags &= ~0x40000000;\n}\n",
+    "seed_sha256": "9062230ea4bfaa9468634b881cb7e3c6b312c4f2b3a1f02cfafe1535bab35fbb",
+    "generated_sha256": "e184994a1f878a92299d36e3083c34889718a4b7d332847326d9c23e160e0a95",
+    "generated_source": "#include \"types.h\"\n\ntypedef struct {\n    u8 pad[4];\n    u32 flags;\n} SelSlot;\n\ntypedef struct {\n    u8 pad[0x18];\n    s16 index_x;\n    s16 index_y;\n    SelSlot slots[][19];\n} SelState;\n\ntypedef struct {\n    u8 pad[0x94];\n    u32 flags;\n} GlobalState;\n\nextern GlobalState lbl_1_bss_8B3A0;\nextern SelState lbl_10_bss_0;\nextern u32 lbl_10_bss_3C0[74736];\nextern void fn_1_152970(s16 *, s16 *, s32, s32, SelSlot *, s16, s16);\n\n#pragma opt_propagation off\nvoid fn_10_3A98(void) {\n    SelSlot (* fzgx_live)[19];\n    SelState *sel = &lbl_10_bss_0;\n    s16 slot_y;\n    s16 slot_x;\n    u32 state;\n\n    if (!(lbl_1_bss_8B3A0.flags & 0x40000000)) {\n        return;\n    }\n\n    state = *(u32 *)((u8 *)lbl_10_bss_3C0 + 0x40e00);\n    if (!(state & ((u32)1 << 31)) || !(state & 0x40000000)) {\n        return;\n    }\n\n    fn_1_152970(&slot_y, &slot_x, 0x31, 0, (SelSlot *)&sel->slots[0][0],\n                 sel->index_y, sel->index_x);\n    fzgx_live = sel->slots;\n    fzgx_live[slot_y][slot_x].flags &= ~0x40000000;\n}\n#pragma opt_propagation reset\n\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "rel/sel/sel/fn_10_3A98.c",
+    "bytes": 172,
+    "headers_sha256": "f9f5e84c1423bef39ec206906b9b67f385818e424c01f7582cef703630a3eba9",
+    "oracle_sha256": "871c3ab209ee9e59f98ee974f8dbecff3e9da3fc716288cd596f714e18864b09",
+    "recipe": [
+      {
+        "label": "lifetime pointer sel->slots at every site with opt_propagation off",
+        "input_sha256": "9062230ea4bfaa9468634b881cb7e3c6b312c4f2b3a1f02cfafe1535bab35fbb",
+        "output_sha256": "e184994a1f878a92299d36e3083c34889718a4b7d332847326d9c23e160e0a95",
+        "input_symbol": "fn_10_3A98",
+        "output_symbol": "fn_10_3A98",
+        "edits": [
+          [
+            423,
+            423,
+            "#pragma opt_propagation off\n"
+          ],
+          [
+            447,
+            447,
+            "    SelSlot (* fzgx_live)[19];\n"
+          ],
+          [
+            864,
+            874,
+            "fzgx_live = sel->slots;\n    fzgx_live"
+          ],
+          [
+            915,
+            915,
+            "#pragma opt_propagation reset\n\n"
+          ]
+        ]
+      }
+    ],
+    "link": "verified",
+    "commit": "569b35f"
   }
 }
