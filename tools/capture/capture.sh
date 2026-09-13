@@ -17,7 +17,7 @@ cp "$BODY" "$OUT/$SYM.c"
 uv run python -c "
 import sys; sys.path.insert(0,'tools')
 from fzgx.project import Project; from fzgx import oracle
-print(oracle.module_flags(Project(),'$MODULE')[0])" > "$OUT/flags.txt"
+print(oracle.module_flags(Project(),'$MODULE')[0] + ' ' + '${EXTRA_FLAGS:-}')" > "$OUT/flags.txt"
 TARGET=stock; case "$MW" in *n) TARGET=ninji;; esac
 cat > "$OUT/capture.gdb" <<GDB
 set pagination off
