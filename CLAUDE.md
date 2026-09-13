@@ -394,6 +394,25 @@ Rules that hold for everyone:
   below the other pointers), so 1.1 near-misses with swapped r30/r31 are not fixable by reordering.
   The `-use_lmw_stmw on` response closes stmw/lmw prologue rows in DOL and movie_module functions
   and must be tried together with GC/1.3.2 before any source rewrite (fn_8004D8DC 98.2 -> 99.95).
+- MWCC register allocator, from the recovered 1.2.5 backend (/Users/rayan/mwcc: Coloring.c,
+  SpillCode.c, Registers.c, CodeGen.c) and confirmed by probes on 1.2.5n/1.3.2: every register
+  candidate gets a virtual-register number before lowering (`CodeGen_PreallocateObjectRegisters`):
+  parameters first (a later parameter numbers higher), then locals with the FIRST declared local
+  numbered HIGHEST (inner-scope locals below outer ones), then a second pass that numbers CSE
+  recompute and induction "shadow" objects above every local, then lowering temporaries as they
+  are created (highest). Coalescing merges a copy into the lower-numbered web and only inside the
+  post-local window, so a `local = temp` copy of a pass-1 local cannot coalesce (the `addi r0; mr`
+  shape). Interference is exact per-instruction liveness; simplify pushes nodes of degree below
+  the free-register count in ascending number, then the rest by lowest spill cost/degree (cost =
+  2 per use + 1 per definition, weighted by block execution weight); colors are assigned in the
+  reverse order (highest number first), each taking the lowest color in {free r0,r3-r12} plus the
+  already claimed callee-saved registers that no colored neighbour holds, else claiming r31, r30,
+  ... downward. Consequences: temps take r0 before r3, r4; a value dead before another's definition
+  shares its register (a parameter copy reusing r31 after the last-declared local); the callee-
+  saved permutation of a near-miss is fixed by declaration order alone unless a value is a shadow
+  object (repeated expression, strength-reduced pointer, constant address) on one side and a
+  declared local on the other: de-CSE it into a local used at every site (fn_12_2D888's offset),
+  hold it in a local (fn_1_DA6C's call result), or wrap a constant pointer in a struct.
 - Engine speed (2026-09-12): `fzgx fixup` startup read 182,000 saved bodies and 700 MB of
   reports on every run (55 s); `seeds/recovered.py` now caches the collected candidates in
   `.fzgx/saved_candidates.pickle` keyed by a cheap fingerprint (check-archive directory mtimes,
