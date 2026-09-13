@@ -100,6 +100,95 @@ extern const f32 lbl_1_rodata_276C;
 extern void * * fn_1_54448(s32);
 extern void lbl_8006D784(void *arg);
 
+/* fzgx:begin fn_1_49410 noprologue */
+#include "types.h"
+
+struct fn_1_49410_lbl_1_rodata_FD0 {
+    u8 pad_0[0xF0];
+    f32 unk_F0;
+    u8 pad_F4[0xC];
+    f32 unk_100;
+    f32 unk_104;
+    u8 pad_108[0x10];
+    u32 unk_118;
+    u32 unk_11C;
+    f32 unk_120;
+};
+struct fn_1_49410_lbl_1_bss_4B9CC {
+    u8 pad_0[0xC];
+    u16 unk_C;
+    u16 unk_E;
+    u32 unk_10;
+    u32 unk_14;
+    f32 unk_18;
+    f32 unk_1C;
+    f32 unk_20;
+    f32 unk_24;
+    f32 unk_28;
+    u32 unk_2C;
+    u16 unk_30;
+    u16 unk_32;
+    u16 unk_34;
+    u8 unk_36;
+    u8 unk_37;
+    f32 unk_38;
+    f32 unk_3C;
+    f32 unk_40;
+    u8 unk_44;
+    u8 unk_45;
+    u8 unk_46;
+    u8 unk_47;
+    u16 unk_48;
+    u16 unk_4A;
+    u16 unk_4C;
+    u16 unk_4E;
+    f32 unk_50;
+    u32 unk_54;
+    u32 unk_58;
+};
+
+extern struct fn_1_49410_lbl_1_bss_4B9CC lbl_1_bss_4B9CC;
+extern struct fn_1_49410_lbl_1_rodata_FD0 lbl_1_rodata_FD0;
+
+#pragma opt_propagation off
+void fn_1_49410(void) {
+    f32 fzgx_live;
+    struct fn_1_49410_lbl_1_rodata_FD0 *q = &lbl_1_rodata_FD0;
+
+    lbl_1_bss_4B9CC.unk_C = 42;
+    lbl_1_bss_4B9CC.unk_10 = q->unk_118;
+    lbl_1_bss_4B9CC.unk_14 = q->unk_11C;
+    lbl_1_bss_4B9CC.unk_E = 0;
+    fzgx_live = q->unk_120;
+    lbl_1_bss_4B9CC.unk_18 = fzgx_live;
+    lbl_1_bss_4B9CC.unk_1C = q->unk_104;
+    lbl_1_bss_4B9CC.unk_20 = q->unk_104;
+    lbl_1_bss_4B9CC.unk_24 = q->unk_104;
+    lbl_1_bss_4B9CC.unk_28 = q->unk_104;
+    lbl_1_bss_4B9CC.unk_2C = 0;
+    lbl_1_bss_4B9CC.unk_36 = 0;
+    lbl_1_bss_4B9CC.unk_30 = 0;
+    lbl_1_bss_4B9CC.unk_32 = 2;
+    lbl_1_bss_4B9CC.unk_34 = 2;
+    lbl_1_bss_4B9CC.unk_38 = q->unk_100;
+    lbl_1_bss_4B9CC.unk_37 = 0;
+    lbl_1_bss_4B9CC.unk_3C = q->unk_F0;
+    lbl_1_bss_4B9CC.unk_40 = q->unk_F0;
+    lbl_1_bss_4B9CC.unk_44 = 1;
+    lbl_1_bss_4B9CC.unk_45 = 0;
+    lbl_1_bss_4B9CC.unk_54 = 0;
+    lbl_1_bss_4B9CC.unk_50 = q->unk_F0;
+    lbl_1_bss_4B9CC.unk_46 = 0;
+    lbl_1_bss_4B9CC.unk_47 = 0;
+    lbl_1_bss_4B9CC.unk_48 = 0;
+    lbl_1_bss_4B9CC.unk_4A = 0;
+    lbl_1_bss_4B9CC.unk_4C = 640;
+    lbl_1_bss_4B9CC.unk_4E = 480;
+    lbl_1_bss_4B9CC.unk_58 = 5;
+}
+#pragma opt_propagation reset
+/* fzgx:end fn_1_49410 */
+
 /* fzgx:begin fn_1_494CC */
 void fn_1_494CC(u8 value) {
     lbl_1_bss_4B9CC.unk_44 = value;

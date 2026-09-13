@@ -414,6 +414,87 @@ void fn_3_1A264(u32 arg0) {
 }
 /* fzgx:end fn_3_1A264 */
 
+/* fzgx:begin fn_3_1A2EC noprologue */
+#include "types.h"
+
+typedef struct {
+    u16 flags;
+    u8 pad[18];
+} CustomizeEntry;
+
+struct QView {
+    u8 unk_0;
+    u8 pad_1[0x3];
+    u32 unk_4;
+    u32 unk_8;
+    u8 pad_C[0x2];
+    u8 unk_E;
+    u8 pad_F[0x1];
+    u8 unk_10;
+};
+
+extern u8 lbl_1_bss_9F8[];
+extern u8 lbl_3_bss_A2438[28];
+extern void fn_1_A2D84(u32);
+extern void fn_3_14008(void);
+
+void fn_3_1A2EC(void) {
+    CustomizeEntry *entries;
+    CustomizeEntry *entries_alt;
+    u8 index;
+    u32 flags;
+    struct QView *st;
+
+    entries = (CustomizeEntry *)(lbl_1_bss_9F8 + 0x10);
+    index = lbl_3_bss_A2438[0];
+    if ((entries[index].flags & 1) == 0) {
+        if ((*(u16 *)(lbl_1_bss_9F8 + 0x12 + index * 20) & 1) == 0) {
+            goto after_enable; /* Keep the verified branch to after_enable. */
+        }
+    }
+
+    if (lbl_3_bss_A2438[0x10] == 0) {
+        fn_1_A2D84(0xA9010000);
+    }
+    lbl_3_bss_A2438[0x10] = 1;
+
+after_enable:
+    index = lbl_3_bss_A2438[0];
+    flags = (u16)(entries[index].flags);
+    if (((flags >> 1) & 1) == 0 &&
+        (((*(u16 *)(lbl_1_bss_9F8 + 0x12 + index * 20) >> 1) & 1) == 0)) {
+        goto after_disable; /* Keep the verified branch to after_disable. */
+    }
+
+    if (lbl_3_bss_A2438[0x10] != 0) {
+        fn_1_A2D84(0xA9010000);
+    }
+    lbl_3_bss_A2438[0x10] = 0;
+
+after_disable:
+    entries_alt = (CustomizeEntry *)(lbl_1_bss_9F8 + 8);
+    index = lbl_3_bss_A2438[0];
+    flags = (u16)(entries_alt[index].flags);
+    if (((flags >> 8) & 1) != 0 && lbl_3_bss_A2438[0x10] != 0) {
+        fn_1_A2D84(0xA9150400);
+        *(u32 *)&lbl_3_bss_A2438[4] = 0x40000000;
+        lbl_3_bss_A2438[0xE] = 0;
+        fn_3_14008();
+        lbl_3_bss_A2438[0x10] = 0;
+    }
+
+    st = (struct QView *)lbl_3_bss_A2438;
+    flags = (u16)(entries_alt[st->unk_0].flags);
+    if (((flags >> 9) & 1) != 0 ||
+        (st->unk_10 == 0 && ((flags >> 8) & 1) != 0)) {
+        fn_1_A2D84(0xA9150500);
+        *(u32 *)&lbl_3_bss_A2438[4] = 0x40000000;
+        lbl_3_bss_A2438[0xE] = 0;
+        *(u32 *)&lbl_3_bss_A2438[8] &= 0xBFFFFFFF;
+    }
+}
+/* fzgx:end fn_3_1A2EC */
+
 /* fzgx:begin fn_3_1AB34 */
 extern void fn_3_146C0(void *, s16, s16, s16, u32 *);
 

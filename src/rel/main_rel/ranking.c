@@ -703,6 +703,95 @@ void fn_1_156B18(fn_1_156B18_State *state) {
 }
 /* fzgx:end fn_1_156B18 */
 
+/* fzgx:begin fn_1_157200 */
+extern const f32 lbl_1_rodata_D910;
+extern f32 lbl_1_rodata_D914[3];
+
+extern s32 fn_8006B55C(void *, u32 *, void *);
+extern s32 fn_8006B628(u32, void *);
+extern s32 fn_8006B6F8(u32);
+
+typedef struct {
+    u32 flags;
+    void *arg04;
+    u8 _pad08[0x14];
+    u32 entry;
+    u8 _pad20[0x18];
+    f32 value;
+    u8 _pad3c[0x10];
+    u8 status;
+} RankingState;
+
+typedef struct {
+    u8 kind;
+    u8 _pad01[3];
+    s32 value0c;
+    s32 value10;
+    u8 value14;
+    u16 value16;
+    u16 value18;
+    u16 value1a;
+    u16 value1c;
+    s32 value20;
+    s32 value24;
+    u8 value28;
+    u8 value29;
+} RankingRequest;
+
+static inline f32 fn_1_157200_array_read(f32 *array, s32 index) { return array[index]; }
+#pragma opt_dead_assignments off
+void fn_1_157200(RankingState *state) {
+    if (state->status & 0x10) {
+        s32 success = 0;
+        RankingRequest request;
+
+        request.kind = 5;
+        request.value0c = 330;
+        request.value10 = 0;
+        request.value14 = 240;
+        if (state->value > lbl_1_rodata_D910) {
+            request.value16 = 90;
+        } else if (state->value < fn_1_157200_array_read(lbl_1_rodata_D914, 0)) {
+            request.value16 = 270;
+        } else {
+            request.value16 = success;
+        }
+
+        success = 0;
+        request.value18 = 40;
+        request.value1a = success;
+        request.value1c = success;
+        request.value20 = 2;
+        request.value24 = 10;
+        request.value28 = success;
+        request.value29 = success;
+
+        {
+            u32 entry;
+            void *arg04;
+            if (!(state->flags & 0x20)) {
+            entry = state->entry;
+            arg04 = state->arg04;
+            if ((entry + 0x10000) == 0xffff) {
+                if (fn_8006B55C(arg04, &state->entry, &request) >= 0) {
+                    success = 1;
+                }
+            } else if (fn_8006B628(entry, &request) >= 0) {
+                success = 1;
+            }
+            if (success && !(state->flags & 0x20) &&
+                fn_8006B6F8(state->entry) >= 0) {
+                state->flags |= 0x20;
+            }
+        } else {
+            fn_8006B6F8(state->entry);
+        }
+        }
+    }
+}
+#pragma opt_dead_assignments reset
+/* fzgx:end fn_1_157200 */
+
 /* fzgx:begin fn_1_157358 */
 extern f32 lbl_1_rodata_D8C8[18];
 extern void fn_8006B7B4(void *);

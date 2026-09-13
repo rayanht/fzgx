@@ -192,6 +192,30 @@ f32 fn_1_4D14(Fn14D14Data *data) {
 }
 /* fzgx:end fn_1_4D14 */
 
+/* fzgx:begin fn_1_4DE0 */
+extern f32 lbl_1_rodata_16C;
+extern f32 lbl_1_rodata_164[2];
+
+void fn_8006CE1C(f32);
+
+#pragma opt_dead_assignments off
+void fn_1_4DE0(Obj_1_data_2CDC *obj, u32 arg1) {
+    if (arg1 == 1) {
+        obj->unk_3 &= 0xFE;
+        if (obj->unk_3 & 2) {
+            Obj_1_data_2CDC *p;
+            fn_8006CE1C(lbl_1_rodata_16C);
+            p = &lbl_1_data_2CDC;
+            p->unk_8 = lbl_1_data_2CD8;
+        } else {
+            fn_8006CE1C((*((0) + (lbl_1_rodata_164))));
+        }
+        obj->unk_6 = -1;
+    }
+}
+#pragma opt_dead_assignments reset
+/* fzgx:end fn_1_4DE0 */
+
 /* fzgx:begin fn_1_4FEC */
 void fn_1_4FEC(void) {
     lbl_1_bss_F58 = 0;

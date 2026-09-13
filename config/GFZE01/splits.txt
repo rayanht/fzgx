@@ -5222,3 +5222,9 @@ dol/fn_80021B2C.c:
 
 dol/fn_80025A24.c:
 	.text       start:0x80025A24 end:0x80025C28 align:4
+
+dol/fn_8006F5C4.c:
+	.text       start:0x8006F5C4 end:0x8006F6A8 align:4
+
+dol/fn_800501F4.c:
+	.text       start:0x800501F4 end:0x800502A0 align:4
