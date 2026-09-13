@@ -333,18 +333,32 @@ def decse_repeated_expressions(body: str, name: str) -> List[Tuple[str, str]]:
     span, locs, top, indent = a
     inner = body[top:span[2]]
     exprs: Dict[str, List[int]] = {}
-    for m in re.finditer(r'\(?\b([A-Za-z_]\w*)\s*(<<|\*)\s*(0x[0-9A-Fa-f]+|\d+)\b\)?', inner):
+    for m in re.finditer(r'\(?(?<![*\w.>])\b([A-Za-z_]\w*)\s*(<<|\*)\s*(0x[0-9A-Fa-f]+|\d+)\b\)?', inner):
         key = f"{m.group(1)} {m.group(2)} {m.group(3)}"
+        exprs.setdefault(key, []).append(m.start())
+    # a repeated member-array base `((T *)(base + K))[i]`: retail keeps the base in a register
+    # (`addi rB, base, K; lwzx`) where a per-site recompute folds K into the displacement
+    for m in re.finditer(r'\(\(' + TYPE + r'\)\(([A-Za-z_]\w*) \+ (0x[0-9A-Fa-f]+|\d+)\)\)', inner):
+        key = f"ptr {m.group(0)}"
         exprs.setdefault(key, []).append(m.start())
     k = 0
     for key, sites in exprs.items():
         if len(sites) < 2:
             continue
-        var = key.split()[0]
         k += 1
         tn = f"tmp_cse{k}"
-        text = re.sub(r'\(?\b' + re.escape(var) + r'\s*' + re.escape(key.split()[1]) + r'\s*' + re.escape(key.split()[2]) + r'\b\)?', tn, inner)
-        first_line = inner.rfind('\n', 0, sites[0]) + 1
+        if key.startswith('ptr '):
+            expr = key[4:]
+            ptype = re.match(r'\(\((' + TYPE + r')\)', expr).group(1).strip()
+            text = inner.replace(expr, tn)
+            decl_type = ptype
+            key = expr[1:-1]  # the value assigned: (T *)(base + K)
+        else:
+            var = key.split()[0]
+            decl_type = 's32'
+            text = re.sub(r'\(?\b' + re.escape(var) + r'\s*' + re.escape(key.split()[1]) + r'\s*' + re.escape(key.split()[2]) + r'\b\)?', tn, inner)
+        stmt_start = max(inner.rfind(';\n', 0, sites[0]), inner.rfind('{\n', 0, sites[0]), inner.rfind('}\n', 0, sites[0]))
+        first_line = stmt_start + 2 if stmt_start >= 0 else 0
         ind = re.match(r'[ \t]*', inner[first_line:]).group(0)
         # C89: the assignment goes after the declarations of the block; a declaration
         # initializer at the first site is split into declaration and assignment
@@ -364,7 +378,7 @@ def decse_repeated_expressions(body: str, name: str) -> List[Tuple[str, str]]:
         for label, pos in (("last", top), ("first", locs[0][0] if locs else top)):
             full = body[:top] + text + body[span[2]:]
             out.append((f"de-CSE {key} into a local declared {label}",
-                        full[:pos] + f"{indent}s32 {tn};\n" + full[pos:]))
+                        full[:pos] + f"{indent}{declarator(decl_type, tn)};\n" + full[pos:]))
     return out
 
 
