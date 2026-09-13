@@ -36,5 +36,5 @@ print('conflicts:', conflicts[:8])
 bad={v for v,_,_ in conflicts}
 if targets:
     t=','.join(f'v{v}:r{c}' for v,c in sorted(targets.items()) if v not in bad)
-    out=subprocess.run(['python3','/Users/rayan/mwcc/tools/source_rank_solver.py',cap,'1','--target',t],capture_output=True,text=True,cwd='/Users/rayan/mwcc')
+    out=subprocess.run(['python3','-c',"import sys; sys.path.insert(0,'/Users/rayan/mwcc/tools'); import allocator_snapshot as a; a.SUPPORTED_TARGETS['132']='GC/1.3.2'; import source_rank_solver as s; sys.argv=['solver']+sys.argv[1:]; s.main()",cap,'1','--target',t],capture_output=True,text=True,cwd='/Users/rayan/mwcc')
     print(out.stdout[-2500:]); print(out.stderr[-600:])

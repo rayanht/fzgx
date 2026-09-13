@@ -485,6 +485,14 @@ Rules that hold for everyone:
   words (stratum labels) and the CodeGen stage points other than register coloring remain. The
   port itself is a version-keyed copy of the recovery project's `allocator_snapshot.py` reader and
   GDB driver under `tools/capture/` with these addresses and the 0x12-byte descriptor stride.
+  DONE (2026-09-13): `tools/capture/capture132.sh SYMBOL BODY.c MODULE` captures GC/1.3.2 through
+  `tools/capture/mwcc132_snapshot.py` (a Reader132 override of the recovery reader: GPR is class
+  index 4, counts at 0x5e8a7c+4*class, instruction opcode at +0x20 / operand count +0x22 /
+  operands +0x24 with kind +0, class +1, flags +2, register +4, object +8; interference node
+  vreg +0x10, degree +0x12, physical +0x14, flags +0x16, count +0x18, neighbours +0x1a; final
+  code point 0x433fc8). The 1.2.5 replay model reproduces the 1.3.2 compiler exactly (fn_1_ECC:
+  143/143 simplify rows, 175/175 colors), so every allocation law above holds for 1.3.2 too.
+  `autotarget.py` aligns the object rows with the final PCode 1:1 (237/237) and feeds the solver.
 - Engine speed (2026-09-12): `fzgx fixup` startup read 182,000 saved bodies and 700 MB of
   reports on every run (55 s); `seeds/recovered.py` now caches the collected candidates in
   `.fzgx/saved_candidates.pickle` keyed by a cheap fingerprint (check-archive directory mtimes,
