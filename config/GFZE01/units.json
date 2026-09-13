@@ -14557,6 +14557,16 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_80025A24.c",
+    "symbols": [
+      "fn_80025A24"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
     "source": "dol/fn_80025C28.c",
     "symbols": [
       "fn_80025C28"
