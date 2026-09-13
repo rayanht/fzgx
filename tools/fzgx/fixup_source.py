@@ -500,12 +500,37 @@ def float_precision(body: str, name: str) -> List[Tuple[str, str]]:
     return out
 
 
+
+def embedded_call_assignments(body: str, name: str) -> List[Tuple[str, str]]:
+    """`x = expr; f(.., x, ..)` -> `f(.., (x = expr), ..)`: the load lowers straight into the
+    variable's web instead of a temporary plus a copy (`lwz r0; mr rX, r0`)."""
+    out: List[Tuple[str, str]] = []
+    span = _function_body_span(body, name)
+    if not span:
+        return out
+    inner = body[span[1]:span[2]]
+    pat = re.compile(r'(?m)^([ \t]+)([A-Za-z_]\w*) = ([^;\n]+);\n([ \t]+)((?:[A-Za-z_][\w.>\-]*\s*=\s*)?[A-Za-z_]\w*\s*\()([^;\n]*?)\)\s*;\n')
+    for m in pat.finditer(inner):
+        ind, x, expr, ind2, callhead, args = m.groups()
+        if x == name or re.search(r'\b' + re.escape(x) + r'\b', expr):
+            continue
+        argl = [a.strip() for a in args.split(',')]
+        if argl.count(x) != 1 or re.search(r'\b' + re.escape(x) + r'\b', callhead):
+            continue
+        argl[argl.index(x)] = f"({x} = {expr})"
+        s0, e0 = span[1] + m.start(), span[1] + m.end()
+        out.append((f"embed {x} = ... in its call argument",
+                    body[:s0] + f"{ind2}{callhead}{', '.join(argl)});\n" + body[e0:]))
+    return out
+
+
 def rewrites(body: str, name: str) -> List[Tuple[str, str]]:
     """Every single second-stage rewrite of a body."""
     out: List[Tuple[str, str]] = []
     for fn in (scope_moves, split_inits, hoists, through_local, return_values,
                call_results_to_locals, wrap_constant_pointers, decse_repeated_expressions,
-               scalar_carriers, dead_uses, variable_splits, signedness_flips, float_precision):
+               scalar_carriers, dead_uses, variable_splits, signedness_flips, float_precision,
+               embedded_call_assignments):
         try:
             out += fn(body, name)
         except Exception:
