@@ -6266,3 +6266,18 @@ rel/main_rel/effect/fn_1_617A4.c:
 
 rel/main_rel/effect/fn_1_59A74.c:
 	.text       start:0x00059A74 end:0x00059B00 align:4
+
+rel/main_rel/effect/fn_1_67E94.c:
+	.text       start:0x00067E94 end:0x00067F20 align:4
+
+rel/main_rel/effect/fn_1_59D54.c:
+	.text       start:0x00059D54 end:0x00059EE4 align:4
+
+rel/main_rel/effect/fn_1_59CC8.c:
+	.text       start:0x00059CC8 end:0x00059D54 align:4
+
+rel/main_rel/effect/fn_1_61640.c:
+	.text       start:0x00061640 end:0x00061760 align:4
+
+rel/main_rel/bg_cas/fn_1_FED34.c:
+	.text       start:0x000FED34 end:0x000FF038 align:4
