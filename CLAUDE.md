@@ -464,6 +464,18 @@ Rules that hold for everyone:
   0x506e10, but 0x5077b0 has a different shape (five calls) from the 1.2.5 coordinator, so every
   PCode/graph global and the operand layout must be re-derived before `allocator_snapshot.py`
   can read a 1.3.2 process.
+  Derived so far for GC/1.3.2 (capstone over the shipped binary, 2026-09-13): the coordinator
+  0x5077b0 loops over five register classes (class byte 0x5e931f, per-class virtual-register
+  counts at 0x5e8a7c + 4*class, available counts at 0x5e8778 + 4*class, coloring count word
+  0x5df940); per class it calls SpillCode_BuildInterference 0x579cf0, SetupClass 0x507d40,
+  SimplifyGraph 0x507b50, SelectColors 0x507a30 (with 0x57abd0 the spill retry), Commit
+  0x507900, FreeIteration 0x440b10; gPCodeBlocks 0x5e87b0 (block->instructions at +0x18,
+  instruction operand_count at +0x22, operands at +0x24, 12-byte operands with kind at +0, class
+  at +1, register at +2, the 1.2.5 layout), gInterferenceGraph 0x5e87d0, gInterferenceBits
+  0x5e21cc, gCoalescedRegisters 0x5e21c8; the opcode descriptor table starts at 0x5bee78 with
+  0x12-byte entries (mnemonic pointer first; 1.2.5 used 0x10). Still needed for a 1.3.2 capture:
+  the CodeGen_Generator stage points (register-coloring reconvergence 0x433df2 is known), the
+  initial-object and coalesce-window words, and the reaching-definition table.
 - Engine speed (2026-09-12): `fzgx fixup` startup read 182,000 saved bodies and 700 MB of
   reports on every run (55 s); `seeds/recovered.py` now caches the collected candidates in
   `.fzgx/saved_candidates.pickle` keyed by a cheap fingerprint (check-archive directory mtimes,
