@@ -150,6 +150,50 @@ u8 fn_1_F2D30(u8 *value, u8 **cursor, u32 index) {
 }
 /* fzgx:end fn_1_F2D30 */
 
+/* fzgx:begin fn_1_F2DDC pool */
+extern u32 lbl_801A6410;
+extern void fn_1_46B4(u32, u32, u8 *, s32);
+
+typedef struct lbl_1_bss_7EFD8_t {
+    u8 pad_0[0x40];
+    u32 fzgx_u32_48;
+} lbl_1_bss_7EFD8_t;
+
+/* file-scope objects of the retail TU, in retail order: MWCC addresses them off one section base */
+u16 fzgx_obj_lbl_1_bss_7EFD0;
+u16 lbl_1_bss_7EFD0_gap_7EFD2;
+u8 fzgx_obj_lbl_1_bss_7EFD4;
+u8 lbl_1_bss_7EFD0_gap_7EFD5;
+u16 lbl_1_bss_7EFD0_gap_7EFD5_fill_7EFD6;
+lbl_1_bss_7EFD8_t fzgx_obj_lbl_1_bss_7EFD8;
+u16 fzgx_obj_lbl_1_bss_7F01C;
+
+#pragma section code_type ".fzgxpool"
+static void fzgx_bss_layout(void) {
+    volatile u8 s;  /* fzgx-allow: S2 layout primer sink: MWCC emits .bss objects in first-access order */
+    s = *(u8 *)&fzgx_obj_lbl_1_bss_7EFD0;
+    s = *(u8 *)&lbl_1_bss_7EFD0_gap_7EFD2;
+    s = *(u8 *)&fzgx_obj_lbl_1_bss_7EFD4;
+    s = *(u8 *)&lbl_1_bss_7EFD0_gap_7EFD5;
+    s = *(u8 *)&lbl_1_bss_7EFD0_gap_7EFD5_fill_7EFD6;
+    s = *(u8 *)&fzgx_obj_lbl_1_bss_7EFD8;
+    s = *(u8 *)&fzgx_obj_lbl_1_bss_7F01C;
+}
+#pragma section code_type ".text"
+
+void fn_1_F2DDC(void) {
+    
+
+    if ((fzgx_obj_lbl_1_bss_7EFD4 & 1) != 0) {
+        fn_1_46B4(lbl_801A6410, fzgx_obj_lbl_1_bss_7EFD8.fzgx_u32_48,
+                   lbl_1_data_3E8C8, 0x19d);
+        fzgx_obj_lbl_1_bss_7EFD8.fzgx_u32_48 = 0;
+        fzgx_obj_lbl_1_bss_7F01C = 0;
+        fzgx_obj_lbl_1_bss_7EFD4 = 0;
+    }
+}
+/* fzgx:end fn_1_F2DDC */
+
 /* fzgx:begin fn_1_F2EB8 */
 #include "types.h"
 

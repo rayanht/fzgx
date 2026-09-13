@@ -15,7 +15,7 @@ import shlex
 import struct
 import time
 
-from . import fixup_evidence as evidence, fixup_source as source, mwgraph, oracle, reuse
+from . import fixup_evidence as evidence, fixup_layout as layout, fixup_source as source, mwgraph, oracle, reuse
 from .project import ROOT, STATE_DIR, Project
 
 
@@ -275,6 +275,7 @@ class Engine:
             yield from evidence.aggregate_initializers(self.project, row['symbol'], body, check)
             yield from evidence.native_pool_objects(self.project, row['symbol'], body, check)
             yield from evidence.shared_pool_primer(self.project, row['symbol'], body, check)
+            yield from layout.tu_section_layout(self.project, row['symbol'], body, check)
             if re.search(r'(?m)^\s*#define\b', body):
                 # Pool fields passed through macro parameters only have a
                 # concrete type and offset after the selected compiler expands them.

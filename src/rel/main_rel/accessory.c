@@ -785,6 +785,76 @@ void fn_1_128E8C(u32 unused, FnData *data) {
 }
 /* fzgx:end fn_1_128E8C */
 
+/* fzgx:begin fn_1_128F10 pool noprologue */
+#include "types.h"
+
+extern const f32 lbl_1_rodata_8068;
+
+typedef struct {
+    u32 unk_0;
+    u32 unk_4;
+    u32 unk_8;
+    u32 unk_C;
+    f32 unk_10;
+    f32 unk_14;
+    f32 unk_18;
+    f32 unk_1C;
+    u8 unk_20;
+} Obj_1_bss_89760;
+
+
+typedef struct lbl_1_bss_89760_t {
+    u32 unk_0;
+    u32 unk_4;
+    u32 unk_8;
+    u32 unk_C;
+} lbl_1_bss_89760_t;
+
+typedef struct lbl_1_bss_89770_t {
+    f32 unk_10;
+    f32 unk_14;
+    f32 unk_18;
+    f32 unk_1C;
+} lbl_1_bss_89770_t;
+
+typedef struct lbl_1_bss_89780_t {
+    u8 unk_20;
+    u8 pad_1[0x1f];
+} lbl_1_bss_89780_t;
+
+/* file-scope objects of the retail TU, in retail order: MWCC addresses them off one section base */
+lbl_1_bss_89760_t fzgx_obj_lbl_1_bss_89760;
+lbl_1_bss_89770_t fzgx_obj_lbl_1_bss_89770;
+lbl_1_bss_89780_t lbl_1_bss_89780;
+u32 fzgx_obj_lbl_1_bss_897A0;
+u32 lbl_1_bss_897A4;
+u32 lbl_1_bss_897A8;
+
+#pragma section code_type ".fzgxpool"
+static void fzgx_bss_layout(void) {
+    volatile u8 s;  /* fzgx-allow: S2 layout primer sink: MWCC emits .bss objects in first-access order */
+    s = *(u8 *)&fzgx_obj_lbl_1_bss_89760;
+    s = *(u8 *)&fzgx_obj_lbl_1_bss_89770;
+    s = *(u8 *)&lbl_1_bss_89780;
+    s = *(u8 *)&fzgx_obj_lbl_1_bss_897A0;
+    s = *(u8 *)&lbl_1_bss_897A4;
+    s = *(u8 *)&lbl_1_bss_897A8;
+}
+#pragma section code_type ".text"
+
+void fn_1_128F10(void) {
+    fzgx_obj_lbl_1_bss_89760.unk_0 = 0;
+    fzgx_obj_lbl_1_bss_89770.unk_10 = lbl_1_rodata_8068;
+    fzgx_obj_lbl_1_bss_89760.unk_4 = 0;
+    fzgx_obj_lbl_1_bss_89770.unk_14 = lbl_1_rodata_8068;
+    fzgx_obj_lbl_1_bss_89760.unk_8 = 0;
+    fzgx_obj_lbl_1_bss_89770.unk_18 = lbl_1_rodata_8068;
+    fzgx_obj_lbl_1_bss_89760.unk_C = 0;
+    fzgx_obj_lbl_1_bss_89770.unk_1C = lbl_1_rodata_8068;
+    lbl_1_bss_89780.unk_20 = 0;
+}
+/* fzgx:end fn_1_128F10 */
+
 /* fzgx:begin fn_1_129D9C */
 #include "types.h"
 #include "rel/main_rel/accessory.h"
