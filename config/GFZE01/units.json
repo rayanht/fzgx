@@ -35224,6 +35224,23 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/face/fn_1_D2FC0.c",
+    "symbols": [
+      "fn_1_D2FC0"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/face.c",
+    "pool": {
+      "...data.0": "lbl_1_data_3DB40",
+      "@5": "lbl_1_data_3DB40",
+      "@6": "lbl_1_data_3DB40+0x8",
+      "@7": "lbl_1_data_3DB40+0x10"
+    }
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/face/fn_1_D3020.c",
     "symbols": [
       "fn_1_D3020"

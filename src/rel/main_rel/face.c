@@ -175,6 +175,37 @@ u32 fn_1_D2FB0(void) {
 }
 /* fzgx:end fn_1_D2FB0 */
 
+/* fzgx:begin fn_1_D2FC0 noprologue */
+#include "types.h"
+
+extern u32 fn_1_D3020(void *, void *);
+extern u8 lbl_1_bss_7ACF8[8];
+extern void fn_80083DB0(void *, void *);
+extern void strcat(void *, void *);
+
+extern void OSReport(const char *, ...);
+#pragma section code_type ".fzgxpool"
+static void fzgx_string_layout(void) {
+    /* fzgx-allow: S2 layout primer: MWCC emits string literals in first-use order; the section is dropped at integration */
+    OSReport("fze.");
+    OSReport("window");
+    OSReport(".rel");
+}
+#pragma section code_type ".text"
+
+void fn_1_D2FC0(void) {
+    struct {
+        u32 a[16];
+    } loc_8;
+
+    
+    fn_80083DB0((void *)&loc_8, (void *)(u32)("fze."));
+    strcat((void *)&loc_8, (void *)(u32)("window"));
+    strcat((void *)&loc_8, (void *)(u32)(".rel"));
+    fn_1_D3020((void *)&loc_8, (void *)&lbl_1_bss_7ACF8);
+}
+/* fzgx:end fn_1_D2FC0 */
+
 /* fzgx:begin fn_1_D3020 */
 #include "types.h"
 
