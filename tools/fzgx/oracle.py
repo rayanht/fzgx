@@ -896,6 +896,39 @@ def compile_many(project: Project, module: str, sources: List[Path], out_dir: Pa
         flags = " ".join([flags] + [shlex.quote(f) for f in extra if not f.startswith("-O")])
     out_dir.mkdir(parents=True, exist_ok=True)
     out: Dict[Path, Path] = {}
+    base_cmd = compile_command(project, module, mw_version, extra_cflags, include_dirs)
+
+    def one_chunk(chunk: List[Path]) -> Dict[Path, Path]:
+        return compile_chunk(base_cmd, chunk, out_dir)
+
+    # parallel: chunks of up to COMPILE_CHUNK sources, COMPILE_WORKERS mwcc processes at once
+    # (a process start is ~80 ms, a source in a batch ~2-8 ms)
+    n = len(sources)
+    if n > COMPILE_CHUNK:
+        per = min(COMPILE_CHUNK_MAX, max(COMPILE_CHUNK, (n + COMPILE_WORKERS - 1) // COMPILE_WORKERS))
+        chunks = [sources[i:i + per] for i in range(0, n, per)]
+        from concurrent.futures import ThreadPoolExecutor
+        with ThreadPoolExecutor(max_workers=COMPILE_WORKERS) as ex:
+            for objects in ex.map(one_chunk, chunks):
+                out.update(objects)
+    elif n:
+        out.update(one_chunk(sources))
+    return out
+
+
+def compile_command(project: Project, module: str, mw_version: Optional[str] = None, extra_cflags: Optional[str] = None,
+                    include_dirs: Optional[List[Path]] = None) -> List[str]:
+    """The mwcc command line (without sources and -o) for a module's flags and a unit's overrides."""
+    flags, mw = module_flags(project, module)
+    if include_dirs is not None:
+        flags = shlex.join(flag for flag in shlex.split(flags) if not flag.startswith('-D'))
+    mw = mw_version or mw
+    if extra_cflags:
+        extra = shlex.split(extra_cflags)
+        olevel = [f for f in extra if f.startswith("-O")]
+        if olevel:
+            flags = " ".join(shlex.quote(olevel[-1] if f.startswith("-O") else f) for f in shlex.split(flags))
+        flags = " ".join([flags] + [shlex.quote(f) for f in extra if not f.startswith("-O")])
     # mwcc names each object after its source in the -o directory; sources must have distinct stems
     base_cmd = [str(ROOT / "build" / "tools" / "wibo"), str(ROOT / "build" / "compilers" / mw / "mwcceppc.exe")]
     # -nofail: a source that fails to compile is skipped and the rest of the batch still compiles
@@ -913,33 +946,23 @@ def compile_many(project: Project, module: str, sources: List[Path], out_dir: Pa
                 i += 1
         arguments = isolated + ['-cwd', 'source'] + [arg for path in include_dirs for arg in ('-i', str(path))]
     base_cmd += arguments + ["-nofail", "-c"]
+    return base_cmd
 
-    def one_chunk(chunk: List[Path]) -> Dict[Path, Path]:
-        # Wibo scans directories to resolve Windows paths for new output files.
-        # A corpus-sized directory makes each compile progressively slower.
-        chunk_dir = out_dir / chunk[0].stem
-        chunk_dir.mkdir(exist_ok=True)
-        paths = {s: chunk_dir / (s.stem + '.o') for s in chunk}
-        for obj in paths.values():
-            obj.unlink(missing_ok=True)
-        result = subprocess.run(base_cmd + ['-o', str(chunk_dir)] + [str(s) for s in chunk], cwd=ROOT, text=True, capture_output=True, timeout=900)
-        # Retain actual compiler diagnostics for deterministic repair passes.
-        (chunk_dir / 'compile.log').write_text(result.stdout + result.stderr)
-        return {s: obj for s,obj in paths.items() if obj.exists()}
 
-    # parallel: chunks of up to COMPILE_CHUNK sources, COMPILE_WORKERS mwcc processes at once
-    # (a process start is ~80 ms, a source in a batch ~2-8 ms)
-    n = len(sources)
-    if n > COMPILE_CHUNK:
-        per = min(COMPILE_CHUNK_MAX, max(COMPILE_CHUNK, (n + COMPILE_WORKERS - 1) // COMPILE_WORKERS))
-        chunks = [sources[i:i + per] for i in range(0, n, per)]
-        from concurrent.futures import ThreadPoolExecutor
-        with ThreadPoolExecutor(max_workers=COMPILE_WORKERS) as ex:
-            for objects in ex.map(one_chunk, chunks):
-                out.update(objects)
-    elif n:
-        out.update(one_chunk(sources))
-    return out
+def compile_chunk(base_cmd: List[str], chunk: List[Path], out_dir: Path) -> Dict[Path, Path]:
+    """One mwcc process over a chunk of sources; {source: object} for the ones that compiled."""
+    # Wibo scans directories to resolve Windows paths for new output files.
+    # A corpus-sized directory makes each compile progressively slower.
+    out_dir.mkdir(parents=True, exist_ok=True)
+    chunk_dir = out_dir / chunk[0].stem
+    chunk_dir.mkdir(exist_ok=True)
+    paths = {s: chunk_dir / (s.stem + '.o') for s in chunk}
+    for obj in paths.values():
+        obj.unlink(missing_ok=True)
+    result = subprocess.run(base_cmd + ['-o', str(chunk_dir)] + [str(s) for s in chunk], cwd=ROOT, text=True, capture_output=True, timeout=900)
+    # Retain actual compiler diagnostics for deterministic repair passes.
+    (chunk_dir / 'compile.log').write_text(result.stdout + result.stderr)
+    return {s: obj for s, obj in paths.items() if obj.exists()}
 
 
 COMPILE_CHUNK = 24

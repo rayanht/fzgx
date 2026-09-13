@@ -252,8 +252,9 @@ def optimizer_pragmas(body: str, name: str) -> List[Tuple[str, str]]:
         return []
     start = body.rfind('\n', 0, span[0]) + 1
     out = []
+    # opt_pointer_analysis never improved a candidate over twelve corpus reports (0 of 1,205)
     for option in ('peephole', 'opt_propagation', 'opt_common_subs', 'opt_lifetimes', 'opt_dead_assignments',
-                   'opt_strength_reduction', 'opt_loop_invariants', 'opt_pointer_analysis'):
+                   'opt_strength_reduction', 'opt_loop_invariants'):
         stack = []
         for pragma in re.finditer(rf'(?m)^[ \t]*#pragma\s+{option}\s+(on|off|reset)\b',code[:span[0]]):
             if pragma[1] == 'reset':

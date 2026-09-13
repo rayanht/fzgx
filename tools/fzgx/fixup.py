@@ -8,6 +8,7 @@ from __future__ import annotations
 from collections import defaultdict
 import gzip
 import hashlib
+import itertools
 import json
 import re
 from pathlib import Path
@@ -21,6 +22,24 @@ from .project import ROOT, STATE_DIR, Project
 
 def digest(value):
     return hashlib.sha256(value).hexdigest()
+
+
+_ENGINE = None
+
+
+def _generate_in_worker(task):
+    """Run one seed's proposal generator in a forked worker: the seed's check result, target
+    words and own words come from the parent, which computed them after this process forked."""
+    seed, capture, check, target, words, limit = task
+    _ENGINE.checks[seed['id']] = check
+    _ENGINE.words[seed['id']] = words
+    _ENGINE.targets[seed['symbol']] = target
+    out = []
+    for label, text in _ENGINE.proposals(seed, capture):
+        out.append((label, text))
+        if len(out) >= limit:
+            break
+    return out
 
 
 class Engine:
@@ -78,6 +97,27 @@ class Engine:
         return dict(metadata, symbol=symbol, source=str(path), sha256=sha, mw=mw, flags=flags,
                     target=str(target), id=identity)
 
+    timing = {}
+
+    def generate_parallel(self, tasks, limit):
+        """[(label, text)...] per task, generated 16 wide in forked workers; serial when a pool
+        cannot be used (the generator is identical either way)."""
+        global _ENGINE
+        if len(tasks) < 2:
+            return [list(itertools.islice(self.proposals(seed, cap), limit)) for _, seed, cap in tasks]
+        for _, seed, cap in tasks:
+            self.check(seed)
+        jobs=[(seed, cap, self.checks[seed['id']], self.targets[seed['symbol']], self.words.get(seed['id']), limit) for _, seed, cap in tasks]
+        try:
+            import multiprocessing
+            from concurrent.futures import ProcessPoolExecutor
+            _ENGINE = self
+            with ProcessPoolExecutor(max_workers=min(oracle.COMPILE_WORKERS, len(jobs)), mp_context=multiprocessing.get_context('fork')) as ex:
+                return list(ex.map(_generate_in_worker, jobs, chunksize=1))
+        except (OSError, RuntimeError, ValueError, TypeError, ImportError, AttributeError) as error:
+            self.emit({'stage': 'generate-serial', 'reason': str(error)[:200]})
+            return [list(itertools.islice(self.proposals(seed, cap), limit)) for _, seed, cap in tasks]
+
     def evaluate(self, rows):
         groups = defaultdict(list)
         unique = {r['id']: r for r in rows}
@@ -92,9 +132,31 @@ class Engine:
             groups[sym.module, row['mw'], row['flags']].append(row)
         tick = time.monotonic()
         progress = time.monotonic()
+        # every (module, compiler, flags) group used to be one serial mwcc process over a
+        # handful of sources (117 ms each); all groups now share one 16-wide chunk pool
+        jobs = []
+        total = sum(len(pending) for pending in groups.values())
+        # small chunks: the pool's wall time is its slowest chunk, and one slow candidate
+        # (a large initializer, an optimizer blow-up) must not hold up a sixteenth of the round
+        per = min(48, max(oracle.COMPILE_CHUNK, (total + oracle.COMPILE_WORKERS - 1) // oracle.COMPILE_WORKERS))
         for (module, mw, flags), pending in groups.items():
             group = digest(json.dumps([module,mw,flags]).encode())[:16]
-            objects = oracle.compile_many(self.project, module, [Path(r['source']) for r in pending], self.output/'objects'/group, mw, flags)
+            cmd = oracle.compile_command(self.project, module, mw, flags)
+            sources = [Path(r['source']) for r in pending]
+            for i in range(0, len(sources), per):
+                jobs.append((cmd, sources[i:i + per], self.output/'objects'/group))
+        objects = {}
+        pool_tick = time.monotonic()
+        if len(jobs) > 1:
+            from concurrent.futures import ThreadPoolExecutor
+            with ThreadPoolExecutor(max_workers=oracle.COMPILE_WORKERS) as ex:
+                for result in ex.map(lambda j: oracle.compile_chunk(*j), jobs):
+                    objects.update(result)
+        elif jobs:
+            objects.update(oracle.compile_chunk(*jobs[0]))
+        self.timing['compile-pool'] = self.timing.get('compile-pool', 0) + time.monotonic() - pool_tick
+        score_tick = time.monotonic()
+        for (module, mw, flags), pending in groups.items():
             self.compiled += len(pending)
             for row in pending:
                 obj = objects.get(Path(row['source']))
@@ -116,8 +178,12 @@ class Engine:
                 self.cache_path.write_text(json.dumps(self.cache))
                 self.emit({'stage': 'compile', 'compiled': self.compiled, 'cached': self.cached})
                 progress = time.monotonic()
+        self.timing['score-loop'] = self.timing.get('score-loop', 0) + time.monotonic() - score_tick
         self.compile_seconds += time.monotonic()-tick
+        cache_tick = time.monotonic()
         self.cache_path.write_text(json.dumps(self.cache))
+        self.timing['cache-write'] = self.timing.get('cache-write', 0) + time.monotonic() - cache_tick
+        self.emit({'stage': 'evaluate-timing', **{k: (round(v, 2) if isinstance(v, float) else v) for k, v in self.timing.items()}, 'jobs': len(jobs), 'pending': total})
         for row in rows:
             row.update({k:v for k,v in unique[row['id']].items() if k in ('object','score','bit_errors','matched','binding_score','word_errors','shape_errors','aligned_word_percent','response_sha256')})
             row.pop('frame_layout_only',None)
@@ -167,9 +233,18 @@ class Engine:
 
     def check(self, row):
         if row['id'] not in self.checks:
-            sym = self.project.resolve(row['symbol'])
-            self.checks[row['id']] = oracle._diff(self.project, sym.module, sym.name, '', 0,
-                                                target=self.targets[row['symbol']][0], base=Path(row['object']))
+            # identical compiler responses (code, data and bindings) diff identically: one
+            # objdiff run per response instead of one per candidate spelling
+            memo = self.__dict__.setdefault('_response_checks', {})
+            key = (row['symbol'], row.get('response_sha256'))
+            if key[1] and key in memo:
+                self.checks[row['id']] = memo[key]
+            else:
+                sym = self.project.resolve(row['symbol'])
+                self.checks[row['id']] = oracle._diff(self.project, sym.module, sym.name, '', 0,
+                                                    target=self.targets[row['symbol']][0], base=Path(row['object']))
+                if key[1]:
+                    memo[key] = self.checks[row['id']]
         result = self.checks[row['id']]
         row.update(percent=result.percent if result.ok else 0,
                    raw_percent=result.percent if result.ok else 0,
@@ -294,7 +369,10 @@ class Engine:
             yield from evidence.stack_object_boundaries(self.project, row['symbol'], body, check)
             yield from evidence.optimizer_pragmas(body, name)
             families.append(evidence.candidates(self.project, row['symbol'], body, check))
-            targeted = [[c for c in families[0] if c[0].startswith(('retail scalar flag masks', 'retail format argument', 'retail call argument', 'retail call parameter', 'retail argument order:', 'retail float branch', 'retail zero comparison', 'bind recovered shared-pool', 'retain recovered shared-pool', 'recover native shared-pool', 'lifetime reload', 'lifetime ordered', 'lifetime shared-pool'))],
+            # 'retain recovered shared-pool bases' and 'lifetime shared-pool read' never improved a
+            # candidate over twelve corpus reports (0 of 1,141 and 0 of 594): they no longer take
+            # candidate-cap slots ahead of the productive families
+            targeted = [[c for c in families[0] if c[0].startswith(('retail scalar flag masks', 'retail format argument', 'retail call argument', 'retail call parameter', 'retail argument order:', 'retail float branch', 'retail zero comparison', 'bind recovered shared-pool', 'recover native shared-pool', 'lifetime reload', 'lifetime ordered'))],
                         source.address_expressions(body, name), source.pointer_lifetimes(body, name), source.through_local(body, name),
                         source.wide_member_values(body,name),source.promoted_locals(body,name),source.returned_regions(body,name),source.reuse_temporaries(body,name),source.initialization_orders(body,name),source.flag_stores(body,name),source.loop_lifetimes(body,name)]
             operand_types = {'and':('&',('u32','s32')), 'or':('|',('u32','s32')),
@@ -489,13 +567,16 @@ class Engine:
             if captures is not None:
                 self.refresh_captures(frontier,captures)
             pending=[]; parents={}; generated=time.monotonic();progress=generated
-            for symbol, seeds in frontier.items():
-                for seed in seeds:
+            # candidate generation is pure Python per seed (about a third of a round): every
+            # seed runs in a forked worker, the parent only records the results
+            tasks=[(symbol, seed, (captures or {}).get((symbol,seed['sha256'],seed['mw'],seed['flags']))) for symbol, seeds in frontier.items() for seed in seeds]
+            generated_lists=self.generate_parallel(tasks, max_candidates*2)
+            for (symbol, seed, cap), proposals in zip(tasks, generated_lists):
+                if True:
                     if budget_s is not None and time.monotonic()-start >= budget_s:
                         break
-                    cap=(captures or {}).get((symbol,seed['sha256'],seed['mw'],seed['flags']))
                     count=0
-                    for label,text in self.proposals(seed,cap):
+                    for label,text in proposals:
                         row=self.record(symbol,text,seed['mw'],seed['flags'],label=label,parent=seed['id'],seed=seed.get('seed',seed['id']))
                         if row['id'] in seen:
                             continue
@@ -830,7 +911,16 @@ def load_records(engine,args):
             add(r['symbol'],body,r['mw'],r['flags'],label='saved-body',origin=r.get('origin'))
     else:
         saved=SavedCandidates(args.min_percent-0.000001, clone_members);saved.collect()
-        for symbol,choices in saved.candidates.items():
+        # select the functions before touching bodies: the limit used to be applied after
+        # every saved body of every unmatched function had been read and recorded
+        symbols=sorted(saved.candidates)
+        if clone_members is None:
+            symbols=[s for s in symbols if (sym:=p.resolve(s)) and not (args.module and sym.module!=args.module) and not (args.max_size is not None and sym.size>args.max_size)
+                     and any(args.min_percent-0.000001<r['percent']<=args.max_percent for r in saved.candidates[s])]
+            if args.limit:
+                symbols=symbols[:args.limit]
+        for symbol in symbols:
+            choices=saved.candidates[symbol]
             options={r['sha256']:r for r in choices if r['settings_recorded']}
             for r in choices:
                 if r['percent']>args.max_percent:

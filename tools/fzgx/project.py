@@ -211,9 +211,26 @@ class Project:
 
     def unit_of(self, sym: Symbol) -> Optional[str]:
         """Configured (non-auto) unit that owns this symbol's address, if any."""
-        for sp in self.splits(sym.module):
-            if sp.section == sym.section and sp.start <= sym.addr < sp.end:
-                return sp.unit
+        import bisect
+        splits = self.splits(sym.module)
+        index = self.__dict__.setdefault("_unit_index", {})
+        hit = index.get(sym.module)
+        if hit is None or hit[0] is not splits:
+            # a linear scan over every split per lookup cost the repair engine 6 ms a call
+            by_section = {}
+            for sp in splits:
+                by_section.setdefault(sp.section, []).append((sp.start, sp.end, sp.unit))
+            for rows in by_section.values():
+                rows.sort()
+            hit = (splits, {sec: ([r[0] for r in rows], rows) for sec, rows in by_section.items()})
+            index[sym.module] = hit
+        starts_rows = hit[1].get(sym.section)
+        if not starts_rows:
+            return None
+        starts, rows = starts_rows
+        i = bisect.bisect_right(starts, sym.addr) - 1
+        if i >= 0 and rows[i][0] <= sym.addr < rows[i][1]:
+            return rows[i][2]
         return None
 
     # ---------------------------------------------------------------- asm index

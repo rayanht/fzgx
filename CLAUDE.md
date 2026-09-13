@@ -360,6 +360,16 @@ Rules that hold for everyone:
   generated-unit hash (`.fzgx/verify_cache.json`), so a pass over main.rel is ~30 s. The only
   agent task it emits is the fixed list of blocks that cannot compile under their prologue
   (one revise batch; a block that fails twice is blocked, never re-queued).
+- Engine speed (2026-09-12): `fzgx fixup` startup read 182,000 saved bodies and 700 MB of
+  reports on every run (55 s); `seeds/recovered.py` now caches the collected candidates in
+  `.fzgx/saved_candidates.pickle` keyed by a cheap fingerprint (check-archive directory mtimes,
+  attempts, stores), memoizes each fixup report by mtime, and reads bodies lazily
+  (`LazyRecord`); `load_records` selects the functions before touching bodies. In the search,
+  candidate compiles of every (module, compiler, flags) group share one 16-wide pool of 48-file
+  chunks (a serial process per tiny group cost 117 ms each; one slow file no longer stalls a
+  sixteenth of the round), checks are memoized per compiler response, `Project.unit_of` is a
+  bisect index, and candidate generation runs in forked workers. Twelve functions: 114 s -> 27 s.
+  Remaining per-round cost is mwcc itself (~5 ms per candidate, 16 wide) and the objdiff checks.
 - Build speed: units compile in groups of 48 per mwcc process (`tools/mwcc_batch.sh`, one depfile
   per group, `mwcc_batch` rule); a full rebuild is ~8 s, of which ~5 s is the two-stage main_rel
   link. `build.ninja` names the interpreter `python3` on purpose: a baked-in path changed with every

@@ -559,11 +559,14 @@ def string_run(p, symbol, text, cast=''):
     bases = [syms[l] for l in set(re.findall(r"\b(lbl_\d+_data_[0-9A-F]+|lbl_[0-9A-F]{8})\b", text)) if syms.get(l) and syms[l].section == '.data' and syms[l].addr < lo]
     if bases:
         b0 = min(bases, key=lambda s: s.addr)
-        if lo - b0.addr > 0x4000:
+        # mwcc parses initializers slowly: a 16 KB byte list held a whole compile chunk for
+        # 10 s, so the pad is capped and written as words
+        if lo - b0.addr > 0x2000 or (lo - b0.addr) % 4 or b0.addr % 4:
             return None, [f'pad from {b0.name} to the string run is {lo - b0.addr:#x} bytes']
         pb = raw[b0.addr - base_addr:lo - base_addr]
-        lines = ["    " + ", ".join(f"0x{x:02X}" for x in pb[i:i + 32]) + "," for i in range(0, len(pb), 32)]
-        pad = f"static u8 fzgx_data_{b0.name}[{len(pb):#x}] = {{  /* fzgx-allow: A1 retail data bytes: the TU's .data objects before its string literals; dropped at integration */\n" + "\n".join(lines) + "\n};\n\n"
+        words = [int.from_bytes(pb[i:i + 4], 'big') for i in range(0, len(pb), 4)]
+        lines = ["    " + ", ".join(f"0x{w:08X}" for w in words[i:i + 8]) + "," for i in range(0, len(words), 8)]
+        pad = f"static u32 fzgx_data_{b0.name}[{len(words):#x}] = {{  /* fzgx-allow: A1 retail data bytes: the TU's .data objects before its string literals; dropped at integration */\n" + "\n".join(lines) + "\n};\n\n"
     run, a = [], lo
     while a <= hi:
         st = string_at(raw, a - base_addr)

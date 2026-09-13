@@ -31,6 +31,59 @@ def percent(record):
     return 0
 
 
+class LazyRecord(dict):
+    """A saved candidate whose C is read from its file on first use: collecting every saved
+    body read 180,000 files and 700 MB of reports on each engine start."""
+
+    def __getitem__(self, key):
+        if key == 'body' and dict.get(self, 'body') is None and dict.get(self, 'original_path'):
+            dict.__setitem__(self, 'body', Path(dict.get(self, 'original_path')).read_text())
+        return dict.__getitem__(self, key)
+
+    def get(self, key, default=None):
+        if key == 'body':
+            try:
+                return self['body']
+            except OSError:
+                return default
+        return dict.get(self, key, default)
+
+
+CACHE_PICKLE = STATE_DIR / 'saved_candidates.pickle'
+SHA_CACHE = STATE_DIR / 'saved_candidates_sha.json'
+
+
+def _fingerprint(threshold, rows):
+    """Cheap freshness key over every store collect() reads: file mtimes and sizes of the
+    indexes, reports and stores, directory mtimes for the check archives and attempts."""
+    parts = [repr(threshold), repr(sorted(rows))]
+    def stat(path):
+        try:
+            s = os.stat(path)
+            return f'{path}:{s.st_mtime_ns}:{s.st_size}'
+        except OSError:
+            return f'{path}:-'
+    checks = STATE_DIR / 'checks'
+    parts.append(stat(checks))
+    for d in sorted(os.listdir(checks)) if checks.is_dir() else []:
+        parts.append(stat(checks / d))
+    parts.append(stat(STATE_DIR / 'attempts'))
+    parts.append(stat(ROOT / 'state/repairs'))
+    for directory in ('lift', 'accessory-lift', 'tooling-font', 'call-abi', 'sdkimport', 'repair-near95', 'seeds', 'cri', 'sourcealign', 'draftscan', 'spell'):
+        # result stores are written whole by their commands: the store directory and its
+        # entries change mtime when results land (a full walk visited 26,000 directories)
+        top = STATE_DIR / directory
+        parts.append(stat(top))
+        try:
+            for e in os.scandir(top):
+                parts.append(f'{e.path}:{e.stat().st_mtime_ns}')
+        except OSError:
+            pass
+    parts.append(stat(STATE_DIR / 'sweep_cache.json'))
+    parts.append(str(max((r['id'] for r in []), default=0)))
+    return hashlib.sha256('\n'.join(parts).encode()).hexdigest()
+
+
 class SavedCandidates:
     def __init__(self, threshold, symbols=None):
         self.project, self.ledger = Project(), Ledger()
@@ -42,6 +95,22 @@ class SavedCandidates:
         self.missing = []
         self.inputs = defaultdict(dict)
         self.unreadable = []
+        try:
+            self._sha = json.loads(SHA_CACHE.read_text()) if SHA_CACHE.exists() else {}
+        except ValueError:
+            self._sha = {}
+        self._sha_dirty = False
+
+    def _file_sha(self, path):
+        """sha256 of a saved C file; saved files are content-addressed or append-only, so the
+        digest is keyed by path alone."""
+        key = str(path)
+        sha = self._sha.get(key)
+        if sha is None:
+            sha = digest(path.read_text())
+            self._sha[key] = sha
+            self._sha_dirty = True
+        return sha
 
     def add(self, symbol, record, origin):
         if symbol not in self.rows:
@@ -51,23 +120,30 @@ class SavedCandidates:
             self.evidence[symbol].append(dict(origin=origin, percent=score))
         body = record.get('text') or record.get('body') or record.get('best_body')
         path = record.get('path')
+        lazy = None
         if not body and isinstance(path, str) and path.endswith('.c'):
             path = Path(path)
             if not path.is_absolute():
                 path = ROOT / path
-            if path.is_file():
-                body = path.read_text()
-        if not isinstance(body, str) or not body.strip():
+            if str(path) in self._sha or path.is_file():
+                lazy = path
+        if lazy is not None:
+            try:
+                sha = record['sha256'] if record.get('sha256') else self._file_sha(lazy)
+            except OSError:
+                lazy = None
+        if lazy is None and (not isinstance(body, str) or not body.strip()):
             if score > self.threshold:
                 self.missing.append(dict(symbol=symbol, origin=origin, percent=score))
             return
-        sha = digest(body)
-        if record.get('sha256') and record['sha256'] != sha:
-            raise ValueError(f'{origin}: saved candidate hash changed')
-        self.inputs[sha[:24]][symbol] = body
+        if lazy is None:
+            sha = digest(body)
+            if record.get('sha256') and record['sha256'] != sha:
+                raise ValueError(f'{origin}: saved candidate hash changed')
+        self.inputs[sha[:24]][symbol] = LazyRecord(body=body, original_path=str(lazy) if lazy else None)
         if score <= self.threshold:
             return
-        self.candidates[symbol].append(dict(
+        self.candidates[symbol].append(LazyRecord(
             body=body, percent=score, sha256=sha, origin=origin,
             **{k:record[k] for k in ('raw_percent','percent_adjusted','aligned_word_percent','word_errors','differing_rows','instruction_rows') if k in record},
             original_path=str(path) if path else None,
@@ -95,6 +171,64 @@ class SavedCandidates:
                     self.walk(value, f'{origin}/{i}', symbol)
 
     def collect(self):
+        """Every store except the fixup reports is cached as one pickle keyed by a cheap
+        fingerprint; reports (a new one lands with every engine run) are memoized per file."""
+        import pickle
+        key = _fingerprint(self.threshold, self.rows)
+        cached = None
+        if CACHE_PICKLE.exists():
+            try:
+                cached = pickle.loads(CACHE_PICKLE.read_bytes())
+            except Exception:
+                cached = None
+        memo = cached.get('reports', {}) if cached else {}
+        if cached and cached.get('key') == key:
+            self.candidates, self.evidence, self.missing, self.inputs, self.unreadable = (
+                defaultdict(list, cached['candidates']), defaultdict(list, cached['evidence']), list(cached['missing']),
+                defaultdict(dict, cached['inputs']), list(cached['unreadable']))
+        else:
+            self._collect()
+            tmp = CACHE_PICKLE.with_suffix('.tmp')
+            tmp.write_bytes(pickle.dumps(dict(key=key, reports=memo, candidates=dict(self.candidates), evidence=dict(self.evidence),
+                                              missing=self.missing, inputs=dict(self.inputs), unreadable=self.unreadable)))
+            tmp.replace(CACHE_PICKLE)
+        reports = []
+        for directory, dirs, files in os.walk(STATE_DIR / 'fixup'):
+            dirs[:] = [d for d in dirs if d not in ('objects', 'sources', 'declarations', 'probe')]
+            if 'report.json' in files:
+                reports.append(Path(directory) / 'report.json')
+        changed = False
+        for path in sorted(reports):
+            st = os.stat(path)
+            entry = memo.get(str(path))
+            if not entry or entry[0] != (st.st_mtime_ns, st.st_size):
+                data = json.loads(path.read_text())
+                records = [dict(record, symbol=symbol) for symbol, record in data.get('best', {}).items()]
+                records.extend(data.get('records', []))
+                keep = ('symbol', 'percent', 'raw_percent', 'percent_adjusted', 'adjusted', 'best', 'score', 'source', 'sha256',
+                        'mw', 'mw_version', 'flags', 'extra_cflags', 'aligned_word_percent', 'word_errors', 'differing_rows', 'instruction_rows')
+                lite = [{k: r[k] for k in keep if k in r} for r in records if 'percent' in r and 'symbol' in r and r.get('source')]
+                entry = ((st.st_mtime_ns, st.st_size), lite)
+                memo[str(path)] = entry
+                changed = True
+            for record in entry[1]:
+                # only candidates above the threshold matter here; replaying every low
+                # variant of every report cost 11 s per engine start
+                if percent(record) > self.threshold:
+                    self.add(record['symbol'], {**record, 'path': record['source']}, str(path.relative_to(ROOT)))
+        if self._sha_dirty:
+            SHA_CACHE.write_text(json.dumps(self._sha))
+        if changed:
+            try:
+                cached = pickle.loads(CACHE_PICKLE.read_bytes())
+                cached['reports'] = memo
+                tmp = CACHE_PICKLE.with_suffix('.tmp')
+                tmp.write_bytes(pickle.dumps(cached))
+                tmp.replace(CACHE_PICKLE)
+            except Exception:
+                pass
+
+    def _collect(self):
         for symbol in self.rows:
             index = STATE_DIR / 'checks' / symbol.replace(':', '__') / 'index.jsonl'
             if index.exists():
@@ -112,23 +246,7 @@ class SavedCandidates:
                 record.update(json.loads(metadata.read_text()))
             self.add(row['symbol'], record, f'ledger:attempt/{row["id"]}')
 
-        # The unified fixup report is the canonical store for improved bodies.
-        # Keep every already-diffed alternative: better instruction alignment
-        # and better objdiff similarity need not select the same spelling.
-        reports=[]
-        for directory, dirs, files in os.walk(STATE_DIR / 'fixup'):
-            # These contain millions of generated C/object files, never corpus
-            # reports. Walking them dominated collection of a small family.
-            dirs[:]=[d for d in dirs if d not in ('objects','sources','declarations')]
-            if 'report.json' in files:
-                reports.append(Path(directory)/'report.json')
-        for path in sorted(reports):
-            data = json.loads(path.read_text())
-            records = [dict(record,symbol=symbol) for symbol,record in data.get('best', {}).items()]
-            records.extend(data.get('records', []))
-            for record in records:
-                if 'percent' in record and 'symbol' in record:
-                    self.add(record['symbol'], {**record, 'path': record['source']}, str(path.relative_to(ROOT)))
+        # The unified fixup reports are applied by collect() after this base state, memoized per file.
 
         for path in sorted((ROOT/'state/repairs').glob('*.json.gz')):
             data=json.loads(gzip.decompress(path.read_bytes()))
@@ -180,7 +298,7 @@ class SavedCandidates:
                 if percent(record) <= self.threshold:
                     continue
                 for symbol, original in list(self.inputs.get(key.split(':')[-1], {}).items()):
-                    body = record.get('body') or original
+                    body = record.get('body') or original['body']
                     self.add(symbol, {**record, 'body': body}, f'{path.relative_to(ROOT)}:{key}')
 
         # Before check archives existed, crashes could leave .best.c without an
