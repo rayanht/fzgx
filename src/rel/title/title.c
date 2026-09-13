@@ -404,6 +404,149 @@ void fn_8_1C18(void) {
 #pragma opt_loop_invariants reset
 /* fzgx:end fn_8_1C18 */
 
+/* fzgx:begin fn_8_1C90 */
+#include "font.h"
+
+struct fn_8_1C90_Copy88 { u32 a[22]; };
+struct fn_8_1C90_lbl_8_rodata_0 {
+    f32 unk_0;
+    f32 unk_4;
+    f32 unk_8;
+    f32 unk_C;
+    u8 pad_10[0xC];
+    f32 unk_1C;
+    f32 unk_20;
+    f32 unk_24;
+    f32 unk_28;
+    f32 unk_2C;
+    f32 unk_30;
+    f32 unk_34;
+};
+struct fn_8_1C90_lbl_8_bss_0 {
+    u8 pad_0[0x2];
+    u8 unk_2;
+    u8 pad_3[0x21D];
+    f32 unk_220;
+    u8 pad_224[0x14];
+    u32 unk_238;
+};
+struct fn_8_1C90_lbl_1_bss_970 {
+    s32 unk_0;
+};
+
+extern int fn_1_4C10(void);
+extern int fn_1_4F734(FontDrawPacket *);
+extern struct fn_8_1C90_lbl_1_bss_970 lbl_1_bss_970;
+extern struct fn_8_1C90_lbl_8_bss_0 lbl_8_bss_0;
+extern struct fn_8_1C90_lbl_8_rodata_0 lbl_8_rodata_0;
+extern u16 fn_1_48690(u32);
+extern u16 fn_1_486C4(u32);
+extern u16 lbl_1_bss_96A;
+extern u32 fn_1_4A00(u32, u32, u32);
+extern u32 fn_8_0();
+extern u32 lbl_1_rodata_26F8;
+extern u32 lbl_801A66A0;
+extern void fn_1_51678(FontDrawPacket *, u32, s16, s16, s16, s16);
+extern void fn_1_52070(u32);
+extern void fn_1_52088(void);
+
+void fn_8_1C90(void) {
+    struct fn_8_1C90_lbl_8_bss_0 *p_lbl_8_bss_0;
+    struct fn_8_1C90_lbl_8_rodata_0 *p_lbl_8_rodata_0;
+    struct fn_8_1C90_lbl_1_bss_970 *p_bss_970;
+    f32 v1;
+    f32 v0;
+    s16 v3;
+    s16 v2;
+    f32 v5;
+    f32 v4;
+    f32 v7;
+    f32 v6;
+    f32 v8;
+    u32 v9;
+    f32 v10;
+    u16 t7;
+    u16 t8;
+    u16 t9;
+    u32 v11;
+    s32 v12;
+    s32 v13;
+    FontDrawPacket loc_B8;
+    FontDrawPacket loc_60;
+    FontDrawPacket loc_8;
+    p_lbl_8_bss_0 = (struct fn_8_1C90_lbl_8_bss_0 *)&lbl_8_bss_0;
+    p_lbl_8_rodata_0 = (struct fn_8_1C90_lbl_8_rodata_0 *)&lbl_8_rodata_0;
+    fn_1_52070(96);
+    loc_B8 = *(FontDrawPacket *)&lbl_1_rodata_26F8;
+    v0 = p_lbl_8_rodata_0->unk_2C;
+    v1 = p_lbl_8_rodata_0->unk_30;
+    loc_B8.image = 256;
+    loc_B8.x = v0;
+    loc_B8.y = v1;
+    loc_B8.z = p_lbl_8_rodata_0->unk_34;
+    loc_B8.flags = 13;
+    fn_1_51678((FontDrawPacket *)&loc_B8, 256, 0, 0, 250, 34);
+    fn_1_4F734((FontDrawPacket *)&loc_B8);
+    fn_1_52088();
+    fn_1_52070(544);
+    p_lbl_8_bss_0->unk_220 = p_lbl_8_rodata_0->unk_8;
+    fn_1_52088();
+    fn_1_52070(320);
+    if (p_lbl_8_bss_0->unk_2 != 0 && (lbl_801A66A0 & 0x18) != 0) {
+        loc_8 = *(FontDrawPacket *)&lbl_1_rodata_26F8;
+        loc_8.image = 258;
+        v2 = (s16)((fn_1_486C4((u32)loc_8.image) >> 2) & 0x3FFF);
+        v3 = (s16)fn_1_48690((u32)loc_8.image);
+        fn_1_51678((FontDrawPacket *)&loc_8, (u32)loc_8.image, 0,
+                   (s16)(((fn_1_486C4((u32)loc_8.image) >> 2) & 0x3FFF) * 3),
+                   v3, v2);
+        loc_8.x = p_lbl_8_rodata_0->unk_0;
+        loc_8.y = p_lbl_8_rodata_0->unk_4;
+        loc_8.z = p_lbl_8_rodata_0->unk_8;
+        loc_8.flags = 6;
+        fn_1_4F734((FontDrawPacket *)&loc_8);
+    }
+    fn_1_52088();
+    fn_1_52070(320);
+    loc_60 = *(FontDrawPacket *)&lbl_1_rodata_26F8;
+    v6 = p_lbl_8_rodata_0->unk_0;
+    v7 = p_lbl_8_rodata_0->unk_1C;
+    v8 = p_lbl_8_rodata_0->unk_20;
+    loc_60.image = 768;
+    loc_60.flags = 6;
+    loc_60.x = p_lbl_8_rodata_0->unk_0;
+    loc_60.y = p_lbl_8_rodata_0->unk_1C;
+    loc_60.z = p_lbl_8_rodata_0->unk_20;
+    loc_60.color[0] = 255;
+    loc_60.color[1] = 255;
+    loc_60.color[2] = 255;
+    loc_60.alpha = p_lbl_8_rodata_0->unk_8;
+    loc_60.flags |= 0x4000000;
+    loc_60.vertex_callback = (void (*)(FontDrawPacket* packet, FontVertex* vertices))(fn_8_0);
+    fn_1_4F734((FontDrawPacket *)&loc_60);
+    v10 = p_lbl_8_rodata_0->unk_24;
+    v11 = (loc_60.flags & 0xFBFFFFFF);
+    loc_60.flags = v11;
+    loc_60.image = 770;
+    loc_60.alpha = v10;
+    loc_60.z = p_lbl_8_rodata_0->unk_28;
+    fn_1_4F734((FontDrawPacket *)&loc_60);
+    p_lbl_8_bss_0->unk_220 = p_lbl_8_rodata_0->unk_C;
+    fn_1_52088();
+    p_bss_970 = &lbl_1_bss_970;
+    if (p_bss_970->unk_0 != 0) {
+        v13 = --p_bss_970->unk_0;
+        if (v13 == 15 && fn_1_4C10() == 0) {
+            fn_1_4A00(0, 15, p_lbl_8_bss_0->unk_238);
+        }
+    } else {
+        if (fn_1_4C10() == 0) {
+            lbl_1_bss_96A = 158;
+        }
+    }
+}
+/* fzgx:end fn_8_1C90 */
+
 /* fzgx:begin fn_8_1F64 */
 extern u8 lbl_8_bss_2;
 

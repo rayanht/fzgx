@@ -220,6 +220,84 @@ void fn_1_109114(fn_1_109114_AccessoryObject *self) {
 }
 /* fzgx:end fn_1_109114 */
 
+/* fzgx:begin fn_1_10A43C noprologue */
+#include "types.h"
+
+extern void fn_1_10846C(void);
+extern const f32 lbl_1_rodata_7B1C;
+extern const f32 lbl_1_rodata_7B20;
+extern void fn_1_128884(void *, void *, s32);
+
+typedef struct AccessoryEntry {
+    u8 unk_0;
+    u8 pad_1[0x13];
+    f32 unk_14;
+    f32 unk_18;
+    u8 pad_1C[0x24];
+    f32 unk_40;
+} AccessoryEntry;
+
+typedef struct AccessoryObject {
+    u8 pad_0[0x18];
+    u32 unk_18;
+    u8 pad_1C[8];
+    u8 *unk_24;
+} AccessoryObject;
+
+void fn_1_10A43C(AccessoryObject *self) {
+    int i;
+    int j;
+    AccessoryEntry *entry_i;
+    AccessoryEntry *entry_j;
+
+    if (self == NULL) {
+        return;
+    }
+
+    fn_1_10846C();
+
+    for (i = 0, entry_i = (AccessoryEntry *)self->unk_24; i < self->unk_18; i++, entry_i++) {
+        if (entry_i->unk_0 & 1) {
+            entry_i->unk_40 = lbl_1_rodata_7B1C;
+            entry_i->unk_0 = 0;
+        } else {
+            entry_i->unk_40 = lbl_1_rodata_7B20;
+            entry_i->unk_0 = 1;
+        }
+    }
+
+    for (i = 0, entry_i = (AccessoryEntry *)self->unk_24; i < self->unk_18; i++, entry_i++) {
+        for (j = i + 1, entry_j = (AccessoryEntry *)(self->unk_24 + i * 0x44 + 0x44); j < self->unk_18; j++, entry_j++) {
+            if ((entry_i->unk_0 & 1) && !(entry_j->unk_0 & 1)) {
+                fn_1_128884(entry_i, entry_j, sizeof(AccessoryEntry));
+            }
+        }
+    }
+
+    for (i = 0, entry_i = (AccessoryEntry *)self->unk_24; i < self->unk_18; i++, entry_i++) {
+        for (j = i + 1, entry_j = (AccessoryEntry *)(self->unk_24 + i * 0x44 + 0x44); j < self->unk_18; j++, entry_j++) {
+            if (entry_i->unk_0 == entry_j->unk_0) {
+                if (entry_i->unk_18 > entry_j->unk_18) {
+                    fn_1_128884(entry_i, entry_j, sizeof(AccessoryEntry));
+                }
+            }
+        }
+    }
+
+    for (i = 0, entry_i = (AccessoryEntry *)self->unk_24; i < self->unk_18; i++, entry_i++) {
+        for (j = i + 1, entry_j = (AccessoryEntry *)(self->unk_24 + i * 0x44 + 0x44); j < self->unk_18; j++, entry_j++) {
+            if (entry_i->unk_0 == entry_j->unk_0) {
+                if (entry_i->unk_14 < entry_j->unk_14 && entry_i->unk_18 > lbl_1_rodata_7B20 && entry_j->unk_18 > lbl_1_rodata_7B20) {
+                    fn_1_128884(entry_i, entry_j, sizeof(AccessoryEntry));
+                } else if (entry_i->unk_14 > entry_j->unk_14 && entry_i->unk_18 < lbl_1_rodata_7B20 && entry_j->unk_18 < lbl_1_rodata_7B20) {
+                    fn_1_128884(entry_i, entry_j, sizeof(AccessoryEntry));
+                }
+            }
+        }
+    }
+}
+/* fzgx:end fn_1_10A43C */
+
 /* fzgx:begin fn_1_10B7D8 */
 // Initializes accessory data only when an accessory object is present.
 void fn_1_10B7D8(void *accessory) {

@@ -6362,3 +6362,6 @@ rel/main_rel/memcard/fn_1_BF9C4.c:
 
 rel/main_rel/game/fn_1_327F8.c:
 	.text       start:0x000327F8 end:0x00032A40 align:4
+
+rel/main_rel/accessory/fn_1_10A43C.c:
+	.text       start:0x0010A43C end:0x0010A6A0 align:4

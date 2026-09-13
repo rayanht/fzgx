@@ -218,3 +218,6 @@ rel/title/title/fn_8_1C18.c:
 
 rel/title/title/fn_8_4F64.c:
 	.text       start:0x00004F64 end:0x0000516C align:4
+
+rel/title/title/fn_8_1C90.c:
+	.text       start:0x00001C90 end:0x00001F64 align:4
