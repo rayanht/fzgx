@@ -1715,3 +1715,6 @@ rel/movie_module/fn_12_3AE84.c:
 
 rel/movie_module/fn_12_AE70.c:
 	.text       start:0x0000AE70 end:0x0000B100 align:4
+
+rel/movie_module/fn_12_87FC.c:
+	.text       start:0x000087FC end:0x00008878 align:4
