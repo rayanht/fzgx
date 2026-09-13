@@ -490,6 +490,78 @@ int fn_1_17FCC(int a, int b, int c) {
 }
 /* fzgx:end fn_1_17FCC */
 
+/* fzgx:begin fn_1_180F4 noprologue */
+#include "types.h"
+#include "rel/main_rel/stcoli.h"
+
+typedef struct {
+    int unk_0;
+    int unk_4;
+    int unk_8;
+} Entry_180F4;
+
+int fn_1_180F4(int first, int second, int count, int ascending) {
+    int wins;
+    int current;
+    int limit;
+    int j;
+    int tmp;
+    Entry_180F4 *current_entry;
+    Entry_180F4 *candidate;
+    int result;
+
+    if (first == second) {
+        return 1;
+    }
+
+    if (first > second) {
+        tmp = first;
+        first = second;
+        second = tmp;
+    }
+
+    current = second - first;
+    limit = count - current;
+    if (limit < current) {
+        first = second;
+        current = limit;
+    }
+
+    current_entry = &((Entry_180F4 *)lbl_1_bss_3BE0->unk_C)[first];
+    wins = 0;
+    second = first + 1;
+    limit = count;
+    limit -= 1;
+    j = current;
+
+    while (j > 0) {
+        if (second > limit) {
+            second = 0;
+        }
+
+        candidate = &((Entry_180F4 *)lbl_1_bss_3BE0->unk_C)[second];
+        if (ascending) {
+            if (current_entry->unk_0 < candidate->unk_0) {
+                break;
+            }
+        } else if (current_entry->unk_0 > candidate->unk_0) {
+            break;
+        }
+
+        current_entry = candidate;
+        wins++;
+        second++;
+        j--;
+    }
+
+    result = 0;
+    if (current == 0 || wins >= current) {
+        result = 1;
+    }
+    return result;
+}
+/* fzgx:end fn_1_180F4 */
+
 /* fzgx:begin fn_1_181CC */
 // fn_1_181CC: main_rel .text:0x000181CC size 0x24
 // Wrapper function that passes first three arguments through and sets fourth to 1

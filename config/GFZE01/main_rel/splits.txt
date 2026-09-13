@@ -6383,3 +6383,6 @@ rel/main_rel/sel_static_disp/fn_1_14DC68.c:
 
 rel/main_rel/motasglist/fn_1_41C18.c:
 	.text       start:0x00041C18 end:0x00041CB8 align:4
+
+rel/main_rel/stcoli/fn_1_180F4.c:
+	.text       start:0x000180F4 end:0x000181CC align:4
