@@ -413,6 +413,22 @@ Rules that hold for everyone:
   object (repeated expression, strength-reduced pointer, constant address) on one side and a
   declared local on the other: de-CSE it into a local used at every site (fn_12_2D888's offset),
   hold it in a local (fn_1_DA6C's call result), or wrap a constant pointer in a struct.
+  Frame homes (measured on mwcceppc): under 1.2.5n an unreferenced local array and a stored-only
+  one-field carrier reserve their bytes (0x18 -> 0x28 / 0x20); a dead scalar does not; under 1.3.2
+  nothing dead reserves anything, so a frame that is short by a whole number of words is a
+  compiler-version question first and a missing declared home second. The engine's
+  `rewrites()` now carries the measured levers as families: held call results (widened to s32),
+  struct-wrapped constant pointers, de-CSE into a declared local, one-field scalar carriers,
+  `(void) x;` dead uses, two-region variable splits declared last, signedness flips, float
+  literal suffixes / f32 locals, and `fixup_evidence.frame_padding` sized from the two `stwu`
+  rows. Diff-row census of the largest 70 bodies scoring 50-90%: 43% register allocation, 28%
+  missing/extra instructions, 12% frame offsets, 9% immediates, 7% opcode substitutions; only
+  2.5% shared-pool literal rows. The most frequent substitutions are addi/li/mr copy spellings,
+  lwzx against add+lwz (address kept in a variable), cmpwi against cmplwi (signedness) and
+  fsubs/lfs against fsub/lfd (double promotion). The compiler's own IR dumper is a `ret` stub in
+  every shipped build (`#pragma dumpir` and the gate byte do nothing); exact virtual-register
+  numbers need the recovery project's sandboxed capture, which this machine cannot run (no
+  docker/qemu/gdb), so numbering is inferred from probes only.
 - Engine speed (2026-09-12): `fzgx fixup` startup read 182,000 saved bodies and 700 MB of
   reports on every run (55 s); `seeds/recovered.py` now caches the collected candidates in
   `.fzgx/saved_candidates.pickle` keyed by a cheap fingerprint (check-archive directory mtimes,
