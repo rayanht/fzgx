@@ -25344,6 +25344,18 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/accessory/fn_1_128F10.c",
+    "symbols": [
+      "fn_1_128F10"
+    ],
+    "status": "nonmatching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/accessory.c",
+    "pool": true
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/accessory/fn_1_129D9C.c",
     "symbols": [
       "fn_1_129D9C"
@@ -38119,6 +38131,18 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/game/fn_1_412A0.c",
+    "symbols": [
+      "fn_1_412A0"
+    ],
+    "status": "nonmatching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/game.c",
+    "pool": true
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/game/fn_1_41328.c",
     "symbols": [
       "fn_1_41328"
@@ -43154,6 +43178,18 @@
     "mw_version": null,
     "extra_cflags": [],
     "tu": "rel/main_rel/replay.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/replay/fn_1_F2DDC.c",
+    "symbols": [
+      "fn_1_F2DDC"
+    ],
+    "status": "nonmatching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/replay.c",
+    "pool": true
   },
   {
     "module": "main_rel",
