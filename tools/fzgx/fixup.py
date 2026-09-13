@@ -509,11 +509,19 @@ class Engine:
             generation_seconds=time.monotonic()-generated
             self.evaluate(pending)
             progress=time.monotonic()
-            for index,row in enumerate(pending):
-                if row.get('object') and (row['label'].startswith(('retail conversion','retail floating','retail loop','retail double','retail call result','retail aggregate','recover native shared-pool objects','recover native BSS','region '))
+            def wants_check(row):
+                return bool(row.get('object') and (row['label'].startswith(('retail conversion','retail floating','retail loop','retail double','retail call result','retail aggregate','recover native shared-pool objects','recover native BSS','region '))
                         or row['shape_errors']<parents[row['parent']]['shape_errors']
                         or source.closes_region(self.targets[row['symbol']][1],self.words[row['parent']],
-                                                self.words[row['id']],parents[row['parent']].get('regions',{}))):
+                                                self.words[row['id']],parents[row['parent']].get('regions',{}))))
+            # every check is one objdiff process: run them 16 wide before the serial passes read them
+            from concurrent.futures import ThreadPoolExecutor
+            need=[row for row in pending if wants_check(row) and row['id'] not in self.checks]
+            need+=[seed for seed in parents.values() if seed.get('object') and seed['id'] not in self.checks]
+            with ThreadPoolExecutor(max_workers=16) as ex:
+                list(ex.map(self.check, need))
+            for index,row in enumerate(pending):
+                if wants_check(row):
                     self.check(row)
                 if time.monotonic()-progress>=10:
                     self.emit({'stage':'regions','processed':index+1,'candidates':len(pending)})

@@ -746,9 +746,20 @@ def _pool_rows(project: Project, module: str, left: dict, right: dict,
             start = section['offset'] + own['value']
             size = own['size']
             if anonymous:
-                # up to the end of the last object in the section (tail padding is not retail's)
+                # up to the end of the last object in the section (tail padding is not retail's),
+                # but no further than retail's own displacement reach: a literal of ours that
+                # retail keeps elsewhere (bound by its own relocation) is appended after the
+                # primed layout and must not fail the pool's comparison
                 size = max((o['value'] + o['size'] for o in objects.values()
                             if o['shndx'] == own['shndx'] and o['size']), default=section['size']) - own['value']
+                reach = 0
+                for row in lrows:
+                    text = (row.get('instruction') or {}).get('formatted') or ''
+                    m = re.match(r'(?:lfs|lfd|lwz|lha|lhz|lbz|stw|stfs|stfd) [rf]\d+, (-?0x[0-9a-f]+|-?\d+)\(r\d+\)$', text)
+                    if m and int(m.group(1), 0) >= 0:
+                        reach = max(reach, int(m.group(1), 0) + 8)
+                if reach:
+                    size = min(size, (reach + 7) & ~7)
             ours = bytes(elf.data[start:start + size])
         else:
             ours = b''.join(base64.b64decode(d.get('data', '')) for d in rsym.get('data_diff', []))
@@ -928,7 +939,7 @@ def compile_many(project: Project, module: str, sources: List[Path], out_dir: Pa
 
 COMPILE_CHUNK = 24
 COMPILE_CHUNK_MAX = 240
-COMPILE_WORKERS = 12
+COMPILE_WORKERS = 16
 
 
 def check_many(project: Project, items: List[Tuple[str, Path]], max_diff_lines: int = 0,
