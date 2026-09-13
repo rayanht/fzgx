@@ -1051,6 +1051,124 @@ void fn_17_69EC(void *arg0, f32 farg0) {
 }
 /* fzgx:end fn_17_69EC */
 
+/* fzgx:begin fn_17_6F30 pool */
+typedef struct InterviewText {
+    u8 pad0[0x86];
+    u8 text[1];
+} InterviewText;
+
+typedef struct InterviewObject {
+    u8 pad0[0x14];
+    InterviewText *text;
+} InterviewObject;
+
+typedef struct InterviewCamera {
+    u8 pad0[4];
+    u32 flags;
+    u8 rest[0x6C];
+} InterviewCamera;
+
+typedef struct InterviewSubstate {
+    u8 pad0[4];
+    void *field4;
+    u8 rest[0x18];
+} InterviewSubstate;
+
+/* interview.c file-scope objects, in retail order: MWCC addresses them off one section base. */
+u8 lbl_17_bss_0;
+u8 lbl_17_bss_1;
+u8 lbl_17_bss_2;
+u8 lbl_17_bss_3;
+u32 lbl_17_bss_4;
+u32 lbl_17_bss_8;
+u32 lbl_17_bss_C;
+u32 lbl_17_bss_10;
+u32 lbl_17_bss_14;
+u32 lbl_17_bss_18[2];
+u32 lbl_17_bss_20;
+u32 lbl_17_bss_24[4];
+u32 lbl_17_bss_34[8];
+s32 lbl_17_bss_54;
+u32 lbl_17_bss_58[2];
+InterviewCamera lbl_17_bss_60;
+u16 lbl_17_bss_D4;
+s16 lbl_17_bss_D6;
+InterviewSubstate lbl_17_bss_D8;
+u16 lbl_17_bss_F8;
+
+#pragma section code_type ".fzgxpool"
+static void fzgx_bss_layout(void) {
+    volatile u32 s;  /* fzgx-allow: S2 layout primer sink: MWCC emits .bss objects in first-access order */
+    s = (u32)lbl_17_bss_0;
+    s = (u32)lbl_17_bss_1;
+    s = (u32)lbl_17_bss_2;
+    s = (u32)lbl_17_bss_3;
+    s = (u32)lbl_17_bss_4;
+    s = (u32)lbl_17_bss_8;
+    s = (u32)lbl_17_bss_C;
+    s = (u32)lbl_17_bss_10;
+    s = (u32)lbl_17_bss_14;
+    s = (u32)lbl_17_bss_18[0];
+    s = (u32)lbl_17_bss_20;
+    s = (u32)lbl_17_bss_24[0];
+    s = (u32)lbl_17_bss_34[0];
+    s = (u32)lbl_17_bss_54;
+    s = (u32)lbl_17_bss_58[0];
+    s = (u32)lbl_17_bss_60.flags;
+    s = (u32)lbl_17_bss_D4;
+    s = (u32)lbl_17_bss_D6;
+    s = (u32)lbl_17_bss_D8.field4;
+    s = (u32)lbl_17_bss_F8;
+}
+#pragma section code_type ".text"
+
+extern u8 lbl_17_data_64458[4];
+extern u8 lbl_17_data_6445C[140];
+extern u32 lbl_1_bss_6EAB4;
+extern u32 lbl_1_bss_6EAD0;
+
+extern void fn_1_97204(void *arg0, void *arg1);
+extern s32 fn_80083BCC(void *arg0, void *arg1);
+extern void fn_8004BF0C(void *arg0, s32 arg1);
+
+void fn_17_6F30(InterviewObject *object) {
+    InterviewText *text;
+    u8 *value;
+    u32 flags;
+    s32 result;
+    InterviewSubstate *substate;
+    InterviewSubstate *handle;
+
+    text = object->text;
+    if (text->text[0] == 0) {
+        value = lbl_17_data_64458;
+    } else {
+        u8 *cursor;
+
+        cursor = text->text;
+        while (*cursor != 0x3C && *cursor != 0) {
+            cursor++;
+        }
+        *cursor = 0;
+        value = text->text;
+    }
+    substate = &lbl_17_bss_D8;
+    fn_1_97204(substate->field4, value);
+    result = fn_80083BCC(value, lbl_17_data_6445C);
+    flags = lbl_17_bss_58[0];
+    if (result == 0) {
+        flags = flags | 0x00800000;
+    } else {
+        flags = flags & ~0x00800000;
+    }
+    lbl_17_bss_58[0] = flags;
+    lbl_17_bss_D6 = -20;
+    lbl_1_bss_6EAB4 &= -0x2d;
+    handle = *(InterviewSubstate **)&lbl_1_bss_6EAD0;
+    fn_8004BF0C(handle->field4, -20);
+}
+/* fzgx:end fn_17_6F30 */
+
 /* fzgx:begin fn_17_7020 */
 typedef struct InterviewObject {
     u8 pad0[0x14];
