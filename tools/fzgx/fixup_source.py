@@ -542,13 +542,39 @@ def embedded_call_assignments(body: str, name: str) -> List[Tuple[str, str]]:
     return out
 
 
+
+def condition_embedded_assignments(body: str, name: str) -> List[Tuple[str, str]]:
+    """`if (G OP k) { x = G; } else ...` and `x = G; if (x OP k)` -> `if ((x = G) OP k)`: the
+    load lowers straight into x's web (a virgin named local otherwise gets `lwz rT; cmp rT;
+    mr rX, rT`); keeping a redundant `x = G;` in the then-branch preserves the non-inverted
+    branch pair (fn_8000CEBC, capture-validated)."""
+    out: List[Tuple[str, str]] = []
+    span = _function_body_span(body, name)
+    if not span:
+        return out
+    inner = body[span[1]:span[2]]
+    # form A: the then-branch assigns the compared global
+    for m in re.finditer(r'(?m)^([ \t]+)if \(([A-Za-z_][\w.>\-\[\]]*) (<=|<|>=|>|==|!=) ([^()\n]+?)\) \{\n([ \t]+)([A-Za-z_]\w*) = \2;\n', inner):
+        ind, g, op, k, ind2, x = m.groups()
+        s0, e0 = span[1] + m.start(), span[1] + m.end()
+        out.append((f"embed {x} = {g} in its condition", body[:s0] + f"{ind}if (({x} = {g}) {op} {k}) {{\n" + body[e0:]))
+        out.append((f"embed {x} = {g} in its condition, then-branch reload kept",
+                    body[:s0] + f"{ind}if (({x} = {g}) {op} {k}) {{\n{ind2}{x} = {g};\n" + body[e0:]))
+    # form B: an assignment immediately followed by a test of the variable
+    for m in re.finditer(r'(?m)^([ \t]+)([A-Za-z_]\w*) = ([^;\n]+);\n\1if \(\2 (<=|<|>=|>|==|!=) ([^()\n]+?)\) \{\n', inner):
+        ind, x, g, op, k = m.groups()
+        s0, e0 = span[1] + m.start(), span[1] + m.end()
+        out.append((f"embed {x} = {g} in the following condition", body[:s0] + f"{ind}if (({x} = {g}) {op} {k}) {{\n" + body[e0:]))
+    return out
+
+
 def rewrites(body: str, name: str) -> List[Tuple[str, str]]:
     """Every single second-stage rewrite of a body."""
     out: List[Tuple[str, str]] = []
     for fn in (scope_moves, split_inits, hoists, through_local, return_values,
                call_results_to_locals, wrap_constant_pointers, decse_repeated_expressions,
                scalar_carriers, dead_uses, variable_splits, signedness_flips, float_precision,
-               embedded_call_assignments):
+               embedded_call_assignments, condition_embedded_assignments):
         try:
             out += fn(body, name)
         except Exception:
