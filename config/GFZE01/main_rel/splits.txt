@@ -6365,3 +6365,6 @@ rel/main_rel/game/fn_1_327F8.c:
 
 rel/main_rel/accessory/fn_1_10A43C.c:
 	.text       start:0x0010A43C end:0x0010A6A0 align:4
+
+rel/main_rel/live_camera/fn_1_DA6C.c:
+	.text       start:0x0000DA6C end:0x0000DE14 align:4

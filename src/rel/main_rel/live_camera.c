@@ -38,6 +38,157 @@ void fn_1_DA34(void) {
 }
 /* fzgx:end fn_1_DA34 */
 
+/* fzgx:begin fn_1_DA6C noprologue */
+#include "types.h"
+#include "rel/main_rel/live_camera.h"
+
+extern s32 fn_1_4C10(void);
+extern s32 fn_1_40BB4(void);
+extern s32 fn_1_F2F34(void);
+extern u32 fn_1_F45A4(void);
+extern u32 fn_1_F4594(void);
+extern void * fn_1_86254(int);
+extern s8 fn_1_86624(void);
+extern void fn_1_6DD0(u32);
+extern void fn_1_8A0C(u32);
+extern u32 fn_1_56B8(void);
+extern u32 fn_1_864E8(int);
+extern void camera_set_selected_value(u8);
+extern void camera_set_result(s16);
+extern void fn_1_5370(u32, u32);
+
+typedef struct {
+    u8 pad_0[6];
+    s16 unk_6;
+    s16 unk_8;
+} DA6CArg;
+
+void fn_1_DA6C(DA6CArg *arg0) {
+    s16 temp_r31;
+    s32 var_r30;
+    s32 var_r3;
+    s32 cnt;
+    u32 flags;
+    s32 n;
+
+    if (lbl_1_bss_115C == 0) {
+        return;
+    }
+    if (fn_1_4C10() != 0) {
+        return;
+    }
+    if (fn_1_40BB4() != 0) {
+        return;
+    }
+    if (fn_1_F2F34() == 0) {
+        return;
+    }
+    if (fn_1_F4594() >= fn_1_F45A4() - 0x1e) {
+        return;
+    }
+
+    var_r30 = 1;
+    if (((u16) lbl_1_bss_9F8.unk_A >> 6) & 1) {
+        var_r30 = 1;
+        (*(s8 *)((u8 *)(fn_1_86254((s32) arg0->unk_6)) + 1141)) = -1;
+        arg0->unk_6++;
+        n = fn_1_86624();
+        if (arg0->unk_6 > n - 1) {
+            var_r3 = 0;
+        } else if (arg0->unk_6 < 0) {
+            var_r3 = (s32) fn_1_86624() - 1;
+        } else {
+            var_r3 = arg0->unk_6;
+        }
+        (*(s8 *)((u8 *)(fn_1_86254((s32) var_r3)) + 1141)) = 0;
+        fn_1_6DD0(0);
+        fn_1_8A0C(0);
+        fn_1_56B8();
+    }
+    if (arg0->unk_6 >= fn_1_86624()) {
+        arg0->unk_6 = 0;
+    }
+    if (arg0->unk_6 < 0) {
+        arg0->unk_6 = fn_1_86624() - 1;
+    }
+    arg0->unk_8 = arg0->unk_6;
+
+    if (((u16) lbl_1_bss_9F8.unk_A >> 7) & 1) {
+        var_r30 = -1;
+        (*(s8 *)((u8 *)(fn_1_86254((s32) arg0->unk_6)) + 1141)) = -1;
+        arg0->unk_6--;
+        n = fn_1_86624();
+        if (arg0->unk_6 > n - 1) {
+            var_r3 = 0;
+        } else if (arg0->unk_6 < 0) {
+            var_r3 = (s32) fn_1_86624() - 1;
+        } else {
+            var_r3 = arg0->unk_6;
+        }
+        (*(s8 *)((u8 *)(fn_1_86254((s32) var_r3)) + 1141)) = 0;
+        fn_1_6DD0(0);
+        fn_1_8A0C(0);
+        fn_1_56B8();
+    }
+    if (arg0->unk_6 >= fn_1_86624()) {
+        arg0->unk_6 = 0;
+    }
+    if (arg0->unk_6 < 0) {
+        arg0->unk_6 = fn_1_86624() - 1;
+    }
+    arg0->unk_8 = arg0->unk_6;
+
+    flags = fn_1_864E8(arg0->unk_6);
+    if ((flags & 0x800) && !(flags & 1)) {
+        temp_r31 = arg0->unk_6;
+        do {
+            (*(s8 *)((u8 *)(fn_1_86254((s32) arg0->unk_6)) + 1141)) = -1;
+            arg0->unk_6 += var_r30;
+            if (arg0->unk_6 > (s32) fn_1_86624() - 1) {
+                var_r3 = 0;
+            } else if (arg0->unk_6 < 0) {
+                var_r3 = (s32) fn_1_86624() - 1;
+            } else {
+                var_r3 = arg0->unk_6;
+            }
+            (*(s8 *)((u8 *)(fn_1_86254((s32) var_r3)) + 1141)) = 0;
+            if (arg0->unk_6 >= fn_1_86624()) {
+                arg0->unk_6 = 0;
+            }
+            if (arg0->unk_6 < 0) {
+                arg0->unk_6 = fn_1_86624() - 1;
+            }
+        } while ((fn_1_864E8(arg0->unk_6) & 0x800) && temp_r31 != arg0->unk_6);
+
+        if (arg0->unk_6 >= fn_1_86624()) {
+            arg0->unk_6 = 0;
+        }
+        if (arg0->unk_6 < 0) {
+            arg0->unk_6 = fn_1_86624() - 1;
+        }
+        arg0->unk_8 = arg0->unk_6;
+        if (temp_r31 == arg0->unk_6) {
+            camera_set_selected_value(1);
+            camera_set_result(arg0->unk_6);
+            fn_1_5370(0, 0);
+            camera_set_result(arg0->unk_6);
+            camera_set_selected_value(0);
+            return;
+        }
+        fn_1_56B8();
+    }
+
+    if (arg0->unk_6 >= fn_1_86624()) {
+        arg0->unk_6 = 0;
+    }
+    if (arg0->unk_6 < 0) {
+        arg0->unk_6 = fn_1_86624() - 1;
+    }
+    arg0->unk_8 = arg0->unk_6;
+    camera_set_result(arg0->unk_6);
+}
+/* fzgx:end fn_1_DA6C */
+
 /* fzgx:begin fn_1_DE14 noprologue */
 #include "types.h"
 #include "rel/main_rel/live_camera.h"
