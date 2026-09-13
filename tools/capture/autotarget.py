@@ -9,7 +9,14 @@ sym,body,mw=sys.argv[1:4]; fl=sys.argv[4] if len(sys.argv)>4 else None
 cap=f'{S}/{sym}'
 p=Project(); res=oracle.check(p,sym,0,source=Path(body),mw_version=mw,extra_cflags=fl)
 l,r=res._rows
-fin=json.load(open(f'{cap}/pcode-0001-final.json')); sch=json.load(open(f'{cap}/pcode-0001-scheduled.json'))
+import glob as _glob
+_O=[k for k in range(len(r)) if stuck._fmt(r[k])]
+_best=None
+for _f in sorted(_glob.glob(f'{cap}/pcode-*-final.json')):
+    _d=json.load(open(_f)); _n=sum(len(b['instructions']) for b in _d['blocks'])
+    if _best is None or abs(_n-len(_O))<abs(_best[0]-len(_O)): _best=(_n,_f)
+idx=_best[1].split('pcode-')[1].split('-')[0]
+fin=json.load(open(f'{cap}/pcode-{idx}-final.json')); sch=json.load(open(f'{cap}/pcode-{idx}-scheduled.json'))
 byaddr={i['address']:i for b in sch['blocks'] for i in b['instructions']}
 F=[i for b in fin['blocks'] for i in b['instructions']]
 O=[(k,stuck._fmt(r[k])) for k in range(len(r)) if stuck._fmt(r[k])]
@@ -35,6 +42,9 @@ print('targets:', ','.join(f'v{v}:r{c}' for v,c in sorted(targets.items())))
 print('conflicts:', conflicts[:8])
 bad={v for v,_,_ in conflicts}
 if targets:
+  try:
     t=','.join(f'v{v}:r{c}' for v,c in sorted(targets.items()) if v not in bad)
-    out=subprocess.run(['python3','-c',"import sys; sys.path.insert(0,'/Users/rayan/mwcc/tools'); import allocator_snapshot as a; a.SUPPORTED_TARGETS['132']='GC/1.3.2'; import source_rank_solver as s; sys.argv=['solver']+sys.argv[1:]; s.main()",cap,'1','--target',t],capture_output=True,text=True,cwd='/Users/rayan/mwcc')
+    out=subprocess.run(['python3','-c',"import sys; sys.path.insert(0,'/Users/rayan/mwcc/tools'); import allocator_snapshot as a; a.SUPPORTED_TARGETS['132']='GC/1.3.2'; import source_rank_solver as s; sys.argv=['solver']+sys.argv[1:]; s.main()",cap,str(int(idx)),'--target',t,'--samples','1500','--max-permutations','20000'],capture_output=True,text=True,cwd='/Users/rayan/mwcc',timeout=240)
     print(out.stdout[-2500:]); print(out.stderr[-600:])
+  except subprocess.TimeoutExpired:
+    print('status=timeout')

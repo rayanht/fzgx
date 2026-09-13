@@ -85,6 +85,25 @@ class Reader132(base.SnapshotReader):
     def reaching_definitions(self, blocks):
         return None
 
+    def object_name(self, address):
+        """The C name of a compiler object (named local or parameter), or '' for a temp."""
+        if not address:
+            return ""
+        try:
+            data = self.u32(address + 0x0A)
+            raw = self._read(data, 64) if data else b""
+        except Exception:
+            return ""
+        import re as _re
+        m = _re.search(rb"[ -~]{2,}", raw[10:])
+        return m.group(0).decode() if m else ""
+
+    def coloring_snapshot(self, reg_class, simplify_stack, program_counter=0):
+        snap = super().coloring_snapshot(reg_class, simplify_stack, program_counter)
+        for node in snap["nodes"]:
+            node["name"] = self.object_name(int(node["object"], 16))
+        return snap
+
     def pcode_stage(self, phase, pc):
         return {"format": "mwcc-pcode-stage-v1", "compiler": TARGET_132, "phase": phase, "program_counter": f"0x{pc:08x}",
                 "blocks": self.blocks()}

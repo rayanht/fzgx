@@ -12,6 +12,10 @@ names={}
 for ln in vm.split('\n'):
     f=ln.split()
     if len(f)>=5 and f[2]=='fn-scope' and f[1]!='?': names[int(f[0])]=f[1]
+if not names:
+    import json as _json
+    _b=_json.load(open(f'{cap}/coloring-0001-gpr-01-before.json'))
+    names={n['virtual_register']:n['name'] for n in _b['nodes'] if n.get('name')}
 ranks=[int(v.strip().lstrip('v')) for v in order.split(',')]
 wanted=[names[v] for v in ranks if v in names][::-1]   # highest rank first = first declared
 text=open(body).read(); p=Project()
