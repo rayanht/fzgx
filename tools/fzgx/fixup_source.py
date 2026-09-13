@@ -368,11 +368,81 @@ def decse_repeated_expressions(body: str, name: str) -> List[Tuple[str, str]]:
     return out
 
 
+
+SCALAR_TYPES = {'s8', 'u8', 's16', 'u16', 's32', 'u32', 'int', 'long', 'short', 'char', 'unsigned',
+                'unsigned int', 'unsigned long', 'unsigned short', 'unsigned char', 'BOOL', 'f32', 'f64', 'float', 'double'}
+
+
+def scalar_carriers(body: str, name: str) -> List[Tuple[str, str]]:
+    """A scalar local wrapped in a one-member struct: the aggregate is numbered in the
+    frontend's promotion stratum above strength-reduced induction variables and CSE temps,
+    so its web claims a callee-saved register ahead of them (measured on mwcceppc: a stored
+    carrier also owns a 4-byte frame home under 1.2.5n)."""
+    out: List[Tuple[str, str]] = []
+    a = _decl_anchor(body, name)
+    if not a:
+        return out
+    span, locs, top, indent = a
+    for s0, e0, typ, nm, dims in locs:
+        base = re.sub(r'\b(register|const|volatile)\b', '', typ).strip()
+        if dims or '*' in base or base not in SCALAR_TYPES or _init_of(body[s0:e0]):
+            continue
+        rest = body[e0:span[2]]
+        if not re.search(r'\b' + re.escape(nm) + r'\b', rest):
+            continue
+        rest = re.sub(r'\b' + re.escape(nm) + r'\b(?!\.value)', nm + '.value', rest)
+        out.append((f"one-field carrier {nm}", body[:s0] + f"{indent}struct {{ {base} value; }} {nm};\n" + rest + body[span[2]:]))
+    return out
+
+
+def dead_uses(body: str, name: str) -> List[Tuple[str, str]]:
+    """`(void) x;` after a definition: a statement-level use that keeps the value's web
+    where the definition put it (no code is emitted)."""
+    out: List[Tuple[str, str]] = []
+    a = _decl_anchor(body, name)
+    if not a:
+        return out
+    span, locs, top, indent = a
+    names = [l[3] for l in locs if not l[4]][:12]
+    inner = body[top:span[2]]
+    for nm in names:
+        for m in re.finditer(r'(?m)^([ \t]+)' + re.escape(nm) + r'(?:\.value)?\s*=[^=][^;\n]*;\n', inner):
+            s = top + m.end()
+            out.append((f"dead use of {nm} after its definition",
+                        body[:s] + f"{m.group(1)}(void) {nm};  /* fzgx: keeps the web at its definition */\n" + body[s:]))
+    return out
+
+
+def variable_splits(body: str, name: str) -> List[Tuple[str, str]]:
+    """A local assigned in two regions split into two locals, the second declared last:
+    a second assignment otherwise creates a rename web numbered above every named local."""
+    out: List[Tuple[str, str]] = []
+    a = _decl_anchor(body, name)
+    if not a:
+        return out
+    span, locs, top, indent = a
+    inner = body[top:span[2]]
+    for s0, e0, typ, nm, dims in locs:
+        if dims:
+            continue
+        defs = [m for m in re.finditer(r'(?m)^[ \t]+' + re.escape(nm) + r'\s*=[^=]', inner)]
+        if len(defs) != 2:
+            continue
+        cut = defs[1].start()
+        tail = re.sub(r'\b' + re.escape(nm) + r'\b', nm + '_2', inner[cut:])
+        text = body[:top] + inner[:cut] + tail + body[span[2]:]
+        for label, pos in (("last", top), ("first", locs[0][0])):
+            out.append((f"split {nm} at its second definition, {nm}_2 declared {label}",
+                        text[:pos] + f"{indent}{declarator(typ.strip(), nm + '_2' + dims)};\n" + text[pos:]))
+    return out
+
+
 def rewrites(body: str, name: str) -> List[Tuple[str, str]]:
     """Every single second-stage rewrite of a body."""
     out: List[Tuple[str, str]] = []
     for fn in (scope_moves, split_inits, hoists, through_local, return_values,
-               call_results_to_locals, wrap_constant_pointers, decse_repeated_expressions):
+               call_results_to_locals, wrap_constant_pointers, decse_repeated_expressions,
+               scalar_carriers, dead_uses, variable_splits):
         try:
             out += fn(body, name)
         except Exception:

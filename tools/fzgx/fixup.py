@@ -350,6 +350,7 @@ class Engine:
             yield from evidence.aggregate_initializers(self.project, row['symbol'], body, check)
             yield from evidence.native_pool_objects(self.project, row['symbol'], body, check)
             yield from evidence.shared_pool_primer(self.project, row['symbol'], body, check)
+            yield from evidence.frame_padding(self.project, row['symbol'], body, check)
             yield from layout.tu_section_layout(self.project, row['symbol'], body, check)
             if re.search(r'(?m)^\s*#define\b', body):
                 # Pool fields passed through macro parameters only have a

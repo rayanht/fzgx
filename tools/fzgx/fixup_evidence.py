@@ -2694,6 +2694,38 @@ def _pool_widths(p, module, pool_name):
     return widths
 
 
+def frame_padding(p, symbol, body, check):
+    """Retail's frame larger than ours by a whole number of words: under 1.2.5-class compilers
+    an unreferenced local array reserves its bytes (measured: `u32 pad[4]` grows 0x18 to 0x28
+    on 1.2.5n, nothing dead reserves under 1.3.2), so propose a dead pad array of the missing
+    size after and before the leading locals; the oracle decides the version."""
+    from . import fixup_source as source
+    rows = getattr(check, '_rows', None)
+    if not rows or 'fzgx_frame_pad' in body:
+        return []
+    import re as _re
+    def frame(side):
+        for r in side:
+            t = ((r.get('instruction') or {}).get('formatted') or '')
+            m = _re.match(r'stwu r1, -(0x[0-9a-f]+)\(r1\)', t)
+            if m:
+                return int(m.group(1), 16)
+        return None
+    retail, ours = frame(rows[0]), frame(rows[1])
+    if retail is None or ours is None or retail <= ours or (retail - ours) % 4 or retail - ours > 0x400:
+        return []
+    delta = retail - ours
+    a = source._decl_anchor(body, symbol)
+    if not a:
+        return []
+    span, locs, top, indent = a
+    out = []
+    for label, pos in (("after the locals", top), ("before the locals", locs[0][0] if locs else top)):
+        for decl in (f"u32 fzgx_frame_pad[{delta // 4}];", f"u8 fzgx_frame_pad[{delta}];"):
+            out.append((f"frame pad {delta:#x} {label}: {decl}", body[:pos] + f"{indent}{decl}  /* fzgx: retail frame home */\n" + body[pos:]))
+    return out
+
+
 def shared_pool_primer(p, symbol, body, check):
     """Retail addresses a translation unit's literal pool through one base register: the pool
     is laid out in first-use order across the whole TU, so a per-function unit's own pool never
