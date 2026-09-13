@@ -12887,6 +12887,19 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_8000CEBC.c",
+    "symbols": [
+      "fn_8000CEBC"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [],
+    "pool": {
+      "@24": "lbl_801A6F40"
+    }
+  },
+  {
+    "module": "main",
     "source": "dol/fn_8000D55C.c",
     "symbols": [
       "fn_8000D55C"
