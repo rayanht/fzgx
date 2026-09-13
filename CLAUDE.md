@@ -440,6 +440,19 @@ Rules that hold for everyone:
   reassigned `result` becoming a copy-region web (vr42) numbered above `base` (vr40), so it claimed
   r27 before base claimed r26; a second local declared right after `base` put it in the named
   region and matched. The `variable_splits` family now emits that shape.
+  Further capture-validated laws (fn_8000CEBC, fn_8008EDF0, fn_80022028, all landed): a virgin
+  named local defined from a compared global lowers as `lhz rT; cmplwi rT; mr rX, rT` (the copy
+  cannot coalesce into a pass-1 web); `if ((x = G) <= k) { x = G; } else ...` lowers the load into
+  x's web and keeps the non-inverted `bgt; b` pair (`condition_embedded_assignments`). Stack homes
+  are laid out in reverse declaration order and a call result assigned to a local that is later
+  copied (`t = f(); v0 = t;`) owns a home under 1.2.5n even when it never reaches memory
+  otherwise; the capture's stack-frame-NNNN.json lists every home with its owner, so a `frame`
+  residual is solved by reading that list and reordering declarations. A plain pointer local
+  holding a constant address is rematerialized at every site (extra `lis/addi` rows); the
+  one-member struct wrapper keeps one materialization when every site, including the flush
+  call, goes through the wrapper. Under 1.2.5n the compiler reloads a global after a volatile
+  store unless the value sits in a local, and a dead first definition of that local is removed
+  before numbering (a double definition cannot promote it).
 - Engine speed (2026-09-12): `fzgx fixup` startup read 182,000 saved bodies and 700 MB of
   reports on every run (55 s); `seeds/recovered.py` now caches the collected candidates in
   `.fzgx/saved_candidates.pickle` keyed by a cheap fingerprint (check-archive directory mtimes,
