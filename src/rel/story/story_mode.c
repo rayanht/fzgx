@@ -539,6 +539,113 @@ void fn_7_13FC(void) {
 }
 /* fzgx:end fn_7_13FC */
 
+/* fzgx:begin fn_7_1400 pool */
+struct Sig_fn_7_2114_fn_7_2114_Arg0 {
+    u32 unk_0;
+    u8 pad_4[0xA8];
+    u32 unk_AC;
+    u8 pad_B0[0x18];
+    u32 unk_C8;
+};
+
+struct fn_7_1400_sub {
+    u8 pad_0[0x248];
+    u16 unk_248;
+};
+
+struct fn_7_1400_lbl_7_bss_0 {
+    u8 pad_0[0x10];
+    u8 *unk_10;
+    u8 *unk_14;
+    u8 pad_18[0xC];
+    u32 unk_24;
+    u8 pad_28[0x20];
+    struct fn_7_1400_sub sub;
+};
+
+extern struct Sig_fn_7_2114_fn_7_2114_Arg0 * fn_7_2114(struct Sig_fn_7_2114_fn_7_2114_Arg0 *);
+extern u16 lbl_1_data_414;
+extern u16 lbl_1_bss_96A;
+extern f32 lbl_7_rodata_0[330];
+extern u32 fn_1_47F74(u32);
+extern u32 fn_7_4108(void *, u32, u32);
+extern u32 fn_7_41FC(void *);
+extern void fn_1_F1B78(u32);
+extern void fn_1_3EF8C(u8);
+extern void fn_1_3EFF0(u32, u8);
+
+/* file-scope objects of the retail TU, in retail order: MWCC addresses them off one section base */
+u32 lbl_7_bss_0;
+u32 lbl_7_bss_4[2];
+u32 lbl_7_bss_C;
+u8 *lbl_7_bss_10;
+u8 *lbl_7_bss_14;
+u32 lbl_7_bss_18;
+u32 lbl_7_bss_1C_fill_1C[2];
+u32 lbl_7_bss_1C_8;
+u32 lbl_7_bss_1C_fill_28[8];
+struct fn_7_1400_sub lbl_7_bss_48;
+u16 lbl_7_bss_48_fill_292;
+u32 lbl_7_bss_48_fill_294[2];
+
+#pragma section code_type ".fzgxpool"
+static void fzgx_bss_layout(void) {
+    volatile u8 s;  /* fzgx-allow: S2 layout primer sink: MWCC emits .bss objects in first-access order */
+    s = *(u8 *)&lbl_7_bss_0;
+    s = *(u8 *)&lbl_7_bss_4;
+    s = *(u8 *)&lbl_7_bss_C;
+    s = *(u8 *)&lbl_7_bss_10;
+    s = *(u8 *)&lbl_7_bss_14;
+    s = *(u8 *)&lbl_7_bss_18;
+    s = *(u8 *)&lbl_7_bss_1C_fill_1C;
+    s = *(u8 *)&lbl_7_bss_1C_8;
+    s = *(u8 *)&lbl_7_bss_1C_fill_28;
+    s = *(u8 *)&lbl_7_bss_48;
+    s = *(u8 *)&lbl_7_bss_48_fill_292;
+    s = *(u8 *)&lbl_7_bss_48_fill_294;
+}
+#pragma section code_type ".text"
+
+void fn_7_1400(void) {
+    s8 v0;
+    u8 *v1;
+    s32 v2;
+    s32 v4;
+
+    
+    fn_1_47F74(186);
+    if (lbl_7_bss_14[0] == 9) {
+        v0 = (s8)lbl_7_bss_10[1];
+        switch (v0) {
+        case 0:
+        default:
+            fn_1_F1B78(0);
+            break;
+        case 1:
+            fn_1_F1B78(1);
+            break;
+        case 2:
+            fn_1_F1B78(2);
+            break;
+        }
+    } else {
+        fn_1_F1B78(-1);
+    }
+    v1 = lbl_7_bss_10;
+    v2 = (0x10000 + -32768);
+    v4 = ((s8)v1[0] * 132);
+    lbl_7_bss_14 = (u8 *)&lbl_7_rodata_0 + v4;
+    lbl_1_data_414 = (lbl_1_data_414 | (v2 >> (s8)v1[0]));
+    fn_1_3EF8C(5);
+    fn_1_3EFF0((u32)fn_7_2114, 1);
+    lbl_7_bss_1C_8 = 0;
+    lbl_7_bss_48.unk_248 = (s8)lbl_7_bss_10[1];
+    fn_7_4108(&lbl_7_bss_48, *(u32 *)(lbl_7_bss_14 + 0x20), 0);
+    fn_7_41FC((u8 *)&lbl_7_bss_48);
+    lbl_1_bss_96A = 140;
+}
+/* fzgx:end fn_7_1400 */
+
 /* fzgx:begin fn_7_1538 */
 // fn_7_1538: empty in retail (single blr).
 void fn_7_1538(void) {

@@ -473,7 +473,10 @@ def _bss_base_rows(project, module, obj, left, right, lrows, rrows, function_nam
             if pair not in pairs:
                 pairs.append(pair)
             continue
-        if not rname.startswith('...bss') or not owned or owned['size'] != retail.size:
+        # The unit's copy is dropped at integration and every displacement off the base is
+        # compared as code, so a section base only needs its retail symbol at the same start;
+        # dtk's symbol size is a heuristic (a retail TU's first object is often smaller).
+        if not rname.startswith('...bss') or not owned or owned['size'] > retail.size:
             continue
         if anchor['shndx'] != section['index'] or owned['shndx'] != section['index'] or anchor['value'] != owned['value']:
             continue

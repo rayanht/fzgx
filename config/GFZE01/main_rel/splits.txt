@@ -6287,3 +6287,12 @@ rel/main_rel/mdlload/fn_1_D47F0.c:
 
 rel/main_rel/stcoli/fn_1_18214.c:
 	.text       start:0x00018214 end:0x00018784 align:4
+
+rel/main_rel/phys/fn_1_E35F0.c:
+	.text       start:0x000E35F0 end:0x000E3778 align:4
+
+rel/main_rel/phys/fn_1_E7E00.c:
+	.text       start:0x000E7E00 end:0x000E7F88 align:4
+
+rel/main_rel/replay/fn_1_F2780.c:
+	.text       start:0x000F2780 end:0x000F2820 align:4

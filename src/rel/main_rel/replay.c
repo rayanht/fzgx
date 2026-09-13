@@ -4,6 +4,101 @@
 
 extern u32 OSGetTick(void);
 
+/* fzgx:begin fn_1_F2780 pool noprologue */
+#include "types.h"
+
+typedef struct State {
+    u8 pad0[0x19];
+    u8 byte19;
+    u8 byte1a;
+    u8 byte1b;
+    u8 byte1c;
+    u8 byte1d;
+    u8 byte1e;
+    u8 byte1f;
+    u8 byte20;
+    u8 byte21;
+    u8 byte22;
+    u8 byte23;
+    u8 pad24[0x1c];
+    void *object;
+} State;
+
+typedef struct Global {
+    u8 pad0[4];
+    u8 byte4;
+    u8 pad5[3];
+    State state;
+} Global;
+
+typedef struct Object {
+    u8 pad0[0xa0];
+    u16 halfa0;
+} Object;
+
+extern u32 lbl_801A6410;
+extern char lbl_1_data_3E8C8[9];
+extern Object *fn_1_4630(u32 arg0, u32 arg1, char *arg2, u32 arg3);
+
+typedef struct lbl_1_bss_7F01C_t {
+    u8 fzgx_byte_4C;
+    u8 pad_1[0x1];
+} lbl_1_bss_7F01C_t;
+
+/* file-scope objects of the retail TU, in retail order: MWCC addresses them off one section base */
+u16 lbl_1_bss_7EFD0;
+u16 lbl_1_bss_7EFD0_fill_7EFD2;
+u8 lbl_1_bss_7EFD4;
+u8 lbl_1_bss_7EFD0_fill_7EFD5;
+u16 lbl_1_bss_7EFD0_fill_7EFD6;
+State lbl_1_bss_7EFD8;
+lbl_1_bss_7F01C_t lbl_1_bss_7F01C;
+u16 lbl_1_bss_7EFD0_fill_7F01E;
+u32 lbl_1_bss_7F020[2];
+u8 lbl_1_bss_7F028;
+
+#pragma section code_type ".fzgxpool"
+static void fzgx_bss_layout(void) {
+    volatile u8 s;  /* fzgx-allow: S2 layout primer sink: MWCC emits .bss objects in first-access order */
+    s = *(u8 *)&lbl_1_bss_7EFD0;
+    s = *(u8 *)&lbl_1_bss_7EFD0_fill_7EFD2;
+    s = *(u8 *)&lbl_1_bss_7EFD4;
+    s = *(u8 *)&lbl_1_bss_7EFD0_fill_7EFD5;
+    s = *(u8 *)&lbl_1_bss_7EFD0_fill_7EFD6;
+    s = *(u8 *)&lbl_1_bss_7EFD8;
+    s = *(u8 *)&lbl_1_bss_7F01C;
+    s = *(u8 *)&lbl_1_bss_7EFD0_fill_7F01E;
+    s = *(u8 *)&lbl_1_bss_7F020;
+    s = *(u8 *)&lbl_1_bss_7F028;
+}
+#pragma section code_type ".text"
+
+void fn_1_F2780(void) {
+    Object *object;
+    State *state;
+
+    
+    state = &lbl_1_bss_7EFD8;
+    object = fn_1_4630(lbl_801A6410, (1 << 16) + 0x14c, lbl_1_data_3E8C8, 0x75);
+    state->object = object;
+    *(u16 *)((u8 *)&lbl_1_bss_7F01C.fzgx_byte_4C) = 0;
+    object->halfa0 = 0;
+    lbl_1_bss_7EFD4 = 0x29;
+    state->byte19 = 0;
+    state->byte1a = 1;
+    state->byte1c = 0;
+    state->byte20 = 0;
+    state->byte1d = 0;
+    state->byte21 = 0;
+    state->byte1e = 0;
+    state->byte22 = 0;
+    state->byte1f = 0;
+    state->byte23 = 0;
+    *(u32 *)((u8 *)state + 0xc) = 0;
+    state->byte1b = 0;
+}
+/* fzgx:end fn_1_F2780 */
+
 /* fzgx:begin fn_1_F2CD8 */
 void fn_1_F2CD8(u8 *value, u8 **cursor, u32 index) {
     s32 target;

@@ -41081,6 +41081,18 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/phys/fn_1_E35F0.c",
+    "symbols": [
+      "fn_1_E35F0"
+    ],
+    "status": "nonmatching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/phys.c",
+    "pool": true
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/phys/fn_1_E38D4.c",
     "symbols": [
       "fn_1_E38D4"
@@ -41532,6 +41544,18 @@
     "mw_version": null,
     "extra_cflags": [],
     "tu": "rel/main_rel/phys.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/phys/fn_1_E7E00.c",
+    "symbols": [
+      "fn_1_E7E00"
+    ],
+    "status": "nonmatching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/phys.c",
+    "pool": true
   },
   {
     "module": "main_rel",
@@ -43031,6 +43055,18 @@
     "pool": {
       "@45": "jumptable_1_data_49AD8"
     }
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/replay/fn_1_F2780.c",
+    "symbols": [
+      "fn_1_F2780"
+    ],
+    "status": "nonmatching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/replay.c",
+    "pool": true
   },
   {
     "module": "main_rel",
@@ -58223,6 +58259,18 @@
   },
   {
     "module": "story",
+    "source": "rel/story/story_mode/fn_7_1400.c",
+    "symbols": [
+      "fn_7_1400"
+    ],
+    "status": "nonmatching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/story/story_mode.c",
+    "pool": true
+  },
+  {
+    "module": "story",
     "source": "rel/story/story_mode/fn_7_1544.c",
     "symbols": [
       "fn_7_1544"
@@ -59544,6 +59592,18 @@
     "mw_version": "GC/1.3.2",
     "extra_cflags": [],
     "tu": "rel/winning/winning.c"
+  },
+  {
+    "module": "winning",
+    "source": "rel/winning/winning/fn_15_2E8C.c",
+    "symbols": [
+      "fn_15_2E8C"
+    ],
+    "status": "nonmatching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/winning/winning.c",
+    "pool": true
   },
   {
     "module": "winning",
