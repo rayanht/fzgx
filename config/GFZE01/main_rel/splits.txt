@@ -6377,3 +6377,9 @@ rel/main_rel/font/fn_1_49410.c:
 
 rel/main_rel/ranking/fn_1_157200.c:
 	.text       start:0x00157200 end:0x00157358 align:4
+
+rel/main_rel/sel_static_disp/fn_1_14DC68.c:
+	.text       start:0x0014DC68 end:0x0014DD68 align:4
+
+rel/main_rel/motasglist/fn_1_41C18.c:
+	.text       start:0x00041C18 end:0x00041CB8 align:4

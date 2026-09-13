@@ -191,6 +191,63 @@ void *fn_1_41BDC(fn_1_41BDC_MotasglistData *data, s32 index) {
 }
 /* fzgx:end fn_1_41BDC */
 
+/* fzgx:begin fn_1_41C18 noprologue */
+#include "types.h"
+
+typedef struct Sig_fn_1_41C18_Fn1967A8Resource Sig_fn_1_41C18_Fn1967A8Resource;
+struct Sig_fn_1_41C18_Fn1967A8Resource {
+    u8 unk_00;
+    u8 unk_01[0x07];
+    u32 unk_08;
+    u8 unk_0C[0x10];
+    u32 unk_1C;
+};
+typedef struct Sig_fn_1_41328_RelocData {
+    u32 count;
+    u32 values[1];
+} Sig_fn_1_41328_RelocData;
+typedef struct Sig_fn_1_41488_Fn41488Data {
+    u32 count;
+    char *strings;
+} Sig_fn_1_41488_Fn41488Data;
+
+struct fn_1_41C18_Arg0 {
+    u8 pad_0[0x4];
+    u32 unk_4;
+};
+
+extern int fn_1_41488(Sig_fn_1_41488_Fn41488Data *, const char *);
+extern void fn_1_41328(Sig_fn_1_41328_RelocData *);
+
+void fn_1_41C18(struct fn_1_41C18_Arg0 *arg0, u32 arg1) {
+    struct { u32 value; } v0;
+    s32 v1;
+    u32 v2;
+    u32 v3;
+    u32 v4;
+    int t1;
+    arg0->unk_4 = arg1;
+    fn_1_41328((Sig_fn_1_41328_RelocData *)arg1);
+    if ((*(u16 *)((u8 *)(u32)arg0 + 2) & 0x4) != 0) {
+    v0.value = 0;
+    v1 = 0;
+    v2 = v0.value;
+    while (v1 < (s32)*(u16 *)((u8 *)(u32)arg0 + 16)) {
+    v3 = arg1;
+    v4 = (*(u32 *)((u8 *)(u32)arg0 + 12) + v0.value);
+    t1 = fn_1_41488((Sig_fn_1_41488_Fn41488Data *)v3, (const char *)(*(u32 *)((u8 *)(u32)arg0 + 20) + *(u32 *)((u8 *)v4 + 28)));
+    v3 = t1;
+    *(u16 *)((u8 *)v4 + 2) = v3;
+    if (*(u16 *)((u8 *)v4 + 2) == 65535) {
+    *(u16 *)((u8 *)v4 + 2) = v2;
+    }
+    v0.value += 52;
+    v1++;
+    }
+    }
+}
+/* fzgx:end fn_1_41C18 */
+
 /* fzgx:begin fn_1_41E34 */
 typedef struct MotasglistEntry {
     u16 value;

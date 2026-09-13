@@ -41331,6 +41331,17 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/motasglist/fn_1_41C18.c",
+    "symbols": [
+      "fn_1_41C18"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "tu": "rel/main_rel/motasglist.c"
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/motasglist/fn_1_41E34.c",
     "symbols": [
       "fn_1_41E34"
@@ -45685,6 +45696,20 @@
     "mw_version": null,
     "extra_cflags": [],
     "tu": "rel/main_rel/sel_static_disp.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/sel_static_disp/fn_1_14DC68.c",
+    "symbols": [
+      "fn_1_14DC68"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "tu": "rel/main_rel/sel_static_disp.c",
+    "pool": {
+      "@30": "lbl_1_data_45204"
+    }
   },
   {
     "module": "main_rel",

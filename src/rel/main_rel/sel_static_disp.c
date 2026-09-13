@@ -3221,6 +3221,59 @@ void fn_1_14DBCC(Fn1_14DBCC_Item *arg0) {
 }
 /* fzgx:end fn_1_14DBCC */
 
+/* fzgx:begin fn_1_14DC68 */
+extern void fn_80071718(void *arg0);
+extern void fn_800711A8(void *arg0);
+extern void fn_1_12AB38(void *arg0);
+
+typedef struct {
+    u8 pad_0[0x340];
+    void *unk_340;
+    void *unk_344;
+    u8 pad_348[0x18];
+} StaticDispEntry;
+
+void fn_1_14DC68(StaticDispEntry *arg0, s16 arg1) {
+    struct { s16 value; } k;
+    s16 j;
+    StaticDispEntry *cursor;
+    StaticDispEntry *base;
+    StaticDispEntry *p;
+    s16 i;
+
+    if (lbl_1_bss_6D82C.unk_0 != 0) {
+        fn_80071718((void *)lbl_1_bss_6D82C.unk_0);
+        lbl_1_bss_6D82C.unk_0 = 0;
+    }
+
+    p = arg0;
+
+    fn_1_12AB38(&"vehicle_parts/");
+
+    for (i = 0; i < arg1; i++) {
+        base = p;
+        for (j = 0; j < 3u; j++) {
+            cursor = base;
+            for (k.value = 0; k.value < 4; k.value++) {
+                if (cursor->unk_344 != 0) {
+                    fn_800711A8(cursor->unk_344);
+                    cursor->unk_344 = 0;
+                }
+                cursor = (StaticDispEntry *)((u8 *)cursor + 4);
+            }
+            if (base->unk_340 != 0) {
+                fn_80071718(base->unk_340);
+                base->unk_340 = 0;
+            }
+            base = (StaticDispEntry *)((u8 *)base + 0x360);
+        }
+        p = (StaticDispEntry *)((u8 *)p + 0xa20);
+    }
+
+    fn_1_12AB38(&lbl_1_data_45200);
+}
+/* fzgx:end fn_1_14DC68 */
+
 /* fzgx:begin fn_1_14DE80 */
 void fn_1_14DE80(void *arg0, void *arg1, void *arg2, void *arg3) {
     fn_1_14DEC8(arg0, arg1, arg2, arg3, 0);
