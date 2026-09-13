@@ -6320,3 +6320,6 @@ rel/main_rel/accessory/fn_1_128F10.c:
 
 rel/main_rel/game/fn_1_412A0.c:
 	.text       start:0x000412A0 end:0x00041328 align:4
+
+rel/main_rel/_prolog/fn_1_3920.c:
+	.text       start:0x00003920 end:0x00003B34 align:4

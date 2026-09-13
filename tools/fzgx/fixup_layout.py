@@ -157,14 +157,21 @@ def find_models(text):
     return models
 
 
-def tu_objects(p, symbol, text, mode, cache):
+def tu_objects(p, symbol, text, mode, cache, retail_bases=()):
     sym = p.resolve(symbol)
     syms = p.symbols(sym.module)
     notes = []
     models = find_models(text)
-    if not models:
+    # same-module .bss scalars/arrays the body names directly are objects of the retail TU too
+    scalars = []
+    for m in re.finditer(r"\nextern\s+((?:const\s+)?(?:u8|s8|u16|s16|u32|s32|f32|f64|int|char)(?:\s*\*)?)\s+(lbl_\d+_bss_[0-9A-F]+|lbl_[0-9A-F]{8})\s*((?:\[[^\]]*\])*)\s*;", text):
+        s = syms.get(m.group(2))
+        if s and s.section == '.bss' and m.group(2) not in {mm[2] for mm in models} and re.search(r"(?<![\w&])%s\b" % re.escape(m.group(2)), text.replace(m.group(0), '')):
+            scalars.append((m.group(1), m.group(2), m.group(3), m.group(0), s))
+    if not models and not scalars:
         return None, ['no bss model']
     out_text = text
+    extra_objs = {s.name: (decl_t, dims, stmt) for decl_t, name, dims, stmt, s in scalars}
     fm = re.search(r"\n[^\n;{}]*\b%s\s*\([^;{}]*\)\s*\{" % re.escape(sym.name), out_text)
     if not fm:
         return None, ['function definition not found']
@@ -173,7 +180,8 @@ def tu_objects(p, symbol, text, mode, cache):
     for pvar, tname, base, stmt, kind in models:
         b = syms.get(base)
         if b is None or b.section != '.bss':
-            notes.append(f'{base}: not a .bss symbol'); return None, notes
+            # another module's object (or SDA data): retail addresses it by name, leave it alone
+            notes.append(f'{base}: not a same-module .bss object, left as is'); continue
         if kind == 'direct-header':
             kind = 'direct'
         if kind == 'direct':
@@ -275,8 +283,12 @@ def tu_objects(p, symbol, text, mode, cache):
             else:
                 layout[fname] = (v, 1, 1, 1)
                 decls[fname] = ('u8', [], f'u8 {fname};')
-        cluster = sorted((s for s in syms.values() if s.section == b.section and s.kind == 'object' and s.addr >= b.addr), key=lambda s: s.addr)
-        if not cluster or cluster[0].addr != b.addr:
+        start = b
+        lower = [syms[r] for r in retail_bases if syms.get(r) and syms[r].section == b.section and syms[r].addr < b.addr and b.addr - syms[r].addr <= 0x10000]
+        if lower:
+            start = max(lower, key=lambda s: s.addr)
+        cluster = sorted((s for s in syms.values() if s.section == b.section and s.kind == 'object' and s.addr >= start.addr), key=lambda s: s.addr)
+        if not cluster or cluster[0].addr != start.addr:
             notes.append(f'{base}: not an object start'); return None, notes
         # gaps between dtk objects become pseudo-objects
         full = []
@@ -309,6 +321,18 @@ def tu_objects(p, symbol, text, mode, cache):
                     notes.append(f'{fname}: conflicting field at {obj.name}+{inner:#x}'); return None, notes
             rec['fields'].setdefault(inner, (fname, fsize, esize, ealign))
             rewrites.append((um, obj, inner, fname, idx, amp))
+        for name, (decl_t, dims, stmt) in list(extra_objs.items()):
+            s = syms[name]
+            if s.addr < start.addr or s.addr - start.addr > 0x10000:
+                continue
+            obj = next((c for c in cluster if c.addr <= s.addr < c.end), None)
+            if obj is None or obj.name != name or name in per_obj:
+                continue
+            fname = f'fzgx_scalar_{name}'
+            decls[fname] = (decl_t, [d.strip('[]') for d in re.findall(r'\[[^\]]*\]', dims)], f'{decl_t} {fname}{dims};')
+            per_obj[name] = {'sym': obj, 'fields': {0: (fname, obj.size, obj.size, 4 if not dims else 4)}}
+            out_text = out_text.replace(stmt, '')
+            extra_objs.pop(name)
         last = max(r['sym'].end for r in per_obj.values())
         before = [s for s in cluster if s.addr < last]
         beyond = [s for s in cluster if s.addr >= last]
@@ -346,6 +370,12 @@ def tu_objects(p, symbol, text, mode, cache):
                     q = a + fsize
                 if q < s.end:
                     defs += filler(f'{s.name}_fill', q, s.end)
+                pos = s.end
+                continue
+            if list(fl) == [0] and fl[0][0].startswith('fzgx_scalar_'):
+                fname, fsize, esize, ealign = fl[0]
+                defs.append((s.addr, fdef(decls[fname], s.name), s.name))
+                access[(s.name, 0)] = s.name
                 pos = s.end
                 continue
             if list(fl) == [0]:
@@ -391,6 +421,8 @@ def tu_objects(p, symbol, text, mode, cache):
             out_text = re.sub(r"\n[ \t]*(?:struct\s+)?%s\s*\*\s*%s\s*;" % (re.escape(tname), re.escape(pvar)), '', out_text)
         all_defs += defs
         notes.append(f'{base}: {len(per_obj)} objects referenced, {len(defs)} definitions')
+    if not all_defs:
+        return None, notes
     all_defs.sort(key=lambda x: x[0])
     for _, d, _ in all_defs:
         dn = re.search(r"(\w+)(?:\[[^\]]*\])*;$", d.replace('(*', '').replace(')(', ''))
@@ -571,9 +603,15 @@ def tu_section_layout(p, symbol, body, check):
     out = []
     cache = {}
     bases = []
+    retail_bases = set()
+    rows = check._rows if check is not None and check._rows else ([], [])
+    for r in rows[0]:
+        m = re.match(r"addi r\d+, r\d+, (lbl_\w+)@l$", (r.get('instruction') or {}).get('formatted') or '')
+        if m:
+            retail_bases.add(m.group(1))
     for mode in ('dtk', 'split'):
         try:
-            text, notes = tu_objects(p, symbol, body, mode, cache)
+            text, notes = tu_objects(p, symbol, body, mode, cache, retail_bases)
         except (ValueError, KeyError, IndexError, AttributeError, OSError):
             text = None
         if text:

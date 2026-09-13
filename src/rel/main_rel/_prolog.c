@@ -528,6 +528,132 @@ void fn_1_3238(void) {
 }
 /* fzgx:end fn_1_3238 */
 
+/* fzgx:begin fn_1_3920 pool noprologue */
+#include "types.h"
+
+struct fn_1_3920_lbl_1_bss_978 {
+    u8 pad_0[8];
+    u32 probe[4];
+    u16 merged[4];
+    u8 pad_20[0x3F4 - 0x20];
+    u8 unk_3F4;
+};
+
+struct fn_1_3920_In {
+    u16 val;
+    u8 pad[7];
+    u8 flag;
+};
+
+struct fn_1_3920_Out {
+    u16 val;
+    u8 pad[8];
+    u8 flag;
+};
+
+extern u32 lbl_1_data_2B68[4];
+extern u8 lbl_1_data_2B64;
+extern int fn_1_D357C(void);
+extern void fn_8001CF80(void *);
+extern u32 SIProbe(u32);
+extern void fn_8006B470(void *);
+extern void fn_1_D332C(u16 *);
+
+/* file-scope objects of the retail TU, in retail order: MWCC addresses them off one section base */
+u32 lbl_1_bss_978[2];
+u32 lbl_1_bss_980[4];
+u16 lbl_1_bss_990[4];
+u32 lbl_1_bss_990_fill_998[12];
+u32 lbl_1_bss_9C8[12];
+u32 fzgx_obj_lbl_1_bss_9F8[20];
+u32 fzgx_obj_lbl_1_bss_A48[16];
+u32 fzgx_obj_lbl_1_bss_A88[6];
+u32 fzgx_obj_lbl_1_bss_AA0[84];
+u32 lbl_1_bss_BF0[32];
+u32 fzgx_obj_lbl_1_bss_C70[20];
+u32 lbl_1_bss_CC0[38];
+u32 lbl_1_bss_D58_fill_D58[5];
+u8 lbl_1_bss_D58_14;
+u8 lbl_1_bss_D58_fill_D6D;
+u16 lbl_1_bss_D58_fill_D6E;
+
+#pragma section code_type ".fzgxpool"
+static void fzgx_bss_layout(void) {
+    volatile u8 s;  /* fzgx-allow: S2 layout primer sink: MWCC emits .bss objects in first-access order */
+    s = *(u8 *)&lbl_1_bss_978;
+    s = *(u8 *)&lbl_1_bss_980;
+    s = *(u8 *)&lbl_1_bss_990;
+    s = *(u8 *)&lbl_1_bss_990_fill_998;
+    s = *(u8 *)&lbl_1_bss_9C8;
+    s = *(u8 *)&fzgx_obj_lbl_1_bss_9F8;
+    s = *(u8 *)&fzgx_obj_lbl_1_bss_A48;
+    s = *(u8 *)&fzgx_obj_lbl_1_bss_A88;
+    s = *(u8 *)&fzgx_obj_lbl_1_bss_AA0;
+    s = *(u8 *)&lbl_1_bss_BF0;
+    s = *(u8 *)&fzgx_obj_lbl_1_bss_C70;
+    s = *(u8 *)&lbl_1_bss_CC0;
+    s = *(u8 *)&lbl_1_bss_D58_fill_D58;
+    s = *(u8 *)&lbl_1_bss_D58_14;
+    s = *(u8 *)&lbl_1_bss_D58_fill_D6D;
+    s = *(u8 *)&lbl_1_bss_D58_fill_D6E;
+}
+#pragma section code_type ".text"
+
+void fn_1_3920(void) {
+    u8 flag;
+    u32 *q;
+    u32 i;
+    u8 zero;
+    struct fn_1_3920_Out out[4];
+    struct fn_1_3920_In in[4];
+
+    
+    flag = lbl_1_data_2B64;
+    if (fn_1_D357C() == 0) {
+        lbl_1_data_2B64 = 0;
+        if (flag != 0) {
+            lbl_1_bss_D58_14 = 0;
+        } else if (lbl_1_bss_D58_14 < 4) {
+            lbl_1_bss_D58_14 = lbl_1_bss_D58_14 + 1;
+        } else {
+            fn_8001CF80(out);
+            i = 0;
+            q = lbl_1_bss_980;
+            do {
+                *q = SIProbe(i);
+                i++;
+                q++;
+            } while (i < 4);
+            if (lbl_1_data_2B68[0] + 0x10000 != 0xffff
+                    || lbl_1_data_2B68[1] + 0x10000 != 0xffff
+                    || lbl_1_data_2B68[2] + 0x10000 != 0xffff
+                    || lbl_1_data_2B68[3] + 0x10000 != 0xffff) {
+                fn_8006B470(in);
+                for (i = 0; i < 4; i++) {
+                    if ((s8)in[i].flag != -1) {
+                        out[i].val = in[i].val;
+                        out[i].flag = 0;
+                    }
+                }
+            }
+            for (i = 0; i < 4; i++) {
+                if ((s8)out[i].flag == -3) {
+                    out[i].val = 0;
+                }
+            }
+            {
+                u16 *m = lbl_1_bss_990;
+                m[0] |= out[0].val;
+                m[1] |= out[1].val;
+                m[2] |= out[2].val;
+                m[3] |= out[3].val;
+            }
+            fn_1_D332C((u16 *)out);
+        }
+    }
+}
+/* fzgx:end fn_1_3920 */
+
 /* fzgx:begin fn_1_3B34 */
 extern u32 fn_80008BEC(void *, u32, u32);
 
