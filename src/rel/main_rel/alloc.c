@@ -90,6 +90,41 @@ int fn_1_4C10(void) {
 }
 /* fzgx:end fn_1_4C10 */
 
+/* fzgx:begin fn_1_4C24 */
+#pragma section code_type ".fzgxpool"
+__declspec(section ".fzgxpool") static void fzgx_pool_prime1(void) {
+    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */
+    s = 65535.0f;
+    s = 1.0f;
+    s = -1.0f;
+    s = 0.0f;
+    d = 4503599627370496.0;
+}
+#pragma section code_type ".text"
+
+extern f32 lbl_1_rodata_160;
+
+f32 fn_1_4C24(void) {
+    f32 *rodata;
+    f32 ratio;
+
+    rodata = &lbl_1_rodata_160;
+
+    if ((lbl_1_data_2CDC.unk_3 & 1) == 0) {
+        return (-1.0f);
+    }
+
+    ratio = (f32)lbl_1_data_2CDC.unk_1 / (f32)lbl_1_data_2CDC.unk_0;
+    if (ratio < (0.0f)) {
+        return (0.0f);
+    }
+    if (ratio > (1.0f)) {
+        return (1.0f);
+    }
+    return ratio;
+}
+/* fzgx:end fn_1_4C24 */
+
 /* fzgx:begin fn_1_4CAC */
 u32 fn_1_4CAC(void) {
     return (lbl_1_data_2CDC.unk_3 >> 1) & 1;

@@ -577,6 +577,64 @@ void fn_9_1124(void)
 }
 /* fzgx:end fn_9_1124 */
 
+/* fzgx:begin fn_9_120C */
+#pragma section code_type ".fzgxpool"
+__declspec(section ".fzgxpool") static void fzgx_pool_prime1(void) {
+    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */
+    s = 0.0f;
+    s = 0.25f;
+}
+static const u32 fzgx_pool_table2[3] = {0x00000000, 0x00000000, 0x00000000};  /* fzgx-allow: A1 retail pool bytes */
+__declspec(section ".fzgxpool") static void fzgx_pool_keep2(void) { const u32 *volatile cp; cp = fzgx_pool_table2; }  /* fzgx-allow: S2 pool primer sink */
+__declspec(section ".fzgxpool") static void fzgx_pool_prime3(void) {
+    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */
+    s = 160.0f;
+    s = 50.0f;
+    s = -10.0f;
+    s = 182.04444885253906f;
+    s = 2.0f;
+    s = 1.0f;
+}
+static const u32 fzgx_pool_table4[1] = {0x00000000};  /* fzgx-allow: A1 retail pool bytes */
+__declspec(section ".fzgxpool") static void fzgx_pool_keep4(void) { const u32 *volatile cp; cp = fzgx_pool_table4; }  /* fzgx-allow: S2 pool primer sink */
+__declspec(section ".fzgxpool") static void fzgx_pool_prime5(void) {
+    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */
+    d = 4503599627370496.0;
+}
+#pragma section code_type ".text"
+
+struct Car {
+    u8 pad_0[0x3b8];
+    s16 unk_3b8;
+};
+
+extern u32 lbl_801A66A0;
+extern void lbl_8006D7F4(void *, f32, f32, f32);
+extern void mathutil_mtxA_rotate_y(s32);
+extern void mathutil_mtxA_rotate_x(s32);
+extern void lbl_8006E14C(f32);
+extern void fn_80072558(void);
+extern void fn_1_870BC(struct Car *, s8, struct Car *, s32, u8, f32);
+
+s32 fn_9_120C(struct Car *car) {
+    s16 state_value;
+    struct Car *self;
+    Obj_9_bss_8_Target *state;
+
+    state = lbl_9_bss_8;
+    state_value = state->unk_C;
+    self = car;
+    lbl_8006D7F4(state, 0.0f, 0.0f, -10.0f);
+    mathutil_mtxA_rotate_y(-0x8000);
+    mathutil_mtxA_rotate_x(0x10000 - 0x2000);
+    mathutil_mtxA_rotate_y((s32)((f32)(lbl_801A66A0 % 360) * 182.04444885253906f));
+    lbl_8006E14C(2.0f);
+    fn_80072558();
+    fn_1_870BC(self, (s8)state_value, self, 0, (u8)self->unk_3b8, 1.0f);
+    return 0;
+}
+/* fzgx:end fn_9_120C */
+
 /* fzgx:begin colchg_chgcol_disp */
 extern u8 lbl_9_data_178[20];
 extern u8 lbl_9_bss_14[200];

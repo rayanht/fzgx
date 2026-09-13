@@ -6251,3 +6251,18 @@ rel/main_rel/memcard/fn_1_BFCF8.c:
 
 rel/main_rel/bg_lig/fn_1_D8D58.c:
 	.text       start:0x000D8D58 end:0x000D8EEC align:4
+
+rel/main_rel/car/fn_1_84038.c:
+	.text       start:0x00084038 end:0x00084124 align:4
+
+rel/main_rel/stcoli/fn_1_23500.c:
+	.text       start:0x00023500 end:0x000235C8 align:4
+
+rel/main_rel/alloc/fn_1_4C24.c:
+	.text       start:0x00004C24 end:0x00004CAC align:4
+
+rel/main_rel/effect/fn_1_617A4.c:
+	.text       start:0x000617A4 end:0x000618B8 align:4
+
+rel/main_rel/effect/fn_1_59A74.c:
+	.text       start:0x00059A74 end:0x00059B00 align:4
