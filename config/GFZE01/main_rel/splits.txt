@@ -6284,3 +6284,6 @@ rel/main_rel/bg_cas/fn_1_FED34.c:
 
 rel/main_rel/mdlload/fn_1_D47F0.c:
 	.text       start:0x000D47F0 end:0x000D4964 align:4
+
+rel/main_rel/stcoli/fn_1_18214.c:
+	.text       start:0x00018214 end:0x00018784 align:4

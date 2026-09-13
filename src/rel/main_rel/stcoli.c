@@ -423,6 +423,201 @@ void fn_1_181F0(int a, int b, int c) {
 }
 /* fzgx:end fn_1_181F0 */
 
+/* fzgx:begin fn_1_18214 noprologue */
+#include "types.h"
+
+typedef struct {
+    u32 f00, f04, f08, f0c, f10, f14, f18, f1c, f20, f24;
+    u32 f28, f2c, f30, f34, f38, f3c, f40, f44;
+} Cfg;
+
+typedef struct {
+    u8 pad_0[0x4];
+    Cfg *cfg;
+    u8 pad_8[0xc];
+    f32 fx;
+    f32 fy;
+    f32 fz;
+    f32 rxv;
+    f32 ryv;
+    f32 rzv;
+    f32 sxv;
+    f32 syv;
+    f32 szv;
+} Entity;
+
+typedef struct {
+    u32 count;
+    u32 entries[1];
+} Stack;
+
+extern f32 fn_1_9E14C(u32, u32, f32);
+extern f32 fn_1_9E170(u32, u32, void *, f32);
+extern const f32 lbl_1_rodata_6D0;
+extern f32 lbl_1_rodata_6F8;
+extern u32 mathutil_mtxA_rotate_x(u32);
+extern u32 mathutil_mtxA_rotate_y(u32);
+extern u32 mathutil_mtxA_rotate_z(u32);
+extern void fn_80008BEC(void *, int, void *);
+extern void lbl_8006E0B4(f32, f32, f32);
+
+void fn_1_18214(Entity *arg0, f32 *arg1, Stack *arg2, f32 t) {
+    Cfg *v0 = arg0->cfg;
+    u8 *slot;
+    s32 ang;
+    f32 a;
+    f32 b;
+    f32 c;
+    f32 r;
+
+    if (arg2 != 0) {
+        slot = (u8 *)arg2 + arg2->count * 36 + 44;
+        if (arg2->entries[arg2->count] != (u32)arg0) {
+            fn_80008BEC((u8 *)arg2 + arg2->count * 36 + 44, 0, (void *)36);
+        }
+        if (v0->f3c != 0) {
+            a = fn_1_9E170(v0->f18, v0->f3c, slot, t);
+        } else {
+            a = arg0->sxv;
+        }
+        if (v0->f40 != 0) {
+            b = fn_1_9E170(v0->f1c, v0->f40, slot + 4, t);
+        } else {
+            b = arg0->syv;
+        }
+        if (v0->f44 != 0) {
+            c = fn_1_9E170(v0->f20, v0->f44, slot + 8, t);
+        } else {
+            c = arg0->szv;
+        }
+        if (lbl_1_rodata_6D0 != a || lbl_1_rodata_6D0 != b || lbl_1_rodata_6D0 != c) {
+            lbl_8006E0B4(arg1[0] * a, arg1[1] * b, arg1[2] * c);
+        }
+        if (v0->f30 != 0) {
+            a = fn_1_9E170(v0->f0c, v0->f30, slot + 12, t);
+        } else {
+            a = arg0->rxv;
+        }
+        if (v0->f34 != 0) {
+            b = fn_1_9E170(v0->f10, v0->f34, slot + 16, t);
+        } else {
+            b = arg0->ryv;
+        }
+        if (v0->f38 != 0) {
+            c = fn_1_9E170(v0->f14, v0->f38, slot + 20, t);
+        } else {
+            c = arg0->rzv;
+        }
+        if (lbl_1_rodata_6D0 != c) {
+            if (((s32)(lbl_1_rodata_6F8 * c) & 0xFFFF) != 0) {
+                mathutil_mtxA_rotate_z((s16)(u16)(s32)(lbl_1_rodata_6F8 * c));
+            }
+        }
+        if (lbl_1_rodata_6D0 != b) {
+            if (((s32)(lbl_1_rodata_6F8 * b) & 0xFFFF) != 0) {
+                mathutil_mtxA_rotate_y((s16)(u16)(s32)(lbl_1_rodata_6F8 * b));
+            }
+        }
+        if (lbl_1_rodata_6D0 != a) {
+            if (((s32)(lbl_1_rodata_6F8 * a) & 0xFFFF) != 0) {
+                mathutil_mtxA_rotate_x((s16)(u16)(s32)(lbl_1_rodata_6F8 * a));
+            }
+        }
+        if (v0->f24 != 0) {
+            r = fn_1_9E170(v0->f00, v0->f24, slot + 24, t);
+        } else {
+            r = arg0->fx;
+        }
+        arg1[0] = arg1[0] * r;
+        if (v0->f28 != 0) {
+            r = fn_1_9E170(v0->f04, v0->f28, slot + 28, t);
+        } else {
+            r = arg0->fy;
+        }
+        arg1[1] = arg1[1] * r;
+        if (v0->f2c != 0) {
+            r = fn_1_9E170(v0->f08, v0->f2c, slot + 32, t);
+        } else {
+            r = arg0->fz;
+        }
+        arg1[2] = arg1[2] * r;
+    } else {
+        if (v0->f3c != 0) {
+            a = fn_1_9E14C(v0->f18, v0->f3c, t);
+        } else {
+            a = arg0->sxv;
+        }
+        if (v0->f40 != 0) {
+            b = fn_1_9E14C(v0->f1c, v0->f40, t);
+        } else {
+            b = arg0->syv;
+        }
+        if (v0->f44 != 0) {
+            c = fn_1_9E14C(v0->f20, v0->f44, t);
+        } else {
+            c = arg0->szv;
+        }
+        if (lbl_1_rodata_6D0 != a || lbl_1_rodata_6D0 != b || lbl_1_rodata_6D0 != c) {
+            lbl_8006E0B4(arg1[0] * a, arg1[1] * b, arg1[2] * c);
+        }
+        if (v0->f30 != 0) {
+            b = fn_1_9E14C(v0->f0c, v0->f30, t);
+        } else {
+            b = arg0->rxv;
+        }
+        if (v0->f34 != 0) {
+            a = fn_1_9E14C(v0->f10, v0->f34, t);
+        } else {
+            a = arg0->ryv;
+        }
+        if (v0->f38 != 0) {
+            c = fn_1_9E14C(v0->f14, v0->f38, t);
+        } else {
+            c = arg0->rzv;
+        }
+        if (lbl_1_rodata_6D0 != c) {
+            if (((s32)(lbl_1_rodata_6F8 * c) & 0xFFFF) != 0) {
+                mathutil_mtxA_rotate_z((s16)(u16)(s32)(lbl_1_rodata_6F8 * c));
+            }
+        }
+        if (lbl_1_rodata_6D0 != a) {
+            if (((s32)(lbl_1_rodata_6F8 * a) & 0xFFFF) != 0) {
+                mathutil_mtxA_rotate_y((s16)(u16)(s32)(lbl_1_rodata_6F8 * a));
+            }
+        }
+        if (lbl_1_rodata_6D0 != b) {
+            if (((s32)(lbl_1_rodata_6F8 * b) & 0xFFFF) != 0) {
+                mathutil_mtxA_rotate_x((s16)(u16)(s32)(lbl_1_rodata_6F8 * b));
+            }
+        }
+        if (v0->f24 != 0) {
+            r = fn_1_9E14C(v0->f00, v0->f24, t);
+        } else {
+            r = arg0->fx;
+        }
+        arg1[0] = arg1[0] * r;
+        if (v0->f28 != 0) {
+            r = fn_1_9E14C(v0->f04, v0->f28, t);
+        } else {
+            r = arg0->fy;
+        }
+        arg1[1] = arg1[1] * r;
+        if (v0->f2c != 0) {
+            r = fn_1_9E14C(v0->f08, v0->f2c, t);
+        } else {
+            r = arg0->fz;
+        }
+        arg1[2] = arg1[2] * r;
+    }
+    if (arg2 != 0) {
+        arg2->entries[arg2->count] = (u32)arg0;
+        if ((s32)arg2->count < 9) {
+            arg2->count = arg2->count + 1;
+        }
+    }
+}
+/* fzgx:end fn_1_18214 */
+
 /* fzgx:begin fn_1_18F28 noprologue */
 #include "types.h"
 
