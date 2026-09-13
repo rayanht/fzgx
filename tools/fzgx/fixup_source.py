@@ -463,6 +463,7 @@ def signedness_flips(body: str, name: str) -> List[Tuple[str, str]]:
     if not a:
         return out
     span, locs, top, indent = a
+    narrow = []
     for s0, e0, typ, nm, dims in locs:
         base = typ.strip()
         if base not in SIGN_FLIP:
@@ -470,6 +471,18 @@ def signedness_flips(body: str, name: str) -> List[Tuple[str, str]]:
         line = body[s0:e0]
         new_line = re.sub(r'\b' + re.escape(base) + r'\b', SIGN_FLIP[base], line, count=1)
         out.append((f"{nm}: {base} -> {SIGN_FLIP[base]}", body[:s0] + new_line + body[e0:]))
+        if base in ('u8', 's8', 'u16', 's16'):
+            # a byte/halfword local kept in a register is truncated at every compare and
+            # argument (`clrlwi`); retail's untruncated form is a 32-bit local (fn_80076CD4)
+            wide = 's32' if base[0] == 's' else 'u32'
+            out.append((f"{nm}: {base} -> {wide}", body[:s0] + re.sub(r'\b' + re.escape(base) + r'\b', wide, line, count=1) + body[e0:]))
+            out.append((f"{nm}: {base} -> s32", body[:s0] + re.sub(r'\b' + re.escape(base) + r'\b', 's32', line, count=1) + body[e0:]))
+            narrow.append((s0, e0, base, line))
+    if len(narrow) > 1:
+        text = body
+        for s0, e0, base, line in sorted(narrow, reverse=True):
+            text = text[:s0] + re.sub(r'\b' + re.escape(base) + r'\b', 's32', line, count=1) + text[e0:]
+        out.append(("every byte/halfword local -> s32", text))
     return out
 
 
