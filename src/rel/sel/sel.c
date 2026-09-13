@@ -670,6 +670,54 @@ void fn_10_3268(void) {
 }
 /* fzgx:end fn_10_3268 */
 
+/* fzgx:begin fn_10_3A98 */
+typedef struct {
+    u8 pad[4];
+    u32 flags;
+} SelSlot;
+
+typedef struct {
+    u8 pad[0x18];
+    s16 index_x;
+    s16 index_y;
+    SelSlot slots[][19];
+} SelState;
+
+typedef struct {
+    u8 pad[0x94];
+    u32 flags;
+} GlobalState;
+
+extern GlobalState lbl_1_bss_8B3A0;
+extern SelState lbl_10_bss_0;
+extern u32 lbl_10_bss_3C0[74736];
+extern void fn_1_152970(s16 *, s16 *, s32, s32, SelSlot *, s16, s16);
+
+#pragma opt_propagation off
+void fn_10_3A98(void) {
+    SelSlot (* fzgx_live)[19];
+    SelState *sel = &lbl_10_bss_0;
+    s16 slot_y;
+    s16 slot_x;
+    u32 state;
+
+    if (!(lbl_1_bss_8B3A0.flags & 0x40000000)) {
+        return;
+    }
+
+    state = *(u32 *)((u8 *)lbl_10_bss_3C0 + 0x40e00);
+    if (!(state & ((u32)1 << 31)) || !(state & 0x40000000)) {
+        return;
+    }
+
+    fn_1_152970(&slot_y, &slot_x, 0x31, 0, (SelSlot *)&sel->slots[0][0],
+                 sel->index_y, sel->index_x);
+    fzgx_live = sel->slots;
+    fzgx_live[slot_y][slot_x].flags &= ~0x40000000;
+}
+#pragma opt_propagation reset
+/* fzgx:end fn_10_3A98 */
+
 /* fzgx:begin fn_10_3D64 */
 extern int lbl_1_bss_7180C;
 extern int fn_1_B7E98(int);
