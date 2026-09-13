@@ -5240,3 +5240,6 @@ dol/fn_8003043C.c:
 
 dol/fn_8000CEBC.c:
 	.text       start:0x8000CEBC end:0x8000D1F0 align:4
+
+dol/fn_8008EDF0.c:
+	.text       start:0x8008EDF0 end:0x8008EEAC align:4
