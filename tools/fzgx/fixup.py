@@ -943,7 +943,14 @@ def command(p,args):
     else:
         engine=Engine(p,output,verbose=True);rows=load_records(engine,args)
         captures=load_captures(engine,args.captures,rows) if args.captures else None
-        with oracle.build_lock():
+        # the search compiles into its own output directory; only a carved function's check
+        # writes the unit's object under build/, so the build lock is held only when one is
+        # in the corpus (holding it for a whole search blocks every submit and verify)
+        carved=any(p.unit_of(p.resolve(r['symbol'])) for r in rows if p.resolve(r['symbol']))
+        if carved:
+            with oracle.build_lock():
+                report=engine.run(rows,args.rounds,args.beam,args.max_candidates,args.budget,captures)
+        else:
             report=engine.run(rows,args.rounds,args.beam,args.max_candidates,args.budget,captures)
         # One canonical corpus format for capture and future repair, all variants
         # remain in report.json rather than separate per-algorithm stores.
