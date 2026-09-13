@@ -2043,6 +2043,18 @@
   },
   {
     "module": "interview",
+    "source": "rel/interview/interview/fn_17_3090.c",
+    "symbols": [
+      "fn_17_3090"
+    ],
+    "status": "nonmatching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/interview/interview.c",
+    "pool": true
+  },
+  {
+    "module": "interview",
     "source": "rel/interview/interview/fn_17_3270.c",
     "symbols": [
       "fn_17_3270"

@@ -84,6 +84,103 @@ void fn_17_2D24(void) {
 }
 /* fzgx:end fn_17_2D24 */
 
+/* fzgx:begin fn_17_3090 pool */
+extern void fn_17_50F0(void);
+extern void fn_17_3E08(void);
+extern void fn_17_4540(void);
+extern void fn_17_49B8(void);
+extern void fn_17_3410(void);
+extern void fn_17_4E50(void);
+extern void fn_17_5C24(void);
+
+extern void fn_1_154F74(s32, s32);
+extern void fn_1_154F88(f32);
+extern void fn_1_154F98(s32);
+extern void fn_1_154FD8(void);
+extern void fn_1_49410(void);
+extern void fn_1_495B0(s32);
+extern void fn_1_49590(f32);
+
+extern const f32 lbl_17_rodata_3C;
+extern f32 lbl_17_rodata_24[5];
+
+typedef struct InterviewFlags {
+    u8 pad[4];
+    u32 flags;
+    u8 rest[0x6E];
+} InterviewFlags;
+
+/* interview.c file-scope objects, in retail order: MWCC addresses them off one section base. */
+u8 lbl_17_bss_0;
+u8 lbl_17_bss_1;
+u8 lbl_17_bss_2;
+u8 lbl_17_bss_3;
+u32 lbl_17_bss_4;
+u32 lbl_17_bss_8;
+u32 lbl_17_bss_C;
+u32 lbl_17_bss_10;
+u32 lbl_17_bss_14;
+u32 lbl_17_bss_18[2];
+u32 lbl_17_bss_20;
+u32 lbl_17_bss_24[4];
+u32 lbl_17_bss_34[8];
+s32 lbl_17_bss_54;
+u32 lbl_17_bss_58[2];
+InterviewFlags lbl_17_bss_60;
+
+#pragma section code_type ".fzgxpool"
+static void fzgx_bss_layout(void) {
+    volatile u32 s;  /* fzgx-allow: S2 layout primer sink: MWCC emits .bss objects in first-access order */
+    s = lbl_17_bss_0;
+    s = lbl_17_bss_1;
+    s = lbl_17_bss_2;
+    s = lbl_17_bss_3;
+    s = lbl_17_bss_4;
+    s = lbl_17_bss_8;
+    s = lbl_17_bss_C;
+    s = lbl_17_bss_10;
+    s = lbl_17_bss_14;
+    s = lbl_17_bss_18[0];
+    s = lbl_17_bss_20;
+    s = lbl_17_bss_24[0];
+    s = lbl_17_bss_34[0];
+    s = lbl_17_bss_54;
+    s = lbl_17_bss_58[0];
+    s = lbl_17_bss_60.flags;
+}
+#pragma section code_type ".text"
+
+void fn_17_3090(void) {
+    InterviewFlags *sub;
+
+    if (lbl_17_bss_58[0] & (~0x7fffffff)) {
+        fn_17_50F0();
+    }
+    fn_17_3E08();
+    fn_17_4540();
+    fn_17_49B8();
+    fn_17_3410();
+    fn_17_4E50();
+    sub = &lbl_17_bss_60;
+    if (sub->flags & 2) {
+        fn_17_5C24();
+        if (lbl_17_bss_54 == 5) {
+            fn_1_154F74(0x50, 0x181);
+            fn_1_154F88(lbl_17_rodata_3C);
+            fn_1_154F98(2);
+        } else {
+            fn_1_154F74(0x19, 0x17e);
+            fn_1_154F88(lbl_17_rodata_24[0]);
+            fn_1_154F98(1);
+            fn_1_49410();
+            fn_1_495B0(-2147483647 - 1);
+            fn_1_49590(lbl_17_rodata_3C);
+        }
+        fn_1_154FD8();
+    }
+}
+/* fzgx:end fn_17_3090 */
+
 /* fzgx:begin fn_17_3270 */
 typedef struct InterviewState {
     u32 first;
