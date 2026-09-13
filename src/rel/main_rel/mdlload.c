@@ -629,6 +629,88 @@ void fn_1_D47D8(struct Base *base, s32 index) {
 }
 /* fzgx:end fn_1_D47D8 */
 
+/* fzgx:begin fn_1_D47F0 noprologue */
+#include "types.h"
+
+#pragma section code_type ".fzgxpool"
+__declspec(section ".fzgxpool") static void fzgx_pool_prime1(void) {
+    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */
+    s = 30.0f;
+    s = 0.6499999761581421f;
+    s = 0.75f;
+    s = 1.0f;
+    s = 0.0f;
+    s = 182.04444885253906f;
+    d = 0.5;
+    d = 2.0;
+    d = 4503599627370496.0;
+    s = 0.5f;
+    s = 0.02500000037252903f;
+    s = 0.9900000095367432f;
+    s = 1.649999976158142f;
+    s = 3000.0f;
+    s = 100.0f;
+}
+#pragma section code_type ".text"
+
+extern u32 lbl_1_bss_6D620[78];
+extern f32 lbl_1_rodata_6168[112];
+extern u32 fn_1_681C(u32 index, void *out);
+extern u32 fn_1_1FB80(void *data, u32 mode);
+
+typedef struct {
+    s8 state;
+    u8 pad[3];
+    f32 value;
+    f32 field_8;
+    u8 field_c;
+    u8 field_d;
+    u8 field_e;
+    u8 pad_f;
+    u8 pad_10[8];
+} D47F0Entry;
+
+#pragma opt_common_subs off
+void fn_1_D47F0(void *base, u32 index) {
+    f32 *constants;
+    D47F0Entry *entry;
+    D47F0Entry *cached;
+    u8 temp[0x18];
+    u32 result;
+    f32 base_value;
+    f32 delta;
+    f32 scaled_delta;
+    f32 scaled_base;
+
+    constants = lbl_1_rodata_6168;
+    entry = (D47F0Entry *)((u8 *)lbl_1_bss_6D620 + index * 0x18);
+    cached = (D47F0Entry *)((u8 *)base + index * 0x18 + 0xe780);
+    fn_1_681C(index & 0xff, temp);
+    result = fn_1_1FB80(temp, 1);
+    base_value = *(f32 *)((u8 *)base + 0xc040);
+
+    if (base_value > (0.0f) && !(result & 1)) {
+        if (cached->state == -1) {
+            *cached = *entry;
+        }
+        entry->state = 4;
+        entry->value = (0.0f);
+        base_value = *(f32 *)((u8 *)base + 0xc040);
+        delta = (1.0f) - base_value;
+        scaled_base = (100.0f) * base_value;
+        scaled_delta = (3000.0f) * delta;
+        entry->field_8 = scaled_delta + scaled_base;
+        entry->field_c = 0x17;
+        entry->field_d = 0x1a;
+        entry->field_e = 0x1d;
+    } else if (cached->state != -1) {
+        *entry = *cached;
+        cached->state = -1;
+    }
+}
+#pragma opt_common_subs reset
+/* fzgx:end fn_1_D47F0 */
+
 /* fzgx:begin fn_1_D5958 */
 // fn_1_D5958: iterate through 4 structures, calling fn_1_D550C on each.
 void fn_1_D5958(void *arg) {
