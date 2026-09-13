@@ -215,10 +215,164 @@ def through_local(body: str, name: str) -> List[Tuple[str, str]]:
     return out
 
 
+
+def _decl_anchor(body: str, name: str):
+    """(top, indent) for inserting a declaration after the leading locals, or None."""
+    span = _function_body_span(body, name)
+    if not span:
+        return None
+    locs = _locals(body, span)
+    top = locs[-1][1] if locs else span[1] + (1 if body[span[1]] == "\n" else 0)
+    indent = re.match(r"\s*", body[locs[0][0]:locs[0][1]]).group(0) if locs else "    "
+    return span, locs, top, indent
+
+
+def call_results_to_locals(body: str, name: str) -> List[Tuple[str, str]]:
+    """A call nested in a larger expression held in a local first: the allocator numbers a
+    declared local below every lowering temporary, so the value takes a different register
+    (`n = f(); if (a > n - 1)` reproduced fn_1_DA6C's `extsb r4`)."""
+    out: List[Tuple[str, str]] = []
+    a = _decl_anchor(body, name)
+    if not a:
+        return out
+    span, locs, top, indent = a
+    protos = {m.group(2): m.group(1).strip() for m in re.finditer(
+        r'(?m)^\s*(?:extern\s+)?(' + TYPE + r')\s*\b([A-Za-z_]\w*)\s*\([^;{]*\)\s*;', body[:span[0]])}
+    inner = body[top:span[2]]
+    k = 0
+    per_callee: Dict[str, list] = {}
+    for m in re.finditer(r"(?m)^([ \t]+)(?!return\b)([^\n;{}]*?)\b([A-Za-z_]\w*)\s*(\([^()]*\))([^\n;{]*)([;{])\n", inner):
+        ind, before, callee, args, after, term = m.groups()
+        after = after + term
+        if callee in ('if', 'while', 'for', 'switch', 'sizeof', 'return') or callee == name:
+            continue
+        if not (before.strip() or after.strip()):
+            continue  # a bare call statement or `x = f();` already carries its own register
+        if re.fullmatch(r"\s*[A-Za-z_]\w*\s*=\s*", before) and not after.strip():
+            continue
+        head = re.sub(r'^\s*(if|while|switch)\s*\(', '', before)
+        if head.count('(') != head.count(')'):
+            continue
+        k += 1
+        tn = f"tmp_call{k}"
+        typ = protos.get(callee, 's32')
+        if typ == 'void':
+            continue
+        if '*' not in typ and typ not in ('u32', 'f32', 'f64', 'float', 'double', 'unsigned int', 'unsigned long'):
+            typ = 's32'  # a narrow result widens once, into the local (retail's extsb after the call)
+        s0 = top + m.start()
+        stmt = f"{ind}{tn} = {callee}{args};\n{ind}{before}{tn}{after}\n"
+        text = body[:s0] + stmt + body[top + m.end():]
+        for label, pos in (("last", top), ("first", locs[0][0] if locs else top)):
+            out.append((f"hold {callee} result in a local declared {label}",
+                        text[:pos] + f"{indent}{declarator(typ, tn)};\n" + text[pos:]))
+        per_callee.setdefault(callee, []).append((s0, top + m.end(), stmt.replace(tn, f"tmp_{callee}"), typ))
+    # every site of one callee through the same reassigned local, and only the sites inside
+    # conditions (fn_1_DA6C held the bound in a local for its two `if` tests, not the assignments)
+    for callee, sites in per_callee.items():
+        if len(sites) < 2:
+            continue
+        subsets = [("every", sites)]
+        conds = [s for s in sites if re.match(r'\s*(if|while|for|else if)\b', s[2].split('\n')[1])]
+        if 1 < len(conds) < len(sites):
+            subsets.append(("condition", conds))
+        for kind, chosen in subsets:
+            text = body
+            for s0, e0, stmt, typ in sorted(chosen, reverse=True):
+                text = text[:s0] + stmt + text[e0:]
+            for label, pos in (("last", top), ("first", locs[0][0] if locs else top)):
+                out.append((f"hold {kind} {callee} result in one local declared {label}",
+                            text[:pos] + f"{indent}{declarator(chosen[0][3], 'tmp_' + callee)};\n" + text[pos:]))
+    return out
+
+
+def wrap_constant_pointers(body: str, name: str) -> List[Tuple[str, str]]:
+    """A pointer local holding a constant address is a rematerializable temporary numbered
+    above every declared local; a one-member struct keeps it an ordinary local."""
+    out: List[Tuple[str, str]] = []
+    a = _decl_anchor(body, name)
+    if not a:
+        return out
+    span, locs, top, indent = a
+    globals_ = set(re.findall(r'(?m)^\s*extern\s+[^;(]*?\b([A-Za-z_]\w*)\s*(?:\[[^\]]*\])*\s*;', body[:span[0]]))
+    inner = body[span[1]:span[2]]
+    for s0, e0, typ, nm, dims in locs:
+        if dims or '*' not in typ or typ.startswith('struct {'):
+            continue
+        init = _init_of(body[s0:e0])
+        assigns = re.findall(r'(?m)^\s*' + re.escape(nm) + r'\s*=\s*([^;]+);', inner)
+        values = ([init] if init else []) + assigns
+        if not values or not all(re.fullmatch(r'\(?\s*(?:\(' + TYPE + r'\)\s*)?&?\s*([A-Za-z_]\w*)(?:\s*\+\s*0x[0-9A-Fa-f]+|\s*\+\s*\d+)?\s*\)?', v.strip()) for v in values):
+            continue
+        if not all(re.search(r'\b([A-Za-z_]\w*)\b', v.strip().lstrip('(&')).group(1) in globals_ for v in values):
+            continue
+        decl_line = body[s0:e0]
+        base_type = typ.rstrip('* ').strip()
+        stars = typ.count('*')
+        new_decl = f"{indent}struct {{ {base_type} {'*' * stars}value; }} {nm};\n"
+        rest = body[e0:span[2]]
+        rest = re.sub(r'\b' + re.escape(nm) + r'\b(?!\.value)', nm + '.value', rest)
+        text = body[:s0] + new_decl + (f"{indent}{nm}.value = {init};\n" if init else "") + rest + body[span[2]:]
+        if init:
+            # the initializer becomes the first statement after the declarations
+            text = body[:s0] + new_decl + rest + body[span[2]:]
+            t2 = top - (e0 - s0) + len(new_decl)
+            text = text[:t2] + f"{indent}{nm}.value = {init};\n" + text[t2:]
+        out.append((f"struct-wrap constant pointer {nm}", text))
+    return out
+
+
+def decse_repeated_expressions(body: str, name: str) -> List[Tuple[str, str]]:
+    """A repeated `x << k` / `x * k` computed once into a declared local used at every site:
+    the compiler's own common-subexpression web is numbered above every local, a declared
+    local is not (fn_12_2D888's offset)."""
+    out: List[Tuple[str, str]] = []
+    a = _decl_anchor(body, name)
+    if not a:
+        return out
+    span, locs, top, indent = a
+    inner = body[top:span[2]]
+    exprs: Dict[str, List[int]] = {}
+    for m in re.finditer(r'\(?\b([A-Za-z_]\w*)\s*(<<|\*)\s*(0x[0-9A-Fa-f]+|\d+)\b\)?', inner):
+        key = f"{m.group(1)} {m.group(2)} {m.group(3)}"
+        exprs.setdefault(key, []).append(m.start())
+    k = 0
+    for key, sites in exprs.items():
+        if len(sites) < 2:
+            continue
+        var = key.split()[0]
+        k += 1
+        tn = f"tmp_cse{k}"
+        text = re.sub(r'\(?\b' + re.escape(var) + r'\s*' + re.escape(key.split()[1]) + r'\s*' + re.escape(key.split()[2]) + r'\b\)?', tn, inner)
+        first_line = inner.rfind('\n', 0, sites[0]) + 1
+        ind = re.match(r'[ \t]*', inner[first_line:]).group(0)
+        # C89: the assignment goes after the declarations of the block; a declaration
+        # initializer at the first site is split into declaration and assignment
+        lines = text[first_line:].split('\n')
+        pending = []
+        j = 0
+        while j < len(lines):
+            dm = DECL_RE.match(lines[j])
+            if not dm or dm.group(1).strip() in ('return', 'goto', 'break', 'continue'):
+                break
+            if dm.group(4):
+                lines[j] = f"{ind}{declarator(dm.group(1).strip(), dm.group(2) + dm.group(3))};"
+                pending.append(f"{ind}{dm.group(2)} = {dm.group(4).strip()};")
+            j += 1
+        lines[j:j] = [f"{ind}{tn} = {key};"] + pending
+        text = text[:first_line] + '\n'.join(lines)
+        for label, pos in (("last", top), ("first", locs[0][0] if locs else top)):
+            full = body[:top] + text + body[span[2]:]
+            out.append((f"de-CSE {key} into a local declared {label}",
+                        full[:pos] + f"{indent}s32 {tn};\n" + full[pos:]))
+    return out
+
+
 def rewrites(body: str, name: str) -> List[Tuple[str, str]]:
     """Every single second-stage rewrite of a body."""
     out: List[Tuple[str, str]] = []
-    for fn in (scope_moves, split_inits, hoists, through_local, return_values):
+    for fn in (scope_moves, split_inits, hoists, through_local, return_values,
+               call_results_to_locals, wrap_constant_pointers, decse_repeated_expressions):
         try:
             out += fn(body, name)
         except Exception:
