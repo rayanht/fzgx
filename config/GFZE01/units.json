@@ -14286,6 +14286,16 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_80022028.c",
+    "symbols": [
+      "fn_80022028"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
     "source": "dol/fn_80022420.c",
     "symbols": [
       "fn_80022420"
