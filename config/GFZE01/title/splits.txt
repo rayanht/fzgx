@@ -221,3 +221,6 @@ rel/title/title/fn_8_4F64.c:
 
 rel/title/title/fn_8_1C90.c:
 	.text       start:0x00001C90 end:0x00001F64 align:4
+
+rel/title/title/fn_8_1394.c:
+	.text       start:0x00001394 end:0x00001C08 align:4

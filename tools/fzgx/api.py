@@ -566,6 +566,14 @@ def _install(p: Project, unit_src: str, text: str, pool: bool = False) -> None:
         path = ROOT / "src" / unit_src
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(text)
+    if pool and u:
+        # Pool matches have no pending link row, but their source and split
+        # ownership must still enter the next hash-verified commit.
+        config = p.module_config_dir(u['module'])
+        paths = [ROOT / 'src' / u.get('tu', unit_src), p.units_path,
+                 config / 'splits.txt', config / 'symbols.txt']
+        with (STATE_DIR / 'verify_dependencies.jsonl').open('a') as out:
+            out.write(json.dumps([str(path.relative_to(ROOT)) for path in paths]) + '\n')
 
 
 def _discard_work(p: Project, key: str) -> None:

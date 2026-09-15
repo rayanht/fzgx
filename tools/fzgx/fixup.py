@@ -776,8 +776,11 @@ def integrate(project, report, inputs, output):
                               'seed': Path(record['source']).read_text(), 'seed_sha256': record['sha256'],
                               'generated_sha256': hashlib.sha256(source.encode()).hexdigest(), 'generated_source': source,
                               'compiler': mw, 'flags': record['flags'], 'source': result['unit'],
-                              'bytes': project.resolve(symbol).size, 'headers_sha256': headers_sha256, 'oracle_sha256': oracle_sha256, 'recipe': row.get('recipe', []), 'link': 'pending'}
+                              'bytes': project.resolve(symbol).size, 'headers_sha256': headers_sha256, 'oracle_sha256': oracle_sha256, 'recipe': row.get('recipe', []), 'link': result['link']}
         provenance_path.write_text(json.dumps(provenance, indent=2) + '\n')
+    if accepted:
+        with (STATE_DIR / 'verify_dependencies.jsonl').open('a') as out:
+            out.write(json.dumps([str(provenance_path.relative_to(ROOT))]) + '\n')
     message = 'Integrate deterministic fixup matches'
     verification = api.verify_links(project, message) if accepted else None
     if verification:
