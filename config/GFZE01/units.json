@@ -22916,6 +22916,23 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_8007C910.c",
+    "symbols": [
+      "fn_8007C910"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-use_lmw_stmw",
+      "off"
+    ]
+  },
+  {
+    "module": "main",
     "source": "dol/fn_8007CF18.c",
     "symbols": [
       "fn_8007CF18"
@@ -39701,6 +39718,17 @@
     ],
     "status": "matching",
     "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/live_camera.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/live_camera/fn_1_E174.c",
+    "symbols": [
+      "fn_1_E174"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
     "extra_cflags": [],
     "tu": "rel/main_rel/live_camera.c"
   },

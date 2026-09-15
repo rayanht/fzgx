@@ -271,6 +271,437 @@ void fn_1_DE14(Fn1DE14State *state) {
 }
 /* fzgx:end fn_1_DE14 */
 
+/* fzgx:begin fn_1_E174 noprologue */
+#include "types.h"
+
+typedef struct Sig_ADXT_Stop_AdxSjdHandle Sig_ADXT_Stop_AdxSjdHandle;
+typedef struct Sig_ADXT_Stop_ADXStream Sig_ADXT_Stop_ADXStream;
+typedef struct Sig_ADXT_Stop_AXRNAHandle Sig_ADXT_Stop_AXRNAHandle;
+typedef struct Sig_ADXT_Stop_SJInterface Sig_ADXT_Stop_SJInterface;
+typedef struct Sig_ADXT_Stop_SJ Sig_ADXT_Stop_SJ;
+typedef struct Sig_ADXT_Stop_ADX_AMP Sig_ADXT_Stop_ADX_AMP;
+typedef struct Sig_ADXT_Stop_LSCObject Sig_ADXT_Stop_LSCObject;
+typedef struct Sig_ADXT_Stop_SJCK {
+    unsigned char *data;
+    int len;
+} Sig_ADXT_Stop_SJCK;
+typedef void (*Sig_ADXT_Stop_SJErrorCallback)(void *object, int error);
+struct Sig_ADXT_Stop_SJInterface {
+    void *reserved[3];
+    void (*destroy)(Sig_ADXT_Stop_SJ *sj);
+    const void *(*get_uuid)(Sig_ADXT_Stop_SJ *sj);
+    void (*reset)(Sig_ADXT_Stop_SJ *sj);
+    void (*get_chunk)(Sig_ADXT_Stop_SJ *sj, int channel, int max_size, Sig_ADXT_Stop_SJCK *chunk);
+    void (*unget_chunk)(Sig_ADXT_Stop_SJ *sj, int channel, Sig_ADXT_Stop_SJCK *chunk);
+    void (*put_chunk)(Sig_ADXT_Stop_SJ *sj, int channel, Sig_ADXT_Stop_SJCK *chunk);
+    int (*get_num_data)(Sig_ADXT_Stop_SJ *sj, int channel);
+    int (*is_get_chunk)(Sig_ADXT_Stop_SJ *sj, int channel, int size, int *available);
+    void (*entry_error_func)(Sig_ADXT_Stop_SJ *sj, Sig_ADXT_Stop_SJErrorCallback callback, void *object);
+};
+struct Sig_ADXT_Stop_SJ {
+    const Sig_ADXT_Stop_SJInterface *interface;
+};
+typedef struct Sig_ADXT_Stop_ADXTHandle {
+    s8 used;
+    s8 status;
+    s8 stream_type;
+    s8 maximum_channels;
+    Sig_ADXT_Stop_AdxSjdHandle *decoder;
+    Sig_ADXT_Stop_ADXStream *stream;
+    Sig_ADXT_Stop_AXRNAHandle *rna;
+    Sig_ADXT_Stop_SJ *stream_sj;
+    Sig_ADXT_Stop_SJ *input_sj;
+    Sig_ADXT_Stop_SJ *output_sj[2];
+    u8 *input_buffer;
+    s32 input_buffer_size;
+    s32 input_extra_size;
+    u8 *output_buffer;
+    s32 output_buffer_size;
+    s32 output_buffer_distance;
+    s32 server_frequency;
+    s16 stream_buffer_sectors;
+    s16 minimum_buffer_sectors;
+    s16 output_volume;
+    s16 output_pan[2];
+    s16 field_46;
+    s32 maximum_decode_samples;
+    s32 loop_count;
+    s32 link_data_length;
+    s32 field_54;
+    s32 field_58;
+    s32 field_5C;
+    s16 error_code;
+    u8 reserved_62[2];
+    s32 field_64;
+    s16 field_68;
+    s16 field_6A;
+    s8 stream_loop_enabled;
+    s8 auto_receiver;
+    u8 reserved_6E[2];
+    s8 suppress_playback;
+    s8 decoder_ready;
+    s8 paused;
+    u8 reserved_73;
+    Sig_ADXT_Stop_ADX_AMP *amplifier;
+    Sig_ADXT_Stop_SJ *amplifier_input[2];
+    Sig_ADXT_Stop_SJ *amplifier_output[2];
+    s32 time_offset;
+    s32 eos_sector;
+    s32 loop_sample_count;
+    Sig_ADXT_Stop_LSCObject *linked_stream_controller;
+    s8 link_enabled;
+    u8 reserved_99[3];
+    u32 playback_time;
+    s32 playback_start_vsync;
+    s32 linked_decoded_samples;
+    s8 pending_stream_start;
+    u8 reserved_A9[3];
+    u8 *work_end;
+    const char *pending_filename;
+    void *pending_directory;
+    s32 pending_file_offset;
+    s32 pending_file_sectors;
+} Sig_ADXT_Stop_ADXTHandle;
+
+struct fn_1_E174_lbl_1_bss_1148 {
+    u8 pad_0[0x8];
+    f32 unk_8;
+    f32 unk_C;
+    u8 pad_10[0x4];
+    u8 unk_14;
+    u8 pad_15[0xF];
+    f32 unk_24;
+    u8 pad_28[0x4];
+    s16 unk_2C;
+    s16 unk_2E;
+    u8 pad_30[0x5D8];
+    s16 unk_608;
+    u8 pad_60A[0x5A];
+    u8 unk_664;
+};
+struct fn_1_E174_lbl_1_data_43B8 {
+    u8 pad_0[0x148];
+    s16 unk_148;
+    s16 unk_14A;
+    s16 unk_14C;
+};
+struct fn_1_E174_lbl_1_rodata_4E0 {
+    f32 unk_0;
+    u8 pad_4[0x10];
+    f32 unk_14;
+    u8 pad_18[0x4];
+    f32 unk_1C;
+    f32 unk_20;
+    f32 unk_24;
+};
+struct fn_1_E174_lbl_1_bss_9F8 {
+    u8 pad_0[0x12];
+    u16 unk_12;
+};
+
+extern s16 lbl_1_bss_960;
+extern struct fn_1_E174_lbl_1_bss_1148 lbl_1_bss_1148;
+extern struct fn_1_E174_lbl_1_bss_9F8 lbl_1_bss_9F8;
+extern struct fn_1_E174_lbl_1_data_43B8 lbl_1_data_43B8;
+extern struct fn_1_E174_lbl_1_rodata_4E0 lbl_1_rodata_4E0;
+extern u32 fn_1_A1588(Sig_ADXT_Stop_ADXTHandle *, u32);
+extern u32 fn_1_A1964(u32);
+extern u32 fn_1_A1CE8(u32);
+extern u32 fn_1_F2F34(void);
+extern u32 lbl_1_bss_6EAD0;
+extern s32 fn_1_40BB4(void);
+extern u8 lbl_1_bss_6F243;
+extern void fn_1_A2D84(u32);
+
+#pragma opt_lifetimes off
+#pragma opt_propagation off
+#pragma opt_strength_reduction off
+static inline void fn_1_E174_store(s16 value, s16 *destination) { *destination = value; }
+void fn_1_E174(f32 arg0) {
+    f32 fzgx_live;
+    s16 fzgx_value;
+    struct fn_1_E174_lbl_1_bss_1148 *p_lbl_1_bss_1148;
+    struct fn_1_E174_lbl_1_data_43B8 *p_lbl_1_data_43B8;
+    struct fn_1_E174_lbl_1_rodata_4E0 *p_lbl_1_rodata_4E0;
+    struct fn_1_E174_lbl_1_bss_9F8 *p_lbl_1_bss_9F8;
+    s16 v0;
+    u32 v1;
+    s32 v2;
+    f32 v3;
+    u32 v5;
+    s16 v4;
+    u32 v6;
+    f32 v7;
+    u32 v8;
+    f32 v9;
+    s32 v10;
+    s16 v11;
+    u32 v12;
+    u32 v13;
+    f32 v14;
+    f32 v15;
+    f32 v16;
+    s32 v17;
+    u32 t7;
+    u32 t8;
+    u32 t9;
+    u32 t10;
+    u32 t11;
+    u32 t12;
+    u32 t13;
+    u32 t14;
+    u32 t15;
+    u32 t16;
+    u32 t19;
+    u32 t20;
+    u32 t21;
+    u32 t22;
+    u32 t23;
+    u32 t24;
+    u32 t25;
+    u32 t26;
+    p_lbl_1_data_43B8 = (struct fn_1_E174_lbl_1_data_43B8 *)&lbl_1_data_43B8;
+    p_lbl_1_bss_1148 = (struct fn_1_E174_lbl_1_bss_1148 *)&lbl_1_bss_1148;
+    p_lbl_1_rodata_4E0 = (struct fn_1_E174_lbl_1_rodata_4E0 *)&lbl_1_rodata_4E0;
+    if (((10) == (lbl_1_bss_960))) {
+    fn_1_A1CE8((p_lbl_1_data_43B8->unk_148 & 0xFF));
+    } else {
+    if (((12) == (lbl_1_bss_960)) || (s32)fn_1_F2F34() != 0) {
+    v0 = p_lbl_1_data_43B8->unk_148;
+    v1 = (v0 - 41);
+    switch ((s32)v1) {
+    case 1:
+    fn_1_A1CE8(((((1) + (v0))) & 0xFF));
+    break;
+    case 2:
+    fn_1_A1CE8(((((1) + (v0))) & 0xFF));
+    break;
+    default:
+    fn_1_A1CE8((v0 & 0xFF));
+    }
+    }
+    }
+    v3 = arg0;
+    if (p_lbl_1_bss_1148->unk_14 != 0 && (s32)fn_1_40BB4() == 0 && (s32)fn_1_F2F34() != 0) {
+    if (p_lbl_1_bss_1148->unk_664 != 0) {
+    p_lbl_1_data_43B8->unk_14A = 41;
+    p_lbl_1_bss_1148->unk_664 = 0;
+    if (p_lbl_1_data_43B8->unk_148 != 41) {
+    p_lbl_1_data_43B8->unk_148 = 41;
+    lbl_1_bss_6F243 = 0;
+    }
+    v2 = p_lbl_1_data_43B8->unk_148;
+    if (v2 < 41) {
+    v2 = (v2 & 0xFF);
+    t7 = fn_1_A1964(v2);
+    v2 = t7;
+    v2 = (p_lbl_1_data_43B8->unk_148 & 0xFF);
+    t8 = fn_1_A1CE8(v2);
+    v2 = t8;
+    } else {
+    v5 = (v2 - 41);
+    switch ((s32)v5) {
+    case 0:
+    v2 = (u32)&lbl_1_bss_6EAD0;
+    v2 = *(u32 *)((u8 *)v2 + 0);
+    v2 = *(u32 *)((u8 *)v2 + 0);
+    t9 = fn_1_A1588((Sig_ADXT_Stop_ADXTHandle *)v2, 38);
+    v2 = t9;
+    v2 = (p_lbl_1_data_43B8->unk_148 & 0xFF);
+    t10 = fn_1_A1CE8(v2);
+    v2 = t10;
+    break;
+    case 1:
+    v2 = (u32)&lbl_1_bss_6EAD0;
+    v2 = *(u32 *)((u8 *)v2 + 0);
+    v2 = *(u32 *)((u8 *)v2 + 0);
+    t11 = fn_1_A1588((Sig_ADXT_Stop_ADXTHandle *)v2, 44);
+    v2 = t11;
+    v2 = p_lbl_1_data_43B8->unk_148;
+    v2 = ((v2 + 1) & 0xFF);
+    t12 = fn_1_A1CE8(v2);
+    v2 = t12;
+    break;
+    case 2:
+    v2 = (u32)&lbl_1_bss_6EAD0;
+    v2 = *(u32 *)((u8 *)v2 + 0);
+    v2 = *(u32 *)((u8 *)v2 + 0);
+    t13 = fn_1_A1588((Sig_ADXT_Stop_ADXTHandle *)v2, 43);
+    v2 = t13;
+    v2 = p_lbl_1_data_43B8->unk_148;
+    v2 = ((v2 + 1) & 0xFF);
+    t14 = fn_1_A1CE8(v2);
+    v2 = t14;
+    break;
+    default:
+    v2 = (u32)&lbl_1_bss_6EAD0;
+    v2 = *(u32 *)((u8 *)v2 + 0);
+    v2 = *(u32 *)((u8 *)v2 + 0);
+    t15 = fn_1_A1588((Sig_ADXT_Stop_ADXTHandle *)v2, 38);
+    v2 = t15;
+    v2 = (p_lbl_1_data_43B8->unk_148 & 0xFF);
+    t16 = fn_1_A1CE8(v2);
+    v2 = t16;
+    }
+    }
+    }
+    if (((12) == (lbl_1_bss_960))) {
+    p_lbl_1_bss_9F8 = (struct fn_1_E174_lbl_1_bss_9F8 *)&lbl_1_bss_9F8;
+    if (((p_lbl_1_bss_9F8->unk_12 >> 9) & 0x1) != 0) {
+    v3 = (p_lbl_1_rodata_4E0->unk_1C);
+    v2 = 0xA9010000;
+    v6 = (p_lbl_1_bss_1148->unk_2E + 1);
+    v7 = p_lbl_1_bss_1148->unk_24;
+    p_lbl_1_bss_1148->unk_2E = v6;
+    v2 += 1536;
+    p_lbl_1_data_43B8->unk_14C = 60;
+    p_lbl_1_bss_1148->unk_8 = v3;
+    p_lbl_1_bss_1148->unk_C = v7;
+    fn_1_A2D84(v2);
+    }
+    if (((p_lbl_1_bss_9F8->unk_12 >> 8) & 0x1) != 0) {
+    v2 = 0xA9010000;
+    v3 = (p_lbl_1_rodata_4E0->unk_1C);
+    v8 = (p_lbl_1_bss_1148->unk_2E - 1);
+    v9 = (-p_lbl_1_bss_1148->unk_24);
+    fn_1_E174_store(60, &(p_lbl_1_data_43B8->unk_14C));
+    v2 += 1536;
+    fzgx_value = v8;
+    p_lbl_1_bss_1148->unk_2E = fzgx_value;
+    p_lbl_1_bss_1148->unk_8 = v3;
+    p_lbl_1_bss_1148->unk_C = v9;
+    fn_1_A2D84(v2);
+    }
+    }
+    v2 = p_lbl_1_data_43B8->unk_14C;
+    if (v2 != 0) {
+    p_lbl_1_data_43B8->unk_14C = (v2 - 1);
+    } else {
+    v3 = p_lbl_1_bss_1148->unk_8;
+    if (v3 != (p_lbl_1_rodata_4E0->unk_14)) {
+    p_lbl_1_bss_1148->unk_8 = (v3 - (p_lbl_1_rodata_4E0->unk_20));
+    }
+    }
+    if (p_lbl_1_bss_1148->unk_2E < 0) {
+    v2 = p_lbl_1_bss_1148->unk_608;
+    p_lbl_1_bss_1148->unk_2E = (v2 - 1);
+    }
+    v2 = p_lbl_1_bss_1148->unk_608;
+    if (p_lbl_1_bss_1148->unk_2E > (s32)(v2 - 1)) {
+    p_lbl_1_bss_1148->unk_2E = 0;
+    }
+    v2 = (u32)((u8 *)(u32)p_lbl_1_bss_1148 + 1548);
+    v10 = (s16)(*(s16 *)((u8 *)v2 + (p_lbl_1_bss_1148->unk_2E << 1)));
+    p_lbl_1_data_43B8->unk_14A = v10;
+    if (v10 < 0) {
+    p_lbl_1_data_43B8->unk_14A = 43;
+    }
+    if (p_lbl_1_data_43B8->unk_14A >= 44) {
+    p_lbl_1_data_43B8->unk_14A = 0;
+    }
+    if (p_lbl_1_data_43B8->unk_148 != (v11 = p_lbl_1_data_43B8->unk_14A) && ((0) == (p_lbl_1_data_43B8->unk_14C))) {
+    p_lbl_1_data_43B8->unk_148 = v11;
+    lbl_1_bss_6F243 = 0;
+    if (v11 < 41) {
+    v2 = (v11 & 0xFF);
+    t19 = fn_1_A1964(v2);
+    v2 = t19;
+    } else {
+    v12 = (v11 - 41);
+    switch ((s32)v12) {
+    case 0:
+    v2 = (u32)&lbl_1_bss_6EAD0;
+    v2 = *(u32 *)((u8 *)v2 + 0);
+    v2 = *(u32 *)((u8 *)v2 + 0);
+    t20 = fn_1_A1588((Sig_ADXT_Stop_ADXTHandle *)v2, 38);
+    v2 = t20;
+    break;
+    case 1:
+    v2 = (u32)&lbl_1_bss_6EAD0;
+    v2 = *(u32 *)((u8 *)v2 + 0);
+    v2 = *(u32 *)((u8 *)v2 + 0);
+    t21 = fn_1_A1588((Sig_ADXT_Stop_ADXTHandle *)v2, 44);
+    v2 = t21;
+    break;
+    case 2:
+    v2 = (u32)&lbl_1_bss_6EAD0;
+    v2 = *(u32 *)((u8 *)v2 + 0);
+    v2 = *(u32 *)((u8 *)v2 + 0);
+    t22 = fn_1_A1588((Sig_ADXT_Stop_ADXTHandle *)v2, 43);
+    v2 = t22;
+    break;
+    default:
+    v2 = (u32)&lbl_1_bss_6EAD0;
+    v2 = *(u32 *)((u8 *)v2 + 0);
+    v2 = *(u32 *)((u8 *)v2 + 0);
+    t23 = fn_1_A1588((Sig_ADXT_Stop_ADXTHandle *)v2, 38);
+    v2 = t23;
+    }
+    }
+    }
+    v2 = p_lbl_1_data_43B8->unk_148;
+    v13 = (v2 - 41);
+    switch ((s32)v13) {
+    case 1:
+    v2 = ((v2 + 1) & 0xFF);
+    t24 = fn_1_A1CE8(v2);
+    v2 = t24;
+    break;
+    case 2:
+    v2 = ((v2 + 1) & 0xFF);
+    t25 = fn_1_A1CE8(v2);
+    v2 = t25;
+    break;
+    default:
+    v2 = (v2 & 0xFF);
+    t26 = fn_1_A1CE8(v2);
+    v2 = t26;
+    }
+    v2 = (u32)&lbl_1_bss_9F8;
+    if (((*(u16 *)((u8 *)v2 + 16) >> 4) & 0x1) != 0) {
+    v2 = p_lbl_1_bss_1148->unk_2C;
+    p_lbl_1_bss_1148->unk_2C = (v2 + 1);
+    }
+    if (p_lbl_1_bss_1148->unk_2C >= 4) {
+    p_lbl_1_bss_1148->unk_2C = 0;
+    }
+    v4 = p_lbl_1_bss_1148->unk_2C;
+    v2 = (u32)((u8 *)(u32)p_lbl_1_bss_1148 + 24);
+    v14 = (p_lbl_1_rodata_4E0->unk_14);
+    fzgx_live = p_lbl_1_rodata_4E0->unk_0;
+    v15 = (fzgx_live);
+    v16 = (p_lbl_1_rodata_4E0->unk_24);
+    v17 = 0;
+    while ((s16)v17 < 3) {
+    if (((s16)v17) == v4) {
+    v3 = *(f32 *)((u8 *)v2 + 0);
+    v3 = (v3 + v16);
+    *(f32 *)((u8 *)v2 + 0) = v3;
+    } else {
+    v3 = *(f32 *)((u8 *)v2 + 0);
+    v3 = (v3 - v16);
+    *(f32 *)((u8 *)v2 + 0) = v3;
+    }
+    v3 = *(f32 *)((u8 *)v2 + 0);
+    if (v3 < v14) {
+    *(f32 *)((u8 *)v2 + 0) = v14;
+    }
+    v3 = *(f32 *)((u8 *)v2 + 0);
+    if (v3 > v15) {
+    *(f32 *)((u8 *)v2 + 0) = v15;
+    }
+    v2 = (u32)((u8 *)v2 + 4);
+    v17++;
+    }
+    }
+}
+#pragma opt_strength_reduction reset
+
+#pragma opt_propagation reset
+
+#pragma opt_lifetimes reset
+/* fzgx:end fn_1_E174 */
+
 /* fzgx:begin fn_1_EE04 */
 typedef struct {
     u8 pad[2];
