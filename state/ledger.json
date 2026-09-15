@@ -1,5 +1,5 @@
 {
- "generated": 1789440847,
+ "generated": 1789445023,
  "functions": [
   {
    "symbol": "car_colchg:_prolog",
@@ -119514,19 +119514,19 @@
   {
    "symbol": "fn_10_1C2D8",
    "module": "sel",
-   "unit": null,
+   "unit": "rel/sel/sel/fn_10_1C2D8.c",
    "addr": 115416,
    "size": 4156,
-   "status": "blocked",
-   "attempts": 6,
+   "status": "matched",
+   "attempts": 7,
    "best_percent": 91.99,
    "claimed_by": null,
    "claimed_at": null,
    "claim_ttl": null,
-   "matched_commit": null,
+   "matched_commit": "1e98cbbc",
    "blocked_reason": "Large-region corpus pass: 6 attempts; best refreshed C still has 71 differing instruction words and 21 instruction-shape edits under GC/1.3.2. Released candidate diagnostics: 0 value-flow conflicts, 0 operand-order witnesses. Register-field similarity alone is not an allocation proof. Saved C and compiler settings: state/repairs/large_near_frontier_20260914.json.gz. Batch: docs/batches/2026-09-14-large-regions.md.",
    "prev_status": null,
-   "link_state": null
+   "link_state": "verified"
   },
   {
    "symbol": "fn_10_1D314",
@@ -461048,6 +461048,25 @@
    "cost_usd": 0.0,
    "outcome": "matched",
    "notes": "Place SI layout primer in discarded section",
+   "best_body_path": null,
+   "stale_checks": 0,
+   "best_in_attempt": 0.0
+  },
+  {
+   "id": 17728,
+   "symbol": "fn_10_1C2D8",
+   "agent": "deterministic-fixup",
+   "harness": "fixup",
+   "model": null,
+   "started": 1789442499,
+   "ended": 1789442499,
+   "checks": 0,
+   "final_percent": null,
+   "tokens_in": 0,
+   "tokens_out": 0,
+   "cost_usd": 0.0,
+   "outcome": "matched",
+   "notes": "recover selection panel data objects and evaluation lifetimes",
    "best_body_path": null,
    "stale_checks": 0,
    "best_in_attempt": 0.0

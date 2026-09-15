@@ -334,6 +334,7 @@ class Engine:
             yield from evidence.relocation_bindings(body, check)
             yield from layout.bss_member_bindings(self.project, row['symbol'], body, row.get('object'), check)
             yield from layout.private_data_objects(body, row.get('object'), check)
+        yield from source.split_declaration_groups(body, name)
         yield from source.accessor_lifetimes(body, name)
         if row.get('score') == 100:
             if row.get('source_lint') and (check.matched or check.matched_pool):
@@ -358,6 +359,7 @@ class Engine:
             yield from evidence.native_pool_objects(self.project, row['symbol'], body, check)
             yield from evidence.shared_pool_primer(self.project, row['symbol'], body, check)
             yield from evidence.frame_padding(self.project, row['symbol'], body, check)
+            yield from layout.initialized_data_views(self.project, row['symbol'], body)
             yield from layout.tu_section_layout(self.project, row['symbol'], body, check)
             if re.search(r'(?m)^\s*#define\b', body):
                 # Pool fields passed through macro parameters only have a

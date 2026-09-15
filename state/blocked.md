@@ -10,7 +10,6 @@ below do not imply that declaration order alone can repair a function.
 | `fn_12_3DB8` | 16 | 0 |
 | `fn_1_D123C` | 16 | 2 |
 | `fn_8_2660` | 155 | 10 |
-| `fn_10_1C2D8` | 71 | 21 |
 | `fn_12_BBC0` | 28 | 13 |
 | `fn_3_1D338` | 112 | 6 |
 | `fn_12_364CC` | 95 | 3 |
@@ -27,3 +26,9 @@ The 2026-09-15 shared-state pass linked `fn_8001B42C` from C.
 association; the 109-word/8-shape alternative is also preserved in
 `state/repairs/shared_regions_20260915.json.gz`. Neither customization
 candidate is a full match. See `docs/batches/2026-09-15-shared-regions.md`.
+
+The subsequent selection pass linked the 4,156-byte `fn_10_1C2D8` from C.
+Its arithmetic, initialized data and all 867 pointer bindings are verified.
+The adjacent `fn_10_1D314` remains unmatched at 121 words / 15 shape edits;
+its corrected source is in `state/repairs/large_closures_20260915.json.gz`.
+See `docs/batches/2026-09-15-large-closures.md`.

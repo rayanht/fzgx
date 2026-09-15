@@ -579,6 +579,108 @@ def string_at(raw, off):
     return s, n
 
 
+def initialized_data_views(p, symbol, text):
+    """Recover native data objects hidden behind an extern aggregate view.
+
+    MWCC introduces its shared data base for separate initialized objects.
+    Keeping the whole region behind one pointer changes both address folding
+    and the order of the data and literal bases in the prologue.
+    """
+    import struct
+    from .dataimport import payload, pool_objects
+    sym = p.resolve(symbol)
+    function = re.search(r'\n[^\n;{}]*\b' + re.escape(sym.name) + r'\s*\([^;{}]*\)\s*\{', text)
+    if not function:
+        return
+    pattern = (r'(?:(?:struct\s+)?\w+\s*\*\s*)?(\w+)\s*=\s*'
+               r'\((?:struct\s+)?(\w+)\s*\*\)\s*&?(lbl_\w+)\s*;')
+    for model in re.finditer(pattern, text[function.start():]):
+        var, tag, base = model.groups()
+        known = p.symbols(sym.module).get(base)
+        if not known or known.section != '.data':
+            continue
+        members = struct_text(tag, text)
+        if members is None:
+            continue
+        decls = field_decls(members)
+        used = sorted(set(re.findall(r'\b' + re.escape(var) + r'\s*->\s*(\w+)', text)))
+        if not used or any(n not in decls or decls[n][0] not in ('u32', 's32', 'char', 'u8', 'char *', 'void *')
+                           or len(decls[n][1]) != 1 for n in used):
+            continue
+        statement = model[0]
+        rest = text[:function.start()] + text[function.start():].replace(statement, '', 1)
+        rest = re.sub(r'(?m)^[ \t]*(?:struct\s+)?' + re.escape(tag) + r'\s*\*\s*' + re.escape(var) + r'\s*;\n', '', rest)
+        rest_function = re.search(r'\n[^\n;{}]*\b' + re.escape(sym.name) + r'\s*\([^;{}]*\)\s*\{', rest)
+        accesses = re.sub(r'\b' + re.escape(var) + r'\s*->\s*\w+', '', rest[rest_function.start():])
+        if re.search(r'\b' + re.escape(var) + r'\b', accesses):
+            continue
+        is_tag = re.search(r'\bstruct\s+' + re.escape(tag) + r'\s*\{', text)
+        measured, error = probe_layout(p, sym.module, text[:function.start()],
+                                       'struct ' + tag if is_tag else tag, used, decls, symbol)
+        if error:
+            continue
+        fields = sorted((measured[n][0], measured[n][0] + measured[n][1], n) for n in used)
+        extent = fields[-1][1]
+        if any(lo % 4 or hi % 4 for lo, hi, _ in fields):
+            continue
+        raw_section = section_bytes(p, sym.module, '.data')
+        if raw_section is None:
+            continue
+        origin, raw = raw_section
+        raw = raw[known.addr - origin:known.addr - origin + extent]
+        if len(raw) != extent:
+            continue
+        relocations = {}
+        try:
+            for obj in pool_objects(p, sym.module, '.data', known.addr, extent):
+                _, relocs = payload(p, obj)
+                for rel in relocs:
+                    offset = obj.addr + rel['offset'] - known.addr
+                    if 0 <= offset < extent:
+                        if rel['kind'] != 1 or offset % 4 or rel['addend'] < 0:
+                            raise ValueError('unsupported initialized pointer')
+                        relocations[offset] = rel
+        except (ValueError, KeyError):
+            continue
+        declarations, definitions = set(), []
+        prefix = 'fzgx_pool_native_' + base
+        def value(offset):
+            rel = relocations.get(offset)
+            if rel:
+                alias = rel['symbol'] + '__fzgx_offset_%X' % rel['addend']
+                declarations.add('extern u8 ' + alias + '[];')
+                return '(u32)' + alias
+            return '0x%08X' % struct.unpack_from('>I', raw, offset)[0]
+        cursor = 0
+        for lo, hi, name in fields:
+            if cursor < lo:
+                definitions.append('static u32 %s_gap_%X[%d] = {%s}; /* fzgx-allow: A1 measured pool bytes and bindings */' %
+                                   (prefix, cursor, (lo - cursor) // 4, ', '.join(value(i) for i in range(cursor, lo, 4))))
+            ty, dims, declaration = decls[name]
+            native = prefix + '_' + name
+            if ty in ('char', 'u8'):
+                if any(lo <= i < hi for i in relocations):
+                    # A saved string view may span later pointer tables.
+                    # Preserve the view while giving their relocations full
+                    # word initializers; never turn pointer slots into zeros.
+                    definitions.append('static union {u32 words[%d]; %s} %s = {{%s}}; /* fzgx-allow: A1 measured pool bytes and bindings */' %
+                                       ((hi - lo) // 4, fdef(decls[name], 'view'), native,
+                                        ', '.join(value(i) for i in range(lo, hi, 4))))
+                    native += '.view'
+                    values = None
+                else:
+                    values = ', '.join('0x%02X' % byte for byte in raw[lo:hi])
+            else:
+                values = ', '.join(('(' + ty + ')' if '*' in ty else '') + value(i) for i in range(lo, hi, 4))
+            if values is not None:
+                definitions.append('static ' + fdef(decls[name], native).rstrip(';') + ' = {' + values + '}; /* fzgx-allow: A1 measured pool bytes and bindings */')
+            rest = re.sub(r'\b' + re.escape(var) + r'\s*->\s*' + re.escape(name) + r'\b', native, rest)
+            cursor = hi
+        block = '\n'.join(sorted(declarations)) + '\n' + '\n'.join(definitions) + '\n'
+        at = re.search(r'\n[^\n;{}]*\b' + re.escape(sym.name) + r'\s*\([^;{}]*\)\s*\{', rest).start()
+        yield 'native initialized data objects ' + base, rest[:at] + '\n' + block + rest[at:]
+
+
 def string_run(p, symbol, text, cast=''):
     sym = p.resolve(symbol)
     syms = p.symbols(sym.module)

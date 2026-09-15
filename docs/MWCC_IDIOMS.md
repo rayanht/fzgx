@@ -1,6 +1,21 @@
 Starter notes on CodeWarrior for GameCube 1.x codegen at `-O4,p`. Grow this
 file from what actually unblocked functions; keep each item one or two lines.
 
+## Selection panel evidence (2026-09-15)
+
+- Four-byte color structs reproduce pooled `lwz` initializers; scalar `const u32`
+  colors can fold into immediates. Automatic struct initializers keep per-iteration copies inside loops.
+- Separate initialized data objects establish MWCC's native data base. A pointer
+  to an extern aggregate can change base setup and address lifetimes despite identical field offsets.
+- Complete nested calls before binding a localized string table when retail does;
+  an inline indexed lookup closed the last four register differences in `fn_10_1C2D8`.
+- DTK `pad_` objects contained 93 of this panel's 867 data pointers. Pool proof
+  must inspect their relocations, including unused slots, rather than assuming zero padding.
+- Split grouped declarations before allocation analysis. On `fn_10_1D314`, this
+  preserved the code and exposed ten locals; the resulting partial repairs remain unmatched.
+
+## General observations
+
 - Register allocation follows declaration order of locals and argument order.
   Reordering declarations moves registers; extra temporaries can force a spill
   or a different register.

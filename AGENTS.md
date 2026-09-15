@@ -107,3 +107,8 @@ all accesses use a section base. Portable archives must retain word-scored front
 candidates that have not received a full objdiff score. When attempting to link an
 already accepted pool match, retain its prior C and compiler settings; a rejected
 upgrade must not erase the previously accepted pool reconstruction.
+Anonymous DTK `pad_` and `gap_` objects can contain initialized pointer tables;
+use `dataimport.pool_objects` and `payload` for their bytes and relocations.
+Do not infer zero padding from a label. Split grouped scalar declarations before
+capturing allocation constraints so every local is visible. Arithmetic repairs
+must preserve operator precedence; `x = input * a + b` is not `x = input; x *= a + b`.

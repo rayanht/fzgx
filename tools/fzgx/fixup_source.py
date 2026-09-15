@@ -87,6 +87,23 @@ def _init_of(line: str) -> Optional[str]:
     return dm.group(4).strip() if dm and dm.group(4) else None
 
 
+def split_declaration_groups(body, name):
+    """Expose each scalar home to the captured declaration/lifetime repairs."""
+    span = _function_body_span(body, name)
+    if not span:
+        return []
+    pattern = re.compile(r'(?m)^([ \t]+)(' + TYPE + r')\s+'
+                         r'(\w+(?:\[[^\],]+\])*(?:\s*,\s*\w+(?:\[[^\],]+\])*)+);[ \t]*$')
+    def expand(match):
+        if match[2] not in SCALAR_TYPES:
+            return match[0]
+        return '\n'.join(match[1] + match[2] + ' ' + var.strip() + ';' for var in match[3].split(','))
+    inner = pattern.sub(expand, body[span[1]:span[2]])
+    if inner == body[span[1]:span[2]]:
+        return []
+    return [('split scalar declaration groups', body[:span[1]] + inner + body[span[2]:])]
+
+
 def _order_ok(locs, lines: List[str], order: Tuple[int, ...]) -> bool:
     """An initializer may only name locals declared before it."""
     placed = set()
