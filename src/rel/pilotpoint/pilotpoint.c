@@ -155,6 +155,276 @@ void fn_14_2FC(void) {
 }
 /* fzgx:end fn_14_2FC */
 
+/* fzgx:begin fn_14_380 */
+#include "font.h"
+
+#pragma section code_type ".fzgxpool"
+__declspec(section ".fzgxpool") static void fzgx_pool_prime1(void) {
+    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */
+    s = 0.0f;
+    s = 167.0f;
+    s = 38.0f;
+    s = 90.0f;
+    s = 320.0f;
+    s = 216.0f;
+    s = 8.0f;
+    s = 96.0f;
+    s = 336.0f;
+    s = 380.0f;
+    d = 12.0;
+    s = 1.0f;
+    s = 99.0f;
+    s = 30.0f;
+    s = 140.0f;
+    s = 178.0f;
+    s = 254.0f;
+    s = 292.0f;
+    s = 541.0f;
+    s = 575.0f;
+    s = 98.0f;
+    s = 42.0f;
+}
+static const u32 fzgx_pool_table2[1] = {0x00000000};  /* fzgx-allow: A1 retail pool bytes */
+__declspec(section ".fzgxpool") static void fzgx_pool_keep2(void) { const u32 *volatile cp; cp = fzgx_pool_table2; }  /* fzgx-allow: S2 pool primer sink */
+__declspec(section ".fzgxpool") static void fzgx_pool_prime3(void) {
+    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */
+    d = 4503601774854144.0;
+}
+#pragma section code_type ".text"
+
+struct fn_14_380_Copy88 { u32 a[22]; };
+struct fn_14_380_lbl_14_bss_0 {
+    u32 unk_0;
+    u8 pad_4[0x20];
+    u32 unk_24;
+    u32 unk_28;
+    u32 unk_2C;
+    u32 unk_30;
+    u32 unk_34;
+};
+struct fn_14_380_lbl_14_rodata_0 {
+    u8 pad_0[0x4];
+    f32 unk_4;
+    f32 unk_8;
+    f32 unk_C;
+    f32 unk_10;
+    f32 unk_14;
+    f32 unk_18;
+    f32 unk_1C;
+    f32 unk_20;
+    f32 unk_24;
+    f64 unk_28;
+    f32 unk_30;
+    f32 unk_34;
+    f32 unk_38;
+    f32 unk_3C;
+    f32 unk_40;
+    f32 unk_44;
+    f32 unk_48;
+    f32 unk_4C;
+    f32 unk_50;
+    f32 unk_54;
+    f32 unk_58;
+    u8 pad_5C[0x4];
+    f64 unk_60;
+};
+struct fn_14_380_lbl_14_data_D50 {
+    u32 unk_0[1];
+};
+
+extern int fn_1_4F734(FontDrawPacket *);
+extern struct fn_14_380_lbl_14_bss_0 lbl_14_bss_0;
+extern struct fn_14_380_lbl_14_data_D50 lbl_14_data_D50;
+extern struct fn_14_380_lbl_14_rodata_0 lbl_14_rodata_0;
+extern u16 lbl_1_bss_96A;
+extern u32 fn_1_134AD4(void);
+extern u32 fn_1_13B328(u32, u32);
+extern u32 fn_1_13DC54(void);
+extern u32 lbl_1_rodata_26F8;
+extern u32 lbl_801A66B4;
+extern void fn_1_133DBC(void *);
+extern void fn_1_138120(void *);
+extern void fn_1_50164(f32, f32, f32, f32, FontDrawPacket *);
+
+f32 fn_14_380(void) {
+    struct fn_14_380_lbl_14_bss_0 *p_lbl_14_bss_0;
+    struct fn_14_380_lbl_14_rodata_0 *p_lbl_14_rodata_0;
+    f32 v1;
+    f32 v0;
+    f32 v18;
+    u32 v2;
+    u32 v3;
+    u32 v4;
+    f32 v5;
+    f32 v6;
+    f32 v7;
+    f64 v8;
+    f32 v9;
+    f32 v10;
+    f32 v11;
+    f32 v12;
+    f32 v13;
+    f32 v14;
+    f64 v16;
+    f32 v17;
+    f32 v19;
+    f32 v20;
+    f32 v21;
+    f32 v22;
+    f32 v23;
+    f32 v24;
+    f32 v25;
+    f32 v26;
+    f32 v27;
+    f32 v28;
+    f32 v29;
+    f32 v30;
+    f32 v31;
+    f32 v32;
+    f32 v33;
+    f32 v34;
+    f32 v35;
+    f32 v36;
+    f32 v37;
+    f32 v38;
+    f32 v39;
+    f32 v40;
+    f32 v41;
+    f32 v42;
+    f32 v43;
+    f32 v44;
+    f32 v45;
+    f32 v46;
+    f32 v47;
+    f32 v48;
+    f32 v49;
+    u32 v50;
+    FontDrawPacket loc_8;
+    /* frame */
+    p_lbl_14_rodata_0 = (struct fn_14_380_lbl_14_rodata_0 *)&lbl_14_rodata_0;
+    p_lbl_14_bss_0 = (struct fn_14_380_lbl_14_bss_0 *)&lbl_14_bss_0;
+    fn_1_133DBC((void *)0);
+    fn_1_134AD4();
+    fn_1_13DC54();
+    fn_1_13B328(0x1000000, 1);
+    fn_1_138120((void *)lbl_14_data_D50.unk_0[lbl_801A66B4]);
+    loc_8 = *(FontDrawPacket *)&lbl_1_rodata_26F8;
+    v0 = (167.0f);
+    v1 = (38.0f);
+    loc_8.image = (0x10000 - 28155);
+    loc_8.x = v0;
+    loc_8.y = v1;
+    loc_8.z = (90.0f);
+    loc_8.flags = 10;
+    fn_1_4F734((FontDrawPacket *)&loc_8);
+    loc_8 = *(FontDrawPacket *)&lbl_1_rodata_26F8;
+    loc_8.image = (0x10000 - 25045);
+    loc_8.flags = 10;
+    p_lbl_14_bss_0->unk_28 += p_lbl_14_bss_0->unk_30;
+    if ((s32)p_lbl_14_bss_0->unk_28 > 190) {
+    p_lbl_14_bss_0->unk_28 = 190;
+    p_lbl_14_bss_0->unk_24 += p_lbl_14_bss_0->unk_2C;
+    }
+    if ((s32)p_lbl_14_bss_0->unk_24 > 396) {
+    p_lbl_14_bss_0->unk_24 = 396;
+    }
+    loc_8.x = (320.0f);
+    loc_8.y = (216.0f);
+    v5 = (8.0f);
+    fn_1_50164((f32)(s32)p_lbl_14_bss_0->unk_24, (f32)(s32)p_lbl_14_bss_0->unk_28, v5, v5, (FontDrawPacket *)&loc_8);
+    loc_8.x = (320.0f);
+    loc_8.y = (96.0f);
+    v9 = (8.0f);
+    fn_1_50164((f32)(s32)p_lbl_14_bss_0->unk_24, (38.0f), v9, v9, (FontDrawPacket *)&loc_8);
+    loc_8.x = (320.0f);
+    loc_8.y = (336.0f);
+    v11 = (8.0f);
+    fn_1_50164((f32)(s32)p_lbl_14_bss_0->unk_24, (38.0f), v11, v11, (FontDrawPacket *)&loc_8);
+    loc_8.x = (320.0f);
+    loc_8.y = (380.0f);
+    v13 = (8.0f);
+    fn_1_50164((f32)(s32)p_lbl_14_bss_0->unk_24, (38.0f), v13, v13, (FontDrawPacket *)&loc_8);
+    if ((s32)p_lbl_14_bss_0->unk_24 == 396 && (s32)p_lbl_14_bss_0->unk_28 == 190) {
+    v16 = (12.0);
+    v17 = (1.0f);
+    v18 = (f32)(v16 - (f64)(s32)p_lbl_14_bss_0->unk_34);
+    v18 /= v16;
+    if (v18 > v17) {
+    v18 = v17;
+    }
+    loc_8.alpha = v18;
+    loc_8.x = (99.0f);
+    loc_8.y = (96.0f);
+    v19 = (30.0f);
+    fn_1_50164(v19, v19, (8.0f), (8.0f), (FontDrawPacket *)&loc_8);
+    loc_8.x = (99.0f);
+    loc_8.y = (140.0f);
+    v21 = (30.0f);
+    fn_1_50164(v21, v21, (8.0f), (8.0f), (FontDrawPacket *)&loc_8);
+    loc_8.x = (99.0f);
+    loc_8.y = (178.0f);
+    v23 = (30.0f);
+    fn_1_50164(v23, v23, (8.0f), (8.0f), (FontDrawPacket *)&loc_8);
+    loc_8.x = (99.0f);
+    loc_8.y = (216.0f);
+    v25 = (30.0f);
+    fn_1_50164(v25, v25, (8.0f), (8.0f), (FontDrawPacket *)&loc_8);
+    loc_8.x = (99.0f);
+    loc_8.y = (254.0f);
+    v27 = (30.0f);
+    fn_1_50164(v27, v27, (8.0f), (8.0f), (FontDrawPacket *)&loc_8);
+    loc_8.x = (99.0f);
+    loc_8.y = (292.0f);
+    v29 = (30.0f);
+    fn_1_50164(v29, v29, (8.0f), (8.0f), (FontDrawPacket *)&loc_8);
+    loc_8.x = (99.0f);
+    loc_8.y = (336.0f);
+    v31 = (30.0f);
+    fn_1_50164(v31, v31, (8.0f), (8.0f), (FontDrawPacket *)&loc_8);
+    loc_8.x = (99.0f);
+    loc_8.y = (380.0f);
+    v33 = (30.0f);
+    fn_1_50164(v33, v33, (8.0f), (8.0f), (FontDrawPacket *)&loc_8);
+    loc_8.x = (541.0f);
+    loc_8.y = (96.0f);
+    v35 = (30.0f);
+    fn_1_50164(v35, v35, (8.0f), (8.0f), (FontDrawPacket *)&loc_8);
+    loc_8.x = (541.0f);
+    loc_8.y = (140.0f);
+    v37 = (30.0f);
+    fn_1_50164(v37, v37, (8.0f), (8.0f), (FontDrawPacket *)&loc_8);
+    loc_8.x = (541.0f);
+    loc_8.y = (178.0f);
+    v39 = (30.0f);
+    fn_1_50164(v39, v39, (8.0f), (8.0f), (FontDrawPacket *)&loc_8);
+    loc_8.x = (541.0f);
+    loc_8.y = (216.0f);
+    v41 = (30.0f);
+    fn_1_50164(v41, v41, (8.0f), (8.0f), (FontDrawPacket *)&loc_8);
+    loc_8.x = (541.0f);
+    loc_8.y = (254.0f);
+    v43 = (30.0f);
+    fn_1_50164(v43, v43, (8.0f), (8.0f), (FontDrawPacket *)&loc_8);
+    loc_8.x = (541.0f);
+    loc_8.y = (292.0f);
+    v45 = (30.0f);
+    fn_1_50164(v45, v45, (8.0f), (8.0f), (FontDrawPacket *)&loc_8);
+    loc_8.x = (575.0f);
+    loc_8.y = (336.0f);
+    v47 = (8.0f);
+    fn_1_50164((98.0f), (42.0f), v47, v47, (FontDrawPacket *)&loc_8);
+    loc_8.x = (541.0f);
+    loc_8.y = (380.0f);
+    v49 = (30.0f);
+    fn_1_50164(v49, v49, (8.0f), (8.0f), (FontDrawPacket *)&loc_8);
+    p_lbl_14_bss_0->unk_34--;
+    }
+    if ((s32)p_lbl_14_bss_0->unk_0 < 0) {
+    lbl_1_bss_96A = 173;
+    }
+}
+/* fzgx:end fn_14_380 */
+
 /* fzgx:begin fn_14_900 */
 // fn_14_900: empty in retail (single blr).
 void fn_14_900(void) {
