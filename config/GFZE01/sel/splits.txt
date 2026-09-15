@@ -566,3 +566,6 @@ rel/sel/sel/fn_10_3A98.c:
 
 rel/sel/record/fn_10_26554.c:
 	.text       start:0x00026554 end:0x000266AC align:4
+
+rel/sel/sel/fn_10_1C2D8.c:
+	.text       start:0x0001C2D8 end:0x0001D314 align:4

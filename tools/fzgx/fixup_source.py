@@ -197,7 +197,21 @@ def through_local(body: str, name: str) -> List[Tuple[str, str]]:
             continue
         s0, e0 = span[1] + m.start(), span[1] + m.end()
         out.append((f"through {x}", body[:s0] + f"{ind}{x} = {a};\n{ind}{x} = {x} {op} {b};\n" + body[e0:]))
-        out.append((f"through {x} compound", body[:s0] + f"{ind}{x} = {a};\n{ind}{x} {op}= {b};\n" + body[e0:]))
+        # A compound assignment groups its entire RHS. The regex can split
+        # input * 53 + 74 at '*'; input *= 53 + 74 would change the value.
+        depth = 0
+        grouped = True
+        for token in TOKEN.findall(b):
+            if token in ('(', '['):
+                depth += 1
+            elif token in (')', ']'):
+                depth -= 1
+            elif depth == 0 and (token in ('?', ',', ':') or
+                                 token in PREC and PREC[token] <= PREC[op]):
+                grouped = False
+                break
+        if grouped and depth == 0:
+            out.append((f"through {x} compound", body[:s0] + f"{ind}{x} = {a};\n{ind}{x} {op}= {b};\n" + body[e0:]))
     if locs:
         top = locs[-1][1]
         indent = re.match(r"\s*", body[locs[0][0]:locs[0][1]]).group(0)

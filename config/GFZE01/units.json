@@ -58686,6 +58686,25 @@
   },
   {
     "module": "sel",
+    "source": "rel/sel/sel/fn_10_1C2D8.c",
+    "symbols": [
+      "fn_10_1C2D8"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "tu": "rel/sel/sel.c",
+    "pool": {
+      "...rodata.0": "lbl_10_rodata_158",
+      "@26": "lbl_10_rodata_1E0",
+      "@11": "lbl_10_rodata_1A4",
+      "@10": "lbl_10_rodata_158+0x48",
+      "@27": "lbl_10_rodata_1E8",
+      "...data.0": "lbl_10_data_D00"
+    }
+  },
+  {
+    "module": "sel",
     "source": "rel/sel/sel/fn_10_1E398.c",
     "symbols": [
       "fn_10_1E398"

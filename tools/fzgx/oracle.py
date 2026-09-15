@@ -522,16 +522,14 @@ def _bss_base_rows(project, module, obj, left, right, lrows, rrows, function_nam
 
 def _relocated_pool_matches(project, module, elf, section, address, extent):
     """Compare initialized bytes and symbolic pointer bindings across a shared pool."""
-    from .dataimport import payload, resolve_target
+    from .dataimport import payload, pool_objects, resolve_target
 
     actual = bytearray(elf.data[section['offset']:section['offset'] + extent])
     expected = bytearray(extent)
     covered = bytearray(extent)
     bindings = []
     try:
-        for sym in project.symbols(module).values():
-            if sym.kind != 'object' or sym.section != section['name'] or sym.end <= address or sym.addr >= address + extent:
-                continue
+        for sym in pool_objects(project, module, section['name'], address, extent):
             raw, relocs = payload(project, sym)
             lo, hi = max(address, sym.addr), min(address + extent, sym.end)
             expected[lo - address:hi - address] = raw[lo - sym.addr:hi - sym.addr]

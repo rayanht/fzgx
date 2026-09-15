@@ -17,7 +17,7 @@ from pathlib import Path
 from . import oracle
 from .carve import _section_default_align, order_labels_after_functions
 from .poolfix import Elf
-from .project import ROOT, STATE_DIR, Project
+from .project import ROOT, STATE_DIR, Project, Symbol
 
 BSS = {'.bss', '.sbss', '.sbss2'}
 SECTIONS = BSS | {'.data', '.rodata', '.sdata', '.sdata2'}
@@ -86,6 +86,28 @@ def resolve_target(p, module, name):
         if sym and sym.addr != int(m[2], 16):
             sym = None
     return sym
+
+
+def pool_objects(p, module, section, address, extent):
+    """Include DTK's anonymous objects when proving an entire initialized pool.
+
+    A `pad_` label can contain a pointer table, despite its name. Its retail
+    bytes and relocations require the same proof as named objects.
+    """
+    result = [s for s in p.symbols(module).values() if s.kind == 'object' and
+              s.section == section and s.addr < address + extent and s.end > address]
+    named = list(result)
+    for elf, own in objects(p, module).values():
+        match = re.fullmatch(r'(?:gap|pad)_\d+_([0-9A-Fa-f]{8})_\w+', own['name'])
+        if not match or elf.sections[own['shndx']]['name'] != section or not own['size']:
+            continue
+        start = int(match[1], 16)
+        end = start + own['size']
+        if (start >= address + extent or end <= address or
+                any(s.addr < end and s.end > start for s in named)):
+            continue
+        result.append(Symbol(own['name'], module, section, start, 'object', own['size'], 'local', {}))
+    return result
 
 
 def payload(p, sym):
