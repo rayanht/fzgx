@@ -63,26 +63,26 @@ void fn_80016394(void *addr, u32 length, u32 offset, DVDLowCallback callback);
 
 static DVDCommand CommandList_8015CD70[3];
 
-static unsigned char gap____bss_0_3c[44];
+static unsigned char fzgx_pool_gap____bss_0_3c[44];
 
 static OSAlarm AlarmForTimeout;
 
-static unsigned char gap____bss_0_90[40];
+static unsigned char fzgx_pool_gap____bss_0_90[40];
 
-static DVDBuffer Prev;
+static DVDBuffer __DVDLowPrev__fzgx_offset_0;
 
-static DVDBuffer Curr;
+static DVDBuffer __DVDLowCurr__fzgx_offset_0;
 
 #pragma section code_type ".fzgxpool"
 static void layout____bss_0(void) {
 // Hardware or OS state can change asynchronously.
     volatile unsigned char sink; // fzgx-allow: S2 SDK asynchronous state
     sink = *(unsigned char *)&CommandList_8015CD70;
-    sink = *(unsigned char *)&gap____bss_0_3c;
+    sink = *(unsigned char *)&fzgx_pool_gap____bss_0_3c;
     sink = *(unsigned char *)&AlarmForTimeout;
-    sink = *(unsigned char *)&gap____bss_0_90;
-    sink = *(unsigned char *)&Prev;
-    sink = *(unsigned char *)&Curr;
+    sink = *(unsigned char *)&fzgx_pool_gap____bss_0_90;
+    sink = *(unsigned char *)&__DVDLowPrev__fzgx_offset_0;
+    sink = *(unsigned char *)&__DVDLowCurr__fzgx_offset_0;
 }
 #pragma section code_type ".text"
 
@@ -112,9 +112,9 @@ void __DVDInterruptHandler(__OSInterrupt interrupt, OSContext *context) {
     if (lbl_801A6898) {
         lbl_801A6888 = __OSGetSystemTime();
         lbl_801A6468 = 0;
-        Prev.addr = Curr.addr;
-        Prev.length = Curr.length;
-        Prev.offset = Curr.offset;
+        __DVDLowPrev__fzgx_offset_0.addr = __DVDLowCurr__fzgx_offset_0.addr;
+        __DVDLowPrev__fzgx_offset_0.length = __DVDLowCurr__fzgx_offset_0.length;
+        __DVDLowPrev__fzgx_offset_0.offset = __DVDLowCurr__fzgx_offset_0.offset;
         if (StopAtNextInt_801A6858 == 1) {
             cause |= 8;
         }

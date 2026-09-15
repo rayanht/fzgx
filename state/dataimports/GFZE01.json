@@ -35,6 +35,102 @@
     "unit_size": 266496,
     "unit_start": 182208
   },
+  "main:__DVDLowAlarmForWA": {
+    "address": 2148912560,
+    "align": 8,
+    "declarations": [
+      {
+        "declaration": "OSAlarm __DVDLowAlarmForWA",
+        "path": "include/dolphin/dvd/SharedState.h"
+      }
+    ],
+    "definition": "OSAlarm __DVDLowAlarmForWA",
+    "method": "declared-bss",
+    "module": "main",
+    "references": [],
+    "relocations": [],
+    "section": ".bss",
+    "section_size": 40,
+    "sha256": "2c34ce1df23b838c5abf2a7f6437cca3d3067ed509ff25f11df6b11b582b51eb",
+    "size": 40,
+    "source": "dol/data/__DVDLowAlarmForWA.c",
+    "symbol": "__DVDLowAlarmForWA",
+    "unit_align": 8,
+    "unit_size": 40,
+    "unit_start": 2148912560
+  },
+  "main:__DVDLowCurr": {
+    "address": 2148912692,
+    "align": 4,
+    "declarations": [
+      {
+        "declaration": "DVDLowBuffer __DVDLowCurr",
+        "path": "include/dolphin/dvd/SharedState.h"
+      }
+    ],
+    "definition": "DVDLowBuffer __DVDLowCurr",
+    "method": "declared-bss",
+    "module": "main",
+    "references": [],
+    "relocations": [],
+    "section": ".bss",
+    "section_size": 24,
+    "sha256": "15ec7bf0b50732b49f8228e07d24365338f9e3ab994b00af08e5a3bffe55fd8b",
+    "size": 12,
+    "source": "dol/data/__DVDLowPrev.c",
+    "symbol": "__DVDLowCurr",
+    "unit_align": 8,
+    "unit_size": 24,
+    "unit_start": 2148912680
+  },
+  "main:__DVDLowPrev": {
+    "address": 2148912680,
+    "align": 8,
+    "declarations": [
+      {
+        "declaration": "DVDLowBuffer __DVDLowPrev",
+        "path": "include/dolphin/dvd/SharedState.h"
+      }
+    ],
+    "definition": "DVDLowBuffer __DVDLowPrev",
+    "method": "declared-bss",
+    "module": "main",
+    "references": [],
+    "relocations": [],
+    "section": ".bss",
+    "section_size": 24,
+    "sha256": "15ec7bf0b50732b49f8228e07d24365338f9e3ab994b00af08e5a3bffe55fd8b",
+    "size": 12,
+    "source": "dol/data/__DVDLowPrev.c",
+    "symbol": "__DVDLowPrev",
+    "unit_align": 8,
+    "unit_size": 24,
+    "unit_start": 2148912680
+  },
+  "main:__OSDriveBlock": {
+    "address": 2148908832,
+    "align": 8,
+    "declarations": [
+      {
+        "declaration": "DVDCommandBlock __OSDriveBlock",
+        "path": "include/dolphin/dvd/SharedState.h"
+      }
+    ],
+    "definition": "DVDCommandBlock __OSDriveBlock",
+    "method": "declared-bss",
+    "module": "main",
+    "references": [],
+    "relocations": [],
+    "section": ".bss",
+    "section_size": 48,
+    "sha256": "17b0761f87b081d5cf10757ccc89f12be355c70e2e29df288b65b30710dcbcd1",
+    "size": 48,
+    "source": "dol/data/__OSDriveBlock.c",
+    "symbol": "__OSDriveBlock",
+    "unit_align": 8,
+    "unit_size": 48,
+    "unit_start": 2148908832
+  },
   "main:__files": {
     "address": 2148904536,
     "align": 8,

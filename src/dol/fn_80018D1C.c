@@ -58,7 +58,7 @@ void cbForStateMotorStopped(u32 intType);
 
 static unsigned char BB2_8015CE40[32];
 
-static unsigned char gap____bss_0_20[32];
+static unsigned char lbl_8015CE60__fzgx_offset_0[32];
 
 static DVDCommandBlock DummyCommandBlock;
 
@@ -67,7 +67,7 @@ static void layout____bss_0(void) {
 // Hardware or OS state can change asynchronously.
     volatile unsigned char sink; // fzgx-allow: S2 SDK asynchronous state
     sink = *(unsigned char *)&BB2_8015CE40;
-    sink = *(unsigned char *)&gap____bss_0_20;
+    sink = *(unsigned char *)&lbl_8015CE60__fzgx_offset_0;
     sink = *(unsigned char *)&DummyCommandBlock;
 }
 #pragma section code_type ".text"

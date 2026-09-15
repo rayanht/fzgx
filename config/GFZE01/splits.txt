@@ -5303,3 +5303,12 @@ dol/fn_8007C910.c:
 
 dol/fn_8001B42C.c:
 	.text       start:0x8001B42C end:0x8001BC54 align:4
+
+dol/data/__OSDriveBlock.c:
+	.bss        start:0x8015BF20 end:0x8015BF50 align:8
+
+dol/data/__DVDLowAlarmForWA.c:
+	.bss        start:0x8015CDB0 end:0x8015CDD8 align:8
+
+dol/data/__DVDLowPrev.c:
+	.bss        start:0x8015CE28 end:0x8015CE40 align:8

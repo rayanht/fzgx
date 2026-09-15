@@ -7659,5 +7659,2099 @@
     ],
     "oracle_sha256": "7cd63033369c3b07e3fe76ed92108263a6d28e5b3f3a8e251f031f42d4f37913",
     "link": "pending"
+  },
+  "fn_80018D1C": {
+    "seed_symbol": "fn_80018D1C",
+    "seed": "#include <types.h>\n#include <dolphin/dvd.h>\n#include <dolphin/types.h>\n#include \"sdk_addresses.h\"\n\n// Hardware or OS state can change asynchronously.\ntypedef volatile s32 vs32;\n\ntypedef void (*DVDLowCallback)(u32 intType);\n\nvoid DVDReset();\n\nvoid __DVDStoreErrorCode(u32 error);\n\nBOOL DVDLowWaitCoverClose(DVDLowCallback callback);\n\nBOOL DVDLowStopMotor(DVDLowCallback callback);\n\nBOOL DVDLowRequestError(DVDLowCallback callback);\n\nBOOL DVDLowAudioStream(u32 subcmd, u32 length, u32 offset, DVDLowCallback callback);\n\nvu32 __DIRegs[16] : FZGX_ADDR___DIRegs;\n\nextern DVDCommandBlock *executing_801A68C0;\n\n// Hardware or OS state can change asynchronously.\nextern volatile BOOL lbl_801A68D4; // fzgx-allow: S2 SDK asynchronous state\n\nextern vu32 CurrCommand_801A68DC;\n\nextern vu32 lbl_801A68E0;\n\nextern DVDCBCallback lbl_801A68E4;\n\nextern vu32 ResumeFromHere_801A68E8;\n\nextern vs32 lbl_801A68F4;\n\n// Hardware or OS state can change asynchronously.\nextern volatile BOOL ResetRequired_801A68F8; // fzgx-allow: S2 SDK asynchronous state\n\nstatic void stateTimeout();\n\nstatic void stateGettingError();\n\nstatic void stateMotorStopped();\n\nvoid stateReady();\n\nvoid stateBusy();\n\nvoid cbForStateError(u32 intType);\n\nvoid cbForStateGettingError(u32 intType);\n\nvoid cbForStateMotorStopped(u32 intType);\n\nstatic unsigned char BB2_8015CE40[32];\n\nstatic unsigned char gap____bss_0_20[32];\n\nstatic DVDCommandBlock DummyCommandBlock;\n\n#pragma section code_type \".fzgxpool\"\nstatic void layout____bss_0(void) {\n// Hardware or OS state can change asynchronously.\n    volatile unsigned char sink; // fzgx-allow: S2 SDK asynchronous state\n    sink = *(unsigned char *)&BB2_8015CE40;\n    sink = *(unsigned char *)&gap____bss_0_20;\n    sink = *(unsigned char *)&DummyCommandBlock;\n}\n#pragma section code_type \".text\"\n\nstatic inline void stateError(u32 error) {\n    __DVDStoreErrorCode(error);\n    DVDLowStopMotor(cbForStateError);\n}\n\nstatic inline void stateTimeout() {\n    __DVDStoreErrorCode(0x1234568);\n    DVDReset();\n    cbForStateError(0);\n}\n\nstatic inline void stateGettingError() { DVDLowRequestError(cbForStateGettingError); }\n\nstatic inline BOOL CheckCancel(u32 resume) {\n    DVDCommandBlock *finished;\n    if (lbl_801A68E0) {\n        ResumeFromHere_801A68E8 = resume;\n        lbl_801A68E0 = 0;\n        finished = executing_801A68C0;\n        executing_801A68C0 = &DummyCommandBlock;\n        finished->state = 10;\n        if (finished->callback)\n            (*finished->callback)(-3, finished);\n        if (lbl_801A68E4)\n            (lbl_801A68E4)(0, finished);\n        stateReady();\n        return 1;\n    }\n    return 0;\n}\n\nstatic inline void stateMotorStopped(void) { DVDLowWaitCoverClose(cbForStateMotorStopped); }\n\nvoid stateBusy(DVDCommandBlock *block);\n\nextern u32 lbl_80124058[3];\n\nextern u32 lbl_801A648C[1];\n\nstatic inline BOOL IsImmCommandWithResult(u32 command) {\n    u32 i;\n    if (command == 9 || command == 10 || command == 11 || command == 12) {\n        return 1;\n    }\n    for (i = 0; i < sizeof(lbl_80124058) / sizeof(lbl_80124058[0]); i++) {\n        if (command == lbl_80124058[i])\n            return 1;\n    }\n    return 0;\n}\n\nstatic inline BOOL IsDmaCommand(u32 command) {\n    u32 i;\n    if (command == 1 || command == 4 || command == 5 || command == 14)\n        return 1;\n    for (i = 0; i < sizeof(lbl_801A648C) / sizeof(lbl_801A648C[0]); i++) {\n        if (command == lbl_801A648C[i])\n            return 1;\n    }\n    return 0;\n}\n\nvoid DVDReset(void);\n\nvoid fn_80018D1C(u32 intType) {\n    DVDCommandBlock *finished;\n    if (intType == 16) {\n        executing_801A68C0->state = -1;\n        stateTimeout();\n        return;\n    }\n    if ((CurrCommand_801A68DC == 3) || (CurrCommand_801A68DC == 15)) {\n        if (intType & 2) {\n            executing_801A68C0->state = -1;\n            stateError(0x1234567);\n            return;\n        }\n        lbl_801A68F4 = 0;\n        if (CurrCommand_801A68DC == 15) {\n            ResetRequired_801A68F8 = 1;\n        }\n        if (CheckCancel(7)) {\n            return;\n        }\n        executing_801A68C0->state = 7;\n        stateMotorStopped();\n        return;\n    }\n    if (IsDmaCommand(CurrCommand_801A68DC)) {\n        executing_801A68C0->transferredSize += executing_801A68C0->currTransferSize - __DIRegs[6];\n    }\n    if (intType & 8) {\n        lbl_801A68E0 = 0;\n        finished = executing_801A68C0;\n        executing_801A68C0 = &DummyCommandBlock;\n        finished->state = 10;\n        if (finished->callback)\n            (*finished->callback)(-3, finished);\n        if (lbl_801A68E4)\n            (lbl_801A68E4)(0, finished);\n        stateReady();\n        return;\n    }\n    if (intType & 1) {\n        lbl_801A68F4 = 0;\n        if (CheckCancel(0))\n            return;\n        if (IsDmaCommand(CurrCommand_801A68DC)) {\n            if (executing_801A68C0->transferredSize != executing_801A68C0->length) {\n                stateBusy(executing_801A68C0);\n                return;\n            }\n            finished = executing_801A68C0;\n            executing_801A68C0 = &DummyCommandBlock;\n            finished->state = 0;\n            if (finished->callback) {\n                (finished->callback)((s32)finished->transferredSize, finished);\n            }\n            stateReady();\n        } else if (IsImmCommandWithResult(CurrCommand_801A68DC)) {\n            s32 result;\n            if ((CurrCommand_801A68DC == 11) || (CurrCommand_801A68DC == 10)) {\n                result = (s32)(__DIRegs[8] << 2);\n            } else {\n                result = (s32)__DIRegs[8];\n            }\n            finished = executing_801A68C0;\n            executing_801A68C0 = &DummyCommandBlock;\n            finished->state = 0;\n            if (finished->callback) {\n                (finished->callback)(result, finished);\n            }\n            stateReady();\n        } else if (CurrCommand_801A68DC == 6) {\n            if (executing_801A68C0->currTransferSize == 0) {\n                if (__DIRegs[8] & 1) {\n                    finished = executing_801A68C0;\n                    executing_801A68C0 = &DummyCommandBlock;\n                    finished->state = 9;\n                    if (finished->callback) {\n                        (finished->callback)(-2, finished);\n                    }\n                    stateReady();\n                } else {\n                    lbl_801A68D4 = 0;\n                    executing_801A68C0->currTransferSize = 1;\n                    DVDLowAudioStream(0, executing_801A68C0->length, executing_801A68C0->offset,\n                                      fn_80018D1C);\n                }\n            } else {\n                finished = executing_801A68C0;\n                executing_801A68C0 = &DummyCommandBlock;\n                finished->state = 0;\n                if (finished->callback) {\n                    (finished->callback)(0, finished);\n                }\n                stateReady();\n            }\n        } else {\n            finished = executing_801A68C0;\n            executing_801A68C0 = &DummyCommandBlock;\n            finished->state = 0;\n            if (finished->callback) {\n                (finished->callback)(0, finished);\n            }\n            stateReady();\n        }\n    } else {\n        if (CurrCommand_801A68DC == 14) {\n            executing_801A68C0->state = -1;\n            stateError(0x01234567);\n            return;\n        }\n        if ((CurrCommand_801A68DC == 1 || CurrCommand_801A68DC == 4 || CurrCommand_801A68DC == 5 ||\n             CurrCommand_801A68DC == 14) &&\n            (executing_801A68C0->transferredSize == executing_801A68C0->length)) {\n            if (CheckCancel(0)) {\n                return;\n            }\n            finished = executing_801A68C0;\n            executing_801A68C0 = &DummyCommandBlock;\n            finished->state = 0;\n            if (finished->callback) {\n                (finished->callback)((s32)finished->transferredSize, finished);\n            }\n            stateReady();\n            return;\n        }\n        stateGettingError();\n    }\n}\n",
+    "seed_sha256": "c75f5fcde39e3f71bbb3a6dda9ae86355faa62e4b60a71d0174f5884404a9c58",
+    "generator": "fzgx fixup",
+    "transform": "bind measured SDK shared objects",
+    "generated_source": "#include <types.h>\n#include <dolphin/dvd.h>\n#include <dolphin/types.h>\n#include \"sdk_addresses.h\"\n\n// Hardware or OS state can change asynchronously.\ntypedef volatile s32 vs32;\n\ntypedef void (*DVDLowCallback)(u32 intType);\n\nvoid DVDReset();\n\nvoid __DVDStoreErrorCode(u32 error);\n\nBOOL DVDLowWaitCoverClose(DVDLowCallback callback);\n\nBOOL DVDLowStopMotor(DVDLowCallback callback);\n\nBOOL DVDLowRequestError(DVDLowCallback callback);\n\nBOOL DVDLowAudioStream(u32 subcmd, u32 length, u32 offset, DVDLowCallback callback);\n\nvu32 __DIRegs[16] : FZGX_ADDR___DIRegs;\n\nextern DVDCommandBlock *executing_801A68C0;\n\n// Hardware or OS state can change asynchronously.\nextern volatile BOOL lbl_801A68D4; // fzgx-allow: S2 SDK asynchronous state\n\nextern vu32 CurrCommand_801A68DC;\n\nextern vu32 lbl_801A68E0;\n\nextern DVDCBCallback lbl_801A68E4;\n\nextern vu32 ResumeFromHere_801A68E8;\n\nextern vs32 lbl_801A68F4;\n\n// Hardware or OS state can change asynchronously.\nextern volatile BOOL ResetRequired_801A68F8; // fzgx-allow: S2 SDK asynchronous state\n\nstatic void stateTimeout();\n\nstatic void stateGettingError();\n\nstatic void stateMotorStopped();\n\nvoid stateReady();\n\nvoid stateBusy();\n\nvoid cbForStateError(u32 intType);\n\nvoid cbForStateGettingError(u32 intType);\n\nvoid cbForStateMotorStopped(u32 intType);\n\nstatic unsigned char BB2_8015CE40[32];\n\nstatic unsigned char lbl_8015CE60__fzgx_offset_0[32];\n\nstatic DVDCommandBlock DummyCommandBlock;\n\n#pragma section code_type \".fzgxpool\"\nstatic void layout____bss_0(void) {\n// Hardware or OS state can change asynchronously.\n    volatile unsigned char sink; // fzgx-allow: S2 SDK asynchronous state\n    sink = *(unsigned char *)&BB2_8015CE40;\n    sink = *(unsigned char *)&lbl_8015CE60__fzgx_offset_0;\n    sink = *(unsigned char *)&DummyCommandBlock;\n}\n#pragma section code_type \".text\"\n\nstatic inline void stateError(u32 error) {\n    __DVDStoreErrorCode(error);\n    DVDLowStopMotor(cbForStateError);\n}\n\nstatic inline void stateTimeout() {\n    __DVDStoreErrorCode(0x1234568);\n    DVDReset();\n    cbForStateError(0);\n}\n\nstatic inline void stateGettingError() { DVDLowRequestError(cbForStateGettingError); }\n\nstatic inline BOOL CheckCancel(u32 resume) {\n    DVDCommandBlock *finished;\n    if (lbl_801A68E0) {\n        ResumeFromHere_801A68E8 = resume;\n        lbl_801A68E0 = 0;\n        finished = executing_801A68C0;\n        executing_801A68C0 = &DummyCommandBlock;\n        finished->state = 10;\n        if (finished->callback)\n            (*finished->callback)(-3, finished);\n        if (lbl_801A68E4)\n            (lbl_801A68E4)(0, finished);\n        stateReady();\n        return 1;\n    }\n    return 0;\n}\n\nstatic inline void stateMotorStopped(void) { DVDLowWaitCoverClose(cbForStateMotorStopped); }\n\nvoid stateBusy(DVDCommandBlock *block);\n\nextern u32 lbl_80124058[3];\n\nextern u32 lbl_801A648C[1];\n\nstatic inline BOOL IsImmCommandWithResult(u32 command) {\n    u32 i;\n    if (command == 9 || command == 10 || command == 11 || command == 12) {\n        return 1;\n    }\n    for (i = 0; i < sizeof(lbl_80124058) / sizeof(lbl_80124058[0]); i++) {\n        if (command == lbl_80124058[i])\n            return 1;\n    }\n    return 0;\n}\n\nstatic inline BOOL IsDmaCommand(u32 command) {\n    u32 i;\n    if (command == 1 || command == 4 || command == 5 || command == 14)\n        return 1;\n    for (i = 0; i < sizeof(lbl_801A648C) / sizeof(lbl_801A648C[0]); i++) {\n        if (command == lbl_801A648C[i])\n            return 1;\n    }\n    return 0;\n}\n\nvoid DVDReset(void);\n\nvoid fn_80018D1C(u32 intType) {\n    DVDCommandBlock *finished;\n    if (intType == 16) {\n        executing_801A68C0->state = -1;\n        stateTimeout();\n        return;\n    }\n    if ((CurrCommand_801A68DC == 3) || (CurrCommand_801A68DC == 15)) {\n        if (intType & 2) {\n            executing_801A68C0->state = -1;\n            stateError(0x1234567);\n            return;\n        }\n        lbl_801A68F4 = 0;\n        if (CurrCommand_801A68DC == 15) {\n            ResetRequired_801A68F8 = 1;\n        }\n        if (CheckCancel(7)) {\n            return;\n        }\n        executing_801A68C0->state = 7;\n        stateMotorStopped();\n        return;\n    }\n    if (IsDmaCommand(CurrCommand_801A68DC)) {\n        executing_801A68C0->transferredSize += executing_801A68C0->currTransferSize - __DIRegs[6];\n    }\n    if (intType & 8) {\n        lbl_801A68E0 = 0;\n        finished = executing_801A68C0;\n        executing_801A68C0 = &DummyCommandBlock;\n        finished->state = 10;\n        if (finished->callback)\n            (*finished->callback)(-3, finished);\n        if (lbl_801A68E4)\n            (lbl_801A68E4)(0, finished);\n        stateReady();\n        return;\n    }\n    if (intType & 1) {\n        lbl_801A68F4 = 0;\n        if (CheckCancel(0))\n            return;\n        if (IsDmaCommand(CurrCommand_801A68DC)) {\n            if (executing_801A68C0->transferredSize != executing_801A68C0->length) {\n                stateBusy(executing_801A68C0);\n                return;\n            }\n            finished = executing_801A68C0;\n            executing_801A68C0 = &DummyCommandBlock;\n            finished->state = 0;\n            if (finished->callback) {\n                (finished->callback)((s32)finished->transferredSize, finished);\n            }\n            stateReady();\n        } else if (IsImmCommandWithResult(CurrCommand_801A68DC)) {\n            s32 result;\n            if ((CurrCommand_801A68DC == 11) || (CurrCommand_801A68DC == 10)) {\n                result = (s32)(__DIRegs[8] << 2);\n            } else {\n                result = (s32)__DIRegs[8];\n            }\n            finished = executing_801A68C0;\n            executing_801A68C0 = &DummyCommandBlock;\n            finished->state = 0;\n            if (finished->callback) {\n                (finished->callback)(result, finished);\n            }\n            stateReady();\n        } else if (CurrCommand_801A68DC == 6) {\n            if (executing_801A68C0->currTransferSize == 0) {\n                if (__DIRegs[8] & 1) {\n                    finished = executing_801A68C0;\n                    executing_801A68C0 = &DummyCommandBlock;\n                    finished->state = 9;\n                    if (finished->callback) {\n                        (finished->callback)(-2, finished);\n                    }\n                    stateReady();\n                } else {\n                    lbl_801A68D4 = 0;\n                    executing_801A68C0->currTransferSize = 1;\n                    DVDLowAudioStream(0, executing_801A68C0->length, executing_801A68C0->offset,\n                                      fn_80018D1C);\n                }\n            } else {\n                finished = executing_801A68C0;\n                executing_801A68C0 = &DummyCommandBlock;\n                finished->state = 0;\n                if (finished->callback) {\n                    (finished->callback)(0, finished);\n                }\n                stateReady();\n            }\n        } else {\n            finished = executing_801A68C0;\n            executing_801A68C0 = &DummyCommandBlock;\n            finished->state = 0;\n            if (finished->callback) {\n                (finished->callback)(0, finished);\n            }\n            stateReady();\n        }\n    } else {\n        if (CurrCommand_801A68DC == 14) {\n            executing_801A68C0->state = -1;\n            stateError(0x01234567);\n            return;\n        }\n        if ((CurrCommand_801A68DC == 1 || CurrCommand_801A68DC == 4 || CurrCommand_801A68DC == 5 ||\n             CurrCommand_801A68DC == 14) &&\n            (executing_801A68C0->transferredSize == executing_801A68C0->length)) {\n            if (CheckCancel(0)) {\n                return;\n            }\n            finished = executing_801A68C0;\n            executing_801A68C0 = &DummyCommandBlock;\n            finished->state = 0;\n            if (finished->callback) {\n                (finished->callback)((s32)finished->transferredSize, finished);\n            }\n            stateReady();\n            return;\n        }\n        stateGettingError();\n    }\n}\n",
+    "generated_sha256": "d062dced733655e92b6646689373326ae0f71af1f34c56ca0a252e1079792168",
+    "compiler": "GC/1.2.5n",
+    "flags": "-use_lmw_stmw on -fp fmadd -fp_contract off -char signed -common off",
+    "source": "dol/fn_80018D1C.c",
+    "bytes": 1592,
+    "recipe": [
+      {
+        "label": "accepted SDK pool",
+        "symbol": "fn_80018D1C",
+        "source": ".fzgx/structural-regions-20260915/sdk-typed-ownership/sources/be5bccbae9f886b9141d675a.c",
+        "sha256": "c75f5fcde39e3f71bbb3a6dda9ae86355faa62e4b60a71d0174f5884404a9c58",
+        "mw": "GC/1.2.5n",
+        "flags": "-use_lmw_stmw on -fp fmadd -fp_contract off -char signed -common off",
+        "target": "/Users/rayan/fzgx/build/GFZE01/obj/dol/fn_80018D1C.o",
+        "id": "be5bccbae9f886b9141d675a344e6e54ad68ea2013977b54e2c7e5d4c2d9b256",
+        "object": ".fzgx/structural-regions-20260915/sdk-typed-ownership/objects/4a23b819f65896c5/be5bccbae9f886b9141d675a/be5bccbae9f886b9141d675a.o",
+        "score": 100.0,
+        "bit_errors": 0,
+        "word_errors": 0,
+        "shape_errors": 0,
+        "aligned_word_percent": 100.0,
+        "response_sha256": "29691e3cbfd87b8978e2b9d2f651b8cf30dac7cccfeaab3c9732fe1ee64933be",
+        "percent": 99.84924,
+        "raw_percent": 99.84924,
+        "percent_adjusted": 100.0,
+        "differing_rows": 0,
+        "instruction_rows": 398,
+        "value_conflicts": 6,
+        "pool_rows": 2,
+        "regions": {
+          "0": [
+            0,
+            0,
+            0
+          ],
+          "36": [
+            0,
+            0,
+            0
+          ],
+          "60": [
+            0,
+            0,
+            0
+          ],
+          "64": [
+            0,
+            0,
+            0
+          ],
+          "72": [
+            0,
+            0,
+            0
+          ],
+          "76": [
+            0,
+            0,
+            0
+          ],
+          "88": [
+            0,
+            0,
+            0
+          ],
+          "100": [
+            0,
+            0,
+            0
+          ],
+          "108": [
+            0,
+            0,
+            0
+          ],
+          "132": [
+            0,
+            0,
+            0
+          ],
+          "144": [
+            0,
+            0,
+            0
+          ],
+          "148": [
+            0,
+            0,
+            0
+          ],
+          "168": [
+            0,
+            0,
+            0
+          ],
+          "176": [
+            0,
+            0,
+            0
+          ],
+          "188": [
+            0,
+            0,
+            0
+          ],
+          "236": [
+            0,
+            0,
+            0
+          ],
+          "252": [
+            0,
+            0,
+            0
+          ],
+          "264": [
+            0,
+            0,
+            0
+          ],
+          "280": [
+            0,
+            0,
+            0
+          ],
+          "284": [
+            0,
+            0,
+            0
+          ],
+          "292": [
+            0,
+            0,
+            0
+          ],
+          "296": [
+            0,
+            0,
+            0
+          ],
+          "304": [
+            0,
+            0,
+            0
+          ],
+          "328": [
+            0,
+            0,
+            0
+          ],
+          "332": [
+            0,
+            0,
+            0
+          ],
+          "344": [
+            0,
+            0,
+            0
+          ],
+          "356": [
+            0,
+            0,
+            0
+          ],
+          "364": [
+            0,
+            0,
+            0
+          ],
+          "372": [
+            0,
+            0,
+            0
+          ],
+          "384": [
+            0,
+            0,
+            0
+          ],
+          "392": [
+            0,
+            0,
+            0
+          ],
+          "396": [
+            0,
+            0,
+            0
+          ],
+          "404": [
+            0,
+            0,
+            0
+          ],
+          "440": [
+            0,
+            0,
+            0
+          ],
+          "448": [
+            0,
+            0,
+            0
+          ],
+          "488": [
+            0,
+            0,
+            0
+          ],
+          "504": [
+            0,
+            0,
+            0
+          ],
+          "516": [
+            0,
+            0,
+            0
+          ],
+          "532": [
+            0,
+            0,
+            0
+          ],
+          "536": [
+            0,
+            0,
+            0
+          ],
+          "540": [
+            0,
+            0,
+            0
+          ],
+          "548": [
+            0,
+            0,
+            0
+          ],
+          "568": [
+            0,
+            0,
+            0
+          ],
+          "608": [
+            0,
+            0,
+            0
+          ],
+          "624": [
+            0,
+            0,
+            0
+          ],
+          "636": [
+            0,
+            0,
+            0
+          ],
+          "652": [
+            0,
+            0,
+            0
+          ],
+          "656": [
+            0,
+            0,
+            0
+          ],
+          "660": [
+            0,
+            0,
+            0
+          ],
+          "668": [
+            0,
+            0,
+            0
+          ],
+          "680": [
+            0,
+            0,
+            0
+          ],
+          "692": [
+            0,
+            0,
+            0
+          ],
+          "700": [
+            0,
+            0,
+            0
+          ],
+          "708": [
+            0,
+            0,
+            0
+          ],
+          "720": [
+            0,
+            0,
+            0
+          ],
+          "728": [
+            0,
+            0,
+            0
+          ],
+          "732": [
+            0,
+            0,
+            0
+          ],
+          "740": [
+            0,
+            0,
+            0
+          ],
+          "760": [
+            0,
+            0,
+            0
+          ],
+          "764": [
+            0,
+            0,
+            0
+          ],
+          "768": [
+            0,
+            0,
+            0
+          ],
+          "800": [
+            0,
+            0,
+            0
+          ],
+          "812": [
+            0,
+            0,
+            0
+          ],
+          "816": [
+            0,
+            0,
+            0
+          ],
+          "820": [
+            0,
+            0,
+            0
+          ],
+          "836": [
+            0,
+            0,
+            0
+          ],
+          "844": [
+            0,
+            0,
+            0
+          ],
+          "860": [
+            0,
+            0,
+            0
+          ],
+          "868": [
+            0,
+            0,
+            0
+          ],
+          "880": [
+            0,
+            0,
+            0
+          ],
+          "888": [
+            0,
+            0,
+            0
+          ],
+          "900": [
+            0,
+            0,
+            0
+          ],
+          "908": [
+            0,
+            0,
+            0
+          ],
+          "912": [
+            0,
+            0,
+            0
+          ],
+          "920": [
+            0,
+            0,
+            0
+          ],
+          "932": [
+            0,
+            0,
+            0
+          ],
+          "944": [
+            0,
+            0,
+            0
+          ],
+          "960": [
+            0,
+            0,
+            0
+          ],
+          "972": [
+            0,
+            0,
+            0
+          ],
+          "1004": [
+            0,
+            0,
+            0
+          ],
+          "1012": [
+            0,
+            0,
+            0
+          ],
+          "1016": [
+            0,
+            0,
+            0
+          ],
+          "1020": [
+            0,
+            0,
+            0
+          ],
+          "1032": [
+            0,
+            0,
+            0
+          ],
+          "1052": [
+            0,
+            0,
+            0
+          ],
+          "1068": [
+            0,
+            0,
+            0
+          ],
+          "1096": [
+            0,
+            0,
+            0
+          ],
+          "1108": [
+            0,
+            0,
+            0
+          ],
+          "1112": [
+            0,
+            0,
+            0
+          ],
+          "1116": [
+            0,
+            0,
+            0
+          ],
+          "1160": [
+            0,
+            0,
+            0
+          ],
+          "1164": [
+            0,
+            0,
+            0
+          ],
+          "1192": [
+            0,
+            0,
+            0
+          ],
+          "1204": [
+            0,
+            0,
+            0
+          ],
+          "1208": [
+            0,
+            0,
+            0
+          ],
+          "1212": [
+            0,
+            0,
+            0
+          ],
+          "1244": [
+            0,
+            0,
+            0
+          ],
+          "1256": [
+            0,
+            0,
+            0
+          ],
+          "1260": [
+            0,
+            0,
+            0
+          ],
+          "1264": [
+            0,
+            0,
+            0
+          ],
+          "1276": [
+            0,
+            0,
+            0
+          ],
+          "1300": [
+            0,
+            0,
+            0
+          ],
+          "1312": [
+            0,
+            0,
+            0
+          ],
+          "1316": [
+            0,
+            0,
+            0
+          ],
+          "1328": [
+            0,
+            0,
+            0
+          ],
+          "1340": [
+            0,
+            0,
+            0
+          ],
+          "1352": [
+            0,
+            0,
+            0
+          ],
+          "1364": [
+            0,
+            0,
+            0
+          ],
+          "1384": [
+            0,
+            0,
+            0
+          ],
+          "1396": [
+            0,
+            0,
+            0
+          ],
+          "1436": [
+            0,
+            0,
+            0
+          ],
+          "1452": [
+            0,
+            0,
+            0
+          ],
+          "1464": [
+            0,
+            0,
+            0
+          ],
+          "1480": [
+            0,
+            0,
+            0
+          ],
+          "1484": [
+            0,
+            0,
+            0
+          ],
+          "1492": [
+            0,
+            0,
+            0
+          ],
+          "1496": [
+            0,
+            0,
+            0
+          ],
+          "1504": [
+            0,
+            0,
+            0
+          ],
+          "1536": [
+            0,
+            0,
+            0
+          ],
+          "1548": [
+            0,
+            0,
+            0
+          ],
+          "1552": [
+            0,
+            0,
+            0
+          ],
+          "1556": [
+            0,
+            0,
+            0
+          ],
+          "1568": [
+            0,
+            0,
+            0
+          ]
+        },
+        "matched": true,
+        "binding_score": 100.0
+      },
+      [
+        {
+          "label": "canonical BSS subobjects and private layout padding",
+          "input_sha256": "c75f5fcde39e3f71bbb3a6dda9ae86355faa62e4b60a71d0174f5884404a9c58",
+          "output_sha256": "d062dced733655e92b6646689373326ae0f71af1f34c56ca0a252e1079792168",
+          "input_symbol": "fn_80018D1C",
+          "output_symbol": "fn_80018D1C",
+          "edits": [
+            [
+              1352,
+              1366,
+              "lbl_8015CE60__fzgx_offset_"
+            ],
+            [
+              1690,
+              1704,
+              "lbl_8015CE60__fzgx_offset_"
+            ]
+          ]
+        }
+      ]
+    ],
+    "headers_sha256": "a3db0164dc3a0250a1c1729dabebf7f84ddbd4096090f5f7f2d171ec8ca55bd1",
+    "oracle_sha256": "7cd63033369c3b07e3fe76ed92108263a6d28e5b3f3a8e251f031f42d4f37913",
+    "link": "pending"
+  },
+  "OSInit": {
+    "seed_symbol": "OSInit",
+    "seed": "#include <dolphin/os.h>\n#include <dolphin/dvd.h>\n#include <dolphin/os/OSCache.h>\n#include <dolphin/os/OSInterrupt.h>\n#include <dolphin/os/OSTime.h>\n#include <dolphin/types.h>\n#include \"sdk_addresses.h\"\n#pragma peephole off\n\nstruct OSMessages {\n    char padding_0[68];\n    char message_44[13];\n    char padding_51[3];\n    char message_54[22];\n    char padding_6a[2];\n    char message_6c[12];\n    char message_78[9];\n    char padding_81[3];\n    char message_84[16];\n    char message_94[11];\n    char padding_9f[1];\n    char message_a0[14];\n    char padding_ae[2];\n    char message_b0[13];\n    char padding_bd[3];\n    char message_c0[13];\n    char padding_cd[3];\n    char message_d0[13];\n    char padding_dd[3];\n    char message_e0[25];\n    char padding_f9[3];\n    char message_fc[14];\n    char padding_10a[2];\n    char message_10c[21];\n};\n\ntypedef struct DVDDriveInfo {\n    u16 revisionLevel;\n    u16 deviceCode;\n    u32 releaseDate;\n    u8 padding[24];\n} DVDDriveInfo;\n\ntypedef struct OSBootInfo {\n    DVDDiskID DVDDiskID;\n    u32 magic;\n    u32 version;\n    u32 memorySize;\n    u32 consoleType;\n    void *arenaLo;\n    void *arenaHi;\n    void *FSTLocation;\n    u32 FSTMaxLength;\n} OSBootInfo;\n\ntypedef struct BI2Debug {\n    s32 debugMonSize;\n    s32 simMemSize;\n    u32 argOffset;\n    u32 debugFlag;\n    int trackLocation;\n    int trackSize;\n    u32 countryCode;\n    u8 unk[8];\n    u32 padSpec;\n} BI2Debug;\n\nextern unsigned char OSDataPool[];\n\nvoid *OSGetArenaLo(void);\n\nvoid OSSetArenaHi(void *newHi);\n\nvoid OSSetArenaLo(void *newLo);\n\nvoid OSRegisterVersion(const char *id);\n\nvoid OSReport(const char *msg, ...);\n\nextern BOOL __OSInIPL;\n\nvoid OSInitAlarm(void);\n\nvoid *OSGetArenaLo(void);\n\nvoid OSSetArenaHi(void *addr);\n\nvoid OSSetArenaLo(void *addr);\n\n__OSInterruptHandler __OSSetInterruptHandler(__OSInterrupt interrupt, __OSInterruptHandler handler);\n\nextern BOOL __OSIsGcam;\n\nvoid DVDInit();\n\nBOOL DVDInquiryAsync(DVDCommandBlock *block, DVDDriveInfo *info, DVDCBCallback callback);\n\nextern const char *__OSVersion;\n\nextern char _stack_addr[];\n\nextern char *__OSResetSWInterruptHandler[];\n\nvu16 __OSDeviceCode : FZGX_ADDR___OSDeviceCode;\n\nstatic DVDDriveInfo DriveInfo_8015BF00;\n\nstatic DVDCommandBlock DriveBlock;\n\nextern OSBootInfo *BootInfo_801A6748;\n\nextern u32 *BI2DebugFlag_801A674C;\n\nextern u32 *BI2DebugFlagHolder_801A6750;\n\nextern BOOL AreWeInitialized_801A6768;\n\nextern OSTime __OSStartTime;\n\nextern u8 __ArenaHi[];\n\nextern u8 __ArenaLo[];\n\nextern u32 __DVDLongFileNameFlag;\n\nextern u32 __PADSpec;\n\nvoid OSExceptionInit(void);\n\nvoid ClearArena(void);\n\nvoid InquiryCallback(s32 result, DVDCommandBlock *block);\n\nvoid OSInit(void) {\n    struct OSMessages *messages = (struct OSMessages *)OSDataPool;\n\n    BI2Debug *DebugInfo;\n    void *debugArenaLo;\n    u32 inputConsoleType;\n    u32 tdev;\n    if ((BOOL)AreWeInitialized_801A6768 == 0) {\n        AreWeInitialized_801A6768 = 1;\n        __OSStartTime = __OSGetSystemTime();\n        OSDisableInterrupts();\n        PPCMtmmcr0(0);\n        PPCMtmmcr1(0);\n        PPCMtpmc1(0);\n        PPCMtpmc2(0);\n        PPCMtpmc3(0);\n        PPCMtpmc4(0);\n        PPCDisableSpeculation();\n        PPCSetFpNonIEEEMode();\n        BI2DebugFlag_801A674C = 0;\n        BootInfo_801A6748 = (OSBootInfo *)(0x8000 << 16);\n        __DVDLongFileNameFlag = (u32)0;\n        DebugInfo = (BI2Debug *)*((u32 *)FZGX_ADDR___OSBI2Pointer);\n        if (DebugInfo != ((void *)0)) {\n            BI2DebugFlag_801A674C = &DebugInfo->debugFlag;\n            __PADSpec = (u32)DebugInfo->padSpec;\n            *((u8 *)FZGX_ADDR___OSBI2DebugFlag) = (u8)*BI2DebugFlag_801A674C;\n            *((u8 *)FZGX_ADDR___OSPadSpecByte) = (u8)__PADSpec;\n        } else if (BootInfo_801A6748->arenaHi) {\n            BI2DebugFlagHolder_801A6750 = (u32 *)*((u8 *)FZGX_ADDR___OSBI2DebugFlag);\n            BI2DebugFlag_801A674C = (u32 *)&BI2DebugFlagHolder_801A6750;\n            __PADSpec = (u32) * ((u8 *)FZGX_ADDR___OSPadSpecByte);\n        }\n        __DVDLongFileNameFlag = 1;\n        OSSetArenaLo((BootInfo_801A6748->arenaLo == ((void *)0)) ? __ArenaLo\n                                                                 : BootInfo_801A6748->arenaLo);\n        if ((BootInfo_801A6748->arenaLo == ((void *)0)) && (BI2DebugFlag_801A674C != 0) &&\n            (*BI2DebugFlag_801A674C < 2)) {\n            debugArenaLo = (char *)(((u32)_stack_addr + 0x1f) & ~0x1f);\n            OSSetArenaLo(debugArenaLo);\n        }\n        OSSetArenaHi((BootInfo_801A6748->arenaHi == ((void *)0)) ? __ArenaHi\n                                                                 : BootInfo_801A6748->arenaHi);\n        OSExceptionInit();\n        __OSInitSystemCall();\n        OSInitAlarm();\n        __OSModuleInit();\n        __OSInterruptInit();\n        __OSSetInterruptHandler(22, (void *)__OSResetSWInterruptHandler);\n        __OSContextInit();\n        __OSCacheInit();\n        EXIInit();\n        SIInit();\n        __OSInitSram();\n        __OSThreadInit();\n        __OSInitAudioSystem();\n        PPCMthid2(PPCMfhid2() & 0xBFFFFFFF);\n        if ((BOOL)__OSInIPL == 0) {\n            __OSInitMemoryProtection();\n        }\n        OSReport(messages->message_44);\n        OSReport(messages->message_54, messages->message_6c, messages->message_78);\n        OSReport(messages->message_84);\n        if (BootInfo_801A6748 == ((void *)0) ||\n            (inputConsoleType = BootInfo_801A6748->consoleType) == 0) {\n            inputConsoleType = 0x10000002;\n        } else {\n            inputConsoleType = BootInfo_801A6748->consoleType;\n        }\n        switch (inputConsoleType & 0xF0000000) {\n        case 0x00000000:\n            OSReport(messages->message_94, inputConsoleType);\n            break;\n        case 0x10000000:\n        case 0x20000000:\n            switch (inputConsoleType & 0x0FFFFFFF) {\n            case 0x10000000:\n                OSReport(messages->message_a0);\n                break;\n            case 0x10000001:\n                OSReport(messages->message_b0);\n                break;\n            case 0x10000002:\n                OSReport(messages->message_c0);\n                break;\n            case 0x10000003:\n                OSReport(messages->message_d0);\n                break;\n            default:\n                tdev = (u32)inputConsoleType & 0x0FFFFFFF;\n                OSReport(messages->message_e0, tdev - 3, inputConsoleType);\n                break;\n            }\n            break;\n        default:\n            OSReport(\"%08x\\n\", inputConsoleType);\n            break;\n        }\n        OSReport(messages->message_fc, (u32)BootInfo_801A6748->memorySize >> 0x14U);\n        OSReport(messages->message_10c, OSGetArenaLo(), OSGetArenaHi());\n        OSRegisterVersion(__OSVersion);\n        if (BI2DebugFlag_801A674C && ((*BI2DebugFlag_801A674C) >= 2)) {\n            EnableMetroTRKInterrupts();\n        }\n        ClearArena();\n        OSEnableInterrupts();\n        if ((BOOL)__OSInIPL == 0) {\n            DVDInit();\n            if ((BOOL)__OSIsGcam) {\n                __OSDeviceCode = 0x9000;\n                return;\n            }\n            DCInvalidateRange(&DriveInfo_8015BF00, sizeof(DriveInfo_8015BF00));\n            DVDInquiryAsync(&DriveBlock, &DriveInfo_8015BF00, InquiryCallback);\n        }\n    }\n}\n",
+    "seed_sha256": "fa9c686eb6a2bf85317d9104b95280b0ddb34c3401ff475793481959d0cecd1e",
+    "generator": "fzgx fixup",
+    "transform": "bind measured SDK shared objects",
+    "generated_source": "#include <dolphin/os.h>\n#include <dolphin/dvd.h>\n#include <dolphin/os/OSCache.h>\n#include <dolphin/os/OSInterrupt.h>\n#include <dolphin/os/OSTime.h>\n#include <dolphin/types.h>\n#include \"sdk_addresses.h\"\n#pragma peephole off\n\nstruct OSMessages {\n    char padding_0[68];\n    char message_44[13];\n    char padding_51[3];\n    char message_54[22];\n    char padding_6a[2];\n    char message_6c[12];\n    char message_78[9];\n    char padding_81[3];\n    char message_84[16];\n    char message_94[11];\n    char padding_9f[1];\n    char message_a0[14];\n    char padding_ae[2];\n    char message_b0[13];\n    char padding_bd[3];\n    char message_c0[13];\n    char padding_cd[3];\n    char message_d0[13];\n    char padding_dd[3];\n    char message_e0[25];\n    char padding_f9[3];\n    char message_fc[14];\n    char padding_10a[2];\n    char message_10c[21];\n};\n\ntypedef struct DVDDriveInfo {\n    u16 revisionLevel;\n    u16 deviceCode;\n    u32 releaseDate;\n    u8 padding[24];\n} DVDDriveInfo;\n\ntypedef struct OSBootInfo {\n    DVDDiskID DVDDiskID;\n    u32 magic;\n    u32 version;\n    u32 memorySize;\n    u32 consoleType;\n    void *arenaLo;\n    void *arenaHi;\n    void *FSTLocation;\n    u32 FSTMaxLength;\n} OSBootInfo;\n\ntypedef struct BI2Debug {\n    s32 debugMonSize;\n    s32 simMemSize;\n    u32 argOffset;\n    u32 debugFlag;\n    int trackLocation;\n    int trackSize;\n    u32 countryCode;\n    u8 unk[8];\n    u32 padSpec;\n} BI2Debug;\n\nextern unsigned char OSDataPool[];\n\nvoid *OSGetArenaLo(void);\n\nvoid OSSetArenaHi(void *newHi);\n\nvoid OSSetArenaLo(void *newLo);\n\nvoid OSRegisterVersion(const char *id);\n\nvoid OSReport(const char *msg, ...);\n\nextern BOOL __OSInIPL;\n\nvoid OSInitAlarm(void);\n\nvoid *OSGetArenaLo(void);\n\nvoid OSSetArenaHi(void *addr);\n\nvoid OSSetArenaLo(void *addr);\n\n__OSInterruptHandler __OSSetInterruptHandler(__OSInterrupt interrupt, __OSInterruptHandler handler);\n\nextern BOOL __OSIsGcam;\n\nvoid DVDInit();\n\nBOOL DVDInquiryAsync(DVDCommandBlock *block, DVDDriveInfo *info, DVDCBCallback callback);\n\nextern const char *__OSVersion;\n\nextern char _stack_addr[];\n\nextern char *__OSResetSWInterruptHandler[];\n\nvu16 __OSDeviceCode : FZGX_ADDR___OSDeviceCode;\n\nstatic DVDDriveInfo DriveInfo_8015BF00;\n\nstatic DVDCommandBlock __OSDriveBlock__fzgx_offset_0;\n\nextern OSBootInfo *BootInfo_801A6748;\n\nextern u32 *BI2DebugFlag_801A674C;\n\nextern u32 *BI2DebugFlagHolder_801A6750;\n\nextern BOOL AreWeInitialized_801A6768;\n\nextern OSTime __OSStartTime;\n\nextern u8 __ArenaHi[];\n\nextern u8 __ArenaLo[];\n\nextern u32 __DVDLongFileNameFlag;\n\nextern u32 __PADSpec;\n\nvoid OSExceptionInit(void);\n\nvoid ClearArena(void);\n\nvoid InquiryCallback(s32 result, DVDCommandBlock *block);\n\nvoid OSInit(void) {\n    struct OSMessages *messages = (struct OSMessages *)OSDataPool;\n\n    BI2Debug *DebugInfo;\n    void *debugArenaLo;\n    u32 inputConsoleType;\n    u32 tdev;\n    if ((BOOL)AreWeInitialized_801A6768 == 0) {\n        AreWeInitialized_801A6768 = 1;\n        __OSStartTime = __OSGetSystemTime();\n        OSDisableInterrupts();\n        PPCMtmmcr0(0);\n        PPCMtmmcr1(0);\n        PPCMtpmc1(0);\n        PPCMtpmc2(0);\n        PPCMtpmc3(0);\n        PPCMtpmc4(0);\n        PPCDisableSpeculation();\n        PPCSetFpNonIEEEMode();\n        BI2DebugFlag_801A674C = 0;\n        BootInfo_801A6748 = (OSBootInfo *)(0x8000 << 16);\n        __DVDLongFileNameFlag = (u32)0;\n        DebugInfo = (BI2Debug *)*((u32 *)FZGX_ADDR___OSBI2Pointer);\n        if (DebugInfo != ((void *)0)) {\n            BI2DebugFlag_801A674C = &DebugInfo->debugFlag;\n            __PADSpec = (u32)DebugInfo->padSpec;\n            *((u8 *)FZGX_ADDR___OSBI2DebugFlag) = (u8)*BI2DebugFlag_801A674C;\n            *((u8 *)FZGX_ADDR___OSPadSpecByte) = (u8)__PADSpec;\n        } else if (BootInfo_801A6748->arenaHi) {\n            BI2DebugFlagHolder_801A6750 = (u32 *)*((u8 *)FZGX_ADDR___OSBI2DebugFlag);\n            BI2DebugFlag_801A674C = (u32 *)&BI2DebugFlagHolder_801A6750;\n            __PADSpec = (u32) * ((u8 *)FZGX_ADDR___OSPadSpecByte);\n        }\n        __DVDLongFileNameFlag = 1;\n        OSSetArenaLo((BootInfo_801A6748->arenaLo == ((void *)0)) ? __ArenaLo\n                                                                 : BootInfo_801A6748->arenaLo);\n        if ((BootInfo_801A6748->arenaLo == ((void *)0)) && (BI2DebugFlag_801A674C != 0) &&\n            (*BI2DebugFlag_801A674C < 2)) {\n            debugArenaLo = (char *)(((u32)_stack_addr + 0x1f) & ~0x1f);\n            OSSetArenaLo(debugArenaLo);\n        }\n        OSSetArenaHi((BootInfo_801A6748->arenaHi == ((void *)0)) ? __ArenaHi\n                                                                 : BootInfo_801A6748->arenaHi);\n        OSExceptionInit();\n        __OSInitSystemCall();\n        OSInitAlarm();\n        __OSModuleInit();\n        __OSInterruptInit();\n        __OSSetInterruptHandler(22, (void *)__OSResetSWInterruptHandler);\n        __OSContextInit();\n        __OSCacheInit();\n        EXIInit();\n        SIInit();\n        __OSInitSram();\n        __OSThreadInit();\n        __OSInitAudioSystem();\n        PPCMthid2(PPCMfhid2() & 0xBFFFFFFF);\n        if ((BOOL)__OSInIPL == 0) {\n            __OSInitMemoryProtection();\n        }\n        OSReport(messages->message_44);\n        OSReport(messages->message_54, messages->message_6c, messages->message_78);\n        OSReport(messages->message_84);\n        if (BootInfo_801A6748 == ((void *)0) ||\n            (inputConsoleType = BootInfo_801A6748->consoleType) == 0) {\n            inputConsoleType = 0x10000002;\n        } else {\n            inputConsoleType = BootInfo_801A6748->consoleType;\n        }\n        switch (inputConsoleType & 0xF0000000) {\n        case 0x00000000:\n            OSReport(messages->message_94, inputConsoleType);\n            break;\n        case 0x10000000:\n        case 0x20000000:\n            switch (inputConsoleType & 0x0FFFFFFF) {\n            case 0x10000000:\n                OSReport(messages->message_a0);\n                break;\n            case 0x10000001:\n                OSReport(messages->message_b0);\n                break;\n            case 0x10000002:\n                OSReport(messages->message_c0);\n                break;\n            case 0x10000003:\n                OSReport(messages->message_d0);\n                break;\n            default:\n                tdev = (u32)inputConsoleType & 0x0FFFFFFF;\n                OSReport(messages->message_e0, tdev - 3, inputConsoleType);\n                break;\n            }\n            break;\n        default:\n            OSReport(\"%08x\\n\", inputConsoleType);\n            break;\n        }\n        OSReport(messages->message_fc, (u32)BootInfo_801A6748->memorySize >> 0x14U);\n        OSReport(messages->message_10c, OSGetArenaLo(), OSGetArenaHi());\n        OSRegisterVersion(__OSVersion);\n        if (BI2DebugFlag_801A674C && ((*BI2DebugFlag_801A674C) >= 2)) {\n            EnableMetroTRKInterrupts();\n        }\n        ClearArena();\n        OSEnableInterrupts();\n        if ((BOOL)__OSInIPL == 0) {\n            DVDInit();\n            if ((BOOL)__OSIsGcam) {\n                __OSDeviceCode = 0x9000;\n                return;\n            }\n            DCInvalidateRange(&DriveInfo_8015BF00, sizeof(DriveInfo_8015BF00));\n            DVDInquiryAsync(&__OSDriveBlock__fzgx_offset_0, &DriveInfo_8015BF00, InquiryCallback);\n        }\n    }\n}\n",
+    "generated_sha256": "2120fa5b7c199cebe715413dcffad6f42d68fa36d6d0872299d80b95b07b5b27",
+    "compiler": "GC/1.2.5n",
+    "flags": "-use_lmw_stmw on -fp fmadd -fp_contract off -char signed -common off",
+    "source": "dol/OSInit.c",
+    "bytes": 984,
+    "recipe": [
+      {
+        "label": "accepted SDK pool",
+        "symbol": "OSInit",
+        "source": ".fzgx/structural-regions-20260915/sdk-typed-ownership/sources/1fea242dd16fa9b77fd7b31b.c",
+        "sha256": "fa9c686eb6a2bf85317d9104b95280b0ddb34c3401ff475793481959d0cecd1e",
+        "mw": "GC/1.2.5n",
+        "flags": "-use_lmw_stmw on -fp fmadd -fp_contract off -char signed -common off",
+        "target": "/Users/rayan/fzgx/build/GFZE01/obj/dol/OSInit.o",
+        "id": "1fea242dd16fa9b77fd7b31b26275868bcb756535c36881cd3e538e4e883dfd5",
+        "object": ".fzgx/structural-regions-20260915/sdk-typed-ownership/objects/4a23b819f65896c5/1fea242dd16fa9b77fd7b31b/1fea242dd16fa9b77fd7b31b.o",
+        "score": 100.0,
+        "bit_errors": 0,
+        "word_errors": 0,
+        "shape_errors": 0,
+        "aligned_word_percent": 100.0,
+        "response_sha256": "60032810e32665774ed33c3e9f10b554de6919ad268c52ac15e192da8e692f53",
+        "percent": 99.87805,
+        "raw_percent": 99.87805,
+        "percent_adjusted": 100.0,
+        "differing_rows": 0,
+        "instruction_rows": 246,
+        "value_conflicts": 0,
+        "pool_rows": 5,
+        "regions": {
+          "0": [
+            0,
+            0,
+            0
+          ],
+          "52": [
+            0,
+            0,
+            0
+          ],
+          "64": [
+            0,
+            0,
+            0
+          ],
+          "76": [
+            0,
+            0,
+            0
+          ],
+          "84": [
+            0,
+            0,
+            0
+          ],
+          "92": [
+            0,
+            0,
+            0
+          ],
+          "100": [
+            0,
+            0,
+            0
+          ],
+          "108": [
+            0,
+            0,
+            0
+          ],
+          "116": [
+            0,
+            0,
+            0
+          ],
+          "124": [
+            0,
+            0,
+            0
+          ],
+          "128": [
+            0,
+            0,
+            0
+          ],
+          "132": [
+            0,
+            0,
+            0
+          ],
+          "164": [
+            0,
+            0,
+            0
+          ],
+          "212": [
+            0,
+            0,
+            0
+          ],
+          "224": [
+            0,
+            0,
+            0
+          ],
+          "248": [
+            0,
+            0,
+            0
+          ],
+          "272": [
+            0,
+            0,
+            0
+          ],
+          "284": [
+            0,
+            0,
+            0
+          ],
+          "288": [
+            0,
+            0,
+            0
+          ],
+          "304": [
+            0,
+            0,
+            0
+          ],
+          "316": [
+            0,
+            0,
+            0
+          ],
+          "328": [
+            0,
+            0,
+            0
+          ],
+          "348": [
+            0,
+            0,
+            0
+          ],
+          "364": [
+            0,
+            0,
+            0
+          ],
+          "376": [
+            0,
+            0,
+            0
+          ],
+          "380": [
+            0,
+            0,
+            0
+          ],
+          "384": [
+            0,
+            0,
+            0
+          ],
+          "388": [
+            0,
+            0,
+            0
+          ],
+          "392": [
+            0,
+            0,
+            0
+          ],
+          "396": [
+            0,
+            0,
+            0
+          ],
+          "400": [
+            0,
+            0,
+            0
+          ],
+          "416": [
+            0,
+            0,
+            0
+          ],
+          "420": [
+            0,
+            0,
+            0
+          ],
+          "424": [
+            0,
+            0,
+            0
+          ],
+          "428": [
+            0,
+            0,
+            0
+          ],
+          "432": [
+            0,
+            0,
+            0
+          ],
+          "436": [
+            0,
+            0,
+            0
+          ],
+          "440": [
+            0,
+            0,
+            0
+          ],
+          "444": [
+            0,
+            0,
+            0
+          ],
+          "448": [
+            0,
+            0,
+            0
+          ],
+          "456": [
+            0,
+            0,
+            0
+          ],
+          "468": [
+            0,
+            0,
+            0
+          ],
+          "472": [
+            0,
+            0,
+            0
+          ],
+          "484": [
+            0,
+            0,
+            0
+          ],
+          "504": [
+            0,
+            0,
+            0
+          ],
+          "516": [
+            0,
+            0,
+            0
+          ],
+          "528": [
+            0,
+            0,
+            0
+          ],
+          "540": [
+            0,
+            0,
+            0
+          ],
+          "552": [
+            0,
+            0,
+            0
+          ],
+          "568": [
+            0,
+            0,
+            0
+          ],
+          "572": [
+            0,
+            0,
+            0
+          ],
+          "580": [
+            0,
+            0,
+            0
+          ],
+          "584": [
+            0,
+            0,
+            0
+          ],
+          "596": [
+            0,
+            0,
+            0
+          ],
+          "600": [
+            0,
+            0,
+            0
+          ],
+          "612": [
+            0,
+            0,
+            0
+          ],
+          "616": [
+            0,
+            0,
+            0
+          ],
+          "636": [
+            0,
+            0,
+            0
+          ],
+          "640": [
+            0,
+            0,
+            0
+          ],
+          "648": [
+            0,
+            0,
+            0
+          ],
+          "652": [
+            0,
+            0,
+            0
+          ],
+          "656": [
+            0,
+            0,
+            0
+          ],
+          "668": [
+            0,
+            0,
+            0
+          ],
+          "672": [
+            0,
+            0,
+            0
+          ],
+          "684": [
+            0,
+            0,
+            0
+          ],
+          "688": [
+            0,
+            0,
+            0
+          ],
+          "700": [
+            0,
+            0,
+            0
+          ],
+          "704": [
+            0,
+            0,
+            0
+          ],
+          "716": [
+            0,
+            0,
+            0
+          ],
+          "720": [
+            0,
+            0,
+            0
+          ],
+          "732": [
+            0,
+            0,
+            0
+          ],
+          "736": [
+            0,
+            0,
+            0
+          ],
+          "760": [
+            0,
+            0,
+            0
+          ],
+          "764": [
+            0,
+            0,
+            0
+          ],
+          "776": [
+            0,
+            0,
+            0
+          ],
+          "800": [
+            0,
+            0,
+            0
+          ],
+          "804": [
+            0,
+            0,
+            0
+          ],
+          "812": [
+            0,
+            0,
+            0
+          ],
+          "832": [
+            0,
+            0,
+            0
+          ],
+          "840": [
+            0,
+            0,
+            0
+          ],
+          "852": [
+            0,
+            0,
+            0
+          ],
+          "864": [
+            0,
+            0,
+            0
+          ],
+          "868": [
+            0,
+            0,
+            0
+          ],
+          "872": [
+            0,
+            0,
+            0
+          ],
+          "876": [
+            0,
+            0,
+            0
+          ],
+          "888": [
+            0,
+            0,
+            0
+          ],
+          "892": [
+            0,
+            0,
+            0
+          ],
+          "904": [
+            0,
+            0,
+            0
+          ],
+          "924": [
+            0,
+            0,
+            0
+          ],
+          "936": [
+            0,
+            0,
+            0
+          ],
+          "956": [
+            0,
+            0,
+            0
+          ]
+        },
+        "matched": true,
+        "binding_score": 100.0
+      },
+      [
+        {
+          "label": "canonical BSS subobjects and private layout padding",
+          "input_sha256": "fa9c686eb6a2bf85317d9104b95280b0ddb34c3401ff475793481959d0cecd1e",
+          "output_sha256": "2120fa5b7c199cebe715413dcffad6f42d68fa36d6d0872299d80b95b07b5b27",
+          "input_symbol": "OSInit",
+          "output_symbol": "OSInit",
+          "edits": [
+            [
+              2209,
+              2219,
+              "__OSDriveBlock__fzgx_offset_0"
+            ],
+            [
+              7127,
+              7137,
+              "__OSDriveBlock__fzgx_offset_0"
+            ]
+          ]
+        }
+      ]
+    ],
+    "headers_sha256": "a3db0164dc3a0250a1c1729dabebf7f84ddbd4096090f5f7f2d171ec8ca55bd1",
+    "oracle_sha256": "7cd63033369c3b07e3fe76ed92108263a6d28e5b3f3a8e251f031f42d4f37913",
+    "link": "pending"
+  },
+  "__DVDInterruptHandler": {
+    "seed_symbol": "__DVDInterruptHandler",
+    "seed": "#include <types.h>\n#include <dolphin/os.h>\n#include <dolphin/os/OSAlarm.h>\n#include <dolphin/os/OSContext.h>\n#include <dolphin/os/OSInterrupt.h>\n#include <dolphin/os/OSTime.h>\n#include <dolphin/types.h>\n#include \"sdk_addresses.h\"\n\ntypedef void (*DVDLowCallback)(u32 intType);\n\ntypedef struct DVDBuffer {\n    void *addr;\n    u32 length;\n    u32 offset;\n} DVDBuffer;\n\ntypedef struct DVDCommand {\n    s32 cmd;\n    void *addr;\n    u32 length;\n    u32 offset;\n    DVDLowCallback callback;\n} DVDCommand;\n\nvoid OSCancelAlarm(OSAlarm *alarm);\n\nu32 __OSBusClock : FZGX_ADDR___OSBusClock;\n\nvu32 __DIRegs[16] : FZGX_ADDR___DIRegs;\n\nBOOL DVDLowSeek(u32 offset, DVDLowCallback callback);\n\nextern BOOL lbl_801A6468;\n\n// Hardware or OS state can change asynchronously.\nextern volatile BOOL StopAtNextInt_801A6858; // fzgx-allow: S2 SDK asynchronous state\n\nextern DVDLowCallback Callback_801A6860;\n\nextern DVDLowCallback lbl_801A6864;\n\n// Hardware or OS state can change asynchronously.\nextern volatile OSTime LastResetEnd_801A6868; // fzgx-allow: S2 SDK asynchronous state\n\n// Hardware or OS state can change asynchronously.\nextern volatile u32 ResetOccurred_801A6870; // fzgx-allow: S2 SDK asynchronous state\n\n// Hardware or OS state can change asynchronously.\nextern volatile BOOL WaitingCoverClose_801A6874; // fzgx-allow: S2 SDK asynchronous state\n\nextern BOOL lbl_801A6878;\n\n// Hardware or OS state can change asynchronously.\nextern volatile OSTime lbl_801A6888; // fzgx-allow: S2 SDK asynchronous state\n\n// Hardware or OS state can change asynchronously.\nextern volatile BOOL lbl_801A6898; // fzgx-allow: S2 SDK asynchronous state\n\nextern vu32 NextCommandNumber_801A689C;\n\nvoid fn_80016394(void *addr, u32 length, u32 offset, DVDLowCallback callback);\n\nstatic DVDCommand CommandList_8015CD70[3];\n\nstatic unsigned char gap____bss_0_3c[44];\n\nstatic OSAlarm AlarmForTimeout;\n\nstatic unsigned char gap____bss_0_90[40];\n\nstatic DVDBuffer Prev;\n\nstatic DVDBuffer Curr;\n\n#pragma section code_type \".fzgxpool\"\nstatic void layout____bss_0(void) {\n// Hardware or OS state can change asynchronously.\n    volatile unsigned char sink; // fzgx-allow: S2 SDK asynchronous state\n    sink = *(unsigned char *)&CommandList_8015CD70;\n    sink = *(unsigned char *)&gap____bss_0_3c;\n    sink = *(unsigned char *)&AlarmForTimeout;\n    sink = *(unsigned char *)&gap____bss_0_90;\n    sink = *(unsigned char *)&Prev;\n    sink = *(unsigned char *)&Curr;\n}\n#pragma section code_type \".text\"\n\nstatic inline BOOL ProcessNextCommand() {\n    s32 n = NextCommandNumber_801A689C;\n    ((void)0);\n    if (CommandList_8015CD70[n].cmd == 1) {\n        ++NextCommandNumber_801A689C;\n        fn_80016394(CommandList_8015CD70[n].addr, CommandList_8015CD70[n].length,\n                    CommandList_8015CD70[n].offset, CommandList_8015CD70[n].callback);\n        return 1;\n    } else if (CommandList_8015CD70[n].cmd == 2) {\n        ++NextCommandNumber_801A689C;\n        DVDLowSeek(CommandList_8015CD70[n].offset, CommandList_8015CD70[n].callback);\n        return 1;\n    }\n    return 0;\n}\n\nvoid __DVDInterruptHandler(__OSInterrupt interrupt, OSContext *context) {\n    DVDLowCallback cb;\n    OSContext exceptionContext;\n    u32 cause = 0;\n    u32 reg;\n    u32 intr;\n    u32 mask;\n    if (lbl_801A6898) {\n        lbl_801A6888 = __OSGetSystemTime();\n        lbl_801A6468 = 0;\n        Prev.addr = Curr.addr;\n        Prev.length = Curr.length;\n        Prev.offset = Curr.offset;\n        if (StopAtNextInt_801A6858 == 1) {\n            cause |= 8;\n        }\n    }\n    lbl_801A6898 = 0;\n    StopAtNextInt_801A6858 = 0;\n    reg = __DIRegs[0];\n    mask = reg & 0x2a;\n    intr = (reg & 0x54) & (mask << 1);\n    if (intr & 0x40) {\n        cause |= 8;\n    }\n    if (intr & 0x10) {\n        cause |= 1;\n    }\n    if (intr & 4) {\n        cause |= 2;\n    }\n    if (cause) {\n        ResetOccurred_801A6870 = 0;\n        OSCancelAlarm(&AlarmForTimeout);\n    }\n    __DIRegs[0] = intr | mask;\n    if (ResetOccurred_801A6870 && (__OSGetSystemTime() - LastResetEnd_801A6868) <\n                                      ((200) * (((u32)__OSBusClock / 4) / 1000))) {\n        reg = __DIRegs[1];\n        mask = reg & 0x2;\n        intr = (reg & 4) & (mask << 1);\n        if (intr & 4) {\n            if (lbl_801A6864) {\n                lbl_801A6864(4);\n            }\n            lbl_801A6864 = 0;\n        }\n        __DIRegs[1] = __DIRegs[1];\n    } else if (WaitingCoverClose_801A6874) {\n        reg = __DIRegs[1];\n        mask = reg & 2;\n        intr = (reg & 4) & (mask << 1);\n        if (intr & 4) {\n            cause |= 4;\n        }\n        __DIRegs[1] = intr | mask;\n        WaitingCoverClose_801A6874 = 0;\n    } else {\n        __DIRegs[1] = 0;\n    }\n    if ((cause & 8) && !lbl_801A6878) {\n        cause &= ~8;\n    }\n    if ((cause & 1)) {\n        if (ProcessNextCommand()) {\n            return;\n        }\n    } else {\n        CommandList_8015CD70[0].cmd = -1;\n        NextCommandNumber_801A689C = 0;\n    }\n    OSClearContext(&exceptionContext);\n    OSSetCurrentContext(&exceptionContext);\n    if (cause) {\n        cb = Callback_801A6860;\n        Callback_801A6860 = 0;\n        if (cb) {\n            cb(cause);\n        }\n        lbl_801A6878 = 0;\n    }\n    OSClearContext(&exceptionContext);\n    OSSetCurrentContext(context);\n}\n",
+    "seed_sha256": "c192041bd6c3bf547a834895b1eadd24d57c8778a3fbd50769556daec83ca802",
+    "generator": "fzgx fixup",
+    "transform": "bind measured SDK shared objects",
+    "generated_source": "#include <types.h>\n#include <dolphin/os.h>\n#include <dolphin/os/OSAlarm.h>\n#include <dolphin/os/OSContext.h>\n#include <dolphin/os/OSInterrupt.h>\n#include <dolphin/os/OSTime.h>\n#include <dolphin/types.h>\n#include \"sdk_addresses.h\"\n\ntypedef void (*DVDLowCallback)(u32 intType);\n\ntypedef struct DVDBuffer {\n    void *addr;\n    u32 length;\n    u32 offset;\n} DVDBuffer;\n\ntypedef struct DVDCommand {\n    s32 cmd;\n    void *addr;\n    u32 length;\n    u32 offset;\n    DVDLowCallback callback;\n} DVDCommand;\n\nvoid OSCancelAlarm(OSAlarm *alarm);\n\nu32 __OSBusClock : FZGX_ADDR___OSBusClock;\n\nvu32 __DIRegs[16] : FZGX_ADDR___DIRegs;\n\nBOOL DVDLowSeek(u32 offset, DVDLowCallback callback);\n\nextern BOOL lbl_801A6468;\n\n// Hardware or OS state can change asynchronously.\nextern volatile BOOL StopAtNextInt_801A6858; // fzgx-allow: S2 SDK asynchronous state\n\nextern DVDLowCallback Callback_801A6860;\n\nextern DVDLowCallback lbl_801A6864;\n\n// Hardware or OS state can change asynchronously.\nextern volatile OSTime LastResetEnd_801A6868; // fzgx-allow: S2 SDK asynchronous state\n\n// Hardware or OS state can change asynchronously.\nextern volatile u32 ResetOccurred_801A6870; // fzgx-allow: S2 SDK asynchronous state\n\n// Hardware or OS state can change asynchronously.\nextern volatile BOOL WaitingCoverClose_801A6874; // fzgx-allow: S2 SDK asynchronous state\n\nextern BOOL lbl_801A6878;\n\n// Hardware or OS state can change asynchronously.\nextern volatile OSTime lbl_801A6888; // fzgx-allow: S2 SDK asynchronous state\n\n// Hardware or OS state can change asynchronously.\nextern volatile BOOL lbl_801A6898; // fzgx-allow: S2 SDK asynchronous state\n\nextern vu32 NextCommandNumber_801A689C;\n\nvoid fn_80016394(void *addr, u32 length, u32 offset, DVDLowCallback callback);\n\nstatic DVDCommand CommandList_8015CD70[3];\n\nstatic unsigned char fzgx_pool_gap____bss_0_3c[44];\n\nstatic OSAlarm AlarmForTimeout;\n\nstatic unsigned char fzgx_pool_gap____bss_0_90[40];\n\nstatic DVDBuffer __DVDLowPrev__fzgx_offset_0;\n\nstatic DVDBuffer __DVDLowCurr__fzgx_offset_0;\n\n#pragma section code_type \".fzgxpool\"\nstatic void layout____bss_0(void) {\n// Hardware or OS state can change asynchronously.\n    volatile unsigned char sink; // fzgx-allow: S2 SDK asynchronous state\n    sink = *(unsigned char *)&CommandList_8015CD70;\n    sink = *(unsigned char *)&fzgx_pool_gap____bss_0_3c;\n    sink = *(unsigned char *)&AlarmForTimeout;\n    sink = *(unsigned char *)&fzgx_pool_gap____bss_0_90;\n    sink = *(unsigned char *)&__DVDLowPrev__fzgx_offset_0;\n    sink = *(unsigned char *)&__DVDLowCurr__fzgx_offset_0;\n}\n#pragma section code_type \".text\"\n\nstatic inline BOOL ProcessNextCommand() {\n    s32 n = NextCommandNumber_801A689C;\n    ((void)0);\n    if (CommandList_8015CD70[n].cmd == 1) {\n        ++NextCommandNumber_801A689C;\n        fn_80016394(CommandList_8015CD70[n].addr, CommandList_8015CD70[n].length,\n                    CommandList_8015CD70[n].offset, CommandList_8015CD70[n].callback);\n        return 1;\n    } else if (CommandList_8015CD70[n].cmd == 2) {\n        ++NextCommandNumber_801A689C;\n        DVDLowSeek(CommandList_8015CD70[n].offset, CommandList_8015CD70[n].callback);\n        return 1;\n    }\n    return 0;\n}\n\nvoid __DVDInterruptHandler(__OSInterrupt interrupt, OSContext *context) {\n    DVDLowCallback cb;\n    OSContext exceptionContext;\n    u32 cause = 0;\n    u32 reg;\n    u32 intr;\n    u32 mask;\n    if (lbl_801A6898) {\n        lbl_801A6888 = __OSGetSystemTime();\n        lbl_801A6468 = 0;\n        __DVDLowPrev__fzgx_offset_0.addr = __DVDLowCurr__fzgx_offset_0.addr;\n        __DVDLowPrev__fzgx_offset_0.length = __DVDLowCurr__fzgx_offset_0.length;\n        __DVDLowPrev__fzgx_offset_0.offset = __DVDLowCurr__fzgx_offset_0.offset;\n        if (StopAtNextInt_801A6858 == 1) {\n            cause |= 8;\n        }\n    }\n    lbl_801A6898 = 0;\n    StopAtNextInt_801A6858 = 0;\n    reg = __DIRegs[0];\n    mask = reg & 0x2a;\n    intr = (reg & 0x54) & (mask << 1);\n    if (intr & 0x40) {\n        cause |= 8;\n    }\n    if (intr & 0x10) {\n        cause |= 1;\n    }\n    if (intr & 4) {\n        cause |= 2;\n    }\n    if (cause) {\n        ResetOccurred_801A6870 = 0;\n        OSCancelAlarm(&AlarmForTimeout);\n    }\n    __DIRegs[0] = intr | mask;\n    if (ResetOccurred_801A6870 && (__OSGetSystemTime() - LastResetEnd_801A6868) <\n                                      ((200) * (((u32)__OSBusClock / 4) / 1000))) {\n        reg = __DIRegs[1];\n        mask = reg & 0x2;\n        intr = (reg & 4) & (mask << 1);\n        if (intr & 4) {\n            if (lbl_801A6864) {\n                lbl_801A6864(4);\n            }\n            lbl_801A6864 = 0;\n        }\n        __DIRegs[1] = __DIRegs[1];\n    } else if (WaitingCoverClose_801A6874) {\n        reg = __DIRegs[1];\n        mask = reg & 2;\n        intr = (reg & 4) & (mask << 1);\n        if (intr & 4) {\n            cause |= 4;\n        }\n        __DIRegs[1] = intr | mask;\n        WaitingCoverClose_801A6874 = 0;\n    } else {\n        __DIRegs[1] = 0;\n    }\n    if ((cause & 8) && !lbl_801A6878) {\n        cause &= ~8;\n    }\n    if ((cause & 1)) {\n        if (ProcessNextCommand()) {\n            return;\n        }\n    } else {\n        CommandList_8015CD70[0].cmd = -1;\n        NextCommandNumber_801A689C = 0;\n    }\n    OSClearContext(&exceptionContext);\n    OSSetCurrentContext(&exceptionContext);\n    if (cause) {\n        cb = Callback_801A6860;\n        Callback_801A6860 = 0;\n        if (cb) {\n            cb(cause);\n        }\n        lbl_801A6878 = 0;\n    }\n    OSClearContext(&exceptionContext);\n    OSSetCurrentContext(context);\n}\n",
+    "generated_sha256": "773ede2444a97d29085c77bdb4726284c80d61d413463522a17eb283b425c5bf",
+    "compiler": "GC/1.2.5n",
+    "flags": "-use_lmw_stmw on -fp fmadd -fp_contract off -char signed -common off",
+    "source": "dol/__DVDInterruptHandler.c",
+    "bytes": 736,
+    "recipe": [
+      {
+        "label": "accepted SDK pool",
+        "symbol": "__DVDInterruptHandler",
+        "source": ".fzgx/structural-regions-20260915/sdk-typed-ownership/sources/56b880e57d3d4eab9c34874a.c",
+        "sha256": "c192041bd6c3bf547a834895b1eadd24d57c8778a3fbd50769556daec83ca802",
+        "mw": "GC/1.2.5n",
+        "flags": "-use_lmw_stmw on -fp fmadd -fp_contract off -char signed -common off",
+        "target": "/Users/rayan/fzgx/build/GFZE01/obj/dol/__DVDInterruptHandler.o",
+        "id": "56b880e57d3d4eab9c34874a70b0b395ab5dd3e1492b1fbca7713ba889b1dcae",
+        "object": ".fzgx/structural-regions-20260915/sdk-typed-ownership/objects/4a23b819f65896c5/56b880e57d3d4eab9c34874a/56b880e57d3d4eab9c34874a.o",
+        "score": 100.0,
+        "bit_errors": 0,
+        "word_errors": 0,
+        "shape_errors": 0,
+        "aligned_word_percent": 100.0,
+        "response_sha256": "bc704a74b1c2156fbcc49b36a099b7f84515c97239425f651902a09dc8530afc",
+        "percent": 99.483696,
+        "raw_percent": 99.483696,
+        "percent_adjusted": 100.0,
+        "differing_rows": 0,
+        "instruction_rows": 184,
+        "value_conflicts": 0,
+        "pool_rows": 12,
+        "regions": {
+          "0": [
+            0,
+            0,
+            0
+          ],
+          "44": [
+            0,
+            0,
+            0
+          ],
+          "48": [
+            0,
+            0,
+            0
+          ],
+          "100": [
+            0,
+            0,
+            0
+          ],
+          "104": [
+            0,
+            0,
+            0
+          ],
+          "148": [
+            0,
+            0,
+            0
+          ],
+          "152": [
+            0,
+            0,
+            0
+          ],
+          "160": [
+            0,
+            0,
+            0
+          ],
+          "164": [
+            0,
+            0,
+            0
+          ],
+          "172": [
+            0,
+            0,
+            0
+          ],
+          "176": [
+            0,
+            0,
+            0
+          ],
+          "184": [
+            0,
+            0,
+            0
+          ],
+          "200": [
+            0,
+            0,
+            0
+          ],
+          "224": [
+            0,
+            0,
+            0
+          ],
+          "228": [
+            0,
+            0,
+            0
+          ],
+          "308": [
+            0,
+            0,
+            0
+          ],
+          "336": [
+            0,
+            0,
+            0
+          ],
+          "348": [
+            0,
+            0,
+            0
+          ],
+          "360": [
+            0,
+            0,
+            0
+          ],
+          "368": [
+            0,
+            0,
+            0
+          ],
+          "380": [
+            0,
+            0,
+            0
+          ],
+          "392": [
+            0,
+            0,
+            0
+          ],
+          "428": [
+            0,
+            0,
+            0
+          ],
+          "432": [
+            0,
+            0,
+            0
+          ],
+          "452": [
+            0,
+            0,
+            0
+          ],
+          "464": [
+            0,
+            0,
+            0
+          ],
+          "472": [
+            0,
+            0,
+            0
+          ],
+          "484": [
+            0,
+            0,
+            0
+          ],
+          "488": [
+            0,
+            0,
+            0
+          ],
+          "496": [
+            0,
+            0,
+            0
+          ],
+          "516": [
+            0,
+            0,
+            0
+          ],
+          "552": [
+            0,
+            0,
+            0
+          ],
+          "560": [
+            0,
+            0,
+            0
+          ],
+          "568": [
+            0,
+            0,
+            0
+          ],
+          "596": [
+            0,
+            0,
+            0
+          ],
+          "604": [
+            0,
+            0,
+            0
+          ],
+          "608": [
+            0,
+            0,
+            0
+          ],
+          "616": [
+            0,
+            0,
+            0
+          ],
+          "620": [
+            0,
+            0,
+            0
+          ],
+          "636": [
+            0,
+            0,
+            0
+          ],
+          "644": [
+            0,
+            0,
+            0
+          ],
+          "652": [
+            0,
+            0,
+            0
+          ],
+          "660": [
+            0,
+            0,
+            0
+          ],
+          "680": [
+            0,
+            0,
+            0
+          ],
+          "692": [
+            0,
+            0,
+            0
+          ],
+          "700": [
+            0,
+            0,
+            0
+          ],
+          "708": [
+            0,
+            0,
+            0
+          ],
+          "716": [
+            0,
+            0,
+            0
+          ]
+        },
+        "matched": true,
+        "binding_score": 100.0
+      },
+      [
+        {
+          "label": "canonical BSS subobjects and private layout padding",
+          "input_sha256": "c192041bd6c3bf547a834895b1eadd24d57c8778a3fbd50769556daec83ca802",
+          "output_sha256": "773ede2444a97d29085c77bdb4726284c80d61d413463522a17eb283b425c5bf",
+          "input_symbol": "__DVDInterruptHandler",
+          "output_symbol": "__DVDInterruptHandler",
+          "edits": [
+            [
+              1809,
+              1809,
+              "fzgx_pool_"
+            ],
+            [
+              1885,
+              1885,
+              "fzgx_pool_"
+            ],
+            [
+              1924,
+              1928,
+              "__DVDLowPrev__fzgx_offset_0"
+            ],
+            [
+              1948,
+              1952,
+              "__DVDLowCurr__fzgx_offset_0"
+            ],
+            [
+              2236,
+              2236,
+              "fzgx_pool_"
+            ],
+            [
+              2330,
+              2417,
+              "fzgx_pool_gap____bss_0_90;\n    sink = *(unsigned char *)&__DVDLowPrev__fzgx_offset_0;\n    sink = *(unsigned char *)&__DVDLowCurr__fzgx_offset_0"
+            ],
+            [
+              3329,
+              3413,
+              "__DVDLowPrev__fzgx_offset_0.addr = __DVDLowCurr__fzgx_offset_0.addr;\n        __DVDLowPrev__fzgx_offset_0.length = __DVDLowCurr__fzgx_offset_0.length;\n        __DVDLowPrev__fzgx_offset_0.offset = __DVDLowCurr__fzgx_offset_0"
+            ]
+          ]
+        }
+      ]
+    ],
+    "headers_sha256": "a3db0164dc3a0250a1c1729dabebf7f84ddbd4096090f5f7f2d171ec8ca55bd1",
+    "oracle_sha256": "7cd63033369c3b07e3fe76ed92108263a6d28e5b3f3a8e251f031f42d4f37913",
+    "link": "pending"
+  },
+  "GetTypeCallback": {
+    "seed_symbol": "GetTypeCallback",
+    "seed": "#include <dolphin/si/SIPriv.h>\n#include <dolphin/os.h>\n#include <dolphin/os/OSContext.h>\n#include <dolphin/os/OSTime.h>\n#include <dolphin/si.h>\n\nextern u32 Type_80123BA8[4];\n\nextern u32 lbl_801A6818;\n\nstatic unsigned char Packet_8015CA10[128];\n\nstatic unsigned char gap____bss_0_80[160];\n\nstatic OSTime TypeTime[4];\n\nstatic unsigned char gap____bss_0_140[32];\n\nstatic SITypeAndStatusCallback TypeCallback[4][4];\n\nstatic unsigned char gap____bss_0_1a0[80];\n\nstatic u32 cmdFixDevice[4];\n\nstatic void layout____bss_0(void) {\n// Hardware or OS state can change asynchronously.\n    volatile unsigned char sink; // fzgx-allow: S2 SDK asynchronous state\n    sink = *(unsigned char *)&Packet_8015CA10;\n    sink = *(unsigned char *)&gap____bss_0_80;\n    sink = *(unsigned char *)&TypeTime;\n    sink = *(unsigned char *)&gap____bss_0_140;\n    sink = *(unsigned char *)&TypeCallback;\n    sink = *(unsigned char *)&gap____bss_0_1a0;\n    sink = *(unsigned char *)&cmdFixDevice;\n}\n\nstatic inline void CallTypeAndStatusCallback(s32 chan, u32 type) {\n    SITypeAndStatusCallback callback;\n    int i;\n    for (i = 0; i < 4; ++i) {\n        callback = TypeCallback[chan][i];\n        if (callback) {\n            TypeCallback[chan][i] = 0;\n            callback(chan, type);\n        }\n    }\n}\n\nvoid GetTypeCallback(s32 chan, u32 error, OSContext *context) {\n\n    u32 type;\n    u32 chanBit;\n    BOOL fix;\n    u32 id;\n    Type_80123BA8[chan] &= ~0x0080;\n    Type_80123BA8[chan] |= error;\n    TypeTime[chan] = __OSGetSystemTime();\n    type = Type_80123BA8[chan];\n    chanBit = 0x80000000 >> chan;\n    fix = (BOOL)(lbl_801A6818 & chanBit);\n    lbl_801A6818 &= ~chanBit;\n    if ((error & (0x0001 | 0x0002 | 0x0008 | 0x0004)) || (type & 0x18000000u) != 0x08000000u ||\n        !(type & 0x80000000) || (type & 0x04000000)) {\n        OSSetWirelessID(chan, 0);\n        CallTypeAndStatusCallback(chan, Type_80123BA8[chan]);\n        return;\n    }\n    id = (u32)(OSGetWirelessID(chan) << 8);\n    if (fix && (id & 0x00100000)) {\n        cmdFixDevice[chan] = 0x4Eu << 24 | (id & (0x000f0000 | 0x00c0ff00)) | 0x00100000;\n        Type_80123BA8[chan] = 0x0080;\n        SITransfer(chan, &cmdFixDevice[chan], 3, &Type_80123BA8[chan], 3, GetTypeCallback, 0);\n        return;\n    }\n    if (type & 0x00100000) {\n        if ((id & (0x000f0000 | 0x00c0ff00)) != (type & (0x000f0000 | 0x00c0ff00))) {\n            if (!(id & 0x00100000)) {\n                id = type & (0x000f0000 | 0x00c0ff00);\n                id |= 0x00100000;\n                OSSetWirelessID(chan, (u16)((id >> 8) & 0xffff));\n            }\n            cmdFixDevice[chan] = 0x4E << 24 | id;\n            Type_80123BA8[chan] = 0x0080;\n            SITransfer(chan, &cmdFixDevice[chan], 3, &Type_80123BA8[chan], 3, GetTypeCallback, 0);\n            return;\n        }\n    } else if (type & 0x40000000) {\n        id = type & (0x000f0000 | 0x00c0ff00);\n        id |= 0x00100000;\n        OSSetWirelessID(chan, (u16)((id >> 8) & 0xffff));\n        cmdFixDevice[chan] = 0x4E << 24 | id;\n        Type_80123BA8[chan] = 0x0080;\n        SITransfer(chan, &cmdFixDevice[chan], 3, &Type_80123BA8[chan], 3, GetTypeCallback, 0);\n        return;\n    } else {\n        OSSetWirelessID(chan, 0);\n    }\n    CallTypeAndStatusCallback(chan, Type_80123BA8[chan]);\n}\n",
+    "seed_sha256": "49cd1670589d7af9fae3235c450846a11fb7abbf23c7620adaa627f4dd4403b3",
+    "generator": "fzgx fixup",
+    "transform": "bind measured SDK shared objects",
+    "generated_source": "#include <dolphin/si/SIPriv.h>\n#include <dolphin/os.h>\n#include <dolphin/os/OSContext.h>\n#include <dolphin/os/OSTime.h>\n#include <dolphin/si.h>\n\nextern u32 Type_80123BA8[4];\n\nextern u32 lbl_801A6818;\n\nstatic unsigned char Packet_8015CA10[128];\n\nstatic unsigned char lbl_8015CA90__fzgx_offset_0[160];\n\nstatic OSTime TypeTime[4];\n\nstatic unsigned char lbl_8015CB50__fzgx_offset_0[32];\n\nstatic SITypeAndStatusCallback lbl_8015CB70__fzgx_offset_0[4][4];\n\nstatic unsigned char lbl_8015CBB0__fzgx_offset_0[80];\n\nstatic u32 lbl_8015CBB0__fzgx_offset_50[4];\n\nstatic void layout____bss_0(void) {\n// Hardware or OS state can change asynchronously.\n    volatile unsigned char sink; // fzgx-allow: S2 SDK asynchronous state\n    sink = *(unsigned char *)&Packet_8015CA10;\n    sink = *(unsigned char *)&lbl_8015CA90__fzgx_offset_0;\n    sink = *(unsigned char *)&TypeTime;\n    sink = *(unsigned char *)&lbl_8015CB50__fzgx_offset_0;\n    sink = *(unsigned char *)&lbl_8015CB70__fzgx_offset_0;\n    sink = *(unsigned char *)&lbl_8015CBB0__fzgx_offset_0;\n    sink = *(unsigned char *)&lbl_8015CBB0__fzgx_offset_50;\n}\n\nstatic inline void CallTypeAndStatusCallback(s32 chan, u32 type) {\n    SITypeAndStatusCallback callback;\n    int i;\n    for (i = 0; i < 4; ++i) {\n        callback = lbl_8015CB70__fzgx_offset_0[chan][i];\n        if (callback) {\n            lbl_8015CB70__fzgx_offset_0[chan][i] = 0;\n            callback(chan, type);\n        }\n    }\n}\n\nvoid GetTypeCallback(s32 chan, u32 error, OSContext *context) {\n\n    u32 type;\n    u32 chanBit;\n    BOOL fix;\n    u32 id;\n    Type_80123BA8[chan] &= ~0x0080;\n    Type_80123BA8[chan] |= error;\n    TypeTime[chan] = __OSGetSystemTime();\n    type = Type_80123BA8[chan];\n    chanBit = 0x80000000 >> chan;\n    fix = (BOOL)(lbl_801A6818 & chanBit);\n    lbl_801A6818 &= ~chanBit;\n    if ((error & (0x0001 | 0x0002 | 0x0008 | 0x0004)) || (type & 0x18000000u) != 0x08000000u ||\n        !(type & 0x80000000) || (type & 0x04000000)) {\n        OSSetWirelessID(chan, 0);\n        CallTypeAndStatusCallback(chan, Type_80123BA8[chan]);\n        return;\n    }\n    id = (u32)(OSGetWirelessID(chan) << 8);\n    if (fix && (id & 0x00100000)) {\n        lbl_8015CBB0__fzgx_offset_50[chan] = 0x4Eu << 24 | (id & (0x000f0000 | 0x00c0ff00)) | 0x00100000;\n        Type_80123BA8[chan] = 0x0080;\n        SITransfer(chan, &lbl_8015CBB0__fzgx_offset_50[chan], 3, &Type_80123BA8[chan], 3, GetTypeCallback, 0);\n        return;\n    }\n    if (type & 0x00100000) {\n        if ((id & (0x000f0000 | 0x00c0ff00)) != (type & (0x000f0000 | 0x00c0ff00))) {\n            if (!(id & 0x00100000)) {\n                id = type & (0x000f0000 | 0x00c0ff00);\n                id |= 0x00100000;\n                OSSetWirelessID(chan, (u16)((id >> 8) & 0xffff));\n            }\n            lbl_8015CBB0__fzgx_offset_50[chan] = 0x4E << 24 | id;\n            Type_80123BA8[chan] = 0x0080;\n            SITransfer(chan, &lbl_8015CBB0__fzgx_offset_50[chan], 3, &Type_80123BA8[chan], 3, GetTypeCallback, 0);\n            return;\n        }\n    } else if (type & 0x40000000) {\n        id = type & (0x000f0000 | 0x00c0ff00);\n        id |= 0x00100000;\n        OSSetWirelessID(chan, (u16)((id >> 8) & 0xffff));\n        lbl_8015CBB0__fzgx_offset_50[chan] = 0x4E << 24 | id;\n        Type_80123BA8[chan] = 0x0080;\n        SITransfer(chan, &lbl_8015CBB0__fzgx_offset_50[chan], 3, &Type_80123BA8[chan], 3, GetTypeCallback, 0);\n        return;\n    } else {\n        OSSetWirelessID(chan, 0);\n    }\n    CallTypeAndStatusCallback(chan, Type_80123BA8[chan]);\n}\n",
+    "generated_sha256": "77bad130ac8d7cfdb5710807d2c93c4ecaa7706c0d90f71fcdc72ff3d2415eb9",
+    "compiler": "GC/1.2.5n",
+    "flags": "-use_lmw_stmw on -fp fmadd -fp_contract off -char signed -common off",
+    "source": "dol/GetTypeCallback.c",
+    "bytes": 664,
+    "recipe": [
+      {
+        "label": "accepted SDK pool",
+        "symbol": "GetTypeCallback",
+        "source": ".fzgx/structural-regions-20260915/sdk-typed-ownership/sources/16ab70e550071cefec281bd2.c",
+        "sha256": "49cd1670589d7af9fae3235c450846a11fb7abbf23c7620adaa627f4dd4403b3",
+        "mw": "GC/1.2.5n",
+        "flags": "-use_lmw_stmw on -fp fmadd -fp_contract off -char signed -common off",
+        "target": "/Users/rayan/fzgx/build/GFZE01/obj/dol/GetTypeCallback.o",
+        "id": "16ab70e550071cefec281bd25bd2aa6a3453811f7fff04a5719eb4bcd40270bf",
+        "object": ".fzgx/structural-regions-20260915/sdk-typed-ownership/objects/4a23b819f65896c5/16ab70e550071cefec281bd2/16ab70e550071cefec281bd2.o",
+        "score": 100.0,
+        "bit_errors": 0,
+        "word_errors": 0,
+        "shape_errors": 0,
+        "aligned_word_percent": 100.0,
+        "response_sha256": "adb8d668e80bfedb6ba532bff12b925117e02ce53d1625d0333447a31d108f63",
+        "percent": 99.36747,
+        "raw_percent": 99.36747,
+        "percent_adjusted": 100.0,
+        "differing_rows": 0,
+        "instruction_rows": 166,
+        "value_conflicts": 0,
+        "pool_rows": 8,
+        "regions": {
+          "0": [
+            0,
+            0,
+            0
+          ],
+          "76": [
+            0,
+            0,
+            0
+          ],
+          "128": [
+            0,
+            0,
+            0
+          ],
+          "144": [
+            0,
+            0,
+            0
+          ],
+          "152": [
+            0,
+            0,
+            0
+          ],
+          "160": [
+            0,
+            0,
+            0
+          ],
+          "172": [
+            0,
+            0,
+            0
+          ],
+          "196": [
+            0,
+            0,
+            0
+          ],
+          "208": [
+            0,
+            0,
+            0
+          ],
+          "228": [
+            0,
+            0,
+            0
+          ],
+          "244": [
+            0,
+            0,
+            0
+          ],
+          "248": [
+            0,
+            0,
+            0
+          ],
+          "256": [
+            0,
+            0,
+            0
+          ],
+          "268": [
+            0,
+            0,
+            0
+          ],
+          "276": [
+            0,
+            0,
+            0
+          ],
+          "344": [
+            0,
+            0,
+            0
+          ],
+          "348": [
+            0,
+            0,
+            0
+          ],
+          "356": [
+            0,
+            0,
+            0
+          ],
+          "380": [
+            0,
+            0,
+            0
+          ],
+          "388": [
+            0,
+            0,
+            0
+          ],
+          "404": [
+            0,
+            0,
+            0
+          ],
+          "460": [
+            0,
+            0,
+            0
+          ],
+          "464": [
+            0,
+            0,
+            0
+          ],
+          "472": [
+            0,
+            0,
+            0
+          ],
+          "500": [
+            0,
+            0,
+            0
+          ],
+          "556": [
+            0,
+            0,
+            0
+          ],
+          "560": [
+            0,
+            0,
+            0
+          ],
+          "572": [
+            0,
+            0,
+            0
+          ],
+          "596": [
+            0,
+            0,
+            0
+          ],
+          "608": [
+            0,
+            0,
+            0
+          ],
+          "628": [
+            0,
+            0,
+            0
+          ],
+          "644": [
+            0,
+            0,
+            0
+          ]
+        },
+        "matched": false,
+        "binding_score": 100.0,
+        "object_matched": true,
+        "extra_helpers": [
+          "layout____bss_0"
+        ]
+      },
+      [
+        {
+          "label": "canonical BSS subobjects and private layout padding",
+          "input_sha256": "49cd1670589d7af9fae3235c450846a11fb7abbf23c7620adaa627f4dd4403b3",
+          "output_sha256": "77bad130ac8d7cfdb5710807d2c93c4ecaa7706c0d90f71fcdc72ff3d2415eb9",
+          "input_symbol": "GetTypeCallback",
+          "output_symbol": "GetTypeCallback",
+          "edits": [
+            [
+              266,
+              280,
+              "lbl_8015CA90__fzgx_offset_"
+            ],
+            [
+              338,
+              353,
+              "lbl_8015CB50__fzgx_offset_"
+            ],
+            [
+              392,
+              404,
+              "lbl_8015CB70__fzgx_offset_0"
+            ],
+            [
+              434,
+              449,
+              "lbl_8015CBB0__fzgx_offset_"
+            ],
+            [
+              468,
+              480,
+              "lbl_8015CBB0__fzgx_offset_50"
+            ],
+            [
+              724,
+              738,
+              "lbl_8015CA90__fzgx_offset_"
+            ],
+            [
+              811,
+              963,
+              "lbl_8015CB50__fzgx_offset_0;\n    sink = *(unsigned char *)&lbl_8015CB70__fzgx_offset_0;\n    sink = *(unsigned char *)&lbl_8015CBB0__fzgx_offset_0;\n    sink = *(unsigned char *)&lbl_8015CBB0__fzgx_offset_50"
+            ],
+            [
+              1133,
+              1145,
+              "lbl_8015CB70__fzgx_offset_0"
+            ],
+            [
+              1192,
+              1204,
+              "lbl_8015CB70__fzgx_offset_0"
+            ],
+            [
+              2001,
+              2013,
+              "lbl_8015CBB0__fzgx_offset_50"
+            ],
+            [
+              2147,
+              2159,
+              "lbl_8015CBB0__fzgx_offset_50"
+            ],
+            [
+              2572,
+              2584,
+              "lbl_8015CBB0__fzgx_offset_50"
+            ],
+            [
+              2682,
+              2694,
+              "lbl_8015CBB0__fzgx_offset_50"
+            ],
+            [
+              2956,
+              2968,
+              "lbl_8015CBB0__fzgx_offset_50"
+            ],
+            [
+              3058,
+              3070,
+              "lbl_8015CBB0__fzgx_offset_50"
+            ]
+          ]
+        }
+      ]
+    ],
+    "headers_sha256": "a3db0164dc3a0250a1c1729dabebf7f84ddbd4096090f5f7f2d171ec8ca55bd1",
+    "oracle_sha256": "7cd63033369c3b07e3fe76ed92108263a6d28e5b3f3a8e251f031f42d4f37913",
+    "link": "pending"
+  },
+  "fn_80016524": {
+    "seed_symbol": "fn_80016524",
+    "seed": "#include <types.h>\n#include <dolphin/dvd.h>\n#include <dolphin/os.h>\n#include <dolphin/os/OSAlarm.h>\n#include <dolphin/os/OSContext.h>\n#include <dolphin/os/OSTime.h>\n#include <dolphin/types.h>\n#include \"sdk_addresses.h\"\n\ntypedef void (*DVDLowCallback)(u32 intType);\n\ntypedef struct DVDBuffer {\n    void *addr;\n    u32 length;\n    u32 offset;\n} DVDBuffer;\n\ntypedef struct DVDCommand {\n    s32 cmd;\n    void *addr;\n    u32 length;\n    u32 offset;\n    DVDLowCallback callback;\n} DVDCommand;\n\nvoid OSSetAlarm(OSAlarm *alarm, OSTime tick, OSAlarmHandler handler);\n\nvoid OSCreateAlarm(OSAlarm *alarm);\n\nDVDDiskID *fn_80019C48();\n\nu32 __OSBusClock : FZGX_ADDR___OSBusClock;\n\nvu32 __DIRegs[16] : FZGX_ADDR___DIRegs;\n\nextern BOOL lbl_801A6468;\n\n// Hardware or OS state can change asynchronously.\nextern volatile u32 WorkAroundType_801A687C; // fzgx-allow: S2 SDK asynchronous state\n\n// Hardware or OS state can change asynchronously.\nextern volatile OSTime lbl_801A6888; // fzgx-allow: S2 SDK asynchronous state\n\nextern vu32 NextCommandNumber_801A689C;\n\nvoid fn_80016394(void *addr, u32 length, u32 offset, DVDLowCallback callback);\n\nvoid fn_800162A0(OSAlarm *alarm, OSContext *context);\n\nstatic DVDCommand CommandList[3];\n\nstatic unsigned char gap____bss_0_3c[4];\n\nstatic OSAlarm AlarmForWA;\n\nstatic unsigned char gap____bss_0_68[80];\n\nstatic DVDBuffer Prev;\n\nstatic DVDBuffer Curr;\n\n#pragma section code_type \".fzgxpool\"\nstatic void layout____bss_0(void) {\n// Hardware or OS state can change asynchronously.\n    volatile unsigned char sink; // fzgx-allow: S2 SDK asynchronous state\n    sink = *(unsigned char *)&CommandList;\n    sink = *(unsigned char *)&gap____bss_0_3c;\n    sink = *(unsigned char *)&AlarmForWA;\n    sink = *(unsigned char *)&gap____bss_0_68;\n    sink = *(unsigned char *)&Prev;\n    sink = *(unsigned char *)&Curr;\n}\n#pragma section code_type \".text\"\n\nstatic inline BOOL HitCache(DVDBuffer *cur, DVDBuffer *prev) {\n    u32 uVar1 = (prev->offset + prev->length - 1) >> 15;\n    u32 uVar2 = (cur->offset >> 15);\n    u32 iVar3 = (fn_80019C48()->streaming ? 1 : 0) ? 5 : 15;\n    if ((uVar2 > uVar1 - 2) || (uVar2 < uVar1 + iVar3 + 3)) {\n        return 1;\n    }\n    return 0;\n}\n\nstatic inline void DoJustRead(void *addr, u32 length, u32 offset, DVDLowCallback callback) {\n    CommandList[0].cmd = -1;\n    NextCommandNumber_801A689C = 0;\n    fn_80016394(addr, length, offset, callback);\n}\n\nvoid fn_800164A4(void *addr, u32 length, u32 offset, DVDLowCallback callback);\n\nstatic inline void WaitBeforeRead(void *addr, u32 length, u32 offset, DVDLowCallback callback,\n                                  OSTime timeout) {\n    CommandList[0].cmd = 1;\n    CommandList[0].addr = addr;\n    CommandList[0].length = length;\n    CommandList[0].offset = offset;\n    CommandList[0].callback = callback;\n    CommandList[1].cmd = -1;\n    NextCommandNumber_801A689C = 0;\n    OSCreateAlarm(&AlarmForWA);\n    OSSetAlarm(&AlarmForWA, timeout, fn_800162A0);\n}\n\nBOOL fn_80016524(void *addr, u32 length, u32 offset, DVDLowCallback callback) {\n    OSTime diff;\n    u32 prev;\n    __DIRegs[6] = length;\n    Curr.addr = addr;\n    Curr.length = length;\n    Curr.offset = offset;\n    if (WorkAroundType_801A687C == 0) {\n        DoJustRead(addr, length, offset, callback);\n    } else if (WorkAroundType_801A687C == 1) {\n        if (lbl_801A6468) {\n            fn_800164A4(addr, length, offset, callback);\n        } else {\n            if (!HitCache(&Curr, &Prev)) {\n                DoJustRead(addr, length, offset, callback);\n            } else {\n                prev = (Prev.offset + Prev.length - 1) >> 15;\n                if (prev == Curr.offset >> 15 || prev + 1 == Curr.offset >> 15) {\n                    diff = __OSGetSystemTime() - lbl_801A6888;\n                    if (((5) * (((u32)__OSBusClock / 4) / 1000)) < diff) {\n                        DoJustRead(addr, length, offset, callback);\n                    } else {\n                        WaitBeforeRead(addr, length, offset, callback,\n                                       ((5) * (((u32)__OSBusClock / 4) / 1000)) - diff +\n                                           (((500) * (((u32)__OSBusClock / 4) / 125000)) / 8));\n                    }\n                } else {\n                    fn_800164A4(addr, length, offset, callback);\n                }\n            }\n        }\n    }\n    return 1;\n}\n",
+    "seed_sha256": "7ee3b5cda8f67412f4ac21296528554c516e113cbd01f500c632076b0c2b18a0",
+    "generator": "fzgx fixup",
+    "transform": "bind measured SDK shared objects",
+    "generated_source": "#include <types.h>\n#include <dolphin/dvd.h>\n#include <dolphin/os.h>\n#include <dolphin/os/OSAlarm.h>\n#include <dolphin/os/OSContext.h>\n#include <dolphin/os/OSTime.h>\n#include <dolphin/types.h>\n#include \"sdk_addresses.h\"\n\ntypedef void (*DVDLowCallback)(u32 intType);\n\ntypedef struct DVDBuffer {\n    void *addr;\n    u32 length;\n    u32 offset;\n} DVDBuffer;\n\ntypedef struct DVDCommand {\n    s32 cmd;\n    void *addr;\n    u32 length;\n    u32 offset;\n    DVDLowCallback callback;\n} DVDCommand;\n\nvoid OSSetAlarm(OSAlarm *alarm, OSTime tick, OSAlarmHandler handler);\n\nvoid OSCreateAlarm(OSAlarm *alarm);\n\nDVDDiskID *fn_80019C48();\n\nu32 __OSBusClock : FZGX_ADDR___OSBusClock;\n\nvu32 __DIRegs[16] : FZGX_ADDR___DIRegs;\n\nextern BOOL lbl_801A6468;\n\n// Hardware or OS state can change asynchronously.\nextern volatile u32 WorkAroundType_801A687C; // fzgx-allow: S2 SDK asynchronous state\n\n// Hardware or OS state can change asynchronously.\nextern volatile OSTime lbl_801A6888; // fzgx-allow: S2 SDK asynchronous state\n\nextern vu32 NextCommandNumber_801A689C;\n\nvoid fn_80016394(void *addr, u32 length, u32 offset, DVDLowCallback callback);\n\nvoid fn_800162A0(OSAlarm *alarm, OSContext *context);\n\nstatic DVDCommand CommandList[3];\n\nstatic unsigned char gap____bss_0_3c[4];\n\nstatic OSAlarm __DVDLowAlarmForWA__fzgx_offset_0;\n\nstatic unsigned char fzgx_pool_gap____bss_0_68[80];\n\nstatic DVDBuffer __DVDLowPrev__fzgx_offset_0;\n\nstatic DVDBuffer __DVDLowCurr__fzgx_offset_0;\n\n#pragma section code_type \".fzgxpool\"\nstatic void layout____bss_0(void) {\n// Hardware or OS state can change asynchronously.\n    volatile unsigned char sink; // fzgx-allow: S2 SDK asynchronous state\n    sink = *(unsigned char *)&CommandList;\n    sink = *(unsigned char *)&gap____bss_0_3c;\n    sink = *(unsigned char *)&__DVDLowAlarmForWA__fzgx_offset_0;\n    sink = *(unsigned char *)&fzgx_pool_gap____bss_0_68;\n    sink = *(unsigned char *)&__DVDLowPrev__fzgx_offset_0;\n    sink = *(unsigned char *)&__DVDLowCurr__fzgx_offset_0;\n}\n#pragma section code_type \".text\"\n\nstatic inline BOOL HitCache(DVDBuffer *cur, DVDBuffer *prev) {\n    u32 uVar1 = (prev->offset + prev->length - 1) >> 15;\n    u32 uVar2 = (cur->offset >> 15);\n    u32 iVar3 = (fn_80019C48()->streaming ? 1 : 0) ? 5 : 15;\n    if ((uVar2 > uVar1 - 2) || (uVar2 < uVar1 + iVar3 + 3)) {\n        return 1;\n    }\n    return 0;\n}\n\nstatic inline void DoJustRead(void *addr, u32 length, u32 offset, DVDLowCallback callback) {\n    CommandList[0].cmd = -1;\n    NextCommandNumber_801A689C = 0;\n    fn_80016394(addr, length, offset, callback);\n}\n\nvoid fn_800164A4(void *addr, u32 length, u32 offset, DVDLowCallback callback);\n\nstatic inline void WaitBeforeRead(void *addr, u32 length, u32 offset, DVDLowCallback callback,\n                                  OSTime timeout) {\n    CommandList[0].cmd = 1;\n    CommandList[0].addr = addr;\n    CommandList[0].length = length;\n    CommandList[0].offset = offset;\n    CommandList[0].callback = callback;\n    CommandList[1].cmd = -1;\n    NextCommandNumber_801A689C = 0;\n    OSCreateAlarm(&__DVDLowAlarmForWA__fzgx_offset_0);\n    OSSetAlarm(&__DVDLowAlarmForWA__fzgx_offset_0, timeout, fn_800162A0);\n}\n\nBOOL fn_80016524(void *addr, u32 length, u32 offset, DVDLowCallback callback) {\n    OSTime diff;\n    u32 prev;\n    __DIRegs[6] = length;\n    __DVDLowCurr__fzgx_offset_0.addr = addr;\n    __DVDLowCurr__fzgx_offset_0.length = length;\n    __DVDLowCurr__fzgx_offset_0.offset = offset;\n    if (WorkAroundType_801A687C == 0) {\n        DoJustRead(addr, length, offset, callback);\n    } else if (WorkAroundType_801A687C == 1) {\n        if (lbl_801A6468) {\n            fn_800164A4(addr, length, offset, callback);\n        } else {\n            if (!HitCache(&__DVDLowCurr__fzgx_offset_0, &__DVDLowPrev__fzgx_offset_0)) {\n                DoJustRead(addr, length, offset, callback);\n            } else {\n                prev = (__DVDLowPrev__fzgx_offset_0.offset + __DVDLowPrev__fzgx_offset_0.length - 1) >> 15;\n                if (prev == __DVDLowCurr__fzgx_offset_0.offset >> 15 || prev + 1 == __DVDLowCurr__fzgx_offset_0.offset >> 15) {\n                    diff = __OSGetSystemTime() - lbl_801A6888;\n                    if (((5) * (((u32)__OSBusClock / 4) / 1000)) < diff) {\n                        DoJustRead(addr, length, offset, callback);\n                    } else {\n                        WaitBeforeRead(addr, length, offset, callback,\n                                       ((5) * (((u32)__OSBusClock / 4) / 1000)) - diff +\n                                           (((500) * (((u32)__OSBusClock / 4) / 125000)) / 8));\n                    }\n                } else {\n                    fn_800164A4(addr, length, offset, callback);\n                }\n            }\n        }\n    }\n    return 1;\n}\n",
+    "generated_sha256": "a4cb389090a153527040dc9c46309fe27cf4ebca41c7c0ae4321468408390cbe",
+    "compiler": "GC/1.2.5n",
+    "flags": "-use_lmw_stmw on -fp fmadd -fp_contract off -char signed -common off",
+    "source": "dol/fn_80016524.c",
+    "bytes": 664,
+    "recipe": [
+      {
+        "label": "accepted SDK pool",
+        "symbol": "fn_80016524",
+        "source": ".fzgx/structural-regions-20260915/sdk-typed-ownership/sources/3ff9d64d2fff7835a74b7eab.c",
+        "sha256": "7ee3b5cda8f67412f4ac21296528554c516e113cbd01f500c632076b0c2b18a0",
+        "mw": "GC/1.2.5n",
+        "flags": "-use_lmw_stmw on -fp fmadd -fp_contract off -char signed -common off",
+        "target": "/Users/rayan/fzgx/build/GFZE01/obj/dol/fn_80016524.o",
+        "id": "3ff9d64d2fff7835a74b7eab3041cf14593bcef79d3d0281b31b5620850e08d0",
+        "object": ".fzgx/structural-regions-20260915/sdk-typed-ownership/objects/4a23b819f65896c5/3ff9d64d2fff7835a74b7eab/3ff9d64d2fff7835a74b7eab.o",
+        "score": 100.0,
+        "bit_errors": 0,
+        "word_errors": 0,
+        "shape_errors": 0,
+        "aligned_word_percent": 100.0,
+        "response_sha256": "4070366b5e5d22076928e61db61b04913e3554462168f427e8d9b1772fd2ec0c",
+        "percent": 99.518074,
+        "raw_percent": 99.518074,
+        "percent_adjusted": 100.0,
+        "differing_rows": 0,
+        "instruction_rows": 166,
+        "value_conflicts": 0,
+        "pool_rows": 11,
+        "regions": {
+          "0": [
+            0,
+            0,
+            0
+          ],
+          "80": [
+            0,
+            0,
+            0
+          ],
+          "116": [
+            0,
+            0,
+            0
+          ],
+          "120": [
+            0,
+            0,
+            0
+          ],
+          "132": [
+            0,
+            0,
+            0
+          ],
+          "144": [
+            0,
+            0,
+            0
+          ],
+          "164": [
+            0,
+            0,
+            0
+          ],
+          "168": [
+            0,
+            0,
+            0
+          ],
+          "208": [
+            0,
+            0,
+            0
+          ],
+          "220": [
+            0,
+            0,
+            0
+          ],
+          "228": [
+            0,
+            0,
+            0
+          ],
+          "232": [
+            0,
+            0,
+            0
+          ],
+          "240": [
+            0,
+            0,
+            0
+          ],
+          "248": [
+            0,
+            0,
+            0
+          ],
+          "252": [
+            0,
+            0,
+            0
+          ],
+          "264": [
+            0,
+            0,
+            0
+          ],
+          "280": [
+            0,
+            0,
+            0
+          ],
+          "288": [
+            0,
+            0,
+            0
+          ],
+          "292": [
+            0,
+            0,
+            0
+          ],
+          "300": [
+            0,
+            0,
+            0
+          ],
+          "336": [
+            0,
+            0,
+            0
+          ],
+          "340": [
+            0,
+            0,
+            0
+          ],
+          "376": [
+            0,
+            0,
+            0
+          ],
+          "388": [
+            0,
+            0,
+            0
+          ],
+          "392": [
+            0,
+            0,
+            0
+          ],
+          "472": [
+            0,
+            0,
+            0
+          ],
+          "504": [
+            0,
+            0,
+            0
+          ],
+          "508": [
+            0,
+            0,
+            0
+          ],
+          "592": [
+            0,
+            0,
+            0
+          ],
+          "616": [
+            0,
+            0,
+            0
+          ],
+          "620": [
+            0,
+            0,
+            0
+          ],
+          "640": [
+            0,
+            0,
+            0
+          ]
+        },
+        "matched": true,
+        "binding_score": 100.0
+      },
+      [
+        {
+          "label": "canonical BSS subobjects and private layout padding",
+          "input_sha256": "7ee3b5cda8f67412f4ac21296528554c516e113cbd01f500c632076b0c2b18a0",
+          "output_sha256": "a4cb389090a153527040dc9c46309fe27cf4ebca41c7c0ae4321468408390cbe",
+          "input_symbol": "fn_80016524",
+          "output_symbol": "fn_80016524",
+          "edits": [
+            [
+              1271,
+              1281,
+              "__DVDLowAlarmForWA__fzgx_offset_0"
+            ],
+            [
+              1305,
+              1305,
+              "fzgx_pool_"
+            ],
+            [
+              1344,
+              1348,
+              "__DVDLowPrev__fzgx_offset_0"
+            ],
+            [
+              1368,
+              1372,
+              "__DVDLowCurr__fzgx_offset_0"
+            ],
+            [
+              1694,
+              1823,
+              "__DVDLowAlarmForWA__fzgx_offset_0;\n    sink = *(unsigned char *)&fzgx_pool_gap____bss_0_68;\n    sink = *(unsigned char *)&__DVDLowPrev__fzgx_offset_0;\n    sink = *(unsigned char *)&__DVDLowCurr__fzgx_offset_0"
+            ],
+            [
+              2876,
+              2915,
+              "__DVDLowAlarmForWA__fzgx_offset_0);\n    OSSetAlarm(&__DVDLowAlarmForWA__fzgx_offset_0"
+            ],
+            [
+              3084,
+              3136,
+              "__DVDLowCurr__fzgx_offset_0.addr = addr;\n    __DVDLowCurr__fzgx_offset_0.length = length;\n    __DVDLowCurr__fzgx_offset_0"
+            ],
+            [
+              3422,
+              3433,
+              "__DVDLowCurr__fzgx_offset_0, &__DVDLowPrev__fzgx_offset_0"
+            ],
+            [
+              3543,
+              3646,
+              "__DVDLowPrev__fzgx_offset_0.offset + __DVDLowPrev__fzgx_offset_0.length - 1) >> 15;\n                if (prev == __DVDLowCurr__fzgx_offset_0.offset >> 15 || prev + 1 == __DVDLowCurr__fzgx_offset_0"
+            ]
+          ]
+        }
+      ]
+    ],
+    "headers_sha256": "a3db0164dc3a0250a1c1729dabebf7f84ddbd4096090f5f7f2d171ec8ca55bd1",
+    "oracle_sha256": "7cd63033369c3b07e3fe76ed92108263a6d28e5b3f3a8e251f031f42d4f37913",
+    "link": "pending"
   }
 }

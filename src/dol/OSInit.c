@@ -105,7 +105,7 @@ vu16 __OSDeviceCode : FZGX_ADDR___OSDeviceCode;
 
 static DVDDriveInfo DriveInfo_8015BF00;
 
-static DVDCommandBlock DriveBlock;
+static DVDCommandBlock __OSDriveBlock__fzgx_offset_0;
 
 extern OSBootInfo *BootInfo_801A6748;
 
@@ -244,7 +244,7 @@ void OSInit(void) {
                 return;
             }
             DCInvalidateRange(&DriveInfo_8015BF00, sizeof(DriveInfo_8015BF00));
-            DVDInquiryAsync(&DriveBlock, &DriveInfo_8015BF00, InquiryCallback);
+            DVDInquiryAsync(&__OSDriveBlock__fzgx_offset_0, &DriveInfo_8015BF00, InquiryCallback);
         }
     }
 }

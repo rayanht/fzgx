@@ -51,13 +51,13 @@ static DVDCommand CommandList[3];
 
 static unsigned char gap____bss_0_3c[4];
 
-static OSAlarm AlarmForWA;
+static OSAlarm __DVDLowAlarmForWA__fzgx_offset_0;
 
-static unsigned char gap____bss_0_68[80];
+static unsigned char fzgx_pool_gap____bss_0_68[80];
 
-static DVDBuffer Prev;
+static DVDBuffer __DVDLowPrev__fzgx_offset_0;
 
-static DVDBuffer Curr;
+static DVDBuffer __DVDLowCurr__fzgx_offset_0;
 
 #pragma section code_type ".fzgxpool"
 static void layout____bss_0(void) {
@@ -65,10 +65,10 @@ static void layout____bss_0(void) {
     volatile unsigned char sink; // fzgx-allow: S2 SDK asynchronous state
     sink = *(unsigned char *)&CommandList;
     sink = *(unsigned char *)&gap____bss_0_3c;
-    sink = *(unsigned char *)&AlarmForWA;
-    sink = *(unsigned char *)&gap____bss_0_68;
-    sink = *(unsigned char *)&Prev;
-    sink = *(unsigned char *)&Curr;
+    sink = *(unsigned char *)&__DVDLowAlarmForWA__fzgx_offset_0;
+    sink = *(unsigned char *)&fzgx_pool_gap____bss_0_68;
+    sink = *(unsigned char *)&__DVDLowPrev__fzgx_offset_0;
+    sink = *(unsigned char *)&__DVDLowCurr__fzgx_offset_0;
 }
 #pragma section code_type ".text"
 
@@ -99,28 +99,28 @@ static inline void WaitBeforeRead(void *addr, u32 length, u32 offset, DVDLowCall
     CommandList[0].callback = callback;
     CommandList[1].cmd = -1;
     NextCommandNumber_801A689C = 0;
-    OSCreateAlarm(&AlarmForWA);
-    OSSetAlarm(&AlarmForWA, timeout, fn_800162A0);
+    OSCreateAlarm(&__DVDLowAlarmForWA__fzgx_offset_0);
+    OSSetAlarm(&__DVDLowAlarmForWA__fzgx_offset_0, timeout, fn_800162A0);
 }
 
 BOOL fn_80016524(void *addr, u32 length, u32 offset, DVDLowCallback callback) {
     OSTime diff;
     u32 prev;
     __DIRegs[6] = length;
-    Curr.addr = addr;
-    Curr.length = length;
-    Curr.offset = offset;
+    __DVDLowCurr__fzgx_offset_0.addr = addr;
+    __DVDLowCurr__fzgx_offset_0.length = length;
+    __DVDLowCurr__fzgx_offset_0.offset = offset;
     if (WorkAroundType_801A687C == 0) {
         DoJustRead(addr, length, offset, callback);
     } else if (WorkAroundType_801A687C == 1) {
         if (lbl_801A6468) {
             fn_800164A4(addr, length, offset, callback);
         } else {
-            if (!HitCache(&Curr, &Prev)) {
+            if (!HitCache(&__DVDLowCurr__fzgx_offset_0, &__DVDLowPrev__fzgx_offset_0)) {
                 DoJustRead(addr, length, offset, callback);
             } else {
-                prev = (Prev.offset + Prev.length - 1) >> 15;
-                if (prev == Curr.offset >> 15 || prev + 1 == Curr.offset >> 15) {
+                prev = (__DVDLowPrev__fzgx_offset_0.offset + __DVDLowPrev__fzgx_offset_0.length - 1) >> 15;
+                if (prev == __DVDLowCurr__fzgx_offset_0.offset >> 15 || prev + 1 == __DVDLowCurr__fzgx_offset_0.offset >> 15) {
                     diff = __OSGetSystemTime() - lbl_801A6888;
                     if (((5) * (((u32)__OSBusClock / 4) / 1000)) < diff) {
                         DoJustRead(addr, length, offset, callback);

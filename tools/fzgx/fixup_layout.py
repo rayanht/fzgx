@@ -59,12 +59,14 @@ def bss_member_bindings(p, symbol, body, obj, check):
         return []
     origin = origins.pop()
     objects = [s for s in retail.values() if s.kind == 'object' and s.section == '.bss']
+    bound = {private for private, _, _ in check._pool_pairs}
     names = {}
     for name, s in own.items():
         if (s['shndx'] != section['index'] or not s['size'] or s['info'] & 15 != 1
-                or name.startswith('fzgx_pool_') or '__fzgx_offset_' in name):
+                or name in bound or name.startswith('fzgx_pool_') or '__fzgx_offset_' in name):
             continue
         generated = re.fullmatch(r'(.+)_(?:gap|fill)_[0-9A-F]+(?:_fill_[0-9A-F]+)?', name)
+        padding = generated or re.fullmatch(r'(?:sdk_)?gap____bss_\d+_[0-9A-Fa-f]+', name)
         member = re.fullmatch(r'(.+)_([0-9A-F]+)', name)
         synthetic = name.startswith('lbl_') and name not in retail
         native = s['info'] == 1 and name not in retail
@@ -74,7 +76,7 @@ def bss_member_bindings(p, symbol, body, obj, check):
         owner = next((o for o in objects if o.addr <= address and address + s['size'] <= o.end), None)
         if owner:
             names[name] = owner.name + f'__fzgx_offset_{address-owner.addr:X}'
-        elif generated and '_gap_' in name:
+        elif padding and 'gap' in name:
             # The linker drops private padding only after all relocations to
             # its section have gone; live uses still prevent externalization.
             names[name] = 'fzgx_pool_' + name

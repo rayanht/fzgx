@@ -493,7 +493,12 @@ def import_data(p, names, apply=False, recipes=None, regenerate=False):
                             for base, raw in retail_regions):
                         raise ValueError('trailing padding is not zero or exceeds the section')
                 source_name = f'{p.module_src_prefix(first["module"])}/data/{first["symbol"]}.c'
-                text = '\n'.join(source for _, source in group)
+                # MWCC emits unreferenced BSS definitions in reverse order.
+                # Data-only units have no code accesses to establish an order;
+                # reverse their definitions while retaining the retail layout
+                # for validation and split ownership.
+                definitions = reversed(group) if first['section'] in BSS else group
+                text = '\n'.join(source for _, source in definitions)
                 # The group now owns some relocation targets. Their real
                 # declarations replace the address-only external fallback.
                 for r, _ in group:

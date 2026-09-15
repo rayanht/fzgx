@@ -37,7 +37,16 @@ def cmd_data_import(a, p):
     if a.regenerate:
         from .project import ROOT
         saved = json.loads((ROOT / 'state/dataimports' / f'{p.version}.json').read_text())
-        names = list(saved)
+        if a.symbols:
+            requested = {f'{sym.module}:{sym.name}' if (sym := p.resolve(name)) else name for name in a.symbols}
+            if missing := requested - saved.keys():
+                raise ValueError('no saved data import for: ' + ', '.join(sorted(missing)))
+            # A shared source owns its complete split; regenerating one member
+            # must retain the other objects in that same source.
+            sources = {(saved[name]['module'], saved[name]['source']) for name in requested}
+            names = [key for key, r in saved.items() if (r['module'], r['source']) in sources]
+        else:
+            names = list(saved)
         recipes = {key: recipes.get(r['symbol'], r.get('recipe')) for key, r in saved.items()}
     if not names:
         raise ValueError('provide data symbols, --recipes, or --inventory')

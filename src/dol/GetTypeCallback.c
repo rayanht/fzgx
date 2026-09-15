@@ -10,37 +10,37 @@ extern u32 lbl_801A6818;
 
 static unsigned char Packet_8015CA10[128];
 
-static unsigned char gap____bss_0_80[160];
+static unsigned char lbl_8015CA90__fzgx_offset_0[160];
 
 static OSTime TypeTime[4];
 
-static unsigned char gap____bss_0_140[32];
+static unsigned char lbl_8015CB50__fzgx_offset_0[32];
 
-static SITypeAndStatusCallback TypeCallback[4][4];
+static SITypeAndStatusCallback lbl_8015CB70__fzgx_offset_0[4][4];
 
-static unsigned char gap____bss_0_1a0[80];
+static unsigned char lbl_8015CBB0__fzgx_offset_0[80];
 
-static u32 cmdFixDevice[4];
+static u32 lbl_8015CBB0__fzgx_offset_50[4];
 
 static void layout____bss_0(void) {
 // Hardware or OS state can change asynchronously.
     volatile unsigned char sink; // fzgx-allow: S2 SDK asynchronous state
     sink = *(unsigned char *)&Packet_8015CA10;
-    sink = *(unsigned char *)&gap____bss_0_80;
+    sink = *(unsigned char *)&lbl_8015CA90__fzgx_offset_0;
     sink = *(unsigned char *)&TypeTime;
-    sink = *(unsigned char *)&gap____bss_0_140;
-    sink = *(unsigned char *)&TypeCallback;
-    sink = *(unsigned char *)&gap____bss_0_1a0;
-    sink = *(unsigned char *)&cmdFixDevice;
+    sink = *(unsigned char *)&lbl_8015CB50__fzgx_offset_0;
+    sink = *(unsigned char *)&lbl_8015CB70__fzgx_offset_0;
+    sink = *(unsigned char *)&lbl_8015CBB0__fzgx_offset_0;
+    sink = *(unsigned char *)&lbl_8015CBB0__fzgx_offset_50;
 }
 
 static inline void CallTypeAndStatusCallback(s32 chan, u32 type) {
     SITypeAndStatusCallback callback;
     int i;
     for (i = 0; i < 4; ++i) {
-        callback = TypeCallback[chan][i];
+        callback = lbl_8015CB70__fzgx_offset_0[chan][i];
         if (callback) {
-            TypeCallback[chan][i] = 0;
+            lbl_8015CB70__fzgx_offset_0[chan][i] = 0;
             callback(chan, type);
         }
     }
@@ -67,9 +67,9 @@ void GetTypeCallback(s32 chan, u32 error, OSContext *context) {
     }
     id = (u32)(OSGetWirelessID(chan) << 8);
     if (fix && (id & 0x00100000)) {
-        cmdFixDevice[chan] = 0x4Eu << 24 | (id & (0x000f0000 | 0x00c0ff00)) | 0x00100000;
+        lbl_8015CBB0__fzgx_offset_50[chan] = 0x4Eu << 24 | (id & (0x000f0000 | 0x00c0ff00)) | 0x00100000;
         Type_80123BA8[chan] = 0x0080;
-        SITransfer(chan, &cmdFixDevice[chan], 3, &Type_80123BA8[chan], 3, GetTypeCallback, 0);
+        SITransfer(chan, &lbl_8015CBB0__fzgx_offset_50[chan], 3, &Type_80123BA8[chan], 3, GetTypeCallback, 0);
         return;
     }
     if (type & 0x00100000) {
@@ -79,18 +79,18 @@ void GetTypeCallback(s32 chan, u32 error, OSContext *context) {
                 id |= 0x00100000;
                 OSSetWirelessID(chan, (u16)((id >> 8) & 0xffff));
             }
-            cmdFixDevice[chan] = 0x4E << 24 | id;
+            lbl_8015CBB0__fzgx_offset_50[chan] = 0x4E << 24 | id;
             Type_80123BA8[chan] = 0x0080;
-            SITransfer(chan, &cmdFixDevice[chan], 3, &Type_80123BA8[chan], 3, GetTypeCallback, 0);
+            SITransfer(chan, &lbl_8015CBB0__fzgx_offset_50[chan], 3, &Type_80123BA8[chan], 3, GetTypeCallback, 0);
             return;
         }
     } else if (type & 0x40000000) {
         id = type & (0x000f0000 | 0x00c0ff00);
         id |= 0x00100000;
         OSSetWirelessID(chan, (u16)((id >> 8) & 0xffff));
-        cmdFixDevice[chan] = 0x4E << 24 | id;
+        lbl_8015CBB0__fzgx_offset_50[chan] = 0x4E << 24 | id;
         Type_80123BA8[chan] = 0x0080;
-        SITransfer(chan, &cmdFixDevice[chan], 3, &Type_80123BA8[chan], 3, GetTypeCallback, 0);
+        SITransfer(chan, &lbl_8015CBB0__fzgx_offset_50[chan], 3, &Type_80123BA8[chan], 3, GetTypeCallback, 0);
         return;
     } else {
         OSSetWirelessID(chan, 0);

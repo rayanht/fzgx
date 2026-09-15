@@ -6136,7 +6136,7 @@
     "symbols": [
       "GetTypeCallback"
     ],
-    "status": "nonmatching",
+    "status": "matching",
     "mw_version": "GC/1.2.5n",
     "extra_cflags": [
       "-use_lmw_stmw",
@@ -6150,7 +6150,16 @@
       "-common",
       "off"
     ],
-    "pool": true
+    "pool": {
+      "...bss.0": "Packet",
+      "Packet_8015CA10": "Packet",
+      "lbl_8015CA90__fzgx_offset_0": "lbl_8015CA90",
+      "TypeTime": "TypeTime",
+      "lbl_8015CB50__fzgx_offset_0": "lbl_8015CB50",
+      "lbl_8015CB70__fzgx_offset_0": "lbl_8015CB70",
+      "lbl_8015CBB0__fzgx_offset_0": "lbl_8015CBB0",
+      "lbl_8015CBB0__fzgx_offset_50": "lbl_8015CBB0+0x50"
+    }
   },
   {
     "module": "main",
@@ -6898,7 +6907,7 @@
     "symbols": [
       "OSInit"
     ],
-    "status": "nonmatching",
+    "status": "matching",
     "mw_version": "GC/1.2.5n",
     "extra_cflags": [
       "-use_lmw_stmw",
@@ -6912,7 +6921,12 @@
       "-common",
       "off"
     ],
-    "pool": true
+    "pool": {
+      "@51": "@97",
+      "...bss.0": "DriveInfo",
+      "DriveInfo_8015BF00": "DriveInfo",
+      "__OSDriveBlock__fzgx_offset_0": "__OSDriveBlock"
+    }
   },
   {
     "module": "main",
@@ -10131,7 +10145,7 @@
     "symbols": [
       "__DVDInterruptHandler"
     ],
-    "status": "nonmatching",
+    "status": "matching",
     "mw_version": "GC/1.2.5n",
     "extra_cflags": [
       "-use_lmw_stmw",
@@ -10145,7 +10159,13 @@
       "-common",
       "off"
     ],
-    "pool": true
+    "pool": {
+      "...bss.0": "CommandList",
+      "CommandList_8015CD70": "CommandList",
+      "AlarmForTimeout": "AlarmForTimeout",
+      "__DVDLowPrev__fzgx_offset_0": "__DVDLowPrev",
+      "__DVDLowCurr__fzgx_offset_0": "__DVDLowCurr"
+    }
   },
   {
     "module": "main",
@@ -11915,6 +11935,40 @@
   },
   {
     "module": "main",
+    "source": "dol/data/__DVDLowAlarmForWA.c",
+    "symbols": [
+      "__DVDLowAlarmForWA"
+    ],
+    "status": "matching",
+    "data": true,
+    "mw_version": null,
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/data/__DVDLowPrev.c",
+    "symbols": [
+      "__DVDLowPrev",
+      "__DVDLowCurr"
+    ],
+    "status": "matching",
+    "data": true,
+    "mw_version": null,
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
+    "source": "dol/data/__OSDriveBlock.c",
+    "symbols": [
+      "__OSDriveBlock"
+    ],
+    "status": "matching",
+    "data": true,
+    "mw_version": null,
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
     "source": "dol/data/__files.c",
     "symbols": [
       "__files"
@@ -13457,7 +13511,7 @@
     "symbols": [
       "fn_80016524"
     ],
-    "status": "nonmatching",
+    "status": "matching",
     "mw_version": "GC/1.2.5n",
     "extra_cflags": [
       "-use_lmw_stmw",
@@ -13471,7 +13525,13 @@
       "-common",
       "off"
     ],
-    "pool": true
+    "pool": {
+      "...bss.0": "CommandList",
+      "CommandList": "CommandList",
+      "__DVDLowAlarmForWA__fzgx_offset_0": "__DVDLowAlarmForWA",
+      "__DVDLowPrev__fzgx_offset_0": "__DVDLowPrev",
+      "__DVDLowCurr__fzgx_offset_0": "__DVDLowCurr"
+    }
   },
   {
     "module": "main",
@@ -13701,7 +13761,7 @@
     "symbols": [
       "fn_80018D1C"
     ],
-    "status": "nonmatching",
+    "status": "matching",
     "mw_version": "GC/1.2.5n",
     "extra_cflags": [
       "-use_lmw_stmw",
@@ -13715,7 +13775,12 @@
       "-common",
       "off"
     ],
-    "pool": true
+    "pool": {
+      "...bss.0": "BB2",
+      "BB2_8015CE40": "BB2",
+      "lbl_8015CE60__fzgx_offset_0": "lbl_8015CE60",
+      "DummyCommandBlock": "DummyCommandBlock"
+    }
   },
   {
     "module": "main",
