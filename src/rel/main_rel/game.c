@@ -1558,7 +1558,7 @@ void fn_1_411A4(u32 index) {
 }
 /* fzgx:end fn_1_411A4 */
 
-/* fzgx:begin fn_1_412A0 pool noprologue */
+/* fzgx:begin fn_1_412A0 noprologue */
 #include "rel/main_rel/game.h"
 
 typedef struct BssState {
@@ -1577,8 +1577,8 @@ u32 fzgx_obj_lbl_1_bss_38454;
 u32 fzgx_obj_lbl_1_bss_38458;
 u32 fzgx_obj_lbl_1_bss_3845C;
 u32 fzgx_obj_lbl_1_bss_38460[7];
-s32 lbl_1_bss_38460_1C[7];
-u32 lbl_1_bss_38460_38[7];
+s32 lbl_1_bss_38460__fzgx_offset_1C[7];
+u32 lbl_1_bss_38460__fzgx_offset_38[7];
 u32 fzgx_obj_lbl_1_bss_384B4;
 
 #pragma section code_type ".fzgxpool"
@@ -1589,8 +1589,8 @@ static void fzgx_bss_layout(void) {
     s = *(u8 *)&fzgx_obj_lbl_1_bss_38458;
     s = *(u8 *)&fzgx_obj_lbl_1_bss_3845C;
     s = *(u8 *)&fzgx_obj_lbl_1_bss_38460;
-    s = *(u8 *)&lbl_1_bss_38460_1C;
-    s = *(u8 *)&lbl_1_bss_38460_38;
+    s = *(u8 *)&lbl_1_bss_38460__fzgx_offset_1C;
+    s = *(u8 *)&lbl_1_bss_38460__fzgx_offset_38;
     s = *(u8 *)&fzgx_obj_lbl_1_bss_384B4;
 }
 #pragma section code_type ".text"
@@ -1598,17 +1598,17 @@ static void fzgx_bss_layout(void) {
 void fn_1_412A0(u32 index) {
     
 
-    if (lbl_1_bss_38460_38[index] != 0) {
-        fn_80071718((void *)lbl_1_bss_38460_38[index]);
+    if (lbl_1_bss_38460__fzgx_offset_38[index] != 0) {
+        fn_80071718((void *)lbl_1_bss_38460__fzgx_offset_38[index]);
     }
 
     if (fzgx_obj_lbl_1_bss_38460[index] != 0) {
         fn_800711A8((void *)fzgx_obj_lbl_1_bss_38460[index]);
     }
 
-    lbl_1_bss_38460_38[index] = 0;
+    lbl_1_bss_38460__fzgx_offset_38[index] = 0;
     fzgx_obj_lbl_1_bss_38460[index] = 0;
-    lbl_1_bss_38460_1C[index] = -1;
+    lbl_1_bss_38460__fzgx_offset_1C[index] = -1;
 }
 /* fzgx:end fn_1_412A0 */
 

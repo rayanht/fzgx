@@ -18,12 +18,12 @@ vu16 __VIRegs[59] : FZGX_ADDR___VIRegs;
 
 extern u32 SamplingRate_801A6820;
 
-static XY XYNTSC[12] = {
+static XY fzgx_pool_XYNTSC[12] = {
     {263 - 17, 2}, {15, 18}, {30, 9}, {44, 6},  {52, 5},  {65, 4},
     {87, 3},       {87, 3},  {87, 3}, {131, 2}, {131, 2}, {131, 2},
 };
 
-static XY XYPAL[12] = {
+static XY fzgx_pool_XYPAL[12] = {
     {313 - 17, 2}, {15, 21}, {29, 11}, {45, 7},  {52, 6},  {63, 5},
     {78, 4},       {104, 3}, {104, 3}, {104, 3}, {104, 3}, {156, 2},
 };
@@ -40,15 +40,15 @@ void SISetSamplingRate(u32 msec) {
     case 0:
     case 2:
     case 5:
-        xy = XYNTSC;
+        xy = fzgx_pool_XYNTSC;
         break;
     case 1:
-        xy = XYPAL;
+        xy = fzgx_pool_XYPAL;
         break;
     default:
         OSReport("SISetSamplingRate: unknown TV format. Use default.");
         msec = 0;
-        xy = XYNTSC;
+        xy = fzgx_pool_XYNTSC;
         break;
     }
     SISetXY((__VIRegs[54] & 1 ? 2u : 1u) * xy[msec].line, xy[msec].count);

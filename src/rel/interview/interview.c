@@ -1051,7 +1051,7 @@ void fn_17_69EC(void *arg0, f32 farg0) {
 }
 /* fzgx:end fn_17_69EC */
 
-/* fzgx:begin fn_17_6F30 pool */
+/* fzgx:begin fn_17_6F30 */
 typedef struct InterviewText {
     u8 pad0[0x86];
     u8 text[1];
@@ -1079,8 +1079,8 @@ u8 lbl_17_bss_0;
 u8 lbl_17_bss_1;
 u8 lbl_17_bss_2;
 u8 lbl_17_bss_3;
-u32 lbl_17_bss_4;
-u32 lbl_17_bss_8;
+u32 lbl_17_bss_3__fzgx_offset_1;
+u32 lbl_17_bss_3__fzgx_offset_5;
 u32 lbl_17_bss_C;
 u32 lbl_17_bss_10;
 u32 lbl_17_bss_14;
@@ -1091,10 +1091,10 @@ u32 lbl_17_bss_34[8];
 s32 lbl_17_bss_54;
 u32 lbl_17_bss_58[2];
 InterviewCamera lbl_17_bss_60;
-u16 lbl_17_bss_D4;
+u16 lbl_17_bss_60__fzgx_offset_74;
 s16 lbl_17_bss_D6;
 InterviewSubstate lbl_17_bss_D8;
-u16 lbl_17_bss_F8;
+u16 lbl_17_bss_D8__fzgx_offset_20;
 
 #pragma section code_type ".fzgxpool"
 static void fzgx_bss_layout(void) {
@@ -1103,8 +1103,8 @@ static void fzgx_bss_layout(void) {
     s = (u32)lbl_17_bss_1;
     s = (u32)lbl_17_bss_2;
     s = (u32)lbl_17_bss_3;
-    s = (u32)lbl_17_bss_4;
-    s = (u32)lbl_17_bss_8;
+    s = (u32)lbl_17_bss_3__fzgx_offset_1;
+    s = (u32)lbl_17_bss_3__fzgx_offset_5;
     s = (u32)lbl_17_bss_C;
     s = (u32)lbl_17_bss_10;
     s = (u32)lbl_17_bss_14;
@@ -1115,10 +1115,10 @@ static void fzgx_bss_layout(void) {
     s = (u32)lbl_17_bss_54;
     s = (u32)lbl_17_bss_58[0];
     s = (u32)lbl_17_bss_60.flags;
-    s = (u32)lbl_17_bss_D4;
+    s = (u32)lbl_17_bss_60__fzgx_offset_74;
     s = (u32)lbl_17_bss_D6;
     s = (u32)lbl_17_bss_D8.field4;
-    s = (u32)lbl_17_bss_F8;
+    s = (u32)lbl_17_bss_D8__fzgx_offset_20;
 }
 #pragma section code_type ".text"
 

@@ -40,13 +40,13 @@ __OSExceptionHandler __OSSetExceptionHandler(__OSException exception, __OSExcept
 
 void OSDefaultExceptionHandler(register __OSException exception, register OSContext *context);
 
-static unsigned char OSDataPool_801225B0[68] = {
+static unsigned char fzgx_pool_OSDataPool_801225B0[68] = {
     60, 60, 32, 68,  111, 108, 112, 104, 105, 110, 32, 83, 68,  75,  32,  45,  32,
     79, 83, 9,  114, 101, 108, 101, 97,  115, 101, 32, 98, 117, 105, 108, 100, 58,
     32, 77, 97, 114, 32,  49,  55,  32,  50,  48,  48, 51, 32,  48,  52,  58,  50,
     48, 58, 52, 49,  32,  40,  48,  120, 50,  51,  48, 49, 41,  32,  62,  62,  0};
 
-static unsigned char gap____data_0_44[224] = {
+static unsigned char fzgx_pool_gap____data_0_44[224] = {
     10,  68,  111, 108, 112, 104, 105, 110, 32,  79,  83,  10,  0,   0,   0,   0,   75,  101, 114,
     110, 101, 108, 32,  98,  117, 105, 108, 116, 32,  58,  32,  37,  115, 32,  37,  115, 10,  0,
     0,   0,   77,  97,  114, 32,  49,  55,  32,  50,  48,  48,  51,  0,   48,  52,  58,  50,  48,
@@ -60,7 +60,7 @@ static unsigned char gap____data_0_44[224] = {
     32,  37,  100, 32,  77,  66,  10,  0,   0,   0,   65,  114, 101, 110, 97,  32,  58,  32,  48,
     120, 37,  120, 32,  45,  32,  48,  120, 37,  120, 10,  0,   0,   0,   0};
 
-static u32 __OSExceptionLocations[] = {
+static u32 fzgx_pool___OSExceptionLocations[] = {
     0x00000100, 0x00000200, 0x00000300, 0x00000400, 0x00000500, 0x00000600, 0x00000700, 0x00000800,
     0x00000900, 0x00000C00, 0x00000D00, 0x00000F00, 0x00001300, 0x00001400, 0x00001700,
 };
@@ -103,7 +103,7 @@ void OSExceptionInit(void) {
             }
         }
         destAddr =
-            (void *)((void *)((u32)(__OSExceptionLocations[(u32)exception]) + (0x8000 << 16)));
+            (void *)((void *)((u32)(fzgx_pool___OSExceptionLocations[(u32)exception]) + (0x8000 << 16)));
         memcpy(destAddr, handlerStart, handlerSize);
         DCFlushRangeNoSync(destAddr, handlerSize);
         __sync();
