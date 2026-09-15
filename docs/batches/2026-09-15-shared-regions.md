@@ -92,5 +92,9 @@ Real MWCC negative probes reject an altered switch destination, a missing pointe
 relocation, and an altered unused initializer even though all instruction words
 still match. A shifted SDA destination is also rejected. No unit tests were added.
 
-All accepted integrations passed the 16-target hash check. The final build,
-archive replay, lint and snapshot results are recorded with the completion commit.
+Validation: the archive replay reproduced 23 bodies; scoped regeneration reproduced
+all four typed data objects; all six real-function oracle probes passed their
+expected acceptance or rejection; lint reported zero findings; and
+`configure.py` plus `ninja` printed `16 files OK`. The completion snapshot has
+5,013 matched functions, 2,166 unmatched, 15 blocked, 114 assembly units and
+four remaining pool matches.

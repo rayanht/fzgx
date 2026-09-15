@@ -6709,7 +6709,7 @@
     "source": "dol/fn_8001B42C.c",
     "bytes": 2088,
     "headers_sha256": "a3db0164dc3a0250a1c1729dabebf7f84ddbd4096090f5f7f2d171ec8ca55bd1",
-    "oracle_sha256": "61a458d794fa7493e5aca5da01d0c3845bf439dd445340fb93f4b053b27e6c65",
+    "oracle_sha256": "700a56527d59657e753629a8a83b58da10a07a15eae232957afab0d910fb229c",
     "recipe": [
       {
         "label": "retail shared-state reconstruction",
@@ -6981,7 +6981,7 @@
         ]
       }
     ],
-    "oracle_sha256": "61a458d794fa7493e5aca5da01d0c3845bf439dd445340fb93f4b053b27e6c65",
+    "oracle_sha256": "700a56527d59657e753629a8a83b58da10a07a15eae232957afab0d910fb229c",
     "link": "verified",
     "headers_sha256": "a3db0164dc3a0250a1c1729dabebf7f84ddbd4096090f5f7f2d171ec8ca55bd1"
   },
@@ -7048,7 +7048,7 @@
         ]
       }
     ],
-    "oracle_sha256": "61a458d794fa7493e5aca5da01d0c3845bf439dd445340fb93f4b053b27e6c65",
+    "oracle_sha256": "700a56527d59657e753629a8a83b58da10a07a15eae232957afab0d910fb229c",
     "link": "verified",
     "headers_sha256": "a3db0164dc3a0250a1c1729dabebf7f84ddbd4096090f5f7f2d171ec8ca55bd1"
   },
@@ -7100,7 +7100,7 @@
         ]
       }
     ],
-    "oracle_sha256": "61a458d794fa7493e5aca5da01d0c3845bf439dd445340fb93f4b053b27e6c65",
+    "oracle_sha256": "700a56527d59657e753629a8a83b58da10a07a15eae232957afab0d910fb229c",
     "link": "verified",
     "headers_sha256": "a3db0164dc3a0250a1c1729dabebf7f84ddbd4096090f5f7f2d171ec8ca55bd1"
   },
@@ -7138,7 +7138,7 @@
       }
     ],
     "headers_sha256": "a3db0164dc3a0250a1c1729dabebf7f84ddbd4096090f5f7f2d171ec8ca55bd1",
-    "oracle_sha256": "61a458d794fa7493e5aca5da01d0c3845bf439dd445340fb93f4b053b27e6c65",
+    "oracle_sha256": "700a56527d59657e753629a8a83b58da10a07a15eae232957afab0d910fb229c",
     "link": "verified"
   },
   "OSInit": {
@@ -7175,7 +7175,7 @@
       }
     ],
     "headers_sha256": "a3db0164dc3a0250a1c1729dabebf7f84ddbd4096090f5f7f2d171ec8ca55bd1",
-    "oracle_sha256": "61a458d794fa7493e5aca5da01d0c3845bf439dd445340fb93f4b053b27e6c65",
+    "oracle_sha256": "700a56527d59657e753629a8a83b58da10a07a15eae232957afab0d910fb229c",
     "link": "verified"
   },
   "__DVDInterruptHandler": {
@@ -7237,7 +7237,7 @@
       }
     ],
     "headers_sha256": "a3db0164dc3a0250a1c1729dabebf7f84ddbd4096090f5f7f2d171ec8ca55bd1",
-    "oracle_sha256": "61a458d794fa7493e5aca5da01d0c3845bf439dd445340fb93f4b053b27e6c65",
+    "oracle_sha256": "700a56527d59657e753629a8a83b58da10a07a15eae232957afab0d910fb229c",
     "link": "verified"
   },
   "GetTypeCallback": {
@@ -7358,7 +7358,7 @@
       }
     ],
     "headers_sha256": "a3db0164dc3a0250a1c1729dabebf7f84ddbd4096090f5f7f2d171ec8ca55bd1",
-    "oracle_sha256": "61a458d794fa7493e5aca5da01d0c3845bf439dd445340fb93f4b053b27e6c65",
+    "oracle_sha256": "700a56527d59657e753629a8a83b58da10a07a15eae232957afab0d910fb229c",
     "link": "verified"
   },
   "fn_80016524": {
@@ -7430,7 +7430,7 @@
       }
     ],
     "headers_sha256": "a3db0164dc3a0250a1c1729dabebf7f84ddbd4096090f5f7f2d171ec8ca55bd1",
-    "oracle_sha256": "61a458d794fa7493e5aca5da01d0c3845bf439dd445340fb93f4b053b27e6c65",
+    "oracle_sha256": "700a56527d59657e753629a8a83b58da10a07a15eae232957afab0d910fb229c",
     "link": "verified"
   },
   "fn_80016394": {
@@ -7467,7 +7467,7 @@
         ]
       }
     ],
-    "oracle_sha256": "61a458d794fa7493e5aca5da01d0c3845bf439dd445340fb93f4b053b27e6c65",
+    "oracle_sha256": "700a56527d59657e753629a8a83b58da10a07a15eae232957afab0d910fb229c",
     "headers_sha256": "a3db0164dc3a0250a1c1729dabebf7f84ddbd4096090f5f7f2d171ec8ca55bd1"
   }
 }

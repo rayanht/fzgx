@@ -564,7 +564,7 @@ def _relocated_pool_matches(project, module, elf, section, address, extent):
             own = symbols[info >> 8]
             target = resolve_target(project, module, own['name'])
             alias = re.fullmatch(r'(.+)__fzgx_offset_([0-9A-F]+)', own['name'])
-            if target is None and alias:
+            if target is None and alias and own['shndx'] == 0:
                 target = resolve_target(project, module, alias[1])
                 addend += int(alias[2], 16)
             if own['shndx'] == section['index']:
