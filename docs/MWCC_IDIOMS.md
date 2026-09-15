@@ -110,3 +110,22 @@ Each line is a family that turned a 60–99% body into a match; the count is how
   the branch is the same, the register that holds the constant moves.
 - Two adjacent statements that share nothing, swapped (2): free order, different
   scheduling.
+
+## Large saved bodies (2026-09-14)
+
+- `fn_8_1394` (GC/2.0): assigning the zero operand inside a floating comparison
+  gives it a separate scalar lifetime and reproduces the retail operand order.
+- `fn_1_988DC`: completing a dead integer counter's square immediately after its
+  definition changes the later register interference. Its floating clamp also
+  needs the retail unordered branch behavior; positive nested tests and a
+  min/max expression are not interchangeable for NaNs.
+- `fn_1_13C1A0`: a 200-byte stack copy is ten rows of five words. Recovering the
+  row shape reproduces the address arithmetic that a flat guessed table misses.
+- `fn_1_13D460`: placing the count assignment before packet setup and forming
+  the strip base plus width-times-index before the final displacement reproduces
+  the allocation and operand order without declaration permutations.
+- Shared BSS section bases do not emit relocations to every named object. Bind
+  split definitions by measured module, section, address and owner bounds. Give
+  interior pieces canonical `OWNER__fzgx_offset_HEX` names. Private primer storage
+  can disappear only after its section base is proven and no live relocation
+  reaches the remaining storage. This linked the 6,608-byte `fn_1_AD264`.

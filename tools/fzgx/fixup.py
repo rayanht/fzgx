@@ -1023,7 +1023,7 @@ def archive_sources(report, path):
     targets={r['symbol'] for group in report.get('clones',[]) for r in group['members'] if r['status']=='unmatched'}
     records=[]
     for row in selected.values():
-        if not row.get('object') or 'raw_percent' not in row or targets and row['symbol'] not in targets:
+        if not row.get('object') or targets and row['symbol'] not in targets:
             continue
         seed,recipe=repair_recipe(by_id,row)
         records.append(dict(symbol=row['symbol'],body=Path(row['source']).read_text(),sha256=row['sha256'],

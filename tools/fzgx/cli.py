@@ -127,7 +127,7 @@ def cmd_release(a, p):
 
 
 def cmd_block(a, p):
-    _print(api.block(p, a.symbol, a.reason, a.issue), a.json); return 0
+    _print(api.block(p, a.symbol, a.reason), a.json); return 0
 
 
 def cmd_unblock(a, p):
@@ -453,8 +453,8 @@ def build_parser() -> argparse.ArgumentParser:
         sp.add_argument("--model"); sp.add_argument("--harness")
         sp.add_argument("--tokens-in", type=int, default=0); sp.add_argument("--tokens-out", type=int, default=0)
         sp.add_argument("--cost-usd", type=float, default=0.0)
-    s = sub.add_parser("block", help="mark blocked (optionally open a GitHub issue)"); s.set_defaults(fn=cmd_block)
-    s.add_argument("symbol"); s.add_argument("--reason", required=True); s.add_argument("--issue", action="store_true")
+    s = sub.add_parser("block", help="record a blocked function locally"); s.set_defaults(fn=cmd_block)
+    s.add_argument("symbol"); s.add_argument("--reason", required=True)
     s = sub.add_parser("unblock"); s.set_defaults(fn=cmd_unblock); s.add_argument("symbol")
     s = sub.add_parser("report", help="progress and cost summary"); s.set_defaults(fn=cmd_report)
     s = sub.add_parser("snapshot", help="write state/ledger.json"); s.set_defaults(fn=cmd_snapshot)

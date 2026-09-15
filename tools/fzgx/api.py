@@ -815,21 +815,11 @@ def abort_attempt(p: Project, symbol: str, reason: str) -> Dict[str, Any]:
 
 
 # ---------------------------------------------------------------- bookkeeping
-def block(p: Project, symbol: str, reason: str, open_issue: bool = False) -> Dict[str, Any]:
+def block(p: Project, symbol: str, reason: str) -> Dict[str, Any]:
     l = Ledger()
-    issue = None
     symbol = _key(p, symbol)
-    if open_issue:
-        row = l.get(symbol)
-        body = f"Function `{symbol}` exhausted {row['attempts'] if row else '?'} cheap-tier attempts.\n\n"
-        body += f"Best: {row['best_percent']:.1f}%\n\nReason: {reason}\n" if row else reason
-        cp = subprocess.run(["gh", "issue", "create", "--title", f"blocked: {symbol}", "--body", body,
-                             "--label", "blocked"], cwd=ROOT, text=True, capture_output=True)
-        tail = cp.stdout.strip().rsplit("/", 1)[-1]
-        if cp.returncode == 0 and tail.isdigit():
-            issue = int(tail)
-    l.block(symbol, reason, issue)
-    return {"ok": True, "symbol": symbol, "issue": issue}
+    l.block(symbol, reason)
+    return {"ok": True, "symbol": symbol}
 
 
 def unblock(p: Project, symbol: str) -> Dict[str, Any]:

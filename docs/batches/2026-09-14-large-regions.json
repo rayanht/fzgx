@@ -1,0 +1,568 @@
+{
+  "date": "2026-09-14",
+  "new_matches": [
+    {
+      "symbol": "fn_8_1394",
+      "bytes": 2164,
+      "source": "src/rel/title/title.c",
+      "compiler": "GC/2.0",
+      "flags": [],
+      "source_sha256": "c7d9058420f1beadd60b7837ca211d7103ae286a08779a46b61e5ba85fe58b2e",
+      "link": "verified",
+      "commit": "51d87ef1"
+    },
+    {
+      "symbol": "fn_1_988DC",
+      "bytes": 1340,
+      "source": "src/rel/main_rel/burner.c",
+      "compiler": "GC/1.3.2",
+      "flags": [],
+      "source_sha256": "ada3f5dcfe5782499b974dcceba4d68507211982213ebd9389ef43ed0d28d1ad",
+      "link": "verified",
+      "commit": "a5d9c1e6"
+    },
+    {
+      "symbol": "fn_1_13D460",
+      "bytes": 1452,
+      "source": "src/rel/main_rel/sel_static_disp.c",
+      "compiler": "GC/1.3.2",
+      "flags": [],
+      "source_sha256": "e92c41c5f3880c3c3873832b4b248a75dbd886825d87323bf1d0f86836dea509",
+      "link": "verified",
+      "commit": "a5d9c1e6"
+    },
+    {
+      "symbol": "fn_1_13C1A0",
+      "bytes": 1100,
+      "source": "src/rel/main_rel/sel_static_disp.c",
+      "compiler": "GC/1.3.2",
+      "flags": [],
+      "source_sha256": "75cc054d3be174044456399b7117caa375a23eec21e6d94d6b4373192f04f424",
+      "link": "verified",
+      "commit": "a5d9c1e6"
+    },
+    {
+      "symbol": "fn_8001AAB4",
+      "bytes": 1200,
+      "source": "src/dol/fn_8001AAB4.c",
+      "compiler": "GC/1.2.5n",
+      "flags": [
+        "-use_lmw_stmw",
+        "on",
+        "-fp",
+        "fmadd",
+        "-fp_contract",
+        "off",
+        "-char",
+        "signed",
+        "-common",
+        "off"
+      ],
+      "source_sha256": "a3d096fb9cd5e00415e70d19581b80508129f7a673bd187b58733bf4c6301019",
+      "link": "pool",
+      "commit": null
+    },
+    {
+      "symbol": "fn_8007C910",
+      "bytes": 1276,
+      "source": "src/dol/fn_8007C910.c",
+      "compiler": "GC/1.3.2",
+      "flags": [
+        "-sdata",
+        "8",
+        "-sdata2",
+        "8",
+        "-use_lmw_stmw",
+        "off"
+      ],
+      "source_sha256": "eef40ec805fb9b0dba12e9b053a72b1efc36adf8120f37d9e59cb58cfcd972af",
+      "link": "verified",
+      "commit": "faeb3f3f"
+    },
+    {
+      "symbol": "fn_1_E174",
+      "bytes": 1300,
+      "source": "src/rel/main_rel/live_camera.c",
+      "compiler": "GC/1.3.2",
+      "flags": [],
+      "source_sha256": "5320dadc67fa9922b420eb3a5b8d9890526fb7e2847472d42a8ab9b3551404de",
+      "link": "verified",
+      "commit": "faeb3f3f"
+    },
+    {
+      "symbol": "fn_14_380",
+      "bytes": 1408,
+      "source": "src/rel/pilotpoint/pilotpoint.c",
+      "compiler": "GC/1.3.2",
+      "flags": [],
+      "source_sha256": "d9b8cf12cca28204aa10d4be652748d6bb90758eccc56d8fe0f37f526e62d10f",
+      "link": "verified",
+      "commit": "2a1ab111"
+    }
+  ],
+  "pool_upgrades": [
+    {
+      "symbol": "fn_1_128F10",
+      "bytes": 68,
+      "source": "src/rel/main_rel/accessory.c",
+      "compiler": "GC/1.3.2",
+      "flags": [],
+      "source_sha256": "5043458a44bfcdaafbe3c2f2f7f65a3cea87322f97e8bd08250edecd749e7385",
+      "link": "verified",
+      "commit": "70e5a2bd"
+    },
+    {
+      "symbol": "fn_1_F2780",
+      "bytes": 160,
+      "source": "src/rel/main_rel/replay.c",
+      "compiler": "GC/1.3.2",
+      "flags": [],
+      "source_sha256": "d8e15fea3924df3d6069b6e5e3fd461652eee9cde9bb6b34d2b85156259be387",
+      "link": "verified",
+      "commit": "70e5a2bd"
+    },
+    {
+      "symbol": "fn_1_F2DDC",
+      "bytes": 116,
+      "source": "src/rel/main_rel/replay.c",
+      "compiler": "GC/1.3.2",
+      "flags": [],
+      "source_sha256": "e66a1fd041d0005f140ae88d55fb8407f13324f4c3056d8668796127043b86e7",
+      "link": "verified",
+      "commit": "70e5a2bd"
+    },
+    {
+      "symbol": "fn_1_AD264",
+      "bytes": 6608,
+      "source": "src/rel/main_rel/memcard.c",
+      "compiler": "GC/1.3.2",
+      "flags": [],
+      "source_sha256": "98e3e5f92be88d53734206ec33f9f08a1b50f3c412faa7976e343142b40add98",
+      "link": "verified",
+      "commit": "6bfc2a95"
+    },
+    {
+      "symbol": "fn_17_6F30",
+      "bytes": 240,
+      "source": "src/rel/interview/interview.c",
+      "compiler": "GC/1.3.2",
+      "flags": [],
+      "source_sha256": "4cc8ff3e44a60ed5a0a2f1e57d92832e192c63e2d0c2950029ec48f677a6b201",
+      "link": "verified",
+      "commit": "a3016c30"
+    },
+    {
+      "symbol": "OSExceptionInit",
+      "bytes": 640,
+      "source": "src/dol/OSExceptionInit.c",
+      "compiler": "GC/1.2.5n",
+      "flags": [
+        "-use_lmw_stmw",
+        "on",
+        "-fp",
+        "fmadd",
+        "-fp_contract",
+        "off",
+        "-char",
+        "signed",
+        "-common",
+        "off"
+      ],
+      "source_sha256": "6355f6def566519167081bafe97989c78c9ef880fbc06ef3f4ebf0531c2f348e",
+      "link": "verified",
+      "commit": "a3016c30"
+    },
+    {
+      "symbol": "SISetSamplingRate",
+      "bytes": 228,
+      "source": "src/dol/SISetSamplingRate.c",
+      "compiler": "GC/1.2.5n",
+      "flags": [
+        "-use_lmw_stmw",
+        "on",
+        "-fp",
+        "fmadd",
+        "-fp_contract",
+        "off",
+        "-char",
+        "signed",
+        "-common",
+        "off"
+      ],
+      "source_sha256": "e0d0e0e6a09807ce1aa6289d0beb9b87671304d6953d6153f145defd59932955",
+      "link": "verified",
+      "commit": "a3016c30"
+    },
+    {
+      "symbol": "fn_1_814",
+      "bytes": 192,
+      "source": "src/rel/main_rel/_prolog.c",
+      "compiler": "GC/1.3.2",
+      "flags": [],
+      "source_sha256": "4c6646e88207a10d399c61181d5eed5587128ead2c1646e9363d212ee42dd69c",
+      "link": "verified",
+      "commit": "a3016c30"
+    },
+    {
+      "symbol": "fn_1_3920",
+      "bytes": 532,
+      "source": "src/rel/main_rel/_prolog.c",
+      "compiler": "GC/1.3.2",
+      "flags": [],
+      "source_sha256": "de838028fe3cf50e0cf5a81ff31999374c9deaacbd57558819abe4e94c281837",
+      "link": "verified",
+      "commit": "a3016c30"
+    },
+    {
+      "symbol": "fn_1_412A0",
+      "bytes": 136,
+      "source": "src/rel/main_rel/game.c",
+      "compiler": "GC/1.3.2",
+      "flags": [],
+      "source_sha256": "2a556a900fa96405d85d3f6204757eaf2b7aff28b3755530673ab59698d65a6c",
+      "link": "verified",
+      "commit": "a3016c30"
+    },
+    {
+      "symbol": "fn_1_E35F0",
+      "bytes": 392,
+      "source": "src/rel/main_rel/phys.c",
+      "compiler": "GC/1.3.2",
+      "flags": [],
+      "source_sha256": "c1523b51e8aa813231ff30816a307a69bef25f8338aca920a2cf724c20e21512",
+      "link": "verified",
+      "commit": "a3016c30"
+    },
+    {
+      "symbol": "fn_1_E7E00",
+      "bytes": 392,
+      "source": "src/rel/main_rel/phys.c",
+      "compiler": "GC/1.3.2",
+      "flags": [],
+      "source_sha256": "76fd8ecf2ef7bff8aec99bafb94a219cdc845c4961dcdcc36c1bc852b2803a91",
+      "link": "verified",
+      "commit": "a3016c30"
+    },
+    {
+      "symbol": "fn_1_EB330",
+      "bytes": 396,
+      "source": "src/rel/main_rel/ghost.c",
+      "compiler": "GC/1.3.2",
+      "flags": [],
+      "source_sha256": "c014c54a359ae25306f76f34fd22c2a3b38cfd7549b85406d5758fddb06b9d24",
+      "link": "verified",
+      "commit": "a3016c30"
+    },
+    {
+      "symbol": "fn_1_EF768",
+      "bytes": 244,
+      "source": "src/rel/main_rel/ghost.c",
+      "compiler": "GC/1.3.2",
+      "flags": [],
+      "source_sha256": "9e3fc672f47b61e4b24edcbaac030cdd7309adef0473eb78937244791dc27790",
+      "link": "verified",
+      "commit": "a3016c30"
+    },
+    {
+      "symbol": "fn_1_FB87C",
+      "bytes": 240,
+      "source": "src/rel/main_rel/bg_cas.c",
+      "compiler": "GC/1.3.2",
+      "flags": [],
+      "source_sha256": "fb2a26535824fe522e52daee0f5d56e1ca9bfc9d79aa3ce3170a54597f735ebc",
+      "link": "verified",
+      "commit": "a3016c30"
+    },
+    {
+      "symbol": "fn_1_FC414",
+      "bytes": 204,
+      "source": "src/rel/main_rel/bg_cas.c",
+      "compiler": "GC/1.3.2",
+      "flags": [],
+      "source_sha256": "1e86b4e0876f300d8dbb0bca8770179ba178880f9f088bb18e77e3eba4f91251",
+      "link": "verified",
+      "commit": "a3016c30"
+    },
+    {
+      "symbol": "fn_7_1400",
+      "bytes": 312,
+      "source": "src/rel/story/story_mode.c",
+      "compiler": "GC/1.3.2",
+      "flags": [],
+      "source_sha256": "1f62160ba3fc54b552965d0b1a35cb2c165023497eae15f64efc63601e9853bf",
+      "link": "verified",
+      "commit": "a3016c30"
+    }
+  ],
+  "accepted_code_gain": 11240,
+  "linked_code_gain": 21140,
+  "report": {
+    "ledger": {
+      "car_colchg": {
+        "matched": 32,
+        "matched_bytes": 5044,
+        "unmatched": 5,
+        "unmatched_bytes": 2300
+      },
+      "customize": {
+        "blocked": 2,
+        "blocked_bytes": 11240,
+        "matched": 148,
+        "matched_bytes": 21008,
+        "unmatched": 128,
+        "unmatched_bytes": 150260
+      },
+      "interview": {
+        "matched": 37,
+        "matched_bytes": 5936,
+        "unmatched": 42,
+        "unmatched_bytes": 32488
+      },
+      "main": {
+        "asm": 98,
+        "asm_bytes": 12420,
+        "blocked": 1,
+        "blocked_bytes": 2088,
+        "matched": 1683,
+        "matched_bytes": 319556,
+        "unmatched": 420,
+        "unmatched_bytes": 230220
+      },
+      "main_rel": {
+        "asm": 8,
+        "asm_bytes": 13064,
+        "blocked": 5,
+        "blocked_bytes": 17488,
+        "matched": 2137,
+        "matched_bytes": 301044,
+        "unmatched": 1080,
+        "unmatched_bytes": 1107680
+      },
+      "movie": {
+        "matched": 11,
+        "matched_bytes": 1152,
+        "unmatched": 11,
+        "unmatched_bytes": 15316
+      },
+      "movie_module": {
+        "asm": 8,
+        "asm_bytes": 4048,
+        "blocked": 5,
+        "blocked_bytes": 10616,
+        "matched": 577,
+        "matched_bytes": 122024,
+        "unmatched": 201,
+        "unmatched_bytes": 120316
+      },
+      "option": {
+        "matched": 45,
+        "matched_bytes": 6364,
+        "unmatched": 33,
+        "unmatched_bytes": 49068
+      },
+      "pilotpoint": {
+        "matched": 37,
+        "matched_bytes": 5580,
+        "unmatched": 31,
+        "unmatched_bytes": 51740
+      },
+      "profile": {
+        "blocked": 1,
+        "blocked_bytes": 4232,
+        "matched": 23,
+        "matched_bytes": 4528,
+        "unmatched": 17,
+        "unmatched_bytes": 19216
+      },
+      "replay": {
+        "matched": 17,
+        "matched_bytes": 1388,
+        "unmatched": 2,
+        "unmatched_bytes": 2624
+      },
+      "sample": {
+        "matched": 2,
+        "matched_bytes": 72,
+        "unmatched": 2,
+        "unmatched_bytes": 1768
+      },
+      "sel": {
+        "blocked": 1,
+        "blocked_bytes": 4156,
+        "matched": 104,
+        "matched_bytes": 20880,
+        "unmatched": 118,
+        "unmatched_bytes": 133080
+      },
+      "story": {
+        "matched": 52,
+        "matched_bytes": 5420,
+        "unmatched": 16,
+        "unmatched_bytes": 20664
+      },
+      "title": {
+        "blocked": 1,
+        "blocked_bytes": 10284,
+        "matched": 73,
+        "matched_bytes": 11532,
+        "unmatched": 46,
+        "unmatched_bytes": 43916
+      },
+      "winning": {
+        "matched": 34,
+        "matched_bytes": 7364,
+        "unmatched": 14,
+        "unmatched_bytes": 15304
+      }
+    },
+    "costs": {
+      "attempts": 17713,
+      "checks": 89536,
+      "tokens_in": 4593886702,
+      "tokens_out": 242423899,
+      "cost_usd": 368.252909725
+    },
+    "objdiff": {
+      "matched_code_percent": 28.985332,
+      "matched_functions": 5110,
+      "total_functions": 7312,
+      "complete_units": 5169,
+      "total_units": 6334
+    },
+    "pending_link": 0,
+    "pool_matched": 13
+  },
+  "worker_batch": {
+    "name": "large-regions-luna48-20260914",
+    "model": "gpt-5.6-luna",
+    "parallel": 48,
+    "tool_parallel": 16,
+    "functions": 48,
+    "bytes": 111592,
+    "matched": 4,
+    "released": 44,
+    "failed": 0,
+    "cost_usd": 2.853,
+    "cost_basis": "OpenAI standard-rate estimate",
+    "wall_seconds": 695.5
+  },
+  "rejected_pool_upgrade": "colchg_selmate_init",
+  "retained_frontier": {
+    "functions": 44,
+    "variants": 78
+  },
+  "local_triage": [
+    {
+      "ok": true,
+      "symbol": "fn_8001B42C",
+      "reason": "Large-region corpus pass: 3 attempts; best refreshed C still has 0 differing instruction words and 0 instruction-shape edits under GC/1.2.5n. Released candidate diagnostics: 0 value-flow conflicts, 0 operand-order witnesses. Register-field similarity alone is not an allocation proof. Saved C and compiler settings: state/repairs/large_near_frontier_20260914.json.gz. Batch: docs/batches/2026-09-14-large-regions.md.",
+      "word_errors": 0,
+      "shape_errors": 0
+    },
+    {
+      "ok": true,
+      "symbol": "fn_12_975C",
+      "reason": "Large-region corpus pass: 6 attempts; best refreshed C still has 12 differing instruction words and 0 instruction-shape edits under GC/1.3.2. Released candidate diagnostics: 0 value-flow conflicts, 0 operand-order witnesses. Register-field similarity alone is not an allocation proof. Saved C and compiler settings: state/repairs/large_near_frontier_20260914.json.gz. Batch: docs/batches/2026-09-14-large-regions.md.",
+      "word_errors": 12,
+      "shape_errors": 0
+    },
+    {
+      "ok": true,
+      "symbol": "fn_12_3DB8",
+      "reason": "Large-region corpus pass: 6 attempts; best refreshed C still has 16 differing instruction words and 0 instruction-shape edits under GC/1.3.2. Released candidate diagnostics: 0 value-flow conflicts, 0 operand-order witnesses. Register-field similarity alone is not an allocation proof. Saved C and compiler settings: state/repairs/large_near_frontier_20260914.json.gz. Batch: docs/batches/2026-09-14-large-regions.md.",
+      "word_errors": 16,
+      "shape_errors": 0
+    },
+    {
+      "ok": true,
+      "symbol": "fn_1_D123C",
+      "reason": "Large-region corpus pass: 3 attempts; best refreshed C still has 16 differing instruction words and 2 instruction-shape edits under GC/1.3.2. Released candidate diagnostics: 0 value-flow conflicts, 0 operand-order witnesses. Register-field similarity alone is not an allocation proof. Saved C and compiler settings: state/repairs/large_near_frontier_20260914.json.gz. Batch: docs/batches/2026-09-14-large-regions.md.",
+      "word_errors": 16,
+      "shape_errors": 2
+    },
+    {
+      "ok": true,
+      "symbol": "fn_8_2660",
+      "reason": "Large-region corpus pass: 12 attempts; best refreshed C still has 155 differing instruction words and 10 instruction-shape edits under GC/1.3. Released candidate diagnostics: 0 value-flow conflicts, 0 operand-order witnesses. Register-field similarity alone is not an allocation proof. Saved C and compiler settings: state/repairs/large_near_frontier_20260914.json.gz. Batch: docs/batches/2026-09-14-large-regions.md.",
+      "word_errors": 155,
+      "shape_errors": 10
+    },
+    {
+      "ok": true,
+      "symbol": "fn_10_1C2D8",
+      "reason": "Large-region corpus pass: 6 attempts; best refreshed C still has 71 differing instruction words and 21 instruction-shape edits under GC/1.3.2. Released candidate diagnostics: 0 value-flow conflicts, 0 operand-order witnesses. Register-field similarity alone is not an allocation proof. Saved C and compiler settings: state/repairs/large_near_frontier_20260914.json.gz. Batch: docs/batches/2026-09-14-large-regions.md.",
+      "word_errors": 71,
+      "shape_errors": 21
+    },
+    {
+      "ok": true,
+      "symbol": "fn_12_BBC0",
+      "reason": "Large-region corpus pass: 3 attempts; best refreshed C still has 28 differing instruction words and 13 instruction-shape edits under GC/1.3.2. Released candidate diagnostics: 0 value-flow conflicts, 0 operand-order witnesses. Register-field similarity alone is not an allocation proof. Saved C and compiler settings: state/repairs/large_near_frontier_20260914.json.gz. Batch: docs/batches/2026-09-14-large-regions.md.",
+      "word_errors": 28,
+      "shape_errors": 13
+    },
+    {
+      "ok": true,
+      "symbol": "fn_3_1D338",
+      "reason": "Large-region corpus pass: 9 attempts; best refreshed C still has 126 differing instruction words and 7 instruction-shape edits under GC/1.3.2. Released candidate diagnostics: 0 value-flow conflicts, 0 operand-order witnesses. Register-field similarity alone is not an allocation proof. Saved C and compiler settings: state/repairs/large_near_frontier_20260914.json.gz. Batch: docs/batches/2026-09-14-large-regions.md.",
+      "word_errors": 126,
+      "shape_errors": 7
+    },
+    {
+      "ok": true,
+      "symbol": "fn_12_364CC",
+      "reason": "Large-region corpus pass: 7 attempts; best refreshed C still has 95 differing instruction words and 3 instruction-shape edits under GC/1.3.2. Released candidate diagnostics: 0 value-flow conflicts, 0 operand-order witnesses. Register-field similarity alone is not an allocation proof. Saved C and compiler settings: state/repairs/large_near_frontier_20260914.json.gz. Batch: docs/batches/2026-09-14-large-regions.md.",
+      "word_errors": 95,
+      "shape_errors": 3
+    },
+    {
+      "ok": true,
+      "symbol": "fn_1_9012C",
+      "reason": "Large-region corpus pass: 5 attempts; best refreshed C still has 111 differing instruction words and 26 instruction-shape edits under GC/1.3.2. Released candidate diagnostics: 0 value-flow conflicts, 0 operand-order witnesses. Register-field similarity alone is not an allocation proof. Saved C and compiler settings: state/repairs/large_near_frontier_20260914.json.gz. Batch: docs/batches/2026-09-14-large-regions.md.",
+      "word_errors": 111,
+      "shape_errors": 26
+    },
+    {
+      "ok": true,
+      "symbol": "fn_16_4E90",
+      "reason": "Large-region corpus pass: 7 attempts; best refreshed C still has 139 differing instruction words and 35 instruction-shape edits under GC/1.3.2. Released candidate diagnostics: 0 value-flow conflicts, 0 operand-order witnesses. Register-field similarity alone is not an allocation proof. Saved C and compiler settings: state/repairs/large_near_frontier_20260914.json.gz. Batch: docs/batches/2026-09-14-large-regions.md.",
+      "word_errors": 139,
+      "shape_errors": 35
+    },
+    {
+      "ok": true,
+      "symbol": "fn_1_AFC8",
+      "reason": "Large-region corpus pass: 3 attempts; best refreshed C still has 48 differing instruction words and 4 instruction-shape edits under GC/1.3.2. Released candidate diagnostics: 0 value-flow conflicts, 1 operand-order witnesses. Register-field similarity alone is not an allocation proof. Saved C and compiler settings: state/repairs/large_near_frontier_20260914.json.gz. Batch: docs/batches/2026-09-14-large-regions.md.",
+      "word_errors": 48,
+      "shape_errors": 4
+    },
+    {
+      "ok": true,
+      "symbol": "fn_1_15C6C0",
+      "reason": "Large-region corpus pass: 7 attempts; best refreshed C still has 254 differing instruction words and 43 instruction-shape edits under GC/1.3.2. Released candidate diagnostics: 0 value-flow conflicts, 0 operand-order witnesses. Register-field similarity alone is not an allocation proof. Saved C and compiler settings: state/repairs/large_near_frontier_20260914.json.gz. Batch: docs/batches/2026-09-14-large-regions.md.",
+      "word_errors": 254,
+      "shape_errors": 43
+    },
+    {
+      "ok": true,
+      "symbol": "fn_3_255DC",
+      "reason": "Large-region corpus pass: 7 attempts; best refreshed C still has 240 differing instruction words and 27 instruction-shape edits under GC/1.3.2. Released candidate diagnostics: 0 value-flow conflicts, 1 operand-order witnesses. Register-field similarity alone is not an allocation proof. Saved C and compiler settings: state/repairs/large_near_frontier_20260914.json.gz. Batch: docs/batches/2026-09-14-large-regions.md.",
+      "word_errors": 240,
+      "shape_errors": 27
+    },
+    {
+      "ok": true,
+      "symbol": "fn_1_13B98",
+      "reason": "Large-region corpus pass: 7 attempts; best refreshed C still has 241 differing instruction words and 17 instruction-shape edits under GC/1.3. Released candidate diagnostics: 0 value-flow conflicts, 2 operand-order witnesses. Register-field similarity alone is not an allocation proof. Saved C and compiler settings: state/repairs/large_near_frontier_20260914.json.gz. Batch: docs/batches/2026-09-14-large-regions.md.",
+      "word_errors": 241,
+      "shape_errors": 17
+    },
+    {
+      "ok": true,
+      "symbol": "fn_12_23F5C",
+      "reason": "Large-region corpus pass: 5 attempts; best refreshed C still has 87 differing instruction words and 5 instruction-shape edits under GC/1.3.2. Released candidate diagnostics: 0 value-flow conflicts, 0 operand-order witnesses. Register-field similarity alone is not an allocation proof. Saved C and compiler settings: state/repairs/large_near_frontier_20260914.json.gz. Batch: docs/batches/2026-09-14-large-regions.md.",
+      "word_errors": 87,
+      "shape_errors": 5
+    }
+  ]
+}

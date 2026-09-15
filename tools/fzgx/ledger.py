@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS functions (
   status TEXT CHECK(status IN ('unmatched','claimed','matched','blocked','seeded','asm')) DEFAULT 'unmatched',
   attempts INTEGER DEFAULT 0, best_percent REAL DEFAULT 0,
   claimed_by TEXT, claimed_at INTEGER, claim_ttl INTEGER,
-  matched_commit TEXT, blocked_issue INTEGER, blocked_reason TEXT
+  matched_commit TEXT, blocked_reason TEXT
 );
 CREATE TABLE IF NOT EXISTS attempts (
   id INTEGER PRIMARY KEY, symbol TEXT, agent TEXT, harness TEXT, model TEXT,
@@ -56,6 +56,8 @@ class Ledger:
             if col not in cols:
                 self.db.execute(f"ALTER TABLE attempts ADD COLUMN {col} {decl}")
         fcols = {r[1] for r in self.db.execute("PRAGMA table_info(functions)")}
+        if "blocked_issue" in fcols:
+            self.db.execute("ALTER TABLE functions DROP COLUMN blocked_issue")
         if "prev_status" not in fcols:
             # set while a shadow (A/B) claim is active; restored on finish
             self.db.execute("ALTER TABLE functions ADD COLUMN prev_status TEXT")
@@ -187,11 +189,11 @@ class Ledger:
                 "claim_ttl=NULL, matched_commit=COALESCE(?, matched_commit) WHERE symbol=?",
                 (status, commit, symbol))
 
-    def block(self, symbol: str, reason: str, issue: Optional[int]) -> None:
+    def block(self, symbol: str, reason: str) -> None:
         with self.db:
             self.db.execute(
-                "UPDATE functions SET status='blocked', blocked_reason=?, blocked_issue=? WHERE symbol=?",
-                (reason, issue, symbol))
+                "UPDATE functions SET status='blocked', blocked_reason=? WHERE symbol=?",
+                (reason, symbol))
 
     def unblock(self, symbol: str) -> None:
         with self.db:
@@ -249,6 +251,8 @@ class Ledger:
             self.db.execute("BEGIN")
             for table in ("functions", "attempts", "names", "batches"):
                 for row in data.get(table, []):
+                    if table == 'functions':
+                        row.pop('blocked_issue', None)  # snapshots from the retired issue workflow
                     cols = ",".join(row.keys())
                     qs = ",".join("?" * len(row))
                     n += self.db.execute(

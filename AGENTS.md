@@ -57,8 +57,9 @@ ownership in `splits.txt`, appends to `docs/MWCC_IDIOMS.md`. Always ends with
 
 ## Triage
 
-For functions with `attempts >= 3`: `fzgx block SYMBOL --issue --reason "..."`
-and a row in `state/blocked.md`.
+For functions with `attempts >= 3`: `fzgx block SYMBOL --reason "..."`
+and a row in `state/blocked.md`. Triage is local only. Never create GitHub issues
+for this repository; issue creation is not part of the workflow.
 
 ## Orchestrator
 
@@ -102,3 +103,8 @@ objdiff percentages can hide hundreds of differing words in large functions.
 Keep source structure and compiler settings in portable repair archives. Shared
 BSS members accessed through a section base still require individual module,
 section, address and size proofs before their definitions can be externalized.
+Compiler-response cache keys must include allocated symbol definitions, even when
+all accesses use a section base. Portable archives must retain word-scored frontier
+candidates that have not received a full objdiff score. When attempting to link an
+already accepted pool match, retain its prior C and compiler settings; a rejected
+upgrade must not erase the previously accepted pool reconstruction.
