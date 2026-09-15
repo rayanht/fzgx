@@ -48,7 +48,7 @@ class Engine:
         self.generator_sha256 = digest(Path(__file__).read_bytes() + Path(source.__file__).read_bytes() + Path(evidence.__file__).read_bytes() + Path(layout.__file__).read_bytes() + Path(mwgraph.__file__).read_bytes() + b''.join((ROOT/'tools/fzgx'/name).read_bytes() for name in ('signatures.py','evidence.py','dataimport.py','lift.py','reuse.py','sdkimport.py')))
         output.mkdir(parents=True, exist_ok=True)
         self.headers = mwgraph.header_fingerprint(ROOT, project.version)
-        self.environment = digest(('region-frontier-v1' + self.headers + ''.join(digest((ROOT/'tools/fzgx'/f).read_bytes()) for f in
+        self.environment = digest(('region-frontier-v2' + self.headers + ''.join(digest((ROOT/'tools/fzgx'/f).read_bytes()) for f in
             ('oracle.py', 'poolfix.py', 'project.py', 'regflow.py', 'evidence.py')) +
             digest((ROOT/'config'/project.version/'ldscript.tpl').read_bytes())).encode())
         self.cache_path = output / 'cache.json'
@@ -272,7 +272,12 @@ class Engine:
                     sym = symbols[info >> 8]
                     bindings.append((at, info & 255, sym['name'], addend))
                 sections.append((section['name'], bindings))
-        return digest(json.dumps([words, sections]).encode())
+        # A section-base load has no relocation against each named member.
+        # Their definitions still control ownership and subobject proofs.
+        definitions = [(s['name'], s['value'], s['size'], s['info'], elf.sections[s['shndx']]['name'])
+                       for s in symbols if 0 < s['shndx'] < len(elf.sections)
+                       and elf.sections[s['shndx']]['flags'] & 2]
+        return digest(json.dumps([words, sections, definitions]).encode())
 
     def frontier(self, history, beam):
         groups = defaultdict(list)
@@ -328,6 +333,7 @@ class Engine:
         if check.ok:
             yield from evidence.relocation_bindings(body, check)
             yield from layout.bss_member_bindings(self.project, row['symbol'], body, row.get('object'), check)
+            yield from layout.private_data_objects(body, row.get('object'), check)
         yield from source.accessor_lifetimes(body, name)
         if row.get('score') == 100:
             if row.get('source_lint') and (check.matched or check.matched_pool):

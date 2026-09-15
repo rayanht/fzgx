@@ -188,7 +188,7 @@ class Elf:
             referenced = any((struct.unpack_from('>I', self.data, off + 4)[0] >> 8) in indices
                              for rs in self.sections if rs['type'] == SHT_RELA
                              for off in range(rs['offset'], rs['offset'] + rs['size'], 12))
-            if not referenced and all(s['name'].startswith('@') for s in others):
+            if not referenced and all(s['name'].startswith(('@', 'fzgx_pool_')) for s in others):
                 for s in others:
                     self.data[s['off'] + 4:s['off'] + 16] = struct.pack('>IIBBH', 0, 0, 0, 0, SHN_UNDEF)
                 others = []

@@ -66,7 +66,8 @@ def bss_member_bindings(p, symbol, body, obj, check):
             continue
         generated = re.fullmatch(r'(.+)_(?:gap|fill)_[0-9A-F]+(?:_fill_[0-9A-F]+)?', name)
         member = re.fullmatch(r'(.+)_([0-9A-F]+)', name)
-        if not generated and not (member and member[1] in retail and name not in retail):
+        synthetic = name.startswith('lbl_') and name not in retail
+        if not generated and not synthetic and not (member and member[1] in retail and name not in retail):
             continue
         address = origin + s['value']
         owner = next((o for o in objects if o.addr <= address and address + s['size'] <= o.end), None)
@@ -80,6 +81,28 @@ def bss_member_bindings(p, symbol, body, obj, check):
         return []
     text = re.sub(r'\b\w+\b', lambda m: names.get(m[0], m[0]), body)
     return [('canonical BSS subobjects and private layout padding', text)]
+
+
+def private_data_objects(body, obj, check):
+    """Mark file-local storage inside an oracle-proven shared section copy."""
+    if not obj or not check.ok or not any(a.startswith('...data') for a, _, _ in check._pool_pairs):
+        return []
+    elf = poolfix.Elf(Path(obj).read_bytes())
+    section = elf.section('.data')
+    if section is None:
+        return []
+    names = {}
+    for s in elf.symbols():
+        name = s['name']
+        if (s['shndx'] != section['index'] or not s['size'] or s['info'] != 1
+                or name.startswith(('@', 'fzgx_pool_'))):
+            continue
+        if re.search(r'(?m)^static\s+[^;{}=\n]+\b'+re.escape(name)+r'\b\s*(?:\[|=)', body):
+            names[name] = 'fzgx_pool_' + name
+    if not names:
+        return []
+    text = re.sub(r'\b\w+\b', lambda m: names.get(m[0], m[0]), body)
+    return [('private objects in verified shared data section', text)]
 
 
 def struct_text(tname, text):

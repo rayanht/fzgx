@@ -2070,7 +2070,7 @@ void fn_1_AD1E4(Fn1AD1E4State *state, Fn1AD1E4Object *object) {
 }
 /* fzgx:end fn_1_AD1E4 */
 
-/* fzgx:begin fn_1_AD264 pool noprologue */
+/* fzgx:begin fn_1_AD264 noprologue */
 #include "types.h"
 #include "dolphin/dvd.h"
 
@@ -2190,11 +2190,11 @@ u8 lbl_1_bss_718B9;
 u32 lbl_1_bss_718C0[8] __attribute__((aligned(8)));
 GhostRegs lbl_1_bss_718E0;
 u8 lbl_1_bss_772C8;
-u8 lbl_1_bss_772C9;
-u16 lbl_1_bss_772CA;
-u32 lbl_1_bss_772CC[15];
-u8 lbl_1_bss_77308;
-u8 lbl_1_bss_77309;
+u8 lbl_1_bss_772C8__fzgx_offset_1;
+u16 lbl_1_bss_772C8__fzgx_offset_2;
+u32 lbl_1_bss_772C8__fzgx_offset_4[15];
+u8 lbl_1_bss_772C8__fzgx_offset_40;
+u8 lbl_1_bss_772C8__fzgx_offset_41;
 u8 lbl_1_bss_7730A;
 
 #pragma section code_type ".fzgxpool"
@@ -2212,11 +2212,11 @@ static void fzgx_bss_layout(void) {
     s = lbl_1_bss_718C0[0];
     s = lbl_1_bss_718E0.unk_0;
     s = lbl_1_bss_772C8;
-    s = lbl_1_bss_772C9;
-    s = lbl_1_bss_772CA;
-    s = lbl_1_bss_772CC[0];
-    s = lbl_1_bss_77308;
-    s = lbl_1_bss_77309;
+    s = lbl_1_bss_772C8__fzgx_offset_1;
+    s = lbl_1_bss_772C8__fzgx_offset_2;
+    s = lbl_1_bss_772C8__fzgx_offset_4[0];
+    s = lbl_1_bss_772C8__fzgx_offset_40;
+    s = lbl_1_bss_772C8__fzgx_offset_41;
     s = lbl_1_bss_7730A;
 }
 #pragma section code_type ".text"
@@ -2227,8 +2227,8 @@ typedef struct MgrRoot {
 
 extern MgrRoot lbl_801A6410;
 extern CardSlotInfo lbl_1_bss_9F8;
-static u8 lbl_1_data_35AC8[4] = {0x04, 0x04, 0x00, 0x00};  /* fzgx-allow: A1 retail data bytes: memcard.c's first .data object anchors the section base */
-static u8 fzgx_memcard_data[0x6CEC] = {  /* fzgx-allow: A1 retail data bytes: memcard.c's .data between its first object and its string literals */
+static u8 fzgx_pool_lbl_1_data_35AC8[4] = {0x04, 0x04, 0x00, 0x00};  /* fzgx-allow: A1 retail data bytes: memcard.c's first .data object anchors the section base */
+static u8 fzgx_pool_fzgx_memcard_data[0x6CEC] = {  /* fzgx-allow: A1 retail data bytes: memcard.c's .data between its first object and its string literals */
     0x4F, 0x56, 0x45, 0x52, 0x54, 0x41, 0x4B, 0x45, 0x00, 0x00, 0x00, 0x00, 0x4A, 0x55, 0x4D, 0x50, 0x00, 0x00, 0x00, 0x00, 0x45, 0x4E, 0x45, 0x4D, 0x59, 0x48, 0x49, 0x54, 0x00, 0x00, 0x00, 0x00,
     0x57, 0x41, 0x4C, 0x4C, 0x48, 0x49, 0x54, 0x00, 0x53, 0x49, 0x44, 0x45, 0x42, 0x59, 0x53, 0x49, 0x44, 0x45, 0x00, 0x00, 0x53, 0x54, 0x41, 0x52, 0x54, 0x00, 0x00, 0x00, 0x47, 0x4F, 0x41, 0x4C,
     0x00, 0x00, 0x00, 0x00, 0x4C, 0x41, 0x50, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -3232,7 +3232,7 @@ void fn_1_AD264(CardTask *a)
             a->unk_2A &= ~4;
             a->unk_2A |= 0x10;
         }
-        lbl_1_bss_77309 = 0;
+        lbl_1_bss_772C8__fzgx_offset_41 = 0;
         break;
     }
 
