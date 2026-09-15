@@ -82,12 +82,11 @@ fixups use this engine, including release and lifter callers. Add candidate
 generators to it; never add another standalone repair/search runner. Target-object
 indexes and normalized-object caches must retain module identity, including REL
 entrypoints. Reject stale frozen targets before accepting their scores.
-Picks remaining work with `fzgx --json inventory --status unmatched --max-size N`
-(smallest first), runs 48 Luna workers via the headless orchestrator, then librarian,
-then triage; writes `docs/batches/<date>.md` from `fzgx report` and commits
-`state/ledger.json` via `fzgx snapshot`. Budget per batch is enforced by the
-orchestrator from provider usage events (provider-reported cost when available,
-otherwise an explicitly labeled token-price estimate).
+Prioritize the largest unresolved regions and their saved near-match corpus.
+Inspect value flow, control flow, data layout and compiler evidence; fix the
+structural causes directly. Do not launch Luna agents or swarms. Record measured
+repairs in `docs/batches/<date>.md` and commit `state/ledger.json` via
+`fzgx snapshot`.
 
 Model sessions (`--parallel`) and local tool processes (`--tool-parallel`) have
 separate limits. App-server JSON-RPC command backpressure is separate again;

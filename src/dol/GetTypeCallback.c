@@ -22,7 +22,8 @@ static unsigned char lbl_8015CBB0__fzgx_offset_0[80];
 
 static u32 lbl_8015CBB0__fzgx_offset_50[4];
 
-static void layout____bss_0(void) {
+#pragma section code_type ".fzgxpool"
+__declspec(section ".fzgxpool") static void layout____bss_0(void) {
 // Hardware or OS state can change asynchronously.
     volatile unsigned char sink; // fzgx-allow: S2 SDK asynchronous state
     sink = *(unsigned char *)&Packet_8015CA10;
@@ -33,6 +34,8 @@ static void layout____bss_0(void) {
     sink = *(unsigned char *)&lbl_8015CBB0__fzgx_offset_0;
     sink = *(unsigned char *)&lbl_8015CBB0__fzgx_offset_50;
 }
+
+#pragma section code_type ".text"
 
 static inline void CallTypeAndStatusCallback(s32 chan, u32 type) {
     SITypeAndStatusCallback callback;

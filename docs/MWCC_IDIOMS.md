@@ -129,3 +129,21 @@ Each line is a family that turned a 60–99% body into a match; the count is how
   interior pieces canonical `OWNER__fzgx_offset_HEX` names. Private primer storage
   can disappear only after its section base is proven and no live relocation
   reaches the remaining storage. This linked the 6,608-byte `fn_1_AD264`.
+
+## Shared SDK state (2026-09-15)
+
+- A code-complete function can still have a wrong unused data prefix. In VI
+  configuration, reconstructing the retail prefix and symbolic switch pointers
+  closed two unresolved base relocations without changing an instruction.
+  Verify pointer relocation kind, module, section and destination as well as
+  initialized bytes. A size-zero section symbol is not a relocation-free object.
+- Keep section anchors that already have verified bindings. Rename remaining
+  native BSS members from their measured positions, including SDK layout gaps.
+  Missing BSS symbols can hide complete typed objects: the OS inquiry block and
+  DVD workaround alarm/buffers accounted for 112 bytes of shared storage.
+- MWCC emits unreferenced BSS definitions in reverse declaration order. Data-only
+  grouped imports must reverse definitions and still prove every object offset,
+  section extent and alignment. First-use order in a function primer is a
+  different case; put such primers explicitly in `.fzgxpool`.
+- Preprocessed C may contain spaces around `->`. Normalize the member-access
+  token before the layout parser checks whether a base pointer escapes.
