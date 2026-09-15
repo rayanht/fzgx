@@ -138,18 +138,6 @@
   },
   {
     "module": "car_colchg",
-    "source": "rel/car_colchg/car_colchg/colchg_selmate_init.c",
-    "symbols": [
-      "colchg_selmate_init"
-    ],
-    "status": "nonmatching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [],
-    "tu": "rel/car_colchg/car_colchg.c",
-    "pool": true
-  },
-  {
-    "module": "car_colchg",
     "source": "rel/car_colchg/car_colchg/fn_9_1018.c",
     "symbols": [
       "fn_9_1018"
@@ -25968,11 +25956,19 @@
     "symbols": [
       "fn_1_128F10"
     ],
-    "status": "nonmatching",
-    "mw_version": null,
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
     "extra_cflags": [],
     "tu": "rel/main_rel/accessory.c",
-    "pool": true
+    "pool": {
+      "...bss.0": "lbl_1_bss_89760",
+      "fzgx_obj_lbl_1_bss_89760": "lbl_1_bss_89760",
+      "fzgx_obj_lbl_1_bss_89770": "lbl_1_bss_89770",
+      "lbl_1_bss_89780": "lbl_1_bss_89780",
+      "fzgx_obj_lbl_1_bss_897A0": "lbl_1_bss_897A0",
+      "lbl_1_bss_897A4": "lbl_1_bss_897A4",
+      "lbl_1_bss_897A8": "lbl_1_bss_897A8"
+    }
   },
   {
     "module": "main_rel",
@@ -44004,11 +44000,17 @@
     "symbols": [
       "fn_1_F2780"
     ],
-    "status": "nonmatching",
-    "mw_version": null,
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
     "extra_cflags": [],
     "tu": "rel/main_rel/replay.c",
-    "pool": true
+    "pool": {
+      "...bss.0": "lbl_1_bss_7EFD0",
+      "fzgx_obj_lbl_1_bss_7EFD0": "lbl_1_bss_7EFD0",
+      "fzgx_obj_lbl_1_bss_7EFD4": "lbl_1_bss_7EFD4",
+      "fzgx_obj_lbl_1_bss_7EFD8": "lbl_1_bss_7EFD8",
+      "fzgx_obj_lbl_1_bss_7F01C": "lbl_1_bss_7F01C"
+    }
   },
   {
     "module": "main_rel",
@@ -44038,11 +44040,17 @@
     "symbols": [
       "fn_1_F2DDC"
     ],
-    "status": "nonmatching",
-    "mw_version": null,
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
     "extra_cflags": [],
     "tu": "rel/main_rel/replay.c",
-    "pool": true
+    "pool": {
+      "...bss.0": "lbl_1_bss_7EFD0",
+      "fzgx_obj_lbl_1_bss_7EFD0": "lbl_1_bss_7EFD0",
+      "fzgx_obj_lbl_1_bss_7EFD4": "lbl_1_bss_7EFD4",
+      "fzgx_obj_lbl_1_bss_7EFD8": "lbl_1_bss_7EFD8",
+      "fzgx_obj_lbl_1_bss_7F01C": "lbl_1_bss_7F01C"
+    }
   },
   {
     "module": "main_rel",

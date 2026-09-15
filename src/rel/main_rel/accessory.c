@@ -863,7 +863,7 @@ void fn_1_128E8C(u32 unused, FnData *data) {
 }
 /* fzgx:end fn_1_128E8C */
 
-/* fzgx:begin fn_1_128F10 pool noprologue */
+/* fzgx:begin fn_1_128F10 noprologue */
 #include "types.h"
 
 extern const f32 lbl_1_rodata_8068;
