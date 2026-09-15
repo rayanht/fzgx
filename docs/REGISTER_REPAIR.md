@@ -1,5 +1,52 @@
 # Register repair measurements, 2026-09-11
 
+## GC/1.3.2 high-pressure simplify replay, 2026-09-15
+
+The pinned compiler's simplify routine at `0x507B50` chooses an optimistic
+removal when no low-degree node remains. Capture now retains its signed spill
+cost at node offset 12, generated-register threshold, and fallback score.
+Replay divides cost by the current degree and preserves the descending-rank
+tie break of the compiler's linked list. This models allocation decisions;
+it does not modify the compiler or its output.
+
+Live validation covered **170 functions / 259 allocation passes**, with identical
+stock objects and zero simplify/color replay errors. Three GPR passes previously
+returned unsupported: `fn_80043798`, `fn_1_9D0EC`, and the 4,208-byte
+`fn_12_364CC`. Capture took 14.206 seconds; the recorded replay took 36.398 ms.
+The portable archive includes C, compiler settings and hashes, retail/baseline
+words, complete captures, and validation results:
+
+```sh
+uv run tools/fzgx.py fixup --archive state/repairs/spill_graphs_20260915.json.gz
+```
+
+**No new C matches resulted.** Captured declaration-order projection produced
+one candidate, which remained nonexact. Extending projection to nested scopes
+also produced no new matches and was removed. The movie's 70 differing words
+remain in seven inlined cleanup loops; their desired colors do not conflict
+with the captured interference graph, but a source-realizable order is unresolved.
+Older captures and compiler profiles without measured costs still report
+unsupported high-pressure decisions. Existing cached captures need recapturing
+to use the added fields.
+
+## Loop-lifetime repair guard, 2026-09-15
+
+`reuse_temporaries` previously used the last textual occurrence as a death point.
+On `fn_1_13B98`, it therefore reused the live `for` counter `j` for a pointer
+offset read inside the loop. This invalid rewrite improved the raw word score
+from 241 differences to 230 while leaving 17 instruction-shape differences.
+
+Loop uses now remain live through their enclosing back edges. Unbounded
+statement bodies are conservative, and goto-bearing functions require control
+flow analysis before this generator can reuse locals. Across all 2,171 saved
+best bodies, proposals fell from 187,930 to 153,476: 34,454 proposals without a
+sufficient liveness proof were excluded across 418 functions. This count is not
+a count of proven miscompilations. The offending loader rewrite is excluded;
+a retained post-lifetime reuse still compiles under stock MWCC. The original,
+rejected and retained sources and their measured scores are preserved in
+`state/repairs/reuse_liveness_20260915.json.gz`. Historical candidates are retained
+as evidence; their similarity scores do not establish semantic correctness.
+
 The stopped `deepseek-under1k-fast-512-20260911-021006` batch supplied
 268 unmatched saved bodies at >=95%, totaling 79,616 bytes. Of these,
 70 were classified as register-only from instruction spelling. That label

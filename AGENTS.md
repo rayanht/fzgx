@@ -117,3 +117,5 @@ cohort and an explicit stopping condition. Stop when measured closure yield fail
 that condition; improving a near-match score does not count as closing a region.
 Before a manual compiler probe, assert that the intended source edit occurred and
 inspect existing pragmas that may override a newly inserted setting.
+Temporary reuse requires liveness through loop back edges; a variable's last
+textual occurrence, especially a `for` increment, does not prove it is dead.

@@ -31,6 +31,7 @@ PROFILES = {
         'counts': {'gpr': 0x5E8A8C, 'fpr': 0x5E8A88}, 'count_width': 4,
         'class_global': 0x5E931F, 'register_offset': 16,
         'pcode_blocks': 0x5E87B0, 'opcode_table': 0x5BEE78,
+        'spill_cost_offset': 12, 'spill_limit': 0x5DF940, 'spill_fallback': 0x5BBB24,
     },
 }
 PROFILES['0443b5c02b1aa7b575b61e0e24c4d5ad6bed8fd54cc42de5a2204a5216001914'] = {
@@ -73,6 +74,8 @@ def read_graph(read, profile, register_class, head=0):
             raise ValueError('invalid interference edge')
         node = {'virtual_register': register, 'physical_register': physical,
                 'flags': flags, 'degree': degree, 'neighbors': adjacent}
+        if 'spill_cost_offset' in profile:
+            node['spill_cost'] = struct.unpack_from('<i', data, profile['spill_cost_offset'])[0]
         obj = struct.unpack_from('<I', data, 4)[0]
         if obj:
             name_record = number(obj + 10)
@@ -95,7 +98,11 @@ def read_graph(read, profile, register_class, head=0):
         seen.add(head)
         register, head = addresses[head]
         order.append(register)
-    return {'register_class': register_class, 'nodes': nodes, 'simplify_order': order}
+    snapshot = {'register_class': register_class, 'nodes': nodes, 'simplify_order': order}
+    if 'spill_limit' in profile:
+        snapshot['spill_limit'] = int.from_bytes(read(profile['spill_limit'], 2), 'little', signed=True)
+        snapshot['spill_fallback'] = struct.unpack('<f', read(profile['spill_fallback'], 4))[0]
+    return snapshot
 
 
 def replay(snapshot, order=None):
@@ -172,10 +179,10 @@ def selection_order(snapshot, desired):
 
 
 def simplify(snapshot, ranks=None):
-    """Replay the non-spilling simplify path, retaining coalesced ghost edges.
+    """Replay simplify, including measured cost-based optimistic removals.
 
-    Unknown spill decisions are returned explicitly instead of approximating
-    the compiler's floating-point cost comparison and tie-breaking.
+    Older captures without spill costs still report unsupported decisions.
+    Coalesced ghost edges remain in degree counts, as in the stock compiler.
     """
     nodes = {n['virtual_register']: n for n in snapshot['nodes']}
     remaining = set(snapshot['simplify_order'])
@@ -195,7 +202,21 @@ def simplify(snapshot, ranks=None):
                 degree[neighbor] -= 1
             changed = True
         if not changed:
-            return None
+            if 'spill_limit' not in snapshot or any('spill_cost' not in nodes[r] for r in remaining):
+                return None
+            # Simplify builds its remaining list by prepending nodes in rank
+            # order. Its strict-less comparison therefore retains the highest
+            # rank on equal costs. Costs belong to the captured value webs;
+            # declaration reordering must not reclassify generated registers.
+            def score(register):
+                if register >= snapshot['spill_limit']:
+                    return snapshot['spill_fallback']
+                return nodes[register]['spill_cost'] / degree[register]
+            register = min((r for r in reversed(order) if r in remaining), key=score)
+            remaining.remove(register)
+            removed.append(register)
+            for neighbor in nodes[register]['neighbors']:
+                degree[neighbor] -= 1
     return removed[::-1]
 
 

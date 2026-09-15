@@ -1308,12 +1308,37 @@ def reuse_temporaries(body, name):
     from .sdkimport import masked
     code=masked(body);span=_function_body_span(code,name)
     if not span:return []
+    # A textual last use is not a death point across a back edge. In particular,
+    # a for-loop increment precedes its body in C: reusing that counter in the
+    # body changes the next iteration even though no later token names it.
+    if re.search(r'\bgoto\b',code[span[1]:span[2]]):return []
+    loops=[]
+    starts=[(start,end) for callee,start,end,_ in call_sites(code)
+            if callee in ('for','while') and span[1]<=start<end<span[2]]
+    starts.extend((m.start(),m.end()) for m in re.finditer(r'\bdo\b',code)
+                  if span[1]<=m.start()<span[2])
+    for start,end in starts:
+        opening=re.match(r'\s*\{',code[end:])
+        if not opening:
+            # The closing while of a do-loop has no body of its own.
+            if code[end:].lstrip().startswith(';'):continue
+            # Without a compound body we cannot bound nested if/else statements
+            # using braces. Keep these locals live through the function.
+            loops.append((start,span[2]));continue
+        hi=end+opening.end();depth=1
+        while hi<span[2] and depth:
+            depth+=(code[hi]=='{')-(code[hi]=='}');hi+=1
+        loops.append((start,hi if not depth else span[2]))
     locals_=_locals(body,span);_,variables=declared_types(code,span[0]);out=[]
     candidates=[]
     for a,b,ty,var,dims in locals_:
         if dims or ty.strip() not in ('u32','s32','int','unsigned') or re.search(r'&\s*\b'+re.escape(var)+r'\b',code[span[1]:span[2]]):continue
         uses=list(re.finditer(r'\b'+re.escape(var)+r'\b',code[b:span[2]]))
-        if uses:candidates.append((var,b+uses[-1].end()))
+        if uses:
+            last=b+uses[-1].end()
+            last=max([last]+[hi for lo,hi in loops
+                            if any(lo<=b+use.start()<hi for use in uses)])
+            candidates.append((var,last))
     for m in re.finditer(r'(?m)^([ \t]*)(\w+)\s*=\s*([^;{}\n]+);',code[span[1]:span[2]]):
         a,b=span[1]+m.start(),span[1]+m.end();indent,var,value=m.groups()
         if variables.get(var,'').strip() not in ('u32','s32','int','unsigned'):continue
