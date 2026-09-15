@@ -162,3 +162,20 @@ Each line is a family that turned a 60–99% body into a match; the count is how
   different case; put such primers explicitly in `.fzgxpool`.
 - Preprocessed C may contain spaces around `->`. Normalize the member-access
   token before the layout parser checks whether a base pointer escapes.
+
+## Lost switch cases and string objects (2026-09-15)
+
+- An integer interval recovered as `if (value < 2 && value >= 0)` can be a
+  switch with cases 0 and 1. MWCC retains a different conditional/unconditional
+  branch pair for the switch. Restoring contiguous cases exactly matched
+  `fn_8002A74C`, `fn_8006BA74` and `fn_12_3256C`. This is a source control-flow
+  distinction; disabling dead-code elimination did not repair these examples.
+- A shifted sign-bit test can be an incorrectly lifted rotated low-bit test.
+  Recover the retail `__rlwnm(value, amount, 31, 31)` expression before changing
+  register allocation. This closed `fn_1_7F3AC`, `fn_1_557C4` and `fn_1_55A84`.
+- Error-string pools need separate native string objects. A pointer to one
+  external character array changes both base initialization and offset-zero
+  address formation. Recover each string, its terminating zero and measured
+  padding, and reject any intersecting data relocation. This closed
+  `fn_12_34390`, `fn_12_346BC` and `fn_12_34798` with the original compiler.
+  The repair archive retains all nine inputs, outputs and compiler settings.
