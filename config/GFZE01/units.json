@@ -138,6 +138,18 @@
   },
   {
     "module": "car_colchg",
+    "source": "rel/car_colchg/car_colchg/colchg_selmate_init.c",
+    "symbols": [
+      "colchg_selmate_init"
+    ],
+    "status": "nonmatching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "tu": "rel/car_colchg/car_colchg.c",
+    "pool": true
+  },
+  {
+    "module": "car_colchg",
     "source": "rel/car_colchg/car_colchg/fn_9_1018.c",
     "symbols": [
       "fn_9_1018"
