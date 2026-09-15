@@ -17,6 +17,7 @@ __pycache__/
 .DS_Store
 # Private planning docs
 SPEC.md
+docs/batches/
 # IDE folders
 .idea/
 .vs/
