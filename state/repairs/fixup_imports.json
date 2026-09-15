@@ -7807,5 +7807,160 @@
     ],
     "link": "verified",
     "commit": "1e98cbbc"
+  },
+  "fn_3_10B68": {
+    "seed_symbol": "fn_3_10B68",
+    "generator": "fzgx fixup",
+    "transform": "overlapping offset views fn_3_10B68_lbl_1_bss_9F8",
+    "seed": "#include \"types.h\"\n\nstruct fn_3_10B68_lbl_1_bss_9F8_12_E20 {\n    u16 unk_0;\n    u8 pad_2[0x12];\n};\nstruct fn_3_10B68_lbl_1_bss_9F8_8_E20 {\n    u16 unk_0;\n    u8 pad_2[0x12];\n};\nstruct fn_3_10B68_lbl_3_bss_7EDD8 {\n    u8 pad_0[0x14];\n    u8 unk_14;\n    u8 unk_15;\n    u8 pad_16[0x2];\n    u32 unk_18;\n};\nstruct fn_3_10B68_lbl_1_bss_9F8 {\n    u8 pad_0[0x8];\n    struct fn_3_10B68_lbl_1_bss_9F8_8_E20 unk_8[1];\n    struct fn_3_10B68_lbl_1_bss_9F8_12_E20 unk_12[1];\n};\n\nextern struct fn_3_10B68_lbl_1_bss_9F8 lbl_1_bss_9F8;\nextern struct fn_3_10B68_lbl_3_bss_7EDD8 lbl_3_bss_7EDD8;\nextern void fn_1_A2D84(u32);\n\n#pragma opt_pointer_analysis on\nstatic inline struct fn_3_10B68_lbl_1_bss_9F8_12_E20 *fn_3_10B68_array_read(struct fn_3_10B68_lbl_1_bss_9F8_12_E20 *array) { return array; }\nvoid fn_3_10B68(void) {\n    struct fn_3_10B68_lbl_3_bss_7EDD8 *p_lbl_3_bss_7EDD8;\n    u16 v0;\n    void * v1;\n    p_lbl_3_bss_7EDD8 = (struct fn_3_10B68_lbl_3_bss_7EDD8 *)&lbl_3_bss_7EDD8;\n    if ((fn_3_10B68_array_read(lbl_1_bss_9F8.unk_12)[(*(u8 volatile *)&(p_lbl_3_bss_7EDD8->unk_14)) /* Retail reloads this field. */].unk_0 & 0x1) != 0) {\n    p_lbl_3_bss_7EDD8->unk_18 = 1;\n    fn_1_A2D84(0xA9010000);\n    }\n    if (((fn_3_10B68_array_read(lbl_1_bss_9F8.unk_12)[(*(u8 volatile *)&(p_lbl_3_bss_7EDD8->unk_14)) /* Retail reloads this field. */].unk_0 >> 1) & 0x1) != 0) {\n    lbl_3_bss_7EDD8.unk_18 = 0;\n    fn_1_A2D84(0xA9010000);\n    }\n    v0 = lbl_1_bss_9F8.unk_8[(*(u8 volatile *)&(p_lbl_3_bss_7EDD8->unk_14)) /* Retail reloads this field. */].unk_0;\n    if (((v0 >> 9) & 0x1) != 0 || (((v0 >> 8) & 0x1) != 0 && (s32)lbl_3_bss_7EDD8.unk_18 == 0)) {\n    if (((lbl_1_bss_9F8.unk_8[(*(u8 volatile *)&(p_lbl_3_bss_7EDD8->unk_14)) /* Retail reloads this field. */].unk_0 >> 8) & 0x1) != 0) {\n    fn_1_A2D84((0xA9010000 + 256));\n    } else {\n    fn_1_A2D84((0xA9010000 + 512));\n    }\n    v1 = (void *)(((u8 *)&lbl_3_bss_7EDD8 + (lbl_3_bss_7EDD8.unk_15 << 2)));\n    *(u32 *)((u8 *)v1 + 44) = 0;\n    } else {\n    if ((((*(((*(u8 volatile *)&(p_lbl_3_bss_7EDD8->unk_14)) /* Retail reloads this field. */) + (lbl_1_bss_9F8.unk_8))).unk_0 >> 8) & 0x1) != 0 && (s32)lbl_3_bss_7EDD8.unk_18 != 0) {\n    fn_1_A2D84((0xA9010000 + 256));\n    }\n    }\n}\n#pragma opt_pointer_analysis reset\n\n",
+    "seed_sha256": "a2db267f0491b334730c13bbc2970ac813f6aeeeee74027391b548f8a901e174",
+    "generated_sha256": "cd1b07319d346d68019eaa1f0f37c0dbde3c72f60bc08f04cd8c8326c3258bc3",
+    "generated_source": "#include \"types.h\"\n\nstruct fn_3_10B68_lbl_1_bss_9F8_12_E20 {\n    u16 unk_0;\n    u8 pad_2[0x12];\n};\nstruct fn_3_10B68_lbl_1_bss_9F8_8_E20 {\n    u16 unk_0;\n    u8 pad_2[0x12];\n};\nstruct fn_3_10B68_lbl_3_bss_7EDD8 {\n    u8 pad_0[0x14];\n    u8 unk_14;\n    u8 unk_15;\n    u8 pad_16[0x2];\n    u32 unk_18;\n};\nstruct fn_3_10B68_lbl_1_bss_9F8 {\n    union {\n        struct { u8 pad_view_unk_8[0x8]; struct fn_3_10B68_lbl_1_bss_9F8_8_E20 unk_8[1]; };\n        struct { u8 pad_view_unk_12[0x12]; struct fn_3_10B68_lbl_1_bss_9F8_12_E20 unk_12[1]; };\n    };\n};\n\nextern struct fn_3_10B68_lbl_1_bss_9F8 lbl_1_bss_9F8;\nextern struct fn_3_10B68_lbl_3_bss_7EDD8 lbl_3_bss_7EDD8;\nextern void fn_1_A2D84(u32);\n\n#pragma opt_pointer_analysis on\nstatic inline struct fn_3_10B68_lbl_1_bss_9F8_12_E20 *fn_3_10B68_array_read(struct fn_3_10B68_lbl_1_bss_9F8_12_E20 *array) { return array; }\nvoid fn_3_10B68(void) {\n    struct fn_3_10B68_lbl_3_bss_7EDD8 *p_lbl_3_bss_7EDD8;\n    u16 v0;\n    void * v1;\n    p_lbl_3_bss_7EDD8 = (struct fn_3_10B68_lbl_3_bss_7EDD8 *)&lbl_3_bss_7EDD8;\n    if ((fn_3_10B68_array_read(lbl_1_bss_9F8.unk_12)[(*(u8 volatile *)&(p_lbl_3_bss_7EDD8->unk_14)) /* Retail reloads this field. */].unk_0 & 0x1) != 0) {\n    p_lbl_3_bss_7EDD8->unk_18 = 1;\n    fn_1_A2D84(0xA9010000);\n    }\n    if (((fn_3_10B68_array_read(lbl_1_bss_9F8.unk_12)[(*(u8 volatile *)&(p_lbl_3_bss_7EDD8->unk_14)) /* Retail reloads this field. */].unk_0 >> 1) & 0x1) != 0) {\n    lbl_3_bss_7EDD8.unk_18 = 0;\n    fn_1_A2D84(0xA9010000);\n    }\n    v0 = lbl_1_bss_9F8.unk_8[(*(u8 volatile *)&(p_lbl_3_bss_7EDD8->unk_14)) /* Retail reloads this field. */].unk_0;\n    if (((v0 >> 9) & 0x1) != 0 || (((v0 >> 8) & 0x1) != 0 && (s32)lbl_3_bss_7EDD8.unk_18 == 0)) {\n    if (((lbl_1_bss_9F8.unk_8[(*(u8 volatile *)&(p_lbl_3_bss_7EDD8->unk_14)) /* Retail reloads this field. */].unk_0 >> 8) & 0x1) != 0) {\n    fn_1_A2D84((0xA9010000 + 256));\n    } else {\n    fn_1_A2D84((0xA9010000 + 512));\n    }\n    v1 = (void *)(((u8 *)&lbl_3_bss_7EDD8 + (lbl_3_bss_7EDD8.unk_15 << 2)));\n    *(u32 *)((u8 *)v1 + 44) = 0;\n    } else {\n    if ((((*(((*(u8 volatile *)&(p_lbl_3_bss_7EDD8->unk_14)) /* Retail reloads this field. */) + (lbl_1_bss_9F8.unk_8))).unk_0 >> 8) & 0x1) != 0 && (s32)lbl_3_bss_7EDD8.unk_18 != 0) {\n    fn_1_A2D84((0xA9010000 + 256));\n    }\n    }\n}\n#pragma opt_pointer_analysis reset\n\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "rel/customize/emb_paste_editor/fn_3_10B68.c",
+    "bytes": 336,
+    "headers_sha256": "a3db0164dc3a0250a1c1729dabebf7f84ddbd4096090f5f7f2d171ec8ca55bd1",
+    "oracle_sha256": "7cc891120feb212c397b96ddb46f5213d85d0998668a1ee4bd55a3d6abc2e1ff",
+    "recipe": [
+      {
+        "label": "overlapping offset views fn_3_10B68_lbl_1_bss_9F8",
+        "input_sha256": "a2db267f0491b334730c13bbc2970ac813f6aeeeee74027391b548f8a901e174",
+        "output_sha256": "cd1b07319d346d68019eaa1f0f37c0dbde3c72f60bc08f04cd8c8326c3258bc3",
+        "input_symbol": "fn_3_10B68",
+        "output_symbol": "fn_3_10B68",
+        "edits": [
+          [
+            341,
+            459,
+            "nion {\n        struct { u8 pad_view_unk_8[0x8]; struct fn_3_10B68_lbl_1_bss_9F8_8_E20 unk_8[1]; };\n        struct { u8 pad_view_unk_12[0x12]; struct fn_3_10B68_lbl_1_bss_9F8_12_E20 unk_12[1]; };\n    }"
+          ]
+        ]
+      }
+    ],
+    "link": "pending"
+  },
+  "fn_12_3DB8": {
+    "seed_symbol": "fn_12_3DB8",
+    "generator": "fzgx fixup",
+    "transform": "preserve outgoing counter values",
+    "seed": "\n#include \"types.h\"\n\n#pragma opt_lifetimes off\n#pragma opt_lifetimes on\n\ntypedef struct SFXZObject SFXZObject;\n\nextern const f32 lbl_12_rodata_570;\nextern f64 lbl_12_rodata_578[3];\n\ntypedef void (*SFXZConvertCallback)(u32 *source, void *destination, f32 near_clip, f32 far_clip);\n\nstruct SFXZObject {\n    s32 active;\n    s32 z_bit;\n    s32 tag_info_set;\n    u8 *tag_data;\n    s32 tag_size;\n    u8 reserved_14[4];\n    s32 header_info_set;\n    u8 *header_data;\n    s32 header_size;\n    u8 reserved_24[4];\n    s32 frame_info_set;\n    u8 *frame_data;\n    s32 frame_size;\n    u8 reserved_34[8];\n    f32 near_clip;\n    f32 far_clip;\n    SFXZConvertCallback convert_callback;\n    void *field_48;\n};\n\nvoid fn_12_3DB8(SFXZObject *object, u32 near_z, u32 far_z, u32 *table);\n\nstatic inline u8 fn_12_3DB8_array_read(s32 index, u8 *array) { return array[index]; }\nvoid fn_12_3DB8(SFXZObject *object, u32 near_z, u32 far_z, u32 *table) {\n    s32 i;\n    s32 j;\n    u8 *ccir_table;\n    u32 *z_table;\n    z_table = table + 0x100;\n    ccir_table = (u8 *)(z_table + 0x100);\n    for (i = 0; i <= 15; i++) {\n        ccir_table[i] = 0;\n    }\n    for (j = 16; j <= 235; j++) {\n        ccir_table[j] = (u8)(lbl_12_rodata_570 * (f32)(j - 16));\n    }\n    for (i = 236; i <= 255; i++) {\n        ccir_table[i] = 255;\n    }\n    if (far_z == 0x80000000U) {\n        far_z = 0x7FFFFFFF;\n    }\n    if (near_z == 0x80000000U) {\n        near_z = 0x7FFFFFFF;\n    }\n    for (i = 0; i < 9; i++) {\n        z_table[i] = 0;\n    }\n    for (i = 9; i < 17; i++) {\n        z_table[i] = near_z;\n    }\n    if (near_z == far_z) {\n        for (i = 17; i < 224; i++) {\n            z_table[i] = near_z;\n        }\n    } else {\n        for (i = 17; i < 224; i++) {\n            z_table[i] = near_z + (i - 17) * ((far_z - near_z) / 207);\n        }\n    }\n    for (i = 224; i < 240; i++) {\n        z_table[i] = far_z;\n    }\n    for (i = 240; i < 256; i++) {\n        z_table[i] = 0x7FFFFFFF;\n    }\n    for (i = 0; i <= 255; i++) {\n        table[i] = z_table[fn_12_3DB8_array_read(i, ccir_table)];\n    }\n}\n\n",
+    "seed_sha256": "8c2fad6f0cf4010619a3fa83e9f770b4a0ca24369aca88a08b7e323aa92a7ab1",
+    "generated_sha256": "a44011dc62e2275cb8da30ac73b1e0b4168e2678cf28bf81cd4d3643701a299a",
+    "generated_source": "\n#include \"types.h\"\n\n#pragma opt_lifetimes off\n#pragma opt_lifetimes off\n\ntypedef struct SFXZObject SFXZObject;\n\nextern const f32 lbl_12_rodata_570;\nextern f64 lbl_12_rodata_578[3];\n\ntypedef void (*SFXZConvertCallback)(u32 *source, void *destination, f32 near_clip, f32 far_clip);\n\nstruct SFXZObject {\n    s32 active;\n    s32 z_bit;\n    s32 tag_info_set;\n    u8 *tag_data;\n    s32 tag_size;\n    u8 reserved_14[4];\n    s32 header_info_set;\n    u8 *header_data;\n    s32 header_size;\n    u8 reserved_24[4];\n    s32 frame_info_set;\n    u8 *frame_data;\n    s32 frame_size;\n    u8 reserved_34[8];\n    f32 near_clip;\n    f32 far_clip;\n    SFXZConvertCallback convert_callback;\n    void *field_48;\n};\n\nvoid fn_12_3DB8(SFXZObject *object, u32 near_z, u32 far_z, u32 *table);\n\nstatic inline u8 fn_12_3DB8_array_read(s32 index, u8 *array) { return array[index]; }\nvoid fn_12_3DB8(SFXZObject *object, u32 near_z, u32 far_z, u32 *table) {\n    s32 i;\n    s32 j;\n    u8 *ccir_table;\n    u32 *z_table;\n    z_table = table + 0x100;\n    ccir_table = (u8 *)(z_table + 0x100);\n    { s32 index_0;\nfor (index_0 = 0; index_0 <= 15; index_0++) {\n        ccir_table[index_0] = 0;\n    }\ni = index_0;\n}\n    for (j = 16; j <= 235; j++) {\n        ccir_table[j] = (u8)(lbl_12_rodata_570 * (f32)(j - 16));\n    }\n    { s32 index_1;\nfor (index_1 = 236; index_1 <= 255; index_1++) {\n        ccir_table[index_1] = 255;\n    }\ni = index_1;\n}\n    if (far_z == 0x80000000U) {\n        far_z = 0x7FFFFFFF;\n    }\n    if (near_z == 0x80000000U) {\n        near_z = 0x7FFFFFFF;\n    }\n    { s32 index_2;\nfor (index_2 = 0; index_2 < 9; index_2++) {\n        z_table[index_2] = 0;\n    }\ni = index_2;\n}\n    for (i = 9; i < 17; i++) {\n        z_table[i] = near_z;\n    }\n    if (near_z == far_z) {\n        for (i = 17; i < 224; i++) {\n            z_table[i] = near_z;\n        }\n    } else {\n        for (i = 17; i < 224; i++) {\n            z_table[i] = near_z + (i - 17) * ((far_z - near_z) / 207);\n        }\n    }\n    { s32 index_6;\nfor (index_6 = 224; index_6 < 240; index_6++) {\n        z_table[index_6] = far_z;\n    }\ni = index_6;\n}\n    { s32 index_7;\nfor (index_7 = 240; index_7 < 256; index_7++) {\n        z_table[index_7] = 0x7FFFFFFF;\n    }\ni = index_7;\n}\n    { s32 index_8;\nfor (index_8 = 0; index_8 <= 255; index_8++) {\n        table[index_8] = z_table[fn_12_3DB8_array_read(index_8, ccir_table)];\n    }\ni = index_8;\n}\n}\n\n",
+    "compiler": "GC/1.3.2",
+    "flags": "-use_lmw_stmw on",
+    "source": "rel/movie_module/fn_12_3DB8.c",
+    "bytes": 1776,
+    "headers_sha256": "a3db0164dc3a0250a1c1729dabebf7f84ddbd4096090f5f7f2d171ec8ca55bd1",
+    "oracle_sha256": "7cc891120feb212c397b96ddb46f5213d85d0998668a1ee4bd55a3d6abc2e1ff",
+    "recipe": [
+      {
+        "label": "retain distinct loop counter homes",
+        "input_sha256": "8c2fad6f0cf4010619a3fa83e9f770b4a0ca24369aca88a08b7e323aa92a7ab1",
+        "output_sha256": "bf30938baecd9d33e01684aba21706ac452fbaff973bef9cf03a5f66d42e0a5d",
+        "input_symbol": "fn_12_3DB8",
+        "output_symbol": "fn_12_3DB8",
+        "edits": [
+          [
+            70,
+            71,
+            "ff"
+          ]
+        ]
+      },
+      {
+        "label": "preserve outgoing counter values",
+        "input_sha256": "bf30938baecd9d33e01684aba21706ac452fbaff973bef9cf03a5f66d42e0a5d",
+        "output_sha256": "a44011dc62e2275cb8da30ac73b1e0b4168e2678cf28bf81cd4d3643701a299a",
+        "input_symbol": "fn_12_3DB8",
+        "output_symbol": "fn_12_3DB8",
+        "edits": [
+          [
+            1061,
+            1109,
+            "{ s32 index_0;\nfor (index_0 = 0; index_0 <= 15; index_0++) {\n        ccir_table[index_0"
+          ],
+          [
+            1122,
+            1122,
+            "i = index_0;\n}\n"
+          ],
+          [
+            1231,
+            1282,
+            "{ s32 index_1;\nfor (index_1 = 236; index_1 <= 255; index_1++) {\n        ccir_table[index_1"
+          ],
+          [
+            1297,
+            1297,
+            "i = index_1;\n}\n"
+          ],
+          [
+            1435,
+            1478,
+            "{ s32 index_2;\nfor (index_2 = 0; index_2 < 9; index_2++) {\n        z_table[index_2"
+          ],
+          [
+            1491,
+            1491,
+            "i = index_2;\n}\n"
+          ],
+          [
+            1805,
+            1852,
+            "{ s32 index_6;\nfor (index_6 = 224; index_6 < 240; index_6++) {\n        z_table[index_6"
+          ],
+          [
+            1869,
+            1920,
+            "i = index_6;\n}\n    { s32 index_7;\nfor (index_7 = 240; index_7 < 256; index_7++) {\n        z_table[index_7"
+          ],
+          [
+            1942,
+            2025,
+            "i = index_7;\n}\n    { s32 index_8;\nfor (index_8 = 0; index_8 <= 255; index_8++) {\n        table[index_8] = z_table[fn_12_3DB8_array_read(index_8"
+          ],
+          [
+            2047,
+            2047,
+            "i = index_8;\n}\n"
+          ]
+        ]
+      }
+    ],
+    "link": "pending"
+  },
+  "fn_1_18B40": {
+    "seed_symbol": "fn_1_18B40",
+    "generator": "fzgx fixup",
+    "transform": "retail exchanged arguments <indirect> 0,1 at 1304",
+    "seed": "#include \"types.h\"\n\ntypedef u32 (*fn_1_18B40_Fn)(u32, u32, u32, u32, u32, u32, u32, u32, f32);\n\nstruct fn_1_18B40_Obj {\n    u32 flags;\n    u8 pad_4[0x8];\n    s32 count;\n    struct fn_1_18B40_Obj *entries;\n    u8 pad_14[0x38];\n    s32 unk_4C;\n};\n\nstruct fn_1_18B40_Vec {\n    u32 x;\n    u32 y;\n    u32 z;\n};\n\nextern u8 lbl_1_data_5548[0x190];\nextern u32 lbl_8006DBE4(void);\nextern void lbl_8006DAEC(void);\nextern void lbl_8006DB30(void);\n\n#pragma opt_loop_invariants off\n#pragma opt_common_subs off\nvoid fn_1_18B40(void * arg0, void * arg1, u32 arg2, struct fn_1_18B40_Obj *arg3, struct fn_1_18B40_Vec *arg4, int arg5, void * arg6, void * arg7, f32 arg8, u32 arg9) {\n    struct fn_1_18B40_Obj * fzgx_live_;\n    struct fn_1_18B40_Obj * fzgx_live;\n    struct fn_1_18B40_Vec saved;\n    int i;\n\n    if (arg3->count > 0) {\n        lbl_8006DAEC();\n        fzgx_live_ = arg3->entries;\n{\n    struct fn_1_18B40_Obj *entry;\n        entry = (fzgx_live_);\n        i = 0;\n        while (i < arg3->count) {\n            if (arg5 == 0 || entry->unk_4C == 0 || entry->unk_4C == arg5) {\n                if ((entry->flags & 0x2) == 0) {\n                    saved = *arg4;\n                    lbl_8006DBE4();\n                    ((fn_1_18B40_Fn)*(fn_1_18B40_Fn *)(lbl_1_data_5548 + (__cntlzw(entry->flags & 0x3FE0000) << 2)))((u32)arg1, (u32)arg0, arg2, (u32)entry, (u32)arg4, (u32)arg6, (u32)arg7, arg9, arg8);\n                    fn_1_18B40(arg0, arg1, arg2, entry, arg4, arg5, arg6, arg7, arg8, arg9);\n                    *arg4 = saved;\n                }\n            }\n            i++;\n            entry = (struct fn_1_18B40_Obj *)((u8 *)entry + 0x50);\n}\n        }\n        lbl_8006DB30();\n    }\n}\n#pragma opt_common_subs reset\n\n#pragma opt_loop_invariants reset\n\n",
+    "seed_sha256": "a81f91182545f42c8ad3149d1a54802ef63912d31265570935e5be6a01e9660f",
+    "generated_sha256": "54bf63aae46f90b5ec152d7e71b84e69ed47c1f4443276301ce397e91fffbb9d",
+    "generated_source": "#include \"types.h\"\n\ntypedef u32 (*fn_1_18B40_Fn)(u32, u32, u32, u32, u32, u32, u32, u32, f32);\n\nstruct fn_1_18B40_Obj {\n    u32 flags;\n    u8 pad_4[0x8];\n    s32 count;\n    struct fn_1_18B40_Obj *entries;\n    u8 pad_14[0x38];\n    s32 unk_4C;\n};\n\nstruct fn_1_18B40_Vec {\n    u32 x;\n    u32 y;\n    u32 z;\n};\n\nextern u8 lbl_1_data_5548[0x190];\nextern u32 lbl_8006DBE4(void);\nextern void lbl_8006DAEC(void);\nextern void lbl_8006DB30(void);\n\n#pragma opt_loop_invariants off\n#pragma opt_common_subs off\nvoid fn_1_18B40(void * arg0, void * arg1, u32 arg2, struct fn_1_18B40_Obj *arg3, struct fn_1_18B40_Vec *arg4, int arg5, void * arg6, void * arg7, f32 arg8, u32 arg9) {\n    struct fn_1_18B40_Obj * fzgx_live_;\n    struct fn_1_18B40_Obj * fzgx_live;\n    struct fn_1_18B40_Vec saved;\n    int i;\n\n    if (arg3->count > 0) {\n        lbl_8006DAEC();\n        fzgx_live_ = arg3->entries;\n{\n    struct fn_1_18B40_Obj *entry;\n        entry = (fzgx_live_);\n        i = 0;\n        while (i < arg3->count) {\n            if (arg5 == 0 || entry->unk_4C == 0 || entry->unk_4C == arg5) {\n                if ((entry->flags & 0x2) == 0) {\n                    saved = *arg4;\n                    lbl_8006DBE4();\n                    ((fn_1_18B40_Fn)*(fn_1_18B40_Fn *)(lbl_1_data_5548 + (__cntlzw(entry->flags & 0x3FE0000) << 2)))( (u32)arg0,(u32)arg1, arg2, (u32)entry, (u32)arg4, (u32)arg6, (u32)arg7, arg9, arg8);\n                    fn_1_18B40(arg0, arg1, arg2, entry, arg4, arg5, arg6, arg7, arg8, arg9);\n                    *arg4 = saved;\n                }\n            }\n            i++;\n            entry = (struct fn_1_18B40_Obj *)((u8 *)entry + 0x50);\n}\n        }\n        lbl_8006DB30();\n    }\n}\n#pragma opt_common_subs reset\n\n#pragma opt_loop_invariants reset\n\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "rel/main_rel/stcoli/fn_1_18B40.c",
+    "bytes": 1000,
+    "headers_sha256": "a3db0164dc3a0250a1c1729dabebf7f84ddbd4096090f5f7f2d171ec8ca55bd1",
+    "oracle_sha256": "7cc891120feb212c397b96ddb46f5213d85d0998668a1ee4bd55a3d6abc2e1ff",
+    "recipe": [
+      {
+        "label": "retail exchanged arguments <indirect> 0,1 at 1304",
+        "input_sha256": "a81f91182545f42c8ad3149d1a54802ef63912d31265570935e5be6a01e9660f",
+        "output_sha256": "54bf63aae46f90b5ec152d7e71b84e69ed47c1f4443276301ce397e91fffbb9d",
+        "input_symbol": "fn_1_18B40",
+        "output_symbol": "fn_1_18B40",
+        "edits": [
+          [
+            1304,
+            1324,
+            " (u32)arg0,(u32)arg1"
+          ]
+        ]
+      }
+    ],
+    "link": "pending"
   }
 }

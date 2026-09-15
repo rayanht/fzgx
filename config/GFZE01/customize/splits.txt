@@ -452,3 +452,6 @@ rel/customize/emb_memcard/fn_3_12910.c:
 
 rel/customize/toolkit/fn_3_1A2EC.c:
 	.text       start:0x0001A2EC end:0x0001A488 align:4
+
+rel/customize/emb_paste_editor/fn_3_10B68.c:
+	.text       start:0x00010B68 end:0x00010CB8 align:4

@@ -14,6 +14,68 @@ extern void fn_1_426C(s16);
 extern void fn_80008BA8(struct Sig_fn_8004E278_fn_8004E278_Arg0 *, u32, u32);
 extern void fn_80008BEC(struct Sig_fn_8004E278_fn_8004E278_Arg0 *, int, u32);
 
+/* fzgx:begin fn_3_10B68 noprologue */
+#include "types.h"
+
+struct fn_3_10B68_lbl_1_bss_9F8_12_E20 {
+    u16 unk_0;
+    u8 pad_2[0x12];
+};
+struct fn_3_10B68_lbl_1_bss_9F8_8_E20 {
+    u16 unk_0;
+    u8 pad_2[0x12];
+};
+struct fn_3_10B68_lbl_3_bss_7EDD8 {
+    u8 pad_0[0x14];
+    u8 unk_14;
+    u8 unk_15;
+    u8 pad_16[0x2];
+    u32 unk_18;
+};
+struct fn_3_10B68_lbl_1_bss_9F8 {
+    union {
+        struct { u8 pad_view_unk_8[0x8]; struct fn_3_10B68_lbl_1_bss_9F8_8_E20 unk_8[1]; };
+        struct { u8 pad_view_unk_12[0x12]; struct fn_3_10B68_lbl_1_bss_9F8_12_E20 unk_12[1]; };
+    };
+};
+
+extern struct fn_3_10B68_lbl_1_bss_9F8 lbl_1_bss_9F8;
+extern struct fn_3_10B68_lbl_3_bss_7EDD8 lbl_3_bss_7EDD8;
+extern void fn_1_A2D84(u32);
+
+#pragma opt_pointer_analysis on
+static inline struct fn_3_10B68_lbl_1_bss_9F8_12_E20 *fn_3_10B68_array_read(struct fn_3_10B68_lbl_1_bss_9F8_12_E20 *array) { return array; }
+void fn_3_10B68(void) {
+    struct fn_3_10B68_lbl_3_bss_7EDD8 *p_lbl_3_bss_7EDD8;
+    u16 v0;
+    void * v1;
+    p_lbl_3_bss_7EDD8 = (struct fn_3_10B68_lbl_3_bss_7EDD8 *)&lbl_3_bss_7EDD8;
+    if ((fn_3_10B68_array_read(lbl_1_bss_9F8.unk_12)[(*(u8 volatile *)&(p_lbl_3_bss_7EDD8->unk_14)) /* Retail reloads this field. */].unk_0 & 0x1) != 0) {
+    p_lbl_3_bss_7EDD8->unk_18 = 1;
+    fn_1_A2D84(0xA9010000);
+    }
+    if (((fn_3_10B68_array_read(lbl_1_bss_9F8.unk_12)[(*(u8 volatile *)&(p_lbl_3_bss_7EDD8->unk_14)) /* Retail reloads this field. */].unk_0 >> 1) & 0x1) != 0) {
+    lbl_3_bss_7EDD8.unk_18 = 0;
+    fn_1_A2D84(0xA9010000);
+    }
+    v0 = lbl_1_bss_9F8.unk_8[(*(u8 volatile *)&(p_lbl_3_bss_7EDD8->unk_14)) /* Retail reloads this field. */].unk_0;
+    if (((v0 >> 9) & 0x1) != 0 || (((v0 >> 8) & 0x1) != 0 && (s32)lbl_3_bss_7EDD8.unk_18 == 0)) {
+    if (((lbl_1_bss_9F8.unk_8[(*(u8 volatile *)&(p_lbl_3_bss_7EDD8->unk_14)) /* Retail reloads this field. */].unk_0 >> 8) & 0x1) != 0) {
+    fn_1_A2D84((0xA9010000 + 256));
+    } else {
+    fn_1_A2D84((0xA9010000 + 512));
+    }
+    v1 = (void *)(((u8 *)&lbl_3_bss_7EDD8 + (lbl_3_bss_7EDD8.unk_15 << 2)));
+    *(u32 *)((u8 *)v1 + 44) = 0;
+    } else {
+    if ((((*(((*(u8 volatile *)&(p_lbl_3_bss_7EDD8->unk_14)) /* Retail reloads this field. */) + (lbl_1_bss_9F8.unk_8))).unk_0 >> 8) & 0x1) != 0 && (s32)lbl_3_bss_7EDD8.unk_18 != 0) {
+    fn_1_A2D84((0xA9010000 + 256));
+    }
+    }
+}
+#pragma opt_pointer_analysis reset
+/* fzgx:end fn_3_10B68 */
+
 /* fzgx:begin fn_3_1180C */
 struct Fn3State {
     u8 pad0[4];
@@ -43,9 +105,6 @@ void fn_3_1180C(void) {
 /* fzgx:end fn_3_1180C */
 
 /* fzgx:begin fn_3_11930 */
-
-
-
 struct PasteEntry {
     u8 pad[0x2c];
     int active;
@@ -66,9 +125,6 @@ int fn_3_11930(void) {
 /* fzgx:end fn_3_11930 */
 
 /* fzgx:begin fn_3_11974 */
-
-
-
 void fn_3_11974(void) {
     u32 *fields = (u32 *)&(*(u16 (*)[52])&lbl_3_bss_7EDD8);
     fields[11] = 0;
@@ -120,9 +176,6 @@ void fn_3_11F60(u32 value0, u32 value1) {
 /* fzgx:end fn_3_11F60 */
 
 /* fzgx:begin fn_3_11FA0 */
-
-
-
 void fn_3_11FA0(void) {
     (*(u32 (*)[26])&lbl_3_bss_7EDD8)[0] = 0;
     (*(u32 (*)[26])&lbl_3_bss_7EDD8)[1] = 0;
@@ -130,11 +183,6 @@ void fn_3_11FA0(void) {
 /* fzgx:end fn_3_11FA0 */
 
 /* fzgx:begin fn_3_11FB4 */
-
-
-
-
-
 void fn_3_11FB4(u8 value_47, u8 value_46, u32 value_7EDC0) {
     (*(u8 (*)[0x68])&lbl_3_bss_7EDD8)[0x47] = value_47;
     (*(u32 (*)[3])&lbl_3_bss_7EDC0)[0] = value_7EDC0;

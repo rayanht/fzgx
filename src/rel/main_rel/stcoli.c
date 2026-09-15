@@ -772,6 +772,68 @@ void fn_1_18214(Entity *arg0, f32 *arg1, Stack *arg2, f32 t) {
 }
 /* fzgx:end fn_1_18214 */
 
+/* fzgx:begin fn_1_18B40 noprologue */
+#include "types.h"
+
+typedef u32 (*fn_1_18B40_Fn)(u32, u32, u32, u32, u32, u32, u32, u32, f32);
+
+struct fn_1_18B40_Obj {
+    u32 flags;
+    u8 pad_4[0x8];
+    s32 count;
+    struct fn_1_18B40_Obj *entries;
+    u8 pad_14[0x38];
+    s32 unk_4C;
+};
+
+struct fn_1_18B40_Vec {
+    u32 x;
+    u32 y;
+    u32 z;
+};
+
+extern u8 lbl_1_data_5548[0x190];
+extern u32 lbl_8006DBE4(void);
+extern void lbl_8006DAEC(void);
+extern void lbl_8006DB30(void);
+
+#pragma opt_loop_invariants off
+#pragma opt_common_subs off
+void fn_1_18B40(void * arg0, void * arg1, u32 arg2, struct fn_1_18B40_Obj *arg3, struct fn_1_18B40_Vec *arg4, int arg5, void * arg6, void * arg7, f32 arg8, u32 arg9) {
+    struct fn_1_18B40_Obj * fzgx_live_;
+    struct fn_1_18B40_Obj * fzgx_live;
+    struct fn_1_18B40_Vec saved;
+    int i;
+
+    if (arg3->count > 0) {
+        lbl_8006DAEC();
+        fzgx_live_ = arg3->entries;
+{
+    struct fn_1_18B40_Obj *entry;
+        entry = (fzgx_live_);
+        i = 0;
+        while (i < arg3->count) {
+            if (arg5 == 0 || entry->unk_4C == 0 || entry->unk_4C == arg5) {
+                if ((entry->flags & 0x2) == 0) {
+                    saved = *arg4;
+                    lbl_8006DBE4();
+                    ((fn_1_18B40_Fn)*(fn_1_18B40_Fn *)(lbl_1_data_5548 + (__cntlzw(entry->flags & 0x3FE0000) << 2)))( (u32)arg0,(u32)arg1, arg2, (u32)entry, (u32)arg4, (u32)arg6, (u32)arg7, arg9, arg8);
+                    fn_1_18B40(arg0, arg1, arg2, entry, arg4, arg5, arg6, arg7, arg8, arg9);
+                    *arg4 = saved;
+                }
+            }
+            i++;
+            entry = (struct fn_1_18B40_Obj *)((u8 *)entry + 0x50);
+}
+        }
+        lbl_8006DB30();
+    }
+}
+#pragma opt_common_subs reset
+
+#pragma opt_loop_invariants reset
+/* fzgx:end fn_1_18B40 */
+
 /* fzgx:begin fn_1_18F28 noprologue */
 #include "types.h"
 

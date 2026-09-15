@@ -1730,3 +1730,6 @@ rel/movie_module/fn_12_3916C.c:
 
 rel/movie_module/fn_12_E0F4.c:
 	.text       start:0x0000E0F4 end:0x0000E3BC align:4
+
+rel/movie_module/fn_12_3DB8.c:
+	.text       start:0x00003DB8 end:0x000044A8 align:4
