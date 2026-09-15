@@ -302,6 +302,7 @@ def bindings(p: Project, rec: dict, offsets: dict | None = None) -> dict:
     target = p.target_object_for(sym)
     left = relocations(source_obj, rec['sdk_symbol'])
     right = relocations(target, sym.name)
+    source_symbols = {s['name']: s for s in Elf(source_obj.read_bytes()).symbols()}
     known = rec.get('known_bindings', {})
     mapping = dict(known) | {rec['sdk_symbol']: sym.name}
     for off, (name, addend, kind) in left.items():
@@ -332,6 +333,17 @@ def bindings(p: Project, rec: dict, offsets: dict | None = None) -> dict:
                     if base:
                         mapping[name] = base.name
                         continue
+                own = source_symbols.get(name)
+                delta = address - target_sym.addr
+                if (target_sym.kind == 'object' and target_sym.name.isidentifier() and own
+                        and own['info'] & 15 == 1 and own['size'] > 0
+                        and 0 < delta and delta + own['size'] <= target_sym.size):
+                    alias = f'{target_sym.name}__fzgx_offset_{delta:X}'
+                    if name not in mapping or mapping[name] == alias:
+                        # The ordinary oracle proves this subobject relocation;
+                        # poolfix adjusts only its binding/addend at integration.
+                        mapping[name] = alias
+                        continue
         if (addend, kind) != (dest_addend, dest_kind):
             raise ValueError(f'{off:#x}: {name}+{addend:#x} -> {dest}+{dest_addend:#x}, relocation {kind}/{dest_kind}')
         if name in mapping and mapping[name] != dest:
@@ -345,6 +357,19 @@ def retail_symbol(p: Project, module: str, name: str):
     if sym is None:
         sym = next((s for s in p.symbols(module).values() if name == f'{s.name}_{s.addr:08X}'), None)
     return sym
+
+
+def object_declaration(piece: Piece) -> str:
+    decl = piece.text.split('=', 1)[0].strip().rstrip(';')
+    if re.search(r'\[\s*\]', decl) and '=' in piece.text:
+        initializer = masked(piece.text.split('=', 1)[1]).strip().rstrip(';').strip()
+        if initializer.startswith('{') and initializer.endswith('}'):
+            depth, count = 0, 0
+            for ch in initializer[1:-1].strip().rstrip(','):
+                depth += (ch in '{([') - (ch in '})]')
+                count += ch == ',' and depth == 0
+            decl = re.sub(r'\[\s*\]', f'[{count + 1}]', decl, count=1)
+    return decl
 
 
 def dependency_closure(pieces: list, function: Piece, mapping: dict) -> tuple:
@@ -376,12 +401,17 @@ def dependency_closure(pieces: list, function: Piece, mapping: dict) -> tuple:
             else:
                 externs.append('static inline ' + re.sub(r'^(?:static\s+|inline\s+)+', '', piece.text))
         elif piece.kind == 'object':
-            decl = piece.text.split('=', 1)[0].strip().rstrip(';')
+            # sizeof(array) remains meaningful after its initializer is removed.
+            decl = object_declaration(piece)
             externs.append('extern ' + re.sub(r'^(?:static\s+|extern\s+)+', '', decl) + ';')
         elif piece.kind == 'prototype' and piece.names & mapping.keys():
             externs.append(re.sub(r'^(?:static\s+|inline\s+)+', '', piece.text))
         else:
             externs.append(piece.text)
+    if any(function.names & set(IDENT.findall(masked(text))) for text in externs):
+        # An inline helper may register this function as a callback before its
+        # definition. The closure's cycle guard must not discard its prototype.
+        externs.insert(0, re.sub(r'^(?:static\s+|inline\s+)+', '', function.signature) + ';')
     return list(dict.fromkeys(types)), list(dict.fromkeys(externs))
 
 
@@ -409,13 +439,13 @@ def prepare(p: Project, library: str) -> dict:
                     raise ValueError('inline assembly dependency')
                 text = externalize_statics(text, mapping)
                 text, absolutes = absolute_declarations(pieces, text)
-                for aggregate in (True, False):
+                for storage, aggregate in (('aggregate', True), ('direct', False), ('native', None)):
                     bound = dict(mapping)
                     raw = shared_storage(p, rec, pieces, text, bound, aggregate=aggregate)
                     raw = replace_c_symbols(isolate_parameters(raw, bound), bound)
                     for messages in (False, True):
                         body = literal_storage(p, rec, raw) if messages else raw
-                        variant = ('aggregate' if aggregate else 'direct') + ('-messages' if messages else '')
+                        variant = storage + ('-messages' if messages else '')
                         path = root / f"{rec['symbol']}.{sdk_name}.{variant}.c"
                         path.write_text(body)
                         result['prepared'].append({**rec, 'path': str(path), 'bindings': bound, 'absolutes': absolutes,
@@ -458,6 +488,8 @@ def externalize_statics(text: str, mapping: dict) -> str:
 MEMORY_NAMES = {
     0x80000028: '__OSPhysicalMemSize', 0x800000F0: '__OSSimulatedMemSize',
     0x800000C4: '__OSGlobalInterruptMask', 0x800000C8: '__OSLocalInterruptMask',
+    0x800000F4: '__OSBI2Pointer', 0x800030E8: '__OSBI2DebugFlag',
+    0x800030E9: '__OSPadSpecByte',
     0x800030D8: '__OSTimeAdjust', 0x80000C00: '__OSSystemCallVectorAddress',
     0x81000000: '__OSAudioInitBuffer', 0x81800000: '__OSUnmappedMemory',
 }
@@ -518,13 +550,98 @@ def absolute_declarations(pieces: list, text: str) -> tuple:
     return text, addresses
 
 
-def shared_storage(p: Project, rec: dict, pieces: list, text: str, mapping: dict, aggregate: bool = True) -> str:
+def native_storage(p: Project, rec: dict, pieces: list, text: str, mapping: dict,
+                   elf: Elf, source: dict, dest, objects: list) -> str:
+    """Preserve measured TU object offsets, including unreferenced prefix objects."""
+    used = set(IDENT.findall(masked(text)))
+    selected = []
+    for obj in objects:
+        name = obj['name']
+        local = name.split('$')[0]
+        if local not in used or name.startswith('@'):
+            continue
+        piece = next((x for x in pieces if x.kind == 'object' and name in x.names), None)
+        if piece is not None:
+            decl = object_declaration(piece)
+            external = 'extern ' + re.sub(r'^(?:static\s+|extern\s+)+', '', decl) + ';'
+            if external not in text:
+                continue
+            text = text.replace(external, '')
+        elif '$' in name:
+            matches = [m for m in re.finditer(r'\bstatic\s+[^;{}]+;', masked(text))
+                       if re.search(r'\b' + re.escape(local) + r'\b', m[0])]
+            if len(matches) != 1:
+                continue
+            match = matches[0]
+            parsed = declarations(text[match.start():match.end()])
+            if len(parsed) != 1 or parsed[0].kind != 'object':
+                continue
+            piece = parsed[0]
+            text = text[:match.start()] + text[match.end():]
+        else:
+            continue
+        selected.append((obj['value'] - source['value'], obj, local, piece.text))
+    if not selected:
+        return text
+    section = elf.sections[source['shndx']]
+    definitions, accesses, cursor = [], [], 0
+    tag = re.sub(r'\W', '_', source['name'])
+    for offset, obj, name, definition in sorted(selected):
+        if offset < cursor:
+            raise ValueError(f'overlapping native objects: {name}')
+        while cursor < offset:
+            # Keep the base object's identity and extent for the BSS oracle.
+            end = min(offset, dest.size) if cursor == 0 else offset
+            if end <= cursor:
+                raise ValueError(f'empty native anchor: {dest.name}')
+            gap = mapping[source['name']] if cursor == 0 else f'sdk_gap_{tag}_{cursor:x}'
+            declaration = f'static unsigned char {gap}[{end - cursor}]'
+            if section['type'] != 8:
+                lo, hi = source['value'] + cursor, source['value'] + end
+                if any(rel['type'] == 4 and rel['info'] == source['shndx'] and
+                       any(lo <= struct.unpack_from('>I', elf.data, at)[0] < hi
+                           for at in range(rel['offset'], rel['offset'] + rel['size'], 12))
+                       for rel in elf.sections):
+                    raise ValueError(f'native gap contains relocations: {gap}')
+                layout = p._rel_layout(dest.module)
+                regions = layout.values() if dest.module == 'main' else [layout.get(dest.section, (0, b''))]
+                raw = next((data[dest.addr + cursor - base:dest.addr + end - base]
+                            for base, data in regions
+                            if base <= dest.addr + cursor and dest.addr + end <= base + len(data)), None)
+                if raw is None:
+                    raise ValueError(f'native gap outside retail data: {gap}')
+                declaration += ' = {' + ', '.join(str(v) for v in raw) + '}'
+            definitions.append(declaration + ';')
+            accesses.append(gap)
+            cursor = end
+        if offset == 0:
+            mapping[name] = mapping[source['name']]
+        definitions.append(definition)
+        accesses.append(name)
+        cursor = offset + obj['size']
+    block = '\n'.join(definitions) + '\n'
+    if section['type'] == 8:
+        # BSS follows first access order, even when declarations are in order.
+        block += '#pragma section code_type ".fzgxpool"\nstatic void sdk_layout_' + tag + '(void) {\n'
+        block += 'volatile unsigned char sink; // fzgx-allow: S2 discarded layout primer\n'
+        block += ''.join(f'sink = *(unsigned char *)&{name};\n' for name in accesses)
+        block += '}\n#pragma section code_type ".text"\n'
+    index = next((i for i in range(len(text)) if text.startswith('static inline ', i)), -1)
+    if index < 0:
+        signature = next(x.signature for x in pieces if x.kind == 'function' and rec['sdk_symbol'] in x.names)
+        index = text.index(re.sub(r'^static\s+', '', signature))
+    return text[:index] + block + '\n' + text[index:]
+
+
+def shared_storage(p: Project, rec: dict, pieces: list, text: str, mapping: dict,
+                   aggregate: bool | None = True) -> str:
     """Recover a compiler-generated data base as a typed aggregate, checking retail layout."""
     anchors = [n for n in mapping if n.startswith('.')]
     if not anchors:
         return text
     obj = source_object(p, rec)
-    symbols = Elf(obj.read_bytes()).symbols()
+    elf = Elf(obj.read_bytes())
+    symbols = elf.symbols()
     module = p.resolve(rec['symbol']).module
     retail = list(p.symbols(module).values())
     for anchor in anchors:
@@ -535,11 +652,20 @@ def shared_storage(p: Project, rec: dict, pieces: list, text: str, mapping: dict
             dest = next((s for s in retail if suffix and s.addr == int(suffix[1], 16)), None)
         if dest is None:
             raise ValueError(f'unknown data base: {mapping[anchor]}')
+        # Saved SDK signatures can predate local-to-global symbol promotion.
+        mapping[anchor] = dest.name + (f'_{dest.addr:08X}' if dest.scope == 'local' else '')
         objects = [s for s in symbols if s['shndx'] == source['shndx'] and s['info'] & 15 == 1
                    and s['value'] >= source['value']]
         if not any(not s['name'].startswith('@') for s in objects):
             continue  # Compiler string pool: keep the original literals for poolfix.
         named = [s for s in objects if not s['name'].startswith('@')]
+        if aggregate is None:
+            # MWCC addresses independent TU objects through one section base.
+            # An extern struct view cannot reproduce every address expression.
+            # Keep the donor definitions as a candidate; the object oracle must
+            # prove their bytes and bindings before poolfix can remove copies.
+            text = native_storage(p, rec, pieces, text, mapping, elf, source, dest, objects)
+            continue
         if not aggregate and len(named) == 1 and named[0]['value'] == source['value']:
             mapping[named[0]['name']] = mapping[anchor]
             continue
@@ -560,21 +686,13 @@ def shared_storage(p: Project, rec: dict, pieces: list, text: str, mapping: dict
             piece = next((x for x in pieces if x.kind == 'object' and s['name'] in x.names), None)
             if piece is None:
                 continue  # A function-local static is outside this aggregate's accessed fields.
-            decl = re.sub(r'^(?:static\s+|extern\s+)+', '', piece.text.split('=', 1)[0].strip().rstrip(';'))
+            decl = re.sub(r'^(?:static\s+|extern\s+)+', '', object_declaration(piece))
             decl = re.sub(r'__attribute__\s*\(\(aligned\(\d+\)\)\)', '', decl).strip()
             source_decl = decl
             if re.fullmatch(r'(?:const\s+)?(?:(?:signed|unsigned)\s+)?char\s+\w+\s*\[\s*\]', decl):
                 # Initializers supply array bounds in C, but aggregate members
                 # have no initializer. The compiled symbol carries that extent.
                 decl = re.sub(r'\[\s*\]', f"[{s['size']}]", decl)
-            elif re.search(r'\[\s*\]', decl) and '=' in piece.text:
-                initializer = masked(piece.text.split('=', 1)[1]).strip().rstrip(';').strip()
-                if initializer.startswith('{') and initializer.endswith('}'):
-                    depth, count = 0, 0
-                    for ch in initializer[1:-1].strip().rstrip(','):
-                        depth += (ch in '{([') - (ch in '})]')
-                        count += ch == ',' and depth == 0
-                    decl = re.sub(r'\[\s*\]', f'[{count + 1}]', decl, count=1)
             if offset < cursor:
                 raise ValueError(f"overlapping data-base fields: {s['name']}")
             if offset > cursor:
@@ -584,8 +702,12 @@ def shared_storage(p: Project, rec: dict, pieces: list, text: str, mapping: dict
             replacements[s['name']] = f'({local}->{field})'
             text = re.sub(re.escape('extern ' + source_decl) + r'\s*;', '', text)
             cursor = offset + s['size']
+        if not fields:
+            continue  # This function only references literals in the shared section.
         # Place the aggregate after its type dependencies and before function bodies.
-        decl = 'struct ' + tag + ' {\n' + '\n'.join(fields) + '\n};\nextern struct ' + tag + ' ' + mapping[anchor] + ';\n\n'
+        # Strings and typed objects can share one anchor. Give it one compatible
+        # declaration and cast each view instead of declaring conflicting structs.
+        decl = 'struct ' + tag + ' {\n' + '\n'.join(fields) + '\n};\nextern unsigned char ' + mapping[anchor] + '[];\n\n'
         index = next((i for i in range(len(text)) if text.startswith('static inline ', i)), -1)
         if index < 0:
             signature = next(x.signature for x in pieces if x.kind == 'function' and rec['sdk_symbol'] in x.names)
@@ -593,7 +715,7 @@ def shared_storage(p: Project, rec: dict, pieces: list, text: str, mapping: dict
         text = text[:index] + decl + text[index:]
         for piece in declarations(text):
             if piece.kind == 'function' and set(IDENT.findall(masked(piece.text))) & replacements.keys():
-                body = piece.text.replace('{', '{\nstruct ' + tag + '* ' + local + ' = &' + mapping[anchor] + ';\n', 1)
+                body = piece.text.replace('{', '{\nstruct ' + tag + '* ' + local + ' = (struct ' + tag + '*)' + mapping[anchor] + ';\n', 1)
                 text = text.replace(piece.text, body)
         mapping.update(replacements)
     return text
@@ -623,10 +745,10 @@ def literal_storage(p: Project, rec: dict, text: str) -> str:
             suffix = re.search(r'_([0-9A-Fa-f]{8})$', dest)
             target = next((s for s in retail if suffix and s.addr == int(suffix[1], 16)), None)
         if target:
-            bases[s['shndx']] = target.addr + da - s['value'] - addend
+            bases[s['shndx']] = (target.addr + da - s['value'] - addend, target.section)
             if name.startswith('@') and target.name.isidentifier():
                 direct[(s['shndx'], s['value'] + addend)] = (dest, da)
-    for index, address in bases.items():
+    for index, (address, target_section) in bases.items():
         sec = elf.sections[index]
         data = bytes(elf.data[sec['offset']:sec['offset'] + sec['size']])
         replacements, fields, external = {}, {}, {}
@@ -638,11 +760,20 @@ def literal_storage(p: Project, rec: dict, text: str) -> str:
             offset = data.find(value)
             if offset < 0:
                 continue
+            layout = p._rel_layout(module)
+            regions = layout.values() if module == 'main' else [layout.get(target_section, (0, b''))]
             actual = next((raw[address + offset - base:address + offset - base + len(value)]
-                           for base, raw in p._rel_layout(module).values()
+                           for base, raw in regions
                            if base <= address + offset and address + offset + len(value) <= base + len(raw)), None)
             if actual != value:
-                continue
+                # SDK releases embed their build date/time beside otherwise
+                # identical diagnostics. Bind the measured retail strings only
+                # when both have the same fixed-width timestamp format.
+                formats = (rb'(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) [ \d]\d \d{4}\x00',
+                           rb'\d{2}:\d{2}:\d{2}\x00')
+                if actual is None or not any(re.fullmatch(fmt, value) and re.fullmatch(fmt, actual)
+                                             for fmt in formats):
+                    continue
             bound = direct.get((index, offset))
             if bound:
                 dest, addend = bound
@@ -669,12 +800,12 @@ def literal_storage(p: Project, rec: dict, text: str) -> str:
                 layout.append(f'char padding_{cursor:x}[{offset - cursor}];')
             layout.append(f'char {field}[{size}];')
             cursor = offset + size
-        decl = f'struct {tag} {{\n' + '\n'.join(layout) + f'\n}};\nextern struct {tag} {name};\n'
+        decl = f'struct {tag} {{\n' + '\n'.join(layout) + f'\n}};\nextern unsigned char {name}[];\n'
         for piece in declarations(text):
             if piece.kind != 'function' or not any(t in piece.text for t in replacements):
                 continue
             body = LEXICAL.sub(lambda m: f'messages->{replacements[m[0]]}' if m[0] in replacements else m[0], piece.text)
-            body = body.replace('{', f'{{\nstruct {tag}* messages = &{name};\n', 1)
+            body = body.replace('{', f'{{\nstruct {tag}* messages = (struct {tag}*){name};\n', 1)
             text = text.replace(piece.text, body)
         # All message fields are char arrays, independent of SDK type declarations.
         text = decl + '\n' + text
@@ -739,6 +870,8 @@ def materialize(result: dict) -> list:
             text = re.sub(r'(?m)^(.*\bvolatile\b.*)$', r'\1 // fzgx-allow: S2 SDK asynchronous state', text)
             # This SDK revision uses the public DVDDiskID field names.
             text = re.sub(r'(->|\.)game_name\b', r'\1gameName', text)
+            if piece.kind == 'function' and any(name.startswith('sdk_layout_') for name in piece.names):
+                text = '#pragma section code_type ".fzgxpool"\n' + text + '\n#pragma section code_type ".text"'
             body.append(text)
         needed = set(IDENT.findall(masked('\n'.join(body)))) - provided
         selected = set()

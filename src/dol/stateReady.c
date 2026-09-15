@@ -135,7 +135,7 @@ struct dvdBss {
     DVDCommandBlock DummyCommandBlock;
     OSAlarm ResetAlarm;
 };
-extern struct dvdBss BB2_8015CE40;
+extern struct dvdBss BB2;
 
 static inline void stateError(u32 error) {
     __DVDStoreErrorCode(error);
@@ -175,7 +175,7 @@ void stateBusy(DVDCommandBlock *block);
 void DVDReset(void);
 
 void stateReady() {
-    struct dvdBss *bss = &BB2_8015CE40;
+    struct dvdBss *bss = &BB2;
 
     DVDCommandBlock *finished;
     if (!__DVDCheckWaitingQueue()) {

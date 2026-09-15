@@ -20,10 +20,10 @@ struct SIBiosBss {
 
 vu32 __SIRegs[64] : FZGX_ADDR___SIRegs;
 
-extern struct SIBiosBss Packet_8015CA10;
+extern struct SIBiosBss Packet;
 
 BOOL SIEnablePollingInterrupt(BOOL enable) {
-    struct SIBiosBss *bss = &Packet_8015CA10;
+    struct SIBiosBss *bss = &Packet;
 
     BOOL enabled;
     BOOL rc;

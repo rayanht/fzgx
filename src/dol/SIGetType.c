@@ -14,9 +14,9 @@ extern u32 Type_80123BA8[4];
 
 OSTime TypeTime_8015CB30[4] __attribute__((aligned(8)));
 
-void GetTypeCallback_80012A74(s32 chan, u32 error, OSContext *context);
+void GetTypeCallback(s32 chan, u32 error, OSContext *context);
 
-void GetTypeCallback_80012A74(s32 chan, u32 error, OSContext *context);
+void GetTypeCallback(s32 chan, u32 error, OSContext *context);
 
 #pragma opt_propagation off
 u32 SIGetType(s32 chan) {
@@ -44,7 +44,7 @@ u32 SIGetType(s32 chan) {
         type = Type_80123BA8[chan] = 0x0080;
     }
     TypeTime_8015CB30[chan] = __OSGetSystemTime();
-    SITransfer(chan, &cmdTypeAndStatus, 1, &Type_80123BA8[chan], 3, GetTypeCallback_80012A74,
+    SITransfer(chan, &cmdTypeAndStatus, 1, &Type_80123BA8[chan], 3, GetTypeCallback,
                (((65) * (((u32)__OSBusClock / 4) / 125000)) / 8));
     OSRestoreInterrupts(enabled);
     return type;

@@ -66,6 +66,11 @@ Prioritize deterministic SDK C imports (CARD, then OS, EXI, SI) regardless of
 function size. Under-256-byte functions (`--max-size 255`) remain useful repair
 corpora, not a gate on identified larger functions. Prefer deterministic work: `fzgx trivial`, `fzgx reuse`, and size-filtered `fzgx fixup`/`fzgx stuck`;
 fix recurring failure modes in the tooling before spending agents on them.
+SDK imports must preserve inferred array bounds and callback forward declarations.
+Try native section objects with measured gaps and BSS first-access primers when
+extern aggregate views lose TU addressing. Keep primers in `.fzgxpool`, normalize
+promoted symbol names, and bind interior globals through the existing verified
+subobject-relocation path. Recheck generated candidates after importer changes.
 Register-field similarity is not proof of an allocation problem: inspect value-flow
 and operand-order diagnostics first. `fzgx fixup --capture` captures/replays
 the stock allocator; selection-order witnesses require a source-realizability

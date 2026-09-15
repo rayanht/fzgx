@@ -22,10 +22,10 @@ u32 SIGetStatus(s32 chan);
 
 vu32 __SIRegs[64] : FZGX_ADDR___SIRegs;
 
-extern struct SIBiosBss Packet_8015CA10;
+extern struct SIBiosBss Packet;
 
 static inline BOOL SIGetResponseRaw(s32 chan) {
-    struct SIBiosBss *bss = &Packet_8015CA10;
+    struct SIBiosBss *bss = &Packet;
 
     u32 sr;
     sr = SIGetStatus(chan);
@@ -39,7 +39,7 @@ static inline BOOL SIGetResponseRaw(s32 chan) {
 }
 
 BOOL SIGetResponse(s32 chan, void *data) {
-    struct SIBiosBss *bss = &Packet_8015CA10;
+    struct SIBiosBss *bss = &Packet;
 
     BOOL rc;
     BOOL enabled;

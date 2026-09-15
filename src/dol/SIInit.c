@@ -36,11 +36,11 @@ extern SIControl Si_80123B94;
 
 void SIInterruptHandler_80011C74(__OSInterrupt interrupt, OSContext *context);
 
-extern struct SDK_SIBios____bss_0 Packet_8015CA10;
+extern struct SDK_SIBios____bss_0 Packet;
 
 #pragma opt_propagation off
 void SIInit(void) {
-    struct SDK_SIBios____bss_0 *sdk_storage____bss_0 = &Packet_8015CA10;
+    struct SDK_SIBios____bss_0 *sdk_storage____bss_0 = &Packet;
 
     OSRegisterVersion(__SIVersion);
     (sdk_storage____bss_0->sdk_Packet)[0].chan = (sdk_storage____bss_0->sdk_Packet)[1].chan =

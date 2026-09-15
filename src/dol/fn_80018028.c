@@ -9,7 +9,7 @@ struct fn_80018028_BB2_8015CE40_T {
     u8 data[0x20];
 };
 
-extern struct fn_80018028_BB2_8015CE40_T BB2_8015CE40;
+extern struct fn_80018028_BB2_8015CE40_T BB2;
 
 struct fn_80018028_executing_801A68C0_T {
     u8 pad_0[0xc];
@@ -31,11 +31,11 @@ extern void fn_80018108(struct fn_80018028_executing_801A68C0_T *);
 void fn_80018028(void) {
     struct fn_80018028_BB2_8015CE40_T *bb;
 
-    bb = &BB2_8015CE40;
+    bb = &BB2;
     switch (CurrCommand_801A68DC) {
     case 3:
         if (DVDCompareDiskID(bb->data, executing_801A68C0->disk_id)) {
-            memcpy(IDShouldBe_801A68C4, BB2_8015CE40.data, 0x20);
+            memcpy(IDShouldBe_801A68C4, BB2.data, 0x20);
             executing_801A68C0->state = 1;
             DCInvalidateRange(bb, 0x20);
             lbl_801A6904 = (u32)fn_8001813C;
@@ -45,7 +45,7 @@ void fn_80018028(void) {
         }
         break;
     default:
-        if (fn_8008023C(BB2_8015CE40.data, IDShouldBe_801A68C4, 0x20)) {
+        if (fn_8008023C(BB2.data, IDShouldBe_801A68C4, 0x20)) {
             DVDLowStopMotor((void *)cbForStateCheckID1);
         } else {
             lbl_801A6904 = (u32)fn_80018108;

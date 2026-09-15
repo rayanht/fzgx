@@ -32,10 +32,10 @@ void stateReady();
 
 void AlarmHandler(OSAlarm *alarm, OSContext *context);
 
-extern struct dvdBss BB2_8015CE40;
+extern struct dvdBss BB2;
 
 void cbForStateMotorStopped(u32 intType) {
-    struct dvdBss *bss = &BB2_8015CE40;
+    struct dvdBss *bss = &BB2;
     DVDCommandBlock *finished;
 
     __DIRegs[1] = 0;

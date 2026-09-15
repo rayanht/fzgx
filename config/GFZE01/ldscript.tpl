@@ -80,6 +80,12 @@ SECTIONS
     __OSDBJUMPEND = __OSSetExceptionHandler;
     /* SDK absolute globals; configure.py generates their C constants. */
     __OSRebootBuffer = 0x81300000;
+    /* SDK absolute globals; configure.py generates their C constants. */
+    __OSBI2DebugFlag = 0x800030E8;
+    __OSBI2Pointer = 0x800000F4;
+    __OSPadSpecByte = 0x800030E9;
+    /* SDK absolute globals; configure.py generates their C constants. */
+    __OSWirelessPadFixMode = 0x800030E0;
 }
 
 FORCEACTIVE

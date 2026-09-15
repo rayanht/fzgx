@@ -24,7 +24,7 @@ vu32 __SIRegs[64] : FZGX_ADDR___SIRegs;
 
 extern u32 Type_80123BA8[4];
 
-extern struct SIBiosBss Packet_8015CA10;
+extern struct SIBiosBss Packet;
 
 static inline u32 SIGetStatus(s32 chan) {
     BOOL enabled;
@@ -44,7 +44,7 @@ static inline u32 SIGetStatus(s32 chan) {
 }
 
 BOOL SIGetResponseRaw(s32 chan) {
-    struct SIBiosBss *bss = &Packet_8015CA10;
+    struct SIBiosBss *bss = &Packet;
 
     u32 sr;
     sr = SIGetStatus(chan);

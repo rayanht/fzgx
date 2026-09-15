@@ -13,12 +13,12 @@ typedef struct DVDDriveInfo {
 
 vu16 __OSDeviceCode : FZGX_ADDR___OSDeviceCode;
 
-extern DVDDriveInfo DriveInfo_8015BF00;
+extern DVDDriveInfo DriveInfo;
 
 void InquiryCallback(s32 result, DVDCommandBlock *block) {
     switch (block->state) {
     case 0:
-        __OSDeviceCode = (u16)(0x8000 | DriveInfo_8015BF00.deviceCode);
+        __OSDeviceCode = (u16)(0x8000 | DriveInfo.deviceCode);
         break;
     default:
         __OSDeviceCode = 1;

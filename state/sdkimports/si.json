@@ -40,6 +40,28 @@
     "symbol": "CompleteTransfer",
     "variant": "aggregate-inputBytes-bytes"
   },
+  "GetTypeCallback": {
+    "absolutes": {},
+    "bindings": {
+      "...bss.0": "Packet_8015CA10",
+      "GetTypeCallback": "GetTypeCallback",
+      "OSGetWirelessID": "OSGetWirelessID",
+      "OSSetWirelessID": "OSSetWirelessID",
+      "SITransfer": "SITransfer",
+      "Type": "Type_80123BA8",
+      "__OSGetSystemTime": "__OSGetSystemTime",
+      "__PADFixBits": "lbl_801A6818"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "GetTypeCallback",
+    "size": 664,
+    "source": "libs/dolphin/si/SIBios.c",
+    "symbol": "GetTypeCallback",
+    "variant": "native"
+  },
   "SIDecodeType": {
     "absolutes": {},
     "bindings": {
@@ -222,6 +244,32 @@
     "source": "libs/dolphin/si/SIBios.c",
     "symbol": "SIRegisterPollingHandler",
     "variant": "aggregate"
+  },
+  "SISetSamplingRate": {
+    "absolutes": {
+      "__VIRegs": 3422560256
+    },
+    "bindings": {
+      "...data.0": "XYNTSC_80123C68",
+      "OSDisableInterrupts": "OSDisableInterrupts",
+      "OSReport": "OSReport",
+      "OSRestoreInterrupts": "OSRestoreInterrupts",
+      "SISetSamplingRate": "SISetSamplingRate",
+      "SISetXY": "SISetXY",
+      "SamplingRate": "SamplingRate_801A6820",
+      "VIGetTvFormat": "VIGetTvFormat"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [
+      "#pragma dont_inline on"
+    ],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "SISetSamplingRate",
+    "size": 228,
+    "source": "libs/dolphin/si/SISamplingRate.c",
+    "symbol": "SISetSamplingRate",
+    "variant": "native"
   },
   "SISetXY": {
     "absolutes": {

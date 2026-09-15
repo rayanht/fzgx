@@ -5249,3 +5249,48 @@ dol/fn_80022028.c:
 
 dol/fn_80008FB0.c:
 	.text       start:0x80008FB0 end:0x80009064 align:4
+
+dol/SISetSamplingRate.c:
+	.text       start:0x800132D4 end:0x800133B8 align:4
+
+dol/OSInit.c:
+	.text       start:0x8000A3B0 end:0x8000A788 align:4
+
+dol/OSExceptionInit.c:
+	.text       start:0x8000A788 end:0x8000AA08 align:4
+
+dol/GetTypeCallback.c:
+	.text       start:0x80012A74 end:0x80012D0C align:4
+
+dol/__DVDInterruptHandler.c:
+	.text       start:0x80015FC0 end:0x800162A0 align:4
+
+dol/fn_800162A0.c:
+	.text       start:0x800162A0 end:0x80016324 align:4
+
+dol/fn_80016394.c:
+	.text       start:0x80016394 end:0x800164A4 align:4
+
+dol/fn_80016524.c:
+	.text       start:0x80016524 end:0x800167BC align:4
+
+dol/fn_8001CB64.c:
+	.text       start:0x8001CB64 end:0x8001CC64 align:4
+
+dol/fn_8001CC64.c:
+	.text       start:0x8001CC64 end:0x8001CD68 align:4
+
+dol/fn_8001CF80.c:
+	.text       start:0x8001CF80 end:0x8001D32C align:4
+
+dol/fn_8001DC3C.c:
+	.text       start:0x8001DC3C end:0x8001DDD0 align:4
+
+dol/fn_80018D1C.c:
+	.text       start:0x80018D1C end:0x80019354 align:4
+
+dol/fn_8001CD68.c:
+	.text       start:0x8001CD68 end:0x8001CF80 align:4
+
+dol/fn_8001C704.c:
+	.text       start:0x8001C704 end:0x8001CA30 align:4

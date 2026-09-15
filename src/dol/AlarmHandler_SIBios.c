@@ -4,7 +4,7 @@
 #include <dolphin/os/OSRtc.h>
 #include <dolphin/si.h>
 
-extern SIPacket Packet_8015CA10[4];
+extern SIPacket Packet[4];
 
 extern OSAlarm lbl_8015CA90[4];
 
@@ -18,7 +18,7 @@ void AlarmHandler_SIBios(OSAlarm *alarm, OSContext *context) {
     s32 chan;
     SIPacket *packet;
     chan = alarm - lbl_8015CA90;
-    packet = &Packet_8015CA10[chan];
+    packet = &Packet[chan];
     if (packet->chan != -1) {
         if (__SITransfer(packet->chan, packet->output, packet->outputBytes, packet->input,
                          packet->inputBytes, packet->callback)) {

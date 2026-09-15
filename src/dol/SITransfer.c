@@ -32,11 +32,11 @@ BOOL __SITransfer(s32 chan, void *output, u32 outputBytes, void *input, u32 inpu
 
 void AlarmHandler_SIBios(OSAlarm *alarm, OSContext *context);
 
-extern struct SIBiosBss Packet_8015CA10;
+extern struct SIBiosBss Packet;
 
 BOOL SITransfer(s32 chan, void *output, u32 outputBytes, void *input, u32 inputBytes,
                 SICallback callback, OSTime delay) {
-    struct SIBiosBss *bss = &Packet_8015CA10;
+    struct SIBiosBss *bss = &Packet;
 
     BOOL enabled;
     SIPacket *packet = ((SIPacket *)((u8 *)bss + (u32) & ((struct SIBiosBss *)0)->Packet) + chan);

@@ -28,7 +28,7 @@ typedef struct BootInfo {
 
 extern ExecutingState *executing_801A68C0;
 extern BootInfo *bootInfo_801A68C8;
-extern u32 BB2_8015CE40[];
+extern u32 BB2[];
 
 void fn_80018330(u32 state) {
     if (state == 0x10) {
@@ -39,12 +39,12 @@ void fn_80018330(u32 state) {
     } else if (state & 1) {
         lbl_801A68F4 = 0;
         lbl_801A6904 = (u32)fn_80017838;
-        if (bootInfo_801A68C8->field3c < BB2_8015CE40[2]) {
+        if (bootInfo_801A68C8->field3c < BB2[2]) {
             OSPanic(lbl_801A6484, 0x287, lbl_80123FE4);
         }
         fn_80016524(bootInfo_801A68C8->field38,
-                    (BB2_8015CE40[2] + 0x1f) & ~0x1f,
-                    BB2_8015CE40[1],
+                    (BB2[2] + 0x1f) & ~0x1f,
+                    BB2[1],
                     (u32)fn_800178CC);
     } else {
         DVDLowRequestError(cbForStateGettingError);

@@ -510,6 +510,43 @@
     "symbol": "__DVDCheckWaitingQueue",
     "variant": "aggregate"
   },
+  "__DVDInterruptHandler": {
+    "absolutes": {
+      "__DIRegs": 3422576640,
+      "__OSBusClock": 2147483896
+    },
+    "bindings": {
+      "...bss.0": "CommandList_8015CD70",
+      "Breaking": "lbl_801A6878",
+      "Callback": "Callback_801A6860",
+      "CommandList": "CommandList_8015CD70",
+      "DVDLowSeek": "DVDLowSeek",
+      "FirstRead": "lbl_801A6468",
+      "LastCommandWasRead": "lbl_801A6898",
+      "LastReadFinished": "lbl_801A6888",
+      "LastResetEnd": "LastResetEnd_801A6868",
+      "NextCommandNumber": "NextCommandNumber_801A689C",
+      "OSCancelAlarm": "OSCancelAlarm",
+      "OSClearContext": "OSClearContext",
+      "OSSetCurrentContext": "OSSetCurrentContext",
+      "Read": "fn_80016394",
+      "ResetCoverCallback": "lbl_801A6864",
+      "ResetOccurred": "ResetOccurred_801A6870",
+      "StopAtNextInt": "StopAtNextInt_801A6858",
+      "WaitingCoverClose": "WaitingCoverClose_801A6874",
+      "__DVDInterruptHandler": "__DVDInterruptHandler",
+      "__OSGetSystemTime": "__OSGetSystemTime"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "__DVDInterruptHandler",
+    "size": 736,
+    "source": "libs/dolphin/dvd/dvdlow.c",
+    "symbol": "__DVDInterruptHandler",
+    "variant": "native"
+  },
   "__DVDPrepareResetAsync": {
     "absolutes": {},
     "bindings": {
@@ -697,6 +734,124 @@
     "source": "libs/dolphin/dvd/dvdfs.c",
     "symbol": "entryToPath",
     "variant": "aggregate"
+  },
+  "fn_800162A0": {
+    "absolutes": {},
+    "bindings": {
+      "...bss.0": "CommandList_8015CD70",
+      "AlarmHandler": "fn_800162A0",
+      "CommandList": "CommandList_8015CD70",
+      "DVDLowSeek": "DVDLowSeek",
+      "NextCommandNumber": "NextCommandNumber_801A689C",
+      "Read": "fn_80016394"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "AlarmHandler",
+    "size": 132,
+    "source": "libs/dolphin/dvd/dvdlow.c",
+    "symbol": "fn_800162A0",
+    "variant": "native"
+  },
+  "fn_80016394": {
+    "absolutes": {
+      "__DIRegs": 3422576640,
+      "__OSBusClock": 2147483896
+    },
+    "bindings": {
+      "...bss.0": "CommandList",
+      "AlarmHandlerForTimeout": "AlarmHandlerForTimeout",
+      "Callback": "Callback_801A6860",
+      "LastCommandWasRead": "lbl_801A6898",
+      "LastLength": "lbl_801A685C",
+      "LastReadIssued": "lbl_801A6890",
+      "OSCreateAlarm": "OSCreateAlarm",
+      "OSSetAlarm": "OSSetAlarm",
+      "Read": "fn_80016394",
+      "StopAtNextInt": "StopAtNextInt_801A6858",
+      "__OSGetSystemTime": "__OSGetSystemTime"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "Read",
+    "size": 272,
+    "source": "libs/dolphin/dvd/dvdlow.c",
+    "symbol": "fn_80016394",
+    "variant": "native"
+  },
+  "fn_80016524": {
+    "absolutes": {
+      "__DIRegs": 3422576640,
+      "__OSBusClock": 2147483896
+    },
+    "bindings": {
+      "...bss.0": "CommandList",
+      "AlarmHandler": "fn_800162A0",
+      "CommandList": "CommandList",
+      "DVDGetCurrentDiskID": "fn_80019C48",
+      "DVDLowRead": "fn_80016524",
+      "FirstRead": "lbl_801A6468",
+      "LastReadFinished": "lbl_801A6888",
+      "NextCommandNumber": "NextCommandNumber_801A689C",
+      "OSCreateAlarm": "OSCreateAlarm",
+      "OSSetAlarm": "OSSetAlarm",
+      "Read": "fn_80016394",
+      "SeekTwiceBeforeRead": "fn_800164A4",
+      "WorkAroundType": "WorkAroundType_801A687C",
+      "__OSGetSystemTime": "__OSGetSystemTime"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "DVDLowRead",
+    "size": 664,
+    "source": "libs/dolphin/dvd/dvdlow.c",
+    "symbol": "fn_80016524",
+    "variant": "native"
+  },
+  "fn_80018D1C": {
+    "absolutes": {
+      "__DIRegs": 3422576640
+    },
+    "bindings": {
+      "...bss.0": "BB2_8015CE40",
+      "AutoFinishing": "lbl_801A68D4",
+      "CancelCallback": "lbl_801A68E4",
+      "Canceling": "lbl_801A68E0",
+      "CurrCommand": "CurrCommand_801A68DC",
+      "DVDLowAudioStream": "DVDLowAudioStream",
+      "DVDLowRequestError": "DVDLowRequestError",
+      "DVDLowStopMotor": "DVDLowStopMotor",
+      "DVDLowWaitCoverClose": "DVDLowWaitCoverClose",
+      "DVDReset": "DVDReset",
+      "DmaCommand": "lbl_801A648C",
+      "ImmCommand": "lbl_80124058",
+      "NumInternalRetry": "lbl_801A68F4",
+      "ResetRequired": "ResetRequired_801A68F8",
+      "ResumeFromHere": "ResumeFromHere_801A68E8",
+      "__DVDStoreErrorCode": "__DVDStoreErrorCode",
+      "cbForStateBusy": "fn_80018D1C",
+      "cbForStateError": "cbForStateError",
+      "cbForStateGettingError": "cbForStateGettingError",
+      "cbForStateMotorStopped": "cbForStateMotorStopped",
+      "executing": "executing_801A68C0",
+      "stateBusy": "stateBusy",
+      "stateReady": "stateReady"
+    },
+    "mw": "GC/1.2.5n",
+    "pragmas": [],
+    "revision": "2a9eb75fefd75c649c0488742db931571cbd7812",
+    "sdk": "mkdd",
+    "sdk_symbol": "cbForStateBusy",
+    "size": 1592,
+    "source": "libs/dolphin/dvd/dvd.c",
+    "symbol": "fn_80018D1C",
+    "variant": "native"
   },
   "stateBusy": {
     "absolutes": {

@@ -1,6 +1,6 @@
 #include "types.h"
 
-extern struct SIIsChanBusy_Packet_8015CA10 Packet_8015CA10;
+extern struct SIIsChanBusy_Packet_8015CA10 Packet;
 extern u32 Si_80123B94[];
 
 struct SIIsChanBusy_Packet_8015CA10_0_E32 {
@@ -14,7 +14,7 @@ struct SIIsChanBusy_Packet_8015CA10 {
 s32 SIIsChanBusy(u32 arg0) {
     s32 v0;
     v0 = 1;
-    if ((s32)Packet_8015CA10.unk_0[arg0].unk_0 == -1) {
+    if ((s32)Packet.unk_0[arg0].unk_0 == -1) {
     if ((s32)Si_80123B94[0] != (s32)arg0) {
     v0 = 0;
     }

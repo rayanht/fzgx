@@ -34,10 +34,10 @@ void stateReady();
 
 void DVDReset(void);
 
-extern struct dvdBss BB2_8015CE40;
+extern struct dvdBss BB2;
 
 void stateCoverClosed() {
-    struct dvdBss *bss = &BB2_8015CE40;
+    struct dvdBss *bss = &BB2;
 
     DVDCommandBlock *finished;
     switch (CurrCommand_801A68DC) {

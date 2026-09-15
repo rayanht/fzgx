@@ -453,7 +453,7 @@ def _bss_base_rows(project, module, obj, left, right, lrows, rrows, function_nam
         rname = right['symbols'][rr['target_symbol']]['name']
         # a unit may define the retail TU's objects under an alias when the module header
         # already declares the retail name with another layout
-        anchor, owned = symbols.get(rname), symbols.get(lname) or symbols.get('fzgx_obj_' + lname)
+        anchor = symbols.get(rname)
         if not anchor or not 0 < anchor['shndx'] < len(elf.sections):
             continue
         section = elf.sections[anchor['shndx']]
@@ -464,6 +464,12 @@ def _bss_base_rows(project, module, obj, left, right, lrows, rrows, function_nam
             retail = next((s for s in project.symbols(module).values() if lname == f'{s.name}_{s.addr:08X}'), None)
         if not retail or retail.section not in ('.bss', '.sbss'):
             continue
+        # A split object may retain the local spelling after its symbol is
+        # promoted. Resolve both spellings to the same measured BSS object.
+        owned = next((symbols[name] for name in
+                      (lname, retail.name, f'{retail.name}_{retail.addr:08X}',
+                       'fzgx_obj_' + lname, 'fzgx_obj_' + retail.name)
+                      if name in symbols), None)
         owned_here = unit is not None and project.unit_of(retail) == unit
         if (anchor['size'] <= retail.size and retail.size > 0
                 and (rname in (lname, retail.name, f'{retail.name}_{retail.addr:08X}', 'fzgx_obj_' + retail.name) or
