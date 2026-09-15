@@ -13871,6 +13871,28 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_8001B42C.c",
+    "symbols": [
+      "fn_8001B42C"
+    ],
+    "status": "nonmatching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": [
+      "-use_lmw_stmw",
+      "on",
+      "-fp",
+      "fmadd",
+      "-fp_contract",
+      "off",
+      "-char",
+      "signed",
+      "-common",
+      "off"
+    ],
+    "pool": true
+  },
+  {
+    "module": "main",
     "source": "dol/fn_8001BC54.c",
     "symbols": [
       "fn_8001BC54"

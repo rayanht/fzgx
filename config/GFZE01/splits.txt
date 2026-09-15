@@ -5300,3 +5300,6 @@ dol/fn_8001AAB4.c:
 
 dol/fn_8007C910.c:
 	.text       start:0x8007C910 end:0x8007CE0C align:4
+
+dol/fn_8001B42C.c:
+	.text       start:0x8001B42C end:0x8001BC54 align:4

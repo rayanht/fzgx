@@ -520,6 +520,67 @@ def _bss_base_rows(project, module, obj, left, right, lrows, rrows, function_nam
     return rows, pairs
 
 
+def _relocated_pool_matches(project, module, elf, section, address, extent):
+    """Compare initialized bytes and symbolic pointer bindings across a shared pool."""
+    from .dataimport import payload, resolve_target
+
+    actual = bytearray(elf.data[section['offset']:section['offset'] + extent])
+    expected = bytearray(extent)
+    covered = bytearray(extent)
+    bindings = []
+    try:
+        for sym in project.symbols(module).values():
+            if sym.kind != 'object' or sym.section != section['name'] or sym.end <= address or sym.addr >= address + extent:
+                continue
+            raw, relocs = payload(project, sym)
+            lo, hi = max(address, sym.addr), min(address + extent, sym.end)
+            expected[lo - address:hi - address] = raw[lo - sym.addr:hi - sym.addr]
+            covered[lo - address:hi - address] = b'\1' * (hi - lo)
+            for rel in relocs:
+                offset = sym.addr + rel['offset'] - address
+                if offset + 4 <= 0 or offset >= extent:
+                    continue
+                # Pool pointers are full words. Partial pointers and other
+                # relocation encodings need their own proof, not byte masking.
+                if rel['kind'] != 1 or offset < 0 or offset + 4 > extent:
+                    return False
+                target = project.find_symbol(rel['symbol'], rel['module'])
+                bindings.append((offset, rel['kind'], target.module, target.section, target.addr + rel['addend']))
+    except (ValueError, KeyError):
+        return False
+    if not all(covered):
+        return False
+    found = []
+    symbols = elf.symbols()
+    for rsec in elf.sections:
+        if rsec['type'] != 4 or rsec['info'] != section['index']:
+            continue
+        for pos in range(rsec['offset'], rsec['offset'] + rsec['size'], 12):
+            offset, info, addend = struct.unpack_from('>IIi', elf.data, pos)
+            if offset >= extent:
+                continue
+            if info & 255 != 1 or offset + 4 > extent:
+                return False
+            own = symbols[info >> 8]
+            target = resolve_target(project, module, own['name'])
+            alias = re.fullmatch(r'(.+)__fzgx_offset_([0-9A-F]+)', own['name'])
+            if target is None and alias:
+                target = resolve_target(project, module, alias[1])
+                addend += int(alias[2], 16)
+            if own['shndx'] == section['index']:
+                binding = (module, section['name'], address + own['value'] + addend)
+            elif own['shndx'] == 0 and target:
+                binding = (target.module, target.section, target.addr + addend)
+            else:
+                return False
+            found.append((offset, info & 255, *binding))
+    if sorted(found) != sorted(bindings):
+        return False
+    for offset, *_ in bindings:
+        actual[offset:offset + 4] = expected[offset:offset + 4] = bytes(4)
+    return actual == expected
+
+
 def _data_pool_rows(project, module, obj, left, right, lrows, rrows, section_name=".data",
                     verified_pairs=()):
     """Retarget a private literal pool only when its entire byte range agrees."""
@@ -542,19 +603,20 @@ def _data_pool_rows(project, module, obj, left, right, lrows, rrows, section_nam
         table_names = {private for private, retail, _ in verified_pairs
                        if retail.startswith('jumptable_')}
         tables = [s for s in defined if s['name'] in table_names]
-        if not tables or any(not any(t['value'] <= offset and offset + 4 <= t['value'] + t['size']
-                                     for t in tables) for offset, _, _ in relocs):
-            return set(), []
-        extent = min(t['value'] for t in tables)
-        if any(s['value'] + s['size'] > extent and s not in tables for s in defined):
-            return set(), []
-        covered = bytearray(section['size'] - extent)
-        for table in tables:
-            covered[table['value'] - extent:table['value'] + table['size'] - extent] = b'\1' * table['size']
-        suffix = elf.data[section['offset'] + extent:section['offset'] + section['size']]
-        if any(value and not covered[i] for i, value in enumerate(suffix)):
-            return set(), []
-        defined = [s for s in defined if s['value'] + s['size'] <= extent]
+        if tables:
+            extent = min(t['value'] for t in tables)
+            if any(s['value'] + s['size'] > extent and s not in tables for s in defined):
+                return set(), []
+            covered = bytearray(section['size'] - extent)
+            for table in tables:
+                covered[table['value'] - extent:table['value'] + table['size'] - extent] = b'\1' * table['size']
+            suffix = elf.data[section['offset'] + extent:section['offset'] + section['size']]
+            if any(value and not covered[i] for i, value in enumerate(suffix)):
+                return set(), []
+            if any(offset >= extent and not any(t['value'] <= offset and offset + 4 <= t['value'] + t['size']
+                                               for t in tables) for offset, _, _ in relocs):
+                return set(), []
+            defined = [s for s in defined if s['value'] + s['size'] <= extent]
     if not extent:
         return set(), []
     payload = bytes(elf.data[section['offset']:section['offset'] + extent])
@@ -590,11 +652,13 @@ def _data_pool_rows(project, module, obj, left, right, lrows, rrows, section_nam
             # private copies can bind BSS only after every named object below
             # proves the same module, offset and bounds; no memory is moved.
             actual = bytes(len(payload))
-        if payload != actual:
+        has_pointers = any(offset < extent for offset, _, _ in relocs)
+        if (not _relocated_pool_matches(project, module, elf, section, address, extent)
+                if has_pointers else payload != actual):
             continue
         named = []
         for own in defined:
-            if own['name'].startswith('@'):
+            if own['name'].startswith(('@', 'fzgx_pool_')):
                 continue
             known = project.symbols(module).get(own['name'])
             delta = 0
@@ -774,6 +838,9 @@ def _pool_rows(project: Project, module: str, left: dict, right: dict,
             section = elf.sections[own['shndx']]
             if section['name'] not in ('.rodata', '.sdata2', '.data', '.sdata'):
                 continue
+            if anonymous and any(rel['type'] == 4 and rel['info'] == own['shndx'] and rel['size']
+                                 for rel in elf.sections):
+                continue
             if any(rel['type'] == 4 and rel['info'] == own['shndx'] and
                    any(own['value'] <= struct.unpack_from('>I', elf.data, off)[0] < own['value'] + own['size']
                        for off in range(rel['offset'], rel['offset'] + rel['size'], 12)) for rel in elf.sections):
@@ -795,6 +862,13 @@ def _pool_rows(project: Project, module: str, left: dict, right: dict,
                         reach = max(reach, int(m.group(1), 0) + 8)
                 if reach:
                     size = min(size, (reach + 7) & ~7)
+            # Anonymous section symbols have size zero until the range above
+            # is computed. Their pointer relocations still require the full
+            # byte-and-binding proof in _data_pool_rows.
+            if any(rel['type'] == 4 and rel['info'] == own['shndx'] and
+                   any(own['value'] <= struct.unpack_from('>I', elf.data, off)[0] < own['value'] + size
+                       for off in range(rel['offset'], rel['offset'] + rel['size'], 12)) for rel in elf.sections):
+                continue
             ours = bytes(elf.data[start:start + size])
         else:
             ours = b''.join(base64.b64decode(d.get('data', '')) for d in rsym.get('data_diff', []))
