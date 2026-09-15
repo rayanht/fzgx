@@ -1,5 +1,5 @@
 {
- "generated": 1789433688,
+ "generated": 1789433801,
  "functions": [
   {
    "symbol": "car_colchg:_prolog",
@@ -13801,11 +13801,11 @@
    "claimed_by": null,
    "claimed_at": null,
    "claim_ttl": null,
-   "matched_commit": null,
+   "matched_commit": "f216d162",
    "blocked_issue": null,
    "blocked_reason": null,
    "prev_status": null,
-   "link_state": "pending"
+   "link_state": "verified"
   },
   {
    "symbol": "AlarmHandlerForTimeout",
@@ -15871,11 +15871,11 @@
    "claimed_by": null,
    "claimed_at": null,
    "claim_ttl": null,
-   "matched_commit": null,
+   "matched_commit": "f216d162",
    "blocked_issue": null,
    "blocked_reason": null,
    "prev_status": null,
-   "link_state": "pending"
+   "link_state": "verified"
   },
   {
    "symbol": "fn_8001CC64",
@@ -15889,11 +15889,11 @@
    "claimed_by": null,
    "claimed_at": null,
    "claim_ttl": null,
-   "matched_commit": null,
+   "matched_commit": "f216d162",
    "blocked_issue": null,
    "blocked_reason": null,
    "prev_status": null,
-   "link_state": "pending"
+   "link_state": "verified"
   },
   {
    "symbol": "fn_8001CD68",
@@ -15925,11 +15925,11 @@
    "claimed_by": null,
    "claimed_at": null,
    "claim_ttl": null,
-   "matched_commit": null,
+   "matched_commit": "f216d162",
    "blocked_issue": null,
    "blocked_reason": null,
    "prev_status": null,
-   "link_state": "pending"
+   "link_state": "verified"
   },
   {
    "symbol": "fn_8001D32C",
@@ -16069,11 +16069,11 @@
    "claimed_by": null,
    "claimed_at": null,
    "claim_ttl": null,
-   "matched_commit": null,
+   "matched_commit": "f216d162",
    "blocked_issue": null,
    "blocked_reason": null,
    "prev_status": null,
-   "link_state": "pending"
+   "link_state": "verified"
   },
   {
    "symbol": "fn_8001DDD0",
