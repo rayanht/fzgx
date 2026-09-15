@@ -113,7 +113,7 @@ def struct_text(tname, text):
         m = re.search(r"(?:typedef\s+)?struct\s+%s\s*\{(.*?)\n\}" % re.escape(tname), src, re.S)
         if m:
             return m.group(1)
-        m = re.search(r"typedef\s+struct\s*\w*\s*\{(.*?)\n\}\s*%s\s*;" % re.escape(tname), src, re.S)
+        m = re.search(r"typedef\s+struct\s*\w*\s*\{([^{}]*)\n\}\s*%s\s*;" % re.escape(tname), src, re.S)
         if m:
             return m.group(1)
     return None
@@ -196,6 +196,63 @@ def fdef(decl, name):
     if ttext is None:
         return re.sub(r"\(\s*\*\s*\w+\s*\)", f"(*{name})", raw)
     return f"{ttext}{'' if ttext.endswith('*') else ' '}{name}{''.join(f'[{d}]' for d in dims)};"
+
+
+def overlapping_field_views(p, symbol, text):
+    """Repair lifted offset-named views that accidentally consume each other's storage.
+
+    Offset names nominate a layout, never prove it. Measure the original with
+    MWCC and keep each member's type and stride; only the full retail oracle can
+    accept the proposed overlapping layout.
+    """
+    from .sdkimport import masked
+    from .signatures import records, record_layouts
+    from .fixup_source import _function_body_span
+    code = masked(text)
+    sym = p.resolve(symbol)
+    span = _function_body_span(code, sym.name)
+    if not span:
+        return
+    layouts, _ = record_layouts(code, span[0])
+    edits = []
+    for record in records(code, span[0]):
+        if record['kind'] != 'struct' or record['parent'] or record['key'] not in layouts:
+            continue
+        fields = layouts[record['key']]
+        members = [f for f in fields if not f[0].startswith('pad_')]
+        if not members or not any(f[4] for f in members):
+            continue
+        offsets = {}
+        for name, _, _, _, _ in members:
+            match = re.fullmatch(r'unk_([0-9A-Fa-f]+)', name)
+            if not match:
+                break
+            offsets[name] = int(match[1], 16)
+        else:
+            if all(offsets[n] == off for n, _, off, _, _ in members):
+                continue
+            decls = field_decls(text[record['opening']:record['end'] - 1])
+            if any(n not in decls for n in offsets):
+                continue
+            typ = 'struct ' + record['tag'] if record['tag'] else record['alias']
+            measured, error = probe_layout(p, sym.module, text[:span[0]].rsplit('\n', 1)[0],
+                                           typ, list(offsets), decls, symbol)
+            if error or any(offsets[n] % measured[n][3] for n in offsets):
+                continue
+            if all(offsets[n] == measured[n][0] for n in offsets):
+                continue
+            views = []
+            for n in offsets:
+                padding = f'u8 pad_view_{n}[0x{offsets[n]:X}]; ' if offsets[n] else ''
+                views.append('        struct { ' + padding + fdef(decls[n], n) + ' };')
+            replacement = '\n    union {\n' + '\n'.join(views) + '\n    };\n'
+            edit = (record['opening'], record['end'] - 1, replacement)
+            edits.append(edit)
+            yield 'overlapping offset views ' + record['key'], text[:edit[0]] + replacement + text[edit[1]:]
+    if len(edits) > 1:
+        for lo, hi, replacement in sorted(edits, reverse=True):
+            text = text[:lo] + replacement + text[hi:]
+        yield 'overlapping offset views in all records', text
 
 
 def find_models(text):
@@ -375,7 +432,8 @@ def tu_objects(p, symbol, text, mode, cache, retail_bases=()):
             if nxt is not None and nxt > s.end:
                 full.append(Gap(f"{base}_gap_{s.end:X}", s.end, nxt, b.section))
         cluster = full
-        per_obj, rewrites = {}, []
+        per_obj, rewrites, views = {}, [], {}
+        view_end = b.addr
         for um in uses:
             amp, fname, idx = um.group(1), um.group(2), um.group(3)
             foff, fsize, esize, ealign = layout[fname]
@@ -385,7 +443,23 @@ def tu_objects(p, symbol, text, mode, cache, retail_bases=()):
                 notes.append(f'{fname}: offset {foff:#x} outside cluster'); return None, notes
             inner = addr - obj.addr
             if addr + fsize > obj.end:
-                notes.append(f'{fname}: crosses object {obj.name}'); return None, notes
+                ttext, dims, _ = decls[fname]
+                if mode != 'split' or not dims or ttext is None or isinstance(obj, Gap):
+                    notes.append(f'{fname}: crosses object {obj.name}'); return None, notes
+                # A recovered array view can span several retail objects. Keep
+                # its type and bounds, but allocate each proven object separately.
+                covered = [s for s in cluster if s.addr < addr + fsize and s.end > addr]
+                if (not covered or covered[-1].end < addr + fsize
+                        or any(a.end != c.addr for a, c in zip(covered, covered[1:]))):
+                    notes.append(f'{fname}: incomplete object coverage'); return None, notes
+                views[fname] = (ttext, dims)
+                view_end = max(view_end, addr + fsize)
+                anchor = f'fzgx_byte_{foff:X}'
+                decls[anchor] = ('u8', [], f'u8 {anchor};')
+                rec = per_obj.setdefault(obj.name, {'sym': obj, 'fields': {}})
+                rec['fields'].setdefault(inner, (anchor, 1, 1, 1))
+                rewrites.append((um, obj, inner, fname, idx, amp))
+                continue
             rec = per_obj.setdefault(obj.name, {'sym': obj, 'fields': {}})
             prev = rec['fields'].get(inner)
             synthetic_name = fname.startswith(('fzgx_byte_', 'fzgx_u8_'))
@@ -410,7 +484,7 @@ def tu_objects(p, symbol, text, mode, cache, retail_bases=()):
             per_obj[name] = {'sym': obj, 'fields': {0: (fname, obj.size, obj.size, 4 if not dims else 4)}}
             out_text = out_text.replace(stmt, '')
             extra_objs.pop(name)
-        last = max(r['sym'].end for r in per_obj.values())
+        last = max(view_end, max(r['sym'].end for r in per_obj.values()))
         before = [s for s in cluster if s.addr < last]
         beyond = [s for s in cluster if s.addr >= last]
         if len(before) < 6 and beyond:
@@ -490,7 +564,11 @@ def tu_objects(p, symbol, text, mode, cache, retail_bases=()):
                 defs += filler(s.name + '_tail', pos, s.end)
                 pos = s.end
         for um, obj, inner, fname, idx, amp in sorted(rewrites, key=lambda r: -r[0].start()):
-            repl = f"{amp}{access[(obj.name, inner)]}{idx}"
+            value = access[(obj.name, inner)]
+            if fname in views:
+                ttext, dims = views[fname]
+                value = f"(*({ttext} (*){''.join(f'[{d}]' for d in dims)})&{value})"
+            repl = f"{amp}{value}{idx}"
             out_text = out_text[:um.start()] + repl + out_text[um.end():]
         if stmt_removed:
             out_text = out_text.replace(stmt_removed, '')
@@ -587,7 +665,7 @@ def initialized_data_views(p, symbol, text):
     and the order of the data and literal bases in the prologue.
     """
     import struct
-    from .dataimport import payload, pool_objects
+    from .dataimport import number, payload, pool_objects
     sym = p.resolve(symbol)
     function = re.search(r'\n[^\n;{}]*\b' + re.escape(sym.name) + r'\s*\([^;{}]*\)\s*\{', text)
     if not function:
@@ -604,24 +682,42 @@ def initialized_data_views(p, symbol, text):
             continue
         decls = field_decls(members)
         used = sorted(set(re.findall(r'\b' + re.escape(var) + r'\s*->\s*(\w+)', text)))
-        if not used or any(n not in decls or decls[n][0] not in ('u32', 's32', 'char', 'u8', 'char *', 'void *')
-                           or len(decls[n][1]) != 1 for n in used):
+        byte_offsets = {int(m[1], 0) for m in re.finditer(
+            r'\(\s*u8\s*\*\s*\)\s*' + re.escape(var) + r'\s*\+\s*(0x[\da-fA-F]+|\d+)\b', text)}
+        if byte_offsets:
+            is_tag = re.search(r'\bstruct\s+' + re.escape(tag) + r'\s*\{', text)
+            all_fields, error = probe_layout(p, sym.module, text[:function.start()],
+                'struct ' + tag if is_tag else tag, list(decls), decls, symbol)
+            if error:
+                continue
+            used = sorted(set(used) | {n for n, m in all_fields.items() if m[0] in byte_offsets})
+        if not used or any(n not in decls or decls[n][0] not in ('u32', 's32', 'f32', 'char', 'u8', 'char *', 'void *')
+                           or len(decls[n][1]) > 1 for n in used):
             continue
         statement = model[0]
         rest = text[:function.start()] + text[function.start():].replace(statement, '', 1)
         rest = re.sub(r'(?m)^[ \t]*(?:struct\s+)?' + re.escape(tag) + r'\s*\*\s*' + re.escape(var) + r'\s*;\n', '', rest)
         rest_function = re.search(r'\n[^\n;{}]*\b' + re.escape(sym.name) + r'\s*\([^;{}]*\)\s*\{', rest)
-        accesses = re.sub(r'\b' + re.escape(var) + r'\s*->\s*\w+', '', rest[rest_function.start():])
-        if re.search(r'\b' + re.escape(var) + r'\b', accesses):
-            continue
         is_tag = re.search(r'\bstruct\s+' + re.escape(tag) + r'\s*\{', text)
         measured, error = probe_layout(p, sym.module, text[:function.start()],
                                        'struct ' + tag if is_tag else tag, used, decls, symbol)
         if error:
             continue
+        # Lifts mix named fields with byte-offset aliases of the same arrays.
+        # Normalize only exact field starts proven by the selected layout.
+        for name, (offset, _, _, _) in measured.items():
+            address = (var + '->' + name) if decls[name][1] else ('&(' + var + '->' + name + ')')
+            pattern = r'\(\s*u8\s*\*\s*\)\s*' + re.escape(var) + r'\s*\+\s*(0x[\da-fA-F]+|\d+)\b'
+            rest = re.sub(pattern, lambda m: '(u8 *)' + address if int(m[1], 0) == offset else m[0], rest)
+        from .sdkimport import masked
+        accesses = re.sub(r'\b' + re.escape(var) + r'\s*->\s*\w+', '', masked(rest[rest_function.start():]))
+        if re.search(r'\b' + re.escape(var) + r'\b', accesses):
+            continue
         fields = sorted((measured[n][0], measured[n][0] + measured[n][1], n) for n in used)
         extent = fields[-1][1]
         if any(lo % 4 or hi % 4 for lo, hi, _ in fields):
+            continue
+        if any(a[1] > b[0] for a, b in zip(fields, fields[1:])):
             continue
         raw_section = section_bytes(p, sym.module, '.data')
         if raw_section is None:
@@ -652,13 +748,23 @@ def initialized_data_views(p, symbol, text):
                 return '(u32)' + alias
             return '0x%08X' % struct.unpack_from('>I', raw, offset)[0]
         cursor = 0
+        valid = True
         for lo, hi, name in fields:
             if cursor < lo:
                 definitions.append('static u32 %s_gap_%X[%d] = {%s}; /* fzgx-allow: A1 measured pool bytes and bindings */' %
                                    (prefix, cursor, (lo - cursor) // 4, ', '.join(value(i) for i in range(cursor, lo, 4))))
             ty, dims, declaration = decls[name]
             native = prefix + '_' + name
-            if ty in ('char', 'u8'):
+            if '*' in ty and any(i not in relocations and any(raw[i:i + 4]) for i in range(lo, hi, 4)):
+                # Inferred pointer arrays sometimes extend into adjacent text.
+                # Keep their bounds, but store non-pointer words as words rather
+                # than manufacturing literal pointer casts from string bytes.
+                definitions.append('static union {u32 words[%d]; %s} %s = {{%s}}; /* fzgx-allow: A1 measured pool bytes and bindings */' %
+                                   ((hi - lo) // 4, fdef(decls[name], 'view'), native,
+                                    ', '.join(value(i) for i in range(lo, hi, 4))))
+                native += '.view'
+                values = None
+            elif ty in ('char', 'u8'):
                 if any(lo <= i < hi for i in relocations):
                     # A saved string view may span later pointer tables.
                     # Preserve the view while giving their relocations full
@@ -670,12 +776,24 @@ def initialized_data_views(p, symbol, text):
                     values = None
                 else:
                     values = ', '.join('0x%02X' % byte for byte in raw[lo:hi])
+            elif ty == 'f32':
+                if any(lo <= i < hi for i in relocations):
+                    valid = False
+                    break
+                try:
+                    values = ', '.join(number(raw[i:i + 4], ty) for i in range(lo, hi, 4))
+                except ValueError:
+                    valid = False
+                    break
             else:
                 values = ', '.join(('(' + ty + ')' if '*' in ty else '') + value(i) for i in range(lo, hi, 4))
             if values is not None:
-                definitions.append('static ' + fdef(decls[name], native).rstrip(';') + ' = {' + values + '}; /* fzgx-allow: A1 measured pool bytes and bindings */')
+                initializer = '{' + values + '}' if dims else values
+                definitions.append('static ' + fdef(decls[name], native).rstrip(';') + ' = ' + initializer + '; /* fzgx-allow: A1 measured pool bytes and bindings */')
             rest = re.sub(r'\b' + re.escape(var) + r'\s*->\s*' + re.escape(name) + r'\b', native, rest)
             cursor = hi
+        if not valid:
+            continue
         block = '\n'.join(sorted(declarations)) + '\n' + '\n'.join(definitions) + '\n'
         at = re.search(r'\n[^\n;{}]*\b' + re.escape(sym.name) + r'\s*\([^;{}]*\)\s*\{', rest).start()
         yield 'native initialized data objects ' + base, rest[:at] + '\n' + block + rest[at:]

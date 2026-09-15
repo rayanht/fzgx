@@ -329,8 +329,11 @@ class Engine:
         families = []
         deferred_graph = []
         operators = {}
+        captured_operators = []
         check = self.check(row)
         if check.ok:
+            yield from evidence.swapped_call_arguments(self.project, row['symbol'], body, check)
+            yield from layout.overlapping_field_views(self.project, row['symbol'], body)
             yield from evidence.relocation_bindings(body, check)
             yield from layout.bss_member_bindings(self.project, row['symbol'], body, row.get('object'), check)
             yield from layout.private_data_objects(body, row.get('object'), check)
@@ -346,14 +349,18 @@ class Engine:
                     yield from source.split_helper_calls(body,helper)
         if capture:
             constraints = source.web_constraints(capture, self.targets[row['symbol']][1], self.words[row['id']],check)
+            decoded = source.decode(self.words[row['id']])
+            captured_operators = [decoded[index][0] for index in constraints.get('operand_order_rows', [])]
             decls, _ = source.declaration_candidates(body, name, capture, constraints, max_orders)
             graph = [('graph declaration-order',t) for t in decls]
             carriers = source.carrier_candidates(body,name,capture,constraints)
+            scoped = source.scoped_carrier_candidates(body,name,capture,constraints)
             # Large declaration graphs must not consume the entire budget
             # before semantic, ABI and lifetime repairs get a compiler check.
             yield from graph[:32]
             yield from carriers[:32]
-            deferred_graph.extend((graph[32:],carriers[32:]))
+            yield from scoped[:32]
+            deferred_graph.extend((graph[32:],carriers[32:],scoped[32:]))
         if check.ok:
             yield from evidence.aggregate_initializers(self.project, row['symbol'], body, check)
             yield from evidence.native_pool_objects(self.project, row['symbol'], body, check)
@@ -370,6 +377,8 @@ class Engine:
                     self.emit(dict(stage='pool-expansion-rejected',symbol=row['symbol'],error=str(error)))
                 else:
                     yield from evidence.native_pool_objects(self.project, row['symbol'], expanded, check)
+                    yield from layout.initialized_data_views(self.project, row['symbol'], expanded)
+                    yield from layout.tu_section_layout(self.project, row['symbol'], expanded, check)
             yield from evidence.conversion_arguments(self.project, row['symbol'], body, check)
             yield from evidence.rotate_bit_tests(body, name, check)
             yield from evidence.call_result_types(self.project, row['symbol'], body, check)
@@ -391,13 +400,16 @@ class Engine:
                              'xor':('^',('u32','s32')), 'mullw':('*',('u32','s32')),
                              'fadd':('+',('f64',)), 'fadds':('+',('f32',)),
                              'fmul':('*',('f64',)), 'fmuls':('*',('f32',))}
-            for order in check.operand_order:
-                kind = operand_types.get(order['target'].split()[0].rstrip('.'))
+            for operation in [order['target'].split()[0] for order in check.operand_order] + captured_operators:
+                kind = operand_types.get(operation.rstrip('.'))
                 if kind:
                     types = operators.setdefault(kind[0],[])
                     types.extend(ty for ty in kind[1] if ty not in types)
             if operators:
                 targeted.append(source.operand_lifetimes(body,name,operators))
+            if any(word.startswith(('fmul', 'fdiv')) for word in captured_operators) or any(
+                    order['target'].startswith(('fmul', 'fdiv')) for order in check.operand_order):
+                targeted.append(source.reciprocal_products(body, name))
             policies = []
             for family in targeted:
                 for label, text in family:
@@ -419,7 +431,7 @@ class Engine:
                 if label.startswith('recover member') or (has_extensions and ':' in label and '->' in label and ' at ' not in label):
                     for policy, combined in evidence.optimizer_pragmas(text, name):
                         yield label + ' with ' + policy, combined
-            if check.operand_order:
+            if check.operand_order or captured_operators:
                 commuted=source.commutations(body,name)
                 commuted.sort(key=lambda c:not c[0].startswith('coupled scalar operands'))
                 # An optimizer can canonicalize both source spellings to the

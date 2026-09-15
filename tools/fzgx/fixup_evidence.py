@@ -1230,7 +1230,7 @@ def native_bss_objects(p, symbol, body, check):
         if not valid:
             continue
         roots={anchor:'.'};edits=[];boundary_edits=[]
-        for assignment in re.finditer(r'\b(\w+)\s*=\s*&'+re.escape(anchor)+r'\s*;',code[span[0]:span[1]]):
+        for assignment in re.finditer(r'\b(\w+)\s*=\s*(?:\(\s*'+re.escape(typ)+r'\s*\*\s*\)\s*)?&'+re.escape(anchor)+r'\s*;',code[span[0]:span[1]]):
             root=assignment[1]
             if len(re.findall(r'\b'+re.escape(root)+r'\s*=(?!=)',code[span[0]:span[1]]))==1:
                 roots[root]='->'
@@ -1553,6 +1553,69 @@ def missing_call_copies(check):
             if text.startswith('b') or re.match(r'\w+[.]?\s+(?:'+re.escape(move[1])+'|'+re.escape(move[2])+r'),',text):
                 break
     return copies
+
+
+def swapped_call_arguments(p, symbol, body, check):
+    """An exchanged pair of outgoing values may be wrong C arguments, not allocation.
+
+    Include calls through cast function pointers. They have no identifier for
+    the ordinary call-lifetime repair to find. Every proposal needs a stock
+    compile and the full object oracle before it can be accepted.
+    """
+    from .fixup_source import call_sites
+    from .sdkimport import masked
+    code = masked(body)
+    span = _function_span(code, p.resolve(symbol).name)
+    if not span:
+        return []
+    moves, swaps = {}, set()
+    for left, right in zip(*check._rows):
+        target, ours = stuck._fmt(left).strip(), stuck._fmt(right).strip()
+        a = re.fullmatch(r'(mr|fmr) ([rf]\d+), ([rf]\d+)', target)
+        b = re.fullmatch(r'(mr|fmr) ([rf]\d+), ([rf]\d+)', ours)
+        if a and b and a.group(1, 2) == b.group(1, 2) and a[3] != b[3]:
+            moves[a[2]] = (a[3], b[3])
+        call = re.fullmatch(r'bl (\w+)', target)
+        if call or target in ('bctrl', 'blrl'):
+            callee = call[1] if call else '<indirect>'
+            for first, second in itertools.combinations(moves, 2):
+                if first[0] != second[0] or moves[first] != moves[second][::-1]:
+                    continue
+                base, end = (3, 11) if first[0] == 'r' else (1, 9)
+                slots = sorted((int(first[1:]), int(second[1:])))
+                if base <= slots[0] < slots[1] < end:
+                    swaps.add((callee, first[0], slots[0] - base, slots[1] - base))
+        if target.startswith('b'):
+            moves = {}
+    groups = {}
+    for callee, start, end, args in call_sites(code, indirect=True):
+        if not span[0] <= start < end <= span[1]:
+            continue
+        for wanted, bank, first, second in swaps:
+            if callee != wanted or second >= len(args):
+                continue
+            # Position is unambiguous for a homogeneous prefix. Mixed-bank
+            # signatures need the signature-aware ABI recovery instead.
+            parts = [code[a:b].strip() for a, b in args[:second + 1]]
+            floats = [bool(re.match(r'\((?:f32|f64|float|double)\)', part) or
+                           re.fullmatch(r'[-+]?\d+\.\d*(?:[eE][-+]?\d+)?[fF]?', part)) for part in parts]
+            if bank == 'r' and any(floats) or bank == 'f' and not all(floats):
+                continue
+            a, b = args[first], args[second]
+            if code[a[0]:a[1]].strip() == code[b[0]:b[1]].strip():
+                continue
+            groups.setdefault((callee, first, second), []).append(
+                [(a[0], a[1], body[b[0]:b[1]]), (b[0], b[1], body[a[0]:a[1]])])
+    out = []
+    for (callee, first, second), sites in groups.items():
+        for selected in ([sites] if len(sites) > 1 else []) + [[site] for site in sites]:
+            text = body
+            edits = [edit for site in selected for edit in site]
+            for a, b, replacement in sorted(edits, reverse=True):
+                text = text[:a] + replacement + text[b:]
+            out.append((f'retail exchanged arguments {callee} {first},{second} at ' +
+                        ('every site' if selected is sites else str(edits[0][0])), text))
+    return out
 
 
 def call_arguments(p, symbol, body, check):
@@ -2755,7 +2818,7 @@ def shared_pool_primer(p, symbol, body, check):
     lrows, rrows = check._rows
     lfmt = [((r.get('instruction') or {}).get('formatted') or '') for r in lrows]
     rfmt = [((r.get('instruction') or {}).get('formatted') or '') for r in rrows]
-    if not any('...rodata' in t for t in rfmt):
+    if not any('...rodata' in t or re.match(r'(?:lfs|lfd)\s+f\d+,\s+@\d+@', t) for t in rfmt):
         return []  # the body does not use native literals yet (recover native shared-pool literals first)
     syms = p.symbols(sym.module)
     bases = {}
@@ -2869,6 +2932,13 @@ def shared_pool_primer(p, symbol, body, check):
         # too, and MWCC lays the section out in definition order
         includes = list(re.finditer(r'^#include[^\n]*\n', body[:m.start()], re.M))
         at = includes[-1].end() if includes else 0
+        if not includes:
+            # Expanded saved units contain their primitive typedefs instead
+            # of types.h. A primer before them cannot compile.
+            primitives = list(re.finditer(r'\btypedef\s+[^;{}]+\b(?:u32|f32|f64)\s*;', body[:m.start()]))
+            if primitives:
+                at = max(declaration.end() for declaration in primitives)
+                primer = '\n' + primer
         text = body[:at] + primer + body[at:]
         out.append((f'prime shared-pool layout ({pool.name}, {end:#x} bytes)', text))
     return out

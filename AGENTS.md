@@ -112,3 +112,8 @@ use `dataimport.pool_objects` and `payload` for their bytes and relocations.
 Do not infer zero padding from a label. Split grouped scalar declarations before
 capturing allocation constraints so every local is visible. Arithmetic repairs
 must preserve operator precedence; `x = input * a + b` is not `x = input; x *= a + b`.
+Repeated candidate batches require evidence of a shared cause across a measured
+cohort and an explicit stopping condition. Stop when measured closure yield fails
+that condition; improving a near-match score does not count as closing a region.
+Before a manual compiler probe, assert that the intended source edit occurred and
+inspect existing pragmas that may override a newly inserted setting.

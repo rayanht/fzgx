@@ -92,7 +92,7 @@ def split_declaration_groups(body, name):
     span = _function_body_span(body, name)
     if not span:
         return []
-    pattern = re.compile(r'(?m)^([ \t]+)(' + TYPE + r')\s+'
+    pattern = re.compile(r'(?m)^([ \t]*)(' + TYPE + r')\s+'
                          r'(\w+(?:\[[^\],]+\])*(?:\s*,\s*\w+(?:\[[^\],]+\])*)+);[ \t]*$')
     def expand(match):
         if match[2] not in SCALAR_TYPES:
@@ -1078,14 +1078,17 @@ def extra_families(body: str, name: str) -> List[Tuple[str, str, str]]:
     return out
 
 
-def call_sites(text):
+def call_sites(text, indirect=False):
     """Balanced call and argument spans, including casts and nested calls."""
     from .sdkimport import masked
     code = masked(text)
     stack, calls = [], []
     for token in re.finditer(r'(?P<name>\b[A-Za-z_]\w*)\s*\(|[()\[\]{},]',code):
         if token[0].endswith('('):
-            stack.append([token['name'],token.start(),token.end(),[]])
+            name = token['name']
+            if indirect and name is None and code[:token.start()].rstrip().endswith((')', ']')):
+                name = '<indirect>'
+            stack.append([name,token.start(),token.end(),[]])
         elif token[0] in '[{':
             stack.append([None,token.start(),token.end(),[]])
         elif token[0]==',' and stack and stack[-1][0]:
@@ -1154,6 +1157,49 @@ def loop_lifetimes(body, name):
     if not span:return []
     types={r[3]:r[2] for r in _locals(body,span) if not r[4] and
            ('{' not in r[2] or re.fullmatch(r'struct\s*\{\s*'+TYPE+r'\s+value;\s*\}',r[2]))};out=[]
+    counted = []
+    for callee,start,end,args in call_sites(code):
+        if callee != 'for' or not span[1] <= start < end < span[2]:
+            continue
+        header = re.match(r'for\s*\(\s*(\w+)\s*=(?!=)', code[start:end])
+        opening = re.match(r'\s*\{', code[end:])
+        if not header or header[1] not in types or not opening:
+            continue
+        var = header[1]
+        lo = end + opening.end() - 1
+        hi, depth = lo + 1, 1
+        while hi < span[2] and depth:
+            depth += (code[hi] == '{') - (code[hi] == '}'); hi += 1
+        if (depth or re.search(r'\bgoto\b', code[span[1]:span[2]])
+                or re.search(r'&\s*\b' + re.escape(var) + r'\b', code[span[1]:span[2]])
+                or any(a <= start < b for a,b,_ in counted)):
+            continue
+        local = 'fzgx_loop_' + var + '_' + str(start)
+        if re.search(r'\b' + local + r'\b', code):
+            continue
+        region = body[start:hi]
+        changes, previous = [], None
+        for token in TOKEN.finditer(masked(region)):
+            if token[0] == var and previous not in ('.', '->'):
+                changes.append((token.start(), token.end()))
+            previous = token[0]
+        for a,b in reversed(changes):
+            region = region[:a] + local + region[b:]
+        # Keep the outgoing value, including a break from the loop. Dead-copy
+        # elimination removes it when the next loop initializes the counter.
+        replacement = ('{\n    ' + types[var] + ' ' + local + ';\n' + region +
+                       '\n    ' + var + ' = ' + local + ';\n}')
+        counted.append((start, hi, replacement))
+    if counted:
+        groups = [[edit] for edit in counted]
+        if len(counted) > 1:
+            groups.append(counted)
+            groups.extend([edit for j,edit in enumerate(counted) if j != i] for i in range(len(counted)))
+        for group in groups:
+            text = body
+            for lo,hi,replacement in reversed(group):
+                text = text[:lo] + replacement + text[hi:]
+            out.append(('lifetime counted loops at ' + ','.join(str(edit[0]) for edit in group), text))
     for callee,start,end,args in call_sites(code):
         if callee!='while' or not span[1]<=start<end<span[2]:continue
         opening=re.match(r'\s*\{',code[end:])
@@ -1979,57 +2025,63 @@ def web_constraints(captures, target, ours, check=None):
     def physical(cls, register):
         register = root(cls, register)
         return register if register < 32 else nodes[cls][register]['physical_register']
-    pcode = captures[-1]['pcode']
-    keys, origins = [], []
-    displacement_ops={'addi','addis','lbz','lhz','lha','lwz','lfs','lfd','stb','sth','stw','stfs','stfd'}
-    def emitted_key(row):
-        literals=tuple(int(m[0],0) for m in re.finditer(r'(?<![\w.])-?(?:0x[\da-f]+|\d+)\b',row[2])) if row[0] in displacement_ops else ()
-        return row[0],row[1],literals
-    for instruction in pcode:
-        operands, regs = [], []
-        for a in instruction['operands']:
-            cls, r = a['class'], a['reg']
-            if cls not in nodes or a['flags'] == 0:
-                continue
-            prefix = 'r' if cls == 'gpr' else 'f'
-            operands.append((cls, root(cls, r)))
-            regs.append(prefix + str(physical(cls, r)))
-        name = mnemonic(instruction['mnemonic'])
-        if name in ('mr', 'fmr') and len(regs) == 2 and regs[0] == regs[1]:
-            continue
-        literals=[]
-        if name in displacement_ops:
-            for operand in instruction['operands']:
-                raw=bytes.fromhex(operand['raw'])
-                if operand['class'] is None and int.from_bytes(raw[:2],'little')==2:
-                    literals.append(int.from_bytes(raw[2:6],'little',signed=True))
-        keys.append((name, tuple(regs),tuple(literals)))
-        origins.append(operands)
-    matching = difflib.SequenceMatcher(a=[r[:2] for r in keys], b=[r[:2] for r in original], autojunk=False)
     domains, alternatives, anchors = defaultdict(set), [], []
-    extra_copies=set()
-    for block in matching.get_matching_blocks():
-        for offset in range(block.size):
-            row, index = block.b + offset, block.a + offset
-            if row not in retail_rows:
-                if keys[index][0] in ('mr','fmr') and len(origins[index])==2:
-                    extra_copies.update(web for web in origins[index] if web[1]>=32)
+    extra_copies = set()
+    # Each bank's PCode is captured before that bank is allocated. The last
+    # pass already contains physical operands for earlier banks, so using it
+    # for every bank loses their source webs entirely.
+    for capture in captures:
+        active = capture['before']['register_class']
+        pcode = capture['pcode']
+        keys, origins = [], []
+        displacement_ops={'addi','addis','lbz','lhz','lha','lwz','lfs','lfd','stb','sth','stw','stfs','stfd'}
+        def emitted_key(row):
+            literals=tuple(int(m[0],0) for m in re.finditer(r'(?<![\w.])-?(?:0x[\da-f]+|\d+)\b',row[2])) if row[0] in displacement_ops else ()
+            return row[0],row[1],literals
+        for instruction in pcode:
+            operands, regs = [], []
+            for a in instruction['operands']:
+                cls, r = a['class'], a['reg']
+                if cls not in nodes or a['flags'] == 0:
+                    continue
+                prefix = 'r' if cls == 'gpr' else 'f'
+                operands.append((cls, root(cls, r)))
+                regs.append(prefix + str(physical(cls, r)))
+            name = mnemonic(instruction['mnemonic'])
+            if name in ('mr', 'fmr') and len(regs) == 2 and regs[0] == regs[1]:
                 continue
-            if keys[index][2] and keys[index][2]!=emitted_key(original[row])[2]:
-                continue
-            name, registers, operand_text = retail[retail_rows[row]]
-            if name != original[row][0] or len(registers) != len(origins[index]):
-                continue
-            if mwconstraints.REG.sub('R', operand_text) != mwconstraints.REG.sub('R', original[row][2]):
-                continue
-            pairs = list(zip(origins[index], (int(r[1:]) for r in registers)))
-            anchors.append(row)
-            if name in mwconstraints.COMMUTE and len(pairs) == 3:
-                domains[pairs[0][0]].add(pairs[0][1])
-                alternatives.append((row, pairs[1:]))
-            else:
-                for web, color in pairs:
-                    domains[web].add(color)
+            literals=[]
+            if name in displacement_ops:
+                for operand in instruction['operands']:
+                    raw=bytes.fromhex(operand['raw'])
+                    if operand['class'] is None and int.from_bytes(raw[:2],'little')==2:
+                        literals.append(int.from_bytes(raw[2:6],'little',signed=True))
+            keys.append((name, tuple(regs),tuple(literals)))
+            origins.append(operands)
+        matching = difflib.SequenceMatcher(a=[r[:2] for r in keys], b=[r[:2] for r in original], autojunk=False)
+        for block in matching.get_matching_blocks():
+            for offset in range(block.size):
+                row, index = block.b + offset, block.a + offset
+                if row not in retail_rows:
+                    if keys[index][0] in ('mr','fmr') and len(origins[index])==2:
+                        extra_copies.update(web for web in origins[index] if web[0] == active and web[1]>=32)
+                    continue
+                if keys[index][2] and keys[index][2]!=emitted_key(original[row])[2]:
+                    continue
+                name, registers, operand_text = retail[retail_rows[row]]
+                if name != original[row][0] or len(registers) != len(origins[index]):
+                    continue
+                if mwconstraints.REG.sub('R', operand_text) != mwconstraints.REG.sub('R', original[row][2]):
+                    continue
+                pairs = [(web, color) for web, color in zip(origins[index], (int(r[1:]) for r in registers))
+                         if web[0] == active]
+                anchors.append(row)
+                if name in mwconstraints.COMMUTE and len(pairs) == 3:
+                    domains[pairs[0][0]].add(pairs[0][1])
+                    alternatives.append((row, pairs[1:]))
+                else:
+                    for web, color in pairs:
+                        domains[web].add(color)
     conflicts = {str(k): sorted(v) for k, v in domains.items() if len(v) > 1}
     desired = {web: next(iter(colors)) for web, colors in domains.items() if len(colors) == 1}
     swapped, unresolved = [], []
@@ -2047,7 +2099,7 @@ def web_constraints(captures, target, ours, check=None):
         desired[a], desired[b] = x, y
         if swap:
             swapped.append(row)
-    return {'status': 'web-hypothesis', 'anchors': anchors,
+    return {'status': 'web-hypothesis', 'anchors': sorted(set(anchors)),
             'conflicts': conflicts,
             'extra_copy_webs': {cls:[r for bank,r in extra_copies if bank==cls] for cls in nodes},
             'conflicting_webs': {cls:[r for (bank,r),colors in domains.items() if bank==cls and r>=32 and len(colors)>1] for cls in nodes},
@@ -2077,9 +2129,47 @@ def annotate_verified_branches(body, findings):
     return [('document verified control flow', ''.join(lines))] if changed else []
 
 
+def reciprocal_products(body, name):
+    """Power-of-two division lowers to multiply with a different operand web."""
+    operations = []
+    commutations(body, name, operations)
+    changes = []
+    for operation in operations:
+        if operation['op'] != '*':
+            continue
+        for constant, value in ((operation['left'], operation['right']),
+                                (operation['right'], operation['left'])):
+            literal = body[slice(*constant)].strip()
+            if not re.fullmatch(r'(?:\d+\.\d*|\.\d+|\d+[eE][+-]?\d+)(?:[eE][+-]?\d+)?[fF]?', literal):
+                continue
+            number = float(literal.rstrip('fF'))
+            if not math.isfinite(number) or number <= 0:
+                continue
+            mantissa, exponent = math.frexp(number)
+            if mantissa != 0.5 or not -125 <= exponent <= 127:
+                continue
+            inverse = format(1.0 / number, '.17g')
+            if '.' not in inverse and 'e' not in inverse:
+                inverse += '.0'
+            inverse += 'f' if literal.endswith(('f', 'F')) else ''
+            replacement = f'(({body[slice(*value)]}) / {inverse})'
+            changes.append((operation['start'], operation['end'], replacement))
+            break
+    changes = sorted(set(changes))
+    out = [(f'reciprocal division at {a}', body[:a] + replacement + body[b:])
+           for a, b, replacement in changes]
+    # The AST can contain nested products; do not compose overlapping edits.
+    if len(changes) > 1 and all(b <= c for (_, b, _), (c, _, _) in zip(changes, changes[1:])):
+        combined = body
+        for a, b, replacement in reversed(changes):
+            combined = combined[:a] + replacement + combined[b:]
+        out.append(('reciprocal division at every site', combined))
+    return out
+
+
 def declaration_candidates(body, name, captures, constraints, max_orders=50000):
     """Evaluate declaration orders in the actual graph, with no compile loop."""
-    if constraints['status'] != 'web-hypothesis' or constraints['operand_order_rows']:
+    if constraints['status'] != 'web-hypothesis':
         return [], {'status': constraints['status'], 'orders': 0}
     captures = final_allocations(captures)
     span = _function_body_span(body, name)
@@ -2159,14 +2249,14 @@ def declaration_candidates(body, name, captures, constraints, max_orders=50000):
                         'best_conflicts': best}
 
 
-def carrier_candidates(body, name, captures, constraints):
+def carrier_candidates(body, name, captures, constraints, _span=None):
     """Move implicated scalar homes into MWCC's aggregate-scalarization stratum.
 
     A one-field aggregate preserves the scalar's declared type. Only identifier
     uses in the function body are changed; field names, strings and comments
     retain their spelling. Every result still requires a stock compile.
     """
-    span = _function_body_span(body, name)
+    span = _span or _function_body_span(body, name)
     if span is None or constraints['status'] != 'web-hypothesis':
         return []
     captures = final_allocations(captures)
@@ -2265,7 +2355,7 @@ def carrier_candidates(body, name, captures, constraints):
         # Aggregate initializers can keep an otherwise scalarized pointer on
         # the stack. Split pure address initializers before the carrier move.
         initialized=[l for l in group if _init_of(body[l[0]:l[1]]) is not None]
-        if initialized and all(l in group or _init_of(body[l[0]:l[1]]) is None for l in locals_):
+        if _span is None and initialized and all(l in group or _init_of(body[l[0]:l[1]]) is None for l in locals_):
             split=source;assignments=[]
             for a,b,type_,var,_ in initialized:
                 init=_init_of(body[a:b])
@@ -2293,10 +2383,50 @@ def carrier_candidates(body, name, captures, constraints):
                 changed = True
                 return (match[1] + '{ ' + type_ + ' ' + temp + ' = ' + match[2] + '; ' +
                         var + '.value = ' + temp + '; }')
-            split = pattern.sub(replace_assignment, split)
+            end = span[2] + len(split) - len(body)
+            split = split[:span[1]] + pattern.sub(replace_assignment, split[span[1]:end]) + split[end:]
         if changed:
             proposals.append((label + ':block-copy', split))
     return proposals
+
+
+def scoped_carrier_candidates(body, name, captures, constraints):
+    """Project captured homes for locals declared inside branches and loops too."""
+    from .sdkimport import masked
+    code = masked(body)
+    function = _function_body_span(code, name)
+    if function is None or constraints['status'] != 'web-hypothesis':
+        return []
+    stack, scopes = [], []
+    for match in re.finditer(r'[{}]', code[function[1]:function[2]]):
+        at = function[1] + match.start()
+        if match[0] == '{':
+            stack.append(at)
+        elif stack:
+            start = stack.pop()
+            prefix = code[max(function[1], code.rfind('\n', function[1], start)):start]
+            if re.search(r'\b(?:struct|union|enum)\s*\w*\s*$|=\s*$', prefix):
+                continue
+            scopes.append((function[0], start + 1, at))
+    out = []
+    for span in sorted(scopes):
+        locals_ = scalar_locals(body, span)
+        if not locals_ or any(ty not in SCALAR_TYPES and not ty.endswith('*') for _, _, ty, _, _ in locals_):
+            continue
+        # A carrier's name substitution must not reach a shadowing declaration.
+        names = {var for _, _, _, var, _ in locals_}
+        shadowed = False
+        for line in code[locals_[-1][1]:span[2]].splitlines():
+            declaration = DECL_RE.fullmatch(line)
+            if declaration and declaration[2] in names:
+                shadowed = True
+                break
+        if shadowed:
+            continue
+        line = body.count('\n', 0, span[1]) + 1
+        out.extend((f'scope {line} {label}', text)
+                   for label, text in carrier_candidates(body, name, captures, constraints, _span=span))
+    return out
 
 
 def expression_trees(body, name):
