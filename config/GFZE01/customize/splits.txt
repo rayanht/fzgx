@@ -455,3 +455,6 @@ rel/customize/toolkit/fn_3_1A2EC.c:
 
 rel/customize/emb_paste_editor/fn_3_10B68.c:
 	.text       start:0x00010B68 end:0x00010CB8 align:4
+
+rel/customize/toolkit/fn_3_1D338.c:
+	.text       start:0x0001D338 end:0x0001EC2C align:4

@@ -1980,6 +1980,99 @@ f32 fn_1_51BFC(f32 value) {
 }
 /* fzgx:end fn_1_51BFC */
 
+/* fzgx:begin fn_1_51C74 noprologue */
+#include "dolphin/types.h"
+
+typedef struct {
+    f32 x;
+    f32 y;
+    f32 z;
+    f32 w;
+} Vec4;
+
+typedef struct {
+    Vec4 value;
+    u32 pad[2];
+} Temp;
+
+extern void fn_80038F10(Vec4 *);
+extern u32 fn_1_A5D88(void);
+extern u32 fn_1_A5DB0(void);
+extern const f32 lbl_1_rodata_2770;
+extern const f32 lbl_1_rodata_276C;
+
+typedef struct {
+    u8 pad0[0xc];
+    f32 x;
+    f32 y;
+    u8 pad1[4];
+    f32 z;
+    f32 w;
+} FontData;
+
+#pragma opt_common_subs off
+#pragma opt_propagation off
+#pragma opt_dead_assignments off
+#pragma opt_lifetimes on
+void fn_1_51C74(FontData *obj) {
+    f32 a0;
+    f32 fzgx_live;
+    f32 fzgx_live_;
+    f32 fzgx_live__;
+    Temp t0;
+    Temp t1;
+    Temp t2;
+    f32 a1;
+    Temp t3;
+    struct { f32 value; } x;
+    f32 b1;
+    f32 w;
+    struct { f32 value; } b0;
+    f32 fzgx_live___;
+    f32 y;
+    f32 b2;
+    f32 a2;
+
+    fzgx_live___ = obj->x;
+    fzgx_live = fzgx_live___;
+    x.value = fzgx_live;
+    fn_80038F10(&t0.value);
+    fzgx_live__ = t0.value.x;
+    fzgx_live_ = fzgx_live__;
+    a0 = fzgx_live_;
+{
+    f32 z;
+    b0.value = t0.value.z;
+    obj->x = ((((x.value)) * ((b0.value)))) / (f32)(fn_1_A5D88() & 0xffff)
+        + lbl_1_rodata_2770 * a0 / (f32)(fn_1_A5D88() & 0xffff);
+
+    y = obj->y;
+    fn_80038F10(&t1.value);
+    a1 = t1.value.y;
+    b1 = t1.value.w;
+    obj->y = ((y) * (b1)) / (f32)(fn_1_A5DB0() & 0xffff)
+        + lbl_1_rodata_276C * a1 / (f32)(fn_1_A5DB0() & 0xffff);
+
+    z = obj->z;
+    fn_80038F10(&t2.value);
+    a2 = t2.value.z;
+    obj->z = z * a2 / (f32)(fn_1_A5D88() & 0xffff);
+}
+
+    w = obj->w;
+    fn_80038F10(&t3.value);
+    b2 = t3.value.w;
+    obj->w = w * b2 / (f32)(fn_1_A5DB0() & 0xffff);
+}
+#pragma opt_lifetimes reset
+
+#pragma opt_dead_assignments reset
+
+#pragma opt_propagation reset
+
+#pragma opt_common_subs reset
+/* fzgx:end fn_1_51C74 */
+
 /* fzgx:begin fn_1_52070 */
 void fn_1_52070(u32 value) {
     lbl_1_bss_4E6A8 = 1;

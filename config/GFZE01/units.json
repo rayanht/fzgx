@@ -1917,6 +1917,26 @@
   },
   {
     "module": "customize",
+    "source": "rel/customize/toolkit/fn_3_1D338.c",
+    "symbols": [
+      "fn_3_1D338"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "tu": "rel/customize/toolkit.c",
+    "pool": {
+      "...rodata.0": "lbl_3_rodata_768",
+      "@106": "lbl_3_rodata_960",
+      "@52": "lbl_3_rodata_800",
+      "@78": "lbl_3_rodata_8F0",
+      "@29": "lbl_3_rodata_768+0x58",
+      "@17": "lbl_3_rodata_768+0x28",
+      "@37": "lbl_3_rodata_768+0x78"
+    }
+  },
+  {
+    "module": "customize",
     "source": "rel/customize/toolkit/fn_3_1F81C.c",
     "symbols": [
       "fn_3_1F81C"
@@ -37386,6 +37406,20 @@
     "tu": "rel/main_rel/font.c",
     "pool": {
       "@6": "lbl_1_rodata_2758"
+    }
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/font/fn_1_51C74.c",
+    "symbols": [
+      "fn_1_51C74"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "tu": "rel/main_rel/font.c",
+    "pool": {
+      "@8": "lbl_1_rodata_2758"
     }
   },
   {

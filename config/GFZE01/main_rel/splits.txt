@@ -6401,3 +6401,6 @@ rel/main_rel/live_camera/fn_1_E174.c:
 
 rel/main_rel/stcoli/fn_1_18B40.c:
 	.text       start:0x00018B40 end:0x00018F28 align:4
+
+rel/main_rel/font/fn_1_51C74.c:
+	.text       start:0x00051C74 end:0x00051E60 align:4
