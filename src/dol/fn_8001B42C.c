@@ -179,53 +179,53 @@ static void *fzgx_pool_vi_timing_switch[27] = {
 
 static volatile u16 lbl_8015CF68[59]; // fzgx-allow: S2 SDK asynchronous state
 
-static unsigned char sdk_gap____bss_0_76[118];
+static unsigned char lbl_8015CF68__fzgx_offset_78[118];
 
-static SomeVIStruct HorVer;
+static SomeVIStruct lbl_8015D058__fzgx_offset_0;
 
 #pragma section code_type ".fzgxpool"
 static void sdk_layout____bss_0(void) {
     volatile unsigned char sink; // fzgx-allow: S2 SDK asynchronous state
     sink = *(unsigned char *)&lbl_8015CF68;
-    sink = *(unsigned char *)&sdk_gap____bss_0_76;
-    sink = *(unsigned char *)&HorVer;
+    sink = *(unsigned char *)&lbl_8015CF68__fzgx_offset_78;
+    sink = *(unsigned char *)&lbl_8015D058__fzgx_offset_0;
 }
 #pragma section code_type ".text"
 
 static inline void AdjustPosition(u16 acv) {
     s32 coeff;
     s32 frac;
-    HorVer.AdjustedDispPosX =
-        (((s16)HorVer.DispPosX + lbl_801A6940) > (0x2D0 - HorVer.DispSizeX)
-             ? (0x2D0 - HorVer.DispSizeX)
-         : ((s16)HorVer.DispPosX + lbl_801A6940) < (0) ? (0)
-                                                       : ((s16)HorVer.DispPosX + lbl_801A6940));
-    coeff = (HorVer.FBMode == VI_XFBMODE_SF) ? 2 : 1;
-    frac = HorVer.DispPosY & 1;
-    HorVer.AdjustedDispPosY =
-        (((s16)HorVer.DispPosY + lbl_801A6942) > (frac) ? ((s16)HorVer.DispPosY + lbl_801A6942)
+    lbl_8015D058__fzgx_offset_0.AdjustedDispPosX =
+        (((s16)lbl_8015D058__fzgx_offset_0.DispPosX + lbl_801A6940) > (0x2D0 - lbl_8015D058__fzgx_offset_0.DispSizeX)
+             ? (0x2D0 - lbl_8015D058__fzgx_offset_0.DispSizeX)
+         : ((s16)lbl_8015D058__fzgx_offset_0.DispPosX + lbl_801A6940) < (0) ? (0)
+                                                       : ((s16)lbl_8015D058__fzgx_offset_0.DispPosX + lbl_801A6940));
+    coeff = (lbl_8015D058__fzgx_offset_0.FBMode == VI_XFBMODE_SF) ? 2 : 1;
+    frac = lbl_8015D058__fzgx_offset_0.DispPosY & 1;
+    lbl_8015D058__fzgx_offset_0.AdjustedDispPosY =
+        (((s16)lbl_8015D058__fzgx_offset_0.DispPosY + lbl_801A6942) > (frac) ? ((s16)lbl_8015D058__fzgx_offset_0.DispPosY + lbl_801A6942)
                                                         : (frac));
-    HorVer.AdjustedDispSizeY = HorVer.DispSizeY +
-                               (((s16)HorVer.DispPosY + lbl_801A6942 - frac) < (0)
-                                    ? ((s16)HorVer.DispPosY + lbl_801A6942 - frac)
+    lbl_8015D058__fzgx_offset_0.AdjustedDispSizeY = lbl_8015D058__fzgx_offset_0.DispSizeY +
+                               (((s16)lbl_8015D058__fzgx_offset_0.DispPosY + lbl_801A6942 - frac) < (0)
+                                    ? ((s16)lbl_8015D058__fzgx_offset_0.DispPosY + lbl_801A6942 - frac)
                                     : (0)) -
-                               (((s16)HorVer.DispPosY + (s16)HorVer.DispSizeY + lbl_801A6942 -
+                               (((s16)lbl_8015D058__fzgx_offset_0.DispPosY + (s16)lbl_8015D058__fzgx_offset_0.DispSizeY + lbl_801A6942 -
                                  (((s16)acv * 2) - frac)) > (0)
-                                    ? ((s16)HorVer.DispPosY + (s16)HorVer.DispSizeY + lbl_801A6942 -
+                                    ? ((s16)lbl_8015D058__fzgx_offset_0.DispPosY + (s16)lbl_8015D058__fzgx_offset_0.DispSizeY + lbl_801A6942 -
                                        (((s16)acv * 2) - frac))
                                     : (0));
-    HorVer.AdjustedPanPosY = HorVer.PanPosY - ((((s16)HorVer.DispPosY + lbl_801A6942 - frac) < (0)
-                                                    ? ((s16)HorVer.DispPosY + lbl_801A6942 - frac)
+    lbl_8015D058__fzgx_offset_0.AdjustedPanPosY = lbl_8015D058__fzgx_offset_0.PanPosY - ((((s16)lbl_8015D058__fzgx_offset_0.DispPosY + lbl_801A6942 - frac) < (0)
+                                                    ? ((s16)lbl_8015D058__fzgx_offset_0.DispPosY + lbl_801A6942 - frac)
                                                     : (0)) /
                                                coeff);
-    HorVer.AdjustedPanSizeY = HorVer.PanSizeY +
-                              ((((s16)HorVer.DispPosY + lbl_801A6942 - frac) < (0)
-                                    ? ((s16)HorVer.DispPosY + lbl_801A6942 - frac)
+    lbl_8015D058__fzgx_offset_0.AdjustedPanSizeY = lbl_8015D058__fzgx_offset_0.PanSizeY +
+                              ((((s16)lbl_8015D058__fzgx_offset_0.DispPosY + lbl_801A6942 - frac) < (0)
+                                    ? ((s16)lbl_8015D058__fzgx_offset_0.DispPosY + lbl_801A6942 - frac)
                                     : (0)) /
                                coeff) -
-                              ((((s16)HorVer.DispPosY + (s16)HorVer.DispSizeY + lbl_801A6942 -
+                              ((((s16)lbl_8015D058__fzgx_offset_0.DispPosY + (s16)lbl_8015D058__fzgx_offset_0.DispSizeY + lbl_801A6942 -
                                  (((s16)acv * 2) - frac)) > (0)
-                                    ? ((s16)HorVer.DispPosY + (s16)HorVer.DispSizeY + lbl_801A6942 -
+                                    ? ((s16)lbl_8015D058__fzgx_offset_0.DispPosY + (s16)lbl_8015D058__fzgx_offset_0.DispSizeY + lbl_801A6942 -
                                        (((s16)acv * 2) - frac))
                                     : (0)) /
                                coeff);
@@ -291,7 +291,7 @@ static inline void setScalingRegs(u16 panSizeX, u16 dispSizeX, BOOL threeD) {
     }
 }
 
-void setFbbRegs(SomeVIStruct *HorVer, u32 *tfbb, u32 *bfbb, u32 *rtfbb, u32 *rbfbb);
+void setFbbRegs(SomeVIStruct *lbl_8015D058__fzgx_offset_0, u32 *tfbb, u32 *bfbb, u32 *rtfbb, u32 *rbfbb);
 
 static inline void setHorizontalRegs(VITiming *tm, u16 dispPosX, u16 dispSizeX) {
     u32 hbe;
@@ -339,9 +339,9 @@ void fn_8001B42C(GXRenderModeObj *rm) {
     enabled = OSDisableInterrupts();
     newNonInter = rm->viTVmode;
     newNonInter = newNonInter & 3;
-    if (HorVer.nonInter != newNonInter) {
+    if (lbl_8015D058__fzgx_offset_0.nonInter != newNonInter) {
         lbl_801A6944 = 1;
-        HorVer.nonInter = newNonInter;
+        lbl_8015D058__fzgx_offset_0.nonInter = newNonInter;
     }
     (void)0;
     tvInGame = (u32)rm->viTVmode >> 2;
@@ -369,45 +369,45 @@ void fn_8001B42C(GXRenderModeObj *rm) {
                 tvInBootrom, tvInGame);
     }
     if ((tvInGame == (0)) || (tvInGame == (2))) {
-        HorVer.tv = tvInBootrom;
+        lbl_8015D058__fzgx_offset_0.tv = tvInBootrom;
     } else {
-        HorVer.tv = tvInGame;
+        lbl_8015D058__fzgx_offset_0.tv = tvInGame;
     }
-    HorVer.DispPosX = rm->viXOrigin;
-    HorVer.DispPosY = (HorVer.nonInter == 1) ? (u16)(rm->viYOrigin * 2) : rm->viYOrigin;
-    HorVer.DispSizeX = rm->viWidth;
-    HorVer.FBSizeX = rm->fbWidth;
-    HorVer.FBSizeY = rm->xfbHeight;
-    HorVer.FBMode = rm->xFBmode;
-    HorVer.PanSizeX = HorVer.FBSizeX;
-    HorVer.PanSizeY = HorVer.FBSizeY;
-    HorVer.PanPosX = 0;
-    HorVer.PanPosY = 0;
-    HorVer.DispSizeY = (HorVer.nonInter == 2)             ? HorVer.PanSizeY
-                       : (HorVer.nonInter == 3)           ? HorVer.PanSizeY
-                       : (HorVer.FBMode == VI_XFBMODE_SF) ? (u16)(HorVer.PanSizeY * 2)
-                                                          : HorVer.PanSizeY;
-    HorVer.threeD = (HorVer.nonInter == 3) ? 1 : 0;
-    tm = getTiming((HorVer.tv << 2) + HorVer.nonInter);
-    HorVer.timing = tm;
+    lbl_8015D058__fzgx_offset_0.DispPosX = rm->viXOrigin;
+    lbl_8015D058__fzgx_offset_0.DispPosY = (lbl_8015D058__fzgx_offset_0.nonInter == 1) ? (u16)(rm->viYOrigin * 2) : rm->viYOrigin;
+    lbl_8015D058__fzgx_offset_0.DispSizeX = rm->viWidth;
+    lbl_8015D058__fzgx_offset_0.FBSizeX = rm->fbWidth;
+    lbl_8015D058__fzgx_offset_0.FBSizeY = rm->xfbHeight;
+    lbl_8015D058__fzgx_offset_0.FBMode = rm->xFBmode;
+    lbl_8015D058__fzgx_offset_0.PanSizeX = lbl_8015D058__fzgx_offset_0.FBSizeX;
+    lbl_8015D058__fzgx_offset_0.PanSizeY = lbl_8015D058__fzgx_offset_0.FBSizeY;
+    lbl_8015D058__fzgx_offset_0.PanPosX = 0;
+    lbl_8015D058__fzgx_offset_0.PanPosY = 0;
+    lbl_8015D058__fzgx_offset_0.DispSizeY = (lbl_8015D058__fzgx_offset_0.nonInter == 2)             ? lbl_8015D058__fzgx_offset_0.PanSizeY
+                       : (lbl_8015D058__fzgx_offset_0.nonInter == 3)           ? lbl_8015D058__fzgx_offset_0.PanSizeY
+                       : (lbl_8015D058__fzgx_offset_0.FBMode == VI_XFBMODE_SF) ? (u16)(lbl_8015D058__fzgx_offset_0.PanSizeY * 2)
+                                                          : lbl_8015D058__fzgx_offset_0.PanSizeY;
+    lbl_8015D058__fzgx_offset_0.threeD = (lbl_8015D058__fzgx_offset_0.nonInter == 3) ? 1 : 0;
+    tm = getTiming((lbl_8015D058__fzgx_offset_0.tv << 2) + lbl_8015D058__fzgx_offset_0.nonInter);
+    lbl_8015D058__fzgx_offset_0.timing = tm;
     AdjustPosition(tm->acv);
     (void)0;
     (void)0;
     if (lbl_801A693C == 0) {
-        HorVer.tv = 3;
+        lbl_8015D058__fzgx_offset_0.tv = 3;
     }
     setInterruptRegs(tm);
     regDspCfg = (*((1) + (lbl_8015CF68)));
-    if ((HorVer.nonInter == (2)) || (HorVer.nonInter == (3))) {
+    if ((lbl_8015D058__fzgx_offset_0.nonInter == (2)) || (lbl_8015D058__fzgx_offset_0.nonInter == (3))) {
         regDspCfg = (((u32)(regDspCfg)) & ~0x00000004) | (((u32)(1)) << 2);
     } else {
-        regDspCfg = (((u32)(regDspCfg)) & ~0x00000004) | (((u32)(HorVer.nonInter & 1)) << 2);
+        regDspCfg = (((u32)(regDspCfg)) & ~0x00000004) | (((u32)(lbl_8015D058__fzgx_offset_0.nonInter & 1)) << 2);
     }
-    regDspCfg = (((u32)(regDspCfg)) & ~0x00000008) | (((u32)(HorVer.threeD)) << 3);
-    if ((HorVer.tv == (4)) || (HorVer.tv == (5)) || (HorVer.tv == (6))) {
+    regDspCfg = (((u32)(regDspCfg)) & ~0x00000008) | (((u32)(lbl_8015D058__fzgx_offset_0.threeD)) << 3);
+    if ((lbl_8015D058__fzgx_offset_0.tv == (4)) || (lbl_8015D058__fzgx_offset_0.tv == (5)) || (lbl_8015D058__fzgx_offset_0.tv == (6))) {
         regDspCfg = (((u32)(regDspCfg)) & ~0x00000300) | (((u32)(0)) << 8);
     } else {
-        regDspCfg = (((u32)(regDspCfg)) & ~0x00000300) | (((u32)(HorVer.tv)) << 8);
+        regDspCfg = (((u32)(regDspCfg)) & ~0x00000300) | (((u32)(lbl_8015D058__fzgx_offset_0.tv)) << 8);
     }
     lbl_8015CF68[1] = regDspCfg;
     (lbl_801A6948 |= 1LL << (63 - (1)));
@@ -420,16 +420,16 @@ void fn_8001B42C(GXRenderModeObj *rm) {
     }
     lbl_8015CF68[54] = (u16)regDspCfg;
     (lbl_801A6948 |= 1LL << (63 - (54)));
-    setScalingRegs(HorVer.PanSizeX, HorVer.DispSizeX, HorVer.threeD);
-    setHorizontalRegs(tm, HorVer.AdjustedDispPosX, HorVer.DispSizeX);
+    setScalingRegs(lbl_8015D058__fzgx_offset_0.PanSizeX, lbl_8015D058__fzgx_offset_0.DispSizeX, lbl_8015D058__fzgx_offset_0.threeD);
+    setHorizontalRegs(tm, lbl_8015D058__fzgx_offset_0.AdjustedDispPosX, lbl_8015D058__fzgx_offset_0.DispSizeX);
     setBBIntervalRegs(tm);
-    setPicConfig(HorVer.FBSizeX, HorVer.FBMode, HorVer.PanPosX, HorVer.PanSizeX,
-                 &HorVer.wordPerLine, &HorVer.std, &HorVer.wpl, &HorVer.xof);
+    setPicConfig(lbl_8015D058__fzgx_offset_0.FBSizeX, lbl_8015D058__fzgx_offset_0.FBMode, lbl_8015D058__fzgx_offset_0.PanPosX, lbl_8015D058__fzgx_offset_0.PanSizeX,
+                 &lbl_8015D058__fzgx_offset_0.wordPerLine, &lbl_8015D058__fzgx_offset_0.std, &lbl_8015D058__fzgx_offset_0.wpl, &lbl_8015D058__fzgx_offset_0.xof);
     if (lbl_801A6970 != 0) {
-        setFbbRegs(&HorVer, &HorVer.tfbb, &HorVer.bfbb, &HorVer.rtfbb, &HorVer.rbfbb);
+        setFbbRegs(&lbl_8015D058__fzgx_offset_0, &lbl_8015D058__fzgx_offset_0.tfbb, &lbl_8015D058__fzgx_offset_0.bfbb, &lbl_8015D058__fzgx_offset_0.rtfbb, &lbl_8015D058__fzgx_offset_0.rbfbb);
     }
-    setVerticalRegs(HorVer.AdjustedDispPosY, HorVer.AdjustedDispSizeY, tm->equ, tm->acv, tm->prbOdd,
-                    tm->prbEven, tm->psbOdd, tm->psbEven, HorVer.black);
+    setVerticalRegs(lbl_8015D058__fzgx_offset_0.AdjustedDispPosY, lbl_8015D058__fzgx_offset_0.AdjustedDispSizeY, tm->equ, tm->acv, tm->prbOdd,
+                    tm->prbEven, tm->psbOdd, tm->psbEven, lbl_8015D058__fzgx_offset_0.black);
     OSRestoreInterrupts(enabled);
 }
 #pragma opt_strength_reduction reset

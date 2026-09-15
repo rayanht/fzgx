@@ -13875,7 +13875,7 @@
     "symbols": [
       "fn_8001B42C"
     ],
-    "status": "nonmatching",
+    "status": "matching",
     "mw_version": "GC/1.2.5n",
     "extra_cflags": [
       "-use_lmw_stmw",
@@ -13889,7 +13889,15 @@
       "-common",
       "off"
     ],
-    "pool": true
+    "pool": {
+      "@190": "lbl_80124428",
+      "@196": "lbl_801A64A4",
+      "...data.0": "lbl_801241C8",
+      "...bss.0": "lbl_8015CF68",
+      "lbl_8015CF68": "lbl_8015CF68",
+      "lbl_8015CF68__fzgx_offset_78": "lbl_8015CF68+0x78",
+      "lbl_8015D058__fzgx_offset_0": "lbl_8015D058"
+    }
   },
   {
     "module": "main",

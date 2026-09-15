@@ -67,7 +67,8 @@ def bss_member_bindings(p, symbol, body, obj, check):
         generated = re.fullmatch(r'(.+)_(?:gap|fill)_[0-9A-F]+(?:_fill_[0-9A-F]+)?', name)
         member = re.fullmatch(r'(.+)_([0-9A-F]+)', name)
         synthetic = name.startswith('lbl_') and name not in retail
-        if not generated and not synthetic and not (member and member[1] in retail and name not in retail):
+        native = s['info'] == 1 and name not in retail
+        if not generated and not synthetic and not native and not (member and member[1] in retail and name not in retail):
             continue
         address = origin + s['value']
         owner = next((o for o in objects if o.addr <= address and address + s['size'] <= o.end), None)
