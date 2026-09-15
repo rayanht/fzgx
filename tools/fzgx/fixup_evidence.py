@@ -1704,6 +1704,19 @@ def float_conditions(body, name, diffs):
         return []
     fields,variables=declared_types(code,span[0]);out=[]
     ordered={}
+    # Nested positive tests encode a different unordered arm from the common
+    # min/max clamp. Only propose this when the retail CR merge disagrees.
+    clamp = re.compile(r'\b(\w+)\s*=\s*([0-9]+\.[0-9]+[fF]?)\s*;\s*'
+        r'if\s*\(\s*(\w+)\s*>=\s*\2\s*\)\s*\{\s*'
+        r'\1\s*=\s*([0-9]+\.[0-9]+[fF]?)\s*;\s*'
+        r'if\s*\(\s*\3\s*<=\s*\4\s*\)\s*\{\s*'
+        r'\1\s*=\s*((?:\(\s*(?:f32|f64|float|double)\s*\)\s*)?\3)\s*;\s*\}\s*\}')
+    for match in clamp.finditer(code,span[0],span[1]):
+        dest,low,value,high,result=match.groups()
+        if member_type(value,fields,variables) not in ('f32','f64','float','double'):
+            continue
+        replacement=f'{dest} = {value} < {low} ? {low} : ({value} > {high} ? {high} : {result});'
+        out.append((f'retail float branch clamp at {match.start()}',body[:match.start()]+replacement+body[match.end():]))
     for target,ours in diffs:
         if target==ours:continue
         merge=re.fullmatch(r'cror eq, (lt|gt), eq',target)

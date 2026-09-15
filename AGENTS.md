@@ -94,3 +94,11 @@ a burst of thread starts must not prevent completed turns from being stopped.
 Never modify personal Codex configuration or auth. All worker overrides stay
 inside the runner. Do not use in-process subagents. See
 `docs/CODEX_APP_SERVER.md` for transport, diagnostics, and failure handling.
+
+## Large near-match evidence
+
+Refresh saved candidates against current retail objects before ranking them; raw
+objdiff percentages can hide hundreds of differing words in large functions.
+Keep source structure and compiler settings in portable repair archives. Shared
+BSS members accessed through a section base still require individual module,
+section, address and size proofs before their definitions can be externalized.

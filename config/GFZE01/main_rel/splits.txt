@@ -6386,3 +6386,12 @@ rel/main_rel/motasglist/fn_1_41C18.c:
 
 rel/main_rel/stcoli/fn_1_180F4.c:
 	.text       start:0x000180F4 end:0x000181CC align:4
+
+rel/main_rel/sel_static_disp/fn_1_13C1A0.c:
+	.text       start:0x0013C1A0 end:0x0013C5EC align:4
+
+rel/main_rel/sel_static_disp/fn_1_13D460.c:
+	.text       start:0x0013D460 end:0x0013DA0C align:4
+
+rel/main_rel/burner/fn_1_988DC.c:
+	.text       start:0x000988DC end:0x00098E18 align:4

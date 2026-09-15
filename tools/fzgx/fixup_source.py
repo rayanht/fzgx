@@ -2442,6 +2442,55 @@ def address_expressions(body, name):
     return out
 
 
+def scalar_square_lifetimes(body, name):
+    """Finish a dead scalar's square before unrelated loads take its register."""
+    from .sdkimport import masked
+    code = masked(body); span = _function_body_span(code, name)
+    if not span:
+        return []
+    _, variables = declared_types(code, span[0]); out = []
+    for site in re.finditer(r'\b(\w+)\s*\*\s*\1\b', code[span[1]:span[2]]):
+        var = site[1]; a, b = span[1]+site.start(), span[1]+site.end()
+        if variables.get(var) not in ('s32', 'u32', 'int', 'unsigned int', 'long', 'unsigned long'):
+            continue
+        # Declaration, definition and these two reads: overwriting the local
+        # cannot affect another use or an escaped address.
+        if len(re.findall(r'\b'+re.escape(var)+r'\b', code[span[1]:span[2]])) != 4:
+            continue
+        assignment = reaching_assignment(code, var, a, span[1])
+        if not assignment:
+            continue
+        end = code.find(';', assignment[1], a)
+        if end < 0 or re.search(r'[{}]|\b(?:if|else|for|while|do|goto)\b',code[end+1:a]):
+            continue
+        text = body[:a]+var+body[b:]
+        text = text[:end+1]+'\n    '+var+' = '+var+' * '+var+';'+text[end+1:]
+        out.append((f'lifetime scalar square {var}', text))
+    return out
+
+
+def comparison_lifetimes(body, name):
+    """Keep the zero operand of a floating comparison in its own scalar home."""
+    from .sdkimport import masked
+    code = masked(body); span = _function_body_span(code, name)
+    if not span:
+        return []
+    fields, variables = declared_types(code, span[0]); out = []
+    local = name+'_zero'
+    while re.search(r'\b'+local+r'\b',code):
+        local += '_'
+    for site in re.finditer(r'\b(\w+(?:(?:->|\.)\w+)*)\s*(==|!=)\s*(0\.0[fF]?)\b',code[span[1]:span[2]]):
+        kind = member_type(site[1],fields,variables)
+        if kind not in ('f32','float','f64','double'):
+            continue
+        a,b=span[1]+site.start(),span[1]+site.end()
+        value='('+local+' = '+site[3]+', '+site[1]+' '+site[2]+' '+local+')'
+        text=body[:a]+value+body[b:]
+        text=text[:span[1]]+'\n    '+kind+' '+local+';'+text[span[1]:]
+        out.append((f'lifetime floating comparison at {a}',text))
+    return out
+
+
 def operand_lifetimes(body, name, operators):
     """Give pure operands separate parameter/return webs before inlining."""
     operations = []

@@ -142,7 +142,6 @@ void fn_1_98230(void) {
 /* fzgx:end fn_1_98230 */
 
 /* fzgx:begin fn_1_982C4 */
-
   // array of 0x4AC-byte records
 
 typedef struct Fn1982C4Node Fn1982C4Node;
@@ -535,6 +534,275 @@ void fn_1_988D8(void) {
 }
 /* fzgx:end fn_1_988D8 */
 
+/* fzgx:begin fn_1_988DC noprologue */
+#include "types.h"
+#include "rel/main_rel/globals.h"
+#include "rel/main_rel/burner.h"
+
+#pragma section code_type ".fzgxpool"
+__declspec(section ".fzgxpool") static void fzgx_pool_prime1(void) {
+    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */
+    s = 14.0f;
+    s = 0.0f;
+    s = 900.0f;
+    s = 2.0f;
+    s = 10.0f;
+}
+static const u32 fzgx_pool_table2[1] = {0x00000000};  /* fzgx-allow: A1 retail pool bytes */
+__declspec(section ".fzgxpool") static void fzgx_pool_keep2(void) { const u32 *volatile cp; cp = fzgx_pool_table2; }  /* fzgx-allow: S2 pool primer sink */
+__declspec(section ".fzgxpool") static void fzgx_pool_prime3(void) {
+    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */
+    d = 1.0;
+    d = 0.8;
+    d = 0.1;
+    s = 0.003921568859368563f;
+}
+static const u32 fzgx_pool_table4[1] = {0x00000000};  /* fzgx-allow: A1 retail pool bytes */
+__declspec(section ".fzgxpool") static void fzgx_pool_keep4(void) { const u32 *volatile cp; cp = fzgx_pool_table4; }  /* fzgx-allow: S2 pool primer sink */
+__declspec(section ".fzgxpool") static void fzgx_pool_prime5(void) {
+    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */
+    d = 0.0;
+    s = 0.15000000596046448f;
+    s = 0.10000000149011612f;
+    s = 0.10999999940395355f;
+    s = 0.11999999731779099f;
+    d = 4503601774854144.0;
+}
+#pragma section code_type ".text"
+
+extern s16 camera_get_mode(void);
+extern u32 fn_1_58C4(void);
+extern u8 *memset(u8 *dst, int value, u32 size);
+extern u32 fn_1_8645C(s32 arg0, u32 arg1);
+extern void lbl_8006E1B0(void *mtx, void *dst);
+extern void fn_1_58E3C(void *entry);
+extern void lbl_8006DBAC(void *arg0);
+extern void lbl_8006E0A4(void *arg0);
+extern void *fn_1_868C0(s8 arg0);
+extern void *fn_1_14DDF4(u32 arg0);
+extern void lbl_8006E1C0(void *mtx, void *dst);
+extern void lbl_8006D668(void *dst);
+extern u32 fn_1_584AC(void);
+extern void lbl_8006DB74(void *arg0);
+extern void lbl_8006DD14(void *arg0, void *arg1);
+extern u16 lbl_1_bss_960;
+extern u32 lbl_801A6D00;
+
+typedef struct Vec3 {
+    f32 x;
+    f32 y;
+    f32 z;
+} Vec3;
+
+typedef struct BurnerFxEntry {
+    u8 pad_00[0x0c];
+    u16 unk_0c;
+    u8 pad_0e[0x0a];
+    s16 unk_18;
+    f32 unk_1c;
+    f32 unk_20;
+    f32 unk_24;
+    u8 pad_28[0x6c];
+    Vec3 unk_94;
+    u8 pad_a0[0x48];
+} BurnerFxEntry;
+
+#pragma opt_common_subs off
+void fn_1_988DC(void *arg0) {
+    BurnerFxEntry entry;
+    Vec3 newPos;
+    Vec3 delta;
+    Vec3 prevPos;
+    Vec3 mtx;
+    Vec3 tgt;
+    u8 *p;
+    f64 scale;
+    f64 var_f0;
+    f32 ratio;
+    s32 cnt;
+    s32 cur;
+    s32 prev;
+    s32 tmp;
+    u32 flags;
+    s32 c8;
+    s32 c100;
+    s32 c20;
+    s32 i;
+    void *obj;
+    void *obj2;
+    s16 id;
+    f32 old;
+    f32 v;
+
+    p = *(u8 **)((u8 *)arg0 + 72);
+    i = 0;
+    flags = *(u32 *)p;
+    c8 = flags & 0x80000;
+    tmp = *(s32 *)((u8 *)arg0 + 88);
+    c20 = flags & 0x20;
+    c100 = flags & 0x100000;
+    *(s32 *)&prevPos.x = tmp;
+    tmp = *(s32 *)((u8 *)arg0 + 92);
+    *(s32 *)&prevPos.y = tmp;
+    tmp = *(s32 *)((u8 *)arg0 + 96);
+    *(s32 *)&prevPos.z = tmp;
+    if (c8 != 0) {
+        *(s32 *)((u8 *)arg0 + 1192) = 0x1e;
+    }
+    if (c100 != 0) {
+        *(s32 *)((u8 *)arg0 + 1192) = 0x3c;
+    }
+    prev = *(s32 *)((u8 *)arg0 + 1192);
+    if (prev != 0) {
+        i = 1;
+        *(s32 *)((u8 *)arg0 + 1192) = prev - 1;
+    }
+    cnt = *(s32 *)((u8 *)arg0 + 1192);
+    cnt = cnt * cnt;
+    tmp = *(s32 *)((u8 *)arg0 + 68);
+    *(s32 *)((u8 *)arg0 + 68) = tmp + 1;
+    cur = *(s32 *)((u8 *)arg0 + 64);
+    ratio = (f32)(cnt) / 900.0f;
+    switch (cur) {
+    case 0:
+        if (c20 != 0) {
+            *(s32 *)((u8 *)arg0 + 64) = 1;
+            *(f32 *)((u8 *)arg0 + 116) *= 2.0f;
+            if (*(f32 *)((u8 *)arg0 + 116) > 10.0f) {
+                *(f32 *)((u8 *)arg0 + 116) = 10.0f;
+            }
+        }
+        if (c100 != 0) {
+            *(s32 *)((u8 *)arg0 + 64) = 2;
+        }
+        if (i == 0) {
+            break;
+        }
+        if (*(u32 *)((u8 *)arg0 + 64) == 2) {
+            scale = 0.8 * ratio;
+            old = *(f32 *)((u8 *)arg0 + 116);
+            v = (f32)((f64)old * (1.0 + scale));
+            *(f32 *)((u8 *)arg0 + 116) = v;
+        } else {
+            scale = 0.1 * ratio;
+            old = *(f32 *)((u8 *)arg0 + 116);
+            v = (f32)((f64)old * (1.0 + scale));
+            *(f32 *)((u8 *)arg0 + 116) = v;
+        }
+        v = *(f32 *)((u8 *)arg0 + 116);
+        if (v > 10.0f) {
+            *(f32 *)((u8 *)arg0 + 116) = 10.0f;
+        }
+        if ((c8 | c100) == 0) {
+            break;
+        }
+        if (*(s16 *)(p + 4) != camera_get_mode()) {
+            break;
+        }
+        if (fn_1_58C4() != 1) {
+            break;
+        }
+        memset((u8 *)&entry, 0, 0xe8);
+        entry.unk_0c = 6;
+        id = *(s16 *)(p + 4);
+        entry.unk_18 = id;
+        fn_1_8645C(id, lbl_801A6D00);
+        lbl_8006E1B0((u8 *)arg0 + 0xc, (u8 *)&entry + 0x3c);
+        entry.unk_94 = *(Vec3 *)((u8 *)arg0 + 0xc);
+        entry.unk_1c = 0.003921568859368563f * *(f32 *)((u8 *)arg0 + 40);
+        entry.unk_20 = 0.003921568859368563f * *(f32 *)((u8 *)arg0 + 44);
+        entry.unk_24 = 0.003921568859368563f * *(f32 *)((u8 *)arg0 + 48);
+        fn_1_58E3C(&entry);
+        break;
+    case 2:
+        if (i == 0) {
+            *(s32 *)((u8 *)arg0 + 64) = 0;
+        }
+        break;
+    case 1:
+        if (c20 == 0) {
+            *(s32 *)((u8 *)arg0 + 64) = 0;
+        }
+        break;
+    }
+    lbl_8006DBAC(p + 0x14c);
+    if (*(s16 *)(p + 6) > 0x28) {
+        obj = fn_1_868C0((s8)*(s16 *)(p + 4));
+        if (obj != NULL) {
+            if (*(u32 *)((u8 *)obj + 928) != 0) {
+                lbl_8006E0A4(fn_1_14DDF4(*(u32 *)((u8 *)obj + 928)));
+            }
+        }
+    }
+    lbl_8006E1B0((u8 *)arg0 + 0xc, &newPos);
+    delta.x = newPos.x - prevPos.x;
+    delta.y = newPos.y - prevPos.y;
+    delta.z = newPos.z - prevPos.z;
+    lbl_8006E1C0((u8 *)arg0 + 0x18, &mtx);
+    lbl_8006D668(&mtx);
+{
+    f32 var_f4;
+    var_f4 = *(f32 *)(p + 548);
+    if (*(s16 *)&lbl_1_bss_960 != 0xe) {
+        v = *(f32 *)(p + 512);
+        var_f0 = v < 0.0 ? 0.0 : (v > 1.0 ? 1.0 : (f64)v);
+        var_f4 = (f32)((f64)var_f4 * var_f0);
+    }
+    if (*(u16 *)(p + 532) != 0) {
+        var_f4 *= 0.0f;
+    }
+    if (c20 != 0) {
+        var_f4 *= 2.0f;
+    }
+    if (i != 0) {
+        if (*(u32 *)((u8 *)arg0 + 64) == 2) {
+            scale = 0.8 * ratio;
+            var_f4 = (f32)((f64)var_f4 * (1.0 + scale));
+        } else {
+            scale = 0.1 * ratio;
+            var_f4 = (f32)((f64)var_f4 * (1.0 + scale));
+        }
+    }
+    old = *(f32 *)((u8 *)arg0 + 116);
+    v = 0.15f * (var_f4 - old);
+}
+    *(f32 *)((u8 *)arg0 + 116) = old + v;
+    v = *(f32 *)((u8 *)arg0 + 116);
+    if (v > 10.0f) {
+        *(f32 *)((u8 *)arg0 + 116) = 10.0f;
+    }
+    *(s16 *)((u8 *)arg0 + 112) = (u16)fn_1_584AC() - 0x8000;
+    if ((c20 != 0) || (i != 0)) {
+        tgt = *(Vec3 *)((u8 *)arg0 + 52);
+    } else {
+        tgt = *(Vec3 *)((u8 *)arg0 + 40);
+    }
+    old = *(f32 *)((u8 *)arg0 + 1128);
+    v = 0.1f * (tgt.x - old);
+    *(f32 *)((u8 *)arg0 + 1128) = old + v;
+    old = *(f32 *)((u8 *)arg0 + 1132);
+    v = 0.11f * (tgt.y - old);
+    *(f32 *)((u8 *)arg0 + 1132) = old + v;
+    old = *(f32 *)((u8 *)arg0 + 1136);
+    v = 0.12f * (tgt.z - old);
+    *(f32 *)((u8 *)arg0 + 1136) = old + v;
+    *(Vec3 *)((u8 *)arg0 + 88) = newPos;
+    *(Vec3 *)((u8 *)arg0 + 100) = delta;
+    *(Vec3 *)((u8 *)arg0 + 76) = mtx;
+    if (*(s16 *)(p + 6) > 0x28) {
+        obj2 = fn_1_868C0((s8)*(s16 *)(p + 4));
+        if ((obj2 != NULL) && (*(u32 *)((u8 *)obj2 + 928) != 0)) {
+            lbl_8006DBAC(p + 0x14c);
+            lbl_8006E0A4(fn_1_14DDF4(*(u32 *)((u8 *)obj2 + 928)));
+            lbl_8006DB74((u8 *)arg0 + 0x474);
+        }
+    } else {
+        lbl_8006DD14(p + 0x14c, (u8 *)arg0 + 0x474);
+    }
+}
+#pragma opt_common_subs reset
+/* fzgx:end fn_1_988DC */
+
 /* fzgx:begin fn_1_9A0A4 */
 // fn_1_9A0A4: empty in retail (single blr).
 void fn_1_9A0A4(void) {
@@ -733,9 +1001,6 @@ void fn_1_9CC40(void) {
 /* fzgx:end fn_1_9CC40 */
 
 /* fzgx:begin fn_1_9CC6C */
-
-
-
 // Initializes the burner state and copies the current burner position into the global state.
 void fn_1_9CC6C(void *arg0, s32 arg1) {
     if (arg0 != 0) {

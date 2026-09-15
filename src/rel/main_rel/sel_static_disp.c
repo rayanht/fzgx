@@ -1461,6 +1461,233 @@ void fn_1_13C16C(void) {
 }
 /* fzgx:end fn_1_13C16C */
 
+/* fzgx:begin fn_1_13C1A0 noprologue */
+#include "types.h"
+#include "font.h"
+#include "rel/main_rel/sel_static_disp.h"
+
+extern const f32 lbl_1_rodata_861C;
+extern const f32 lbl_1_rodata_863C;
+extern const f32 lbl_1_rodata_87AC;
+extern const f32 lbl_1_rodata_882C;
+extern const f32 lbl_1_rodata_8830;
+extern const f32 lbl_1_rodata_8834;
+extern const f32 lbl_1_rodata_8A4C;
+extern const f32 lbl_1_rodata_8B58;
+extern const f32 lbl_1_rodata_8B84;
+extern const f32 lbl_1_rodata_8BEC;
+extern const f32 lbl_1_rodata_8D78;
+extern const f32 lbl_1_rodata_8D7C;
+extern const f64 lbl_1_rodata_8608;
+extern u32 lbl_1_rodata_26F8[22];
+extern u16 lbl_1_rodata_8CB0[200];
+extern u32 lbl_801A66B4;
+extern u8 lbl_1_bss_9C;
+
+extern void fn_1_133E04(void *, u32);
+extern u32 fn_1_134AD4(void);
+extern int fn_1_4F734(FontDrawPacket *);
+extern u32 fn_1_13ABA8(u32);
+extern void fn_1_140EE8(u8, int, int);
+extern u16 fn_1_A5DB0(void);
+extern u16 fn_1_A5D88(void);
+extern u32 __cvt_fp2unsigned(f32);
+extern u32 fn_1_7B558(u32, u32, u32, u32, u32, u32, f32);
+extern void fn_1_138144(u32, u32);
+extern u32 fn_1_13C5EC(u8);
+extern u32 fn_1_13F7F8(s16, s16);
+extern int sprintf(char *, const char *, ...);
+
+struct Copy88 { u32 words[22]; };
+struct Copy200 { u32 words[10][5]; };
+
+#pragma opt_propagation off
+#pragma opt_common_subs off
+#pragma opt_strength_reduction off
+void fn_1_13C1A0(u8 *arg0) {
+    char buf[256];
+    struct Copy88 loc_60;
+    struct Copy88 loc_8;
+    struct Copy200 loc_B8;
+    u32 temp_r31;
+    u8 tempbyte;
+    u32 temp_r30;
+    u32 temp_r28;
+    u32 idx;
+    f32 var_f31;
+    u32 lab_t2;
+    char * lab_t0;
+
+    fn_1_133E04((void *)1, 0);
+    fn_1_134AD4();
+    if (*(s16 *)&lbl_1_bss_960 == 9) {
+        loc_B8 = *(struct Copy200 *)lbl_1_rodata_8CB0;
+        tempbyte = lbl_1_bss_9C;
+        loc_60 = *(struct Copy88 *)lbl_1_rodata_26F8;
+        (*((0) + (loc_60.words))) = 0xBA16;
+        *(f32 *)((u8 *)&loc_60 + 4) = lbl_1_rodata_882C;
+        *(f32 *)((u8 *)&loc_60 + 8) = lbl_1_rodata_8830;
+        *(f32 *)((u8 *)&loc_60 + 12) = lbl_1_rodata_8834;
+        *(u32 *)((u8 *)&loc_60 + 0x30) = 0xA;
+        fn_1_4F734((FontDrawPacket *)&loc_60);
+        fn_1_13ABA8(0x28000000);
+        fn_1_140EE8(arg0[0], 0, 1);
+        if ((s8)tempbyte == 2 || (u8)(tempbyte - 4) <= 1 || (s8)tempbyte == 6) {
+            var_f31 = lbl_1_rodata_8BEC;
+        } else {
+            var_f31 = lbl_1_rodata_8D78;
+        }
+        temp_r31 = (u32)(((f32)fn_1_A5DB0() - lbl_1_rodata_8B58) - lbl_1_rodata_8B84);
+        temp_r28 = (u32)(lbl_1_rodata_863C * (f32)fn_1_A5D88());
+        temp_r30 = (u32)lbl_1_rodata_8B58;
+        lab_t2 = (u32)(lbl_1_rodata_861C * (f32)fn_1_A5D88());
+        fn_1_7B558(1, 1, lab_t2, temp_r30, temp_r28, temp_r31, var_f31);
+        sprintf(buf, (const char *)&lbl_1_data_41DE4, loc_B8.words[(s8)tempbyte][lbl_801A66B4]);
+        fn_1_138144((u32)buf, lbl_1_bss_8B3A0.unk_94 & 0x40000000);
+        return;
+    }
+    loc_8 = *(struct Copy88 *)lbl_1_rodata_26F8;
+    (*((0) + (loc_8.words))) = 0x9A12;
+    *(f32 *)((u8 *)&loc_8 + 4) = lbl_1_rodata_882C;
+    *(f32 *)((u8 *)&loc_8 + 8) = lbl_1_rodata_8830;
+    *(f32 *)((u8 *)&loc_8 + 12) = lbl_1_rodata_8834;
+    *(u32 *)((u8 *)&loc_8 + 0x30) = 0xA;
+    fn_1_4F734((FontDrawPacket *)&loc_8);
+    fn_1_13ABA8(0x08000000);
+    fn_1_13C5EC(arg0[0]);
+    temp_r31 = (u32)(lbl_1_rodata_8A4C * (f32)fn_1_A5DB0());
+    temp_r30 = (u32)(lbl_1_rodata_8A4C * (f32)fn_1_A5D88());
+    lab_t2 = (u32)(lbl_1_rodata_87AC * (f32)fn_1_A5D88());
+    fn_1_7B558(1, 1, lab_t2, 0, temp_r30, temp_r31, lbl_1_rodata_8D7C);
+    idx = lbl_801A66B4;
+    sprintf(buf, (const char *)fn_1_13F7F8(0x13, (s16)idx),
+            *(u32 *)(lbl_1_data_2BD54 + arg0[0] * 0x18 + idx * 4));
+    fn_1_138144((u32)buf, lbl_1_bss_8B3A0.unk_94 & 0x40000000);
+}
+#pragma opt_strength_reduction reset
+
+#pragma opt_common_subs reset
+
+#pragma opt_propagation reset
+/* fzgx:end fn_1_13C1A0 */
+
+/* fzgx:begin fn_1_13D460 noprologue */
+#include "types.h"
+#include "font.h"
+
+extern f32 lbl_1_rodata_26F8[22];
+extern const f64 lbl_1_rodata_8600;
+extern const f32 lbl_1_rodata_87AC;
+extern const f32 lbl_1_rodata_8A54;
+extern const f32 lbl_1_rodata_8B30;
+extern const f32 lbl_1_rodata_8DBC;
+
+extern void fn_1_51678(FontDrawPacket *arg0, u32 arg1, s16 arg2, s16 arg3, s16 arg4, s16 arg5);
+extern int fn_1_4F734(FontDrawPacket *arg0);
+extern u16 fn_1_48690(u32 arg0);
+
+static inline s32 fn_1_13D460_strip_position(s32 x, s32 y) { return x + y; }
+#pragma opt_propagation off
+#pragma opt_lifetimes off
+void fn_1_13D460(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
+    FontDrawPacket setup;
+    FontDrawPacket packet;
+    s32 total;
+    s32 i;
+    s32 count;
+    s16 lab_t5;
+    s16 lab_t2;
+
+    setup = *(FontDrawPacket *)&lbl_1_rodata_26F8;
+    setup.image = arg3 ? (0x10000 - 0x61FF) : (0x10000 - 0x68F8);
+    setup.y = (f32)arg1;
+    setup.z = lbl_1_rodata_8B30;
+
+    count = arg2 - 0x18;
+    packet = setup;
+    packet.x = (f32)arg0;
+    lab_t5 = 4;
+    lab_t2 = 0;
+    fn_1_51678(&packet, setup.image, lab_t2, 0, 0xC, lab_t5);
+    fn_1_4F734(&packet);
+
+    packet = setup;
+    total = arg0 + arg2;
+    packet.x = (f32)total;
+    lab_t5 = 4;
+    lab_t2 = 0;
+    fn_1_51678(&packet, setup.image, lab_t2, 0, 0xC, lab_t5);
+    *(u32 *)((u8 *)&packet + 0x30) = 0x80007;
+    fn_1_4F734(&packet);
+
+    i = 0;
+
+    while (i < count / (s32)fn_1_48690(setup.image)) {
+        packet = setup;
+        packet.x = (f32)(fn_1_13D460_strip_position(arg0, i * fn_1_48690(setup.image)) + 0xC);
+        lab_t5 = 4;
+        lab_t2 = 0;
+        fn_1_51678(&packet, setup.image, lab_t2, 4, 0x10, lab_t5);
+        fn_1_4F734(&packet);
+        i++;
+    }
+
+    packet = setup;
+    packet.x = (f32)(fn_1_13D460_strip_position(arg0, i * fn_1_48690(setup.image)) + 0xC);
+    lab_t5 = 4;
+    lab_t2 = 0;
+    fn_1_51678(&packet, setup.image, lab_t2, 4, (s16)((f32)(total - 0xC) - packet.x), lab_t5);
+    fn_1_4F734(&packet);
+
+    packet = setup;
+    packet.x = (f32)(arg0 + 0xC);
+    packet.z = packet.z - lbl_1_rodata_87AC;
+    lab_t5 = 4;
+    lab_t2 = 0xC;
+    fn_1_51678(&packet, setup.image, lab_t2, 0, 4, lab_t5);
+    fn_1_4F734(&packet);
+    packet.x = packet.x + lbl_1_rodata_8A54;
+    fn_1_4F734(&packet);
+    packet.x = packet.x + lbl_1_rodata_8DBC;
+    fn_1_4F734(&packet);
+    packet.x = packet.x + lbl_1_rodata_8A54;
+    fn_1_4F734(&packet);
+
+    packet = setup;
+    packet.x = (f32)(total - 0x34);
+    packet.z = packet.z - lbl_1_rodata_87AC;
+    lab_t5 = 4;
+    lab_t2 = 0xC;
+    fn_1_51678(&packet, setup.image, lab_t2, 0, 4, lab_t5);
+    fn_1_4F734(&packet);
+    packet.x = packet.x + lbl_1_rodata_8A54;
+    fn_1_4F734(&packet);
+    packet.x = packet.x + lbl_1_rodata_8DBC;
+    fn_1_4F734(&packet);
+    packet.x = packet.x + lbl_1_rodata_8A54;
+    fn_1_4F734(&packet);
+
+    if (arg2 > 0x15E) {
+        packet = setup;
+        packet.x = (f32)(arg0 + 0x100);
+        packet.z = packet.z - lbl_1_rodata_87AC;
+        lab_t5 = 4;
+        lab_t2 = 0xC;
+        fn_1_51678(&packet, setup.image, lab_t2, 0, 4, lab_t5);
+        fn_1_4F734(&packet);
+        packet.x = packet.x + lbl_1_rodata_8A54;
+        fn_1_4F734(&packet);
+        packet.x = packet.x + lbl_1_rodata_8DBC;
+        fn_1_4F734(&packet);
+        packet.x = packet.x + lbl_1_rodata_8A54;
+        fn_1_4F734(&packet);
+    }
+}
+#pragma opt_lifetimes reset
+
+#pragma opt_propagation reset
+/* fzgx:end fn_1_13D460 */
+
 /* fzgx:begin fn_1_13DA0C */
 struct Struct_26F8 {
     u32 unk00;

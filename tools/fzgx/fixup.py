@@ -368,6 +368,8 @@ class Engine:
             yield from evidence.encoded_conversions(self.project, row['symbol'], body, check)
             yield from evidence.scalar_lifetimes(self.project, row['symbol'], body, check)
             yield from evidence.stack_object_boundaries(self.project, row['symbol'], body, check)
+            yield from source.comparison_lifetimes(body, name)
+            yield from source.scalar_square_lifetimes(body, name)
             yield from evidence.optimizer_pragmas(body, name)
             families.append(evidence.candidates(self.project, row['symbol'], body, check))
             # 'retain recovered shared-pool bases' and 'lifetime shared-pool read' never improved a

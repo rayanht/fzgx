@@ -442,6 +442,28 @@ def _bss_base_rows(project, module, obj, left, right, lrows, rrows, function_nam
     fn = project.symbols(module).get(function_name)
     unit = project.unit_of(fn) if fn else None
     rows, pairs = set(), []
+    def bind_members(section, anchor, retail):
+        # Section-relative accesses need no relocation against each member.
+        # Still prove every named shared definition before externalizing it.
+        origin = retail.addr - anchor['value']
+        for own in symbols.values():
+            if own['shndx'] != section['index'] or not own['size'] or own['info'] & 15 != 1:
+                continue
+            name = own['name'].removeprefix('fzgx_obj_')
+            known = project.symbols(module).get(name)
+            delta = 0
+            alias = re.fullmatch(r'(.+)__fzgx_offset_([0-9A-F]+)', name)
+            if known is None and alias:
+                known = project.symbols(module).get(alias[1]); delta = int(alias[2], 16)
+            if (not known or known.kind != 'object' or known.section != retail.section
+                    or origin + own['value'] != known.addr + delta
+                    or delta + own['size'] > known.size
+                    or (unit is not None and project.unit_of(known) == unit)):
+                continue
+            binding = known.name + (f'+0x{delta:X}' if delta else '')
+            pair = (own['name'], binding, f'{binding}=verified BSS object[{own["size"]}]')
+            if pair not in pairs:
+                pairs.append(pair)
     for i, (l, r) in enumerate(zip(lrows, rrows)):
         li, ri = l.get('instruction', {}), r.get('instruction', {})
         lr, rr = li.get('relocation'), ri.get('relocation')
@@ -480,6 +502,7 @@ def _bss_base_rows(project, module, obj, left, right, lrows, rrows, function_nam
             pair = (rname, retail.name, f'{retail.name}=BSS object[{retail.size}]')
             if pair not in pairs:
                 pairs.append(pair)
+            bind_members(section, anchor, retail)
             continue
         # The unit's copy is dropped at integration and every displacement off the base is
         # compared as code, so a section base only needs its retail symbol at the same start;
@@ -493,6 +516,7 @@ def _bss_base_rows(project, module, obj, left, right, lrows, rrows, function_nam
             pair = (private, retail.name, f'{retail.name}=owned BSS base')
             if pair not in pairs:
                 pairs.append(pair)
+        bind_members(section, anchor, retail)
     return rows, pairs
 
 
