@@ -32,7 +32,7 @@ void AlarmHandlerForTimeout(OSAlarm *alarm, OSContext *context);
 
 static unsigned char CommandList[60];
 
-static unsigned char gap____bss_0_3c[44];
+static unsigned char fzgx_pool_gap____bss_0_3c[44];
 
 static OSAlarm AlarmForTimeout;
 
@@ -41,7 +41,7 @@ static void layout____bss_0(void) {
 // Hardware or OS state can change asynchronously.
     volatile unsigned char sink; // fzgx-allow: S2 SDK asynchronous state
     sink = *(unsigned char *)&CommandList;
-    sink = *(unsigned char *)&gap____bss_0_3c;
+    sink = *(unsigned char *)&fzgx_pool_gap____bss_0_3c;
     sink = *(unsigned char *)&AlarmForTimeout;
 }
 #pragma section code_type ".text"

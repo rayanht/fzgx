@@ -1320,7 +1320,8 @@ def unit_fully_matches(res: CheckResult) -> Optional[str]:
         return res.error or "check failed"
     if res.uncarved:  # only this symbol was compared, against the retail auto object
         return None if (res.matched or res.matched_pool) else f"{res.symbol}={res.percent:.1f}%"
-    bad = [f"{n}={p:.1f}%" for n, p in res.symbols.items() if p < 100.0 and not (res.matched_pool and n == res.symbol)]
+    bad = [f"{n}={p:.1f}%" for n, p in res.symbols.items()
+           if p < 100.0 and not ((res.matched or res.matched_pool) and n == res.symbol)]
     if bad:
         return "functions below 100%: " + ", ".join(bad)
     if res.missing_in_base:

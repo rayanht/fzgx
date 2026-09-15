@@ -13479,7 +13479,7 @@
     "symbols": [
       "fn_80016394"
     ],
-    "status": "nonmatching",
+    "status": "matching",
     "mw_version": "GC/1.2.5n",
     "extra_cflags": [
       "-use_lmw_stmw",
@@ -13493,7 +13493,11 @@
       "-common",
       "off"
     ],
-    "pool": true
+    "pool": {
+      "...bss.0": "CommandList",
+      "CommandList": "CommandList",
+      "AlarmForTimeout": "AlarmForTimeout"
+    }
   },
   {
     "module": "main",
