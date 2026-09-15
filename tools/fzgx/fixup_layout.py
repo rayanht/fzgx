@@ -36,6 +36,52 @@ class Gap:
         self.name, self.addr, self.end, self.size, self.section, self.kind = name, addr, end, end - addr, section, 'object'
 
 
+def bss_member_bindings(p, symbol, body, obj, check):
+    """Name generated layout pieces using their measured retail subobjects."""
+    if not obj or not check.ok:
+        return []
+    elf = poolfix.Elf(Path(obj).read_bytes())
+    section = elf.section('.bss')
+    if section is None:
+        return []
+    own = {s['name']: s for s in elf.symbols()}
+    module = p.resolve(symbol).module
+    retail = p.symbols(module)
+    origins = set()
+    for private, target, _ in check._pool_pairs:
+        anchor = own.get(private)
+        name, offset = poolfix.binding_target(target)
+        known = retail.get(name)
+        if (private.startswith('...bss') and anchor and known
+                and anchor['shndx'] == section['index'] and known.section == '.bss'):
+            origins.add(known.addr + offset - anchor['value'])
+    if len(origins) != 1:
+        return []
+    origin = origins.pop()
+    objects = [s for s in retail.values() if s.kind == 'object' and s.section == '.bss']
+    names = {}
+    for name, s in own.items():
+        if (s['shndx'] != section['index'] or not s['size'] or s['info'] & 15 != 1
+                or name.startswith('fzgx_pool_') or '__fzgx_offset_' in name):
+            continue
+        generated = re.fullmatch(r'(.+)_(?:gap|fill)_[0-9A-F]+(?:_fill_[0-9A-F]+)?', name)
+        member = re.fullmatch(r'(.+)_([0-9A-F]+)', name)
+        if not generated and not (member and member[1] in retail and name not in retail):
+            continue
+        address = origin + s['value']
+        owner = next((o for o in objects if o.addr <= address and address + s['size'] <= o.end), None)
+        if owner:
+            names[name] = owner.name + f'__fzgx_offset_{address-owner.addr:X}'
+        elif generated and '_gap_' in name:
+            # The linker drops private padding only after all relocations to
+            # its section have gone; live uses still prevent externalization.
+            names[name] = 'fzgx_pool_' + name
+    if not names:
+        return []
+    text = re.sub(r'\b\w+\b', lambda m: names.get(m[0], m[0]), body)
+    return [('canonical BSS subobjects and private layout padding', text)]
+
+
 def struct_text(tname, text):
     for src in (text, include_text()):
         m = re.search(r"(?:typedef\s+)?struct\s+%s\s*\{(.*?)\n\}" % re.escape(tname), src, re.S)

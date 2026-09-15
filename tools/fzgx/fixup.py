@@ -45,7 +45,7 @@ def _generate_in_worker(task):
 class Engine:
     def __init__(self, project, output, verbose=False):
         self.project, self.output, self.verbose = project, output, verbose
-        self.generator_sha256 = digest(Path(__file__).read_bytes() + Path(source.__file__).read_bytes() + Path(evidence.__file__).read_bytes() + Path(mwgraph.__file__).read_bytes() + b''.join((ROOT/'tools/fzgx'/name).read_bytes() for name in ('signatures.py','evidence.py','dataimport.py','lift.py','reuse.py','sdkimport.py')))
+        self.generator_sha256 = digest(Path(__file__).read_bytes() + Path(source.__file__).read_bytes() + Path(evidence.__file__).read_bytes() + Path(layout.__file__).read_bytes() + Path(mwgraph.__file__).read_bytes() + b''.join((ROOT/'tools/fzgx'/name).read_bytes() for name in ('signatures.py','evidence.py','dataimport.py','lift.py','reuse.py','sdkimport.py')))
         output.mkdir(parents=True, exist_ok=True)
         self.headers = mwgraph.header_fingerprint(ROOT, project.version)
         self.environment = digest(('region-frontier-v1' + self.headers + ''.join(digest((ROOT/'tools/fzgx'/f).read_bytes()) for f in
@@ -327,6 +327,7 @@ class Engine:
         check = self.check(row)
         if check.ok:
             yield from evidence.relocation_bindings(body, check)
+            yield from layout.bss_member_bindings(self.project, row['symbol'], body, row.get('object'), check)
         yield from source.accessor_lifetimes(body, name)
         if row.get('score') == 100:
             if row.get('source_lint') and (check.matched or check.matched_pool):

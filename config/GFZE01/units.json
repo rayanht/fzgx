@@ -60297,11 +60297,38 @@
     "symbols": [
       "fn_8_1394"
     ],
-    "status": "nonmatching",
+    "status": "matching",
     "mw_version": "GC/2.0",
     "extra_cflags": [],
     "tu": "rel/title/title.c",
-    "pool": true
+    "pool": {
+      "...rodata.0": "lbl_8_rodata_0",
+      "@7": "lbl_8_rodata_8",
+      "@5": "lbl_8_rodata_0",
+      "@8": "lbl_8_rodata_C",
+      "@6": "lbl_8_rodata_0+0x4",
+      "@46": "lbl_8_data_478",
+      "...bss.0": "lbl_8_bss_0",
+      "fzgx_obj_lbl_8_bss_0": "lbl_8_bss_0",
+      "fzgx_obj_lbl_8_bss_2": "lbl_8_bss_2",
+      "lbl_8_bss_4": "lbl_8_bss_4",
+      "lbl_8_bss_4__fzgx_offset_4": "lbl_8_bss_4+0x4",
+      "lbl_8_bss_C": "lbl_8_bss_C",
+      "lbl_8_bss_20__fzgx_offset_0": "lbl_8_bss_20",
+      "lbl_8_bss_20__fzgx_offset_200": "lbl_8_bss_20+0x200",
+      "lbl_8_bss_224": "lbl_8_bss_224",
+      "lbl_8_bss_228": "lbl_8_bss_228",
+      "lbl_8_bss_22C": "lbl_8_bss_22C",
+      "lbl_8_bss_230": "lbl_8_bss_230",
+      "fzgx_obj_lbl_8_bss_234": "lbl_8_bss_234",
+      "fzgx_obj_lbl_8_bss_238": "lbl_8_bss_238",
+      "lbl_8_bss_238__fzgx_offset_4": "lbl_8_bss_238+0x4",
+      "fzgx_obj_lbl_8_bss_23D": "lbl_8_bss_23D",
+      "lbl_8_bss_241": "lbl_8_bss_241",
+      "fzgx_obj_lbl_8_bss_242": "lbl_8_bss_242",
+      "lbl_8_bss_242__fzgx_offset_1": "lbl_8_bss_242+0x1",
+      "lbl_8_bss_242__fzgx_offset_2": "lbl_8_bss_242+0x2"
+    }
   },
   {
     "module": "title",
