@@ -6404,3 +6404,9 @@ rel/main_rel/stcoli/fn_1_18B40.c:
 
 rel/main_rel/font/fn_1_51C74.c:
 	.text       start:0x00051C74 end:0x00051E60 align:4
+
+rel/main_rel/memcard/fn_1_B3900.c:
+	.text       start:0x000B3900 end:0x000B40B4 align:4
+
+rel/main_rel/sound/fn_1_9FFD8.c:
+	.text       start:0x0009FFD8 end:0x000A0214 align:4

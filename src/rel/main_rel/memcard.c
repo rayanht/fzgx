@@ -6683,6 +6683,325 @@ void fn_1_B38F4(int unused, void *ptr) {
 }
 /* fzgx:end fn_1_B38F4 */
 
+/* fzgx:begin fn_1_B3900 noprologue */
+#include "types.h"
+#include "rel/main_rel/globals.h"
+#include "rel/main_rel/memcard.h"
+
+extern u32 lbl_801A6410;
+extern s32 lbl_801A66B4;
+extern const f32 lbl_1_rodata_4CA8;
+extern void OSReport(const char *fmt, ...);
+extern void OSPanic(const char *file, int line, const char *fmt, ...);
+extern s32 CARDUnmount(s32);
+extern void fn_1_46B4(u32, u32, const char *, int);
+
+#pragma opt_dead_assignments off
+static inline u8 fn_1_B3900_array_read(u8 *array, s32 index) { return array[index]; }
+#pragma opt_dead_assignments reset
+
+#pragma opt_dead_assignments off
+#pragma opt_propagation off
+void fn_1_B3900(u8 *arg0) {
+    u8 *data = (u8 *)&lbl_1_data_35AC8;
+    u8 *bss = (u8 *)&lbl_1_bss_716C0;
+    Obj_1_bss_9F8 *global;
+    u8 *state;
+    u32 f;
+
+    if (fn_1_B3900_array_read(arg0, 4) == 0xFF) {
+        return;
+    }
+
+    switch (fn_1_B3900_array_read(arg0, 4)) {
+    default:
+        OSReport((const char *)(data + 0x6DDC), fn_1_B3900_array_read(arg0, 4));
+        OSReport((const char *)(data + 0x6DF0), fn_1_B3900_array_read(arg0, 3));
+        OSPanic((const char *)(data + 0x6CF0), 0x1A40, (const char *)(data + 0x6E04));
+        break;
+
+    case 1: {
+        state = *(u8 **)(arg0 + 0x24);
+        *(u32 *)(state + 8) &= ~0x200;
+        state = *(u8 **)(arg0 + 0x24);
+        f = *(u32 *)(state + 8);
+        if (f & 0x8000) {
+            arg0[3] = 0x1E;
+        } else {
+            global = (Obj_1_bss_9F8 *)(u32)&lbl_1_bss_9F8;
+            if (((u16)global->unk_8 >> 8) & 1) {
+                arg0[3] = 0x1E;
+        } else if ((((u16)global->unk_8 >> 11) & 1) && !(f & 2)) {
+            if (fn_1_B3900_array_read(arg0, 5) == 3 && *(u32 *)(arg0 + 0xC) != 0) {
+                while (CARDUnmount(fn_1_B3900_array_read(arg0, 0)) == -1) {
+                }
+                fn_1_46B4(lbl_801A6410, *(u32 *)(arg0 + 0xC), (const char *)(data + 0x6CF0), 0x1A52);
+                arg0[7] = 0;
+                *(u32 *)(arg0 + 0xC) = 0;
+                state = *(u8 **)(arg0 + 0x24);
+                *(u32 *)(state + 0x1C) = 0;
+                *(u32 *)(state + 0x18) = 0;
+            }
+            if (fn_1_B3900_array_read(arg0, 6) != 0xFF) {
+                arg0[3] = fn_1_B3900_array_read(arg0, 6);
+                arg0[6] = 0xFF;
+            } else {
+                arg0[3] = fn_1_B3900_array_read(arg0, 5);
+            }
+            {
+                u8 *entry = bss + 8;
+                *(s16 *)(arg0 + 8) = -1;
+            *(s16 *)(arg0 + 0xA) = -1;
+            arg0[0x2A] &= ~4;
+            if (arg0 == entry) {
+                *(u8 *)(bss + 0x1F1) = 0;
+            } else if (arg0 == entry + 0xA0) {
+                *(u8 *)(bss + 0x1F1) = 1;
+            }
+            }
+        } else if ((((u16)((Obj_1_bss_9F8 *)(u32)&lbl_1_bss_9F8)->unk_8 >> 10) & 1) && (*(u32 *)((state = (u8 *)*(u32 *)(arg0 + 0x24)) + 8) & 0x400)) {
+            arg0[3] = 5;
+            *(u32 *)(*(u8 **)(arg0 + 0x24) + 8) &= ~0x400;
+            *(u32 *)(*(u8 **)(arg0 + 0x24) + 8) |= 0x200;
+            arg0[0x2A] &= ~4;
+            arg0[0x2A] |= 0x10;
+        }
+        }
+        *(u8 *)(bss + 0x5C49) = 0;
+        break;
+    }
+
+    case 0x1E:
+        if (*(u32 *)(*(u8 **)(arg0 + 0x24) + 8) & 0x8000) {
+            arg0[2] = 0xFE;
+        } else if (((u16)lbl_1_bss_9F8.unk_8 >> 8) & 1) {
+            arg0[2] = 0xFE;
+        }
+        break;
+
+    case 3:
+        if ((s8)fn_1_B3900_array_read(arg0, 1) == -0x7F) {
+            *(u32 *)(*(u8 **)(arg0 + 0x24) + 4) = (s8)fn_1_B3900_array_read(arg0, 1);
+            arg0[3] = 1;
+        } else {
+            switch (*(s32 *)(*(u8 **)(arg0 + 0x24) + 4)) {
+            case -5:
+                *(u32 *)(*(u8 **)(arg0 + 0x24) + 8) |= 2;
+                /* fallthrough */
+            case -0x80:
+            case -3:
+            case -2:
+                arg0[3] = 1;
+                break;
+            case -0xD:
+                if (*(u32 *)(*(u8 **)(arg0 + 0x24) + 8) & 0x8000) {
+                    arg0[0x2A] |= 4;
+                    arg0[2] = 0xFE;
+                } else if (lbl_801A66B4 == 5) {
+                    arg0[3] = 5;
+                } else {
+                    *(u32 *)(*(u8 **)(arg0 + 0x24) + 8) |= 0x400;
+                    arg0[3] = 1;
+                }
+                break;
+            case -6:
+            case 0:
+                arg0[3] = 4;
+                break;
+            case -1:
+                break;
+            default:
+                arg0[3] = 0;
+                break;
+            }
+        }
+        break;
+
+    case 0x26:
+        arg0[3] = 3;
+        break;
+
+    case 4: {
+        u8 *state = *(u8 **)(arg0 + 0x24);
+        switch (*(s32 *)(state + 4)) {
+        case -5:
+            *(u32 *)(state + 8) |= 2;
+            /* fallthrough */
+        case -3:
+        case -0x80:
+            arg0[3] = 1;
+            break;
+        case -6:
+            if (*(u32 *)(state + 8) & 0x8000) {
+                arg0[0x2A] |= 4;
+                arg0[2] = 0xFE;
+            } else {
+                arg0[3] = 5;
+            }
+            break;
+        case -0xD:
+            f = *(u32 *)(state + 8);
+            if (f & 0x8000) {
+                arg0[0x2A] |= 4;
+                arg0[2] = 0xFE;
+            } else if (lbl_801A66B4 == 5) {
+                arg0[3] = 5;
+            } else {
+                *(u32 *)(state + 8) = f | 0x400;
+                arg0[3] = 1;
+            }
+            break;
+        case 0:
+            arg0[3] = 7;
+            break;
+        case -1:
+            break;
+        default:
+            arg0[3] = 0;
+            break;
+        }
+        break;
+    }
+
+    case 5:
+        if (*(s32 *)(*(u8 **)(arg0 + 0x24) + 4) != 0) {
+            s32 done;
+            if (!(fn_1_B3900_array_read(arg0, 0x2A) & 1)) {
+                done = 0;
+                arg0[0x28] = 0xC;
+                arg0[0x2A] |= 1;
+            } else {
+                u8 c = fn_1_B3900_array_read(arg0, 0x28);
+                if ((s8)c > 0) {
+                    done = 0;
+                    arg0[0x28] = c - 1;
+                } else {
+                    done = 1;
+                }
+            }
+            if (done != 0) {
+                if (*(s32 *)(*(u8 **)(arg0 + 0x24) + 4) == 2 || *(u8 *)(*(u8 **)(arg0 + 0x24) + 1) == 1) {
+                    *(u32 *)(*(u8 **)(arg0 + 0x24) + 4) = -0x7E;
+                    arg0[3] = 1;
+                } else {
+                    arg0[3] = 6;
+                    *(u32 *)(*(u8 **)(arg0 + 0x24) + 8) |= 0x200;
+                }
+            }
+        }
+        break;
+
+    case 6:
+        switch (*(s32 *)(*(u8 **)(arg0 + 0x24) + 4)) {
+        case -5:
+            *(u32 *)(*(u8 **)(arg0 + 0x24) + 8) |= 2;
+            /* fallthrough */
+        case -3:
+        case -0x80:
+            arg0[3] = 1;
+            break;
+        case 0:
+            arg0[3] = 7;
+            *(u32 *)(*(u8 **)(arg0 + 0x24) + 8) &= ~0x200;
+            break;
+        case -1:
+            break;
+        default:
+            arg0[3] = 0;
+            break;
+        }
+        break;
+
+    case 7:
+        switch (*(s32 *)(*(u8 **)(arg0 + 0x24) + 4)) {
+        case -0x80:
+        case -3:
+            arg0[3] = 1;
+            break;
+        case 0:
+            arg0[3] = 0x1C;
+            break;
+        case -1:
+            break;
+        default:
+            arg0[3] = 0;
+            break;
+        }
+        break;
+
+    case 0x1C:
+        switch (*(s32 *)(*(u8 **)(arg0 + 0x24) + 4)) {
+        case -5:
+            *(u32 *)(*(u8 **)(arg0 + 0x24) + 8) |= 2;
+            /* fallthrough */
+        case -0x80:
+        case -0xA:
+        case -4:
+        case -3:
+            arg0[3] = 1;
+            break;
+        case -1:
+            break;
+        case 0:
+            arg0[3] = 0x13;
+            break;
+        default:
+            arg0[3] = 0;
+            break;
+        }
+        break;
+
+    case 0x13:
+        switch (*(s32 *)(*(u8 **)(arg0 + 0x24) + 4)) {
+        case -0x80:
+        case -6:
+        case -3:
+            arg0[3] = 1;
+            break;
+        case 0:
+            arg0[3] = 0x1D;
+            break;
+        case -1:
+            break;
+        default:
+            arg0[3] = 0;
+            break;
+        }
+        break;
+
+    case 0x1D:
+        if (((u16)lbl_1_bss_9F8.unk_8 >> 8) & 1) {
+            *(u32 *)(bss + 0x1F4) = *(u32 *)(*(u8 **)(arg0 + 0x24) + 4);
+            fn_1_46B4(lbl_801A6410, *(u32 *)(arg0 + 0x24), (const char *)(data + 0x6CF0), 0x3EC);
+            *(u32 *)(arg0 + 0x24) = 0;
+            arg0[2] = 0xFF;
+            arg0[3] = 0xFF;
+            arg0[4] = 0xFF;
+            arg0[5] = 0xFF;
+            arg0[6] = 0xFF;
+            arg0[7] = 0;
+            *(s16 *)(arg0 + 8) = -1;
+            *(s16 *)(arg0 + 0xA) = -1;
+            *(u32 *)(arg0 + 0x30) = 0;
+            *(f32 *)(arg0 + 0x34) = lbl_1_rodata_4CA8;
+            *(f32 *)(arg0 + 0x38) = lbl_1_rodata_4CA8;
+            arg0[0x2A] &= ~4;
+            *(u8 *)(bss + 0x5C08) = 0;
+            *(u8 *)(bss + 0x1F8) = 1;
+        }
+        break;
+    }
+
+    f = *(u32 *)(arg0 + 0x24);
+    if (f != 0) {
+        *(u32 *)(bss + 0x1F4) = *(u32 *)(f + 4);
+    }
+}
+#pragma opt_propagation reset
+
+#pragma opt_dead_assignments reset
+/* fzgx:end fn_1_B3900 */
+
 /* fzgx:begin fn_1_B40B4 */
 void fn_1_B40B4(int unused, void *ptr) {
     *(u8 *)((u8 *)ptr + 3) = 0x3;

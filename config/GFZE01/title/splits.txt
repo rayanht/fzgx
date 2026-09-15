@@ -224,3 +224,6 @@ rel/title/title/fn_8_1C90.c:
 
 rel/title/title/fn_8_1394.c:
 	.text       start:0x00001394 end:0x00001C08 align:4
+
+rel/title/title/fn_8_2660.c:
+	.text       start:0x00002660 end:0x00004E8C align:4

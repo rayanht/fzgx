@@ -114,6 +114,210 @@ void fn_1_9FF9C(void) {
 }
 /* fzgx:end fn_1_9FF9C */
 
+/* fzgx:begin fn_1_9FFD8 noprologue */
+#include "types.h"
+#include "rel/main_rel/globals.h"
+#include "rel/main_rel/sound.h"
+
+struct fn_1_9FFD8_lbl_1_bss_6EA98 {
+    u32 unk_0;
+    u8 pad_4[0x9];
+    u8 unk_D;
+    u8 unk_E;
+    u8 pad_F[0x9];
+    u8 unk_18;
+    u8 pad_19[0x3];
+    u32 unk_1C;
+    u16 unk_20;
+    u8 pad_22[0x2];
+    f32 unk_24;
+    f32 unk_28;
+    u8 unk_2C;
+    u8 unk_2D;
+    u8 unk_2E;
+    u8 pad_2F[0x1];
+    u32 unk_30;
+    u32 unk_34;
+    u32 unk_38;
+};
+struct fn_1_9FFD8_lbl_801A6410 {
+    u32 unk_0;
+};
+
+extern const f32 lbl_1_rodata_42E0;
+extern void *lbl_801A6410;
+extern u32 lbl_1_data_33F1C;
+extern u32 OSGetSoundMode(void);
+extern u32 fn_1_44A4(void);
+extern u32 fn_8001E954(u32);
+extern u32 fn_80020778(void);
+extern u32 fn_80025E18(void);
+extern u32 fn_8004CD70(u32, u32, u32);
+extern u32 fn_8004E59C(u32);
+extern u32 fn_8004EC34(u32);
+extern u32 fn_80068BFC(u32, u32, u32, u32, u32);
+extern u32 fn_1_45D0(void *arg0, u32 arg1, u32 *arg2, int arg3);
+extern void AIInit(u8 *arg0);
+extern void fn_1_4438(void);
+extern void fn_1_9FE74(void);
+extern void fn_1_9FEE8(void);
+extern void fn_1_9FF50(void);
+extern void fn_1_9FF54(void);
+extern void fn_1_9FF58(void);
+extern void fn_1_A04AC(void);
+extern void fn_1_A2E24(u32, u32, s32);
+extern void fn_80008BEC(void *, int, u32);
+extern void fn_80020724(void);
+extern void fn_80022014(u32);
+extern void fn_8002361C(u32, u32);
+extern void fn_80025D50(u32, u32);
+extern void fn_8002805C(void);
+extern void fn_800411F4(void);
+extern void fn_8004B7D4(u32);
+extern void fn_8004BBA4(u32, u32);
+extern void fn_80065890(u32);
+extern void fn_8006589C(u32);
+extern void fn_800658A8(u32);
+
+#pragma opt_propagation off
+/* file-scope objects of the retail TU, in retail order: MWCC addresses them off one section base */
+u32 fzgx_obj_lbl_1_bss_6EA98;
+u32 fzgx_obj_lbl_1_bss_6EA9C[2];
+u8 lbl_1_bss_6EAA4;
+u8 fzgx_pool_lbl_1_bss_6EA98_gap_6EAA5;
+u8 lbl_1_bss_6EAA6;
+u8 fzgx_pool_lbl_1_bss_6EA98_gap_6EAA7;
+u32 lbl_1_bss_6EAA8[2];
+u8 lbl_1_bss_6EAB0;
+u8 fzgx_pool_lbl_1_bss_6EA98_gap_6EAB1;
+u16 fzgx_pool_lbl_1_bss_6EA98_gap_6EAB1_fill_6EAB2;
+u32 fzgx_obj_lbl_1_bss_6EAB4;
+u16 lbl_1_bss_6EAB4__fzgx_offset_4;
+u16 lbl_1_bss_6EAB4__fzgx_offset_6;
+f32 lbl_1_bss_6EAB4__fzgx_offset_8;
+f32 lbl_1_bss_6EAB4__fzgx_offset_C;
+u8 lbl_1_bss_6EAB4__fzgx_offset_10;
+u8 lbl_1_bss_6EAB4__fzgx_offset_11;
+u8 fzgx_obj_lbl_1_bss_6EAC6;
+u8 lbl_1_bss_6EAC6__fzgx_offset_1;
+u32 lbl_1_bss_6EAC6__fzgx_offset_2;
+u32 lbl_1_bss_6EAC6__fzgx_offset_6;
+u32 fzgx_obj_lbl_1_bss_6EAD0;
+u32 lbl_1_bss_6EAD0__fzgx_offset_4;
+u8 lbl_1_bss_6EAD0__fzgx_offset_8;
+u8 lbl_1_bss_6EAD0__fzgx_offset_9;
+u16 lbl_1_bss_6EAD0__fzgx_offset_A;
+u32 lbl_1_bss_6EAD0__fzgx_offset_C[447];
+
+#pragma section code_type ".fzgxpool"
+static void fzgx_bss_layout(void) {
+    volatile u8 s;  /* fzgx-allow: S2 layout primer sink: MWCC emits .bss objects in first-access order */
+    s = *(u8 *)&fzgx_obj_lbl_1_bss_6EA98;
+    s = *(u8 *)&fzgx_obj_lbl_1_bss_6EA9C;
+    s = *(u8 *)&lbl_1_bss_6EAA4;
+    s = *(u8 *)&fzgx_pool_lbl_1_bss_6EA98_gap_6EAA5;
+    s = *(u8 *)&lbl_1_bss_6EAA6;
+    s = *(u8 *)&fzgx_pool_lbl_1_bss_6EA98_gap_6EAA7;
+    s = *(u8 *)&lbl_1_bss_6EAA8;
+    s = *(u8 *)&lbl_1_bss_6EAB0;
+    s = *(u8 *)&fzgx_pool_lbl_1_bss_6EA98_gap_6EAB1;
+    s = *(u8 *)&fzgx_pool_lbl_1_bss_6EA98_gap_6EAB1_fill_6EAB2;
+    s = *(u8 *)&fzgx_obj_lbl_1_bss_6EAB4;
+    s = *(u8 *)&lbl_1_bss_6EAB4__fzgx_offset_4;
+    s = *(u8 *)&lbl_1_bss_6EAB4__fzgx_offset_6;
+    s = *(u8 *)&lbl_1_bss_6EAB4__fzgx_offset_8;
+    s = *(u8 *)&lbl_1_bss_6EAB4__fzgx_offset_C;
+    s = *(u8 *)&lbl_1_bss_6EAB4__fzgx_offset_10;
+    s = *(u8 *)&lbl_1_bss_6EAB4__fzgx_offset_11;
+    s = *(u8 *)&fzgx_obj_lbl_1_bss_6EAC6;
+    s = *(u8 *)&lbl_1_bss_6EAC6__fzgx_offset_1;
+    s = *(u8 *)&lbl_1_bss_6EAC6__fzgx_offset_2;
+    s = *(u8 *)&lbl_1_bss_6EAC6__fzgx_offset_6;
+    s = *(u8 *)&fzgx_obj_lbl_1_bss_6EAD0;
+    s = *(u8 *)&lbl_1_bss_6EAD0__fzgx_offset_4;
+    s = *(u8 *)&lbl_1_bss_6EAD0__fzgx_offset_8;
+    s = *(u8 *)&lbl_1_bss_6EAD0__fzgx_offset_9;
+    s = *(u8 *)&lbl_1_bss_6EAD0__fzgx_offset_A;
+    s = *(u8 *)&lbl_1_bss_6EAD0__fzgx_offset_C;
+}
+#pragma section code_type ".text"
+
+void fn_1_9FFD8(void) {
+    u32 fzgx_value;
+    f32 f0;
+    u32 v0;
+    u32 v1;
+    int lab_t1;
+    u32 t11;
+    u32 t12;
+    u32 t17;
+    u32 t19;
+    u32 t21;
+    u32 t22;
+    u32 t23;
+    
+    AIInit(0);
+    fzgx_pool_lbl_1_bss_6EA98_gap_6EAA5 = 0;
+    lbl_1_bss_6EAA6 = 0;
+    fn_80025D50((u32)fn_1_9FE74, (u32)fn_1_9FEE8);
+    fn_80020778();
+    fn_8002805C();
+    fn_80025E18();
+    fn_80022014((u32)fn_1_9FF58);
+    fn_8004EC34(0);
+    fn_8004E59C(0);
+    fn_800411F4();
+    fn_8004BBA4((u32)fn_1_9FF50, 0);
+    fzgx_value = 0;
+    fzgx_obj_lbl_1_bss_6EAB4 = fzgx_value;
+    lbl_1_bss_6EAB4__fzgx_offset_4 = 0;
+    fzgx_obj_lbl_1_bss_6EAB4 = 0;
+    lbl_1_bss_6EAB4__fzgx_offset_4 = 0;
+    f0 = lbl_1_rodata_42E0;
+    lbl_1_bss_6EAB4__fzgx_offset_8 = f0;
+    lbl_1_bss_6EAB4__fzgx_offset_C = f0;
+    lbl_1_bss_6EAB4__fzgx_offset_10 = 0xff;
+    lbl_1_bss_6EAB4__fzgx_offset_11 = 0;
+    fzgx_obj_lbl_1_bss_6EAC6 = 0;
+    fn_1_4438();
+    t11 = fn_1_45D0(lbl_801A6410, 0x28000, &lbl_1_data_33F1C, 0xf4);
+    lbl_1_bss_6EAC6__fzgx_offset_2 = t11;
+    t12 = fn_8001E954(0x6be000);
+    lbl_1_bss_6EAC6__fzgx_offset_6 = t12;
+    lab_t1 = 0;
+    fn_80008BEC((void *)lbl_1_bss_6EAC6__fzgx_offset_2, lab_t1, 0x28000);
+    fn_80068BFC(1, 0x28000, 0x6be000, lbl_1_bss_6EAC6__fzgx_offset_2, lbl_1_bss_6EAC6__fzgx_offset_6);
+    fn_800658A8((u32)fn_1_A04AC);
+    fn_8006589C((u32)fn_1_9FF54);
+    t17 = fn_1_44A4();
+    fn_80065890(t17);
+    t19 = fn_1_45D0(lbl_801A6410, 0x974a0, &lbl_1_data_33F1C, 0x10b);
+    fzgx_obj_lbl_1_bss_6EAD0 = t19;
+    lab_t1 = 0;
+    fn_80008BEC((void *)t19, lab_t1, 0x974a0);
+    t21 = fn_8004CD70(2, (fzgx_obj_lbl_1_bss_6EAD0 + 16), 0x4a248);
+    v0 = fzgx_obj_lbl_1_bss_6EAD0;
+    *(u32 *)((u8 *)v0 + 0) = t21;
+    t22 = fn_8004CD70(2, ((fzgx_obj_lbl_1_bss_6EAD0 + 0x50000) - 0x5da8), 0x4a248);
+    v1 = fzgx_obj_lbl_1_bss_6EAD0;
+    *(u32 *)((u8 *)v1 + 4) = t22;
+    *(u32 *)((u8 *)fzgx_obj_lbl_1_bss_6EAD0 + 8) = 0;
+    *(u32 *)((u8 *)fzgx_obj_lbl_1_bss_6EAD0 + 12) = 0;
+    t23 = OSGetSoundMode();
+    if (t23 == 0) {
+        fn_1_A2E24(0, 0xa0000900, 0);
+        fn_8004B7D4(1);
+    } else {
+        fn_1_A2E24(0, 0xa0000800, 0);
+    }
+    fn_80020724();
+    fn_8002361C((u32)((u8 *)&lbl_1_bss_6EAD0__fzgx_offset_8), 32);
+    fzgx_obj_lbl_1_bss_6EA98 = 0;
+    lbl_1_bss_6EAB0 = 1;
+}
+#pragma opt_propagation reset
+/* fzgx:end fn_1_9FFD8 */
+
 /* fzgx:begin fn_1_A04AC */
 void fn_1_A04AC(void) {
     lbl_1_bss_6F1E0 = 1;
