@@ -657,6 +657,101 @@ def string_at(raw, off):
     return s, n
 
 
+def native_string_views(p, symbol, text):
+    """Recover string objects obscured by a byte pointer to a TU pool."""
+    from .sdkimport import masked
+    from .fixup_source import _function_body_span, commutations
+    from .dataimport import pool_objects, payload
+    code = masked(text)
+    sym = p.resolve(symbol)
+    span = _function_body_span(code, sym.name)
+    if not span:
+        return []
+    out = []
+    for declaration in re.finditer(r'\bextern\s+(?:const\s+)?(char|u8|unsigned char)\s+(\w+)\s*\[[^\]]*\]\s*;', code[:span[0]]):
+        typ, anchor = declaration.groups()
+        owner = p.find_symbol(anchor, sym.module)
+        if not owner or owner.module != sym.module or owner.section not in ('.rodata', '.data'):
+            continue
+        casts = r'(?:\(\s*(?:const\s+)?(?:char|u8|unsigned char|u32|void)\s*\*?\s*\)\s*)*'
+        assignment = list(re.finditer(r'\b(\w+)\s*=\s*'+casts+r'&?'+re.escape(anchor)+r'\s*;', code[span[1]:span[2]]))
+        if len(assignment) != 1:
+            continue
+        assign = assignment[0]
+        root = assign[1]
+        if len(re.findall(r'\b'+re.escape(root)+r'\s*=(?!=)',code[span[1]:span[2]])) != 1:
+            continue
+        root_decl = re.search(r'\b(?:const\s+)?(?:char|u8|unsigned char)\s*\*\s*'+re.escape(root)+r'\s*([;=])', code[span[1]:span[2]])
+        if not root_decl:
+            continue
+        edits = [(declaration.start(), declaration.end(), ''),
+                 (span[1]+assign.start(),span[1]+assign.end(),''),
+                 (span[1]+root_decl.start(),span[1]+root_decl.end(),'')]
+        if root_decl[1] == '=':
+            edits = [edits[0],(span[1]+root_decl.start(),span[1]+assign.end(),'')]
+        uses = []
+        operations = []
+        commutations(text, sym.name, operations)
+        for op in operations:
+            if op['op'] != '+':
+                continue
+            left,right = (code[slice(*op[k])].strip() for k in ('left','right'))
+            left = re.sub(casts, '', left).strip(' ()')
+            if left != root or not re.fullmatch(r'0x[\da-fA-F]+|\d+',right):
+                continue
+            uses.append((op['start'],op['end'],int(right,0)))
+        for use in re.finditer(r'\b'+re.escape(root)+r'\b(?:\s*\+\s*(0x[\da-fA-F]+|\d+))?', code[span[1]:span[2]]):
+            lo, hi = span[1]+use.start(),span[1]+use.end()
+            if any(a<=lo<b for a,b,_ in edits):
+                continue
+            if any(a<=lo<b for a,b,_ in uses):
+                continue
+            # Dynamic indexing needs a measured aggregate view, not a string.
+            if re.match(r'\s*(?:\[|\+|-|->|=)',code[hi:]):
+                uses = []; break
+            uses.append((lo,hi,int(use[1],0) if use[1] else 0))
+        if not uses:
+            continue
+        section = section_bytes(p, owner.module, owner.section, owner.addr)
+        if section is None:
+            continue
+        base, raw = section
+        cursor, limit = owner.addr-base, max(off for _,_,off in uses)
+        start = cursor
+        objects = {}
+        while cursor-start <= limit:
+            string = string_at(raw,cursor)
+            if string is None:
+                break
+            value,width = string
+            if raw[cursor+len(value)+1:cursor+width] != bytes(width-len(value)-1):
+                break
+            objects[cursor-start] = (value,width)
+            cursor += width
+        if any(off not in objects for _,_,off in uses):
+            continue
+        try:
+            physical = pool_objects(p, owner.module, owner.section, owner.addr, cursor-start)
+            if not physical or any(owner.addr <= obj.addr+r['offset'] < base+cursor
+                                   for obj in physical for r in payload(p,obj)[1]):
+                continue
+        except (ValueError, KeyError):
+            continue
+        prefix = 'fzgx_pool_strings_'+anchor
+        storage = 'const char' if owner.section == '.rodata' else 'char'
+        definitions = [f'static {storage} {prefix}_{off:X}[{width}] = {c_literal(value)};'
+                       for off,(value,width) in objects.items()]
+        for lo,hi,off in uses:
+            edits.append((lo,hi,f'(({typ} *){prefix}_{off:X})'))
+        body = text
+        for lo,hi,value in sorted(edits,reverse=True):
+            body = body[:lo]+value+body[hi:]
+        at = declaration.start()
+        definitions = '\n'.join(definitions)+'\n'
+        out.append(('native string objects '+anchor,body[:at]+definitions+body[at:]))
+    return out
+
+
 def initialized_data_views(p, symbol, text):
     """Recover native data objects hidden behind an extern aggregate view.
 

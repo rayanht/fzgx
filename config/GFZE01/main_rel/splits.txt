@@ -6410,3 +6410,12 @@ rel/main_rel/memcard/fn_1_B3900.c:
 
 rel/main_rel/sound/fn_1_9FFD8.c:
 	.text       start:0x0009FFD8 end:0x000A0214 align:4
+
+rel/main_rel/car/fn_1_7F3AC.c:
+	.text       start:0x0007F3AC end:0x0007F428 align:4
+
+rel/main_rel/font/fn_1_557C4.c:
+	.text       start:0x000557C4 end:0x00055924 align:4
+
+rel/main_rel/font/fn_1_55A84.c:
+	.text       start:0x00055A84 end:0x00055C48 align:4

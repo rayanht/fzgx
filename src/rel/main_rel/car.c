@@ -110,6 +110,44 @@ extern void fn_1_12AB38(void *value);
 extern void sprintf(char *buffer, const char *format, ...);
 extern void fn_1_A7B5C(void *arg0, s32 arg1, void *arg2, s8 arg3, void *arg4);
 
+/* fzgx:begin fn_1_7F3AC */
+typedef struct CarFn_1_7F3AC {
+    u8 pad_390[0x390];
+    u32 field_390;
+    u8 pad_394[0x10];
+    u32 field_3A4;
+} CarFn_1_7F3AC;
+
+extern void fn_1_150464(u32 arg0);
+extern void fn_1_810E4(u32 arg0);
+extern u8 lbl_1_data_1FFF0[12];
+extern u32 lbl_801A6410;
+extern void fn_1_46B4(u32 arg0, u32 arg1, u8 *arg2, u32 arg3);
+
+#pragma opt_propagation off
+#pragma opt_common_subs off
+void fn_1_7F3AC(CarFn_1_7F3AC *car, u32 lab_unused0, u32 lab_unused1, u32 lab_unused2) {
+    u32 *fzgx_value;
+    u32 shift;
+    u32 flags;
+    if (car != 0 && car->field_3A4 != 0) {
+        shift = 6;
+        flags = car->field_390;
+        if ((__rlwnm(flags, shift, 31, 31) != 0)) {
+            fn_1_150464(car->field_3A4);
+        } else {
+            fn_1_810E4(car->field_3A4);
+        }
+        fn_1_46B4(lbl_801A6410, car->field_3A4, lbl_1_data_1FFF0, 0x1F7);
+        fzgx_value = &(car->field_3A4);
+        *fzgx_value = 0;
+    }
+}
+#pragma opt_common_subs reset
+
+#pragma opt_propagation reset
+/* fzgx:end fn_1_7F3AC */
+
 /* fzgx:begin fn_1_7F428 */
 u32 fn_1_7F428(u32 arg0) {
     s32 index;

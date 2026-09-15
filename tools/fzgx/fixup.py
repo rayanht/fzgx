@@ -332,6 +332,8 @@ class Engine:
         captured_operators = []
         check = self.check(row)
         if check.ok:
+            yield from evidence.range_switches(body, name, check)
+            yield from layout.native_string_views(self.project, row['symbol'], body)
             yield from evidence.swapped_call_arguments(self.project, row['symbol'], body, check)
             yield from layout.overlapping_field_views(self.project, row['symbol'], body)
             yield from evidence.relocation_bindings(body, check)

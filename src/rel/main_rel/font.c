@@ -3227,6 +3227,176 @@ void fn_1_5575C(Fn1_5575CObject *value) {
 }
 /* fzgx:end fn_1_5575C */
 
+/* fzgx:begin fn_1_557C4 */
+extern void *fn_1_5448C(void *value);
+extern void *fn_1_548AC(u32 size);
+extern void fn_1_55C48(void);
+extern u16 fn_1_7BE94(void);
+extern void fn_1_5489C(void *value, void *object);
+extern void fn_1_56530(void);
+extern void lbl_8006DB74(void *value);
+extern void lbl_8006DD14(void *value, void *object);
+extern u8 *lbl_801A66CC;
+
+typedef struct {
+    u32 w0;
+    u32 w4;
+    u32 w8;
+    u32 wC;
+    u32 w10;
+    u32 w14;
+    u32 w18;
+    u32 w1C;
+    u32 w20;
+    u32 w24;
+} Words28;
+
+typedef struct {
+    u8 pad_00[4];
+    u32 unk_04;
+    void *unk_08;
+    u8 unk_0C[0x30];
+    u16 unk_3C;
+    u8 pad_3E[2];
+    Obj_1_bss_6C7A4 unk_40;
+    void *unk_68[4];
+} Fn1_557C4Object;
+
+#pragma opt_lifetimes off
+void fn_1_557C4(void *value) {
+    s32 offset;
+    Fn1_557C4Object *object;
+    void *resource;
+    s32 valid;
+    s32 i;
+    u32 shift;
+    u32 word;
+    Obj_1_bss_6C7CC *bits;
+
+    resource = fn_1_5448C((u8 *)value + 8);
+    object = fn_1_548AC(0x78);
+    if (object != 0) {
+        valid = 1;
+        object->unk_04 = (u32)fn_1_55C48;
+        object->unk_08 = value;
+        lbl_8006DB74(((0xC) + ((u8 *)object)));
+        object->unk_3C = fn_1_7BE94();
+        object->unk_40 = lbl_1_bss_6C7A4;
+        bits = &lbl_1_bss_6C7CC;
+        for (i = 0, offset = 0; i < 4; i++, offset += 0x30) {
+            if ((__rlwnm(bits->unk_0, ((i + 1) & 0x1f), 31, 31) != 0)) {
+                object->unk_68[i] = fn_1_548AC(0x30);
+                if ((*((object->unk_68) + (i))) != 0) {
+                    lbl_8006DD14(lbl_801A66CC + offset + 0xE0, (*((object->unk_68) + (i))));
+                } else {
+                    valid = 0;
+                }
+            } else {
+                object->unk_68[i] = 0;
+            }
+        }
+        if (valid != 0) {
+            fn_1_5489C(resource, object);
+        }
+    }
+    fn_1_56530();
+}
+#pragma opt_lifetimes reset
+/* fzgx:end fn_1_557C4 */
+
+/* fzgx:begin fn_1_55A84 */
+extern const f32 lbl_1_rodata_28A8;
+extern void *fn_1_5448C(void *data);
+extern void *fn_1_548AC(s32 size);
+extern void fn_1_55D6C(void);
+extern u16 fn_1_7BE94(void);
+extern void fn_1_5489C(void *data, void *value);
+extern void fn_1_56530(void);
+extern void fn_1_563E4(void *state);
+extern void lbl_8006DB74(void *data);
+extern void lbl_8006DD14(void *data, void *value);
+extern u8 *lbl_801A66CC;
+
+typedef struct {
+    u8 pad_00[0x1c];
+    u16 unk_1c;
+} FontInput;
+
+typedef struct {
+    u8 pad_00[0x4];
+    void (*destroy)(void);
+    void *owner;
+    u8 pad_0c[0x30];
+    u16 unk_3c;
+    u8 pad_3e[0x2];
+    Obj_1_bss_6C7A4 settings;
+    void *unk_68;
+    u8 pad_6c[0xc];
+    void *unk_78;
+    void *unk_7c;
+    void *unk_80;
+} FontObject;
+
+typedef void (*FontCallback)(void *, void *, void *);
+
+void fn_1_55A84(FontCallback callback, FontInput *value, void *arg2, void *arg3) {
+    u16 fzgx_value;
+    FontObject *cursor;
+    int offset;
+    FontObject *object;
+    void *data;
+    int ok;
+    int i;
+    u32 shift;
+    u32 *flags;
+
+    if (value->unk_1c != 0 || lbl_1_rodata_28A8 != lbl_1_bss_6C7A4.unk_8) {
+        data = fn_1_5448C((u8 *)value + 8);
+        object = (FontObject *)fn_1_548AC(0x84);
+        if (object != 0) {
+            ok = 1;
+            object->destroy = fn_1_55D6C;
+            object->owner = value;
+            lbl_8006DB74((u8 *)object + 0xc);
+            fzgx_value = fn_1_7BE94();
+            object->unk_3c = fzgx_value;
+            object->settings = lbl_1_bss_6C7A4;
+            i = 0;
+            offset = 0;
+            cursor = object;
+            flags = (u32 *)&lbl_1_bss_6C7CC;
+            while (i < 4) {
+                shift = (i + 1) & 31;
+                if ((__rlwnm(*flags, shift, 31, 31) != 0)) {
+                    cursor->unk_68 = fn_1_548AC(0x30);
+                    if (cursor->unk_68 != 0) {
+                        lbl_8006DD14(lbl_801A66CC + offset + 0xe0, cursor->unk_68);
+                    } else {
+                        ok = 0;
+                    }
+                } else {
+                    cursor->unk_68 = 0;
+                }
+                i++;
+                cursor = (FontObject *)((u8 *)cursor + 4);
+                offset += 0x30;
+            }
+            object->unk_78 = arg2;
+            object->unk_7c = arg3;
+            object->unk_80 = callback;
+            if (ok != 0) {
+                fn_1_5489C(data, object);
+            }
+        }
+        fn_1_56530();
+    } else {
+        fn_1_563E4(&lbl_1_bss_6C7A4);
+        callback(value, arg2, arg3);
+        fn_1_56530();
+    }
+}
+/* fzgx:end fn_1_55A84 */
+
 /* fzgx:begin fn_1_55FC4 */
 void fn_1_55FC4(f32 value) {
     lbl_1_bss_6C7A0 = value;

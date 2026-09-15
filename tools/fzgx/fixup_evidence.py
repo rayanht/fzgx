@@ -688,7 +688,120 @@ def rotate_bit_tests(body, name, check):
         value,amount=site.groups()
         replacement='__rlwnm('+value+', ('+amount+') & 31, 31, 31)'
         a,b=span[0]+site.start(),span[0]+site.end();text=text[:a]+replacement+text[b:]
-    return [('retail rotated bit tests intrinsic',text)] if text!=body else []
+    out = [('retail rotated bit tests intrinsic',text)] if text!=body else []
+    from . import fixup_source as source
+    operations = []
+    source.commutations(body, name, operations)
+    edits = []
+    for outer in operations:
+        if outer['op'] not in ('<', '>=', '&'):
+            continue
+        rhs = body[slice(*outer['right'])].strip(' ()uUlL')
+        if rhs != ('1' if outer['op']=='&' else '0'):
+            continue
+        lo, hi = outer['left']
+        children = [op for op in operations if op['op'] == ('>>' if outer['op']=='&' else '<<')
+                    and lo <= op['start'] < op['end'] <= hi]
+        if len(children) != 1:
+            continue
+        shift = children[0]
+        value, amount = (body[slice(*shift[k])] for k in ('left','right'))
+        value = re.sub(r'^\(\s*(?:s32|u32|int|unsigned int)\s*\)\s*', '', value)
+        if outer['op'] == '&':
+            amount = '32 - ('+amount+')'
+        expression = '__rlwnm('+value+', '+amount+', 31, 31)'
+        if outer['op'] != '&':
+            expression += ' == 0' if outer['op']=='>=' else ' != 0'
+        edits.append((outer['start'], outer['end'], '('+expression+')'))
+    for group in ([edits]+[[e] for e in edits] if len(edits)>1 else [edits]):
+        text = body
+        for a,b,value in sorted(set(group), reverse=True):
+            text = text[:a]+value+text[b:]
+        if text != body:
+            out.append((f'retail rotated low bit ({len(group)} sites)',text))
+    return list(dict.fromkeys(out))
+
+
+def range_switches(body, name, check):
+    """Recover contiguous switch cases flattened into a signed range test."""
+    from . import fixup_source as source
+    from .sdkimport import masked
+    code = masked(body)
+    span = source._function_body_span(code, name)
+    if not span or not any(stuck._fmt(t).startswith('b ') and not stuck._fmt(o)
+                           for t,o in zip(*check._rows)):
+        return []
+    operations = []
+    source.commutations(body, name, operations)
+    def atom(value):
+        value = value.strip()
+        while value.startswith('(') and value.endswith(')'):
+            depth = 0
+            for i,ch in enumerate(value):
+                depth += (ch=='(')-(ch==')')
+                if not depth:
+                    break
+            if i != len(value)-1:
+                break
+            value = value[1:-1].strip()
+        return value
+    def statement(start):
+        while start < span[2] and code[start].isspace():start += 1
+        if start == span[2]:return None
+        if code[start] == '{':
+            end,depth = start+1,1
+            while end < span[2] and depth:
+                depth += (code[end]=='{')-(code[end]=='}');end += 1
+            return (start,end,body[start+1:end-1]) if not depth else None
+        end = code.find(';',start,span[2])
+        if end < 0 or re.search(r'[{}]|\b(?:if|for|while|switch)\b',code[start:end]):return None
+        return start,end+1,body[start:end+1]
+    edits = []
+    for callee,start,end,args in source.call_sites(code):
+        if callee != 'if' or len(args)!=1 or not span[1]<=start<end<=span[2]:continue
+        lo,hi=args[0]
+        roots = [o for o in operations if o['op'] in ('&&','||') and lo<=o['start']<o['end']<=hi
+                 and atom(code[lo:hi])==atom(code[o['start']:o['end']])]
+        if len(roots)!=1:continue
+        root=roots[0];bounds=[]
+        for side in ('left','right'):
+            lo,hi=root[side]
+            children=[o for o in operations if o['op'] in ('<','<=','>','>=')
+                      and lo<=o['start']<o['end']<=hi and atom(code[lo:hi])==atom(code[o['start']:o['end']])]
+            if len(children)!=1:break
+            child=children[0];value=atom(code[slice(*child['left'])]);literal=atom(code[slice(*child['right'])])
+            if not re.fullmatch(r'-?(?:0x[\da-fA-F]+|\d+)',literal):break
+            operator=child['op']
+            if root['op']=='||':operator={'<':'>=','<=':'>','>':'<=','>=':'<'}[operator]
+            bounds.append((value,operator,int(literal,0)))
+        if len(bounds)!=2 or bounds[0][0]!=bounds[1][0]:continue
+        lower=[v+(op=='>') for _,op,v in bounds if op in ('>','>=')]
+        upper=[v-(op=='<') for _,op,v in bounds if op in ('<','<=')]
+        if len(lower)!=1 or len(upper)!=1 or not 0<=upper[0]-lower[0]<32:continue
+        yes=statement(end)
+        if yes is None:continue
+        tail=yes[1];no_text=''
+        alternate=re.match(r'\s*else\b',code[tail:span[2]])
+        if alternate:
+            no=statement(tail+alternate.end())
+            if no is None:continue
+            tail=no[1];no_text=no[2]
+        yes_text=yes[2]
+        if re.search(r'\bbreak\b',masked(yes_text+no_text)):continue
+        if root['op']=='||':yes_text,no_text=no_text,yes_text
+        cases=' '.join('case '+str(i)+':' for i in range(lower[0],upper[0]+1))
+        replacement=('switch ('+bounds[0][0]+') {\n'+cases+' {\n'+yes_text+'\n} break;\n'
+                     +'default: {\n'+no_text+'\n} break;\n}')
+        edits.append((start,tail,replacement))
+    out=[]
+    groups=[[e] for e in edits]
+    ordered=sorted(edits)
+    if len(ordered)>1 and all(b<=c for (a,b,_),(c,d,_) in zip(ordered,ordered[1:])):groups.insert(0,ordered)
+    for group in groups:
+        text=body
+        for a,b,value in sorted(group,reverse=True):text=text[:a]+value+text[b:]
+        out.append((f'retail contiguous switch cases ({len(group)} sites)',text))
+    return list(dict.fromkeys(out))
 
 
 def conversion_arguments(p, symbol, body, check):

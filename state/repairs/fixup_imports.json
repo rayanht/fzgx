@@ -8944,5 +8944,443 @@
     ],
     "link": "verified",
     "commit": "89701533"
+  },
+  "fn_1_7F3AC": {
+    "seed_symbol": "fn_1_7F3AC",
+    "generator": "fzgx fixup",
+    "transform": "retail rotated low bit (1 sites)",
+    "seed": "#include \"types.h\"\n\ntypedef struct CarFn_1_7F3AC {\n    u8 pad_390[0x390];\n    u32 field_390;\n    u8 pad_394[0x10];\n    u32 field_3A4;\n} CarFn_1_7F3AC;\n\nextern void fn_1_150464(u32 arg0);\nextern void fn_1_810E4(u32 arg0);\nextern u8 lbl_1_data_1FFF0[12];\nextern u32 lbl_801A6410;\nextern void fn_1_46B4(u32 arg0, u32 arg1, u8 *arg2, u32 arg3);\n\n#pragma opt_propagation off\n#pragma opt_common_subs off\nvoid fn_1_7F3AC(CarFn_1_7F3AC *car, u32 lab_unused0, u32 lab_unused1, u32 lab_unused2) {\n    u32 *fzgx_value;\n    u32 shift;\n    u32 flags;\n    if (car != 0 && car->field_3A4 != 0) {\n        shift = 6;\n        flags = car->field_390;\n        if ((s32)(flags << shift) < 0) {\n            fn_1_150464(car->field_3A4);\n        } else {\n            fn_1_810E4(car->field_3A4);\n        }\n        fn_1_46B4(lbl_801A6410, car->field_3A4, lbl_1_data_1FFF0, 0x1F7);\n        fzgx_value = &(car->field_3A4);\n        *fzgx_value = 0;\n    }\n}\n#pragma opt_common_subs reset\n\n#pragma opt_propagation reset\n",
+    "seed_sha256": "380bf40911ad1254e9d538967e1ce3514fce5645522362a036fa5370591e527f",
+    "generated_sha256": "b64eef7320dc86fd197296aa7f86b887ddc6a0632c1c206b348a076621f22e86",
+    "generated_source": "#include \"types.h\"\n\ntypedef struct CarFn_1_7F3AC {\n    u8 pad_390[0x390];\n    u32 field_390;\n    u8 pad_394[0x10];\n    u32 field_3A4;\n} CarFn_1_7F3AC;\n\nextern void fn_1_150464(u32 arg0);\nextern void fn_1_810E4(u32 arg0);\nextern u8 lbl_1_data_1FFF0[12];\nextern u32 lbl_801A6410;\nextern void fn_1_46B4(u32 arg0, u32 arg1, u8 *arg2, u32 arg3);\n\n#pragma opt_propagation off\n#pragma opt_common_subs off\nvoid fn_1_7F3AC(CarFn_1_7F3AC *car, u32 lab_unused0, u32 lab_unused1, u32 lab_unused2) {\n    u32 *fzgx_value;\n    u32 shift;\n    u32 flags;\n    if (car != 0 && car->field_3A4 != 0) {\n        shift = 6;\n        flags = car->field_390;\n        if ((__rlwnm(flags, shift, 31, 31) != 0)) {\n            fn_1_150464(car->field_3A4);\n        } else {\n            fn_1_810E4(car->field_3A4);\n        }\n        fn_1_46B4(lbl_801A6410, car->field_3A4, lbl_1_data_1FFF0, 0x1F7);\n        fzgx_value = &(car->field_3A4);\n        *fzgx_value = 0;\n    }\n}\n#pragma opt_common_subs reset\n\n#pragma opt_propagation reset\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "rel/main_rel/car/fn_1_7F3AC.c",
+    "bytes": 124,
+    "headers_sha256": "a3db0164dc3a0250a1c1729dabebf7f84ddbd4096090f5f7f2d171ec8ca55bd1",
+    "oracle_sha256": "7cc891120feb212c397b96ddb46f5213d85d0998668a1ee4bd55a3d6abc2e1ff",
+    "recipe": [
+      {
+        "label": "retail rotated low bit (1 sites)",
+        "input_sha256": "380bf40911ad1254e9d538967e1ce3514fce5645522362a036fa5370591e527f",
+        "output_sha256": "b64eef7320dc86fd197296aa7f86b887ddc6a0632c1c206b348a076621f22e86",
+        "input_symbol": "fn_1_7F3AC",
+        "output_symbol": "fn_1_7F3AC",
+        "edits": [
+          [
+            645,
+            669,
+            "__rlwnm(flags, shift, 31, 31) != 0)"
+          ]
+        ]
+      }
+    ],
+    "link": "pending"
+  },
+  "fn_1_557C4": {
+    "seed_symbol": "fn_1_557C4",
+    "generator": "fzgx fixup",
+    "transform": "retail rotated low bit (1 sites)",
+    "seed": "#include \"types.h\"\n#include \"rel/main_rel/font.h\"\n\nextern void *fn_1_5448C(void *value);\nextern void *fn_1_548AC(u32 size);\nextern void fn_1_55C48(void);\nextern u16 fn_1_7BE94(void);\nextern void fn_1_5489C(void *value, void *object);\nextern void fn_1_56530(void);\nextern void lbl_8006DB74(void *value);\nextern void lbl_8006DD14(void *value, void *object);\nextern u8 *lbl_801A66CC;\n\ntypedef struct {\n    u32 w0;\n    u32 w4;\n    u32 w8;\n    u32 wC;\n    u32 w10;\n    u32 w14;\n    u32 w18;\n    u32 w1C;\n    u32 w20;\n    u32 w24;\n} Words28;\n\ntypedef struct {\n    u8 pad_00[4];\n    u32 unk_04;\n    void *unk_08;\n    u8 unk_0C[0x30];\n    u16 unk_3C;\n    u8 pad_3E[2];\n    Obj_1_bss_6C7A4 unk_40;\n    void *unk_68[4];\n} Fn1_557C4Object;\n\n#pragma opt_lifetimes off\nvoid fn_1_557C4(void *value) {\n    s32 offset;\n    Fn1_557C4Object *object;\n    void *resource;\n    s32 valid;\n    s32 i;\n    u32 shift;\n    u32 word;\n    Obj_1_bss_6C7CC *bits;\n\n    resource = fn_1_5448C((u8 *)value + 8);\n    object = fn_1_548AC(0x78);\n    if (object != 0) {\n        valid = 1;\n        object->unk_04 = (u32)fn_1_55C48;\n        object->unk_08 = value;\n        lbl_8006DB74(((0xC) + ((u8 *)object)));\n        object->unk_3C = fn_1_7BE94();\n        object->unk_40 = lbl_1_bss_6C7A4;\n        bits = &lbl_1_bss_6C7CC;\n        for (i = 0, offset = 0; i < 4; i++, offset += 0x30) {\n            if ((s32)((u32)bits->unk_0 << ((i + 1) & 0x1f)) < 0) {\n                object->unk_68[i] = fn_1_548AC(0x30);\n                if ((*((object->unk_68) + (i))) != 0) {\n                    lbl_8006DD14(lbl_801A66CC + offset + 0xE0, (*((object->unk_68) + (i))));\n                } else {\n                    valid = 0;\n                }\n            } else {\n                object->unk_68[i] = 0;\n            }\n        }\n        if (valid != 0) {\n            fn_1_5489C(resource, object);\n        }\n    }\n    fn_1_56530();\n}\n#pragma opt_lifetimes reset\n\n",
+    "seed_sha256": "4e60fae7e8808be2d5526aaae1a65aac21c24f212228bb63b1228c14b0b644f0",
+    "generated_sha256": "496487e7b019a9e3970fadc7e866b004502d05ea64a4001efaa0191af08b7c2f",
+    "generated_source": "#include \"types.h\"\n#include \"rel/main_rel/font.h\"\n\nextern void *fn_1_5448C(void *value);\nextern void *fn_1_548AC(u32 size);\nextern void fn_1_55C48(void);\nextern u16 fn_1_7BE94(void);\nextern void fn_1_5489C(void *value, void *object);\nextern void fn_1_56530(void);\nextern void lbl_8006DB74(void *value);\nextern void lbl_8006DD14(void *value, void *object);\nextern u8 *lbl_801A66CC;\n\ntypedef struct {\n    u32 w0;\n    u32 w4;\n    u32 w8;\n    u32 wC;\n    u32 w10;\n    u32 w14;\n    u32 w18;\n    u32 w1C;\n    u32 w20;\n    u32 w24;\n} Words28;\n\ntypedef struct {\n    u8 pad_00[4];\n    u32 unk_04;\n    void *unk_08;\n    u8 unk_0C[0x30];\n    u16 unk_3C;\n    u8 pad_3E[2];\n    Obj_1_bss_6C7A4 unk_40;\n    void *unk_68[4];\n} Fn1_557C4Object;\n\n#pragma opt_lifetimes off\nvoid fn_1_557C4(void *value) {\n    s32 offset;\n    Fn1_557C4Object *object;\n    void *resource;\n    s32 valid;\n    s32 i;\n    u32 shift;\n    u32 word;\n    Obj_1_bss_6C7CC *bits;\n\n    resource = fn_1_5448C((u8 *)value + 8);\n    object = fn_1_548AC(0x78);\n    if (object != 0) {\n        valid = 1;\n        object->unk_04 = (u32)fn_1_55C48;\n        object->unk_08 = value;\n        lbl_8006DB74(((0xC) + ((u8 *)object)));\n        object->unk_3C = fn_1_7BE94();\n        object->unk_40 = lbl_1_bss_6C7A4;\n        bits = &lbl_1_bss_6C7CC;\n        for (i = 0, offset = 0; i < 4; i++, offset += 0x30) {\n            if ((__rlwnm(bits->unk_0, ((i + 1) & 0x1f), 31, 31) != 0)) {\n                object->unk_68[i] = fn_1_548AC(0x30);\n                if ((*((object->unk_68) + (i))) != 0) {\n                    lbl_8006DD14(lbl_801A66CC + offset + 0xE0, (*((object->unk_68) + (i))));\n                } else {\n                    valid = 0;\n                }\n            } else {\n                object->unk_68[i] = 0;\n            }\n        }\n        if (valid != 0) {\n            fn_1_5489C(resource, object);\n        }\n    }\n    fn_1_56530();\n}\n#pragma opt_lifetimes reset\n\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "rel/main_rel/font/fn_1_557C4.c",
+    "bytes": 352,
+    "headers_sha256": "a3db0164dc3a0250a1c1729dabebf7f84ddbd4096090f5f7f2d171ec8ca55bd1",
+    "oracle_sha256": "7cc891120feb212c397b96ddb46f5213d85d0998668a1ee4bd55a3d6abc2e1ff",
+    "recipe": [
+      {
+        "label": "retail rotated low bit (1 sites)",
+        "input_sha256": "4e60fae7e8808be2d5526aaae1a65aac21c24f212228bb63b1228c14b0b644f0",
+        "output_sha256": "496487e7b019a9e3970fadc7e866b004502d05ea64a4001efaa0191af08b7c2f",
+        "input_symbol": "fn_1_557C4",
+        "output_symbol": "fn_1_557C4",
+        "edits": [
+          [
+            1367,
+            1413,
+            "__rlwnm(bits->unk_0, ((i + 1) & 0x1f), 31, 31) != 0)"
+          ]
+        ]
+      }
+    ],
+    "link": "pending"
+  },
+  "fn_1_55A84": {
+    "seed_symbol": "fn_1_55A84",
+    "generator": "fzgx fixup",
+    "transform": "retail rotated low bit (1 sites)",
+    "seed": "#include \"types.h\"\n#include \"rel/main_rel/font.h\"\n\nextern const f32 lbl_1_rodata_28A8;\nextern void *fn_1_5448C(void *data);\nextern void *fn_1_548AC(s32 size);\nextern void fn_1_55D6C(void);\nextern u16 fn_1_7BE94(void);\nextern void fn_1_5489C(void *data, void *value);\nextern void fn_1_56530(void);\nextern void fn_1_563E4(void *state);\nextern void lbl_8006DB74(void *data);\nextern void lbl_8006DD14(void *data, void *value);\nextern u8 *lbl_801A66CC;\n\ntypedef struct {\n    u8 pad_00[0x1c];\n    u16 unk_1c;\n} FontInput;\n\ntypedef struct {\n    u8 pad_00[0x4];\n    void (*destroy)(void);\n    void *owner;\n    u8 pad_0c[0x30];\n    u16 unk_3c;\n    u8 pad_3e[0x2];\n    Obj_1_bss_6C7A4 settings;\n    void *unk_68;\n    u8 pad_6c[0xc];\n    void *unk_78;\n    void *unk_7c;\n    void *unk_80;\n} FontObject;\n\ntypedef void (*FontCallback)(void *, void *, void *);\n\nvoid fn_1_55A84(FontCallback callback, FontInput *value, void *arg2, void *arg3) {\n    u16 fzgx_value;\n    FontObject *cursor;\n    int offset;\n    FontObject *object;\n    void *data;\n    int ok;\n    int i;\n    u32 shift;\n    u32 *flags;\n\n    if (value->unk_1c != 0 || lbl_1_rodata_28A8 != lbl_1_bss_6C7A4.unk_8) {\n        data = fn_1_5448C((u8 *)value + 8);\n        object = (FontObject *)fn_1_548AC(0x84);\n        if (object != 0) {\n            ok = 1;\n            object->destroy = fn_1_55D6C;\n            object->owner = value;\n            lbl_8006DB74((u8 *)object + 0xc);\n            fzgx_value = fn_1_7BE94();\n            object->unk_3c = fzgx_value;\n            object->settings = lbl_1_bss_6C7A4;\n            i = 0;\n            offset = 0;\n            cursor = object;\n            flags = (u32 *)&lbl_1_bss_6C7CC;\n            while (i < 4) {\n                shift = (i + 1) & 31;\n                if ((s32)(*flags << shift) < 0) {\n                    cursor->unk_68 = fn_1_548AC(0x30);\n                    if (cursor->unk_68 != 0) {\n                        lbl_8006DD14(lbl_801A66CC + offset + 0xe0, cursor->unk_68);\n                    } else {\n                        ok = 0;\n                    }\n                } else {\n                    cursor->unk_68 = 0;\n                }\n                i++;\n                cursor = (FontObject *)((u8 *)cursor + 4);\n                offset += 0x30;\n            }\n            object->unk_78 = arg2;\n            object->unk_7c = arg3;\n            object->unk_80 = callback;\n            if (ok != 0) {\n                fn_1_5489C(data, object);\n            }\n        }\n        fn_1_56530();\n    } else {\n        fn_1_563E4(&lbl_1_bss_6C7A4);\n        callback(value, arg2, arg3);\n        fn_1_56530();\n    }\n}\n",
+    "seed_sha256": "4cc07dcd93d42b2355e7ae45ae4feac8d76524e90dc777d0a331069d2e91bec8",
+    "generated_sha256": "95e905c93c615520997048a802b0f2121333ec1dec88c7b3cd342a0ba09891ed",
+    "generated_source": "#include \"types.h\"\n#include \"rel/main_rel/font.h\"\n\nextern const f32 lbl_1_rodata_28A8;\nextern void *fn_1_5448C(void *data);\nextern void *fn_1_548AC(s32 size);\nextern void fn_1_55D6C(void);\nextern u16 fn_1_7BE94(void);\nextern void fn_1_5489C(void *data, void *value);\nextern void fn_1_56530(void);\nextern void fn_1_563E4(void *state);\nextern void lbl_8006DB74(void *data);\nextern void lbl_8006DD14(void *data, void *value);\nextern u8 *lbl_801A66CC;\n\ntypedef struct {\n    u8 pad_00[0x1c];\n    u16 unk_1c;\n} FontInput;\n\ntypedef struct {\n    u8 pad_00[0x4];\n    void (*destroy)(void);\n    void *owner;\n    u8 pad_0c[0x30];\n    u16 unk_3c;\n    u8 pad_3e[0x2];\n    Obj_1_bss_6C7A4 settings;\n    void *unk_68;\n    u8 pad_6c[0xc];\n    void *unk_78;\n    void *unk_7c;\n    void *unk_80;\n} FontObject;\n\ntypedef void (*FontCallback)(void *, void *, void *);\n\nvoid fn_1_55A84(FontCallback callback, FontInput *value, void *arg2, void *arg3) {\n    u16 fzgx_value;\n    FontObject *cursor;\n    int offset;\n    FontObject *object;\n    void *data;\n    int ok;\n    int i;\n    u32 shift;\n    u32 *flags;\n\n    if (value->unk_1c != 0 || lbl_1_rodata_28A8 != lbl_1_bss_6C7A4.unk_8) {\n        data = fn_1_5448C((u8 *)value + 8);\n        object = (FontObject *)fn_1_548AC(0x84);\n        if (object != 0) {\n            ok = 1;\n            object->destroy = fn_1_55D6C;\n            object->owner = value;\n            lbl_8006DB74((u8 *)object + 0xc);\n            fzgx_value = fn_1_7BE94();\n            object->unk_3c = fzgx_value;\n            object->settings = lbl_1_bss_6C7A4;\n            i = 0;\n            offset = 0;\n            cursor = object;\n            flags = (u32 *)&lbl_1_bss_6C7CC;\n            while (i < 4) {\n                shift = (i + 1) & 31;\n                if ((__rlwnm(*flags, shift, 31, 31) != 0)) {\n                    cursor->unk_68 = fn_1_548AC(0x30);\n                    if (cursor->unk_68 != 0) {\n                        lbl_8006DD14(lbl_801A66CC + offset + 0xe0, cursor->unk_68);\n                    } else {\n                        ok = 0;\n                    }\n                } else {\n                    cursor->unk_68 = 0;\n                }\n                i++;\n                cursor = (FontObject *)((u8 *)cursor + 4);\n                offset += 0x30;\n            }\n            object->unk_78 = arg2;\n            object->unk_7c = arg3;\n            object->unk_80 = callback;\n            if (ok != 0) {\n                fn_1_5489C(data, object);\n            }\n        }\n        fn_1_56530();\n    } else {\n        fn_1_563E4(&lbl_1_bss_6C7A4);\n        callback(value, arg2, arg3);\n        fn_1_56530();\n    }\n}\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "rel/main_rel/font/fn_1_55A84.c",
+    "bytes": 452,
+    "headers_sha256": "a3db0164dc3a0250a1c1729dabebf7f84ddbd4096090f5f7f2d171ec8ca55bd1",
+    "oracle_sha256": "7cc891120feb212c397b96ddb46f5213d85d0998668a1ee4bd55a3d6abc2e1ff",
+    "recipe": [
+      {
+        "label": "retail rotated low bit (1 sites)",
+        "input_sha256": "4cc07dcd93d42b2355e7ae45ae4feac8d76524e90dc777d0a331069d2e91bec8",
+        "output_sha256": "95e905c93c615520997048a802b0f2121333ec1dec88c7b3cd342a0ba09891ed",
+        "input_symbol": "fn_1_55A84",
+        "output_symbol": "fn_1_55A84",
+        "edits": [
+          [
+            1756,
+            1781,
+            "__rlwnm(*flags, shift, 31, 31) != 0)"
+          ]
+        ]
+      }
+    ],
+    "link": "pending"
+  },
+  "fn_12_346BC": {
+    "seed_symbol": "fn_12_346BC",
+    "generator": "fzgx fixup",
+    "transform": "native string objects lbl_12_rodata_12E0",
+    "seed": "#include \"types.h\"\ntypedef struct Sig_fn_12_3A36C_Fn12_3A36C_Object {\n    u32 unk0;\n    u32 unk4;\n} Sig_fn_12_3A36C_Fn12_3A36C_Object;\n\nextern u32 fn_12_3A36C(Sig_fn_12_3A36C_Fn12_3A36C_Object *);\nextern u32 fn_80056730(u32, u32);\nextern u8 lbl_12_rodata_12E0[];\nextern void MWSFSVM_Error(const char *, ...);\n\nvoid fn_12_346BC(u32 arg0) {\n    u8 *p_lbl_12_rodata_12E0;\n    u32 v0;\n    u32 t0;\n    u32 t2;\n    u32 t4;\n    s32 t5;\n    u32 t7;\n    p_lbl_12_rodata_12E0 = (u8 *)&lbl_12_rodata_12E0;\n    t0 = fn_12_3A36C((Sig_fn_12_3A36C_Fn12_3A36C_Object *)arg0);\n    v0 = t0;\n    if ((s32)t0 == 0) {\n    v0 = (u32)((u8 *)(u32)p_lbl_12_rodata_12E0 + 468);\n    MWSFSVM_Error((const char *)(u32)v0);\n    } else {\n    v0 = arg0;\n    t2 = fn_12_3A36C((Sig_fn_12_3A36C_Fn12_3A36C_Object *)v0);\n    v0 = t2;\n    if ((s32)v0 == 0) {\n    v0 = (u32)((u8 *)(u32)p_lbl_12_rodata_12E0 + 320);\n    MWSFSVM_Error((const char *)(u32)v0);\n    } else {\n    v0 = *(u32 *)((u8 *)arg0 + 76);\n    t4 = fn_80056730(v0, 0);\n    v0 = t4;\n    }\n    v0 = arg0;\n    t5 = fn_12_3A36C((Sig_fn_12_3A36C_Fn12_3A36C_Object *)v0);\n    v0 = t5;\n    if (((0) == ((s32)v0))) {\n    v0 = (u32)((u8 *)(u32)p_lbl_12_rodata_12E0 + 416);\n    MWSFSVM_Error((const char *)(u32)v0);\n    } else {\n    v0 = arg0;\n    t7 = fn_12_3A36C((Sig_fn_12_3A36C_Fn12_3A36C_Object *)v0);\n    v0 = t7;\n    if ((s32)v0 == 0) {\n    v0 = (u32)((u8 *)(u32)p_lbl_12_rodata_12E0 + 0);\n    MWSFSVM_Error((const char *)(u32)v0);\n    } else {\n    if ((s32)*(u8 *)((u8 *)arg0 + 112) == 1) {\n    *(u8 *)((u8 *)arg0 + 113) = 1;\n    }\n    *(u8 *)((u8 *)arg0 + 112) = 0;\n    }\n    }\n    }\n}\n",
+    "seed_sha256": "e461e7338ea34c58e608da27d58c222912452855908f596aa73835b1aafbebf9",
+    "generated_sha256": "6c443259da44fca034c3ec9c3a76ff1ad23d60aee3674700e63734df7328793b",
+    "generated_source": "#include \"types.h\"\ntypedef struct Sig_fn_12_3A36C_Fn12_3A36C_Object {\n    u32 unk0;\n    u32 unk4;\n} Sig_fn_12_3A36C_Fn12_3A36C_Object;\n\nextern u32 fn_12_3A36C(Sig_fn_12_3A36C_Fn12_3A36C_Object *);\nextern u32 fn_80056730(u32, u32);\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_0[44] = \"E1122642: mwPlyLinkStm: handle is invalid.\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_2C[44] = \"E99072101 mwPlyLinkStm: can't link stream\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_58[48] = \"E1122637: mwPlyGetSlFname: handle is invalid.\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_88[40] = \"E10821B : Invalid value of stm_no : %d\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_B0[48] = \"E1122632: mwPlyStartAfsLp: handle is invalid.\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_E0[44] = \"E1122636: mwPlyEntryAfs: handle is invalid.\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_10C[52] = \"E008311 mwPlyEntryAfs: can't entry pid=%d fid=%d\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_140[44] = \"E1122641: mwPlySetLpFlg: handle is invalid.\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_16C[52] = \"E1122634: mwPlyStartSeamless: handle is invalid.\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_1A0[52] = \"E1122635: mwPlyReleaseSeamless: handle is invalid.\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_1D4[48] = \"E1122631: mwPlyReleaseLp: handle is invalid.\";\n\nextern void MWSFSVM_Error(const char *, ...);\n\nvoid fn_12_346BC(u32 arg0) {\n    \n    u32 v0;\n    u32 t0;\n    u32 t2;\n    u32 t4;\n    s32 t5;\n    u32 t7;\n    \n    t0 = fn_12_3A36C((Sig_fn_12_3A36C_Fn12_3A36C_Object *)arg0);\n    v0 = t0;\n    if ((s32)t0 == 0) {\n    v0 = (u32)(((u8 *)fzgx_pool_strings_lbl_12_rodata_12E0_1D4));\n    MWSFSVM_Error((const char *)(u32)v0);\n    } else {\n    v0 = arg0;\n    t2 = fn_12_3A36C((Sig_fn_12_3A36C_Fn12_3A36C_Object *)v0);\n    v0 = t2;\n    if ((s32)v0 == 0) {\n    v0 = (u32)(((u8 *)fzgx_pool_strings_lbl_12_rodata_12E0_140));\n    MWSFSVM_Error((const char *)(u32)v0);\n    } else {\n    v0 = *(u32 *)((u8 *)arg0 + 76);\n    t4 = fn_80056730(v0, 0);\n    v0 = t4;\n    }\n    v0 = arg0;\n    t5 = fn_12_3A36C((Sig_fn_12_3A36C_Fn12_3A36C_Object *)v0);\n    v0 = t5;\n    if (((0) == ((s32)v0))) {\n    v0 = (u32)(((u8 *)fzgx_pool_strings_lbl_12_rodata_12E0_1A0));\n    MWSFSVM_Error((const char *)(u32)v0);\n    } else {\n    v0 = arg0;\n    t7 = fn_12_3A36C((Sig_fn_12_3A36C_Fn12_3A36C_Object *)v0);\n    v0 = t7;\n    if ((s32)v0 == 0) {\n    v0 = (u32)(((u8 *)fzgx_pool_strings_lbl_12_rodata_12E0_0));\n    MWSFSVM_Error((const char *)(u32)v0);\n    } else {\n    if ((s32)*(u8 *)((u8 *)arg0 + 112) == 1) {\n    *(u8 *)((u8 *)arg0 + 113) = 1;\n    }\n    *(u8 *)((u8 *)arg0 + 112) = 0;\n    }\n    }\n    }\n}\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "rel/movie_module/fn_12_346BC.c",
+    "bytes": 220,
+    "headers_sha256": "a3db0164dc3a0250a1c1729dabebf7f84ddbd4096090f5f7f2d171ec8ca55bd1",
+    "oracle_sha256": "7cc891120feb212c397b96ddb46f5213d85d0998668a1ee4bd55a3d6abc2e1ff",
+    "recipe": [
+      {
+        "label": "native string objects lbl_12_rodata_12E0",
+        "input_sha256": "e461e7338ea34c58e608da27d58c222912452855908f596aa73835b1aafbebf9",
+        "output_sha256": "6c443259da44fca034c3ec9c3a76ff1ad23d60aee3674700e63734df7328793b",
+        "input_symbol": "fn_12_346BC",
+        "output_symbol": "fn_12_346BC",
+        "edits": [
+          [
+            231,
+            262,
+            "static const char fzgx_pool_strings_lbl_12_rodata_12E0_0[44] = \"E1122642: mwPlyLinkStm: handle is invalid.\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_2C[44] = \"E99072101 mwPlyLinkStm: can't link stream\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_58[48] = \"E1122637: mwPlyGetSlFname: handle is invalid.\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_88[40] = \"E10821B : Invalid value of stm_no : %d\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_B0[48] = \"E1122632: mwPlyStartAfsLp: handle is invalid.\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_E0[44] = \"E1122636: mwPlyEntryAfs: handle is invalid.\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_10C[52] = \"E008311 mwPlyEntryAfs: can't entry pid=%d fid=%d\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_140[44] = \"E1122641: mwPlySetLpFlg: handle is invalid.\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_16C[52] = \"E1122634: mwPlyStartSeamless: handle is invalid.\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_1A0[52] = \"E1122635: mwPlyReleaseSeamless: handle is invalid.\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_1D4[48] = \"E1122631: mwPlyReleaseLp: handle is invalid.\";\n"
+          ],
+          [
+            343,
+            368,
+            ""
+          ],
+          [
+            445,
+            494,
+            ""
+          ],
+          [
+            613,
+            649,
+            "(u8 *)fzgx_pool_strings_lbl_12_rodata_12E0_1D4)"
+          ],
+          [
+            838,
+            874,
+            "(u8 *)fzgx_pool_strings_lbl_12_rodata_12E0_140)"
+          ],
+          [
+            1153,
+            1189,
+            "(u8 *)fzgx_pool_strings_lbl_12_rodata_12E0_1A0)"
+          ],
+          [
+            1378,
+            1412,
+            "(u8 *)fzgx_pool_strings_lbl_12_rodata_12E0_0)"
+          ]
+        ]
+      }
+    ],
+    "link": "pending"
+  },
+  "fn_12_34390": {
+    "seed_symbol": "fn_12_34390",
+    "generator": "fzgx fixup",
+    "transform": "native string objects lbl_12_rodata_12E0",
+    "seed": "#include \"types.h\"\n\ntypedef struct MovieModule {\n    u8 pad_00[0x40];\n    void *field40;\n    u8 pad_44[8];\n    void *movies;\n    u8 pad_50[0x20];\n    s8 state70;\n    u8 pad_71[0xb7];\n    void *field128;\n    void *field12c;\n} MovieModule;\n\nextern int fn_12_3A36C(MovieModule *module);\nextern char lbl_12_rodata_12E0[43];\nextern void MWSFSVM_Error(const char *message, ...);\nextern u8 lbl_12_bss_1B780[288];\nextern int fn_80056CD0(void *movies);\nextern int fn_8004F818(void *arg0, void *arg1, u8 *buffer, int *a, int *b, int *c);\nextern void fn_80056E9C(void *movies, u8 *buffer, int a, int b, int c);\nextern void fn_80056730(void *movies, int value);\nextern int fn_12_23280(void *value);\nextern void fn_12_3916C(MovieModule *module, void *arg);\nextern void fn_12_38DC8(MovieModule *module);\nextern void LSC_Start(void *movies);\nextern void fn_12_3858C(MovieModule *module);\n\ntypedef struct MovieVTable {\n    void *pad_00[5];\n    void (*method14)(void *object);\n} MovieVTable;\n\ntypedef struct MovieObject {\n    MovieVTable *vtable;\n} MovieObject;\n\n#pragma opt_loop_invariants on\nstatic inline void * fn_12_34390_read_pointer(MovieModule * owner) { return owner->movies; }\nvoid fn_12_34390(MovieModule *module, void *arg1, void *arg2) {\n    void * fzgx_live_;\n    MovieVTable * fzgx_live;\n    const char *base;\n    void *movies;\n    MovieModule *current;\n    int z;\n    int y;\n    int x;\n    void *field;\n\n    base = lbl_12_rodata_12E0;\n\n    if (!fn_12_3A36C(module)) {\n        MWSFSVM_Error(base + 0xb0);\n        return;\n    }\n\n    fn_80056CD0(fn_12_34390_read_pointer(module));\n\n    if (!fn_12_3A36C(module)) {\n        MWSFSVM_Error(base + 0xe0);\n    } else {\n        movies = module->movies;\n        if (!fn_8004F818(arg1, arg2, lbl_12_bss_1B780, &x, &y, &z)) {\n            fn_80056E9C(movies, lbl_12_bss_1B780, x, y, z);\n        } else {\n            MWSFSVM_Error(base + 0x10c, arg1, arg2);\n        }\n    }\n\n    if (!fn_12_3A36C(module)) {\n        MWSFSVM_Error(base + 0x140);\n    } else {\n        fn_80056730(module->movies, 1);\n    }\n\n    if (!fn_12_3A36C(module)) {\n        MWSFSVM_Error(base + 0x16c);\n        return;\n    }\n\n    current = (MovieModule *)module;\n    if (!fn_12_3A36C(module)) {\n        MWSFSVM_Error(base);\n    } else {\n        field = module->field40;\n        if (module->state70 == 0 && fn_12_23280(field) != 0) {\n            MWSFSVM_Error(base + 0x2c);\n        }\n        module->state70 = 1;\n    }\n\n    fn_12_3916C(current, current->field12c);\n    fn_12_38DC8(current);\n    fzgx_live_ = current->movies;\n    LSC_Start(fzgx_live_);\n\n    if (current->field128 != 0) {\n        MovieObject *object = current->field128;\n        fzgx_live = object->vtable;\n        fzgx_live->method14(object);\n    }\n    fn_12_3858C(current);\n}\n#pragma opt_loop_invariants reset\n\n",
+    "seed_sha256": "3999aa8842c1c538bb2ea923a0b001f12a6eee7828f51f5b84462a8f6b5076c8",
+    "generated_sha256": "bbbe19f97db288992c24a6eba275efe5d788b36d63326f8b4e10755eadaa5a50",
+    "generated_source": "#include \"types.h\"\n\ntypedef struct MovieModule {\n    u8 pad_00[0x40];\n    void *field40;\n    u8 pad_44[8];\n    void *movies;\n    u8 pad_50[0x20];\n    s8 state70;\n    u8 pad_71[0xb7];\n    void *field128;\n    void *field12c;\n} MovieModule;\n\nextern int fn_12_3A36C(MovieModule *module);\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_0[44] = \"E1122642: mwPlyLinkStm: handle is invalid.\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_2C[44] = \"E99072101 mwPlyLinkStm: can't link stream\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_58[48] = \"E1122637: mwPlyGetSlFname: handle is invalid.\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_88[40] = \"E10821B : Invalid value of stm_no : %d\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_B0[48] = \"E1122632: mwPlyStartAfsLp: handle is invalid.\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_E0[44] = \"E1122636: mwPlyEntryAfs: handle is invalid.\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_10C[52] = \"E008311 mwPlyEntryAfs: can't entry pid=%d fid=%d\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_140[44] = \"E1122641: mwPlySetLpFlg: handle is invalid.\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_16C[52] = \"E1122634: mwPlyStartSeamless: handle is invalid.\";\n\nextern void MWSFSVM_Error(const char *message, ...);\nextern u8 lbl_12_bss_1B780[288];\nextern int fn_80056CD0(void *movies);\nextern int fn_8004F818(void *arg0, void *arg1, u8 *buffer, int *a, int *b, int *c);\nextern void fn_80056E9C(void *movies, u8 *buffer, int a, int b, int c);\nextern void fn_80056730(void *movies, int value);\nextern int fn_12_23280(void *value);\nextern void fn_12_3916C(MovieModule *module, void *arg);\nextern void fn_12_38DC8(MovieModule *module);\nextern void LSC_Start(void *movies);\nextern void fn_12_3858C(MovieModule *module);\n\ntypedef struct MovieVTable {\n    void *pad_00[5];\n    void (*method14)(void *object);\n} MovieVTable;\n\ntypedef struct MovieObject {\n    MovieVTable *vtable;\n} MovieObject;\n\n#pragma opt_loop_invariants on\nstatic inline void * fn_12_34390_read_pointer(MovieModule * owner) { return owner->movies; }\nvoid fn_12_34390(MovieModule *module, void *arg1, void *arg2) {\n    void * fzgx_live_;\n    MovieVTable * fzgx_live;\n    \n    void *movies;\n    MovieModule *current;\n    int z;\n    int y;\n    int x;\n    void *field;\n\n    \n\n    if (!fn_12_3A36C(module)) {\n        MWSFSVM_Error(((char *)fzgx_pool_strings_lbl_12_rodata_12E0_B0));\n        return;\n    }\n\n    fn_80056CD0(fn_12_34390_read_pointer(module));\n\n    if (!fn_12_3A36C(module)) {\n        MWSFSVM_Error(((char *)fzgx_pool_strings_lbl_12_rodata_12E0_E0));\n    } else {\n        movies = module->movies;\n        if (!fn_8004F818(arg1, arg2, lbl_12_bss_1B780, &x, &y, &z)) {\n            fn_80056E9C(movies, lbl_12_bss_1B780, x, y, z);\n        } else {\n            MWSFSVM_Error(((char *)fzgx_pool_strings_lbl_12_rodata_12E0_10C), arg1, arg2);\n        }\n    }\n\n    if (!fn_12_3A36C(module)) {\n        MWSFSVM_Error(((char *)fzgx_pool_strings_lbl_12_rodata_12E0_140));\n    } else {\n        fn_80056730(module->movies, 1);\n    }\n\n    if (!fn_12_3A36C(module)) {\n        MWSFSVM_Error(((char *)fzgx_pool_strings_lbl_12_rodata_12E0_16C));\n        return;\n    }\n\n    current = (MovieModule *)module;\n    if (!fn_12_3A36C(module)) {\n        MWSFSVM_Error(((char *)fzgx_pool_strings_lbl_12_rodata_12E0_0));\n    } else {\n        field = module->field40;\n        if (module->state70 == 0 && fn_12_23280(field) != 0) {\n            MWSFSVM_Error(((char *)fzgx_pool_strings_lbl_12_rodata_12E0_2C));\n        }\n        module->state70 = 1;\n    }\n\n    fn_12_3916C(current, current->field12c);\n    fn_12_38DC8(current);\n    fzgx_live_ = current->movies;\n    LSC_Start(fzgx_live_);\n\n    if (current->field128 != 0) {\n        MovieObject *object = current->field128;\n        fzgx_live = object->vtable;\n        fzgx_live->method14(object);\n    }\n    fn_12_3858C(current);\n}\n#pragma opt_loop_invariants reset\n\n",
+    "compiler": "GC/1.3.2",
+    "flags": "-use_lmw_stmw on",
+    "source": "rel/movie_module/fn_12_34390.c",
+    "bytes": 444,
+    "headers_sha256": "a3db0164dc3a0250a1c1729dabebf7f84ddbd4096090f5f7f2d171ec8ca55bd1",
+    "oracle_sha256": "7cc891120feb212c397b96ddb46f5213d85d0998668a1ee4bd55a3d6abc2e1ff",
+    "recipe": [
+      {
+        "label": "native string objects lbl_12_rodata_12E0",
+        "input_sha256": "3999aa8842c1c538bb2ea923a0b001f12a6eee7828f51f5b84462a8f6b5076c8",
+        "output_sha256": "bbbe19f97db288992c24a6eba275efe5d788b36d63326f8b4e10755eadaa5a50",
+        "input_symbol": "fn_12_34390",
+        "output_symbol": "fn_12_34390",
+        "edits": [
+          [
+            284,
+            319,
+            "static const char fzgx_pool_strings_lbl_12_rodata_12E0_0[44] = \"E1122642: mwPlyLinkStm: handle is invalid.\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_2C[44] = \"E99072101 mwPlyLinkStm: can't link stream\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_58[48] = \"E1122637: mwPlyGetSlFname: handle is invalid.\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_88[40] = \"E10821B : Invalid value of stm_no : %d\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_B0[48] = \"E1122632: mwPlyStartAfsLp: handle is invalid.\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_E0[44] = \"E1122636: mwPlyEntryAfs: handle is invalid.\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_10C[52] = \"E008311 mwPlyEntryAfs: can't entry pid=%d fid=%d\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_140[44] = \"E1122641: mwPlySetLpFlg: handle is invalid.\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_16C[52] = \"E1122634: mwPlyStartSeamless: handle is invalid.\";\n"
+          ],
+          [
+            1290,
+            1307,
+            ""
+          ],
+          [
+            1407,
+            1433,
+            ""
+          ],
+          [
+            1489,
+            1500,
+            "((char *)fzgx_pool_strings_lbl_12_rodata_12E0_B0)"
+          ],
+          [
+            1632,
+            1643,
+            "((char *)fzgx_pool_strings_lbl_12_rodata_12E0_E0)"
+          ],
+          [
+            1865,
+            1877,
+            "((char *)fzgx_pool_strings_lbl_12_rodata_12E0_10C)"
+          ],
+          [
+            1963,
+            1975,
+            "((char *)fzgx_pool_strings_lbl_12_rodata_12E0_140)"
+          ],
+          [
+            2092,
+            2104,
+            "((char *)fzgx_pool_strings_lbl_12_rodata_12E0_16C)"
+          ],
+          [
+            2221,
+            2225,
+            "((char *)fzgx_pool_strings_lbl_12_rodata_12E0_0)"
+          ],
+          [
+            2363,
+            2374,
+            "((char *)fzgx_pool_strings_lbl_12_rodata_12E0_2C)"
+          ]
+        ]
+      }
+    ],
+    "link": "pending"
+  },
+  "fn_12_34798": {
+    "seed_symbol": "fn_12_34798",
+    "generator": "fzgx fixup",
+    "transform": "native string objects lbl_12_rodata_12E0",
+    "seed": "#include \"types.h\"\n\ntypedef struct MovieObject MovieObject;\ntypedef struct MovieModule MovieModule;\n\nstruct MovieObjectVTable {\n    void (*unused_00)(MovieObject *);\n    void (*unused_04)(MovieObject *);\n    void (*unused_08)(MovieObject *);\n    void (*unused_0c)(MovieObject *);\n    void (*unused_10)(MovieObject *);\n    void (*method_14)(MovieObject *);\n};\n\nstruct MovieObject {\n    struct MovieObjectVTable *vtable;\n};\n\nstruct MovieModule {\n    u8 pad_00[8];\n    int field_08;\n    u8 pad_0c[0x34];\n    void *field_40;\n    u8 pad_44[0x08];\n    void *movie;\n    u8 pad_50[0x20];\n    s8 field_70;\n    u8 pad_71[3];\n    int field_74;\n    u8 pad_78[0xb0];\n    MovieObject *field_128;\n    void *field_12c;\n};\n\nextern const char lbl_12_rodata_12E0[];\nextern int fn_12_3A36C(MovieModule *);\nextern void MWSFSVM_Error(const char *, ...);\nextern int fn_12_23280(void *);\nextern void fn_12_3916C(MovieModule *, void *);\nextern void fn_12_38DC8(MovieModule *);\nextern void fn_12_3858C(MovieModule *);\nextern void fn_80056CD0(void *);\nextern int fn_800570DC(void *, void *);\nextern void fn_80056730(void *, int);\nextern void LSC_Start(void *);\n\n#pragma opt_strength_reduction off\nstatic inline MovieObject * fn_12_34798_read_pointer(MovieModule * owner) { return owner->field_128; }\nvoid fn_12_34798(MovieModule *self, void *arg) {\n    void (* fzgx_live)(MovieObject *);\n    const char *strings = lbl_12_rodata_12E0;\n\n    if (fn_12_3A36C(self) == 0) {\n        MWSFSVM_Error(strings + 0x204);\n        return;\n    }\n    if (arg == 0) {\n        MWSFSVM_Error(strings + 0x234);\n        return;\n    }\n\n    fn_80056CD0(self->movie);\n    if (fn_12_3A36C(self) == 0) {\n        MWSFSVM_Error(strings + 0x260);\n    } else if (arg == 0) {\n        MWSFSVM_Error(strings + 0x290);\n    } else if (fn_800570DC(self->movie, arg) < 0) {\n        self->field_08 = 4;\n        MWSFSVM_Error(strings + 0x2bc, arg);\n    } else {\n        self->field_74 += 1;\n    }\n\n    if (fn_12_3A36C(self) == 0) {\n        MWSFSVM_Error(strings + 0x140);\n    } else {\n        fn_80056730(self->movie, 1);\n    }\n\n    if (fn_12_3A36C(self) == 0) {\n        MWSFSVM_Error(strings + 0x16c);\n        return;\n    }\n\n    {\n        MovieModule *module = (MovieModule *)(u32)self;\n\n        if (fn_12_3A36C(self) == 0) {\n            MWSFSVM_Error(strings);\n        } else {\n            int flag = self->field_70;\n            void *field = self->field_40;\n\n            if (flag == 0 && fn_12_23280(field) != 0) {\n                MWSFSVM_Error(strings + 0x2c);\n            }\n            self->field_70 = 1;\n        }\n\n        fn_12_3916C(module, module->field_12c);\n        fn_12_38DC8(module);\n        LSC_Start(module->movie);\n        if (fn_12_34798_read_pointer(module) != 0) {\n            fzgx_live = module->field_128->vtable->method_14;\n            fzgx_live(module->field_128);\n        }\n        fn_12_3858C(module);\n    }\n}\n#pragma opt_strength_reduction reset\n\n",
+    "seed_sha256": "cdc2e5ca50daf675afd4a727a6a1f2bdd62a287277b20f86d3eb142fd2c09c90",
+    "generated_sha256": "f1e54293f51be7a22cd30b3a2ee599675771f5f6b1fa4098b9a02e3f3c2f285e",
+    "generated_source": "#include \"types.h\"\n\ntypedef struct MovieObject MovieObject;\ntypedef struct MovieModule MovieModule;\n\nstruct MovieObjectVTable {\n    void (*unused_00)(MovieObject *);\n    void (*unused_04)(MovieObject *);\n    void (*unused_08)(MovieObject *);\n    void (*unused_0c)(MovieObject *);\n    void (*unused_10)(MovieObject *);\n    void (*method_14)(MovieObject *);\n};\n\nstruct MovieObject {\n    struct MovieObjectVTable *vtable;\n};\n\nstruct MovieModule {\n    u8 pad_00[8];\n    int field_08;\n    u8 pad_0c[0x34];\n    void *field_40;\n    u8 pad_44[0x08];\n    void *movie;\n    u8 pad_50[0x20];\n    s8 field_70;\n    u8 pad_71[3];\n    int field_74;\n    u8 pad_78[0xb0];\n    MovieObject *field_128;\n    void *field_12c;\n};\n\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_0[44] = \"E1122642: mwPlyLinkStm: handle is invalid.\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_2C[44] = \"E99072101 mwPlyLinkStm: can't link stream\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_58[48] = \"E1122637: mwPlyGetSlFname: handle is invalid.\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_88[40] = \"E10821B : Invalid value of stm_no : %d\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_B0[48] = \"E1122632: mwPlyStartAfsLp: handle is invalid.\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_E0[44] = \"E1122636: mwPlyEntryAfs: handle is invalid.\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_10C[52] = \"E008311 mwPlyEntryAfs: can't entry pid=%d fid=%d\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_140[44] = \"E1122641: mwPlySetLpFlg: handle is invalid.\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_16C[52] = \"E1122634: mwPlyStartSeamless: handle is invalid.\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_1A0[52] = \"E1122635: mwPlyReleaseSeamless: handle is invalid.\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_1D4[48] = \"E1122631: mwPlyReleaseLp: handle is invalid.\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_204[48] = \"E1122630: mwPlyStartFnameLp: handle is invalid.\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_234[44] = \"E10915A: mwPlyStartFnameLp: fname is NULL.\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_260[48] = \"E1122633: mwPlyEntryFname: handle is invalid.\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_290[44] = \"E10915B: mwPlyEntryFname: fname is NULL.\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_2BC[48] = \"E204021: mwPlyEntryFname: Can't entry file'%s'\";\n\nextern int fn_12_3A36C(MovieModule *);\nextern void MWSFSVM_Error(const char *, ...);\nextern int fn_12_23280(void *);\nextern void fn_12_3916C(MovieModule *, void *);\nextern void fn_12_38DC8(MovieModule *);\nextern void fn_12_3858C(MovieModule *);\nextern void fn_80056CD0(void *);\nextern int fn_800570DC(void *, void *);\nextern void fn_80056730(void *, int);\nextern void LSC_Start(void *);\n\n#pragma opt_strength_reduction off\nstatic inline MovieObject * fn_12_34798_read_pointer(MovieModule * owner) { return owner->field_128; }\nvoid fn_12_34798(MovieModule *self, void *arg) {\n    void (* fzgx_live)(MovieObject *);\n    \n\n    if (fn_12_3A36C(self) == 0) {\n        MWSFSVM_Error(((char *)fzgx_pool_strings_lbl_12_rodata_12E0_204));\n        return;\n    }\n    if (arg == 0) {\n        MWSFSVM_Error(((char *)fzgx_pool_strings_lbl_12_rodata_12E0_234));\n        return;\n    }\n\n    fn_80056CD0(self->movie);\n    if (fn_12_3A36C(self) == 0) {\n        MWSFSVM_Error(((char *)fzgx_pool_strings_lbl_12_rodata_12E0_260));\n    } else if (arg == 0) {\n        MWSFSVM_Error(((char *)fzgx_pool_strings_lbl_12_rodata_12E0_290));\n    } else if (fn_800570DC(self->movie, arg) < 0) {\n        self->field_08 = 4;\n        MWSFSVM_Error(((char *)fzgx_pool_strings_lbl_12_rodata_12E0_2BC), arg);\n    } else {\n        self->field_74 += 1;\n    }\n\n    if (fn_12_3A36C(self) == 0) {\n        MWSFSVM_Error(((char *)fzgx_pool_strings_lbl_12_rodata_12E0_140));\n    } else {\n        fn_80056730(self->movie, 1);\n    }\n\n    if (fn_12_3A36C(self) == 0) {\n        MWSFSVM_Error(((char *)fzgx_pool_strings_lbl_12_rodata_12E0_16C));\n        return;\n    }\n\n    {\n        MovieModule *module = (MovieModule *)(u32)self;\n\n        if (fn_12_3A36C(self) == 0) {\n            MWSFSVM_Error(((char *)fzgx_pool_strings_lbl_12_rodata_12E0_0));\n        } else {\n            int flag = self->field_70;\n            void *field = self->field_40;\n\n            if (flag == 0 && fn_12_23280(field) != 0) {\n                MWSFSVM_Error(((char *)fzgx_pool_strings_lbl_12_rodata_12E0_2C));\n            }\n            self->field_70 = 1;\n        }\n\n        fn_12_3916C(module, module->field_12c);\n        fn_12_38DC8(module);\n        LSC_Start(module->movie);\n        if (fn_12_34798_read_pointer(module) != 0) {\n            fzgx_live = module->field_128->vtable->method_14;\n            fzgx_live(module->field_128);\n        }\n        fn_12_3858C(module);\n    }\n}\n#pragma opt_strength_reduction reset\n\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "rel/movie_module/fn_12_34798.c",
+    "bytes": 468,
+    "headers_sha256": "a3db0164dc3a0250a1c1729dabebf7f84ddbd4096090f5f7f2d171ec8ca55bd1",
+    "oracle_sha256": "7cc891120feb212c397b96ddb46f5213d85d0998668a1ee4bd55a3d6abc2e1ff",
+    "recipe": [
+      {
+        "label": "native string objects lbl_12_rodata_12E0",
+        "input_sha256": "cdc2e5ca50daf675afd4a727a6a1f2bdd62a287277b20f86d3eb142fd2c09c90",
+        "output_sha256": "f1e54293f51be7a22cd30b3a2ee599675771f5f6b1fa4098b9a02e3f3c2f285e",
+        "input_symbol": "fn_12_34798",
+        "output_symbol": "fn_12_34798",
+        "edits": [
+          [
+            707,
+            746,
+            "static const char fzgx_pool_strings_lbl_12_rodata_12E0_0[44] = \"E1122642: mwPlyLinkStm: handle is invalid.\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_2C[44] = \"E99072101 mwPlyLinkStm: can't link stream\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_58[48] = \"E1122637: mwPlyGetSlFname: handle is invalid.\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_88[40] = \"E10821B : Invalid value of stm_no : %d\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_B0[48] = \"E1122632: mwPlyStartAfsLp: handle is invalid.\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_E0[44] = \"E1122636: mwPlyEntryAfs: handle is invalid.\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_10C[52] = \"E008311 mwPlyEntryAfs: can't entry pid=%d fid=%d\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_140[44] = \"E1122641: mwPlySetLpFlg: handle is invalid.\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_16C[52] = \"E1122634: mwPlyStartSeamless: handle is invalid.\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_1A0[52] = \"E1122635: mwPlyReleaseSeamless: handle is invalid.\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_1D4[48] = \"E1122631: mwPlyReleaseLp: handle is invalid.\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_204[48] = \"E1122630: mwPlyStartFnameLp: handle is invalid.\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_234[44] = \"E10915A: mwPlyStartFnameLp: fname is NULL.\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_260[48] = \"E1122633: mwPlyEntryFname: handle is invalid.\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_290[44] = \"E10915B: mwPlyEntryFname: fname is NULL.\";\nstatic const char fzgx_pool_strings_lbl_12_rodata_12E0_2BC[48] = \"E204021: mwPlyEntryFname: Can't entry file'%s'\";\n"
+          ],
+          [
+            1365,
+            1406,
+            ""
+          ],
+          [
+            1464,
+            1479,
+            "((char *)fzgx_pool_strings_lbl_12_rodata_12E0_204)"
+          ],
+          [
+            1546,
+            1561,
+            "((char *)fzgx_pool_strings_lbl_12_rodata_12E0_234)"
+          ],
+          [
+            1673,
+            1688,
+            "((char *)fzgx_pool_strings_lbl_12_rodata_12E0_260)"
+          ],
+          [
+            1740,
+            1755,
+            "((char *)fzgx_pool_strings_lbl_12_rodata_12E0_290)"
+          ],
+          [
+            1860,
+            1875,
+            "((char *)fzgx_pool_strings_lbl_12_rodata_12E0_2BC)"
+          ],
+          [
+            1988,
+            2003,
+            "((char *)fzgx_pool_strings_lbl_12_rodata_12E0_140)"
+          ],
+          [
+            2119,
+            2134,
+            "((char *)fzgx_pool_strings_lbl_12_rodata_12E0_16C)"
+          ],
+          [
+            2287,
+            2294,
+            "((char *)fzgx_pool_strings_lbl_12_rodata_12E0_0)"
+          ],
+          [
+            2482,
+            2496,
+            "((char *)fzgx_pool_strings_lbl_12_rodata_12E0_2C)"
+          ]
+        ]
+      }
+    ],
+    "link": "pending"
+  },
+  "fn_8002A74C": {
+    "seed_symbol": "fn_8002A74C",
+    "generator": "fzgx fixup",
+    "transform": "retail contiguous switch cases (1 sites)",
+    "seed": "#include \"types.h\"\n\nextern u16 lbl_801A6BC0;\n\nu16 fn_8002A74C(u32 arg0) {\n    u32 v0;\n    u16 v1;\n    v0 = (arg0 & 0xFFFF);\n    v1 = lbl_801A6BC0;\n    if ((s32)v0 < 2 && (s32)v0 >= 0) {\n        lbl_801A6BC0 = arg0;\n    }\n    return v1;\n}\n",
+    "seed_sha256": "dc967b20e35f6a9afa0035d88d3a7757442705e2f2f7280da9905c07bfcd8ce3",
+    "generated_sha256": "76b51b82831a05f70aa17b2ed9a1b5140e626afc4811297f0a8ff8cb68617b91",
+    "generated_source": "#include \"types.h\"\n\nextern u16 lbl_801A6BC0;\n\nu16 fn_8002A74C(u32 arg0) {\n    u32 v0;\n    u16 v1;\n    v0 = (arg0 & 0xFFFF);\n    v1 = lbl_801A6BC0;\n    switch ((s32)v0) {\ncase 0: case 1: {\n\n        lbl_801A6BC0 = arg0;\n    \n} break;\ndefault: {\n\n} break;\n}\n    return v1;\n}\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "dol/fn_8002A74C.c",
+    "bytes": 40,
+    "headers_sha256": "a3db0164dc3a0250a1c1729dabebf7f84ddbd4096090f5f7f2d171ec8ca55bd1",
+    "oracle_sha256": "7cc891120feb212c397b96ddb46f5213d85d0998668a1ee4bd55a3d6abc2e1ff",
+    "recipe": [
+      {
+        "label": "retail contiguous switch cases (1 sites)",
+        "input_sha256": "dc967b20e35f6a9afa0035d88d3a7757442705e2f2f7280da9905c07bfcd8ce3",
+        "output_sha256": "76b51b82831a05f70aa17b2ed9a1b5140e626afc4811297f0a8ff8cb68617b91",
+        "input_symbol": "fn_8002A74C",
+        "output_symbol": "fn_8002A74C",
+        "edits": [
+          [
+            151,
+            185,
+            "switch ((s32)v0) {\ncase 0: case 1: {\n"
+          ],
+          [
+            219,
+            219,
+            "\n} break;\ndefault: {\n\n} break;\n"
+          ]
+        ]
+      }
+    ],
+    "link": "pending"
+  },
+  "fn_12_3256C": {
+    "seed_symbol": "fn_12_3256C",
+    "generator": "fzgx fixup",
+    "transform": "retail contiguous switch cases (1 sites)",
+    "seed": "#include \"types.h\"\n\ntypedef struct MovieContext {\n    int state;\n    void *movie;\n    u8 _pad[4];\n    int kind;\n} MovieContext;\n\nstatic inline u8 fn_12_3256C_array_read(u8 *array, s32 index) { return array[index]; }\n#pragma peephole off\nint fn_12_3256C(MovieContext *self, u32 *result) {\n    int kind_ok;\n    int kind;\n    u8 *movie = (u8 *)self->movie;\n    int ok;\n\n    if (self->state < 2 && self->state >= -1) {\n        ok = 0;\n    } else {\n        ok = 1;\n    }\n\n    if (ok == 0) {\n        ok = 0;\n    } else {\n        kind = self->kind;\n        kind_ok = 0;\n        if (kind == 0x6b || kind >= 0x6e) {\n            kind_ok = 1;\n        }\n        if (!(kind_ok != 0)) {\n            ok = 0;\n        } else {\n            ok = 1;\n        }\n    }\n\n    if (ok == 0) {\n        return 0;\n    }\n\n    *result = fn_12_3256C_array_read(movie, 0xb1);\n    return 1;\n}\n#pragma peephole reset\n\n",
+    "seed_sha256": "d0dca3dacc98eeb82f2cb88d0f8d69faccb11de467f1b38c40b815daf8ed953b",
+    "generated_sha256": "3a199014a43d161e26156f5e327210ca9a89fde9f6d365af931e69b83d085294",
+    "generated_source": "#include \"types.h\"\n\ntypedef struct MovieContext {\n    int state;\n    void *movie;\n    u8 _pad[4];\n    int kind;\n} MovieContext;\n\nstatic inline u8 fn_12_3256C_array_read(u8 *array, s32 index) { return array[index]; }\n#pragma peephole off\nint fn_12_3256C(MovieContext *self, u32 *result) {\n    int kind_ok;\n    int kind;\n    u8 *movie = (u8 *)self->movie;\n    int ok;\n\n    switch (self->state) {\ncase -1: case 0: case 1: {\n\n        ok = 0;\n    \n} break;\ndefault: {\n\n        ok = 1;\n    \n} break;\n}\n\n    if (ok == 0) {\n        ok = 0;\n    } else {\n        kind = self->kind;\n        kind_ok = 0;\n        if (kind == 0x6b || kind >= 0x6e) {\n            kind_ok = 1;\n        }\n        if (!(kind_ok != 0)) {\n            ok = 0;\n        } else {\n            ok = 1;\n        }\n    }\n\n    if (ok == 0) {\n        return 0;\n    }\n\n    *result = fn_12_3256C_array_read(movie, 0xb1);\n    return 1;\n}\n#pragma peephole reset\n\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "rel/movie_module/fn_12_3256C.c",
+    "bytes": 136,
+    "headers_sha256": "a3db0164dc3a0250a1c1729dabebf7f84ddbd4096090f5f7f2d171ec8ca55bd1",
+    "oracle_sha256": "7cc891120feb212c397b96ddb46f5213d85d0998668a1ee4bd55a3d6abc2e1ff",
+    "recipe": [
+      {
+        "label": "retail contiguous switch cases (1 sites)",
+        "input_sha256": "d0dca3dacc98eeb82f2cb88d0f8d69faccb11de467f1b38c40b815daf8ed953b",
+        "output_sha256": "3a199014a43d161e26156f5e327210ca9a89fde9f6d365af931e69b83d085294",
+        "input_symbol": "fn_12_3256C",
+        "output_symbol": "fn_12_3256C",
+        "edits": [
+          [
+            371,
+            414,
+            "switch (self->state) {\ncase -1: case 0: case 1: {\n"
+          ],
+          [
+            435,
+            443,
+            "\n} break;\ndefault: {\n"
+          ],
+          [
+            464,
+            464,
+            "\n} break;\n"
+          ]
+        ]
+      }
+    ],
+    "link": "pending"
+  },
+  "fn_8006BA74": {
+    "seed_symbol": "fn_8006BA74",
+    "generator": "fzgx fixup",
+    "transform": "retail contiguous switch cases (1 sites)",
+    "seed": "#include \"types.h\"\n\ntypedef struct Fn8006BA74Base {\n    u8 pad_0[0xf4];\n    void *items[64];\n} Fn8006BA74Base;\n\ntypedef struct Fn8006BA74Record {\n    u8 pad_0[0x24];\n    void *owner;\n} Fn8006BA74Record;\n\nextern u32 fn_8006BC84(void *arg0);\nextern void fn_8006BCF8(void *arg0);\nextern s32 fn_8006BE0C(void *arg0, u8 *arg1);\n\ns32 fn_8006BA74(Fn8006BA74Base *arg0, u32 *out, u8 *status) {\n    u32 value;\n    s32 result;\n    s32 state;\n    u32 index;\n    Fn8006BA74Record *record;\n\n    result = 0;\n    *out = fn_8006BC84(arg0);\n    value = *out;\n    if (value == 0xFFFFFFFF) {\n        result = -5;\n    } else {\n        index = value & 0x3F;\n        state = *status;\n        record = (Fn8006BA74Record *)((u8 *)arg0 + (index << 6) + 0x1F4);\n        if (state < 9 && state >= 0) {\n            fn_8006BCF8(record);\n            record->owner = arg0;\n            fn_8006BE0C(record, status);\n        } else {\n            *out = 0xFFFFFFFF;\n            result = -2;\n        }\n        if (record != 0) {\n            arg0->items[index] = record;\n        }\n    }\n    return result;\n}\n",
+    "seed_sha256": "86606eee896ebb6e031aee5e5b713929d35198ef40a6fd6745ccc4cefc22d0e1",
+    "generated_sha256": "33fce21de84d683d3513ca20edee28b38c376b3d13899bd81018a1d2b57b2cd3",
+    "generated_source": "#include \"types.h\"\n\ntypedef struct Fn8006BA74Base {\n    u8 pad_0[0xf4];\n    void *items[64];\n} Fn8006BA74Base;\n\ntypedef struct Fn8006BA74Record {\n    u8 pad_0[0x24];\n    void *owner;\n} Fn8006BA74Record;\n\nextern u32 fn_8006BC84(void *arg0);\nextern void fn_8006BCF8(void *arg0);\nextern s32 fn_8006BE0C(void *arg0, u8 *arg1);\n\ns32 fn_8006BA74(Fn8006BA74Base *arg0, u32 *out, u8 *status) {\n    u32 value;\n    s32 result;\n    s32 state;\n    u32 index;\n    Fn8006BA74Record *record;\n\n    result = 0;\n    *out = fn_8006BC84(arg0);\n    value = *out;\n    if (value == 0xFFFFFFFF) {\n        result = -5;\n    } else {\n        index = value & 0x3F;\n        state = *status;\n        record = (Fn8006BA74Record *)((u8 *)arg0 + (index << 6) + 0x1F4);\n        switch (state) {\ncase 0: case 1: case 2: case 3: case 4: case 5: case 6: case 7: case 8: {\n\n            fn_8006BCF8(record);\n            record->owner = arg0;\n            fn_8006BE0C(record, status);\n        \n} break;\ndefault: {\n\n            *out = 0xFFFFFFFF;\n            result = -2;\n        \n} break;\n}\n        if (record != 0) {\n            arg0->items[index] = record;\n        }\n    }\n    return result;\n}\n",
+    "compiler": "GC/1.3.2",
+    "flags": "-use_lmw_stmw on",
+    "source": "dol/fn_8006BA74.c",
+    "bytes": 188,
+    "headers_sha256": "a3db0164dc3a0250a1c1729dabebf7f84ddbd4096090f5f7f2d171ec8ca55bd1",
+    "oracle_sha256": "7cc891120feb212c397b96ddb46f5213d85d0998668a1ee4bd55a3d6abc2e1ff",
+    "recipe": [
+      {
+        "label": "retail contiguous switch cases (1 sites)",
+        "input_sha256": "86606eee896ebb6e031aee5e5b713929d35198ef40a6fd6745ccc4cefc22d0e1",
+        "output_sha256": "33fce21de84d683d3513ca20edee28b38c376b3d13899bd81018a1d2b57b2cd3",
+        "input_symbol": "fn_8006BA74",
+        "output_symbol": "fn_8006BA74",
+        "edits": [
+          [
+            744,
+            774,
+            "switch (state) {\ncase 0: case 1: case 2: case 3: case 4: case 5: case 6: case 7: case 8: {\n"
+          ],
+          [
+            891,
+            899,
+            "\n} break;\ndefault: {\n"
+          ],
+          [
+            964,
+            964,
+            "\n} break;\n"
+          ]
+        ]
+      }
+    ],
+    "link": "pending"
   }
 }
