@@ -71,17 +71,17 @@ extern OSResetFunctionInfo lbl_801245E0;
 
 static unsigned char lbl_8015D0B0[16];
 
-static PADStatus Origin[4];
+static PADStatus lbl_8015D0C0__fzgx_offset_0[4];
 
-static u32 CmdProbeDevice[4];
+static u32 lbl_8015D0C0__fzgx_offset_30[4];
 
 #pragma section code_type ".fzgxpool"
 static void layout____bss_0(void) {
 // Hardware or OS state can change asynchronously.
     volatile unsigned char sink; // fzgx-allow: S2 SDK asynchronous state
     sink = *(unsigned char *)&lbl_8015D0B0;
-    sink = *(unsigned char *)&Origin;
-    sink = *(unsigned char *)&CmdProbeDevice;
+    sink = *(unsigned char *)&lbl_8015D0C0__fzgx_offset_0;
+    sink = *(unsigned char *)&lbl_8015D0C0__fzgx_offset_30;
 }
 #pragma section code_type ".text"
 
@@ -92,7 +92,7 @@ static inline void DoReset() {
         (void)0;
         chanBit = (0x80000000 >> lbl_801A64B4);
         lbl_801A697C__fzgx_offset_4 &= ~chanBit;
-        memset(&Origin[lbl_801A64B4], 0, sizeof(PADStatus));
+        memset(&lbl_8015D0C0__fzgx_offset_0[lbl_801A64B4], 0, sizeof(PADStatus));
         SIGetTypeAsync(lbl_801A64B4, fn_8001C704);
     }
 }
@@ -136,7 +136,7 @@ BOOL fn_8001CD68() {
         lbl_801A6984 = 0x80000000 | 0x40000000 | 0x20000000 | 0x10000000;
     }
     for (chan = 0; chan < 4; ++chan) {
-        CmdProbeDevice[chan] =
+        lbl_8015D0C0__fzgx_offset_30[chan] =
             (0x4D << 24) | (chan << 22) | ((__OSWirelessPadFixMode & 0x3fffu) << 8);
     }
     fn_800133B8();

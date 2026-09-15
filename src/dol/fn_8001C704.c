@@ -45,17 +45,17 @@ extern u32 lbl_801A64CC;
 
 static u32 lbl_8015D0B0[4];
 
-static PADStatus Origin[4];
+static PADStatus lbl_8015D0C0__fzgx_offset_0[4];
 
-static u32 CmdProbeDevice[4];
+static u32 lbl_8015D0C0__fzgx_offset_30[4];
 
 #pragma section code_type ".fzgxpool"
 static void layout____bss_0(void) {
 // Hardware or OS state can change asynchronously.
     volatile unsigned char sink; // fzgx-allow: S2 SDK asynchronous state
     sink = *(unsigned char *)&lbl_8015D0B0;
-    sink = *(unsigned char *)&Origin;
-    sink = *(unsigned char *)&CmdProbeDevice;
+    sink = *(unsigned char *)&lbl_8015D0C0__fzgx_offset_0;
+    sink = *(unsigned char *)&lbl_8015D0C0__fzgx_offset_30;
 }
 #pragma section code_type ".text"
 
@@ -79,7 +79,7 @@ static inline void DoReset(void) {
     }
     chanBit = 0x80000000 >> lbl_801A64B4;
     lbl_801A697C__fzgx_offset_4 &= ~chanBit;
-    memset(&Origin[lbl_801A64B4], 0, sizeof(PADStatus));
+    memset(&lbl_8015D0C0__fzgx_offset_0[lbl_801A64B4], 0, sizeof(PADStatus));
     SIGetTypeAsync(lbl_801A64B4, fn_8001C704);
 }
 
@@ -109,18 +109,18 @@ void fn_8001C704(s32 chan, u32 type) {
     }
     if (!(type & 0x80000000) || (type & 0x04000000)) {
         if (recalibrate) {
-            rc = SITransfer(lbl_801A64B4, &lbl_801A64CC, 3, &Origin[lbl_801A64B4], 10, fn_8001C4A8,
+            rc = SITransfer(lbl_801A64B4, &lbl_801A64CC, 3, &lbl_8015D0C0__fzgx_offset_0[lbl_801A64B4], 10, fn_8001C4A8,
                             0);
         } else {
-            rc = SITransfer(lbl_801A64B4, &lbl_801A64C8, 1, &Origin[lbl_801A64B4], 10, fn_8001C4A8,
+            rc = SITransfer(lbl_801A64B4, &lbl_801A64C8, 1, &lbl_8015D0C0__fzgx_offset_0[lbl_801A64B4], 10, fn_8001C4A8,
                             0);
         }
     } else if ((type & 0x00100000) && (type & 0x00080000) == 0x00000000 && !(type & 0x00040000)) {
         if (type & 0x40000000) {
-            rc = SITransfer(lbl_801A64B4, &lbl_801A64C8, 1, &Origin[lbl_801A64B4], 10, fn_8001C4A8,
+            rc = SITransfer(lbl_801A64B4, &lbl_801A64C8, 1, &lbl_8015D0C0__fzgx_offset_0[lbl_801A64B4], 10, fn_8001C4A8,
                             0);
         } else {
-            rc = SITransfer(lbl_801A64B4, &CmdProbeDevice[lbl_801A64B4], 3, &Origin[lbl_801A64B4],
+            rc = SITransfer(lbl_801A64B4, &lbl_8015D0C0__fzgx_offset_30[lbl_801A64B4], 3, &lbl_8015D0C0__fzgx_offset_0[lbl_801A64B4],
                             8, fn_8001C62C, 0);
         }
     }

@@ -232,6 +232,11 @@ def tu_objects(p, symbol, text, mode, cache, retail_bases=()):
     syms = p.symbols(sym.module)
     notes = []
     models = find_models(text)
+    # Saved preprocessed bodies retain spaces around member access. The
+    # layout parser below recognizes the pointer token, not that whitespace.
+    for pvar, *_ in models:
+        if pvar:
+            text = re.sub(r'\b' + re.escape(pvar) + r'\s*->\s*', pvar + '->', text)
     # same-module .bss scalars/arrays the body names directly are objects of the retail TU too
     scalars = []
     for m in re.finditer(r"\nextern\s+((?:const\s+)?(?:u8|s8|u16|s16|u32|s32|f32|f64|int|char)(?:\s*\*)?)\s+(lbl_\d+_bss_[0-9A-F]+|lbl_[0-9A-F]{8})\s*((?:\[[^\]]*\])*)\s*;", text):

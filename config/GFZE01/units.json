@@ -138,18 +138,6 @@
   },
   {
     "module": "car_colchg",
-    "source": "rel/car_colchg/car_colchg/colchg_selmate_init.c",
-    "symbols": [
-      "colchg_selmate_init"
-    ],
-    "status": "nonmatching",
-    "mw_version": "GC/1.3.2",
-    "extra_cflags": [],
-    "tu": "rel/car_colchg/car_colchg.c",
-    "pool": true
-  },
-  {
-    "module": "car_colchg",
     "source": "rel/car_colchg/car_colchg/fn_9_1018.c",
     "symbols": [
       "fn_9_1018"
@@ -13843,7 +13831,7 @@
     "symbols": [
       "fn_8001AAB4"
     ],
-    "status": "nonmatching",
+    "status": "matching",
     "mw_version": "GC/1.2.5n",
     "extra_cflags": [
       "-use_lmw_stmw",
@@ -13857,7 +13845,13 @@
       "-common",
       "off"
     ],
-    "pool": true
+    "pool": {
+      "...data.0": "lbl_801241C8",
+      "...bss.0": "lbl_8015CF68",
+      "lbl_8015CF68": "lbl_8015CF68",
+      "lbl_8015CF68__fzgx_offset_78": "lbl_8015CF68+0x78",
+      "lbl_8015D058__fzgx_offset_0": "lbl_8015D058"
+    }
   },
   {
     "module": "main",
@@ -14002,7 +13996,7 @@
     "symbols": [
       "fn_8001C704"
     ],
-    "status": "nonmatching",
+    "status": "matching",
     "mw_version": "GC/1.2.5n",
     "extra_cflags": [
       "-use_lmw_stmw",
@@ -14016,7 +14010,13 @@
       "-common",
       "off"
     ],
-    "pool": true
+    "pool": {
+      "lbl_801A697C__fzgx_offset_4": "lbl_801A697C+0x4",
+      "...bss.0": "lbl_8015D0B0",
+      "lbl_8015D0B0": "lbl_8015D0B0",
+      "lbl_8015D0C0__fzgx_offset_0": "lbl_8015D0C0",
+      "lbl_8015D0C0__fzgx_offset_30": "lbl_8015D0C0+0x30"
+    }
   },
   {
     "module": "main",
@@ -14072,7 +14072,7 @@
     "symbols": [
       "fn_8001CD68"
     ],
-    "status": "nonmatching",
+    "status": "matching",
     "mw_version": "GC/1.2.5n",
     "extra_cflags": [
       "-use_lmw_stmw",
@@ -14086,7 +14086,13 @@
       "-common",
       "off"
     ],
-    "pool": true
+    "pool": {
+      "lbl_801A697C__fzgx_offset_4": "lbl_801A697C+0x4",
+      "...bss.0": "lbl_8015D0B0",
+      "lbl_8015D0B0": "lbl_8015D0B0",
+      "lbl_8015D0C0__fzgx_offset_0": "lbl_8015D0C0",
+      "lbl_8015D0C0__fzgx_offset_30": "lbl_8015D0C0+0x30"
+    }
   },
   {
     "module": "main",

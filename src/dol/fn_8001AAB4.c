@@ -85,7 +85,7 @@ typedef struct {
     u32 rbufAddr;
     u32 rtfbb;
     u32 rbfbb;
-    VITiming *timing;
+    VITiming *fzgx_pool_timing;
 } SomeVIStruct;
 
 __OSInterruptHandler __OSSetInterruptHandler(__OSInterrupt interrupt, __OSInterruptHandler handler);
@@ -134,13 +134,13 @@ extern u32 CurrTvMode_801A6964;
 
 void (*__VIDisableRawPositionInterrupt())(s16, s16);
 
-static unsigned char lbl_801241C8[68] = {
+static unsigned char fzgx_pool_lbl_801241C8[68] = {
     60, 60, 32,  68,  111, 108, 112, 104, 105, 110, 32, 83, 68,  75,  32,  45,  32,
     86, 73, 9,   114, 101, 108, 101, 97,  115, 101, 32, 98, 117, 105, 108, 100, 58,
     32, 83, 101, 112, 32,  32,  53,  32,  50,  48,  48, 50, 32,  48,  53,  58,  51,
     51, 58, 49,  51,  32,  40,  48,  120, 50,  51,  48, 49, 41,  32,  62,  62,  0};
 
-static VITiming timing[10] = {{6,   240, 24,  25,  3,  2,  12,  13,  12,  13,  520, 519,
+static VITiming fzgx_pool_timing[10] = {{6,   240, 24,  25,  3,  2,  12,  13,  12,  13,  520, 519,
                                520, 519, 525, 429, 64, 71, 105, 162, 373, 122, 412},
                               {6,   240, 24,  24,  4,  4,  12,  12,  12,  12,  520, 520,
                                520, 520, 526, 429, 64, 71, 105, 162, 373, 122, 412},
@@ -161,22 +161,22 @@ static VITiming timing[10] = {{6,   240, 24,  25,  3,  2,  12,  13,  12,  13,  5
                               {12,   480,  48,   48,  6,  6,  24,  24,  24,  24,  1038, 1038,
                                1038, 1038, 1050, 429, 64, 71, 105, 180, 391, 122, 412}};
 
-static u16 taps[25] = {0x01F0, 0x01DC, 0x01AE, 0x0174, 0x0129, 0x00DB, 0x008E, 0x0046, 0x000C,
+static u16 fzgx_pool_taps[25] = {0x01F0, 0x01DC, 0x01AE, 0x0174, 0x0129, 0x00DB, 0x008E, 0x0046, 0x000C,
                        0x00E2, 0x00CB, 0x00C0, 0x00C4, 0x00CF, 0x00DE, 0x00EC, 0x00FC, 0x0008,
                        0x000F, 0x0013, 0x0013, 0x000F, 0x000C, 0x0008, 0x0001};
 
 static volatile u16 lbl_8015CF68[59]; // fzgx-allow: S2 SDK asynchronous state
 
-static unsigned char sdk_gap____bss_0_76[120];
+static unsigned char lbl_8015CF68__fzgx_offset_78[120];
 
-static SomeVIStruct HorVer;
+static SomeVIStruct lbl_8015D058__fzgx_offset_0;
 
 #pragma section code_type ".fzgxpool"
 static void sdk_layout____bss_0(void) {
     volatile unsigned char sink; // fzgx-allow: S2 SDK asynchronous state
     sink = *(unsigned char *)&lbl_8015CF68;
-    sink = *(unsigned char *)&sdk_gap____bss_0_76;
-    sink = *(unsigned char *)&HorVer;
+    sink = *(unsigned char *)&lbl_8015CF68__fzgx_offset_78;
+    sink = *(unsigned char *)&lbl_8015D058__fzgx_offset_0;
 }
 #pragma section code_type ".text"
 
@@ -191,37 +191,37 @@ void __VIInit(VITVMode mode);
 static inline void AdjustPosition(u16 acv) {
     s32 coeff;
     s32 frac;
-    HorVer.AdjustedDispPosX =
-        (((s16)HorVer.DispPosX + lbl_801A6940) > (0x2D0 - HorVer.DispSizeX)
-             ? (0x2D0 - HorVer.DispSizeX)
-         : ((s16)HorVer.DispPosX + lbl_801A6940) < (0) ? (0)
-                                                       : ((s16)HorVer.DispPosX + lbl_801A6940));
-    coeff = (HorVer.FBMode == VI_XFBMODE_SF) ? 2 : 1;
-    frac = HorVer.DispPosY & 1;
-    HorVer.AdjustedDispPosY =
-        (((s16)HorVer.DispPosY + lbl_801A6942) > (frac) ? ((s16)HorVer.DispPosY + lbl_801A6942)
+    lbl_8015D058__fzgx_offset_0.AdjustedDispPosX =
+        (((s16)lbl_8015D058__fzgx_offset_0.DispPosX + lbl_801A6940) > (0x2D0 - lbl_8015D058__fzgx_offset_0.DispSizeX)
+             ? (0x2D0 - lbl_8015D058__fzgx_offset_0.DispSizeX)
+         : ((s16)lbl_8015D058__fzgx_offset_0.DispPosX + lbl_801A6940) < (0) ? (0)
+                                                       : ((s16)lbl_8015D058__fzgx_offset_0.DispPosX + lbl_801A6940));
+    coeff = (lbl_8015D058__fzgx_offset_0.FBMode == VI_XFBMODE_SF) ? 2 : 1;
+    frac = lbl_8015D058__fzgx_offset_0.DispPosY & 1;
+    lbl_8015D058__fzgx_offset_0.AdjustedDispPosY =
+        (((s16)lbl_8015D058__fzgx_offset_0.DispPosY + lbl_801A6942) > (frac) ? ((s16)lbl_8015D058__fzgx_offset_0.DispPosY + lbl_801A6942)
                                                         : (frac));
-    HorVer.AdjustedDispSizeY = HorVer.DispSizeY +
-                               (((s16)HorVer.DispPosY + lbl_801A6942 - frac) < (0)
-                                    ? ((s16)HorVer.DispPosY + lbl_801A6942 - frac)
+    lbl_8015D058__fzgx_offset_0.AdjustedDispSizeY = lbl_8015D058__fzgx_offset_0.DispSizeY +
+                               (((s16)lbl_8015D058__fzgx_offset_0.DispPosY + lbl_801A6942 - frac) < (0)
+                                    ? ((s16)lbl_8015D058__fzgx_offset_0.DispPosY + lbl_801A6942 - frac)
                                     : (0)) -
-                               (((s16)HorVer.DispPosY + (s16)HorVer.DispSizeY + lbl_801A6942 -
+                               (((s16)lbl_8015D058__fzgx_offset_0.DispPosY + (s16)lbl_8015D058__fzgx_offset_0.DispSizeY + lbl_801A6942 -
                                  (((s16)acv * 2) - frac)) > (0)
-                                    ? ((s16)HorVer.DispPosY + (s16)HorVer.DispSizeY + lbl_801A6942 -
+                                    ? ((s16)lbl_8015D058__fzgx_offset_0.DispPosY + (s16)lbl_8015D058__fzgx_offset_0.DispSizeY + lbl_801A6942 -
                                        (((s16)acv * 2) - frac))
                                     : (0));
-    HorVer.AdjustedPanPosY = HorVer.PanPosY - ((((s16)HorVer.DispPosY + lbl_801A6942 - frac) < (0)
-                                                    ? ((s16)HorVer.DispPosY + lbl_801A6942 - frac)
+    lbl_8015D058__fzgx_offset_0.AdjustedPanPosY = lbl_8015D058__fzgx_offset_0.PanPosY - ((((s16)lbl_8015D058__fzgx_offset_0.DispPosY + lbl_801A6942 - frac) < (0)
+                                                    ? ((s16)lbl_8015D058__fzgx_offset_0.DispPosY + lbl_801A6942 - frac)
                                                     : (0)) /
                                                coeff);
-    HorVer.AdjustedPanSizeY = HorVer.PanSizeY +
-                              ((((s16)HorVer.DispPosY + lbl_801A6942 - frac) < (0)
-                                    ? ((s16)HorVer.DispPosY + lbl_801A6942 - frac)
+    lbl_8015D058__fzgx_offset_0.AdjustedPanSizeY = lbl_8015D058__fzgx_offset_0.PanSizeY +
+                              ((((s16)lbl_8015D058__fzgx_offset_0.DispPosY + lbl_801A6942 - frac) < (0)
+                                    ? ((s16)lbl_8015D058__fzgx_offset_0.DispPosY + lbl_801A6942 - frac)
                                     : (0)) /
                                coeff) -
-                              ((((s16)HorVer.DispPosY + (s16)HorVer.DispSizeY + lbl_801A6942 -
+                              ((((s16)lbl_8015D058__fzgx_offset_0.DispPosY + (s16)lbl_8015D058__fzgx_offset_0.DispSizeY + lbl_801A6942 -
                                  (((s16)acv * 2) - frac)) > (0)
-                                    ? ((s16)HorVer.DispPosY + (s16)HorVer.DispSizeY + lbl_801A6942 -
+                                    ? ((s16)lbl_8015D058__fzgx_offset_0.DispPosY + (s16)lbl_8015D058__fzgx_offset_0.DispSizeY + lbl_801A6942 -
                                        (((s16)acv * 2) - frac))
                                     : (0)) /
                                coeff);
@@ -255,52 +255,52 @@ void fn_8001AAB4(void) {
     lbl_801A6944 = 0;
     lbl_801A6950 = 0;
     lbl_801A6928 = 0;
-    __VIRegs[39] = taps[0] | ((taps[1] & 0x3F) << 10);
-    __VIRegs[38] = (taps[1] >> 6) | (taps[2] << 4);
-    __VIRegs[41] = taps[3] | ((taps[4] & 0x3F) << 10);
-    __VIRegs[40] = (taps[4] >> 6) | (taps[5] << 4);
-    __VIRegs[43] = taps[6] | ((taps[7] & 0x3F) << 10);
-    __VIRegs[42] = (taps[7] >> 6) | (taps[8] << 4);
-    __VIRegs[45] = taps[9] | (taps[10] << 8);
-    __VIRegs[44] = taps[11] | (taps[12] << 8);
-    __VIRegs[47] = taps[13] | (taps[14] << 8);
-    __VIRegs[46] = taps[15] | (taps[16] << 8);
-    __VIRegs[49] = taps[17] | (taps[18] << 8);
-    __VIRegs[48] = taps[19] | (taps[20] << 8);
-    __VIRegs[51] = taps[21] | (taps[22] << 8);
-    __VIRegs[50] = taps[23] | (taps[24] << 8);
+    __VIRegs[39] = fzgx_pool_taps[0] | ((fzgx_pool_taps[1] & 0x3F) << 10);
+    __VIRegs[38] = (fzgx_pool_taps[1] >> 6) | (fzgx_pool_taps[2] << 4);
+    __VIRegs[41] = fzgx_pool_taps[3] | ((fzgx_pool_taps[4] & 0x3F) << 10);
+    __VIRegs[40] = (fzgx_pool_taps[4] >> 6) | (fzgx_pool_taps[5] << 4);
+    __VIRegs[43] = fzgx_pool_taps[6] | ((fzgx_pool_taps[7] & 0x3F) << 10);
+    __VIRegs[42] = (fzgx_pool_taps[7] >> 6) | (fzgx_pool_taps[8] << 4);
+    __VIRegs[45] = fzgx_pool_taps[9] | (fzgx_pool_taps[10] << 8);
+    __VIRegs[44] = fzgx_pool_taps[11] | (fzgx_pool_taps[12] << 8);
+    __VIRegs[47] = fzgx_pool_taps[13] | (fzgx_pool_taps[14] << 8);
+    __VIRegs[46] = fzgx_pool_taps[15] | (fzgx_pool_taps[16] << 8);
+    __VIRegs[49] = fzgx_pool_taps[17] | (fzgx_pool_taps[18] << 8);
+    __VIRegs[48] = fzgx_pool_taps[19] | (fzgx_pool_taps[20] << 8);
+    __VIRegs[51] = fzgx_pool_taps[21] | (fzgx_pool_taps[22] << 8);
+    __VIRegs[50] = fzgx_pool_taps[23] | (fzgx_pool_taps[24] << 8);
     __VIRegs[56] = 0x280;
     ImportAdjustingValues();
     tvInBootrom = *(u32 *)((void *)((u32)(0xCC) + (0x8000 << 16)));
     dspCfg = __VIRegs[1];
-    HorVer.nonInter = (s32)((dspCfg >> 2U) & 1);
-    HorVer.tv = ((u32)(dspCfg) & 0x300) >> 8;
-    if (tvInBootrom == (1) && HorVer.tv == (0)) {
-        HorVer.tv = (5);
+    lbl_8015D058__fzgx_offset_0.nonInter = (s32)((dspCfg >> 2U) & 1);
+    lbl_8015D058__fzgx_offset_0.tv = ((u32)(dspCfg) & 0x300) >> 8;
+    if (tvInBootrom == (1) && lbl_8015D058__fzgx_offset_0.tv == (0)) {
+        lbl_8015D058__fzgx_offset_0.tv = (5);
     }
-    tv = (HorVer.tv == 3) ? 0 : HorVer.tv;
-    HorVer.timing = getTiming((tv << 2) + HorVer.nonInter);
+    tv = (lbl_8015D058__fzgx_offset_0.tv == 3) ? 0 : lbl_8015D058__fzgx_offset_0.tv;
+    lbl_8015D058__fzgx_offset_0.fzgx_pool_timing = getTiming((tv << 2) + lbl_8015D058__fzgx_offset_0.nonInter);
     lbl_8015CF68[1] = dspCfg;
-    lbl_801A6960 = HorVer.timing;
-    CurrTvMode_801A6964 = HorVer.tv;
-    HorVer.DispSizeX = 640;
-    HorVer.DispSizeY = lbl_801A6960->acv * 2;
-    HorVer.DispPosX = (720 - HorVer.DispSizeX) / 2;
-    HorVer.DispPosY = 0;
+    lbl_801A6960 = lbl_8015D058__fzgx_offset_0.fzgx_pool_timing;
+    CurrTvMode_801A6964 = lbl_8015D058__fzgx_offset_0.tv;
+    lbl_8015D058__fzgx_offset_0.DispSizeX = 640;
+    lbl_8015D058__fzgx_offset_0.DispSizeY = lbl_801A6960->acv * 2;
+    lbl_8015D058__fzgx_offset_0.DispPosX = (720 - lbl_8015D058__fzgx_offset_0.DispSizeX) / 2;
+    lbl_8015D058__fzgx_offset_0.DispPosY = 0;
     AdjustPosition(lbl_801A6960->acv);
-    HorVer.FBSizeX = 640;
-    HorVer.FBSizeY = lbl_801A6960->acv * 2;
-    HorVer.PanPosX = 0;
-    HorVer.PanPosY = 0;
-    HorVer.PanSizeX = 640;
-    HorVer.PanSizeY = lbl_801A6960->acv * 2;
-    HorVer.FBMode = 0;
-    HorVer.wordPerLine = 40;
-    HorVer.std = 40;
-    HorVer.wpl = 40;
-    HorVer.xof = 0;
-    HorVer.black = 1;
-    HorVer.threeD = 0;
+    lbl_8015D058__fzgx_offset_0.FBSizeX = 640;
+    lbl_8015D058__fzgx_offset_0.FBSizeY = lbl_801A6960->acv * 2;
+    lbl_8015D058__fzgx_offset_0.PanPosX = 0;
+    lbl_8015D058__fzgx_offset_0.PanPosY = 0;
+    lbl_8015D058__fzgx_offset_0.PanSizeX = 640;
+    lbl_8015D058__fzgx_offset_0.PanSizeY = lbl_801A6960->acv * 2;
+    lbl_8015D058__fzgx_offset_0.FBMode = 0;
+    lbl_8015D058__fzgx_offset_0.wordPerLine = 40;
+    lbl_8015D058__fzgx_offset_0.std = 40;
+    lbl_8015D058__fzgx_offset_0.wpl = 40;
+    lbl_8015D058__fzgx_offset_0.xof = 0;
+    lbl_8015D058__fzgx_offset_0.black = 1;
+    lbl_8015D058__fzgx_offset_0.threeD = 0;
     OSInitThreadQueue(&lbl_801A692C);
     tvInBootrom = __VIRegs[24];
     value = tvInBootrom;
