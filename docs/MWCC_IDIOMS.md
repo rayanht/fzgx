@@ -47,8 +47,15 @@ file from what actually unblocked functions; keep each item one or two lines.
   (fine, it dedupes onto the primed slot) but a `const u32` scalar folds into `li` — integer pool
   words must be one-element arrays read as `[0]` (retail's `lwz r0, 0x490(r31)`); and the
   oracle's pool byte comparison must stop at retail's last displacement (the next word belongs
-  to the following object). `#pragma pool_data on` produces the same base-relative shape for a
-  unit's own data but is not what retail used (retail leaf functions keep per-literal `lis`).
+  to the following object). Refinement (probe `head.c`, 2026-09-16): the shared base is the
+  *section symbol* `...rodata.0`, which MWCC CSEs across a function's own private literals; a
+  user-declared `const` object (even `static`, even one defined in the unit) is addressed by its
+  own symbol and never joins that base. So retail's `lfs f, 0x3c(r30)` reads are plain float
+  literals in the source (`5.0f`), not fields of a pool object: bodies must spell pool reads as
+  native literals (`native_pool_literals`), integer-read words as primer table entries, and the
+  primer fixes the first-use order. `#pragma pool_data on` produces the same base-relative
+  shape for a unit's own data but is not what retail used (retail leaf functions keep
+  per-literal `lis`).
 
 ## Selection panel evidence (2026-09-15)
 

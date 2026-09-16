@@ -3496,6 +3496,59 @@ def shared_pool_primer(p, symbol, body, check):
             ident = definition.group(2) + (f'__fzgx_offset_{definition.group(3)}' if definition.group(3) else '')
             body_ = body_.replace(definition.group(0), '')
             body_ = re.sub(r'\b' + re.escape(ident) + r'\[0\]', f'fzgx_pool_table{n}[{w}]', body_)
+        # integer reads of pool words through an extern struct view of the pool head
+        # (`local.words[k] = pool->unk_2B0`): those words are primer table entries, so read them
+        # there; once nothing else uses the view, the extern and its pointer go, and the
+        # compiler's section base is the only one left (retail's r30)
+        try:
+            from .fixup_source import declared_types, record_layouts, member_layout
+            from .sdkimport import masked
+            code_ = masked(body_)
+            span_ = _function_span(code_, sym.name)
+            if span_:
+                _, variables = declared_types(code_, span_[0])
+                layouts = record_layouts(code_, span_[0], variables)
+                roots = {}
+                for name_, ty in variables.items():
+                    if p.find_symbol(name_, sym.module) and p.find_symbol(name_, sym.module).addr == pool.addr:
+                        roots[name_] = (0, ty)
+                for assignment in re.finditer(r'\b(\w+)\s*=\s*(?:\([^();]+\)\s*)*&?\s*(\w+)\s*;', code_[span_[0]:span_[1]]):
+                    if assignment[2] in roots and len(re.findall(r'\b' + re.escape(assignment[1]) + r'\s*=(?!=)', code_[span_[0]:span_[1]])) == 1:
+                        roots[assignment[1]] = (span_[0] + assignment.start(), variables.get(assignment[1], ''))
+                edits = []
+                for root, (assign_at, ty) in roots.items():
+                    for use in re.finditer(r'\b' + re.escape(root) + r'((?:\s*(?:->|\.)\s*\w+)+)', code_[span_[0]:span_[1]]):
+                        field = member_layout(root + re.sub(r'\s+', '', use[1]), layouts, variables)
+                        if not field or field[0] != root:
+                            continue
+                        _, offset, element, count = field
+                        if count is not None or offset not in table_at or element.replace('const ', '').strip() not in ('u32', 's32'):
+                            continue
+                        n, w = table_at[offset]
+                        edits.append((span_[0] + use.start(), span_[0] + use.end(), f'fzgx_pool_table{n}[{w}]'))
+                if edits:
+                    for a, b, value in sorted(edits, reverse=True):
+                        body_ = body_[:a] + value + body_[b:]
+                    code_ = masked(body_); span_ = _function_span(code_, sym.name)
+                    for root, (assign_at, ty) in roots.items():
+                        inner_ = code_[span_[0]:span_[1]]
+                        uses = [u for u in re.finditer(r'\b' + re.escape(root) + r'\b', inner_)]
+                        if len(uses) <= (1 if assign_at else 0):
+                            # only its own assignment (or nothing) is left
+                            if assign_at:
+                                m_ = re.search(r'(?m)^[ \t]*(?:\w[\w \*]*\s+\**)?' + re.escape(root) + r'\s*=\s*[^;]*;[ \t]*\n?', body_[span_[0]:span_[1]])
+                                if m_:
+                                    body_ = body_[:span_[0] + m_.start()] + body_[span_[0] + m_.end():]
+                                    code_ = masked(body_); span_ = _function_span(code_, sym.name)
+                                decl_ = re.search(r'(?m)^[ \t]*(?:struct\s+)?\w+\s*\*\s*' + re.escape(root) + r'\s*;[ \t]*\n', body_[span_[0]:span_[1]])
+                                if decl_:
+                                    body_ = body_[:span_[0] + decl_.start()] + body_[span_[0] + decl_.end():]
+                                    code_ = masked(body_); span_ = _function_span(code_, sym.name)
+                    for name_ in list(roots):
+                        if p.find_symbol(name_, sym.module) and not re.search(r'\b' + re.escape(name_) + r'\b', code_[span_[0]:span_[1]]):
+                            body_ = re.sub(r'(?m)^extern\s+[^;]*\b' + re.escape(name_) + r'\b[^;]*;[ \t]*\n', '', body_)
+        except Exception:
+            pass
         if body_ != body:
             body = body_
             m = re.search(r'^[\w \*]+?\b' + re.escape(sym.name) + r'\s*\([^;{]*\)\s*\{', body, re.M)
