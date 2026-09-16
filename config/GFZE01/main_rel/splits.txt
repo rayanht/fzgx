@@ -6491,3 +6491,9 @@ rel/main_rel/car/fn_1_85688.c:
 
 rel/main_rel/stcoli/fn_1_2A694.c:
 	.text       start:0x0002A694 end:0x0002A8D0 align:4
+
+rel/main_rel/screen_effect/fn_1_77B80.c:
+	.text       start:0x00077B80 end:0x00077C5C align:4
+
+rel/main_rel/sel_static_disp/fn_1_150464.c:
+	.text       start:0x00150464 end:0x00150500 align:4

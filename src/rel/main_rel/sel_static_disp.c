@@ -4327,6 +4327,61 @@ s32 fn_1_14FE48(void *arg0, void *arg1) {
 }
 /* fzgx:end fn_1_14FE48 */
 
+/* fzgx:begin fn_1_150464 noprologue */
+#include "types.h"
+
+struct Sig_fn_800711A8_fn_800711A8_Entry {
+    u8 pad_00[0x24];
+    void *field_24;
+};
+struct Sig_fn_800711A8_fn_800711A8_Arg0 {
+    s32 count;
+    u8 pad_04[4];
+    struct Sig_fn_800711A8_fn_800711A8_Entry **entries;
+    u8 pad_0C[4];
+    u32 field_10;
+    void *field_14;
+};
+struct Sig_fn_80071718_fn_80071718_Arg0 {
+    u8 pad_0[0xC];
+    u32 unk_C;
+};
+
+extern void fn_800711A8(struct Sig_fn_800711A8_fn_800711A8_Arg0 *);
+extern void fn_80071718(struct Sig_fn_80071718_fn_80071718_Arg0 *);
+
+void fn_1_150464(u32 arg0) {
+    u32 v2;
+    u32 v1;
+    s32 v0;
+    struct { s32 value; } v3;
+    u32 v4;
+    u32 v5;
+    v0 = 0;
+    v1 = arg0;
+    while ((s16)v0 < 3) {
+    v2 = v1;
+    v3.value = 0;
+    while ((s16)v3.value < 3) {
+    v4 = *(u32 *)((u8 *)v2 + 0);
+    if (v4 != 0) {
+    fn_800711A8((struct Sig_fn_800711A8_fn_800711A8_Arg0 *)v4);
+    *(u32 *)((u8 *)v2 + 0) = 0;
+    }
+    v5 = *(u32 *)((u8 *)v2 + 4);
+    if (v5 != 0) {
+    fn_80071718((struct Sig_fn_80071718_fn_80071718_Arg0 *)v5);
+    *(u32 *)((u8 *)v2 + 4) = 0;
+    }
+    v2 += 8;
+    v3.value++;
+    }
+    v1 += 48;
+    v0++;
+    }
+}
+/* fzgx:end fn_1_150464 */
+
 /* fzgx:begin fn_1_150500 */
 void fn_1_150500(void) {
     lbl_1_data_2A7E0.unk_3C->unk_0 = 0;

@@ -1720,6 +1720,30 @@ void fn_1_772E0(void) {
 }
 /* fzgx:end fn_1_772E0 */
 
+/* fzgx:begin fn_1_77B80 noprologue */
+#include "types.h"
+
+extern u32 lbl_1_bss_6D1A8[278];
+extern const f32 lbl_1_rodata_31A0;
+
+extern u32 fn_80036104(void);
+extern u32 GXGetTexObjHeight(u32 arg0);
+extern u32 GXGetTexObjWidth(u32 arg0);
+extern u32 fn_800360D8(u32 arg0);
+extern void GXInitTexObj(u32 arg0, u32 arg1, u32 arg2, u32 arg3, u32 arg4, int arg5, int arg6, int arg7);
+extern void GXInitTexObjLOD(u32 arg0, int arg1, int arg2, int arg3, int arg4, int arg5, f32 arg6, f32 arg7, f32 arg8);
+
+void fn_1_77B80(u32 arg0) {
+    struct { u32 value; } value0;
+
+    lbl_1_bss_6D1A8[0] = arg0;
+    value0.value = fn_80036104();
+    GXInitTexObj(lbl_1_bss_6D1A8[0], fn_800360D8(lbl_1_bss_6D1A8[0]), (GXGetTexObjWidth(lbl_1_bss_6D1A8[0])), (GXGetTexObjHeight(lbl_1_bss_6D1A8[0])), value0.value, 1, 1, 0);
+    GXInitTexObjLOD(lbl_1_bss_6D1A8[0], 1, 1, 0, 0, 0,
+        0.0f, 0.0f, 0.0f);
+}
+/* fzgx:end fn_1_77B80 */
+
 /* fzgx:begin fn_1_7879C */
 extern const f32 lbl_1_rodata_323C;
 extern const f64 lbl_1_rodata_31D8;
