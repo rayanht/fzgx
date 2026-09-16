@@ -488,7 +488,7 @@ class Engine:
             # 'retain recovered shared-pool bases' and 'lifetime shared-pool read' never improved a
             # candidate over twelve corpus reports (0 of 1,141 and 0 of 594): they no longer take
             # candidate-cap slots ahead of the productive families
-            targeted = [[c for c in families[0] if c[0].startswith(('retail scalar flag masks', 'retail format argument', 'retail call argument', 'retail call parameter', 'retail argument order:', 'retail float branch', 'retail zero comparison', 'bind recovered shared-pool', 'recover native shared-pool', 'lifetime reload', 'lifetime ordered'))],
+            targeted = [[c for c in families[0] if c[0].startswith(('retail parameter copy', 'retail scalar flag masks', 'retail format argument', 'retail call argument', 'retail call parameter', 'retail argument order:', 'retail float branch', 'retail zero comparison', 'bind recovered shared-pool', 'recover native shared-pool', 'lifetime reload', 'lifetime ordered'))],
                         source.address_expressions(body, name), source.pointer_lifetimes(body, name), source.through_local(body, name),
                         source.wide_member_values(body,name),source.promoted_locals(body,name),source.returned_regions(body,name),source.reuse_temporaries(body,name),source.initialization_orders(body,name),source.flag_stores(body,name),source.loop_lifetimes(body,name)]
             operand_types = {'and':('&',('u32','s32')), 'or':('|',('u32','s32')),

@@ -624,6 +624,30 @@ def pool_scalar_reads(p, symbol, body, check):
             except ValueError:
                 continue
             edits.append((wrapper.start() if closing else start,end+closing.end() if closing else end,value))
+    # the lifter's byte-addressed form: `*(f32 *)((u8 *)root + 0x140)` / `*(f32 *)(root + 0x140)`
+    # where root aliases a pool object (fn_1_53830: retail reads the same word through the
+    # TU pool base, so the literal must be native for the primer to place it)
+    taken = [(a,b) for a,b,_ in edits]
+    for name,(anchor,ty) in roots.items():
+        pattern = (r'\*\s*\(\s*(?:const\s+)?(f32|float|f64|double)\s*\*\s*\)\s*\(\s*(?:\(\s*(?:const\s+)?u8\s*\*\s*\)\s*)?'
+                   + re.escape(name) + r'\s*\+\s*(0x[0-9A-Fa-f]+|\d+)\s*\)')
+        for use in re.finditer(pattern,code):
+            start,end = use.span()
+            if not any(a<=start and end<=b for a,b in ranges) or any(a<end and start<b for a,b in taken):
+                continue
+            if re.match(r'\s*(?:=(?!=)|[+*/&|^-]=|\+\+|--)',code[end:]) or re.search(r'&\s*$',code[:start]):
+                continue
+            element = use[1]; width = BASIC[element][0]; offset = int(use[2],0)
+            if (anchor,offset,width) not in referenced:
+                continue
+            raw = retail_bytes(p,sym.module,anchor,offset,width)
+            if raw is None:
+                continue
+            try:
+                value = number(raw,element)
+            except ValueError:
+                continue
+            edits.append((start,end,value))
     return edits
 
 
@@ -2081,6 +2105,112 @@ def format_arguments(p, symbol, body):
     return out
 
 
+
+PARAM_COPY_RE = re.compile(r'^(?:mr|fmr) ([rf])(\d+), ([rf])(\d+)$')
+
+
+def _prologue_parameters(rows):
+    """{argument register: callee-saved register} for parameters copied out of r3..r10 /
+    f1..f8 before the first branch, call or compare: the prologue's own parameter homes."""
+    out = {}
+    for text in rows[:80]:
+        if not text:
+            continue
+        if text.startswith(('b', 'cmp')) and not text.startswith('bl _save'):
+            break
+        m = PARAM_COPY_RE.match(text)
+        if not m or m[1] != m[3]:
+            continue
+        src, dst = int(m[4]), int(m[2])
+        first, last = (3, 10) if m[1] == 'r' else (1, 8)
+        if first <= src <= last and dst >= 14 and (m[1], src) not in out:
+            out[(m[1], src)] = dst
+    return out
+
+
+def _signature_parameters(body, name):
+    """[(type, name)] of the function definition's named parameters."""
+    m = re.search(r'\b' + re.escape(name) + r'\s*\(([^;{]*)\)\s*\{', body)
+    if not m:
+        return []
+    out = []
+    for part in m[1].split(','):
+        part = part.strip()
+        if not part or part == 'void' or part == '...':
+            continue
+        dm = re.fullmatch(r'(.*?[\w*])\s*(?<![\w])([A-Za-z_]\w*)((?:\[[^\]]*\])*)', part)
+        if not dm:
+            return []
+        out.append((dm[1].strip(), dm[2]))
+    return out
+
+
+def parameter_copies(p, symbol, body, check):
+    """Parameters are numbered below every declared local, so a parameter that retail keeps
+    in a callee-saved register above a local's is a local copy of the parameter
+    (`s32 id = arg0;`) declared where the register order puts it; a parameter that retail
+    keeps below ours is a copy this body made that retail did not (fn_1_A358C, capture-
+    verified: arg0 is vr32 under every declaration order, retail holds it in r28 above i)."""
+    sym = p.resolve(symbol)
+    rows = [(stuck._fmt(t), stuck._fmt(o)) for t, o in zip(*check._rows)]
+    retail = _prologue_parameters([t for t, _ in rows])
+    ours = _prologue_parameters([o for _, o in rows])
+    if not retail or not ours:
+        return []
+    params = _signature_parameters(body, sym.name)
+    if not params:
+        return []
+    # argument registers in signature order: r3.. for integers/pointers, f1.. for floats
+    slots = []
+    gpr, fpr = 3, 1
+    for typ, nm in params:
+        if re.fullmatch(r'(?:const\s+)?(?:f32|f64|float|double)', typ):
+            slots.append((('f', fpr), typ, nm)); fpr += 1
+        else:
+            slots.append((('r', gpr), typ, nm)); gpr += 1
+    from . import fixup_source as source
+    anchor = source._decl_anchor(body, sym.name)
+    if not anchor:
+        return []
+    span, locs, top, indent = anchor
+    inner_start = top
+    out = []
+    for key, typ, nm in slots:
+        if key not in retail or key not in ours or retail[key] == ours[key]:
+            continue
+        ident = r'(?<![\w.>])' + re.escape(nm) + r'\b'
+        inner = body[inner_start:span[2]]
+        if retail[key] > ours[key]:
+            copy = nm + '_local'
+            if re.search(r'\b' + re.escape(copy) + r'\b', body):
+                continue
+            if not re.search(ident, inner):
+                continue
+            renamed = re.sub(ident, copy, inner)
+            # the copy is numbered like a local at its declaration position: the locals
+            # retail colours above it are the first ones declared, so the predicted position
+            # is after as many declared scalars as retail keeps registers above the parameter
+            above = sum(1 for reg in range(retail[key] + 1, 32) if reg not in retail.values())
+            positions = [('first', locs[0][0] if locs else top)] + [(f'after {l[3]}', l[1]) for l in locs]
+            order = sorted(range(len(positions)), key=lambda i: abs(i - above))
+            for i in order:
+                label, pos = positions[i]
+                text = body[:pos] + f'{indent}{typ} {copy} = {nm};\n' + body[pos:inner_start] + renamed + body[span[2]:]
+                out.append((f'retail parameter copy {nm} declared {label}', text))
+        else:
+            # a copy this body made: drop it and use the parameter directly
+            for s0, e0, ltyp, lname, dims in locs:
+                init = re.match(r'\s*' + re.escape(ltyp.strip()) + r'\s*' + re.escape(lname) + r'\s*=\s*(\w+)\s*;', body[s0:e0])
+                if not init or init[1] != nm or dims:
+                    continue
+                rest = body[e0:span[2]]
+                if re.search(ident, rest) or re.search(r'(?<![\w.>])' + re.escape(lname) + r'\s*=[^=]', rest):
+                    continue
+                text = body[:s0] + re.sub(r'(?<![\w.>])' + re.escape(lname) + r'\b', nm, rest) + body[span[2]:]
+                out.append((f'retail parameter copy {nm}: drop {lname}', text))
+    return out
+
+
 def missing_call_copies(check):
     """Live argument copies present only in retail, without intervening writes."""
     rows=[(stuck._fmt(t),stuck._fmt(o)) for t,o in zip(*check._rows)]
@@ -3038,6 +3168,7 @@ def candidates(p: Project, symbol: str, body: str, base: oracle.CheckResult):
     diffs = [(stuck._fmt(a), stuck._fmt(b)) for a, b in zip(lrows, rrows) if (a.get("diff_kind") or "DIFF_NONE") != "DIFF_NONE"]
     span = _function_span(body, sym.name)
     candidates: List[Tuple[str, str]] = store_values(body, sym.name, base)
+    candidates += parameter_copies(p, symbol, body, base)
     candidates += bitmask_arguments(p,symbol,body)
     candidates += format_arguments(p,symbol,body)
     candidates += call_arguments(p,symbol,body,base)
@@ -3442,12 +3573,19 @@ def shared_pool_primer(p, symbol, body, check):
             return t if ('.' in t or 'e' in t) else t + '.0'
         segments = []
         off = 0
+        own_words = {o for o, (k, w) in own.items() if k == 'i'}
         while off < end:
             k = kinds[off]
             if k == 'N':
                 start = off
-                while off < end and kinds[off] == 'N':
+                # a word this function reads is its own one-element object: MWCC addresses
+                # only offset 0 of an object base-relative (`lwz r0, 0x13c(r29)`); `table[1]`
+                # materialises the table's address instead
+                if off in own_words:
                     off += 4
+                else:
+                    while off < end and kinds[off] == 'N' and off not in own_words:
+                        off += 4
                 segments.append(('table', raw[start:off]))
             else:
                 if k == 'D':
@@ -3523,6 +3661,14 @@ def shared_pool_primer(p, symbol, body, check):
                             continue
                         _, offset, element, count = field
                         if count is not None or offset not in table_at or element.replace('const ', '').strip() not in ('u32', 's32'):
+                            continue
+                        n, w = table_at[offset]
+                        edits.append((span_[0] + use.start(), span_[0] + use.end(), f'fzgx_pool_table{n}[{w}]'))
+                    # the lifter's byte-addressed word read `*(u32 *)((u8 *)root + 0x138)`
+                    for use in re.finditer(r'\*\s*\(\s*(?:const\s+)?(?:u32|s32)\s*\*\s*\)\s*\(\s*(?:\(\s*(?:const\s+)?u8\s*\*\s*\)\s*)?'
+                                           + re.escape(root) + r'\s*\+\s*(0x[0-9A-Fa-f]+|\d+)\s*\)', code_[span_[0]:span_[1]]):
+                        offset = int(use[1], 0)
+                        if offset not in table_at or re.match(r'\s*(?:=(?!=)|[+*/&|^-]=)', code_[span_[0] + use.end():]):
                             continue
                         n, w = table_at[offset]
                         edits.append((span_[0] + use.start(), span_[0] + use.end(), f'fzgx_pool_table{n}[{w}]'))

@@ -57,6 +57,30 @@ file from what actually unblocked functions; keep each item one or two lines.
   shape for a unit's own data but is not what retail used (retail leaf functions keep
   per-literal `lis`).
 
+- **Parameter above a local** (capture-verified on fn_1_A358C, landed): parameters are
+  numbered below every declared local (`arg0` is vr32 under every declaration order), so a
+  parameter that retail keeps in a callee-saved register *above* a local's (`mr r28, r3` with
+  the loop counter in r27) is a local copy of the parameter, `s32 id = arg0;`, declared where
+  the register order puts it (after the locals retail colours above it). The copy is folded by
+  copy propagation unless the body carries `#pragma opt_propagation off` or the copy has its own
+  lifetime; 488 stuck bodies show the retail shape, 136 have ours below retail. Evidence family
+  `retail parameter copy` (`fixup_evidence.parameter_copies`) reads both prologues and ranks the
+  predicted position first; it reproduced every retail parameter register in 85 of 137 bodies.
+- **Survivor order** (fn_1_76504, replay-verified): among callee-saved webs the first claims are
+  not by vreg number but by *survival*: a web whose total interference degree stays >= K=29
+  through simplification pops first (r31 downward, longest survivor first); only then does the
+  descending vreg sweep colour the rest. A retail parameter in r28 above a constant-address
+  shadow (r27) with identical code means the parameter interferes with ~4 more webs in retail
+  (a longer lifetime or more temporaries in its range); declaration order and the struct
+  wrapper cannot change it. `simplify_replay.py DIR 0001 32:+6` answers "how much more degree".
+- **Lifter pool reads** (fn_1_53830, 405-body sweep 2026-09-16): the byte-addressed forms
+  `*(f32 *)((u8 *)pool + 0x140)` and `*(u32 *)((u8 *)pool + 0x138)` through an alias of the pool
+  object are pool reads too; `pool_scalar_reads` turns the float ones into native literals and
+  the primer turns the integer ones into table entries. Each integer word the function reads
+  must be its own one-element table object: `table[1]` materialises the table's address where
+  retail has `lwz r0, 0x13c(r29)`. Native literals + primer over the 405 unprimed
+  private-literal bodies: 5 matches, 258 improved (up to +31 points), 83 regressed, 97 s.
+
 ## Selection panel evidence (2026-09-15)
 
 - Four-byte color structs reproduce pooled `lwz` initializers; scalar `const u32`
