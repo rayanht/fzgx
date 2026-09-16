@@ -37,9 +37,9 @@ def _generate_in_worker(task):
     out = []
     for label, text in _ENGINE.proposals(seed, capture):
         out.append((label, text))
-        if len(out) >= limit:
+        if len(out) >= limit * 4:
             break
-    return out
+    return _ENGINE.prioritise(seed, out)[:limit]
 
 
 class Engine:
@@ -104,7 +104,9 @@ class Engine:
         cannot be used (the generator is identical either way)."""
         global _ENGINE
         if len(tasks) < 2:
-            return [list(itertools.islice(self.proposals(seed, cap), limit)) for _, seed, cap in tasks]
+            for _, seed, cap in tasks:
+                self.check(seed)
+            return [self.prioritise(seed, list(itertools.islice(self.proposals(seed, cap), limit * 4)))[:limit] for _, seed, cap in tasks]
         for _, seed, cap in tasks:
             self.check(seed)
         jobs=[(seed, cap, self.checks[seed['id']], self.targets[seed['symbol']], self.words.get(seed['id']), limit) for _, seed, cap in tasks]
@@ -116,7 +118,75 @@ class Engine:
                 return list(ex.map(_generate_in_worker, jobs, chunksize=1))
         except (OSError, RuntimeError, ValueError, TypeError, ImportError, AttributeError) as error:
             self.emit({'stage': 'generate-serial', 'reason': str(error)[:200]})
-            return [list(itertools.islice(self.proposals(seed, cap), limit)) for _, seed, cap in tasks]
+            return [self.prioritise(seed, list(itertools.islice(self.proposals(seed, cap), limit * 4)))[:limit] for _, seed, cap in tasks]
+
+    def row_lines(self, seed):
+        """{differing row index: source line} for the seed (MWCC's `.line` table from a
+        `-sym on` compile of the same source; the code is byte-identical). A retail-only
+        row takes the line of the nearest row of ours."""
+        from . import linemap
+        key = seed['id']
+        memo = self.__dict__.setdefault('_row_lines', {})
+        if key in memo:
+            return memo[key]
+        check = self.checks.get(key)
+        out = {}
+        try:
+            if check is not None and check.ok:
+                sym = self.project.resolve(seed['symbol'])
+                obj = Path(seed['object']).with_suffix('.sym.o')
+                if not obj.exists():
+                    flags = ' '.join(x for x in [seed.get('flags') or '', '-sym on'] if x)
+                    oracle.compile_source(self.project, sym.module, Path(seed['source']), obj, seed.get('mw'), flags)
+                table = linemap.tables(obj).get(sym.name, []) if obj.exists() else []
+                lrows, rrows = check._rows
+                accepted = getattr(check, '_accepted_rows', set())
+                for k, (a, b) in enumerate(zip(lrows, rrows)):
+                    if k in accepted or (a.get('diff_kind') or 'DIFF_NONE') == 'DIFF_NONE' and (b.get('diff_kind') or 'DIFF_NONE') == 'DIFF_NONE':
+                        continue
+                    for j in (k, k - 1, k + 1):
+                        if 0 <= j < len(rrows):
+                            ins = rrows[j].get('instruction') or {}
+                            if ins.get('address') is not None:
+                                ln = linemap.line_of(table, int(ins['address']))
+                                if ln:
+                                    out[k] = ln
+                                    break
+        except Exception:
+            out = {}
+        memo[key] = out
+        return out
+
+    def implicated_lines(self, seed):
+        return {ln + d for ln in self.row_lines(seed).values() for d in (-1, 0, 1)}
+
+    def prioritise(self, seed, proposals):
+        """Candidates that edit an implicated line (or only declarations and pragmas) first,
+        in their family order; edits confined to statements that already match go last."""
+        lines = self.implicated_lines(seed)
+        if not lines:
+            return proposals
+        import difflib
+        text0 = Path(seed['source']).read_text()
+        body = text0.splitlines()
+        name = self.project.resolve(seed['symbol']).name
+        span = source._function_body_span(text0, name)
+        first_stmt = None
+        if span:
+            decls = source._locals(text0, span)
+            first_stmt = text0[:decls[-1][1]].count('\n') + 2 if decls else text0[:span[1]].count('\n') + 2
+        relevant, rest = [], []
+        for label, text in proposals:
+            changed = set()
+            new = text.splitlines()
+            for tag, i1, i2, j1, j2 in difflib.SequenceMatcher(None, body, new, autojunk=False).get_opcodes():
+                if tag != 'equal':
+                    changed.update(range(i1 + 1, max(i2, i1 + 1) + 1))
+            if not changed or changed & lines or (first_stmt and all(c < first_stmt for c in changed)):
+                relevant.append((label, text))
+            else:
+                rest.append((label, text))
+        return relevant + rest
 
     def evaluate(self, rows):
         groups = defaultdict(list)
@@ -386,6 +456,8 @@ class Engine:
             yield from evidence.call_result_types(self.project, row['symbol'], body, check)
             yield from evidence.floating_expressions(self.project, row['symbol'], body, check)
             yield from evidence.paired_vector_kernels(self.project, row['symbol'], body, check)
+            yield from evidence.attributed_type_flips(self.project, row['symbol'], body, check, self.row_lines(row))
+            yield from evidence.attributed_inlines(self.project, row['symbol'], body, check, self.row_lines(row))
             yield from evidence.fusion_control(self.project, row['symbol'], body, check)
             yield from evidence.encoded_conversions(self.project, row['symbol'], body, check)
             yield from evidence.scalar_lifetimes(self.project, row['symbol'], body, check)

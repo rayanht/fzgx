@@ -1280,6 +1280,122 @@ def paired_vector_kernels(p, symbol, body, check):
     return out
 
 
+def attributed_type_flips(p, symbol, body, check, row_lines):
+    """Signedness and width flips targeted by line attribution: a `cmpwi`/`cmplwi` (or
+    `lha`/`lhz`, `extsh`/`clrlwi`, `srawi`/`srwi`) row names its source line, the line
+    names the operands, and each operand's declaration (local, parameter or struct field
+    in the body) is flipped toward retail's signedness."""
+    from . import fixup_source as source
+    if not row_lines:
+        return []
+    name = p.resolve(symbol).name
+    lrows, rrows = check._rows
+    SIGNED = {'cmpwi', 'cmpw', 'lha', 'lhax', 'extsh', 'extsb', 'srawi', 'sraw', 'divw', 'mulhw'}
+    UNSIGNED = {'cmplwi', 'cmplw', 'lhz', 'lhzx', 'clrlwi', 'srwi', 'srw', 'divwu', 'mulhwu', 'rlwinm'}
+    wants = {}  # line -> 'signed' | 'unsigned'
+    for k, ln in row_lines.items():
+        l, o = stuck._fmt(lrows[k]).split(' ')[0], stuck._fmt(rrows[k]).split(' ')[0]
+        for d in (-1, 0, 1):  # a row's line is exact only to within one scheduled statement
+            if l in SIGNED and (o in UNSIGNED or not o):
+                wants[ln + d] = 'signed'
+            elif l in UNSIGNED and (o in SIGNED or not o):
+                wants[ln + d] = 'unsigned'
+    if not wants:
+        return []
+    lines = body.split('\n')
+    span = source._function_body_span(body, name)
+    if not span:
+        return []
+    flip_to = {'signed': {'u8': 's8', 'u16': 's16', 'u32': 's32', 'unsigned int': 'int', 'unsigned char': 'char', 'unsigned short': 'short'},
+               'unsigned': {'s8': 'u8', 's16': 'u16', 's32': 'u32', 'int': 'u32', 'char': 'u8', 'short': 'u16'}}
+    out = []
+    grouped = []
+    for ln, direction in sorted(wants.items()):
+        if ln < 1 or ln - 1 >= len(lines):
+            continue
+        text = lines[ln - 1]
+        operands = set(re.findall(r'(?<![\w.>])([A-Za-z_]\w*)(?![\w(])', text))
+        members = set(re.findall(r'(?:->|\.)([A-Za-z_]\w*)', text))
+        operands -= {'if', 'else', 'while', 'for', 'return', 'switch', 'case', 'u8', 's8', 'u16', 's16', 'u32', 's32', 'f32', 'f64', 'void', 'struct'}
+        edits = []
+        line_start = sum(len(x) + 1 for x in lines[:ln - 1])
+        # casts on the line itself: `*(u32 *)(p + 244)` and `(u32)x` carry the operand type
+        for m in re.finditer(rf'\(\s*({"|".join(map(re.escape, flip_to[direction]))})\s*\**\s*\)', text):
+            edits.append((line_start + m.start(1), line_start + m.end(1), flip_to[direction][m.group(1)], f'cast {m.group(1)}'))
+        for ident in operands:
+            # declaration of a scalar local or parameter in this function, before the statement
+            for m in re.finditer(rf'\b({"|".join(map(re.escape, flip_to[direction]))})\s+{re.escape(ident)}\b', body[:span[2]]):
+                if m.start() > line_start:
+                    break
+                edits.append((m.start(1), m.end(1), flip_to[direction][m.group(1)], ident))
+                break
+        for member in members:
+            for m in re.finditer(rf'\b({"|".join(map(re.escape, flip_to[direction]))})\s+{re.escape(member)}\s*(?:\[[^\]]*\])?\s*;', body[:span[0]]):
+                edits.append((m.start(1), m.end(1), flip_to[direction][m.group(1)], member))
+        for a, b, new, ident in edits:
+            out.append((f'attributed {direction} {ident} at line {ln}', body[:a] + new + body[b:]))
+        grouped.extend(edits)
+    if len(grouped) > 1:
+        text = body
+        for a, b, new, ident in sorted(set(grouped), reverse=True):
+            text = text[:a] + new + text[b:]
+        out.append(('attributed signedness at every implicated line', text))
+    return out
+
+
+def attributed_inlines(p, symbol, body, check, row_lines):
+    """A single-use local read on an implicated line is folded back into its use: a value
+    computed in a separate statement changes evaluation order (a call evaluated before the
+    other operands, a load hoisted into its own web) and operand order of the consumer."""
+    from . import fixup_source as source
+    if not row_lines:
+        return []
+    name = p.resolve(symbol).name
+    span = source._function_body_span(body, name)
+    if not span:
+        return []
+    lines = body.split('\n')
+    starts = [0]
+    for line in lines:
+        starts.append(starts[-1] + len(line) + 1)
+    out = []
+    # the scheduler interleaves neighbouring statements, so a row's line is exact only to
+    # within one statement either side
+    implicated = sorted({ln + d for ln in set(row_lines.values()) for d in (-1, 0, 1)})
+    for ln in implicated:
+        if ln < 1 or ln - 1 >= len(lines):
+            continue
+        for ident in set(re.findall(r'(?<![\w.>])([A-Za-z_]\w*)(?![\w(])', lines[ln - 1])):
+            inner0 = body[span[1]:span[2]]
+            decl = re.search(rf'(?m)^[ \t]*(?:const\s+)?[\w ]+?\s*\**\s*{re.escape(ident)}\s*;[ \t]*\n', inner0)
+            uses = [m for m in re.finditer(rf'(?<![\w.>])\b{re.escape(ident)}\b(?!\s*\()', inner0)
+                    if not (decl and decl.start() <= m.start() < decl.end())]
+            assigns = [m for m in re.finditer(rf'(?m)^([ \t]*){re.escape(ident)}\s*=\s*(?![=])([^;{{}}]+);[ \t]*\n', inner0)]
+            if len(assigns) != 1 or len(uses) != 2:
+                continue
+            a = assigns[0]
+            value = a.group(2).strip()
+            if re.search(r'\+\+|--|(?<![=!<>])=(?!=)', value):
+                continue
+            use = [m for m in uses if not (a.start() <= m.start() < a.end())]
+            if len(use) != 1 or use[0].start() < a.end():
+                continue
+            u = use[0]
+            narrow = re.match(r'\s*(u8|s8|u16|s16)\b', decl.group(0)) if decl else None
+            variants = [f'({value})']
+            if narrow:
+                variants.insert(0, f'(({narrow.group(1)})({value}))')  # the local truncated its value
+            for replacement in variants:
+                inner = body[span[1]:span[2]]
+                inner = inner[:u.start()] + replacement + inner[u.end():]
+                inner = inner[:a.start()] + inner[a.end():]
+                if decl:
+                    inner = inner[:decl.start()] + inner[decl.end():]
+                text = body[:span[1]] + inner + body[span[2]:]
+                out.append((f'attributed inline {ident} at line {ln}' + (' typed' if replacement != f'({value})' else ''), text))
+    return out
+
+
 def encoded_conversions(p, symbol, body, check):
     """Recover compiler conversion scratch from an explicit lifted union."""
     from .sdkimport import masked
