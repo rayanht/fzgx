@@ -1136,6 +1136,150 @@ def floating_expressions(p, symbol, body, check):
     return out
 
 
+FUSED = ("fmadds", "fmsubs", "fnmsubs", "fnmadds", "fmadd", "fmsub", "fnmsub", "fnmadd")
+
+
+def _product_sites(body, name):
+    """Products that are direct operands of an addition or subtraction, with the
+    parent operator and the operand span (parentheses included, casts excluded)."""
+    from . import fixup_source as source
+    operations = []
+    source.commutations(body, name, operations)
+    products = {(o['start'], o['end']) for o in operations if o['op'] == '*'}
+
+    def bare(a, b):
+        while a < b and body[a] == '(' and body[b - 1] == ')':
+            depth = 0
+            for k in range(a, b):
+                if body[k] == '(':
+                    depth += 1
+                elif body[k] == ')':
+                    depth -= 1
+                    if depth == 0 and k != b - 1:
+                        return a, b
+            a += 1; b -= 1
+            while a < b and body[a] in ' \t': a += 1
+            while a < b and body[b - 1] in ' \t': b -= 1
+        return a, b
+    span = source._function_body_span(body, name)
+    floats = set(re.findall(r'\b(?:f32|f64|float|double)\s+(\w+)', body[:span[2]] if span else body))
+    floats |= set(re.findall(r'\b(?:f32|f64|float|double)\s+\*\s*(\w+)', body[:span[2]] if span else body))
+
+    def floating(text):
+        if re.search(r'\((?:f32|f64|float|double)\s*\*?\)|\d\.\d*f?\b|\.\d+f?\b', text):
+            return True
+        return any(w in floats for w in re.findall(r'[A-Za-z_]\w*', text))
+    sites = []
+    for o in operations:
+        if o['op'] not in ('+', '-'):
+            continue
+        for side in ('left', 'right'):
+            a, b = o[side]
+            if bare(a, b) in products and floating(body[a:b]):
+                sites.append((a, b, o['op'], side))
+    return sorted(set(sites))
+
+
+def fusion_control(p, symbol, body, check):
+    """`a + b * c` in one expression lowers to fmadds; a product held in a temporary
+    or wrapped in `(f32)` stays a separate fmuls (probe-verified on GC/1.3.2, 2026-09-15).
+    Retail's count of fused operations decides the direction: cast every product that
+    retail keeps separate, or drop the casts and temporaries where retail fuses."""
+    from . import fixup_source as source
+    name = p.resolve(symbol).name
+    target = [stuck._fmt(row).split(' ')[0] for row in check._rows[0]]
+    ours = [stuck._fmt(row).split(' ')[0] for row in check._rows[1]]
+    retail_fused = sum(m in FUSED for m in target)
+    our_fused = sum(m in FUSED for m in ours)
+    out = []
+    # counts alone miss a swapped grouping (`x*x + y*y + z*z` accumulated from the first
+    # product against ours from the second): any row where a fused and an unfused float
+    # opcode face each other is evidence for both directions
+    facing = any(((l in FUSED) != (o in FUSED)) and (l in FUSED or o in FUSED) and l != o
+                 for l, o in zip(target, ours) if l and o)
+    if retail_fused < our_fused or facing or (retail_fused == our_fused and
+                                              sum(m.startswith('fnm') for m in target) != sum(m.startswith('fnm') for m in ours)):
+        sites = _product_sites(body, name)
+        double = bool(re.search(r'\b(?:f64|double)\b', body[source._function_body_span(body, name)[1]:] if source._function_body_span(body, name) else ''))
+        for cast in ('(f32)',) + (('(f64)',) if double else ()):
+            edits = [(a, b, f'{cast}({body[a:b]})') for a, b, op, side in sites]
+            if len(edits) > 1:
+                text = body
+                for a, b, value in reversed(edits):
+                    text = text[:a] + value + text[b:]
+                out.append((f'retail unfused products: {cast} at every site', text))
+            for a, b, value in edits[:24]:
+                out.append((f'retail unfused product: {cast} at {a}', body[:a] + value + body[b:]))
+    if retail_fused > our_fused or facing:
+        span = source._function_body_span(body, name)
+        if not span:
+            return out
+        inner = body[span[1]:span[2]]
+        edits = []
+        for m in re.finditer(r'\((?:f32|f64|float|double)\)\s*(\((?:[^()]|\([^()]*\))*\))', inner):
+            if '*' in m.group(1) and not re.search(r'[;{}=]', m.group(1)):
+                edits.append((span[1] + m.start(), span[1] + m.end(), m.group(1)))
+        # a single-use product temporary: `t = a * b; ... x + t` folds back into the expression
+        for m in re.finditer(r'(?m)^\s*(?:(?:f32|f64|float|double)\s+)?(\w+)\s*=\s*([^;=]*\*[^;=]*);[ \t]*\n', inner):
+            var, expr = m.group(1), m.group(2).strip()
+            uses = [u for u in re.finditer(rf'\b{re.escape(var)}\b', inner) if not (m.start() <= u.start() < m.end())]
+            if len(uses) != 1 or re.search(r'[;{}]|\+\+|--|\(', expr):
+                continue
+            u = uses[0]
+            if not re.search(rf'[-+]\s*$', inner[:u.start()]) and not re.match(rf'{re.escape(var)}\s*[-+](?!=)', inner[u.start():]):
+                continue
+            text = inner[:u.start()] + f'({expr})' + inner[u.end():]
+            text = text[:m.start()] + text[m.end():]
+            out.append((f'retail fused product: fold {var}', body[:span[1]] + text + body[span[2]:]))
+        if len(edits) > 1:
+            text = body
+            for a, b, value in reversed(edits):
+                text = text[:a] + value + text[b:]
+            out.append(('retail fused products: drop every product cast', text))
+        for a, b, value in edits[:24]:
+            out.append((f'retail fused product: drop cast at {a}', body[:a] + value + body[b:]))
+    return out
+
+
+def paired_vector_kernels(p, symbol, body, check):
+    """Retail's psq_l/psq_st vector kernels come from inline-assembly helpers (include/psvec.h);
+    rewrite per-component float statement triples into those calls where retail carries the
+    paired-single operations and the candidate does not."""
+    from . import psvec
+    from . import fixup_source as source
+    name = p.resolve(symbol).name
+    target = [stuck._fmt(row).split(' ')[0] for row in check._rows[0]]
+    ours = [stuck._fmt(row).split(' ')[0] for row in check._rows[1]]
+    wanted = {m for m in psvec.KERNEL_MNEMONICS if target.count(m) > ours.count(m)}
+    if not wanted:
+        return []
+    kinds = set()
+    if 'ps_sub' in wanted: kinds.add('sub')
+    if 'ps_add' in wanted: kinds.add('add')
+    if 'ps_muls0' in wanted: kinds.add('scale')
+    if 'ps_madds0' in wanted: kinds.add('scale_add')
+    if 'ps_merge00' in wanted: kinds.add('set')
+    if 'ps_sub' in wanted and 'ps_madds0' in wanted: kinds.add('sub+scale_add')
+    span = source._function_body_span(body, name)
+    if not span:
+        return []
+    inner = body[span[1]:span[2]]
+    found = [f for f in psvec.kernel_sites(inner) if set(f[2].split('+')) <= kinds]
+    out = []
+    if not found:
+        return out
+    every = psvec.rewrite(body, span, sites=[i for i, f in enumerate(psvec.kernel_sites(inner)) if f in found])
+    if every:
+        out.append((f'paired-single kernels at every site ({len(found)})', every))
+    if len(found) > 1:
+        allsites = psvec.kernel_sites(inner)
+        for f in found[:16]:
+            text = psvec.rewrite(body, span, sites=[allsites.index(f)])
+            if text:
+                out.append((f'paired-single {f[2]} kernel at {span[1] + f[0]}', text))
+    return out
+
+
 def encoded_conversions(p, symbol, body, check):
     """Recover compiler conversion scratch from an explicit lifted union."""
     from .sdkimport import masked

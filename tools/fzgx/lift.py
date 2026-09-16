@@ -376,7 +376,18 @@ def lift_variants(p: Project, module: str, name: str) -> List[str]:
 def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site_temps: bool = True, partial: bool = False,
           total: bool = False) -> Optional[str]:
     from .paired import Paired, VECTOR
+    from . import psvec as _psvec
     paired = Paired(name)
+    # retail's paired-single vector kernels are inline-assembly helpers (include/psvec.h);
+    # each recognised kernel becomes one pseudo-instruction at its last instruction and its
+    # members become no-ops, so the rest of the lowering never sees the raw psq/ps forms
+    kernel_list = _psvec.kernels(ins, LABELS[0])
+    if kernel_list:
+        ins = list(ins)
+        for anchor, kind, operands, consumed in kernel_list:
+            for j in consumed:
+                ins[j] = ("psvec_consumed", [])
+            ins[anchor] = ("psvec_" + kind, list(operands))
     syms = p.symbols(module)
     regs: Dict[str, str] = {}          # register -> C expression
     rtype: Dict[str, str] = {}         # register -> C type of the expression
@@ -508,7 +519,14 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
     def raw_ok(addr: int) -> bool:
         """Memory no symbol names that the source addressed by number: the OS globals below the
         first DOL section, and the hardware registers (the lint allows both with a comment)."""
-        return 0x80000000 <= addr < 0x80003100 or 0xCC000000 <= addr <= 0xCC00FFFF
+        return 0x80000000 <= addr < 0x80003100 or 0xCC000000 <= addr <= 0xCC00FFFF or 0xE0000000 <= addr < 0xE0004000
+
+    def raw_text(addr: int) -> str:
+        # the locked-cache window holds the current matrix stack; matched code spells it
+        # base plus offset (effect.c), which also keeps lint's address ranges clear
+        if 0xE0000000 <= addr < 0xE0004000:
+            return f"(0xE0000000 + 0x{addr - 0xE0000000:02X})"
+        return f"0x{addr:08X}"
 
     def const_of(b: str) -> Optional[int]:
         m = re.fullmatch(r"0x([0-9A-Fa-f]+)", b) or re.fullmatch(r"\((0x[0-9A-Fa-f]+) \+ (-?\d+)\)", b)
@@ -1945,6 +1963,36 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                 continue  # callee-saved float registers
             if mn in ("stmw", "lmw"):
                 frame = True; continue  # the callee-saved block save/restore
+            if mn == "psvec_consumed":
+                continue
+            if mn.startswith("psvec_"):
+                # operands: vector memory operands (`0x10(r29)`) and scalar float registers
+                args = []
+                for operand in a:
+                    mem = MEM_RE.fullmatch(operand)
+                    if mem is None:
+                        args.append(use(operand))
+                        continue
+                    off_v = _imm(mem[1])
+                    if mem[2] == "r1":
+                        frame = True
+                        if owner(off_v) is not None:
+                            expr = local_at(off_v, 0, "u8")
+                            args.append(f"((u8 *)&loc_{owner(off_v)[0]:X} + {owner(off_v)[1]})" if owner(off_v)[1] else f"&loc_{owner(off_v)[0]:X}")
+                        else:
+                            ent = slocals.setdefault(off_v, {"w": 0, "t": "u8", "addr": False, "elems": {}})
+                            ent["w"] = 4; ent["t"] = "f32"; ent["array"] = 3
+                            args.append(f"&loc_{off_v:X}[0]")
+                    elif sym_of(mem[1]):
+                        symbol = sym_of(mem[1])
+                        declare(symbol, "u8", far_ref=True)
+                        args.append(f"((u8 *)&{symbol} + {sym_off(mem[1])})")
+                    else:
+                        base = use(mem[2])
+                        args.append(f"((u8 *){base} + {off_v})" if off_v else f"(u8 *){base}")
+                externs.setdefault("__psvec_header__", '#include "psvec.h"')
+                stmts.append(f"{mn}({', '.join(args)});")
+                continue
             if mn in ("crclr", "crset") or mn == "nop":
                 if mn == "crclr":
                     variadic_next[0] = True  # `crclr cr1eq`: the callee is variadic (no float varargs)
@@ -2065,7 +2113,7 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                         if hit is None:
                             if not raw_ok(key + o):
                                 raise Give(f"unnamed memory 0x{key + o:X}")
-                            regs[a[0]] = f"*({t} *)0x{key + o:08X}"; rtype[a[0]] = t
+                            regs[a[0]] = f"*({t} *){raw_text(key + o)}"; rtype[a[0]] = t
                             if mn.endswith("u"):
                                 regs[base] = f"0x{key + o:08X}"
                             if reused_after_store(i, a[0], a[1]):
@@ -2153,7 +2201,7 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
                         if hit is None:
                             if not raw_ok(key + o):
                                 raise Give(f"unnamed memory 0x{key + o:X}")
-                            stmts.append(f"*({t} *)0x{key + o:08X} = {val};"); continue
+                            stmts.append(f"*({t} *){raw_text(key + o)} = {val};"); continue
                         sd, so = hit
                         if so == 0 and sd.size <= 8:
                             declare(sd.name, t, far_ref=True); stmts.append(f"{ref(sd.name)} = {val};")
@@ -2775,7 +2823,7 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
         for arr in arrays:
             body = [re.sub(rf"(?<![\w.>&]){arr}\b(?!\s*\[|\s*=[^=])", f"(u32){arr}", b) if not re.match(rf"^\s*\w[\w ]*\s+{arr}\[", b) else b for b in body]
         def fix_addr(b: str) -> str:
-            return re.sub(r"&(loc_[0-9A-F]+)\b", lambda m: m.group(1) if m.group(1) in arrays else f"&{m.group(1)}", b)
+            return re.sub(r"&(loc_[0-9A-F]+)\b(?!\[)", lambda m: m.group(1) if m.group(1) in arrays else f"&{m.group(1)}", b)
         body = [fix_addr(b) if not b.startswith(("u8 loc", "u32 loc", "f32 loc", "s16 loc", "u16 loc", "s8 loc", "f64 loc", "struct {")) else b for b in body]
     if temps:
         # a temporary's type follows its first assignment: a pointer global's struct pointer,
@@ -3025,7 +3073,7 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
             structs = [padded(t_, g) if t_.startswith(f"struct {sname} {{") else t_ for t_ in structs]
     externs.pop(name, None)  # never a declaration of the function itself
     types_header = 'dolphin/types.h' if any(hw in externs for hw in HW_BLOCKS.values()) else 'types.h'
-    text = [f'#include "{types_header}"'] + signature_index.preamble(signatures_used.values()) + [""]
+    text = [f'#include "{types_header}"'] + (['#include "psvec.h"'] if externs.pop("__psvec_header__", None) else []) + signature_index.preamble(signatures_used.values()) + [""]
     if structs:
         text += structs + [""]
     text += sorted(externs.values())

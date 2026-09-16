@@ -385,6 +385,8 @@ class Engine:
             yield from evidence.rotate_bit_tests(body, name, check)
             yield from evidence.call_result_types(self.project, row['symbol'], body, check)
             yield from evidence.floating_expressions(self.project, row['symbol'], body, check)
+            yield from evidence.paired_vector_kernels(self.project, row['symbol'], body, check)
+            yield from evidence.fusion_control(self.project, row['symbol'], body, check)
             yield from evidence.encoded_conversions(self.project, row['symbol'], body, check)
             yield from evidence.scalar_lifetimes(self.project, row['symbol'], body, check)
             yield from evidence.stack_object_boundaries(self.project, row['symbol'], body, check)

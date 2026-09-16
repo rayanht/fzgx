@@ -31,10 +31,21 @@ def prior_attempt(ledger, symbol):
                 instruction='Reuse this previously recovered code where it is more complete than the new lifter draft.')
 
 
-def prepare(output: Path, count: int):
+def prepare(output: Path, count: int, min_size: int = 0, max_size: int = 0, max_attempts: int = -1):
     project, ledger = Project(), Ledger()
-    rows = [dict(row) for row in ledger.db.execute(
-        "SELECT * FROM functions WHERE status='unmatched' ORDER BY size DESC,module,addr LIMIT ?", (count,))]
+    # Size and attempt bounds carve the untouched mid-size pool out of the
+    # global ordering, so a batch does not re-select the heavily tried giants.
+    query = "SELECT * FROM functions WHERE status='unmatched' AND size>=?"
+    params = [min_size]
+    if max_size:
+        query += ' AND size<=?'
+        params.append(max_size)
+    if max_attempts >= 0:
+        query += ' AND attempts<=?'
+        params.append(max_attempts)
+    query += ' ORDER BY size DESC,module,addr LIMIT ?'
+    params.append(count)
+    rows = [dict(row) for row in ledger.db.execute(query, params)]
     if len(rows) != count:
         raise ValueError(f'only {len(rows)} unmatched functions remain, requested {count}')
     output.mkdir(parents=True, exist_ok=False)
@@ -82,7 +93,10 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--count', type=int, default=50)
+    parser.add_argument('--min-size', type=int, default=0)
+    parser.add_argument('--max-size', type=int, default=0, help='0: no cap')
+    parser.add_argument('--max-attempts', type=int, default=-1, help='-1: no cap')
     args = parser.parse_args()
     if args.count < 1:
         parser.error('--count must be positive')
-    print(json.dumps(prepare(args.output.resolve(), args.count)))
+    print(json.dumps(prepare(args.output.resolve(), args.count, args.min_size, args.max_size, args.max_attempts)))
