@@ -6458,3 +6458,6 @@ rel/main_rel/_prolog/fn_1_ECC.c:
 
 rel/main_rel/mdlload/fn_1_D4370.c:
 	.text       start:0x000D4370 end:0x000D47D8 align:4
+
+rel/main_rel/phys/fn_1_E39F0.c:
+	.text       start:0x000E39F0 end:0x000E3C38 align:4
