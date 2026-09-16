@@ -337,6 +337,102 @@ u8 fn_3_1443C(void) {
 }
 /* fzgx:end fn_3_1443C */
 
+/* fzgx:begin fn_3_1445C noprologue */
+#include "types.h"
+
+typedef struct {
+    u32 flags;
+    u8 pad04[0x0c];
+    s16 field_10;
+    s16 field_12;
+    u8 pad14[2];
+    s16 field_16;
+    s16 field_18;
+    s16 field_1a;
+    u8 pad1c[4];
+    u32 field_20;
+} EmblemState;
+
+typedef struct {
+    u32 field_00;
+    u8 field_04;
+    u8 field_05;
+    u8 field_06;
+    u8 field_07;
+    u32 field_08;
+    u32 field_0c;
+    u8 pad10[4];
+    u32 field_14;
+} EmblemEntry;
+
+extern EmblemState lbl_3_bss_A17A0;
+extern EmblemEntry lbl_3_bss_A17D4[128];
+
+extern u8 fn_3_14600(void);
+extern u32 fn_3_17820(u8 *);
+extern u8 fn_3_19C94(void);
+extern void fn_80008BA8(u32, u32, u32);
+
+static inline EmblemEntry *fn_3_1445C_array_read(EmblemEntry *array) { return array; }
+void fn_3_1445C(void) {
+    s32 next;
+    EmblemState *state2;
+    s32 flags;
+
+    if ((lbl_3_bss_A17A0.flags & 0x04000000) == 0) {
+        if (fn_3_14600() != 0)
+            return;
+    } else {
+        lbl_3_bss_A17A0.flags &= ~0x04000000;
+    }
+
+    flags = lbl_3_bss_A17A0.flags;
+    flags |= 0x10000000;
+    lbl_3_bss_A17A0.flags = flags;
+    flags = lbl_3_bss_A17A0.field_1a;
+    next = flags;
+    next = next + 1;
+    if (((0x80) == (next)))
+        lbl_3_bss_A17A0.field_1a = 0;
+    else
+        lbl_3_bss_A17A0.field_1a = next;
+
+    if (lbl_3_bss_A17A0.field_1a == lbl_3_bss_A17A0.field_16) {
+        flags = lbl_3_bss_A17A0.field_16 + 1;
+        next = flags;
+        if (((0x80) == (next)))
+            lbl_3_bss_A17A0.field_16 = 0;
+        else
+            lbl_3_bss_A17A0.field_16 = next;
+    }
+
+    if (lbl_3_bss_A17A0.field_1a != lbl_3_bss_A17A0.field_16)
+        lbl_3_bss_A17A0.field_16 = lbl_3_bss_A17A0.field_1a;
+
+    state2 = &lbl_3_bss_A17A0;
+    if (state2->field_18 == state2->field_16) {
+        state2->field_18 = state2->field_18 + 1;
+    }
+
+    if (state2->field_18 == 0x7f)
+        lbl_3_bss_A17A0.field_18 = 0;
+
+    if (fn_3_1445C_array_read(lbl_3_bss_A17D4)[lbl_3_bss_A17A0.field_1a].field_0c < 0x2000 &&
+        fn_3_1445C_array_read(lbl_3_bss_A17D4)[lbl_3_bss_A17A0.field_1a].field_0c != 0)
+        fn_3_1445C_array_read(lbl_3_bss_A17D4)[lbl_3_bss_A17A0.field_1a].field_00 = 0x20000000;
+
+    fn_3_1445C_array_read(lbl_3_bss_A17D4)[lbl_3_bss_A17A0.field_1a].field_06 =
+        (u8)lbl_3_bss_A17A0.field_10;
+    fn_3_1445C_array_read(lbl_3_bss_A17D4)[lbl_3_bss_A17A0.field_1a].field_07 =
+        (u8)lbl_3_bss_A17A0.field_12;
+    fn_3_1445C_array_read(lbl_3_bss_A17D4)[lbl_3_bss_A17A0.field_1a].field_08 =
+        fn_3_17820((u8 *)&lbl_3_bss_A17D4[lbl_3_bss_A17A0.field_1a]);
+    fn_3_1445C_array_read(lbl_3_bss_A17D4)[lbl_3_bss_A17A0.field_1a].field_04 = fn_3_19C94();
+    fn_80008BA8(fn_3_1445C_array_read(lbl_3_bss_A17D4)[lbl_3_bss_A17A0.field_1a].field_14,
+                 lbl_3_bss_A17A0.field_20, 0x2000);
+}
+/* fzgx:end fn_3_1445C */
+
 /* fzgx:begin fn_3_14600 noprologue */
 #include "types.h"
 
