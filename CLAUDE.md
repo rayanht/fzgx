@@ -551,6 +551,25 @@ Rules that hold for everyone:
   ("Root causes measured over the whole stuck corpus"). `-sym on` compiles are byte-identical
   and give the `.line` table (`tools/fzgx/linemap.py`) that the engine uses to order and target
   candidates by implicated statement.
+- TU truth (2026-09-16): no TU had ever compiled as one unit; matched blocks were accepted under
+  whatever declarations made them match, so every large TU carried dozens of contested symbols
+  (font.c: 82). `fzgx tutruth rel/<module>/<tu>.c` resolves one truth per symbol deterministically:
+  a header declaration outranks everything; else the matched definition, else the old prologue,
+  else the most common block spelling. Blocks follow the truth mechanically (call-site casts,
+  register-class argument permutation, dropped redundant leading arguments, result casts,
+  data views, non-prototype `extern T f();` and a K&R definition when callers pass fewer arguments
+  than the `lab_unused` parameters), every rewritten block is re-verified through the oracle on
+  scratch sources (no cache), and a block that cannot follow stays self-contained and is reported.
+  Callers carry evidence the callee's code cannot: parameter order across register classes
+  (fn_80071ED4: retail loads the s32 before the floats) and int/pointer return types
+  (fn_1_548AC returns `void *`). MWCC's scheduler builds memory dependences per declared
+  object, so a view `(*(T *)&sym)` over a smaller declared object schedules differently: the
+  symbol's real size must reach the header (dtk under-sizes `lbl_1_bss_4C678`: the 8 objects
+  4C678..4E6D0 are one 0x2050-byte cluster). `structs.py` now counts update-form stores (stwu).
+  font.c: 169/170 blocks under one prologue; the whole TU (plus 34 unmatched best bodies and the
+  pool primer) compiles as one unit and 163/211 functions match at TU level under `-inline on`.
+  **`-inline auto` is wrong at TU scope**: MWCC auto-inlined five same-TU callees that retail
+  calls; per-function units could never expose this. Collapsed TUs need `-inline on`.
 - Fast repair path (2026-09-16): `fzgx sweep --min-percent N [--max-percent M] --rounds 4 --land`
   runs every cheap family (evidence, source, declaration moves, section layout, line-attributed
   flips/inlines) over every saved body in the range with one `compile_many` per module per round,
