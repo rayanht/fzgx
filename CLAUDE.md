@@ -544,6 +544,13 @@ Rules that hold for everyone:
   when retail hoists a base the dtk symbol hides several objects: the split-per-field variant.
   MWCC gives a named global r31 before an anonymous section base; that order is not reachable from
   C. Per-block definitions still collide at `tu-check`; the TU pass must hoist them once.
+- Paired-single vector kernels (2026-09-15): retail's `psq_l/psq_st` displacement forms come
+  only from inline-assembly helpers; `include/psvec.h` carries the validated set, the lifter
+  substitutes recognised kernels (`psvec.kernels`) and `fixup` rewrites statement triples
+  (`paired_vector_kernels`). Fusion law and line attribution: see `docs/MWCC_IDIOMS.md`
+  ("Root causes measured over the whole stuck corpus"). `-sym on` compiles are byte-identical
+  and give the `.line` table (`tools/fzgx/linemap.py`) that the engine uses to order and target
+  candidates by implicated statement.
 - Near-miss fixup must preserve a proven store-value correction in its search
   frontier even when register differences initially lower its word score. Value-flow
   diagnostics invalidate unsupported regions locally; mixed diffs must not disable

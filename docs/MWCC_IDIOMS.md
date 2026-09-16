@@ -179,3 +179,43 @@ Each line is a family that turned a 60–99% body into a match; the count is how
   padding, and reject any intersecting data relocation. This closed
   `fn_12_34390`, `fn_12_346BC` and `fn_12_34798` with the original compiler.
   The repair archive retains all nine inputs, outputs and compiler settings.
+
+## Root causes measured over the whole stuck corpus (2026-09-15)
+
+`fzgx stuck --min-percent 50` over 1,962 saved bodies, counting mnemonics per side
+without row alignment (`retail - ours` net rows):
+
+- `lis` -2073 / `addi` +1622 (731 functions): the TU section base and shared literal
+  pool (existing primer/layout families).
+- `psq_st` +608, `psq_l` +579, `ps_madds0` +148, `ps_sub` +111: 164 unmatched
+  functions (244 KB) use paired-single vector kernels. **MWCC's `__vec2x32float__`
+  only emits the indexed `psq_lx`/`psq_stx`; the displacement form `psq_l f, 0x10(r29)`
+  comes only from inline assembly inlined into the caller.** `include/psvec.h` holds
+  the helpers (sub, add, scale, scale_add, sub_scale_add, set), each byte-exact on
+  retail: fn_1_FB50 and fn_1_7EB8C match with one call. An inlined asm block's
+  register parameters take f0, f1, f2 in declaration order, which is why `psvec_set`
+  declares (dst, z, y, x): retail merges x from f2 with y from f1 and stores z from
+  f0. Loads passed straight as arguments keep that order; loading into locals first
+  changes it (fn_1_2A694). The lifter recognises the kernels (`psvec.kernels`) and the
+  engine rewrites per-component statement triples (`paired_vector_kernels`).
+- `fmuls` +615 / `fmadds` -525 / `fadds` +318 (251 functions): retail keeps products
+  separate where ours fuse. Probe law (GC/1.3.2): `a + b*c` fuses; a product held in a
+  named temporary or wrapped in an explicit `(f32)` cast does not (`t = b*c; a + t`
+  and `a + (f32)(b*c)` give `fmuls; fadds`), and only the multiply that is a direct
+  operand of the add/sub fuses: `(f32)(a*b) - c*d` gives `fmuls; fnmsubs`, `a*b - c*d`
+  gives `fmuls(c*d); fmsubs`. `x*x + y*y + z*z` accumulated from the first product
+  (`fmuls x; fmadds y; fmadds z`) is `(f32)(x*x) + y*y + z*z`; the plain expression
+  materialises `y*y` first. Family: `fusion_control`.
+- `cmpwi` +764 / `cmplwi` -443 (460 functions) and `lha` +93: our bodies are
+  unsigned where retail is signed. With `-sym on` MWCC emits a DWARF 1 `.line` table
+  and byte-identical code, so every differing row names its statement
+  (`tools/fzgx/linemap.py`); `attributed_type_flips` flips the casts and declarations
+  of that statement's operands toward retail's signedness, `attributed_inlines` folds a
+  single-use local read there back into its use (fn_1_76704: the call evaluated
+  inside the multiply fixes `mullw` operand order), and the engine tries candidates
+  that edit implicated statements before the rest.
+- Epilogue `lwz r31; lwz r0` against `lwz r0; lwz r31` (10 functions): the scheduler
+  hoists the LR reload only when nothing ties it; same instruction stream, different
+  DAG, not closable by flags (`-O3` disables scheduling entirely).
+- No other retail-only opcode family above 40 functions exists; the rest of the
+  residuals are register allocation, frame layout and control-flow shape.
