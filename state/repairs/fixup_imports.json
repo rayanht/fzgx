@@ -9391,5 +9391,42 @@
     ],
     "link": "verified",
     "commit": "66fd7429"
+  },
+  "fn_1_76704": {
+    "seed_symbol": "fn_1_76704",
+    "generator": "fzgx fixup",
+    "transform": "attributed inline t2 at line 51 typed",
+    "seed": "#include \"types.h\"\n\nstruct fn_1_76704_Copy16 { u32 a[4]; };\n\nextern const f32 lbl_1_rodata_31E8;\nextern const f64 lbl_1_rodata_31D8;\nextern u16 fn_1_A5DB0(void);\nextern u8 lbl_1_data_1DAC0[0x44];\nextern u8 lbl_1_data_1DC80[0x48];\nextern void OSPanic(const char *, int, const char *, ...);\n\nstatic inline u32 fn_1_76704_operand(u32 right, u32 left) { left *= right; return left; }\n#pragma opt_propagation off\nstatic inline u32 fn_1_76704_operand_(u32 right, u32 left) { left *= right; return left; }\n#pragma opt_dead_assignments off\nf32 fn_1_76704(void * arg0, void * arg1) {\n    u8 *p = (u8 *)arg0;\n    s32 a;\n    s32 b;\n    f32 v8;\n    s16 v9;\n    s16 v11;\n    u32 t1;\n    u16 t2;\n    if (arg1 != 0) {\n        if (*(s16 *)((u8 *)arg1 + 4) <= 1 || *(s16 *)((u8 *)arg1 + 6) <= 1) {\n            OSPanic((const char *)lbl_1_data_1DAC0, 2262, (const char *)lbl_1_data_1DC80);\n        }\n        *(struct fn_1_76704_Copy16 *)(p + 232) = *(struct fn_1_76704_Copy16 *)arg1;\n    } else {\n        *(u16 *)(p + 232) = 0;\n        *(u16 *)(p + 234) = 0;\n        *(u16 *)(p + 236) = 640;\n        *(u16 *)(p + 238) = 480;\n        *(u16 *)(p + 240) = 0;\n        *(u16 *)(p + 242) = 0;\n        *(u32 *)(p + 244) = 0;\n    }\n    *(u16 *)(p + 248) = *(s16 *)(p + 232);\n    t1 = (u16)(fn_1_A5DB0());\n    *(u16 *)(p + 250) = (s32)((f32)(*(s16 *)(p + 234) * (s32)(t1 & 0xFFFF)) / lbl_1_rodata_31E8);\n    a = *(s16 *)(p + 248);\n    t1 = a - (((a & 1) ^ ((u32)a >> 31)) - ((u32)a >> 31));\n    a = t1;\n    *(u16 *)(p + 248) = a;\n    b = *(s16 *)(p + 250);\n    b = b - (((b & 1) ^ ((u32)b >> 31)) - ((u32)b >> 31));\n    *(u16 *)(p + 250) = b;\n    *(u16 *)(p + 252) = (*(s16 *)(p + 236) + *(s16 *)(p + 232)) - *(s16 *)(p + 248);\n    t2 = fn_1_A5DB0();\n    v8 = (f32)(((*(s16 *)(p + 238) + *(s16 *)(p + 234)) - *(s16 *)(p + 250)) * (s32)(t2 & 0xFFFF));\n    *(u16 *)(p + 254) = (s32)(v8 / lbl_1_rodata_31E8);\n    v9 = *(s16 *)(p + 252);\n    if ((v9 % 8) > 0) {\n        *(u16 *)(p + 252) = fn_1_76704_operand_((8), ((v9 / 8 + 1)));\n    }\n    v11 = *(s16 *)(p + 254);\n    if ((v11 % 8) > 0) {\n        *(u16 *)(p + 254) = fn_1_76704_operand((8), ((v11 / 8 + 1)));\n    }\n    if (*(s32 *)(p + 244) != 0) {\n        *(u16 *)(p + 256) = *(s16 *)(p + 252) / 2;\n        *(u16 *)(p + 258) = *(s16 *)(p + 254) / 2;\n    } else {\n        *(u16 *)(p + 256) = *(s16 *)(p + 252);\n        *(u16 *)(p + 258) = *(s16 *)(p + 254);\n    }\n    return v8;\n}\n#pragma opt_dead_assignments reset\n\n#pragma opt_propagation reset\n\n",
+    "seed_sha256": "77872f659c0bd9b9146158317bc2b5b052631b58a1496b489d32484c3ceccd59",
+    "generated_sha256": "43416976a961f9c338c4280fc88f3202a49e512da55ce52477fb8aa3bcfd0e4c",
+    "generated_source": "#include \"types.h\"\n\nstruct fn_1_76704_Copy16 { u32 a[4]; };\n\nextern const f32 lbl_1_rodata_31E8;\nextern const f64 lbl_1_rodata_31D8;\nextern u16 fn_1_A5DB0(void);\nextern u8 lbl_1_data_1DAC0[0x44];\nextern u8 lbl_1_data_1DC80[0x48];\nextern void OSPanic(const char *, int, const char *, ...);\n\nstatic inline u32 fn_1_76704_operand(u32 right, u32 left) { left *= right; return left; }\n#pragma opt_propagation off\nstatic inline u32 fn_1_76704_operand_(u32 right, u32 left) { left *= right; return left; }\n#pragma opt_dead_assignments off\nf32 fn_1_76704(void * arg0, void * arg1) {\n    u8 *p = (u8 *)arg0;\n    s32 a;\n    s32 b;\n    f32 v8;\n    s16 v9;\n    s16 v11;\n    u32 t1;\n    if (arg1 != 0) {\n        if (*(s16 *)((u8 *)arg1 + 4) <= 1 || *(s16 *)((u8 *)arg1 + 6) <= 1) {\n            OSPanic((const char *)lbl_1_data_1DAC0, 2262, (const char *)lbl_1_data_1DC80);\n        }\n        *(struct fn_1_76704_Copy16 *)(p + 232) = *(struct fn_1_76704_Copy16 *)arg1;\n    } else {\n        *(u16 *)(p + 232) = 0;\n        *(u16 *)(p + 234) = 0;\n        *(u16 *)(p + 236) = 640;\n        *(u16 *)(p + 238) = 480;\n        *(u16 *)(p + 240) = 0;\n        *(u16 *)(p + 242) = 0;\n        *(u32 *)(p + 244) = 0;\n    }\n    *(u16 *)(p + 248) = *(s16 *)(p + 232);\n    t1 = (u16)(fn_1_A5DB0());\n    *(u16 *)(p + 250) = (s32)((f32)(*(s16 *)(p + 234) * (s32)(t1 & 0xFFFF)) / lbl_1_rodata_31E8);\n    a = *(s16 *)(p + 248);\n    t1 = a - (((a & 1) ^ ((u32)a >> 31)) - ((u32)a >> 31));\n    a = t1;\n    *(u16 *)(p + 248) = a;\n    b = *(s16 *)(p + 250);\n    b = b - (((b & 1) ^ ((u32)b >> 31)) - ((u32)b >> 31));\n    *(u16 *)(p + 250) = b;\n    *(u16 *)(p + 252) = (*(s16 *)(p + 236) + *(s16 *)(p + 232)) - *(s16 *)(p + 248);\n    v8 = (f32)(((*(s16 *)(p + 238) + *(s16 *)(p + 234)) - *(s16 *)(p + 250)) * (s32)(((u16)(fn_1_A5DB0())) & 0xFFFF));\n    *(u16 *)(p + 254) = (s32)(v8 / lbl_1_rodata_31E8);\n    v9 = *(s16 *)(p + 252);\n    if ((v9 % 8) > 0) {\n        *(u16 *)(p + 252) = fn_1_76704_operand_((8), ((v9 / 8 + 1)));\n    }\n    v11 = *(s16 *)(p + 254);\n    if ((v11 % 8) > 0) {\n        *(u16 *)(p + 254) = fn_1_76704_operand((8), ((v11 / 8 + 1)));\n    }\n    if (*(s32 *)(p + 244) != 0) {\n        *(u16 *)(p + 256) = *(s16 *)(p + 252) / 2;\n        *(u16 *)(p + 258) = *(s16 *)(p + 254) / 2;\n    } else {\n        *(u16 *)(p + 256) = *(s16 *)(p + 252);\n        *(u16 *)(p + 258) = *(s16 *)(p + 254);\n    }\n    return v8;\n}\n#pragma opt_dead_assignments reset\n\n#pragma opt_propagation reset\n\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "rel/main_rel/screen_effect/fn_1_76704.c",
+    "bytes": 608,
+    "headers_sha256": "a589c0d12ea0a921f727e63ed125ea39c16e33457a7ec3899c6c793bcdfddceb",
+    "oracle_sha256": "7cc891120feb212c397b96ddb46f5213d85d0998668a1ee4bd55a3d6abc2e1ff",
+    "recipe": [
+      {
+        "label": "attributed inline t2 at line 51 typed",
+        "input_sha256": "77872f659c0bd9b9146158317bc2b5b052631b58a1496b489d32484c3ceccd59",
+        "output_sha256": "43416976a961f9c338c4280fc88f3202a49e512da55ce52477fb8aa3bcfd0e4c",
+        "input_symbol": "fn_1_76704",
+        "output_symbol": "fn_1_76704",
+        "edits": [
+          [
+            670,
+            682,
+            ""
+          ],
+          [
+            1705,
+            1811,
+            "v8 = (f32)(((*(s16 *)(p + 238) + *(s16 *)(p + 234)) - *(s16 *)(p + 250)) * (s32)(((u16)(fn_1_A5DB0()))"
+          ]
+        ]
+      }
+    ],
+    "link": "pending"
   }
 }

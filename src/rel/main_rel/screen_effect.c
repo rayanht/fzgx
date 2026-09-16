@@ -1458,6 +1458,77 @@ void fn_1_76650(fn_1_76650_ScreenEffect *effect) {
 }
 /* fzgx:end fn_1_76650 */
 
+/* fzgx:begin fn_1_76704 */
+struct fn_1_76704_Copy16 { u32 a[4]; };
+
+extern const f32 lbl_1_rodata_31E8;
+extern const f64 lbl_1_rodata_31D8;
+extern u16 fn_1_A5DB0(void);
+extern u8 lbl_1_data_1DAC0[0x44];
+extern u8 lbl_1_data_1DC80[0x48];
+extern void OSPanic(const char *, int, const char *, ...);
+
+static inline u32 fn_1_76704_operand(u32 right, u32 left) { left *= right; return left; }
+#pragma opt_propagation off
+static inline u32 fn_1_76704_operand_(u32 right, u32 left) { left *= right; return left; }
+#pragma opt_dead_assignments off
+f32 fn_1_76704(void * arg0, void * arg1) {
+    u8 *p = (u8 *)arg0;
+    s32 a;
+    s32 b;
+    f32 v8;
+    s16 v9;
+    s16 v11;
+    u32 t1;
+    if (arg1 != 0) {
+        if (*(s16 *)((u8 *)arg1 + 4) <= 1 || *(s16 *)((u8 *)arg1 + 6) <= 1) {
+            OSPanic((const char *)lbl_1_data_1DAC0, 2262, (const char *)lbl_1_data_1DC80);
+        }
+        *(struct fn_1_76704_Copy16 *)(p + 232) = *(struct fn_1_76704_Copy16 *)arg1;
+    } else {
+        *(u16 *)(p + 232) = 0;
+        *(u16 *)(p + 234) = 0;
+        *(u16 *)(p + 236) = 640;
+        *(u16 *)(p + 238) = 480;
+        *(u16 *)(p + 240) = 0;
+        *(u16 *)(p + 242) = 0;
+        *(u32 *)(p + 244) = 0;
+    }
+    *(u16 *)(p + 248) = *(s16 *)(p + 232);
+    t1 = (u16)(fn_1_A5DB0());
+    *(u16 *)(p + 250) = (s32)((f32)(*(s16 *)(p + 234) * (s32)(t1 & 0xFFFF)) / lbl_1_rodata_31E8);
+    a = *(s16 *)(p + 248);
+    t1 = a - (((a & 1) ^ ((u32)a >> 31)) - ((u32)a >> 31));
+    a = t1;
+    *(u16 *)(p + 248) = a;
+    b = *(s16 *)(p + 250);
+    b = b - (((b & 1) ^ ((u32)b >> 31)) - ((u32)b >> 31));
+    *(u16 *)(p + 250) = b;
+    *(u16 *)(p + 252) = (*(s16 *)(p + 236) + *(s16 *)(p + 232)) - *(s16 *)(p + 248);
+    v8 = (f32)(((*(s16 *)(p + 238) + *(s16 *)(p + 234)) - *(s16 *)(p + 250)) * (s32)(((u16)(fn_1_A5DB0())) & 0xFFFF));
+    *(u16 *)(p + 254) = (s32)(v8 / lbl_1_rodata_31E8);
+    v9 = *(s16 *)(p + 252);
+    if ((v9 % 8) > 0) {
+        *(u16 *)(p + 252) = fn_1_76704_operand_((8), ((v9 / 8 + 1)));
+    }
+    v11 = *(s16 *)(p + 254);
+    if ((v11 % 8) > 0) {
+        *(u16 *)(p + 254) = fn_1_76704_operand((8), ((v11 / 8 + 1)));
+    }
+    if (*(s32 *)(p + 244) != 0) {
+        *(u16 *)(p + 256) = *(s16 *)(p + 252) / 2;
+        *(u16 *)(p + 258) = *(s16 *)(p + 254) / 2;
+    } else {
+        *(u16 *)(p + 256) = *(s16 *)(p + 252);
+        *(u16 *)(p + 258) = *(s16 *)(p + 254);
+    }
+    return v8;
+}
+#pragma opt_dead_assignments reset
+
+#pragma opt_propagation reset
+/* fzgx:end fn_1_76704 */
+
 /* fzgx:begin fn_1_76964 */
 typedef struct {
     u8 pad_0[0xB4];

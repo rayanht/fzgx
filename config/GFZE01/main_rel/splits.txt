@@ -6419,3 +6419,6 @@ rel/main_rel/font/fn_1_557C4.c:
 
 rel/main_rel/font/fn_1_55A84.c:
 	.text       start:0x00055A84 end:0x00055C48 align:4
+
+rel/main_rel/screen_effect/fn_1_76704.c:
+	.text       start:0x00076704 end:0x00076964 align:4
