@@ -37983,8 +37983,8 @@
     "extra_cflags": [],
     "tu": "rel/main_rel/font.c",
     "pool": {
-      "@27": "lbl_1_rodata_2870",
-      "@29": "lbl_1_rodata_2878"
+      "@28": "lbl_1_rodata_2870",
+      "@30": "lbl_1_rodata_2878"
     }
   },
   {

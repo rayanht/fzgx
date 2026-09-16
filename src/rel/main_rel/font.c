@@ -46,6 +46,45 @@ typedef struct fn_1_563E4_FontState {
     u8 pad_20[4];
     u32 state;
 } fn_1_563E4_FontState;
+
+typedef struct State {
+    FontDrawPacket *current;
+    s32 warned;
+    u8 unk_8[0x2028];
+    s32 override_enabled, override_value;
+    u32 texture[8];
+} State;
+
+typedef struct Config {
+    u32 capacity;
+    FontDrawPacket *packets;
+    u8 unk_8[0x44];
+    char warning[1];
+} Config;
+
+typedef struct ImageInfo {
+    u8 unk_0[8];
+    u16 width, height;
+    u32 unk_C;
+} ImageInfo;
+
+typedef struct Images {
+    u32 unk_0;
+    ImageInfo *info;
+    u32 unk_8;
+    u32 (*textures)[8];
+} Images;
+
+typedef struct Resource {
+    s32 loaded;
+    u8 unk_4[0x1c];
+    Images *images;
+    u32 unk_24;
+} Resource;
+
+struct fn_1_530C8_lbl_1_rodata_282C {
+    f32 unk_0;
+};
 extern f32 fn_1_4B1D4(s32 mode, s32 value);
 extern const f64 lbl_1_rodata_10F8;
 extern s32 fn_8008077C(u32 arg0, u32 arg1, u32 arg2);
@@ -73,7 +112,7 @@ extern void fn_80072AB0(s32 arg0, s32 arg1, s32 arg2);
 extern void fn_80074918(u8 arg0, s32 arg1, u8 arg2);
 extern void fn_80072C24(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
 extern void fn_80072CC4(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
-extern f32 fn_1_519AC(u32 value);
+extern f32 fn_1_519AC(u32);
 extern void DCFlushRange(void *, u32);
 extern void GXInitTexObj(void *, void *, u16, u16, u32, u32, u32, u8);
 extern void GXInitTexObjLOD(void *, u32, u32, f32, f32, f32, u8, u8, u32);
@@ -889,9 +928,7 @@ void fn_1_4CE48(Obj_1_bss_4B9CC *obj, f32 limit) {
 }
 /* fzgx:end fn_1_4CE48 */
 
-/* fzgx:begin fn_1_4CF3C noprologue */
-#include "types.h"
-
+/* fzgx:begin fn_1_4CF3C */
 typedef struct {
     unsigned char Sig_parse_format_justification_options;
     unsigned char Sig_parse_format_sign_options;
@@ -911,22 +948,10 @@ typedef struct Sig_parse_format_MkVaListState {
 } Sig_parse_format___va_list[1];
 typedef Sig_parse_format___va_list Sig_parse_format_va_list;
 
-struct fn_1_4CF3C_lbl_1_bss_4B9CC {
-    u8 pad_0[0x1C];
-    f32 unk_1C;
-    u8 pad_20[0x1C];
-    f32 unk_3C;
-};
-
-extern f32 fn_1_4B1D4(u32, u32);
-extern f64 lbl_1_rodata_10F8;
-extern s32 fn_8008077C(u32, const char *, Sig_parse_format_va_list *);
-extern struct fn_1_4CF3C_lbl_1_bss_4B9CC lbl_1_bss_4B9CC;
-extern void fn_1_4A0D8(const char *);
 
 #pragma opt_common_subs off
 void fn_1_4CF3C(const char *format, f32 x, ...) {
-    struct fn_1_4CF3C_lbl_1_bss_4B9CC *p_lbl_1_bss_4B9CC;
+    Obj_1_bss_4B9CC *p_lbl_1_bss_4B9CC;
     char buffer[512];
     Sig_parse_format_va_list list;
     f32 saved;
@@ -936,7 +961,7 @@ void fn_1_4CF3C(const char *format, f32 x, ...) {
 
     __builtin_va_info(&list);
 
-    fn_8008077C((u32)buffer, format, (Sig_parse_format_va_list *)&list);
+    fn_8008077C((u32)buffer, (u32)(const char *)(format), (u32)((Sig_parse_format_va_list *)&list));
 
     p_lbl_1_bss_4B9CC = &lbl_1_bss_4B9CC;
     saved = p_lbl_1_bss_4B9CC->unk_1C;
@@ -981,32 +1006,16 @@ void fn_1_4D274(u32 *object, f32 value) {
 }
 /* fzgx:end fn_1_4D274 */
 
-/* fzgx:begin fn_1_4D494 noprologue */
-typedef unsigned char u8;
+/* fzgx:begin fn_1_4D494 */
 
-typedef unsigned long u32;
-
-typedef float f32;
-
-/* lbl_1_bss_4BA30: .bss size 0x14, 5 refs from font.c */
-typedef struct {
-u32 unk_0; /* 0 loads, 2 stores */
-f32 unk_4; /* 1 loads, 1 stores */
-f32 unk_8; /* 3 loads, 1 stores */
-f32 unk_C; /* 3 loads, 1 stores */
-f32 unk_10; /* 3 loads, 1 stores */
-} Obj_1_bss_4BA30;
-extern Obj_1_bss_4BA30 lbl_1_bss_4BA44;
-
-extern u8 lbl_1_rodata_FD0[];
 void fn_1_4D494(void) {
-Obj_1_bss_4BA30 *bss = &lbl_1_bss_4BA44;
-f32 *rodata = (f32 *)lbl_1_rodata_FD0;
-bss->unk_0 = 1;
-bss->unk_4 = rodata[0x16ac / 4];
-bss->unk_8 = rodata[0xf0 / 4];
-bss->unk_C = rodata[0x16b0 / 4];
-bss->unk_10 = rodata[0xf0 / 4];
+    Obj_1_bss_4BA44 *bss = &lbl_1_bss_4BA44;
+    f32 *rodata = (f32 *)lbl_1_rodata_FD0;
+    bss->unk_0 = 1;
+    bss->unk_4 = rodata[0x16ac / 4];
+    bss->unk_8 = rodata[0xf0 / 4];
+    bss->unk_C = rodata[0x16b0 / 4];
+    bss->unk_10 = rodata[0xf0 / 4];
 }
 /* fzgx:end fn_1_4D494 */
 
@@ -2296,9 +2305,6 @@ void fn_1_52BF8(void *arg0, u32 arg1, s16 arg2) {
 struct fn_1_530C8_lbl_801A6D00 {
     u32 unk_0;
 };
-struct fn_1_530C8_lbl_1_rodata_282C {
-    f32 unk_0;
-};
 
 
 
@@ -2584,9 +2590,7 @@ void **fn_1_54448(s32 arg0) {
 }
 /* fzgx:end fn_1_54448 */
 
-/* fzgx:begin fn_1_5448C noprologue */
-#include "types.h"
-
+/* fzgx:begin fn_1_5448C */
 typedef struct {
     u8 pad_0[0x30];
     u8 *table;
@@ -2599,17 +2603,7 @@ typedef struct {
     f32 value_4c;
 } FontGlobals;
 
-typedef struct {
-    f32 x;
-    f32 y;
-    f32 z;
-} Vec3;
 
-extern FontGlobals *lbl_801A66CC;
-extern const f32 lbl_1_rodata_2870;
-extern const f64 lbl_1_rodata_2878;
-extern void lbl_8006E1B0(void *arg, Vec3 *out);
-extern f32 lbl_8006D0B4(f32 value);
 
 #pragma opt_common_subs on
 static inline f32 fn_1_5448C_read_pointer(FontGlobals * owner) { return owner->value_4c; }
@@ -2622,11 +2616,11 @@ u32 fn_1_5448C(void *arg, u32 lab_unused0, u32 lab_unused1, u32 lab_unused2) {
     f32 distance;
     s32 index;
     u8 *entry;
-    FontGlobals *state;
+    u8 *state;
 
     lbl_8006E1B0(arg, &vec);
     state = lbl_801A66CC;
-    clamp = state->clamp_3c;
+    clamp = ((FontGlobals *)state)->clamp_3c;
     fzgx_live = vec.z;
     vec.z = -fzgx_live;
     if (vec.z < clamp) {
@@ -2640,23 +2634,23 @@ u32 fn_1_5448C(void *arg, u32 lab_unused0, u32 lab_unused1, u32 lab_unused2) {
     sum += fzgx_live * fzgx_live;
     distance = lbl_8006D0B4(sum);
     state = lbl_801A66CC;
-    distance = state->value_38 + distance - clamp;
+    distance = ((FontGlobals *)state)->value_38 + distance - clamp;
 
     if (distance < (0.0f)) {
         index = 0;
     } else {
-        index = (s32)((f32)state->count * distance / (distance + fn_1_5448C_read_pointer(state)));
-        if (index >= state->count) {
-            index = state->count - 1;
+        index = (s32)((f32)((FontGlobals *)state)->count * distance / (distance + fn_1_5448C_read_pointer((FontGlobals *)state)));
+        if (index >= ((FontGlobals *)state)->count) {
+            index = ((FontGlobals *)state)->count - 1;
         }
     }
 
-    entry = state->table + (index << 3);
-    if (state->current > entry) {
-        state->current = entry;
+    entry = ((FontGlobals *)state)->table + (index << 3);
+    if (((FontGlobals *)state)->current > entry) {
+        ((FontGlobals *)state)->current = entry;
     }
-    if (lbl_801A66CC->maximum < entry) {
-        lbl_801A66CC->maximum = entry;
+    if (((FontGlobals *)lbl_801A66CC)->maximum < entry) {
+        ((FontGlobals *)lbl_801A66CC)->maximum = entry;
     }
     return (u32)entry;
 }
@@ -3164,27 +3158,14 @@ void fn_1_557C4(void *value) {
 #pragma opt_lifetimes reset
 /* fzgx:end fn_1_557C4 */
 
-/* fzgx:begin fn_1_55924 noprologue */
-#include "types.h"
-#include "rel/main_rel/globals.h"
-#include "rel/main_rel/font.h"
-
-extern void *fn_1_54448(void *value);
-extern void *fn_1_548AC(u32 size);
-extern void fn_1_55C48(void);
-extern s16 fn_1_7BE94(void);
-extern void fn_1_5489C(void *value, void *data);
-extern void fn_1_56530(void);
-extern void lbl_8006DB74(void *value);
-extern void lbl_8006DD14(void *value, void *data);
-extern u8 *lbl_801A66CC;
+/* fzgx:begin fn_1_55924 */
 
 typedef struct {
     u8 pad_00[0x4];
     void *vtable;
     void *owner;
     u8 pad_0C[0x30];
-    s16 unk_3C;
+    u16 unk_3C;
     u8 pad_3E[0x2];
     Obj_1_bss_6C7A4 settings;
     void *items[4];
@@ -3197,7 +3178,7 @@ void fn_1_55924(void *value, void *arg) {
     s32 i;
     Obj_1_bss_6C7CC *flags;
 
-    handle = fn_1_54448(arg);
+    handle = (void *)fn_1_54448( (s32)(void *)(arg));
     object = (Fn1_55924Object *)fn_1_548AC(0x78);
     if (object != 0) {
         object->vtable = (void *)fn_1_55C48;
@@ -3220,7 +3201,7 @@ void fn_1_55924(void *value, void *arg) {
             }
         }
         if (ok != 0) {
-            fn_1_5489C(handle, object);
+            fn_1_5489C( (void **)(void *)(handle), (void **)(void *)(object));
         }
     }
     fn_1_56530();

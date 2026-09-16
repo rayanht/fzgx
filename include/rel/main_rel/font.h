@@ -41,11 +41,11 @@ typedef struct {
 } Obj_1_data_1AEA8;
 extern Obj_1_data_1AEA8 lbl_1_data_1AEA8;
 
-// lbl_1_bss_4C678: .bss size 0x8, 6 refs from font.c
-extern u32 lbl_1_bss_4C678;
-
 // lbl_1_bss_6C7A0: .bss size 0x4, 6 refs from font.c
 extern f32 lbl_1_bss_6C7A0;
+
+// lbl_1_bss_4C678: .bss size 0x8, 6 refs from font.c
+extern u32 lbl_1_bss_4C678;
 
 // lbl_1_bss_646D2: .bss size 0xE, 5 refs from font.c
 typedef struct {
@@ -54,9 +54,6 @@ typedef struct {
 } Obj_1_bss_646D2;
 extern Obj_1_bss_646D2 lbl_1_bss_646D2;
 
-// lbl_1_bss_3E058: .bss size 0x4, 5 refs from font.c
-extern u32 lbl_1_bss_3E058;
-
 // lbl_1_data_1A3B8: .data size 0xAD8, 5 refs from font.c
 typedef struct {
     u16 unk_0;  // 2 loads, 0 stores
@@ -64,15 +61,8 @@ typedef struct {
 } Obj_1_data_1A3B8;
 extern Obj_1_data_1A3B8 lbl_1_data_1A3B8;
 
-// lbl_1_bss_4BA30: .bss size 0x14, 5 refs from font.c
-typedef struct {
-    u32 unk_0;  // 0 loads, 2 stores
-    f32 unk_4;  // 1 loads, 1 stores
-    f32 unk_8;  // 3 loads, 1 stores
-    f32 unk_C;  // 3 loads, 1 stores
-    f32 unk_10;  // 3 loads, 1 stores
-} Obj_1_bss_4BA30;
-extern Obj_1_bss_4BA30 lbl_1_bss_4BA30;
+// lbl_1_bss_3E058: .bss size 0x4, 5 refs from font.c
+extern u32 lbl_1_bss_3E058;
 
 // lbl_1_data_FCD4: .data size 0x1D60, 5 refs from font.c
 typedef struct {
@@ -91,6 +81,16 @@ typedef struct {
 } Obj_1_data_FCD4;
 extern Obj_1_data_FCD4 lbl_1_data_FCD4;
 
+// lbl_1_bss_4BA30: .bss size 0x14, 5 refs from font.c
+typedef struct {
+    u32 unk_0;  // 2 loads, 5 stores
+    f32 unk_4;  // 1 loads, 1 stores
+    f32 unk_8;  // 3 loads, 1 stores
+    f32 unk_C;  // 3 loads, 1 stores
+    f32 unk_10;  // 3 loads, 1 stores
+} Obj_1_bss_4BA30;
+extern Obj_1_bss_4BA30 lbl_1_bss_4BA30;
+
 // lbl_1_data_1C504: .data size 0x4, 4 refs from font.c (own data block)
 typedef struct {
     u32 unk_0;  // 2 loads, 0 stores
@@ -107,16 +107,6 @@ extern Obj_1_data_1C504_Target *lbl_1_data_1C504;
 
 // lbl_1_bss_3E05C: .bss size 0x4, 4 refs from font.c
 extern f32 lbl_1_bss_3E05C;
-
-// lbl_1_bss_4BA44: .bss size 0x14, 3 refs from font.c
-typedef struct {
-    u8 pad_0[0x4];
-    f32 unk_4;  // 1 loads, 1 stores
-    f32 unk_8;  // 2 loads, 1 stores
-    f32 unk_C;  // 2 loads, 1 stores
-    f32 unk_10;  // 2 loads, 1 stores
-} Obj_1_bss_4BA44;
-extern Obj_1_bss_4BA44 lbl_1_bss_4BA44;
 
 // lbl_1_bss_4BB30: .bss size 0xC, 3 refs from font.c
 typedef struct {
@@ -138,11 +128,53 @@ typedef struct {
 } Obj_1_bss_40BBC;
 extern Obj_1_bss_40BBC lbl_1_bss_40BBC;
 
+// lbl_1_bss_4BA44: .bss size 0x14, 3 refs from font.c
+typedef struct {
+    u32 unk_0;  // 1 loads, 1 stores
+    f32 unk_4;  // 1 loads, 1 stores
+    f32 unk_8;  // 2 loads, 1 stores
+    f32 unk_C;  // 2 loads, 1 stores
+    f32 unk_10;  // 2 loads, 1 stores
+} Obj_1_bss_4BA44;
+extern Obj_1_bss_4BA44 lbl_1_bss_4BA44;
+
 // lbl_1_data_1C500: .data size 0x4, 2 refs from font.c (own data block)
 extern u32 lbl_1_data_1C500;
 
+// lbl_1_bss_4C684: .bss size 0x4, 2 refs from font.c
+extern u32 lbl_1_bss_4C684;
+
+// lbl_1_bss_4BA5C: .bss size 0x4, 2 refs from font.c
+extern u32 lbl_1_bss_4BA5C;
+
+// lbl_1_bss_4BA60: .bss size 0x20, 2 refs from font.c
+extern u8 lbl_1_bss_4BA60[0x20];
+
+// lbl_1_bss_4BA58: .bss size 0x4, 2 refs from font.c
+extern u32 lbl_1_bss_4BA58;
+
+// lbl_1_bss_6C710: .bss size 0x88, 2 refs from font.c
+extern u8 lbl_1_bss_6C710[0x88];
+
+// lbl_1_bss_4E6B0: .bss size 0x20, 2 refs from font.c
+extern u8 lbl_1_bss_4E6B0[0x20];
+
+// lbl_1_bss_4BB40: .bss size 0x5C, 2 refs from font.c
+typedef struct {
+    u32 unk_0;  // 2 loads, 2 stores
+    u32 unk_4;  // 1 loads, 1 stores
+    u8 pad_8[0x54];
+} Obj_1_bss_4BB40;
+extern Obj_1_bss_4BB40 lbl_1_bss_4BB40;
+
+// lbl_1_bss_4BB3C: .bss size 0x1, 2 refs from font.c
+extern u8 lbl_1_bss_4BB3C;
+
 // lbl_1_bss_3F60C: .bss size 0x15B0, 2 refs from font.c
 extern u8 lbl_1_bss_3F60C[0x15B0];
+
+// lbl_1_bss_4C680: .bss size 0x4, 2 refs from font.c
+extern u32 lbl_1_bss_4C680;
 
 // lbl_1_bss_646E0: .bss size 0x4, 2 refs from font.c
 extern u32 lbl_1_bss_646E0;
@@ -157,43 +189,11 @@ typedef struct {
 } Obj_1_data_1C508;
 extern Obj_1_data_1C508 lbl_1_data_1C508;
 
-// lbl_1_bss_4BA5C: .bss size 0x4, 2 refs from font.c
-extern u32 lbl_1_bss_4BA5C;
+// jumptable_1_data_1BFD8: .data size 0xDC, 1 refs from font.c (own data block)
+extern u8 jumptable_1_data_1BFD8[0xDC];
 
-// lbl_1_bss_4BB40: .bss size 0x5C, 2 refs from font.c
-typedef struct {
-    u32 unk_0;  // 2 loads, 2 stores
-    u32 unk_4;  // 1 loads, 1 stores
-    u8 pad_8[0x54];
-} Obj_1_bss_4BB40;
-extern Obj_1_bss_4BB40 lbl_1_bss_4BB40;
-
-// lbl_1_bss_4BB3C: .bss size 0x1, 2 refs from font.c
-extern u8 lbl_1_bss_4BB3C;
-
-// lbl_1_bss_6C710: .bss size 0x88, 2 refs from font.c
-extern u8 lbl_1_bss_6C710[0x88];
-
-// lbl_1_bss_4BA58: .bss size 0x4, 2 refs from font.c
-extern u32 lbl_1_bss_4BA58;
-
-// lbl_1_bss_4BA60: .bss size 0x20, 2 refs from font.c
-extern u8 lbl_1_bss_4BA60[0x20];
-
-// lbl_1_bss_4C684: .bss size 0x4, 2 refs from font.c
-extern u32 lbl_1_bss_4C684;
-
-// lbl_1_bss_4E6B0: .bss size 0x20, 2 refs from font.c
-extern u8 lbl_1_bss_4E6B0[0x20];
-
-// lbl_1_bss_4C680: .bss size 0x4, 2 refs from font.c
-extern u32 lbl_1_bss_4C680;
-
-// jumptable_1_data_1BEFC: .data size 0xDC, 1 refs from font.c (own data block)
-extern u8 jumptable_1_data_1BEFC[0xDC];
-
-// lbl_1_data_1BCC8: .data size 0xBC, 1 refs from font.c (own data block)
-extern u8 lbl_1_data_1BCC8[0xBC];
+// jumptable_1_data_1C304: .data size 0x98, 1 refs from font.c (own data block)
+extern u8 jumptable_1_data_1C304[0x98];
 
 // lbl_1_data_1C5DC: .data size 0x4, 1 refs from font.c (own data block)
 extern u32 lbl_1_data_1C5DC;
@@ -201,16 +201,16 @@ extern u32 lbl_1_data_1C5DC;
 // lbl_1_data_1C5EC: .data size 0x64, 1 refs from font.c (own data block)
 extern u8 lbl_1_data_1C5EC[0x64];
 
-// jumptable_1_data_1C304: .data size 0x98, 1 refs from font.c (own data block)
-extern u8 jumptable_1_data_1C304[0x98];
+// lbl_1_data_1BCC8: .data size 0xBC, 1 refs from font.c (own data block)
+extern u8 lbl_1_data_1BCC8[0xBC];
 
-// jumptable_1_data_1BFD8: .data size 0xDC, 1 refs from font.c (own data block)
-extern u8 jumptable_1_data_1BFD8[0xDC];
-
-// jumptable_1_data_1BD84: .data size 0x178, 1 refs from font.c (own data block)
-extern u8 jumptable_1_data_1BD84[0x178];
+// jumptable_1_data_1BEFC: .data size 0xDC, 1 refs from font.c (own data block)
+extern u8 jumptable_1_data_1BEFC[0xDC];
 
 // jumptable_1_data_1C578: .data size 0x5C, 1 refs from font.c (own data block)
 extern u8 jumptable_1_data_1C578[0x5C];
+
+// jumptable_1_data_1BD84: .data size 0x178, 1 refs from font.c (own data block)
+extern u8 jumptable_1_data_1BD84[0x178];
 
 #endif  // REL_MAIN_REL_FONT_H

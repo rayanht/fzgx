@@ -100,7 +100,9 @@ def analyze(p: Project, module: str, symbol: str) -> Dict[str, object]:
                         stride_seen["derived0"] = stride_seen.get("derived0", 0) or strides[pair[1]]
                     continue
             # direct access through the symbol, with an optional displacement: op rX, (sym+0x3c)@l(rA) or sym@l(rA)
-            m = re.match(rf"^(lwz|lhz|lha|lbz|lfs|lfd|stw|sth|stb|stfs|stfd) [rf](\d+), \(?{re.escape(symbol)}(?:\s*\+\s*(0x[0-9a-fA-F]+|\d+))?\)?@l\(r(\d+)\)", ins)
+            # the update forms (`stwu r0, sym@l(r3)`: the store that also materialises the address)
+            # access the same field as their plain forms
+            m = re.match(rf"^(lwz|lhz|lha|lbz|lfs|lfd|stw|sth|stb|stfs|stfd)u? [rf](\d+), \(?{re.escape(symbol)}(?:\s*\+\s*(0x[0-9a-fA-F]+|\d+))?\)?@l\(r(\d+)\)", ins)
             if m and f"r{m.group(4)}" in pending_ha:
                 off = int(m.group(3), 0) if m.group(3) else 0
                 f = fields[("object", off)]

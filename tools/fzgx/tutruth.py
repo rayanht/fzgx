@@ -11,11 +11,12 @@ prologue; a block that no longer matches is reverted and reported.
 from __future__ import annotations
 
 import re
+from pathlib import Path
 from collections import Counter, OrderedDict
 from typing import Dict, List, Optional, Tuple
 
 from . import oracle, reconcile, tufile, tutidy
-from .project import ROOT, Project
+from .project import ROOT, STATE_DIR, Project
 
 SCALAR = {'void', 'int', 'char', 'short', 'long', 'unsigned', 'signed', 'float', 'double',
           's8', 'u8', 's16', 'u16', 's32', 'u32', 's64', 'u64', 'f32', 'f64', 'BOOL', 'size_t'}
@@ -193,36 +194,48 @@ def type_definition_span(body: str, tname: str) -> Optional[Tuple[int, int]]:
 
 def hoist_private_types(tf: tufile.TuFile, truths: Dict[str, str], report: Dict[str, object]) -> None:
     """Move the definitions of block-private types that a truth names into the prologue,
-    when exactly one block defines the type (reconcile prefixed the colliding ones)."""
+    dependencies first, when exactly one block defines the type (reconcile prefixed the
+    colliding ones)."""
     private: Dict[str, List[str]] = {}
     for b in tf.blocks:
         for t in set(re.findall(r'^\}\s*([A-Za-z_]\w*)\s*;', b.body, re.M)) | set(re.findall(r'^typedef\s+struct\s+([A-Za-z_]\w*)\s*\{', b.body, re.M)) | set(re.findall(r'^struct\s+([A-Za-z_]\w*)\s*\{', b.body, re.M)):
             private.setdefault(t, []).append(b.name)
-    hoisted = []
-    pending = [t for truth in truths.values() for t in re.findall(r'[A-Za-z_]\w*', truth) if t in private]
-    seen = set()
-    while pending:
-        t = pending.pop(0)
-        if t in seen:
-            continue
-        seen.add(t)
+    hoisted: List[Tuple[str, str]] = []
+    done: set = set()
+
+    def in_prologue(t: str) -> bool:
+        return bool(re.search(r'^\}\s*' + re.escape(t) + r'\s*;', tf.prologue, re.M)
+                    or re.search(r'^(?:typedef\s+)?struct\s+' + re.escape(t) + r'\s*\{', tf.prologue, re.M))
+
+    def hoist(t: str, stack: Tuple[str, ...] = ()) -> None:
+        if t in done or t in stack or t not in private or in_prologue(t):
+            return
         owners = private[t]
         if len(set(owners)) != 1:
             report.setdefault('unhoistable', []).append(f'{t}: defined in {sorted(set(owners))}')
-            continue
+            done.add(t)
+            return
         b = tf.get(owners[0])
         span = type_definition_span(b.body, t)
         if not span:
             report.setdefault('unhoistable', []).append(f'{t}: no definition span in {b.name}')
-            continue
+            done.add(t)
+            return
         text = b.body[span[0]:span[1]]
-        # a type the hoisted definition names must come first
-        for inner in re.findall(r'[A-Za-z_]\w*', text):
-            if inner in private and inner != t and inner not in seen:
-                pending.insert(0, inner)
+        for inner in dict.fromkeys(re.findall(r'[A-Za-z_]\w*', text)):
+            if inner != t and inner in private:
+                hoist(inner, stack + (t,))
+        span = type_definition_span(b.body, t)  # offsets may have moved with an inner hoist
+        text = b.body[span[0]:span[1]]
         b.body = b.body[:span[0]] + b.body[span[1]:]
         tf.prologue = tf.prologue.rstrip('\n') + '\n\n' + text.rstrip('\n') + '\n'
         hoisted.append((t, b.name))
+        done.add(t)
+
+    for truth in truths.values():
+        for t in re.findall(r'[A-Za-z_]\w*', truth):
+            if t in private:
+                hoist(t)
     report['hoisted_types'] = hoisted
 
 
@@ -240,7 +253,7 @@ def cast_results(body: str, name: str, old_ret: str) -> str:
         before = body[line_start:m.start()]
         if not re.search(r'(=|return|\(|,|\?|:)\s*$', before):
             continue
-        out = out[:m.start()] + f'({old_ret})' + out[m.start():res[1] + 1] + out[res[1] + 1:]
+        out = out[:m.start()] + f'({old_ret})' + out[m.start():]
     return out
 
 
@@ -261,8 +274,8 @@ def min_call_args(body: str, name: str) -> Optional[int]:
 
 def view_rewrite(body: str, name: str, decl: str, truth_is_pointer: bool = False) -> Optional[str]:
     """Every use of a data symbol goes through the block's own view of the object:
-    `extern T n;` -> `(*(T *)&n)`, `extern T n[..];` -> `((T *)&n)`, `extern T *n;` -> `(*(T **)&n)`.
-    The address is the same symbol; the code is unchanged."""
+    `extern T n;` -> `(*(T *)&n)`, `extern T n[..];` -> `((T *)&n)`, `extern T *n;` -> `((T)n)`
+    when the truth is a pointer too. The address is the same symbol."""
     m = re.match(r'^\s*extern\s+(.*?)\s*\b' + re.escape(name) + r'\s*((?:\[[^\]]*\])*)\s*;', decl.strip())
     if not m:
         return None
@@ -270,7 +283,7 @@ def view_rewrite(body: str, name: str, decl: str, truth_is_pointer: bool = False
     if m.group(2):
         view = f'((({t} *)&{name}))'
     elif t.endswith('*') and truth_is_pointer:
-        view = f'(({t}){name})'  # the loaded pointer, cast: no address materialisation
+        view = f'(({t}){name})'
     else:
         view = f'(*(({t} *)&{name}))'
     ident = re.compile(r'(?<![\w.>])' + re.escape(name) + r'\b')
@@ -393,11 +406,19 @@ def resolve(p: Project, tu_source: str, v, apply: bool = True) -> Dict[str, obje
                     n = tutidy._decl_name(hl)
                     if n:
                         hdecl.setdefault(n, hl.strip())
-    # block typedefs that collide with a header typedef get the block's prefix
+    # block typedefs that collide with a header or prologue typedef: an identical definition
+    # is dropped (the prologue carries it), a different one gets the block's prefix
+    prologue_typedefs = set(re.findall(r'^\}\s*([A-Za-z_]\w*)\s*;', tf.prologue, re.M)) | set(re.findall(r'^(?:typedef\s+)?struct\s+([A-Za-z_]\w*)\s*\{', tf.prologue, re.M))
     for b in tf.blocks:
-        for t in set(re.findall(r'^\}\s*([A-Za-z_]\w*)\s*;', b.body, re.M)) & set(header_typedefs):
-            b.body = re.sub(r'\b' + re.escape(t) + r'\b', f'{b.name}_{t}', b.body)
-            report.setdefault('renamed_typedefs', []).append((b.name, t))
+        for t in sorted((set(re.findall(r'^\}\s*([A-Za-z_]\w*)\s*;', b.body, re.M)) | set(re.findall(r'^(?:typedef\s+)?struct\s+([A-Za-z_]\w*)\s*\{', b.body, re.M))) & (set(header_typedefs) | prologue_typedefs)):
+            span = type_definition_span(b.body, t)
+            pspan = type_definition_span(tf.prologue, t)
+            if span and pspan and re.sub(r'\s+', ' ', b.body[span[0]:span[1]]).strip() == re.sub(r'\s+', ' ', tf.prologue[pspan[0]:pspan[1]]).strip():
+                b.body = b.body[:span[0]] + b.body[span[1]:]
+                report.setdefault('dropped_typedefs', []).append((b.name, t))
+            else:
+                b.body = re.sub(r'\b' + re.escape(t) + r'\b', f'{b.name}_{t}', b.body)
+                report.setdefault('renamed_typedefs', []).append((b.name, t))
     pdecl: Dict[str, str] = {}
     kept_pro = []
     for ln in tf.prologue.splitlines():
@@ -542,27 +563,44 @@ def resolve(p: Project, tu_source: str, v, apply: bool = True) -> Dict[str, obje
         return base_prologue.rstrip('\n') + '\n' + '\n'.join(dict.fromkeys(lines)) + '\n'
 
     before_hoist = tf.prologue
-    hoist_private_types(tf, {n: candidates[n][choice[n]][1] for n in symbols if _sig(candidates[n][choice[n]][1])}, report)
+    hoist_private_types(tf, {f'{n}#{k}': t for n in symbols for k, (_, t) in enumerate(candidates[n])}, report)
     base_prologue = base_prologue.rstrip('\n') + '\n' + tf.prologue[len(before_hoist):]  # the hoisted types
     original = {b.name: b.body for b in tf.blocks}
+
+    scratch = STATE_DIR / 'work' / 'tutruth' / Path(tu_source).stem
+    scratch.mkdir(parents=True, exist_ok=True)
+
+    def verify(names_: List[str]) -> Dict[str, bool]:
+        """Direct oracle verdicts on the current state (no cache): prologue + block per unit."""
+        items = []
+        for n_ in names_:
+            path = scratch / f'{n_}.c'
+            path.write_text(tufile.gen_text(tf, n_))
+            items.append((f'{module}:{n_}', path))
+        res = oracle.check_many(p, items, 20)
+        return {n_: bool((r_ := res.get(f'{module}:{n_}')) and r_.ok and (r_.matched or r_.matched_pool)
+                         and oracle.unit_fully_matches(r_) is None) for n_ in names_}
 
     def rebuild() -> None:
         for b in tf.blocks:
             nb = derive(b.name)
             b.body = nb if nb is not None else original[b.name]
         tf.prologue = render_prologue()
-        for n_, u in units.items():
-            tufile.write_gen(p, u, tf)
 
     rebuild()
     names = [b.name for b in tf.blocks if b.name in units]
-    verdict = v.verdicts(p, names, module)
+    verdict = verify(names)
+    if names and sum(1 for n_ in names if not verdict.get(n_)) > len(names) // 2:
+        # the prologue itself is likely broken: keep the first compiler message for the report
+        first = next(n_ for n_ in names if not verdict.get(n_))
+        res0 = oracle.check(p, f'{module}:{first}', 20, source=scratch / f'{first}.c')
+        report['first_round_error'] = res0.error[-900:] if not res0.ok else f'{first}: {res0.percent}'
     failing = [n for n in names if not verdict.get(n)]
     for bname in list(failing):
         fixed = False
         forced.add(bname)
         rebuild()
-        if v.verdicts(p, [bname], module).get(bname):
+        if verify([bname]).get(bname):
             fixed = True
         else:
             forced.discard(bname)
@@ -574,7 +612,7 @@ def resolve(p: Project, tu_source: str, v, apply: bool = True) -> Dict[str, obje
                 choice[n] = k
                 rebuild()
                 affected = sorted(set(users[n]) | {bname})
-                vd = v.verdicts(p, affected, module)
+                vd = verify(affected)
                 if vd.get(bname) and all(vd.get(x) for x in affected if verdict.get(x)):
                     fixed = True  # the block matches and no other user regressed
                     break
@@ -583,31 +621,45 @@ def resolve(p: Project, tu_source: str, v, apply: bool = True) -> Dict[str, obje
             choice[n] = prev
         if fixed:
             rebuild()
-            verdict = v.verdicts(p, names, module)
+            verdict = verify(names)
             failing = [n for n in names if not verdict.get(n)]
     for n in symbols:
         report['truth'][n] = candidates[n][choice[n]]
     report['rewritten'] = [n for n in names if verdict.get(n)]
     report['reverted'] = failing
-    # a block that cannot be adapted keeps its original, self-contained form (still contested)
+    # a block that cannot be adapted keeps its committed, self-contained form (still contested)
     pristine = tufile.load(p, tu_source)
-    for bname in failing:
+
+    def restore(bname: str) -> None:
+        """The committed block, self-contained: under the committed prologue when it was not
+        self-contained before (its declarations are what it matched against)."""
         b = tf.get(bname)
-        b.body = pristine.get(bname).body
-        if 'noprologue' not in b.flags:
+        pb = pristine.get(bname)
+        b.flags = list(pb.flags)
+        if 'noprologue' in pb.flags:
+            b.body = pb.body
+        else:
+            b.body = pristine.prologue.rstrip('\n') + '\n\n' + pb.body
             b.flags.append('noprologue')
-    for n_, u in units.items():
-        tufile.write_gen(p, u, tf)
-    final = v.verdicts(p, names, module)
+
+    report['prologue'] = tf.prologue
+    for bname in failing:
+        report.setdefault('adapted', {})[bname] = tf.get(bname).body
+        res_ = oracle.check(p, f'{module}:{bname}', 12, source=scratch / f'{bname}.c')
+        report.setdefault('why', {})[bname] = (res_.error[-500:] if not res_.ok else
+                                              f'{res_.percent:.2f} ' + ' | '.join(l for l in res_.diff if l[0] in '?<>')[:600])
+        restore(bname)
+    final = verify(names)
     for n in [n for n, ok in final.items() if not ok]:
-        # a second opinion outside the batched path before a block is called failing
-        res = oracle.check(p, f'{module}:{n}', 20)
-        if res.ok and (res.matched or res.matched_pool) and oracle.unit_fully_matches(res) is None:
-            final[n] = True
+        restore(n)
+    final.update(verify([n for n, ok in final.items() if not ok]))
     report['final_matching'] = sum(1 for x in final.values() if x)
     report['final_failing'] = [n for n, ok in final.items() if not ok]
+    report['self_contained'] = [b.name for b in tf.blocks if 'noprologue' in b.flags]
     if apply and not report['final_failing']:
         tufile._write_atomic(tufile.tu_path(p, tu_source), tf.render())
+        for u in units.values():
+            tufile.write_gen(p, u, tf)
         # a rewritten block may renumber its private literals: keep pool mappings current
         for u in list(units.values()):
             if isinstance(u.get('pool'), dict):
@@ -620,9 +672,6 @@ def resolve(p: Project, tu_source: str, v, apply: bool = True) -> Dict[str, obje
                                 x['pool'] = dict(res.pool_map)
                         p.save_units(all_units)
                     report.setdefault('pool_remapped', []).append(u['symbols'][0])
-    elif apply == 'keep':
-        pass  # leave the generated units in the resolved state for inspection
-    else:
         for u in units.values():
-            tufile.write_gen(p, u, pristine)
+            tufile.write_gen(p, u, tf)
     return report
