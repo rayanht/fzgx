@@ -6500,3 +6500,6 @@ rel/main_rel/sel_static_disp/fn_1_150464.c:
 
 rel/main_rel/game/fn_1_411D4.c:
 	.text       start:0x000411D4 end:0x000412A0 align:4
+
+rel/main_rel/font/fn_1_49B70.c:
+	.text       start:0x00049B70 end:0x00049F08 align:4

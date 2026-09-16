@@ -682,6 +682,153 @@ u16 fn_1_499BC(const u8 *value) {
 }
 /* fzgx:end fn_1_499BC */
 
+/* fzgx:begin fn_1_49B70 noprologue */
+#include "types.h"
+
+typedef struct {
+    u8 pad_0[0x10];
+    u32 unk_10;
+    u32 unk_14;
+    u8 pad_18[0x10];
+    f32 unk_28;
+} UnkArg1;
+
+extern f32 lbl_1_rodata_10D8;
+extern f64 lbl_1_rodata_10E0[3];
+
+s32 fn_1_49B70(u8 *arg0, UnkArg1 *arg1) {
+    /* volatile: retail reloads the accumulator from the frame in every case arm */
+    volatile u32 flags;
+    u32 c1;
+    s32 i;
+    s32 shift;
+    s32 mode;
+    u8 *p;
+    s32 n;
+    s32 ret;
+
+    flags = 0;
+    if (arg0[0] != 0x2F) {
+        return 0;
+    }
+    c1 = arg0[1];
+    if (c1 == 0x62 || c1 == 0x6F) {
+        mode = (s32)(((0x62 - c1) | (c1 - 0x62)) >> 31);
+        p = arg0 + 2;
+        if (arg0[2] != 0x63) {
+            return 0;
+        }
+        if (p[7] != 0x2F) {
+            return 0;
+        }
+        n = 3;
+        shift = 0x1C;
+        ret = 9;
+    } else if (c1 == 0x74) {
+        p = arg0 + 2;
+        if (arg0[2] != 0x72) {
+            return 0;
+        }
+        if (p[3] != 0x2F) {
+            return 0;
+        }
+        mode = 2;
+        n = 1;
+        shift = 4;
+        ret = 5;
+    } else {
+        return 0;
+    }
+    for (i = 0; i < n * 2; i++, shift -= 4) {
+        switch (p[i + 1]) {
+        case 0x30:
+            break;
+        case 0x31:
+            flags |= 1 << shift;
+            break;
+        case 0x32:
+            flags |= 2 << shift;
+            break;
+        case 0x33:
+            flags |= 3 << shift;
+            break;
+        case 0x34:
+            flags |= 4 << shift;
+            break;
+        case 0x35:
+            flags |= 5 << shift;
+            break;
+        case 0x36:
+            flags |= 6 << shift;
+            break;
+        case 0x37:
+            flags |= 7 << shift;
+            break;
+        case 0x38:
+            flags |= 8 << shift;
+            break;
+        case 0x39:
+            flags |= 9 << shift;
+            break;
+        case 0x61:
+            flags |= 0xA << shift;
+            break;
+        case 0x41:
+            flags |= 0xA << shift;
+            break;
+        case 0x62:
+            flags |= 0xB << shift;
+            break;
+        case 0x42:
+            flags |= 0xB << shift;
+            break;
+        case 0x63:
+            flags |= 0xC << shift;
+            break;
+        case 0x43:
+            flags |= 0xC << shift;
+            break;
+        case 0x64:
+            flags |= 0xD << shift;
+            break;
+        case 0x44:
+            flags |= 0xD << shift;
+            break;
+        case 0x65:
+            flags |= 0xE << shift;
+            break;
+        case 0x45:
+            flags |= 0xE << shift;
+            break;
+        case 0x66:
+            flags |= 0xF << shift;
+            break;
+        case 0x46:
+            flags |= 0xF << shift;
+            break;
+        }
+    }
+    switch (mode) {
+    case 0:
+        if (arg1 != NULL) {
+            arg1->unk_10 = flags;
+        }
+        break;
+    case 1:
+        if (arg1 != NULL) {
+            arg1->unk_14 = flags;
+        }
+        break;
+    case 2:
+        if (arg1 != NULL) {
+            arg1->unk_28 = (f32)flags / lbl_1_rodata_10D8;
+        }
+        break;
+    }
+    return ret;
+}
+/* fzgx:end fn_1_49B70 */
+
 /* fzgx:begin fn_1_4AC20 */
 typedef struct {
     u32 unk_0;
