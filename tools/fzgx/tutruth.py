@@ -198,13 +198,13 @@ def hoist_private_types(tf: tufile.TuFile, truths: Dict[str, str], report: Dict[
     colliding ones)."""
     private: Dict[str, List[str]] = {}
     for b in tf.blocks:
-        for t in set(re.findall(r'^\}\s*([A-Za-z_]\w*)\s*;', b.body, re.M)) | set(re.findall(r'^typedef\s+struct\s+([A-Za-z_]\w*)\s*\{', b.body, re.M)) | set(re.findall(r'^struct\s+([A-Za-z_]\w*)\s*\{', b.body, re.M)):
+        for t in set(re.findall(r'\}\s*([A-Za-z_]\w*)\s*;', b.body, re.M)) | set(re.findall(r'^typedef\s+struct\s+([A-Za-z_]\w*)\s*\{', b.body, re.M)) | set(re.findall(r'^struct\s+([A-Za-z_]\w*)\s*\{', b.body, re.M)):
             private.setdefault(t, []).append(b.name)
     hoisted: List[Tuple[str, str]] = []
     done: set = set()
 
     def in_prologue(t: str) -> bool:
-        return bool(re.search(r'^\}\s*' + re.escape(t) + r'\s*;', tf.prologue, re.M)
+        return bool(re.search(r'\}\s*' + re.escape(t) + r'\s*;', tf.prologue, re.M)
                     or re.search(r'^(?:typedef\s+)?struct\s+' + re.escape(t) + r'\s*\{', tf.prologue, re.M))
 
     def hoist(t: str, stack: Tuple[str, ...] = ()) -> None:
@@ -228,6 +228,12 @@ def hoist_private_types(tf: tufile.TuFile, truths: Dict[str, str], report: Dict[
         span = type_definition_span(b.body, t)  # offsets may have moved with an inner hoist
         text = b.body[span[0]:span[1]]
         b.body = b.body[:span[0]] + b.body[span[1]:]
+        # a forward typedef of the tag (`typedef struct X X;`, self-referential structs) goes first
+        fwd = re.search(r'^typedef\s+struct\s+' + re.escape(t) + r'\s+' + re.escape(t) + r'\s*;\s*\n?', b.body, re.M)
+        if fwd:
+            b.body = b.body[:fwd.start()] + b.body[fwd.end():]
+        if (fwd or re.search(r'\b' + re.escape(t) + r'\s*\*', text)) and not re.search(r'^typedef\s+struct\s+' + re.escape(t) + r'\s+' + re.escape(t) + r'\s*;', tf.prologue, re.M) and text.startswith('struct'):
+            tf.prologue = tf.prologue.rstrip('\n') + f'\n\ntypedef struct {t} {t};\n'
         tf.prologue = tf.prologue.rstrip('\n') + '\n\n' + text.rstrip('\n') + '\n'
         hoisted.append((t, b.name))
         done.add(t)
@@ -358,6 +364,23 @@ def permute_args(body: str, name: str, old: List[str], new: List[str]) -> Option
     return out
 
 
+def knr_definition(body: str, name: str) -> str:
+    """The definition of `name` in non-prototype (K&R) form, so callers may pass fewer
+    arguments after it (fn_1_5448C's lab_unused parameters; its code is unchanged)."""
+    m = re.search(r'^([A-Za-z_][\w \*]*?)\b' + re.escape(name) + r'\s*\(([^;{}()]*)\)\s*\{', body, re.M)
+    if not m or m.group(2).strip() in ('', 'void'):
+        return body
+    params = [x.strip() for x in m.group(2).split(',')]
+    names, decls = [], []
+    for prm in params:
+        pm = re.search(r'([A-Za-z_]\w*)\s*((?:\[[^\]]*\])*)$', prm)
+        if not pm or prm == '...':
+            return body
+        names.append(pm.group(1))
+        decls.append(prm + ';')
+    return body[:m.start()] + f'{m.group(1)}{name}({", ".join(names)})\n' + '\n'.join(decls) + '\n{' + body[m.end():]
+
+
 def drop_leading_args(body: str, name: str, k: int) -> str:
     """Calls that passed k more leading arguments than the truth declares."""
     out = body
@@ -374,10 +397,20 @@ def drop_leading_args(body: str, name: str, k: int) -> str:
     return out
 
 
-def resolve(p: Project, tu_source: str, v, apply: bool = True) -> Dict[str, object]:
+def resolve(p: Project, tu_source: str, v, apply: bool = True,
+            extra_blocks: Optional[Dict[str, str]] = None) -> Dict[str, object]:
+    """`extra_blocks` ({name: body}) join the TU as unverified members (unmatched functions'
+    best bodies): their declarations are reconciled and adapted like everyone else's, they
+    are never restored, and the result is only reported, never written."""
     module = tu_source.split('/')[1] if tu_source.startswith('rel/') else 'main'
     units = {u['symbols'][0]: u for u in p.load_units() if u.get('tu') == tu_source}
     tf = tufile.load(p, tu_source)
+    extra_names = set()
+    if extra_blocks:
+        apply = False
+        for name_, body_ in extra_blocks.items():
+            tf.blocks.append(tufile.Block(name_, body_, []))
+            extra_names.add(name_)
     report: Dict[str, object] = {'tu': tu_source, 'truth': {}, 'rewritten': [], 'reverted': [], 'unresolved': {}}
     tf.prologue = split_multi(join_declarations(tf.prologue))
     for b in tf.blocks:
@@ -408,9 +441,9 @@ def resolve(p: Project, tu_source: str, v, apply: bool = True) -> Dict[str, obje
                         hdecl.setdefault(n, hl.strip())
     # block typedefs that collide with a header or prologue typedef: an identical definition
     # is dropped (the prologue carries it), a different one gets the block's prefix
-    prologue_typedefs = set(re.findall(r'^\}\s*([A-Za-z_]\w*)\s*;', tf.prologue, re.M)) | set(re.findall(r'^(?:typedef\s+)?struct\s+([A-Za-z_]\w*)\s*\{', tf.prologue, re.M))
+    prologue_typedefs = set(re.findall(r'\}\s*([A-Za-z_]\w*)\s*;', tf.prologue, re.M)) | set(re.findall(r'^(?:typedef\s+)?struct\s+([A-Za-z_]\w*)\s*\{', tf.prologue, re.M))
     for b in tf.blocks:
-        for t in sorted((set(re.findall(r'^\}\s*([A-Za-z_]\w*)\s*;', b.body, re.M)) | set(re.findall(r'^(?:typedef\s+)?struct\s+([A-Za-z_]\w*)\s*\{', b.body, re.M))) & (set(header_typedefs) | prologue_typedefs)):
+        for t in sorted((set(re.findall(r'\}\s*([A-Za-z_]\w*)\s*;', b.body, re.M)) | set(re.findall(r'^(?:typedef\s+)?struct\s+([A-Za-z_]\w*)\s*\{', b.body, re.M))) & (set(header_typedefs) | prologue_typedefs)):
             span = type_definition_span(b.body, t)
             pspan = type_definition_span(tf.prologue, t)
             if span and pspan and re.sub(r'\s+', ' ', b.body[span[0]:span[1]]).strip() == re.sub(r'\s+', ' ', tf.prologue[pspan[0]:pspan[1]]).strip():
@@ -419,6 +452,35 @@ def resolve(p: Project, tu_source: str, v, apply: bool = True) -> Dict[str, obje
             else:
                 b.body = re.sub(r'\b' + re.escape(t) + r'\b', f'{b.name}_{t}', b.body)
                 report.setdefault('renamed_typedefs', []).append((b.name, t))
+    # the same private type defined by several blocks: identical text is hoisted once and
+    # dropped from the blocks, differing definitions get each block's prefix
+    defs_by_type: Dict[str, List[Tuple[str, str]]] = {}
+    for b in tf.blocks:
+        for t in set(re.findall(r'\}\s*([A-Za-z_]\w*)\s*;', b.body, re.M)) | set(re.findall(r'^(?:typedef\s+)?(?:struct|union)\s+([A-Za-z_]\w*)\s*\{', b.body, re.M)):
+            span = type_definition_span(b.body, t)
+            if span:
+                defs_by_type.setdefault(t, []).append((b.name, re.sub(r'\s+', ' ', b.body[span[0]:span[1]]).strip()))
+    for t, owners in defs_by_type.items():
+        if len(owners) < 2:
+            continue
+        texts = {text for _, text in owners}
+        if len(texts) == 1:
+            first = True
+            for bname, _ in owners:
+                b = tf.get(bname)
+                span = type_definition_span(b.body, t)
+                if not span:
+                    continue
+                if first:
+                    tf.prologue = tf.prologue.rstrip('\n') + '\n\n' + b.body[span[0]:span[1]].rstrip('\n') + '\n'
+                    first = False
+                b.body = b.body[:span[0]] + b.body[span[1]:]
+            report.setdefault('shared_types', []).append(t)
+        else:
+            for bname, _ in owners:
+                b = tf.get(bname)
+                b.body = re.sub(r'\b' + re.escape(t) + r'\b', f'{bname}_{t}', b.body)
+            report.setdefault('renamed_typedefs', []).append(('*', t))
     pdecl: Dict[str, str] = {}
     kept_pro = []
     for ln in tf.prologue.splitlines():
@@ -442,12 +504,13 @@ def resolve(p: Project, tu_source: str, v, apply: bool = True) -> Dict[str, obje
     symbols = list(dict.fromkeys(list(variants) + list(pdecl)))
     private_types = set()
     for b in tf.blocks:
-        private_types |= set(re.findall(r'^\}\s*([A-Za-z_]\w*)\s*;', b.body, re.M)) | set(re.findall(r'^(?:typedef\s+)?struct\s+([A-Za-z_]\w*)\s*\{', b.body, re.M))
+        private_types |= set(re.findall(r'\}\s*([A-Za-z_]\w*)\s*;', b.body, re.M)) | set(re.findall(r'^(?:typedef\s+)?struct\s+([A-Za-z_]\w*)\s*\{', b.body, re.M))
     known_types = SCALAR | set(header_typedefs) | private_types | {'struct', 'union', 'enum', 'extern', 'const', 'volatile', 'static', 'inline', 'unsigned', 'signed'}
 
     def admissible(decl: str) -> bool:
         sig = _sig(decl)
-        words = set(re.findall(r'[A-Za-z_]\w*', sig[0] + ' ' + ' '.join(sig[2]))) if sig else set(re.findall(r'[A-Za-z_]\w*', decl.split('=')[0]))
+        stripped = re.sub(r'\[[^\]]*\]', '', decl.split('=')[0])  # array dimensions are not types
+        words = set(re.findall(r'(?<![\w])[A-Za-z_]\w*', sig[0] + ' ' + ' '.join(sig[2]))) if sig else set(re.findall(r'(?<![\w])[A-Za-z_]\w*', stripped))
         if not sig:
             words -= {tutidy._decl_name(decl)}
         return all(w in known_types or w == '...' for w in words)
@@ -500,7 +563,10 @@ def resolve(p: Project, tu_source: str, v, apply: bool = True) -> Dict[str, obje
                     break
         if n in definitions:
             # the definer must agree with the prologue: only its own signature or a retyping of it
-            c = [(src, t) for src, t in c if src in ('definition', 'definition-retyped')] or c[:1]
+            c = [(src, t) for src, t in c if src in ('header', 'definition', 'definition-retyped')] or c[:1]
+        if n in hdecl and admissible(hdecl[n]):
+            # a header declaration is the file's truth for everyone, definers included
+            c = [('header', hdecl[n])]
         candidates[n] = c
     # users of a symbol: blocks that declared it privately, called it, or defined it
     users: Dict[str, List[str]] = {}
@@ -514,6 +580,22 @@ def resolve(p: Project, tu_source: str, v, apply: bool = True) -> Dict[str, obje
         return where.get(n, {}).get(bname) or pdecl.get(n)
 
     forced: set = set()
+    # definitions whose callers pass fewer arguments than they declare (unused trailing
+    # parameters a match needed): the definition goes non-prototype so the calls stay legal
+    knr_defs: set = set()
+    for n in symbols:
+        if n not in definitions:
+            continue
+        st0 = _sig(definitions[n])
+        if not st0 or '...' in st0[2]:
+            continue
+        for b in tf.blocks:
+            least = min_call_args(original[b.name], n)
+            if least is not None and least < len(st0[2]):
+                knr_defs.add(n)
+
+    definer_of = {n: next((bn for bn, ob in original.items() if re.search(r'\b' + re.escape(n) + r'\s*\([^;{}()]*\)\s*\{', ob)), None)
+                  for n in symbols if n in definitions}
 
     def derive(bname: str) -> Optional[str]:
         body = original[bname]
@@ -521,9 +603,11 @@ def resolve(p: Project, tu_source: str, v, apply: bool = True) -> Dict[str, obje
             if bname not in users[n]:
                 continue
             truth = candidates[n][choice[n]][1]
-            if n in definitions and bname == next((b.name for b in tf.blocks if re.search(r'\b' + re.escape(n) + r'\s*\([^;{}()]*\)\s*\{', b.body)), None):
+            if n in definitions and bname == definer_of.get(n):
                 # the definer: its own private declaration goes, its signature is the truth
                 body = '\n'.join(x for x in body.splitlines() if not (tutidy.DECL_LINE_RE.match(x) and tutidy._decl_name(x) == n)) + '\n'
+                if n in knr_defs:
+                    body = knr_definition(body, n)
                 if candidates[n][choice[n]][0] == 'definition-retyped':
                     st_ = _sig(truth)
                     dm = re.search(r'^([A-Za-z_][\w \*]*?)\b' + re.escape(n) + r'\s*\(([^;{}()]*)\)\s*\{', body, re.M)
@@ -553,7 +637,9 @@ def resolve(p: Project, tu_source: str, v, apply: bool = True) -> Dict[str, obje
                         knr.add(n)
             if n in hdecl and candidates[n][choice[n]][0] == 'header':
                 continue
-            if n in knr and st:
+            if n in hdecl and candidates[n][choice[n]][0] == 'header':
+                continue
+            if (n in knr or n in knr_defs) and st:
                 lines.append(f'extern {st[0]} {n}();')
             elif n in definitions and candidates[n][choice[n]][0] == 'definition':
                 lines.append(truth)  # the TU's own definition, declared ahead of its callers
@@ -588,7 +674,7 @@ def resolve(p: Project, tu_source: str, v, apply: bool = True) -> Dict[str, obje
         tf.prologue = render_prologue()
 
     rebuild()
-    names = [b.name for b in tf.blocks if b.name in units]
+    names = [b.name for b in tf.blocks if b.name in units and b.name not in extra_names]
     verdict = verify(names)
     if names and sum(1 for n_ in names if not verdict.get(n_)) > len(names) // 2:
         # the prologue itself is likely broken: keep the first compiler message for the report
@@ -656,6 +742,16 @@ def resolve(p: Project, tu_source: str, v, apply: bool = True) -> Dict[str, obje
     report['final_matching'] = sum(1 for x in final.values() if x)
     report['final_failing'] = [n for n, ok in final.items() if not ok]
     report['self_contained'] = [b.name for b in tf.blocks if 'noprologue' in b.flags]
+    if extra_names:
+        report['extra_verdicts'] = verify(sorted(extra_names))
+        compiles = {}
+        for n_ in sorted(extra_names):
+            res_ = oracle.check(p, f'{module}:{n_}', 0, source=scratch / f'{n_}.c')
+            compiles[n_] = bool(res_.ok)
+            if not res_.ok:
+                report.setdefault('extra_errors', {})[n_] = res_.error[-300:]
+        report['extra_compiles'] = compiles
+        report['tu_text'] = tf.render()
     if apply and not report['final_failing']:
         tufile._write_atomic(tufile.tu_path(p, tu_source), tf.render())
         for u in units.values():

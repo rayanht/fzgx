@@ -85,10 +85,8 @@ typedef struct Resource {
 struct fn_1_530C8_lbl_1_rodata_282C {
     f32 unk_0;
 };
-extern f32 fn_1_4B1D4(s32 mode, s32 value);
-extern const f64 lbl_1_rodata_10F8;
-extern s32 fn_8008077C(u32 arg0, u32 arg1, u32 arg2);
-extern u8 lbl_1_rodata_FD0[];
+
+struct FzgxCopy_88 { u32 words[22]; };
 extern void *lbl_801A6D00;
 extern void fn_1_A71CC(void);
 extern void fn_800724C8(void);
@@ -123,20 +121,23 @@ extern void fn_80008BA8(u32 arg0, u32 arg1, u32 arg2);
 extern u32 fn_1_54298(void);
 extern u32 fn_1_542A8(void);
 extern f32 fn_1_542B8(void);
+extern f32 fn_1_4B1D4(s32 mode, s32 value);
+extern const f64 lbl_1_rodata_10F8;
+extern s32 fn_8008077C(u32 arg0, u32 arg1, u32 arg2);
+extern u8 lbl_1_rodata_FD0[];
 extern u8 *lbl_801A66CC;
 extern const f32 lbl_1_rodata_2870;
 extern const f64 lbl_1_rodata_2878;
 extern void lbl_8006E1B0();
 extern f32 lbl_8006D0B4(f32 value);
 extern void **fn_1_54448(s32 arg0);
-extern void * fn_1_548AC(u32);
+extern void * fn_1_548AC(u32 amount);
 extern void fn_1_55C48(void);
 extern u16 fn_1_7BE94(void);
 extern void fn_1_5489C(void **arg0, void **arg1);
 extern void fn_1_56530(void);
 extern void lbl_8006DB74(void *value);
 extern void lbl_8006DD14(void *value, void *object);
-extern int fn_1_4F734(FontDrawPacket *input);
 extern void fn_1_4E500(void);
 extern void fn_1_48D80(void *value);
 extern void fn_1_4E6F4(void);
@@ -148,7 +149,6 @@ extern s32 fn_1_4EB74(fn_1_4EB74_FontObject *self);
 extern f64 lbl_1_rodata_2778[2];
 extern u16 fn_1_48690(u32 unused);
 extern u16 fn_1_486C4(u32 value);
-extern void fn_1_51678(FontDrawPacket *p, u32 image, s16 x, s16 y, s16 width, s16 height);
 extern void fn_80038F10(f32* out);
 extern u16 fn_1_A5D88(void);
 extern u16 fn_1_A5DB0(void);
@@ -1007,7 +1007,6 @@ void fn_1_4D274(u32 *object, f32 value) {
 /* fzgx:end fn_1_4D274 */
 
 /* fzgx:begin fn_1_4D494 */
-
 void fn_1_4D494(void) {
     Obj_1_bss_4BA44 *bss = &lbl_1_bss_4BA44;
     f32 *rodata = (f32 *)lbl_1_rodata_FD0;
@@ -1163,7 +1162,6 @@ struct fn_1_4DEC0_Copy88 { u32 a[22]; };
 
 
 
-struct FzgxCopy_88 { u32 words[22]; };
 void fn_1_4DEC0(void) {
     struct FzgxCopy_88 loc_8;
     s32 sp4;
@@ -1407,7 +1405,6 @@ struct fn_1_4E92C_lbl_801A6D00 {
     u32 unk_0;
 };
 
-struct FzgxCopy_88 { u32 words[22]; };
 s32 fn_1_4E92C(s32 arg0, u32 arg1, s16 arg2, s16 arg3, u32 arg4) {
     struct FzgxCopy_88 loc_60;
     struct FzgxCopy_88 loc_8;
@@ -2607,7 +2604,12 @@ typedef struct {
 
 #pragma opt_common_subs on
 static inline f32 fn_1_5448C_read_pointer(FontGlobals * owner) { return owner->value_4c; }
-u32 fn_1_5448C(void *arg, u32 lab_unused0, u32 lab_unused1, u32 lab_unused2) {
+u32 fn_1_5448C(arg, lab_unused0, lab_unused1, lab_unused2)
+void *arg;
+u32 lab_unused0;
+u32 lab_unused1;
+u32 lab_unused2;
+{
     f32 fzgx_live_;
     f32 fzgx_live;
     Vec3 vec;
@@ -3159,7 +3161,6 @@ void fn_1_557C4(void *value) {
 /* fzgx:end fn_1_557C4 */
 
 /* fzgx:begin fn_1_55924 */
-
 typedef struct {
     u8 pad_00[0x4];
     void *vtable;

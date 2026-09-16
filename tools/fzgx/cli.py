@@ -103,6 +103,12 @@ def cmd_sweep(a, p):
               a.families.split(',') if a.families else None, a.land, a.symbols or None)
 
 
+def cmd_tutruth(a, p):
+    from . import finish, tutruth
+    r = tutruth.resolve(p, a.tu, finish.Verifier(p), apply=not a.dry_run)
+    print(json.dumps({k: v for k, v in r.items() if k not in ('prologue', 'adapted', 'tu_text', 'truth')}, indent=1))
+
+
 def cmd_uncarve(a, p):
     from . import uncarve
     if a.stubs:
@@ -543,6 +549,8 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("symbols", nargs="*"); s.add_argument("--min-percent", type=float, default=90.0); s.add_argument("--max-percent", type=float, default=100.0)
     s.add_argument("--rounds", type=int, default=4); s.add_argument("--output", type=Path); s.add_argument("--families", help="comma-separated family names (default: all)")
     s.add_argument("--land", action="store_true")
+    s = sub.add_parser("tutruth", help="one truth per symbol for a TU file: candidate search with verified call-site adaptations; blocks that cannot follow stay self-contained"); s.set_defaults(fn=cmd_tutruth)
+    s.add_argument("tu", help="e.g. rel/main_rel/font.c"); s.add_argument("--dry-run", action="store_true")
     s = sub.add_parser("uncarve", help="drop units that have no matched code (rejected, or every stub with --stubs); re-splits"); s.set_defaults(fn=cmd_uncarve)
     s.add_argument("sources", nargs="*"); s.add_argument("--stubs", action="store_true")
     s = sub.add_parser("verify", help="relink once for all accepted units, verify hashes, commit; bisect on failure"); s.set_defaults(fn=cmd_verify)
