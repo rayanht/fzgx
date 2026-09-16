@@ -623,6 +623,36 @@ void fn_1_A2E5C(s32 arg0, s32 arg1) {
 }
 /* fzgx:end fn_1_A2E5C */
 
+/* fzgx:begin fn_1_A358C */
+extern u32 lbl_1_bss_6EA98;
+extern s32 fn_1_3F864(void);
+extern u32 fn_1_864E8(s32 arg0);
+extern void fn_80067898(u32 arg0);
+#pragma opt_propagation off
+#pragma opt_lifetimes off
+void fn_1_A358C(s32 arg0) {
+    u8* base = (u8*)&lbl_1_bss_6EA98;
+    u8* entry;
+    u32* flags;
+    s32 id = arg0;
+    s32 i;
+    if (fn_1_3F864() != 0) {
+        entry = base + 0x74C;
+        flags = (u32*)(base + 0x830);
+        i = 0;
+        while (i < (s8)base[0x82C]) {
+            if (id == entry[1] && entry[2] != 0 && (fn_1_864E8(id) & 0x400) != 0 &&
+                (*flags & 0x400) == 0 && base[0x740] == 0 && *(u32*)(base + 0x744) <= 0x2D) {
+                fn_80067898(0xA9091000);
+            }
+            entry += 0x14;
+            flags++;
+            i++;
+        }
+    }
+}
+/* fzgx:end fn_1_A358C */
+
 /* fzgx:begin fn_1_A3C78 noprologue */
 #include "types.h"
 #include "rel/main_rel/sound.h"

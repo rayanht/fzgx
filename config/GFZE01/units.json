@@ -47865,6 +47865,17 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/sound/fn_1_A358C.c",
+    "symbols": [
+      "fn_1_A358C"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/sound.c"
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/sound/fn_1_A3C78.c",
     "symbols": [
       "fn_1_A3C78"
