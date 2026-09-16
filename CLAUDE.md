@@ -551,6 +551,27 @@ Rules that hold for everyone:
   ("Root causes measured over the whole stuck corpus"). `-sym on` compiles are byte-identical
   and give the `.line` table (`tools/fzgx/linemap.py`) that the engine uses to order and target
   candidates by implicated statement.
+- Fast repair path (2026-09-16): `fzgx sweep --min-percent N [--max-percent M] --rounds 4 --land`
+  runs every cheap family (evidence, source, declaration moves, section layout, line-attributed
+  flips/inlines) over every saved body in the range with one `compile_many` per module per round,
+  word scores for ranking and objdiff only on winners: 686 bodies at 90%+ took 17 minutes for four
+  rounds (5 matches, 167 improved); the pool pipeline over 405 private-literal bodies took 97 s
+  (5 matches, 258 improved). Use it before `fzgx fixup`; the engine's per-seed rounds are two
+  orders of magnitude slower on the same corpus. `--land` submits exact and pool matches through
+  `api.submit` and saves improvements as attempts (`api.claim --max-attempts 999` / `release`);
+  `fzgx verify` then links and commits. Census tooling: `.fzgx/fullrows.pickle` (full retail/ours
+  rows for every stuck body, 100 s to rebuild with `oracle.check_many`) answers group questions
+  (frame decomposition, parameter registers, first structural divergence) without re-running checks.
+- Laws measured 2026-09-16 (see docs/MWCC_IDIOMS.md "Laws to apply first"): a parameter that retail
+  keeps in a callee-saved register above a declared local is a local copy of the parameter declared
+  at that position (`fixup_evidence.parameter_copies`, capture-verified, fn_1_A358C landed); the
+  first callee-saved claims go to the webs whose interference degree survives simplification
+  (>= K=29), only then in descending vreg order (`simplify_replay.py DIR 0001 32:+6` measures the
+  missing degree); the lifter's byte-addressed pool reads `*(f32 *)((u8 *)pool + off)` are pool
+  reads (native literals + primer, each read integer word its own one-element table object); a
+  constant stored into an `s8`/`char` array element folds to the element's signedness (`li r0, -1`),
+  retail's `li r0, 0xff` is a store through a `u8` lvalue (fn_1_8E3A4). A pool match
+  (`matched_pool`) is accepted by `api.submit` but reported unmatched by `api.check`.
 - Near-miss fixup must preserve a proven store-value correction in its search
   frontier even when register differences initially lower its word score. Value-flow
   diagnostics invalidate unsupported regions locally; mixed diffs must not disable

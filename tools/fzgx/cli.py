@@ -97,6 +97,12 @@ def cmd_stuck(a, p):
         print(stuck.summary(out))
 
 
+def cmd_sweep(a, p):
+    from . import sweep
+    sweep.run(p, a.min_percent, a.max_percent, a.output, a.rounds,
+              a.families.split(',') if a.families else None, a.land, a.symbols or None)
+
+
 def cmd_uncarve(a, p):
     from . import uncarve
     if a.stubs:
@@ -533,6 +539,10 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--min-percent", type=float, default=80.0); s.add_argument("--module"); s.add_argument("--workers", type=int, default=12)
     s.add_argument("--max-size", type=int, help="only functions up to N bytes")
     s.add_argument("--json", action="store_true")
+    s = sub.add_parser("sweep", help="fast repair path: every cheap family over every saved body in a range, one batched compile per round; --land submits matches and saves improvements"); s.set_defaults(fn=cmd_sweep)
+    s.add_argument("symbols", nargs="*"); s.add_argument("--min-percent", type=float, default=90.0); s.add_argument("--max-percent", type=float, default=100.0)
+    s.add_argument("--rounds", type=int, default=4); s.add_argument("--output", type=Path); s.add_argument("--families", help="comma-separated family names (default: all)")
+    s.add_argument("--land", action="store_true")
     s = sub.add_parser("uncarve", help="drop units that have no matched code (rejected, or every stub with --stubs); re-splits"); s.set_defaults(fn=cmd_uncarve)
     s.add_argument("sources", nargs="*"); s.add_argument("--stubs", action="store_true")
     s = sub.add_parser("verify", help="relink once for all accepted units, verify hashes, commit; bisect on failure"); s.set_defaults(fn=cmd_verify)
