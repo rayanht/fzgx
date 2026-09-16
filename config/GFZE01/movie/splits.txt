@@ -38,3 +38,6 @@ rel/movie/movie/fn_5_3E74.c:
 
 rel/movie/_prolog/_epilog.c:
 	.text       start:0x00000280 end:0x00000320 align:4
+
+rel/movie/_prolog/fn_5_1404.c:
+	.text       start:0x00001404 end:0x0000169C align:4

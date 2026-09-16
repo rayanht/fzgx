@@ -6464,3 +6464,12 @@ rel/main_rel/phys/fn_1_E39F0.c:
 
 rel/main_rel/sound/fn_1_A358C.c:
 	.text       start:0x000A358C end:0x000A3654 align:4
+
+rel/main_rel/prog/fn_1_A6E68.c:
+	.text       start:0x000A6E68 end:0x000A6F10 align:4
+
+rel/main_rel/memcard/fn_1_C023C.c:
+	.text       start:0x000C023C end:0x000C0374 align:4
+
+rel/main_rel/memcard/fn_1_C0374.c:
+	.text       start:0x000C0374 end:0x000C0510 align:4

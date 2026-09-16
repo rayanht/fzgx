@@ -42291,6 +42291,39 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/memcard/fn_1_C023C.c",
+    "symbols": [
+      "fn_1_C023C"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/memcard.c",
+    "pool": {
+      "...rodata.0": "lbl_1_rodata_4AE0",
+      "@11": "lbl_1_rodata_4CB0"
+    }
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/memcard/fn_1_C0374.c",
+    "symbols": [
+      "fn_1_C0374"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/memcard.c",
+    "pool": {
+      "...rodata.0": "lbl_1_rodata_4AE0",
+      "@38": "lbl_1_rodata_4D1C",
+      "@13": "lbl_1_rodata_4CC0",
+      "@11": "lbl_1_rodata_4CB0",
+      "@9": "lbl_1_rodata_4CA8"
+    }
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/memcard/fn_1_C0510.c",
     "symbols": [
       "fn_1_C0510"
@@ -43341,6 +43374,21 @@
       "@35": "lbl_1_rodata_49E0",
       "@32": "lbl_1_rodata_49D8",
       "@33": "lbl_1_rodata_49DC"
+    }
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/prog/fn_1_A6E68.c",
+    "symbols": [
+      "fn_1_A6E68"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/prog.c",
+    "pool": {
+      "...rodata.0": "lbl_1_rodata_48C8",
+      "@18": "lbl_1_rodata_49E0"
     }
   },
   {
@@ -50027,6 +50075,20 @@
     "mw_version": null,
     "extra_cflags": [],
     "tu": "rel/movie/_prolog.c"
+  },
+  {
+    "module": "movie",
+    "source": "rel/movie/_prolog/fn_5_1404.c",
+    "symbols": [
+      "fn_5_1404"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/movie/_prolog.c",
+    "pool": {
+      "...rodata.0": "lbl_5_rodata_0"
+    }
   },
   {
     "module": "movie",
@@ -57001,6 +57063,23 @@
   },
   {
     "module": "pilotpoint",
+    "source": "rel/pilotpoint/pilotpoint/fn_14_C518.c",
+    "symbols": [
+      "fn_14_C518"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/pilotpoint/pilotpoint.c",
+    "pool": {
+      "...rodata.0": "lbl_14_rodata_0",
+      "@9": "lbl_14_rodata_0+0x10",
+      "@16": "lbl_14_rodata_30",
+      "@35": "lbl_14_rodata_60"
+    }
+  },
+  {
+    "module": "pilotpoint",
     "source": "rel/pilotpoint/pilotpoint/fn_14_C69C.c",
     "symbols": [
       "fn_14_C69C"
@@ -61478,6 +61557,54 @@
     "mw_version": null,
     "extra_cflags": [],
     "tu": "rel/title/title.c"
+  },
+  {
+    "module": "title",
+    "source": "rel/title/title/fn_8_6F1C.c",
+    "symbols": [
+      "fn_8_6F1C"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/title/title.c",
+    "pool": {
+      "...rodata.0": "lbl_8_rodata_160",
+      "@13": "lbl_8_rodata_188",
+      "@5": "lbl_8_rodata_160",
+      "@8": "lbl_8_rodata_160+0x10",
+      "@7": "lbl_8_rodata_160+0xC",
+      "@6": "lbl_8_rodata_160+0x8",
+      "@22": "lbl_8_rodata_194",
+      "@23": "lbl_8_rodata_198",
+      "@9": "lbl_8_rodata_160+0x18",
+      "@12": "lbl_8_rodata_160+0x24",
+      "@11": "lbl_8_rodata_160+0x20"
+    }
+  },
+  {
+    "module": "title",
+    "source": "rel/title/title/fn_8_79C0.c",
+    "symbols": [
+      "fn_8_79C0"
+    ],
+    "status": "matching",
+    "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/title/title.c",
+    "pool": {
+      "...rodata.0": "lbl_8_rodata_160",
+      "@13": "lbl_8_rodata_188",
+      "@5": "lbl_8_rodata_160",
+      "@8": "lbl_8_rodata_160+0x10",
+      "@7": "lbl_8_rodata_160+0xC",
+      "@6": "lbl_8_rodata_160+0x8",
+      "@22": "lbl_8_rodata_194",
+      "@23": "lbl_8_rodata_198",
+      "@9": "lbl_8_rodata_160+0x18",
+      "@12": "lbl_8_rodata_160+0x24",
+      "@11": "lbl_8_rodata_160+0x20"
+    }
   },
   {
     "module": "title",
