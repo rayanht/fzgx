@@ -15,6 +15,7 @@ from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
 from . import api, fixup_evidence, fixup_layout, fixup_source, linemap, oracle, stuck
+from .ledger import Ledger
 from .project import Project, STATE_DIR
 
 Candidate = Tuple[str, str]
@@ -229,8 +230,10 @@ def land(p: Project, rep: Dict[str, dict], label: str) -> Dict[str, list]:
         work = p.work_path(s)
         work.parent.mkdir(parents=True, exist_ok=True)
         work.write_text(body)
-        ck = api.check(p, s, 0)
-        if r.get('matched') and ck.get('matched'):
+        # the sweep already holds this body's objdiff verdict: record it instead of a second
+        # check (5 s each); `submit` re-verifies matches itself
+        Ledger().bump_checks(api._key(p, s), pct)
+        if r.get('matched'):
             sub = api.submit(p, s, agent=agent, message=f'{s}: {label}', harness='deterministic')
             if sub.get('ok'):
                 submitted.append(s)
