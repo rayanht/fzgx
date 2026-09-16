@@ -1,6 +1,31 @@
 Starter notes on CodeWarrior for GameCube 1.x codegen at `-O4,p`. Grow this
 file from what actually unblocked functions; keep each item one or two lines.
 
+## Laws to apply first (probe-verified, 2026-09-15)
+
+- **Paired-single vectors**: `psq_l f, off(rN), 0, qr0` / `psq_st` / `ps_sub` / `ps_add` /
+  `ps_muls0` / `ps_madds0` / `ps_merge00` in retail are inline-assembly helpers. Write
+  `#include "psvec.h"` and call `psvec_sub(a, b, out)`, `psvec_add(a, b, out)`,
+  `psvec_scale(a, s, out)`, `psvec_scale_add(acc, v, s, out)` (out = acc + v*s),
+  `psvec_sub_scale_add(a, b, s, d, out)` (d = a - b; out = b + d*s) and
+  `psvec_set(out, z, y, x)` (note the z, y, x order) with `void *` addresses such as
+  `&v->x`. Never write the three scalar component statements: MWCC can only produce
+  the indexed `psq_lx` forms from C, so scalar or `__vec2x32float__` code can never match.
+  Pass loads straight as `psvec_set` arguments; loading them into locals first changes
+  the registers.
+- **Fused multiply-add**: `a + b*c` in one expression gives `fmadds`; a product held in a
+  temporary or wrapped in `(f32)` stays `fmuls` + `fadds`. Only the product that is a
+  direct operand fuses: retail `fmuls; fnmsubs` for `x*y - z*w` is `(f32)(x*y) - z*w`;
+  retail `fmuls x; fmadds y; fmadds z` for a squared length is `(f32)(x*x) + y*y + z*z`.
+- **Signedness**: `cmpwi`/`lha`/`extsh`/`srawi` need a signed operand type (cast or
+  declaration), `cmplwi`/`lhz`/`clrlwi`/`srwi` an unsigned one; flip the operand of that
+  statement, not unrelated locals.
+- **Locked cache**: `lis rX, 0xe000` + `lfs f, 0xc(rX)` is `*(f32 *)(0xE0000000 + 0x0C)`
+  (the current matrix); do not invent a symbol for it.
+- **Evaluation order at a call**: a value produced by a call and consumed in an expression
+  is evaluated first when written inline; holding it in a local moves the call and can
+  swap `mullw`/`add` operands (fn_1_76704).
+
 ## Selection panel evidence (2026-09-15)
 
 - Four-byte color structs reproduce pooled `lwz` initializers; scalar `const u32`

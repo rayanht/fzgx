@@ -253,6 +253,33 @@ def build_context(project: Project, ledger: Optional[Ledger], symbol: str,
     # must survive even when one large function exceeds the auxiliary budget.
     required_chars = len("\n".join(parts))
 
+    # paired-single vector kernels are inline-assembly helpers; name each one the retail code
+    # uses with the exact call, since no scalar or __vec2x32float__ spelling can produce it
+    try:
+        from . import lift as _lift_mod, psvec as _psvec
+        ins_, labels_ = [], {}
+        for ln in fn.asm:
+            t = ln.strip()
+            if t.startswith(".L_") and t.endswith(":"):
+                labels_[t[:-1]] = len(ins_); continue
+            m = _lift_mod.LINE_RE.match(t)
+            if m:
+                ins_.append((m.group(1), [a.strip() for a in m.group(2).split(",")] if m.group(2) else []))
+        kernels_ = _psvec.kernels(ins_, labels_)
+        if kernels_:
+            lines_ = []
+            for anchor, kind, operands, consumed in kernels_:
+                first = min(consumed)
+                lines_.append(f"- instructions {first}-{anchor} (0x{first * 4:X}-0x{anchor * 4:X}): `psvec_{kind}({', '.join(operands)})`"
+                              " with each `off(rN)` written as the vector's address")
+            parts.append("\n## Paired-single kernels in the retail code\n"
+                         "These `psq_l`/`psq_st`/`ps_*` groups come from the inline-assembly helpers in `include/psvec.h`. "
+                         "Write `#include \"psvec.h\"` and call the helper named here (arguments are `void *` addresses such as "
+                         "`&v->x`, scalars are `f32`; `psvec_set` takes (dst, z, y, x)). Scalar per-component C and "
+                         "`__vec2x32float__` can never match these bytes.\n" + "\n".join(lines_))
+    except Exception:
+        pass
+
     callers = project.callers(symbol)
     if callers:
         parts.append(f"\n## Callers: {', '.join(f'`{c}`' for c in callers)}")
