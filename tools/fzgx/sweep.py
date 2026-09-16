@@ -167,9 +167,11 @@ def climb(p: Project, selection: Dict[str, str], outdir: Path, rounds: int = 4,
                 ow = oracle.words(o, sym.name)
                 if not targets[s] or not ow:
                     continue
-                sc, bad = oracle.word_score(targets[s], ow)
-                if s not in best or (sc, -len(bad)) > (best[s][0], -best[s][1]):
-                    best[s] = (sc, len(bad), f, label)
+                # aligned first: a structural fix shifts every later word and only the
+                # alignment-tolerant score sees the gain (the engine's best-by-shape slot)
+                aligned, pos = fixup_source.fitness(targets[s], ow)
+                if s not in best or (aligned, pos) > (best[s][0], best[s][1]):
+                    best[s] = (aligned, pos, f, label)
         # the current body's word score, per module in one compile
         basew: Dict[str, float] = {}
         by_module: Dict[str, list] = collections.defaultdict(list)
@@ -182,15 +184,16 @@ def climb(p: Project, selection: Dict[str, str], outdir: Path, rounds: int = 4,
                 o = objs.get(Path(state[s]['file']))
                 ow = oracle.words(o, sym.name) if o else None
                 tw = targets.get(s) or oracle.words(p.target_object_for(sym), sym.name)
-                basew[s] = oracle.word_score(tw, ow)[0] if ow and tw else -1
-        winners = [(s, b[2]) for s, b in best.items() if b[0] > basew.get(s, -1) + 1e-9]
+                basew[s] = fixup_source.fitness(tw, ow) if ow and tw else (-1.0, -1.0)
+        winners = [(s, b[2]) for s, b in best.items() if (b[0], b[1]) > basew.get(s, (-1.0, -1.0))]
         res = oracle.check_many(p, winners)
         gained = 0
         for s, f in winners:
             r = res.get(s)
             if not r or not r.ok:
                 continue
-            if r.matched or r.matched_pool or r.percent > state[s]['percent'] + 1e-6:
+            # accepted on the aligned gain: objdiff's percent may dip while the shape improves
+            if r.matched or r.matched_pool or r.percent > state[s]['percent'] - 2.0:
                 state[s].update(percent=r.percent, file=str(f), matched=bool(r.matched or r.matched_pool), check=r)
                 state[s]['history'].append(best[s][3])
                 gained += 1
