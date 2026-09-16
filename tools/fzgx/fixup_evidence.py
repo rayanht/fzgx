@@ -1396,6 +1396,76 @@ def attributed_inlines(p, symbol, body, check, row_lines):
     return out
 
 
+def attributed_declaration_swaps(p, symbol, body, check, row_lines):
+    """Callee-saved register renames name the locals involved: the rows that differ only by
+    register attribute to statements, the locals read or written there are the mis-coloured
+    webs, and the allocator colours named locals in declaration order, so only those locals'
+    declarations are permuted (pairwise swaps, first and last placement) instead of every
+    permutation of every local."""
+    from . import fixup_source as source
+    if not row_lines:
+        return []
+    name = p.resolve(symbol).name
+    span = source._function_body_span(body, name)
+    if not span:
+        return []
+    locs = source._locals(body, span)
+    if len(locs) < 2:
+        return []
+    lrows, rrows = check._rows
+    REG = re.compile(r'\b[rf]\d+\b')
+    SAVED = re.compile(r'\b(?:r(?:1[4-9]|2\d|3[01])|f(?:1[4-9]|2\d|3[01]))\b')
+    lines = body.split('\n')
+    involved = []
+    names = [l[3] for l in locs]
+    for k, ln in row_lines.items():
+        lf, of = stuck._fmt(lrows[k]), stuck._fmt(rrows[k])
+        if not lf or not of or REG.sub('R', lf) != REG.sub('R', of):
+            continue
+        if not (SAVED.search(lf) or SAVED.search(of)):
+            continue
+        for d in (-1, 0, 1):
+            if 0 < ln + d <= len(lines):
+                for ident in re.findall(r'(?<![\w.>])([A-Za-z_]\w*)(?![\w(])', lines[ln + d - 1]):
+                    if ident in names and ident not in involved:
+                        involved.append(ident)
+    if not involved:
+        return []
+    order = list(range(len(locs)))
+    idx = {l[3]: i for i, l in enumerate(locs)}
+    out = []
+    seen = set()
+    def emit(label, perm):
+        key = tuple(perm)
+        if key in seen or key == tuple(order):
+            return
+        seen.add(key)
+        out.append((label, source.reorder(body, locs, key)))
+    inv = [idx[n] for n in involved]
+    for a in inv:
+        for b in range(len(locs)):
+            if a == b:
+                continue
+            perm = list(order); perm[a], perm[b] = perm[b], perm[a]
+            emit(f'attributed swap {locs[a][3]}/{locs[b][3]}', perm)
+        rest = [i for i in order if i != a]
+        emit(f'attributed {locs[a][3]} first', [a] + rest)
+        emit(f'attributed {locs[a][3]} last', rest + [a])
+    if len(inv) >= 2:
+        import itertools
+        others = [i for i in order if i not in inv]
+        for perm_inv in itertools.permutations(inv):
+            if list(perm_inv) == inv:
+                continue
+            perm = list(order)
+            for slot, value in zip(inv, perm_inv):
+                perm[slot] = value
+            emit(f'attributed permute {"/".join(locs[i][3] for i in perm_inv)}', perm)
+            if len(out) > 120:
+                break
+    return out
+
+
 def encoded_conversions(p, symbol, body, check):
     """Recover compiler conversion scratch from an explicit lifted union."""
     from .sdkimport import masked

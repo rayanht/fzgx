@@ -35,11 +35,18 @@ def _generate_in_worker(task):
     _ENGINE.words[seed['id']] = words
     _ENGINE.targets[seed['symbol']] = target
     out = []
-    for label, text in _ENGINE.proposals(seed, capture):
-        out.append((label, text))
-        if len(out) >= limit * 4:
-            break
-    return _ENGINE.prioritise(seed, out)[:limit]
+    try:
+        for label, text in _ENGINE.proposals(seed, capture):
+            out.append((label, text))
+            if len(out) >= limit * 4:
+                break
+        return _ENGINE.prioritise(seed, out)[:limit]
+    except Exception:
+        # a generator fault in one seed must not push the whole round to serial generation;
+        # the traceback goes next to the report for repair
+        import traceback
+        (_ENGINE.output / 'generator_faults.log').open('a').write(f"{seed['symbol']} {seed['id'][:12]}\n{traceback.format_exc()}\n")
+        return _ENGINE.prioritise(seed, out)[:limit] if out else []
 
 
 class Engine:
@@ -458,6 +465,7 @@ class Engine:
             yield from evidence.paired_vector_kernels(self.project, row['symbol'], body, check)
             yield from evidence.attributed_type_flips(self.project, row['symbol'], body, check, self.row_lines(row))
             yield from evidence.attributed_inlines(self.project, row['symbol'], body, check, self.row_lines(row))
+            yield from evidence.attributed_declaration_swaps(self.project, row['symbol'], body, check, self.row_lines(row))
             yield from evidence.fusion_control(self.project, row['symbol'], body, check)
             yield from evidence.encoded_conversions(self.project, row['symbol'], body, check)
             yield from evidence.scalar_lifetimes(self.project, row['symbol'], body, check)

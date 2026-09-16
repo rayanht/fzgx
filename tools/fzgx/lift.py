@@ -2803,7 +2803,7 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
             # measured in bytes (width unknown at the use) and is declared as u32 here
             if ent.get("wrapped"):
                 decls.append((off_, f"struct {{ {ent['t']} a[{max(size // w, 1)}]; }} loc_{off_:X};", "struct")); continue
-            if ent.get("array"):
+            if ent.get("array") and max(size // w, 1) > 1:
                 decls.append((off_, f"{ent['t']} loc_{off_:X}[{max(size // w, 1)}];", True)); continue
             if size > w and size >= 16:
                 decls.append((off_, f"struct {{ {ent['t']} a[{max(size // w, 1)}]; }} loc_{off_:X};", "struct")); continue
@@ -2848,7 +2848,7 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
         body = [f"struct {name}_{g} *{ln};" for ln, g in locals_.items()] + body
     # an address stored or passed is a pointer: cast, so u32 fields and parameters accept it
     body = [b if b.startswith("p_") else re.sub(r"= (&[A-Za-z_]\w*(?:\[0\])?);", r"= (u32)\1;", b) for b in body]
-    fnames = {s for s, e in externs.items() if e.startswith("extern void ") and e.endswith("(void);")}
+    fnames = {s for s, e in externs.items() if re.match(r"extern [\w *]+? " + re.escape(s) + r"\(", e)}
     for f in fnames:
         body = [re.sub(rf"(= ){re.escape(f)}(?=;)", rf"\1(u32){f}", b) for b in body]
     if ret is not None:
@@ -2861,8 +2861,10 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
         m = re.fullmatch(r"(\S.*?) = \((\S.*?) ([+-]) (\d+)\);", b)
         if m and m.group(1) == m.group(2):
             k = int(m.group(4))
+            # a dereference lvalue binds looser than postfix ++: parenthesise it
+            target = m.group(1) if re.fullmatch(r"[\w.\[\]>-]+", m.group(1)) else f"({m.group(1)})"
             if k == 1:
-                return f"{m.group(1)}{'++' if m.group(3) == '+' else '--'};"
+                return f"{target}{'++' if m.group(3) == '+' else '--'};"
             return f"{m.group(1)} {m.group(3)}= {k};"
         return b
     body = [peephole(b) for b in body]
@@ -3072,6 +3074,30 @@ def _lift(p: Project, module: str, name: str, ins, layout: str = "reverse", site
             sname = f"{name}_{g}"
             structs = [padded(t_, g) if t_.startswith(f"struct {sname} {{") else t_ for t_ in structs]
     externs.pop(name, None)  # never a declaration of the function itself
+    if total:
+        # a region-reconstruction slip can close one block too many or too few; the draft must
+        # still compile for the model to repair it, so balance the braces at the end
+        depth = 0; balanced = []; kinds = []
+        for b in body:
+            t = b.strip()
+            if t == "}" and depth <= 0:
+                continue
+            if t.startswith("} else"):
+                # an else can only continue an if block; after anything else it is a bare block
+                if kinds and kinds[-1] == "if":
+                    kinds[-1] = "else"
+                else:
+                    balanced.append("}"); balanced.append("{"); kinds.append("block") if not kinds else None
+                    if kinds: kinds[-1] = "block"
+                    continue
+                balanced.append(b); continue
+            opens, closes = b.count("{"), b.count("}")
+            if t == "}":
+                if kinds: kinds.pop()
+            elif opens > closes:
+                kinds.append("if" if re.match(r"(?:\} )?(?:if|else if)\b", t) else "block")
+            balanced.append(b); depth += opens - closes
+        body = balanced + ["}"] * max(depth, 0)
     types_header = 'dolphin/types.h' if any(hw in externs for hw in HW_BLOCKS.values()) else 'types.h'
     text = [f'#include "{types_header}"'] + (['#include "psvec.h"'] if externs.pop("__psvec_header__", None) else []) + signature_index.preamble(signatures_used.values()) + [""]
     if structs:
