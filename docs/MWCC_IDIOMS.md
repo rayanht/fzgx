@@ -36,6 +36,20 @@ file from what actually unblocked functions; keep each item one or two lines.
   r30/r29) is itself a shadow: hold it in a one-member struct (`struct { u8 *value; } mgr;`)
   so its load is the CSE'd value (fn_10_7130, capture-verified).
 
+- **Literal pool base** (383 unmatched functions carry a private `lfd @N` where retail has
+  `lfd f, off(r31)`): MWCC lays every `.rodata` object *defined in the unit* (the compiler's own
+  float/double literals, including the 2^52 int-to-float constant, `static const` tables) in one
+  section in definition/first-use order and, once a base register holds one of them, addresses
+  the rest by displacement. An `extern` view of retail's pool can never join that base: the
+  compiler's constants stay in the unit's private pool. So the whole retail pool region has to be
+  defined inside the unit (`native_pool_objects` + `shared_pool_primer`). Two rules of that
+  definition, probe-verified 2026-09-16: a `const f32` scalar definition folds into a literal
+  (fine, it dedupes onto the primed slot) but a `const u32` scalar folds into `li` — integer pool
+  words must be one-element arrays read as `[0]` (retail's `lwz r0, 0x490(r31)`); and the
+  oracle's pool byte comparison must stop at retail's last displacement (the next word belongs
+  to the following object). `#pragma pool_data on` produces the same base-relative shape for a
+  unit's own data but is not what retail used (retail leaf functions keep per-literal `lis`).
+
 ## Selection panel evidence (2026-09-15)
 
 - Four-byte color structs reproduce pooled `lwz` initializers; scalar `const u32`

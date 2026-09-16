@@ -1709,9 +1709,12 @@ def native_pool_objects(p, symbol, body, check):
                     if atom and atom[0]==hi:
                         _,name,kind,dims,field=atom
                         values=[number(raw[i:i+BASIC[kind][0]],kind) for i in range(0,len(raw),BASIC[kind][0])]
-                        declaration_=kind+' '+name+('['+str(dims[0])+']' if dims else '')
-                        initializer='{'+','.join(values)+'}' if dims else values[0]
-                        replacements[field]=name
+                        # MWCC folds a const integer scalar into an immediate (`li r0, -1`) while retail
+                        # loaded the pool word; a one-element array keeps the load (probe, 2026-09-16)
+                        scalar_word = not dims and kind not in ('f32','float','f64','double')
+                        declaration_=kind+' '+name+('['+str(dims[0])+']' if dims else '[1]' if scalar_word else '')
+                        initializer='{'+','.join(values)+'}' if dims or scalar_word else values[0]
+                        replacements[field]=name+'[0]' if scalar_word else name
                     else:
                         delta=lo-obj.addr;name=obj.name if not delta else obj.name+f'__fzgx_offset_{delta:X}'
                         declaration_=f'u8 {name}[{len(raw)}]';initializer='{'+','.join(f'0x{x:02X}' for x in raw)+'}'
@@ -3468,6 +3471,34 @@ def shared_pool_primer(p, symbol, body, check):
         m = re.search(r'^[\w \*]+?\b' + re.escape(sym.name) + r'\s*\([^;{]*\)\s*\{', body, re.M)
         if not m:
             continue
+        # a pool word the body reads through its own one-element definition
+        # (`const u32 lbl__fzgx_offset_X[1] = {...}` from the object recovery) would be laid out
+        # after the primer; it is the primer table's word, so read it there
+        table_at = {}
+        off = 0
+        for n, (k, v) in enumerate(segments, 1):
+            if k == 'table':
+                for w in range(len(v) // 4):
+                    table_at[off + 4 * w] = (n, w)
+                off += len(v)
+            else:
+                for use in v:
+                    off += 8 if use.startswith('d =') else 4
+        body_ = body
+        for definition in list(re.finditer(r'(?m)^const (u32|s32) (\w+?)(?:__fzgx_offset_([0-9A-Fa-f]+))?\[1\] = \{[^}]*\};\n', body_)):
+            base_sym = syms.get(definition.group(2))
+            if base_sym is None or base_sym.section != pool.section:
+                continue
+            o = base_sym.addr + int(definition.group(3) or '0', 16) - pool.addr
+            if o not in table_at:
+                continue
+            n, w = table_at[o]
+            ident = definition.group(2) + (f'__fzgx_offset_{definition.group(3)}' if definition.group(3) else '')
+            body_ = body_.replace(definition.group(0), '')
+            body_ = re.sub(r'\b' + re.escape(ident) + r'\[0\]', f'fzgx_pool_table{n}[{w}]', body_)
+        if body_ != body:
+            body = body_
+            m = re.search(r'^[\w \*]+?\b' + re.escape(sym.name) + r'\s*\([^;{]*\)\s*\{', body, re.M)
         # ahead of every file-scope definition: a static const object of the body is pool data
         # too, and MWCC lays the section out in definition order
         includes = list(re.finditer(r'^#include[^\n]*\n', body[:m.start()], re.M))

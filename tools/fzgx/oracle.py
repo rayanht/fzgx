@@ -855,11 +855,14 @@ def _pool_rows(project: Project, module: str, left: dict, right: dict,
                 reach = 0
                 for row in lrows:
                     text = (row.get('instruction') or {}).get('formatted') or ''
-                    m = re.match(r'(?:lfs|lfd|lwz|lha|lhz|lbz|stw|stfs|stfd) [rf]\d+, (-?0x[0-9a-f]+|-?\d+)\(r\d+\)$', text)
-                    if m and int(m.group(1), 0) >= 0:
-                        reach = max(reach, int(m.group(1), 0) + 8)
+                    m = re.match(r'(lfs|lfd|lwz|lha|lhz|lbz|stw|stfs|stfd) [rf]\d+, (-?0x[0-9a-f]+|-?\d+)\(r\d+\)$', text)
+                    if m and int(m.group(2), 0) >= 0:
+                        width = {'lfd': 8, 'stfd': 8, 'lha': 2, 'lhz': 2, 'lbz': 1}.get(m.group(1), 4)
+                        reach = max(reach, int(m.group(2), 0) + width)
                 if reach:
-                    size = min(size, (reach + 7) & ~7)
+                    # the exact reach: the word after retail's last pooled access belongs to the
+                    # next object, and our unit's pool continues with its own literals there
+                    size = min(size, (reach + 3) & ~3)
             # Anonymous section symbols have size zero until the range above
             # is computed. Their pointer relocations still require the full
             # byte-and-binding proof in _data_pool_rows.
