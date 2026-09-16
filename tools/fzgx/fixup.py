@@ -38,7 +38,7 @@ def _generate_in_worker(task):
     try:
         for label, text in _ENGINE.proposals(seed, capture):
             out.append((label, text))
-            if len(out) >= limit * 4:
+            if len(out) >= limit * 10:
                 break
         return _ENGINE.prioritise(seed, out)[:limit]
     except Exception:
@@ -113,7 +113,7 @@ class Engine:
         if len(tasks) < 2:
             for _, seed, cap in tasks:
                 self.check(seed)
-            return [self.prioritise(seed, list(itertools.islice(self.proposals(seed, cap), limit * 4)))[:limit] for _, seed, cap in tasks]
+            return [self.prioritise(seed, list(itertools.islice(self.proposals(seed, cap), limit * 10)))[:limit] for _, seed, cap in tasks]
         for _, seed, cap in tasks:
             self.check(seed)
         jobs=[(seed, cap, self.checks[seed['id']], self.targets[seed['symbol']], self.words.get(seed['id']), limit) for _, seed, cap in tasks]
@@ -125,7 +125,7 @@ class Engine:
                 return list(ex.map(_generate_in_worker, jobs, chunksize=1))
         except (OSError, RuntimeError, ValueError, TypeError, ImportError, AttributeError) as error:
             self.emit({'stage': 'generate-serial', 'reason': str(error)[:200]})
-            return [self.prioritise(seed, list(itertools.islice(self.proposals(seed, cap), limit * 4)))[:limit] for _, seed, cap in tasks]
+            return [self.prioritise(seed, list(itertools.islice(self.proposals(seed, cap), limit * 10)))[:limit] for _, seed, cap in tasks]
 
     def row_lines(self, seed):
         """{differing row index: source line} for the seed (MWCC's `.line` table from a
@@ -386,6 +386,12 @@ class Engine:
             if bridges:
                 preferred.append(min(bridges, key=lambda r:(-r.get('pool_coverage',0), r['word_errors'], -r['score'])))
             preferred.append(by_words[0])
+            # a structural correction (a kernel, an induction index, a call inlined) first
+            # perturbs register numbers and lowers the word score; its opcode shape improves.
+            # Keep the best-by-shape candidate so the allocator families can finish it.
+            shaped = [r for r in rows if r.get('shape_errors') is not None]
+            if shaped:
+                preferred.append(min(shaped, key=lambda r:(r['shape_errors'], r['word_errors'], r['id'])))
             if measured:
                 preferred.append(min(measured,key=lambda r:(r['differing_rows'], -r['raw_percent'],r['id'])))
                 preferred.append(max(measured,key=lambda r:(r['raw_percent'], -r['differing_rows'],r['id'])))
@@ -466,6 +472,11 @@ class Engine:
             yield from evidence.attributed_type_flips(self.project, row['symbol'], body, check, self.row_lines(row))
             yield from evidence.attributed_inlines(self.project, row['symbol'], body, check, self.row_lines(row))
             yield from evidence.attributed_declaration_swaps(self.project, row['symbol'], body, check, self.row_lines(row))
+            yield from evidence.induction_indexing(self.project, row['symbol'], body, check)
+            # structural spellings that change a web's numbering class (carriers, de-CSE,
+            # held call results, splits) go before any declaration permutation: order within
+            # a class is only worth searching once the class is right
+            yield from [('regalloc: ' + l, t) for l, t in source.rewrites(body, name)]
             yield from evidence.fusion_control(self.project, row['symbol'], body, check)
             yield from evidence.encoded_conversions(self.project, row['symbol'], body, check)
             yield from evidence.scalar_lifetimes(self.project, row['symbol'], body, check)

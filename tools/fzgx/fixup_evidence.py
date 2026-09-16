@@ -1461,8 +1461,105 @@ def attributed_declaration_swaps(p, symbol, body, check, row_lines):
             for slot, value in zip(inv, perm_inv):
                 perm[slot] = value
             emit(f'attributed permute {"/".join(locs[i][3] for i in perm_inv)}', perm)
-            if len(out) > 120:
+            if len(out) > 40:
                 break
+    return out[:40]
+
+
+def induction_indexing(p, symbol, body, check, row_lines=None):
+    """A loop pointer initialised straight into its callee-saved register (`addi r30, r3,
+    sym@l`) with no copy is a strength-reduced induction shadow of an indexed access, not
+    a source pointer: MWCC lowers `p = base; ... p = p + K` through a temporary and a copy
+    (`addi r0; mr r30, r0`), while `base[i]` / `(u8 *)base + i * K` is initialised in place
+    (fn_10_7130, probe-verified 2026-09-16). The same holds for `off = 0; ... off += K`
+    against `i * K`. Rewrite each stepped local of a counted loop into its counter form."""
+    from . import fixup_source as source
+    name = p.resolve(symbol).name
+    lrows, rrows = check._rows
+    evidence = False
+    for k in range(1, len(rrows)):
+        of = stuck._fmt(rrows[k])
+        if re.match(r'mr r\d+, r0$', of) and stuck._fmt(lrows[k]) != of and any(
+                re.match(r'(addi|li) r0,', stuck._fmt(rrows[j])) for j in range(max(0, k - 4), k)):
+            evidence = True; break
+    if not evidence:
+        return []
+    span = source._function_body_span(body, name)
+    if not span:
+        return []
+    inner = body[span[1]:span[2]]
+    out = []
+    # loops with a unit-step counter
+    for loop in re.finditer(r'(?m)^([ \t]*)(?:while|for)\s*\(([^\n]*)\)\s*\{', inner):
+        indent = loop.group(1)
+        # loop body extent by brace depth
+        depth, k = 0, loop.end() - 1
+        while k < len(inner):
+            if inner[k] == '{': depth += 1
+            elif inner[k] == '}':
+                depth -= 1
+                if depth == 0: break
+            k += 1
+        lbody = inner[loop.end():k]
+        counters = re.findall(r'(?m)^[ \t]*(\w+)\s*(?:\+\+|\+=\s*1|=\s*\1\s*\+\s*1)\s*;', lbody)
+        counters += re.findall(r'\b(\w+)\+\+', loop.group(2))
+        if len(set(counters)) != 1:
+            continue
+        counter = counters[0]
+        # the counter starts at 0 before the loop
+        if not re.search(rf'\b{re.escape(counter)}\s*=\s*0\s*;', inner[:loop.start()]) and not re.search(rf'\b{re.escape(counter)}\s*=\s*0\s*;', loop.group(2)):
+            continue
+        # stepped locals: `v = v + K` / `v += K` / `v = (T *)((u8 *)v + K)` inside, initialised before
+        steps = {}
+        for m in re.finditer(r'(?m)^[ \t]*(\w+)\s*(?:\+=\s*(0x[0-9A-Fa-f]+|\d+)|=\s*\(?[^;]*?\(u8 \*\)\s*\1\s*\+\s*(0x[0-9A-Fa-f]+|\d+)\)?|=\s*\1\s*\+\s*(0x[0-9A-Fa-f]+|\d+))\s*;[ \t]*\n', lbody):
+            v = m.group(1)
+            if v == counter:
+                continue
+            k_ = next(g for g in m.groups()[1:] if g)
+            steps[v] = (int(k_, 0), m)
+        if not steps:
+            continue
+        for v, (K, step) in steps.items():
+            init = list(re.finditer(rf'(?m)^[ \t]*{re.escape(v)}\s*=\s*([^;]+);[ \t]*\n', inner[:loop.start()]))
+            if not init:
+                continue
+            init = init[-1]
+            base = init.group(1).strip()
+            if re.search(rf'\b{re.escape(v)}\b', base):
+                continue
+            uses = [m for m in re.finditer(rf'(?<![\w.>])\b{re.escape(v)}\b', lbody) if not (step.start() <= m.start() < step.end())]
+            if not uses or re.search(rf'\b{re.escape(v)}\b', inner[k:]):
+                continue  # used after the loop: keep the pointer
+            decl = re.search(rf'(?m)^[ \t]*((?:const\s+)?[\w ]+?\s*\**)\s*{re.escape(v)}\s*;[ \t]*\n', inner[:loop.start()])
+            dtype = decl.group(1).strip() if decl else ''
+            if re.fullmatch(r'0|0x0', base):
+                replacement = f'({counter} * {K:#x})'
+            elif '*' in dtype:
+                replacement = f'(({dtype})((u8 *)({base}) + {counter} * {K:#x}))'
+            else:
+                replacement = f'(({base}) + {counter} * {K:#x})'
+            edits = [(m.start(), m.end(), replacement) for m in uses] + [(step.start(), step.end(), '')]
+            new_body = lbody
+            for a, b, value in sorted(edits, reverse=True):
+                new_body = new_body[:a] + value + new_body[b:]
+            text = inner[:loop.end()] + new_body + inner[k:]
+            text = text[:init.start()] + text[init.end():]
+            if decl and not re.search(rf'\b{re.escape(v)}\b', text[decl.end():]):
+                text = text[:decl.start()] + text[decl.end():]
+            out.append((f'induction index {v} by {counter}', body[:span[1]] + text + body[span[2]:]))
+    if len(out) > 1:
+        # every stepped local together: the single texts edit disjoint spans of the body
+        combined = body
+        changes = []
+        for label, text in out:
+            ops = source.edits(body, text)
+            if any(a < max(d, c + 1) and c < max(b, a + 1) for a, b, _ in ops for c, d, _ in changes):
+                continue
+            changes.extend(ops)
+        for a, b, value in sorted(changes, reverse=True):
+            combined = combined[:a] + value + combined[b:]
+        if combined != body:
+            out.append(('induction index every stepped local', combined))
     return out
 
 
