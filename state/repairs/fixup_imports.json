@@ -9489,7 +9489,8 @@
         ]
       }
     ],
-    "link": "pending"
+    "link": "verified",
+    "commit": "7c72349a"
   },
   "fn_1_FB50": {
     "seed_symbol": "fn_1_FB50",
@@ -9506,6 +9507,693 @@
     "headers_sha256": "a589c0d12ea0a921f727e63ed125ea39c16e33457a7ec3899c6c793bcdfddceb",
     "oracle_sha256": "7cc891120feb212c397b96ddb46f5213d85d0998668a1ee4bd55a3d6abc2e1ff",
     "recipe": [],
+    "link": "verified",
+    "commit": "7c72349a"
+  },
+  "fn_1_8CED0": {
+    "seed_symbol": "fn_1_8CED0",
+    "generator": "fzgx fixup",
+    "transform": "attributed inline tmp_ra1 at line 251",
+    "seed": "#include \"types.h\"\n#pragma section code_type \".fzgxpool\"\n__declspec(section \".fzgxpool\") static void fzgx_pool_prime1(void) {\n    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */\n    s = 3.0f;\n    s = 2.0f;\n}\nstatic const u32 fzgx_pool_table2[1] = {0x40000000};  /* fzgx-allow: A1 retail pool bytes */\n__declspec(section \".fzgxpool\") static void fzgx_pool_keep2(void) { const u32 *volatile cp; cp = fzgx_pool_table2; }  /* fzgx-allow: S2 pool primer sink */\n__declspec(section \".fzgxpool\") static void fzgx_pool_prime3(void) {\n    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */\n    s = 1.5f;\n    s = 0.0f;\n}\nstatic const u32 fzgx_pool_table4[1] = {0x00000000};  /* fzgx-allow: A1 retail pool bytes */\n__declspec(section \".fzgxpool\") static void fzgx_pool_keep4(void) { const u32 *volatile cp; cp = fzgx_pool_table4; }  /* fzgx-allow: S2 pool primer sink */\n__declspec(section \".fzgxpool\") static void fzgx_pool_prime5(void) {\n    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */\n    d = 1.1920928955078125e-07;\n    s = 1.4499999284744263f;\n    s = -1.5881868392106856e-23f;\n    s = 1.0f;\n}\nstatic const u32 fzgx_pool_table6[1] = {0x00000000};  /* fzgx-allow: A1 retail pool bytes */\n__declspec(section \".fzgxpool\") static void fzgx_pool_keep6(void) { const u32 *volatile cp; cp = fzgx_pool_table6; }  /* fzgx-allow: S2 pool primer sink */\n__declspec(section \".fzgxpool\") static void fzgx_pool_prime7(void) {\n    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */\n    d = 0.15000000074505807;\n    s = 0.05000000074505806f;\n    s = 30.0f;\n    s = 0.00390625f;\n    s = 182.04444885253906f;\n    s = 180.0f;\n    s = 44.0f;\n    s = 89.0f;\n    s = 360.0f;\n    s = 60.0f;\n}\nstatic const u32 fzgx_pool_table8[1] = {0x00000000};  /* fzgx-allow: A1 retail pool bytes */\n__declspec(section \".fzgxpool\") static void fzgx_pool_keep8(void) { const u32 *volatile cp; cp = fzgx_pool_table8; }  /* fzgx-allow: S2 pool primer sink */\n__declspec(section \".fzgxpool\") static void fzgx_pool_prime9(void) {\n    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */\n    d = 0.12999999932944775;\n    s = 0.029999999329447746f;\n}\nstatic const u32 fzgx_pool_table10[1] = {0x00000000};  /* fzgx-allow: A1 retail pool bytes */\n__declspec(section \".fzgxpool\") static void fzgx_pool_keep10(void) { const u32 *volatile cp; cp = fzgx_pool_table10; }  /* fzgx-allow: S2 pool primer sink */\n__declspec(section \".fzgxpool\") static void fzgx_pool_prime11(void) {\n    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */\n    d = 4503599627370496.0;\n    d = 4503601774854144.0;\n}\nstatic const u32 fzgx_pool_table12[306] = {0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00330000, 0x00010001, 0x00020002, 0x00030003, 0x0004002F, 0x00050004, 0x00060005, 0x00070006, 0x00080007, 0x00090008, 0x000A002A, 0x000B0009, 0x000C002B, 0x000D000A, 0x000E002C, 0x000F000B, 0x0010002D, 0x0011000C, 0x0012002E, 0x0013000D, 0x0014000E, 0x003D000F, 0x003E0010, 0x003F0011, 0x00400012, 0x00410013, 0x00420014, 0x00430015, 0x00440016, 0x00450017, 0x00460018, 0x00470019, 0x0048001A, 0x0049001B, 0x004A001C, 0x004B001D, 0x004C0034, 0x004D0035, 0x004E0036, 0x004F0037, 0x001F001E, 0x0020001F, 0x00210020, 0x00220021, 0x00230022, 0x00240023, 0x00250024, 0x00260025, 0x00270026, 0x00280027, 0x00290028, 0x002A0029, 0x00500038, 0x00510030, 0x00520031, 0x00530032, 0x00540033, 0xFFFF0000};  /* fzgx-allow: A1 retail pool bytes */\n__declspec(section \".fzgxpool\") static void fzgx_pool_keep12(void) { const u32 *volatile cp; cp = fzgx_pool_table12; }  /* fzgx-allow: S2 pool primer sink */\n__declspec(section \".fzgxpool\") static void fzgx_pool_prime13(void) {\n    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */\n    s = 100.0f;\n}\nstatic const u32 fzgx_pool_table14[3] = {0x0032001E, 0x00140004, 0xFFFFFFFF};  /* fzgx-allow: A1 retail pool bytes */\n__declspec(section \".fzgxpool\") static void fzgx_pool_keep14(void) { const u32 *volatile cp; cp = fzgx_pool_table14; }  /* fzgx-allow: S2 pool primer sink */\n__declspec(section \".fzgxpool\") static void fzgx_pool_prime15(void) {\n    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */\n    d = 0.5;\n    d = 0.20000000298023224;\n    s = 0.10000000149011612f;\n    s = 0.11999999731779099f;\n    s = -0.10000000149011612f;\n    s = -1.0f;\n    s = 0.8999999761581421f;\n    s = 0.49000000953674316f;\n    d = 0.800000011920929;\n    s = 0.4000000059604645f;\n}\nstatic const u32 fzgx_pool_table16[1] = {0x00000000};  /* fzgx-allow: A1 retail pool bytes */\n__declspec(section \".fzgxpool\") static void fzgx_pool_keep16(void) { const u32 *volatile cp; cp = fzgx_pool_table16; }  /* fzgx-allow: S2 pool primer sink */\n__declspec(section \".fzgxpool\") static void fzgx_pool_prime17(void) {\n    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */\n    s = 0.5f;\n}\nstatic const u32 fzgx_pool_table18[2] = {0x3F000000, 0x40000000};  /* fzgx-allow: A1 retail pool bytes */\n__declspec(section \".fzgxpool\") static void fzgx_pool_keep18(void) { const u32 *volatile cp; cp = fzgx_pool_table18; }  /* fzgx-allow: S2 pool primer sink */\n__declspec(section \".fzgxpool\") static void fzgx_pool_prime19(void) {\n    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */\n    s = -1.1920928955078125e-07f;\n    s = 240.0f;\n    s = 0.75f;\n}\nstatic const u32 fzgx_pool_table20[1] = {0x3F000000};  /* fzgx-allow: A1 retail pool bytes */\n__declspec(section \".fzgxpool\") static void fzgx_pool_keep20(void) { const u32 *volatile cp; cp = fzgx_pool_table20; }  /* fzgx-allow: S2 pool primer sink */\n__declspec(section \".fzgxpool\") static void fzgx_pool_prime21(void) {\n    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */\n    s = 1000.0f;\n}\nstatic const u32 fzgx_pool_table22[29] = {0xFFFFFFFF, 0xFFFFFFFF, 0x3F800000, 0x3F800000, 0x3F800000, 0x3F800000, 0x3F800000, 0x00000000, 0x00000000, 0x3F800000, 0x00000000, 0x3F800000, 0x00000000, 0x3F800000, 0x00000000, 0x00000000, 0x3F800000, 0x3F800000, 0x00000000, 0x3F800000, 0x3F800000, 0x3F800000, 0x00000000, 0x00000000, 0x00000000, 0x3F800000, 0x00000000, 0x00000000, 0xBF800000};  /* fzgx-allow: A1 retail pool bytes */\n__declspec(section \".fzgxpool\") static void fzgx_pool_keep22(void) { const u32 *volatile cp; cp = fzgx_pool_table22; }  /* fzgx-allow: S2 pool primer sink */\n__declspec(section \".fzgxpool\") static void fzgx_pool_prime23(void) {\n    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */\n    s = 0.800000011920929f;\n}\nstatic const u32 fzgx_pool_table24[16] = {0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000};  /* fzgx-allow: A1 retail pool bytes */\n__declspec(section \".fzgxpool\") static void fzgx_pool_keep24(void) { const u32 *volatile cp; cp = fzgx_pool_table24; }  /* fzgx-allow: S2 pool primer sink */\n__declspec(section \".fzgxpool\") static void fzgx_pool_prime25(void) {\n    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */\n    d = 0.0;\n    d = 1.0;\n    s = 15.0f;\n    s = 0.009999999776482582f;\n    s = 255.0f;\n    s = 128.0f;\n}\nstatic const u32 fzgx_pool_table26[28] = {0x41980000, 0x41700000, 0x41980000, 0x41980000, 0x41980000, 0x414E6666, 0x41500000, 0x41500000, 0x41500000, 0x41500000, 0x06010406, 0x02000000, 0x3F000000, 0x3F000000, 0x3F000000, 0x3F000000, 0x3E4CCCCD, 0x3F800000, 0x3F800000, 0xBF800000, 0xBF800000, 0x3F800000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000};  /* fzgx-allow: A1 retail pool bytes */\n__declspec(section \".fzgxpool\") static void fzgx_pool_keep26(void) { const u32 *volatile cp; cp = fzgx_pool_table26; }  /* fzgx-allow: S2 pool primer sink */\n__declspec(section \".fzgxpool\") static void fzgx_pool_prime27(void) {\n    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */\n    s = 17.0f;\n    s = 2.299999952316284f;\n    s = 14.699999809265137f;\n    s = 0.30000001192092896f;\n    s = 10.0f;\n    s = 7.699999809265137f;\n    s = 160.0f;\n    s = 25.0f;\n    d = 0.2;\n    s = 0.25f;\n    s = 8192.0f;\n    s = -30.0f;\n    s = 200.0f;\n    s = 40000.0f;\n}\nstatic const u32 fzgx_pool_table28[29] = {0x467FA400, 0x467FA400, 0x46822A00, 0x46822A00, 0x46848200, 0x46848200, 0x4686DA00, 0x4686DA00, 0x45C9D800, 0x45CB0000, 0x45E2D800, 0x45E40000, 0x45FBD800, 0x45FD0000, 0x46517C00, 0x4651C400, 0x46537800, 0x4653C000, 0x46557400, 0x4655BC00, 0x465CE400, 0x465D2000, 0x46847400, 0x46849400, 0x02010003, 0x02030103, 0x00020302, 0x03010001, 0x01000200};  /* fzgx-allow: A1 retail pool bytes */\n__declspec(section \".fzgxpool\") static void fzgx_pool_keep28(void) { const u32 *volatile cp; cp = fzgx_pool_table28; }  /* fzgx-allow: S2 pool primer sink */\n__declspec(section \".fzgxpool\") static void fzgx_pool_prime29(void) {\n    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */\n    s = 5.0f;\n    s = 20.0f;\n    s = 40.0f;\n    s = -1000.0f;\n    s = -35.0f;\n    s = 35.0f;\n    s = 1500.0f;\n}\nstatic const u32 fzgx_pool_table30[1] = {0x00000000};  /* fzgx-allow: A1 retail pool bytes */\n__declspec(section \".fzgxpool\") static void fzgx_pool_keep30(void) { const u32 *volatile cp; cp = fzgx_pool_table30; }  /* fzgx-allow: S2 pool primer sink */\n__declspec(section \".fzgxpool\") static void fzgx_pool_prime31(void) {\n    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */\n    d = 50.0;\n    s = 50.0f;\n    s = -2.000060796737671f;\n}\nstatic const u32 fzgx_pool_table32[2] = {0x0000C0FF, 0x00000000};  /* fzgx-allow: A1 retail pool bytes */\n__declspec(section \".fzgxpool\") static void fzgx_pool_keep32(void) { const u32 *volatile cp; cp = fzgx_pool_table32; }  /* fzgx-allow: S2 pool primer sink */\n__declspec(section \".fzgxpool\") static void fzgx_pool_prime33(void) {\n    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */\n    s = 4.125f;\n}\nstatic const u32 fzgx_pool_table34[1] = {0x00000000};  /* fzgx-allow: A1 retail pool bytes */\n__declspec(section \".fzgxpool\") static void fzgx_pool_keep34(void) { const u32 *volatile cp; cp = fzgx_pool_table34; }  /* fzgx-allow: S2 pool primer sink */\n__declspec(section \".fzgxpool\") static void fzgx_pool_prime35(void) {\n    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */\n    d = -1.0;\n    d = 0.05;\n    d = 1.5707963705062866;\n    s = -0.5f;\n}\nstatic const u32 fzgx_pool_table36[1] = {0x00000000};  /* fzgx-allow: A1 retail pool bytes */\n__declspec(section \".fzgxpool\") static void fzgx_pool_keep36(void) { const u32 *volatile cp; cp = fzgx_pool_table36; }  /* fzgx-allow: S2 pool primer sink */\n__declspec(section \".fzgxpool\") static void fzgx_pool_prime37(void) {\n    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */\n    d = 32768.0;\n    s = 65536.0f;\n    s = 2.1415927410125732f;\n    s = 32768.0f;\n    s = 320.0f;\n    s = 55.0f;\n    s = 0.9333333373069763f;\n    s = 90000.0f;\n}\nstatic const u32 fzgx_pool_table38[1] = {0x60000000};  /* fzgx-allow: A1 retail pool bytes */\n__declspec(section \".fzgxpool\") static void fzgx_pool_keep38(void) { const u32 *volatile cp; cp = fzgx_pool_table38; }  /* fzgx-allow: S2 pool primer sink */\n#pragma section code_type \".text\"\n\nextern u8 lbl_1_bss_8CA28;\nextern void fn_80008BEC(void *, int, u32);\n\ntypedef struct {\n    f32 unk_00;\n    f32 unk_04;\n    f32 unk_08;\n    f32 unk_0C;\n    f32 unk_10;\n    f32 unk_14;\n    f32 unk_18;\n    f32 unk_1C;\n    f32 unk_20;\n    f32 unk_24;\n    u16 unk_28;\n    u16 unk_2A;\n    u16 unk_2C;\n    u16 unk_2E;\n    u16 unk_30;\n    u16 unk_32;\n    u32 unk_34;\n    u8 unk_38;\n    u8 unk_39;\n    u8 unk_3A;\n    u8 unk_3B;\n    u32 unk_3C;\n    u8 unk_40;\n    u8 unk_41[3];\n    f32 unk_44;\n    f32 unk_48;\n    f32 unk_4C;\n    f32 unk_50;\n    u16 unk_54;\n    u16 unk_56;\n    u32 unk_58;\n    u8 unk_5C[4];\n} Fn1_8CED0State;\n\nvoid fn_1_8CED0(Fn1_8CED0State *state, u16 arg1, u16 arg2) {\n    u32 h = arg2;\n    u32 w = arg1;\n    s32 tmp_ra1;\n\n    state->unk_00 = 0.0f;\n    state->unk_04 = 0.0f;\n    state->unk_08 = (f32)w;\n    state->unk_0C = (f32)h;\n    state->unk_10 = 0.0f;\n    state->unk_14 = 1.0f;\n    state->unk_18 = 0.0f;\n    state->unk_1C = 0.0f;\n    state->unk_20 = (f32)w;\n    state->unk_24 = (f32)h;\n    state->unk_28 = 0;\n    state->unk_2A = 0;\n    state->unk_2C = arg1;\n    state->unk_2E = arg2;\n    if (lbl_1_bss_8CA28 != 0) {\n        state->unk_34 = 5;\n    } else {\n        state->unk_34 = 6;\n    }\n    state->unk_38 = 1;\n    if (lbl_1_bss_8CA28 != 0) {\n        state->unk_39 = 1;\n    } else {\n        state->unk_39 = 0;\n    }\n    tmp_ra1 = state->unk_39;\n    if (tmp_ra1 != 0) {\n        state->unk_30 = state->unk_2C >> 1;\n        state->unk_32 = state->unk_2E >> 1;\n    } else {\n        state->unk_30 = state->unk_2C;\n        state->unk_32 = state->unk_2E;\n    }\n    state->unk_3A = 1;\n    state->unk_3C = 7;\n    state->unk_40 = 0;\n    state->unk_44 = 55.0f;\n    state->unk_48 = (0.9333333373069763f * arg1) / arg2;\n    state->unk_4C = 0.10000000149011612f;\n    state->unk_50 = 90000.0f;    state->unk_54 = 1;\n    fn_80008BEC(state->unk_5C, 0, 4);\n    state->unk_58 = 1;\n}\n",
+    "seed_sha256": "7431d6fd05492f69f2dc04cfb095d5724971d4e64c646a49b7c7e9081376ba2c",
+    "generated_sha256": "d2a443697c405387a35ea145e7781877d91a10493fa0b7a79fb5ba92826a0a69",
+    "generated_source": "#include \"types.h\"\n#pragma section code_type \".fzgxpool\"\n__declspec(section \".fzgxpool\") static void fzgx_pool_prime1(void) {\n    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */\n    s = 3.0f;\n    s = 2.0f;\n}\nstatic const u32 fzgx_pool_table2[1] = {0x40000000};  /* fzgx-allow: A1 retail pool bytes */\n__declspec(section \".fzgxpool\") static void fzgx_pool_keep2(void) { const u32 *volatile cp; cp = fzgx_pool_table2; }  /* fzgx-allow: S2 pool primer sink */\n__declspec(section \".fzgxpool\") static void fzgx_pool_prime3(void) {\n    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */\n    s = 1.5f;\n    s = 0.0f;\n}\nstatic const u32 fzgx_pool_table4[1] = {0x00000000};  /* fzgx-allow: A1 retail pool bytes */\n__declspec(section \".fzgxpool\") static void fzgx_pool_keep4(void) { const u32 *volatile cp; cp = fzgx_pool_table4; }  /* fzgx-allow: S2 pool primer sink */\n__declspec(section \".fzgxpool\") static void fzgx_pool_prime5(void) {\n    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */\n    d = 1.1920928955078125e-07;\n    s = 1.4499999284744263f;\n    s = -1.5881868392106856e-23f;\n    s = 1.0f;\n}\nstatic const u32 fzgx_pool_table6[1] = {0x00000000};  /* fzgx-allow: A1 retail pool bytes */\n__declspec(section \".fzgxpool\") static void fzgx_pool_keep6(void) { const u32 *volatile cp; cp = fzgx_pool_table6; }  /* fzgx-allow: S2 pool primer sink */\n__declspec(section \".fzgxpool\") static void fzgx_pool_prime7(void) {\n    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */\n    d = 0.15000000074505807;\n    s = 0.05000000074505806f;\n    s = 30.0f;\n    s = 0.00390625f;\n    s = 182.04444885253906f;\n    s = 180.0f;\n    s = 44.0f;\n    s = 89.0f;\n    s = 360.0f;\n    s = 60.0f;\n}\nstatic const u32 fzgx_pool_table8[1] = {0x00000000};  /* fzgx-allow: A1 retail pool bytes */\n__declspec(section \".fzgxpool\") static void fzgx_pool_keep8(void) { const u32 *volatile cp; cp = fzgx_pool_table8; }  /* fzgx-allow: S2 pool primer sink */\n__declspec(section \".fzgxpool\") static void fzgx_pool_prime9(void) {\n    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */\n    d = 0.12999999932944775;\n    s = 0.029999999329447746f;\n}\nstatic const u32 fzgx_pool_table10[1] = {0x00000000};  /* fzgx-allow: A1 retail pool bytes */\n__declspec(section \".fzgxpool\") static void fzgx_pool_keep10(void) { const u32 *volatile cp; cp = fzgx_pool_table10; }  /* fzgx-allow: S2 pool primer sink */\n__declspec(section \".fzgxpool\") static void fzgx_pool_prime11(void) {\n    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */\n    d = 4503599627370496.0;\n    d = 4503601774854144.0;\n}\nstatic const u32 fzgx_pool_table12[306] = {0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00330000, 0x00010001, 0x00020002, 0x00030003, 0x0004002F, 0x00050004, 0x00060005, 0x00070006, 0x00080007, 0x00090008, 0x000A002A, 0x000B0009, 0x000C002B, 0x000D000A, 0x000E002C, 0x000F000B, 0x0010002D, 0x0011000C, 0x0012002E, 0x0013000D, 0x0014000E, 0x003D000F, 0x003E0010, 0x003F0011, 0x00400012, 0x00410013, 0x00420014, 0x00430015, 0x00440016, 0x00450017, 0x00460018, 0x00470019, 0x0048001A, 0x0049001B, 0x004A001C, 0x004B001D, 0x004C0034, 0x004D0035, 0x004E0036, 0x004F0037, 0x001F001E, 0x0020001F, 0x00210020, 0x00220021, 0x00230022, 0x00240023, 0x00250024, 0x00260025, 0x00270026, 0x00280027, 0x00290028, 0x002A0029, 0x00500038, 0x00510030, 0x00520031, 0x00530032, 0x00540033, 0xFFFF0000};  /* fzgx-allow: A1 retail pool bytes */\n__declspec(section \".fzgxpool\") static void fzgx_pool_keep12(void) { const u32 *volatile cp; cp = fzgx_pool_table12; }  /* fzgx-allow: S2 pool primer sink */\n__declspec(section \".fzgxpool\") static void fzgx_pool_prime13(void) {\n    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */\n    s = 100.0f;\n}\nstatic const u32 fzgx_pool_table14[3] = {0x0032001E, 0x00140004, 0xFFFFFFFF};  /* fzgx-allow: A1 retail pool bytes */\n__declspec(section \".fzgxpool\") static void fzgx_pool_keep14(void) { const u32 *volatile cp; cp = fzgx_pool_table14; }  /* fzgx-allow: S2 pool primer sink */\n__declspec(section \".fzgxpool\") static void fzgx_pool_prime15(void) {\n    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */\n    d = 0.5;\n    d = 0.20000000298023224;\n    s = 0.10000000149011612f;\n    s = 0.11999999731779099f;\n    s = -0.10000000149011612f;\n    s = -1.0f;\n    s = 0.8999999761581421f;\n    s = 0.49000000953674316f;\n    d = 0.800000011920929;\n    s = 0.4000000059604645f;\n}\nstatic const u32 fzgx_pool_table16[1] = {0x00000000};  /* fzgx-allow: A1 retail pool bytes */\n__declspec(section \".fzgxpool\") static void fzgx_pool_keep16(void) { const u32 *volatile cp; cp = fzgx_pool_table16; }  /* fzgx-allow: S2 pool primer sink */\n__declspec(section \".fzgxpool\") static void fzgx_pool_prime17(void) {\n    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */\n    s = 0.5f;\n}\nstatic const u32 fzgx_pool_table18[2] = {0x3F000000, 0x40000000};  /* fzgx-allow: A1 retail pool bytes */\n__declspec(section \".fzgxpool\") static void fzgx_pool_keep18(void) { const u32 *volatile cp; cp = fzgx_pool_table18; }  /* fzgx-allow: S2 pool primer sink */\n__declspec(section \".fzgxpool\") static void fzgx_pool_prime19(void) {\n    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */\n    s = -1.1920928955078125e-07f;\n    s = 240.0f;\n    s = 0.75f;\n}\nstatic const u32 fzgx_pool_table20[1] = {0x3F000000};  /* fzgx-allow: A1 retail pool bytes */\n__declspec(section \".fzgxpool\") static void fzgx_pool_keep20(void) { const u32 *volatile cp; cp = fzgx_pool_table20; }  /* fzgx-allow: S2 pool primer sink */\n__declspec(section \".fzgxpool\") static void fzgx_pool_prime21(void) {\n    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */\n    s = 1000.0f;\n}\nstatic const u32 fzgx_pool_table22[29] = {0xFFFFFFFF, 0xFFFFFFFF, 0x3F800000, 0x3F800000, 0x3F800000, 0x3F800000, 0x3F800000, 0x00000000, 0x00000000, 0x3F800000, 0x00000000, 0x3F800000, 0x00000000, 0x3F800000, 0x00000000, 0x00000000, 0x3F800000, 0x3F800000, 0x00000000, 0x3F800000, 0x3F800000, 0x3F800000, 0x00000000, 0x00000000, 0x00000000, 0x3F800000, 0x00000000, 0x00000000, 0xBF800000};  /* fzgx-allow: A1 retail pool bytes */\n__declspec(section \".fzgxpool\") static void fzgx_pool_keep22(void) { const u32 *volatile cp; cp = fzgx_pool_table22; }  /* fzgx-allow: S2 pool primer sink */\n__declspec(section \".fzgxpool\") static void fzgx_pool_prime23(void) {\n    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */\n    s = 0.800000011920929f;\n}\nstatic const u32 fzgx_pool_table24[16] = {0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000};  /* fzgx-allow: A1 retail pool bytes */\n__declspec(section \".fzgxpool\") static void fzgx_pool_keep24(void) { const u32 *volatile cp; cp = fzgx_pool_table24; }  /* fzgx-allow: S2 pool primer sink */\n__declspec(section \".fzgxpool\") static void fzgx_pool_prime25(void) {\n    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */\n    d = 0.0;\n    d = 1.0;\n    s = 15.0f;\n    s = 0.009999999776482582f;\n    s = 255.0f;\n    s = 128.0f;\n}\nstatic const u32 fzgx_pool_table26[28] = {0x41980000, 0x41700000, 0x41980000, 0x41980000, 0x41980000, 0x414E6666, 0x41500000, 0x41500000, 0x41500000, 0x41500000, 0x06010406, 0x02000000, 0x3F000000, 0x3F000000, 0x3F000000, 0x3F000000, 0x3E4CCCCD, 0x3F800000, 0x3F800000, 0xBF800000, 0xBF800000, 0x3F800000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000};  /* fzgx-allow: A1 retail pool bytes */\n__declspec(section \".fzgxpool\") static void fzgx_pool_keep26(void) { const u32 *volatile cp; cp = fzgx_pool_table26; }  /* fzgx-allow: S2 pool primer sink */\n__declspec(section \".fzgxpool\") static void fzgx_pool_prime27(void) {\n    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */\n    s = 17.0f;\n    s = 2.299999952316284f;\n    s = 14.699999809265137f;\n    s = 0.30000001192092896f;\n    s = 10.0f;\n    s = 7.699999809265137f;\n    s = 160.0f;\n    s = 25.0f;\n    d = 0.2;\n    s = 0.25f;\n    s = 8192.0f;\n    s = -30.0f;\n    s = 200.0f;\n    s = 40000.0f;\n}\nstatic const u32 fzgx_pool_table28[29] = {0x467FA400, 0x467FA400, 0x46822A00, 0x46822A00, 0x46848200, 0x46848200, 0x4686DA00, 0x4686DA00, 0x45C9D800, 0x45CB0000, 0x45E2D800, 0x45E40000, 0x45FBD800, 0x45FD0000, 0x46517C00, 0x4651C400, 0x46537800, 0x4653C000, 0x46557400, 0x4655BC00, 0x465CE400, 0x465D2000, 0x46847400, 0x46849400, 0x02010003, 0x02030103, 0x00020302, 0x03010001, 0x01000200};  /* fzgx-allow: A1 retail pool bytes */\n__declspec(section \".fzgxpool\") static void fzgx_pool_keep28(void) { const u32 *volatile cp; cp = fzgx_pool_table28; }  /* fzgx-allow: S2 pool primer sink */\n__declspec(section \".fzgxpool\") static void fzgx_pool_prime29(void) {\n    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */\n    s = 5.0f;\n    s = 20.0f;\n    s = 40.0f;\n    s = -1000.0f;\n    s = -35.0f;\n    s = 35.0f;\n    s = 1500.0f;\n}\nstatic const u32 fzgx_pool_table30[1] = {0x00000000};  /* fzgx-allow: A1 retail pool bytes */\n__declspec(section \".fzgxpool\") static void fzgx_pool_keep30(void) { const u32 *volatile cp; cp = fzgx_pool_table30; }  /* fzgx-allow: S2 pool primer sink */\n__declspec(section \".fzgxpool\") static void fzgx_pool_prime31(void) {\n    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */\n    d = 50.0;\n    s = 50.0f;\n    s = -2.000060796737671f;\n}\nstatic const u32 fzgx_pool_table32[2] = {0x0000C0FF, 0x00000000};  /* fzgx-allow: A1 retail pool bytes */\n__declspec(section \".fzgxpool\") static void fzgx_pool_keep32(void) { const u32 *volatile cp; cp = fzgx_pool_table32; }  /* fzgx-allow: S2 pool primer sink */\n__declspec(section \".fzgxpool\") static void fzgx_pool_prime33(void) {\n    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */\n    s = 4.125f;\n}\nstatic const u32 fzgx_pool_table34[1] = {0x00000000};  /* fzgx-allow: A1 retail pool bytes */\n__declspec(section \".fzgxpool\") static void fzgx_pool_keep34(void) { const u32 *volatile cp; cp = fzgx_pool_table34; }  /* fzgx-allow: S2 pool primer sink */\n__declspec(section \".fzgxpool\") static void fzgx_pool_prime35(void) {\n    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */\n    d = -1.0;\n    d = 0.05;\n    d = 1.5707963705062866;\n    s = -0.5f;\n}\nstatic const u32 fzgx_pool_table36[1] = {0x00000000};  /* fzgx-allow: A1 retail pool bytes */\n__declspec(section \".fzgxpool\") static void fzgx_pool_keep36(void) { const u32 *volatile cp; cp = fzgx_pool_table36; }  /* fzgx-allow: S2 pool primer sink */\n__declspec(section \".fzgxpool\") static void fzgx_pool_prime37(void) {\n    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */\n    d = 32768.0;\n    s = 65536.0f;\n    s = 2.1415927410125732f;\n    s = 32768.0f;\n    s = 320.0f;\n    s = 55.0f;\n    s = 0.9333333373069763f;\n    s = 90000.0f;\n}\nstatic const u32 fzgx_pool_table38[1] = {0x60000000};  /* fzgx-allow: A1 retail pool bytes */\n__declspec(section \".fzgxpool\") static void fzgx_pool_keep38(void) { const u32 *volatile cp; cp = fzgx_pool_table38; }  /* fzgx-allow: S2 pool primer sink */\n#pragma section code_type \".text\"\n\nextern u8 lbl_1_bss_8CA28;\nextern void fn_80008BEC(void *, int, u32);\n\ntypedef struct {\n    f32 unk_00;\n    f32 unk_04;\n    f32 unk_08;\n    f32 unk_0C;\n    f32 unk_10;\n    f32 unk_14;\n    f32 unk_18;\n    f32 unk_1C;\n    f32 unk_20;\n    f32 unk_24;\n    u16 unk_28;\n    u16 unk_2A;\n    u16 unk_2C;\n    u16 unk_2E;\n    u16 unk_30;\n    u16 unk_32;\n    u32 unk_34;\n    u8 unk_38;\n    u8 unk_39;\n    u8 unk_3A;\n    u8 unk_3B;\n    u32 unk_3C;\n    u8 unk_40;\n    u8 unk_41[3];\n    f32 unk_44;\n    f32 unk_48;\n    f32 unk_4C;\n    f32 unk_50;\n    u16 unk_54;\n    u16 unk_56;\n    u32 unk_58;\n    u8 unk_5C[4];\n} Fn1_8CED0State;\n\nvoid fn_1_8CED0(Fn1_8CED0State *state, u16 arg1, u16 arg2) {\n    u16 h = arg2;\n    u32 w = arg1;\n\n    state->unk_00 = 0.0f;\n    state->unk_04 = 0.0f;\n    state->unk_08 = (f32)w;\n    state->unk_0C = (f32)h;\n    state->unk_10 = 0.0f;\n    state->unk_14 = 1.0f;\n    state->unk_18 = 0.0f;\n    state->unk_1C = 0.0f;\n    state->unk_20 = (f32)w;\n    state->unk_24 = (f32)h;\n    state->unk_28 = 0;\n    state->unk_2A = 0;\n    state->unk_2C = arg1;\n    state->unk_2E = arg2;\n    if (lbl_1_bss_8CA28 != 0) {\n        state->unk_34 = 5;\n    } else {\n        state->unk_34 = 6;\n    }\n    state->unk_38 = 1;\n    if (lbl_1_bss_8CA28 != 0) {\n        state->unk_39 = 1;\n    } else {\n        state->unk_39 = 0;\n    }\n    w = state->unk_39;\n    if ((w) != 0) {\n        state->unk_30 = state->unk_2C >> 1;\n        state->unk_32 = state->unk_2E >> 1;\n    } else {\n        state->unk_30 = state->unk_2C;\n        state->unk_32 = state->unk_2E;\n    }\n    state->unk_3A = 1;\n    state->unk_3C = 7;\n    state->unk_40 = 0;\n    state->unk_44 = 55.0f;\n    state->unk_48 = (0.9333333373069763f * arg1) / arg2;\n    state->unk_4C = 0.10000000149011612f;\n    state->unk_50 = 90000.0f;    state->unk_54 = 1;\n    fn_80008BEC(state->unk_5C, 0, 4);\n    state->unk_58 = 1;\n}\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "rel/main_rel/car/fn_1_8CED0.c",
+    "bytes": 468,
+    "headers_sha256": "a589c0d12ea0a921f727e63ed125ea39c16e33457a7ec3899c6c793bcdfddceb",
+    "oracle_sha256": "7cc891120feb212c397b96ddb46f5213d85d0998668a1ee4bd55a3d6abc2e1ff",
+    "recipe": [
+      {
+        "label": "lifetime reuse w for tmp_ra1 at 15572",
+        "input_sha256": "7431d6fd05492f69f2dc04cfb095d5724971d4e64c646a49b7c7e9081376ba2c",
+        "output_sha256": "226af8a4c2343ec01f3385eb4b2fa946874bdd0e83020c89c591227f7b018b28",
+        "input_symbol": "fn_1_8CED0",
+        "output_symbol": "fn_1_8CED0",
+        "edits": [
+          [
+            15576,
+            15599,
+            "w = state->unk_39;\n    tmp_ra1 = w"
+          ]
+        ]
+      },
+      {
+        "label": "h:u32->u16",
+        "input_sha256": "226af8a4c2343ec01f3385eb4b2fa946874bdd0e83020c89c591227f7b018b28",
+        "output_sha256": "5f2b9f1f42af186c390a89aa449bbea4fcbedc076e7ea0d632d19dda18d4fde7",
+        "input_symbol": "fn_1_8CED0",
+        "output_symbol": "fn_1_8CED0",
+        "edits": [
+          [
+            14924,
+            14926,
+            "16"
+          ]
+        ]
+      },
+      {
+        "label": "attributed inline tmp_ra1 at line 251",
+        "input_sha256": "5f2b9f1f42af186c390a89aa449bbea4fcbedc076e7ea0d632d19dda18d4fde7",
+        "output_sha256": "d2a443697c405387a35ea145e7781877d91a10493fa0b7a79fb5ba92826a0a69",
+        "input_symbol": "fn_1_8CED0",
+        "output_symbol": "fn_1_8CED0",
+        "edits": [
+          [
+            14955,
+            14972,
+            ""
+          ],
+          [
+            15599,
+            15627,
+            "if ((w)"
+          ]
+        ]
+      }
+    ],
+    "link": "pending"
+  },
+  "fn_1_581AC": {
+    "seed_symbol": "fn_1_581AC",
+    "generator": "fzgx fixup",
+    "transform": "opt_propagation off",
+    "seed": "#include \"types.h\"\n\nextern u16 lbl_1_bss_6C844;\nextern u32 lbl_1_bss_6C840;\n\ntypedef struct AvLineEntry {\n    u16 unk_00;\n    u16 unk_02;\n    u8 unk_04[0x100];\n} AvLineEntry;\n\nextern void fn_80008BA8(void*, void*, u32);\n\ns32 fn_1_581AC(u16 value, u16 type, void* data) {\n    AvLineEntry *entry;\n    u8 *p;\n\n    if (lbl_1_bss_6C844 == 0x64) {\n        return 0;\n    }\n\n    ((AvLineEntry*)lbl_1_bss_6C840)[lbl_1_bss_6C844].unk_00 = value;\n    p = (u8*)lbl_1_bss_6C840 + lbl_1_bss_6C844 * 0x104;\n    entry = (AvLineEntry*)p;\n    entry->unk_02 = type;\n    fn_80008BA8(((AvLineEntry*)lbl_1_bss_6C840)[lbl_1_bss_6C844].unk_04, data, 0x100);\n    lbl_1_bss_6C844++;\n    return 1;\n}\n",
+    "seed_sha256": "79cca76455c1f50c975913607d0d6a42915843ec7f394914e3dff9c1156bace3",
+    "generated_sha256": "65af1aeabd6d95d545f655b29b9a530a5c4dbf90c5a02d18f5e0242792d1a766",
+    "generated_source": "#include \"types.h\"\n\nextern u16 lbl_1_bss_6C844;\nextern u32 lbl_1_bss_6C840;\n\ntypedef struct AvLineEntry {\n    u16 unk_00;\n    u16 unk_02;\n    u8 unk_04[0x100];\n} AvLineEntry;\n\nextern void fn_80008BA8(void*, void*, u32);\n\n#pragma opt_propagation off\ns32 fn_1_581AC(u16 value, u16 type, void* data) {\n    AvLineEntry *entry;\n    u8 *p;\n\n    if (lbl_1_bss_6C844 == 0x64) {\n        return 0;\n    }\n\n    ((AvLineEntry*)lbl_1_bss_6C840)[lbl_1_bss_6C844].unk_00 = value;\n    p = (u8*)lbl_1_bss_6C840 + lbl_1_bss_6C844 * 0x104;\n    entry = (AvLineEntry*)p;\n    entry->unk_02 = type;\n    fn_80008BA8(((AvLineEntry*)lbl_1_bss_6C840)[lbl_1_bss_6C844].unk_04, data, 0x100);\n    lbl_1_bss_6C844++;\n    return 1;\n}\n#pragma opt_propagation reset\n\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "rel/main_rel/avline/fn_1_581AC.c",
+    "bytes": 156,
+    "headers_sha256": "a589c0d12ea0a921f727e63ed125ea39c16e33457a7ec3899c6c793bcdfddceb",
+    "oracle_sha256": "7cc891120feb212c397b96ddb46f5213d85d0998668a1ee4bd55a3d6abc2e1ff",
+    "recipe": [
+      {
+        "label": "opt_propagation off",
+        "input_sha256": "79cca76455c1f50c975913607d0d6a42915843ec7f394914e3dff9c1156bace3",
+        "output_sha256": "65af1aeabd6d95d545f655b29b9a530a5c4dbf90c5a02d18f5e0242792d1a766",
+        "input_symbol": "fn_1_581AC",
+        "output_symbol": "fn_1_581AC",
+        "edits": [
+          [
+            221,
+            221,
+            "#pragma opt_propagation off\n"
+          ],
+          [
+            673,
+            673,
+            "#pragma opt_propagation reset\n\n"
+          ]
+        ]
+      }
+    ],
+    "link": "pending"
+  },
+  "fn_1_12AC28": {
+    "seed_symbol": "fn_1_12AC28",
+    "generator": "fzgx fixup",
+    "transform": "define retail TU bss objects (dtk)",
+    "seed": "#include \"types.h\"\n#include \"rel/main_rel/archive.h\"\n\nextern u32 lbl_1_bss_897A0;\nextern void *lbl_801A6410;\n\nextern s32 fn_8006A480(void *entry, void *arg0, void *result);\nextern void *fn_8006A998(void *result);\nextern void *fn_8006A9AC(void *result);\nextern void OSPanic(u8 *message, s32 line, u8 *file, ...);\nextern void *fn_1_4630(void *arg0, void *arg1, void *arg2, s32 arg3);\nextern void fn_80008BA8(void *arg0, void *arg1, void *arg2);\nextern void *fn_1_D38A4(void *arg0, s32 arg1);\nextern void *fn_1_D3884(void *arg0);\n\ntypedef struct ArchiveEntry {\n    u8 field_0[0x4c];\n    u8 data[0x20];\n} ArchiveEntry;\n\ntypedef struct ArchiveState {\n    s32 count;\n    s32 ready;\n    s32 fallback;\n    ArchiveEntry entries[1];\n} ArchiveState;\n\nvoid *fn_1_12AC28(void *arg0, void **arg1, void **arg2) {\n    void *ret;\n    void *lookup;\n    void *archive;\n    ArchiveState *state;\n    u8 info1[12];\n    u8 info2[12];\n\n    state = (ArchiveState *)&lbl_1_bss_897A0;\n    if (state->ready != 0) {\n        if (fn_8006A480(state->entries[state->count].data, arg0, info1) != 0) {\n            lookup = fn_8006A998(info1);\n        } else {\n            lookup = 0;\n        }\n        archive = lookup;\n        if (lookup != 0) {\n            if (arg1 != 0 && arg2 != 0) {\n                if (fn_8006A480(state->entries[state->count].data, arg0, info2) == 0) {\n                    OSPanic(lbl_1_data_40608, 0x1be, lbl_1_data_4076C);\n                }\n                *arg2 = fn_8006A9AC(info2);\n                if (*arg2 != 0) {\n                    *arg1 = fn_1_4630(lbl_801A6410, *arg2,\n                        lbl_1_data_40608, 0x1fc);\n                    fn_80008BA8(*arg1, lookup, *arg2);\n                    archive = *arg1;\n                }\n                ret = fn_1_D38A4(archive, 0);\n            } else {\n                ret = fn_1_D38A4(lookup, 0);\n            }\n        } else if (state->fallback != 0) {\n            ret = fn_1_D3884(arg0);\n        } else {\n            ret = 0;\n        }\n    } else {\n        ret = fn_1_D3884(arg0);\n    }\n    return ret;\n}\n",
+    "seed_sha256": "c6e302146641badbe49fb1e62427af7776cacd085511502ffe571d2b78fe86b9",
+    "generated_sha256": "0e3b3a5678421e4e8a82b410ccc0a6eb1fe7996541bb1b0ce54f4b907316035a",
+    "generated_source": "#include \"types.h\"\n#include \"rel/main_rel/archive.h\"\n\nextern void *lbl_801A6410;\n\nextern s32 fn_8006A480(void *entry, void *arg0, void *result);\nextern void *fn_8006A998(void *result);\nextern void *fn_8006A9AC(void *result);\nextern void OSPanic(u8 *message, s32 line, u8 *file, ...);\nextern void *fn_1_4630(void *arg0, void *arg1, void *arg2, s32 arg3);\nextern void fn_80008BA8(void *arg0, void *arg1, void *arg2);\nextern void *fn_1_D38A4(void *arg0, s32 arg1);\nextern void *fn_1_D3884(void *arg0);\n\ntypedef struct ArchiveEntry {\n    u8 field_0[0x4c];\n    u8 data[0x20];\n} ArchiveEntry;\n\ntypedef struct ArchiveState {\n    s32 count;\n    s32 ready;\n    s32 fallback;\n    ArchiveEntry entries[1];\n} ArchiveState;\n\nstatic inline ArchiveEntry *fn_1_12AC28_array_read(ArchiveEntry *array) { return array; }\n#pragma opt_loop_invariants off\ntypedef struct lbl_1_bss_897AC_t {\n    ArchiveEntry entries[1];\n    u8 pad_6C[0x1ac8];\n} lbl_1_bss_897AC_t;\n\n/* file-scope objects of the retail TU, in retail order: MWCC addresses them off one section base */\ns32 fzgx_obj_lbl_1_bss_897A0;\ns32 lbl_1_bss_897A4;\ns32 lbl_1_bss_897A8;\nlbl_1_bss_897AC_t fzgx_obj_lbl_1_bss_897AC;\nu32 fzgx_obj_lbl_1_bss_8B2E0[48];\nu32 fzgx_obj_lbl_1_bss_8B3A0[83];\n\n#pragma section code_type \".fzgxpool\"\nstatic void fzgx_bss_layout(void) {\n    volatile u8 s;  /* fzgx-allow: S2 layout primer sink: MWCC emits .bss objects in first-access order */\n    s = *(u8 *)&fzgx_obj_lbl_1_bss_897A0;\n    s = *(u8 *)&lbl_1_bss_897A4;\n    s = *(u8 *)&lbl_1_bss_897A8;\n    s = *(u8 *)&fzgx_obj_lbl_1_bss_897AC;\n    s = *(u8 *)&fzgx_obj_lbl_1_bss_8B2E0;\n    s = *(u8 *)&fzgx_obj_lbl_1_bss_8B3A0;\n}\n#pragma section code_type \".text\"\n\nvoid *fn_1_12AC28(void *arg0, void **arg1, void **arg2) {\n    void *ret;\n    void *lookup;\n    void *archive;\n    u8 info1[12];\n    u8 info2[12];\n\n    \n    if (lbl_1_bss_897A4 != 0) {\n        if (fn_8006A480(fn_1_12AC28_array_read(fzgx_obj_lbl_1_bss_897AC.entries)[fzgx_obj_lbl_1_bss_897A0].data, arg0, info1) != 0) {\n            lookup = fn_8006A998(info1);\n        } else {\n            lookup = 0;\n        }\n        archive = lookup;\n        if (lookup != 0) {\n            if (arg1 != 0 && arg2 != 0) {\n                if (fn_8006A480(fn_1_12AC28_array_read(fzgx_obj_lbl_1_bss_897AC.entries)[fzgx_obj_lbl_1_bss_897A0].data, arg0, info2) == 0) {\n                    OSPanic(lbl_1_data_40608, 0x1be, lbl_1_data_4076C);\n                }\n                *arg2 = fn_8006A9AC(info2);\n                if (*arg2 != 0) {\n                    *arg1 = fn_1_4630(lbl_801A6410, *arg2,\n                        lbl_1_data_40608, 0x1fc);\n                    fn_80008BA8(*arg1, lookup, *arg2);\n                    archive = *arg1;\n                }\n                ret = fn_1_D38A4(archive, 0);\n            } else {\n                ret = fn_1_D38A4(lookup, 0);\n            }\n        } else if (lbl_1_bss_897A8 != 0) {\n            ret = fn_1_D3884(arg0);\n        } else {\n            ret = 0;\n        }\n    } else {\n        ret = fn_1_D3884(arg0);\n    }\n    return ret;\n}\n#pragma opt_loop_invariants reset\n\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "rel/main_rel/archive/fn_1_12AC28.c",
+    "bytes": 376,
+    "headers_sha256": "a589c0d12ea0a921f727e63ed125ea39c16e33457a7ec3899c6c793bcdfddceb",
+    "oracle_sha256": "7cc891120feb212c397b96ddb46f5213d85d0998668a1ee4bd55a3d6abc2e1ff",
+    "recipe": [
+      {
+        "label": "address typed base at every site (ArchiveEntry) with opt_loop_invariants off",
+        "input_sha256": "c6e302146641badbe49fb1e62427af7776cacd085511502ffe571d2b78fe86b9",
+        "output_sha256": "01b6e4aaf325902a9527babe423b13619d70007ac72d5fd4ffc4458938a89d17",
+        "input_symbol": "fn_1_12AC28",
+        "output_symbol": "fn_1_12AC28",
+        "edits": [
+          [
+            740,
+            740,
+            "static inline ArchiveEntry *fn_1_12AC28_array_read(ArchiveEntry *array) { return array; }\n#pragma opt_loop_invariants off\n"
+          ],
+          [
+            1011,
+            1025,
+            "fn_1_12AC28_array_read(state->entries)"
+          ],
+          [
+            1286,
+            1300,
+            "fn_1_12AC28_array_read(state->entries)"
+          ],
+          [
+            2051,
+            2051,
+            "#pragma opt_loop_invariants reset\n\n"
+          ]
+        ]
+      },
+      {
+        "label": "define retail TU bss objects (dtk)",
+        "input_sha256": "01b6e4aaf325902a9527babe423b13619d70007ac72d5fd4ffc4458938a89d17",
+        "output_sha256": "0e3b3a5678421e4e8a82b410ccc0a6eb1fe7996541bb1b0ce54f4b907316035a",
+        "input_symbol": "fn_1_12AC28",
+        "output_symbol": "fn_1_12AC28",
+        "edits": [
+          [
+            54,
+            82,
+            ""
+          ],
+          [
+            862,
+            862,
+            "typedef struct lbl_1_bss_897AC_t {\n    ArchiveEntry entries[1];\n    u8 pad_6C[0x1ac8];\n} lbl_1_bss_897AC_t;\n\n/* file-scope objects of the retail TU, in retail order: MWCC addresses them off one section base */\ns32 fzgx_obj_lbl_1_bss_897A0;\ns32 lbl_1_bss_897A4;\ns32 lbl_1_bss_897A8;\nlbl_1_bss_897AC_t fzgx_obj_lbl_1_bss_897AC;\nu32 fzgx_obj_lbl_1_bss_8B2E0[48];\nu32 fzgx_obj_lbl_1_bss_8B3A0[83];\n\n#pragma section code_type \".fzgxpool\"\nstatic void fzgx_bss_layout(void) {\n    volatile u8 s;  /* fzgx-allow: S2 layout primer sink: MWCC emits .bss objects in first-access order */\n    s = *(u8 *)&fzgx_obj_lbl_1_bss_897A0;\n    s = *(u8 *)&lbl_1_bss_897A4;\n    s = *(u8 *)&lbl_1_bss_897A8;\n    s = *(u8 *)&fzgx_obj_lbl_1_bss_897AC;\n    s = *(u8 *)&fzgx_obj_lbl_1_bss_8B2E0;\n    s = *(u8 *)&fzgx_obj_lbl_1_bss_8B3A0;\n}\n#pragma section code_type \".text\"\n\n"
+          ],
+          [
+            972,
+            997,
+            ""
+          ],
+          [
+            1038,
+            1184,
+            "\n    if (lbl_1_bss_897A4 != 0) {\n        if (fn_8006A480(fn_1_12AC28_array_read(fzgx_obj_lbl_1_bss_897AC.entries)[fzgx_obj_lbl_1_bss_897A0"
+          ],
+          [
+            1455,
+            1483,
+            "fzgx_obj_lbl_1_bss_897AC.entries)[fzgx_obj_lbl_1_bss_897A0"
+          ],
+          [
+            2044,
+            2059,
+            "lbl_1_bss_897A8"
+          ]
+        ]
+      }
+    ],
+    "link": "pending"
+  },
+  "fn_1_55924": {
+    "seed_symbol": "fn_1_55924",
+    "generator": "fzgx fixup",
+    "transform": "retail rotated bit tests intrinsic",
+    "seed": "#include \"types.h\"\n#include \"rel/main_rel/globals.h\"\n#include \"rel/main_rel/font.h\"\n\nextern void *fn_1_54448(void *value);\nextern void *fn_1_548AC(u32 size);\nextern void fn_1_55C48(void);\nextern s16 fn_1_7BE94(void);\nextern void fn_1_5489C(void *value, void *data);\nextern void fn_1_56530(void);\nextern void lbl_8006DB74(void *value);\nextern void lbl_8006DD14(void *value, void *data);\nextern u8 *lbl_801A66CC;\n\ntypedef struct {\n    u8 pad_00[0x4];\n    void *vtable;\n    void *owner;\n    u8 pad_0C[0x30];\n    s16 unk_3C;\n    u8 pad_3E[0x2];\n    Obj_1_bss_6C7A4 settings;\n    void *items[4];\n} Fn1_55924Object;\n\nvoid fn_1_55924(void *value, void *arg) {\n    Fn1_55924Object *object;\n    void *handle;\n    s32 ok;\n    s32 i;\n    Obj_1_bss_6C7CC *flags;\n\n    handle = fn_1_54448(arg);\n    object = (Fn1_55924Object *)fn_1_548AC(0x78);\n    if (object != 0) {\n        object->vtable = (void *)fn_1_55C48;\n        object->owner = value;\n        ok = 1;\n        lbl_8006DB74((u8 *)object + 0xC);\n        object->unk_3C = fn_1_7BE94();\n        object->settings = lbl_1_bss_6C7A4;\n        flags = &lbl_1_bss_6C7CC;\n        for (i = 0; i < 4; i++) {\n            if ((flags->unk_0 << (i + 1)) >> 31) {\n                object->items[i] = fn_1_548AC(0x30);\n                if (object->items[i] != 0) {\n                    lbl_8006DD14((((i * 0x30) + ((u8 *)lbl_801A66CC)) + (0xE0)), object->items[i]);\n                } else {\n                    ok = 0;\n                }\n            } else {\n                object->items[i] = 0;\n            }\n        }\n        if (ok != 0) {\n            fn_1_5489C(handle, object);\n        }\n    }\n    fn_1_56530();\n}\n",
+    "seed_sha256": "7fa05d06b72dd37378e29eb6b4e81834c8aa1619d1ee84cb726deef422726e6a",
+    "generated_sha256": "8b75ba732ef709703cdbab60d2a6c85026385a70b0777b560d2ae324bf5f2ad0",
+    "generated_source": "#include \"types.h\"\n#include \"rel/main_rel/globals.h\"\n#include \"rel/main_rel/font.h\"\n\nextern void *fn_1_54448(void *value);\nextern void *fn_1_548AC(u32 size);\nextern void fn_1_55C48(void);\nextern s16 fn_1_7BE94(void);\nextern void fn_1_5489C(void *value, void *data);\nextern void fn_1_56530(void);\nextern void lbl_8006DB74(void *value);\nextern void lbl_8006DD14(void *value, void *data);\nextern u8 *lbl_801A66CC;\n\ntypedef struct {\n    u8 pad_00[0x4];\n    void *vtable;\n    void *owner;\n    u8 pad_0C[0x30];\n    s16 unk_3C;\n    u8 pad_3E[0x2];\n    Obj_1_bss_6C7A4 settings;\n    void *items[4];\n} Fn1_55924Object;\n\nvoid fn_1_55924(void *value, void *arg) {\n    Fn1_55924Object *object;\n    void *handle;\n    s32 ok;\n    s32 i;\n    Obj_1_bss_6C7CC *flags;\n\n    handle = fn_1_54448(arg);\n    object = (Fn1_55924Object *)fn_1_548AC(0x78);\n    if (object != 0) {\n        object->vtable = (void *)fn_1_55C48;\n        object->owner = value;\n        ok = 1;\n        lbl_8006DB74((u8 *)object + 0xC);\n        object->unk_3C = fn_1_7BE94();\n        object->settings = lbl_1_bss_6C7A4;\n        flags = &lbl_1_bss_6C7CC;\n        for (i = 0; i < 4; i++) {\n            if (__rlwnm(flags->unk_0, (i + 1) & 31, 31, 31)) {\n                object->items[i] = fn_1_548AC(0x30);\n                if (object->items[i] != 0) {\n                    lbl_8006DD14((((i * 0x30) + ((u8 *)lbl_801A66CC)) + (0xE0)), object->items[i]);\n                } else {\n                    ok = 0;\n                }\n            } else {\n                object->items[i] = 0;\n            }\n        }\n        if (ok != 0) {\n            fn_1_5489C(handle, object);\n        }\n    }\n    fn_1_56530();\n}\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "rel/main_rel/font/fn_1_55924.c",
+    "bytes": 352,
+    "headers_sha256": "a589c0d12ea0a921f727e63ed125ea39c16e33457a7ec3899c6c793bcdfddceb",
+    "oracle_sha256": "7cc891120feb212c397b96ddb46f5213d85d0998668a1ee4bd55a3d6abc2e1ff",
+    "recipe": [
+      {
+        "label": "retail rotated bit tests intrinsic",
+        "input_sha256": "7fa05d06b72dd37378e29eb6b4e81834c8aa1619d1ee84cb726deef422726e6a",
+        "output_sha256": "8b75ba732ef709703cdbab60d2a6c85026385a70b0777b560d2ae324bf5f2ad0",
+        "input_symbol": "fn_1_55924",
+        "output_symbol": "fn_1_55924",
+        "edits": [
+          [
+            1156,
+            1187,
+            "__rlwnm(flags->unk_0, (i + 1) & 31, 31, 31)"
+          ]
+        ]
+      }
+    ],
+    "link": "pending"
+  },
+  "fn_80070774": {
+    "seed_symbol": "fn_80070774",
+    "generator": "fzgx fixup",
+    "transform": "lifetime reuse t4 for t6 at 3520",
+    "seed": "#include \"types.h\"\n\nstruct Sig_GXInitFifoBase_GXInitFifoBase_Arg0 {\n    u32 unk_0;\n    u32 unk_4;\n    u8 unk_8;\n    u8 pad_C[0x10];\n    u32 unk_1C;\n};\nstruct Sig_GXInitFifoPtrs_GXInitFifoPtrs_Arg0 {\n    u8 pad_0[0x8];\n    u32 unk_8;\n    u8 pad_C[0x8];\n    u32 unk_14;\n    u32 unk_18;\n    s32 unk_1C;\n};\ntypedef u8 Sig_fn_80034ECC_GXBool;\ntypedef enum Sig_fn_80037C2C__GXPixelFmt {\n    Sig_fn_80037C2C_GX_PF_RGB8_Z24,\n    Sig_fn_80037C2C_GX_PF_RGBA6_Z24,\n    Sig_fn_80037C2C_GX_PF_RGB565_Z16,\n    Sig_fn_80037C2C_GX_PF_Z24,\n    Sig_fn_80037C2C_GX_PF_Y8,\n    Sig_fn_80037C2C_GX_PF_U8,\n    Sig_fn_80037C2C_GX_PF_V8,\n    Sig_fn_80037C2C_GX_PF_YUV420,\n} Sig_fn_80037C2C_GXPixelFmt;\ntypedef enum Sig_fn_80037C2C__GXZFmt16 {\n    Sig_fn_80037C2C_GX_ZC_LINEAR,\n    Sig_fn_80037C2C_GX_ZC_NEAR,\n    Sig_fn_80037C2C_GX_ZC_MID,\n    Sig_fn_80037C2C_GX_ZC_FAR,\n} Sig_fn_80037C2C_GXZFmt16;\ntypedef u8 Sig_fn_80037D14_GXBool;\ntypedef u8 Sig_fn_80035110_GXBool;\n\nstruct fn_80070774_lbl_801A6CF4_T {\n    u32 unk_0;\n    u16 unk_4;\n    u16 unk_6;\n    u16 unk_8;\n    u8 pad_A[0xF];\n    u8 unk_19;\n    u8 unk_1A[0x18];\n    u8 unk_32[0];\n};\nstruct fn_80070774_lbl_801A6D30_T {\n    u32 unk_0;\n    u32 unk_4;\n    u32 unk_8;\n    u32 unk_C;\n    u32 unk_10;\n    u32 unk_14;\n    u32 unk_18;\n};\n\nextern f32 lbl_801A7410;\nextern f32 lbl_801A7414;\nextern f64 lbl_801A7418;\nextern s32 fn_8001B42C(u32 *);\nextern struct fn_80070774_lbl_801A6CF4_T *lbl_801A6CF4;\nextern struct fn_80070774_lbl_801A6D30_T *lbl_801A6D30;\nextern u32 GXInit(u32, u32);\nextern u32 GXSetDispCopyYScale(f32);\nextern u32 fn_80037D40(u32, u32);\nextern u32 fn_80038EEC(f32, f32, f32, f32, f32, f32);\nextern u32 fn_80070CF8(u32);\nextern void fn_80071D30(void);\nextern void fn_80074188(u32, u32, u32, u32);\nextern void fn_8007423C(u32, u32, u32, u32);\nextern void fn_800743C4(s32, u32);\nextern void fn_800744F8(void *, u32);\nextern void fn_80034ECC(u8, u8 *, u32, u8 *);\nextern void fn_80037C2C(Sig_fn_80037C2C_GXPixelFmt, Sig_fn_80037C2C_GXZFmt16);\nextern void fn_80037D14(Sig_fn_80037D14_GXBool);\nextern u8 lbl_8019E18C[];\nextern u32 lbl_801A6CE0;\nextern u32 lbl_801A6CE4;\nextern u32 lbl_801A7918;\nextern void DCFlushRange(void *, u32);\nextern void GXInitFifoBase(struct Sig_GXInitFifoBase_GXInitFifoBase_Arg0 *, u32, u32);\nextern void GXInitFifoPtrs(struct Sig_GXInitFifoPtrs_GXInitFifoPtrs_Arg0 *, u32, u32);\nextern void fn_8001AF64(void);\nextern void fn_8001BC54(void);\nextern void fn_8001BD84(u32);\nextern void fn_800350F4(u32);\nextern void fn_80035110(void *, Sig_fn_80035110_GXBool);\n\nstatic inline u8 * fn_80070774_read_pointer(struct fn_80070774_lbl_801A6CF4_T * owner) { return owner->unk_1A; }\n#pragma opt_common_subs off\nvoid fn_80070774(u32 arg0, u32 arg1, u32 arg2) {\n    u32 t7;\n    u32 t5;\n    u32 t4;\n    struct { u32 value; } t2;\n    struct { u32 value; } t0;\n    s32 v5;\n    u32 v4;\n    u32 v3;\n    struct { u32 value; } v2;\n    struct { u32 value; } v1;\n    u32 v0;\n    u32 loc_8;\n\n    v0 = (((((lbl_801A6CF4->unk_4 + 15) & 0xFFF0) * 528) << 1));\n    t0.value = fn_80070CF8(v0);\n    v1.value = ((v0 + 31) & ~0x1F);\n    DCFlushRange((void *)t0.value, v1.value);\n    if ((lbl_801A6CE0 & 0x10) == 0) {\n        t2.value = fn_80070CF8(v0);\n        v2.value = t2.value;\n        DCFlushRange((void *)t2.value, v1.value);\n    }\n    t4 = fn_80070CF8(arg1);\n    lbl_801A6CE4 = arg1;\n    t5 = GXInit(t4, arg1);\n    lbl_801A6D30->unk_14 = t5;\n    if ((s32)arg0 != 0) {\n        lbl_801A6CE0 = (lbl_801A6CE0 | 4);\n        lbl_801A6D30->unk_18 = (u32)lbl_8019E18C;\n{\n    u32 t6;\n        t6 = fn_80070CF8(arg1);\n        GXInitFifoBase((struct Sig_GXInitFifoBase_GXInitFifoBase_Arg0 *)(u32)lbl_8019E18C, t6, arg1);\n        GXInitFifoPtrs((struct Sig_GXInitFifoPtrs_GXInitFifoPtrs_Arg0 *)(u32)lbl_8019E18C, t6, t6);\n}\n    }\n    lbl_801A6D30->unk_4 = t0.value;\n    if ((lbl_801A6CE0 & 0x10) != 0) {\n        lbl_801A6D30->unk_8 = t0.value;\n    } else {\n        lbl_801A6D30->unk_8 = v2.value;\n    }\n    lbl_801A6D30->unk_0 = lbl_801A6D30->unk_8;\n    lbl_801A6D30->unk_C = 0;\n    lbl_801A6D30->unk_10 = 0;\n    fn_80071D30();\n    fn_80038EEC(0.0f, 0.0f, (f32)(u32)lbl_801A6CF4->unk_4, (f32)(u32)lbl_801A6CF4->unk_6,\n                0.0f, 1.0f);\n    fn_80074188(0, 0, lbl_801A6CF4->unk_4, lbl_801A6CF4->unk_6);\n    fn_8007423C(0, 0, lbl_801A6CF4->unk_4, lbl_801A6CF4->unk_6);\n    fn_800743C4(lbl_801A6CF4->unk_4, lbl_801A6CF4->unk_8);\n    GXSetDispCopyYScale((f32)(u32)lbl_801A6CF4->unk_8 / (f32)(u32)lbl_801A6CF4->unk_6);\n    fn_80034ECC(lbl_801A6CF4->unk_19, fn_80070774_read_pointer(lbl_801A6CF4), 1, lbl_801A6CF4->unk_32);\n    if ((s32)arg2 != 0) {\n        fn_80037C2C(Sig_fn_80037C2C_GX_PF_RGBA6_Z24, Sig_fn_80037C2C_GX_ZC_LINEAR);\n        fn_80037D14(1);\n        fn_80037D40(1, 0);\n    } else {\n        fn_80037C2C(Sig_fn_80037C2C_GX_PF_RGB8_Z24, Sig_fn_80037C2C_GX_ZC_LINEAR);\n        fn_80037D14(0);\n    }\n    loc_8 = lbl_801A7918;\n    fn_800744F8((void *)&loc_8, 0xFFFFFF);\n    fn_80035110((void *)lbl_801A6D30->unk_4, 1);\n    fn_80035110((void *)lbl_801A6D30->unk_8, 0);\n    fn_80035110((void *)lbl_801A6D30->unk_4, 0);\n    fn_800350F4(0);\n    fn_8001B42C((u32 *)lbl_801A6CF4);\n    fn_8001BD84(t0.value);\n    fn_8001BC54();\n    fn_8001AF64();\n    if ((lbl_801A6CF4->unk_0 & 0x1) != 0) {\n        fn_8001AF64();\n    }\n}\n#pragma opt_common_subs reset\n\n",
+    "seed_sha256": "0c2bfc6917f291424c2f54993a11ade80bd4e7cb2be76bf21d967ee325012fe7",
+    "generated_sha256": "45aa38ee3514cf1c809485e05063805ca4f2c0cfed6f9af7cff05422fa14c84c",
+    "generated_source": "#include \"types.h\"\n\nstruct Sig_GXInitFifoBase_GXInitFifoBase_Arg0 {\n    u32 unk_0;\n    u32 unk_4;\n    u8 unk_8;\n    u8 pad_C[0x10];\n    u32 unk_1C;\n};\nstruct Sig_GXInitFifoPtrs_GXInitFifoPtrs_Arg0 {\n    u8 pad_0[0x8];\n    u32 unk_8;\n    u8 pad_C[0x8];\n    u32 unk_14;\n    u32 unk_18;\n    s32 unk_1C;\n};\ntypedef u8 Sig_fn_80034ECC_GXBool;\ntypedef enum Sig_fn_80037C2C__GXPixelFmt {\n    Sig_fn_80037C2C_GX_PF_RGB8_Z24,\n    Sig_fn_80037C2C_GX_PF_RGBA6_Z24,\n    Sig_fn_80037C2C_GX_PF_RGB565_Z16,\n    Sig_fn_80037C2C_GX_PF_Z24,\n    Sig_fn_80037C2C_GX_PF_Y8,\n    Sig_fn_80037C2C_GX_PF_U8,\n    Sig_fn_80037C2C_GX_PF_V8,\n    Sig_fn_80037C2C_GX_PF_YUV420,\n} Sig_fn_80037C2C_GXPixelFmt;\ntypedef enum Sig_fn_80037C2C__GXZFmt16 {\n    Sig_fn_80037C2C_GX_ZC_LINEAR,\n    Sig_fn_80037C2C_GX_ZC_NEAR,\n    Sig_fn_80037C2C_GX_ZC_MID,\n    Sig_fn_80037C2C_GX_ZC_FAR,\n} Sig_fn_80037C2C_GXZFmt16;\ntypedef u8 Sig_fn_80037D14_GXBool;\ntypedef u8 Sig_fn_80035110_GXBool;\n\nstruct fn_80070774_lbl_801A6CF4_T {\n    u32 unk_0;\n    u16 unk_4;\n    u16 unk_6;\n    u16 unk_8;\n    u8 pad_A[0xF];\n    u8 unk_19;\n    u8 unk_1A[0x18];\n    u8 unk_32[0];\n};\nstruct fn_80070774_lbl_801A6D30_T {\n    u32 unk_0;\n    u32 unk_4;\n    u32 unk_8;\n    u32 unk_C;\n    u32 unk_10;\n    u32 unk_14;\n    u32 unk_18;\n};\n\nextern f32 lbl_801A7410;\nextern f32 lbl_801A7414;\nextern f64 lbl_801A7418;\nextern s32 fn_8001B42C(u32 *);\nextern struct fn_80070774_lbl_801A6CF4_T *lbl_801A6CF4;\nextern struct fn_80070774_lbl_801A6D30_T *lbl_801A6D30;\nextern u32 GXInit(u32, u32);\nextern u32 GXSetDispCopyYScale(f32);\nextern u32 fn_80037D40(u32, u32);\nextern u32 fn_80038EEC(f32, f32, f32, f32, f32, f32);\nextern u32 fn_80070CF8(u32);\nextern void fn_80071D30(void);\nextern void fn_80074188(u32, u32, u32, u32);\nextern void fn_8007423C(u32, u32, u32, u32);\nextern void fn_800743C4(s32, u32);\nextern void fn_800744F8(void *, u32);\nextern void fn_80034ECC(u8, u8 *, u32, u8 *);\nextern void fn_80037C2C(Sig_fn_80037C2C_GXPixelFmt, Sig_fn_80037C2C_GXZFmt16);\nextern void fn_80037D14(Sig_fn_80037D14_GXBool);\nextern u8 lbl_8019E18C[];\nextern u32 lbl_801A6CE0;\nextern u32 lbl_801A6CE4;\nextern u32 lbl_801A7918;\nextern void DCFlushRange(void *, u32);\nextern void GXInitFifoBase(struct Sig_GXInitFifoBase_GXInitFifoBase_Arg0 *, u32, u32);\nextern void GXInitFifoPtrs(struct Sig_GXInitFifoPtrs_GXInitFifoPtrs_Arg0 *, u32, u32);\nextern void fn_8001AF64(void);\nextern void fn_8001BC54(void);\nextern void fn_8001BD84(u32);\nextern void fn_800350F4(u32);\nextern void fn_80035110(void *, Sig_fn_80035110_GXBool);\n\nstatic inline u8 * fn_80070774_read_pointer(struct fn_80070774_lbl_801A6CF4_T * owner) { return owner->unk_1A; }\n#pragma opt_common_subs off\nvoid fn_80070774(u32 arg0, u32 arg1, u32 arg2) {\n    u32 t7;\n    u32 t5;\n    u32 t4;\n    struct { u32 value; } t2;\n    struct { u32 value; } t0;\n    s32 v5;\n    u32 v4;\n    u32 v3;\n    struct { u32 value; } v2;\n    struct { u32 value; } v1;\n    u32 v0;\n    u32 loc_8;\n\n    v0 = (((((lbl_801A6CF4->unk_4 + 15) & 0xFFF0) * 528) << 1));\n    t0.value = fn_80070CF8(v0);\n    v1.value = ((v0 + 31) & ~0x1F);\n    DCFlushRange((void *)t0.value, v1.value);\n    if ((lbl_801A6CE0 & 0x10) == 0) {\n        t2.value = fn_80070CF8(v0);\n        v2.value = t2.value;\n        DCFlushRange((void *)t2.value, v1.value);\n    }\n    t4 = fn_80070CF8(arg1);\n    lbl_801A6CE4 = arg1;\n    t5 = GXInit(t4, arg1);\n    lbl_801A6D30->unk_14 = t5;\n    if ((s32)arg0 != 0) {\n        lbl_801A6CE0 = (lbl_801A6CE0 | 4);\n        lbl_801A6D30->unk_18 = (u32)lbl_8019E18C;\n{\n    u32 t6;\n        t4 = fn_80070CF8(arg1);\n        t6 = t4;\n        GXInitFifoBase((struct Sig_GXInitFifoBase_GXInitFifoBase_Arg0 *)(u32)lbl_8019E18C, t6, arg1);\n        GXInitFifoPtrs((struct Sig_GXInitFifoPtrs_GXInitFifoPtrs_Arg0 *)(u32)lbl_8019E18C, t6, t6);\n}\n    }\n    lbl_801A6D30->unk_4 = t0.value;\n    if ((lbl_801A6CE0 & 0x10) != 0) {\n        lbl_801A6D30->unk_8 = t0.value;\n    } else {\n        lbl_801A6D30->unk_8 = v2.value;\n    }\n    lbl_801A6D30->unk_0 = lbl_801A6D30->unk_8;\n    lbl_801A6D30->unk_C = 0;\n    lbl_801A6D30->unk_10 = 0;\n    fn_80071D30();\n    fn_80038EEC(0.0f, 0.0f, (f32)(u32)lbl_801A6CF4->unk_4, (f32)(u32)lbl_801A6CF4->unk_6,\n                0.0f, 1.0f);\n    fn_80074188(0, 0, lbl_801A6CF4->unk_4, lbl_801A6CF4->unk_6);\n    fn_8007423C(0, 0, lbl_801A6CF4->unk_4, lbl_801A6CF4->unk_6);\n    fn_800743C4(lbl_801A6CF4->unk_4, lbl_801A6CF4->unk_8);\n    GXSetDispCopyYScale((f32)(u32)lbl_801A6CF4->unk_8 / (f32)(u32)lbl_801A6CF4->unk_6);\n    fn_80034ECC(lbl_801A6CF4->unk_19, fn_80070774_read_pointer(lbl_801A6CF4), 1, lbl_801A6CF4->unk_32);\n    if ((s32)arg2 != 0) {\n        fn_80037C2C(Sig_fn_80037C2C_GX_PF_RGBA6_Z24, Sig_fn_80037C2C_GX_ZC_LINEAR);\n        fn_80037D14(1);\n        fn_80037D40(1, 0);\n    } else {\n        fn_80037C2C(Sig_fn_80037C2C_GX_PF_RGB8_Z24, Sig_fn_80037C2C_GX_ZC_LINEAR);\n        fn_80037D14(0);\n    }\n    loc_8 = lbl_801A7918;\n    fn_800744F8((void *)&loc_8, 0xFFFFFF);\n    fn_80035110((void *)lbl_801A6D30->unk_4, 1);\n    fn_80035110((void *)lbl_801A6D30->unk_8, 0);\n    fn_80035110((void *)lbl_801A6D30->unk_4, 0);\n    fn_800350F4(0);\n    fn_8001B42C((u32 *)lbl_801A6CF4);\n    fn_8001BD84(t0.value);\n    fn_8001BC54();\n    fn_8001AF64();\n    if ((lbl_801A6CF4->unk_0 & 0x1) != 0) {\n        fn_8001AF64();\n    }\n}\n#pragma opt_common_subs reset\n\n",
+    "compiler": "GC/1.3",
+    "flags": "",
+    "source": "dol/fn_80070774.c",
+    "bytes": 740,
+    "headers_sha256": "a589c0d12ea0a921f727e63ed125ea39c16e33457a7ec3899c6c793bcdfddceb",
+    "oracle_sha256": "7cc891120feb212c397b96ddb46f5213d85d0998668a1ee4bd55a3d6abc2e1ff",
+    "recipe": [
+      {
+        "label": "lifetime reuse t4 for t6 at 3520",
+        "input_sha256": "0c2bfc6917f291424c2f54993a11ade80bd4e7cb2be76bf21d967ee325012fe7",
+        "output_sha256": "45aa38ee3514cf1c809485e05063805ca4f2c0cfed6f9af7cff05422fa14c84c",
+        "input_symbol": "fn_80070774",
+        "output_symbol": "fn_80070774",
+        "edits": [
+          [
+            3529,
+            3550,
+            "4 = fn_80070CF8(arg1);\n        t6 = t4"
+          ]
+        ]
+      }
+    ],
+    "link": "pending"
+  },
+  "fn_1_1576B4": {
+    "seed_symbol": "fn_1_1576B4",
+    "generator": "fzgx fixup",
+    "transform": "attributed signed success at line 66",
+    "seed": "#include \"types.h\"\n\nextern s32 fn_8006B55C(u32, void *, void *);\nextern s32 fn_8006B628(void *, void *);\nextern s32 fn_8006B6F8(void *);\n\ntypedef struct {\n    u8 field00;\n    u8 _pad01[3];\n    u32 field04;\n    u32 field08;\n    u8 field0c;\n    u8 _pad0d[1];\n    u16 field0e;\n    u16 field10;\n    u16 field12;\n    u16 field14;\n    u32 field18;\n    u32 field1c;\n    u8 field20;\n    u8 field21;\n} RankingConfig;\n\ntypedef struct {\n    u32 flags;\n    u32 field04;\n    u8 _pad08[0x24];\n    void *data;\n    u8 _pad30[0x1c];\n    u8 enabled;\n} RankingState;\n\n#pragma opt_propagation off\nvoid fn_1_1576B4(RankingState *state) {\n    RankingConfig config;\n    u32 field04;\n    void *data;\n    u32 success;\n\n    if (state->enabled & 2) {\n        success = 0;\n        config.field00 = 4;\n        config.field04 = 0x258;\n        config.field08 = success;\n        config.field0c = 0xfa;\n        config.field0e = 0x32;\n        config.field10 = 0x96;\n        config.field12 = success;\n        config.field14 = success;\n        config.field18 = 0x14;\n        config.field1c = 0x64;\n        config.field20 = success;\n        config.field21 = success;\n\n        if (!(((0x100) & (state->flags)))) {\n            field04 = state->field04;\n            data = state->data;\n            if ((u32)data == 0xffffffffU) {\n                if (fn_8006B55C(field04, &state->data, &config) >= 0) {\n                    success = 1;\n                }\n            } else if (fn_8006B628(data, &config) >= 0) {\n                success = 1;\n            }\n\n            if (success && !(((0x100) & (state->flags))) &&\n                fn_8006B6F8(state->data) >= 0) {\n                state->flags |= 0x100;\n            }\n        } else {\n            fn_8006B6F8(state->data);\n        }\n    }\n}\n#pragma opt_propagation reset\n\n",
+    "seed_sha256": "17ac43e4634f9d786815c1e0e853be3554c3e04b290468fea2556d6418bf270c",
+    "generated_sha256": "42474a0e50aa253eebcedcfa2318c142e8efc0979930aa4994b52cd8aac808a1",
+    "generated_source": "#include \"types.h\"\n\nextern s32 fn_8006B55C(u32, void *, void *);\nextern s32 fn_8006B628(void *, void *);\nextern s32 fn_8006B6F8(void *);\n\ntypedef struct {\n    u8 field00;\n    u8 _pad01[3];\n    u32 field04;\n    u32 field08;\n    u8 field0c;\n    u8 _pad0d[1];\n    u16 field0e;\n    u16 field10;\n    u16 field12;\n    u16 field14;\n    u32 field18;\n    u32 field1c;\n    u8 field20;\n    u8 field21;\n} RankingConfig;\n\ntypedef struct {\n    u32 flags;\n    u32 field04;\n    u8 _pad08[0x24];\n    void *data;\n    u8 _pad30[0x1c];\n    u8 enabled;\n} RankingState;\n\n#pragma opt_propagation off\nvoid fn_1_1576B4(RankingState *state) {\n    RankingConfig config;\n    u32 field04;\n    void *data;\n    s32 success;\n\n    if (state->enabled & 2) {\n        success = 0;\n        config.field00 = 4;\n        config.field04 = 0x258;\n        config.field08 = success;\n        config.field0c = 0xfa;\n        config.field0e = 0x32;\n        config.field10 = 0x96;\n        config.field12 = success;\n        config.field14 = success;\n        config.field18 = 0x14;\n        config.field1c = 0x64;\n        config.field20 = success;\n        config.field21 = success;\n\n        if (!(((0x100) & (state->flags)))) {\n            field04 = state->field04;\n            data = state->data;\n            if ((u32)data == 0xffffffffU) {\n                if (fn_8006B55C(field04, &state->data, &config) >= 0) {\n                    success = 1;\n                }\n            } else if (fn_8006B628(data, &config) >= 0) {\n                success = 1;\n            }\n\n            if (success && !(((0x100) & (state->flags))) &&\n                fn_8006B6F8(state->data) >= 0) {\n                state->flags |= 0x100;\n            }\n        } else {\n            fn_8006B6F8(state->data);\n        }\n    }\n}\n#pragma opt_propagation reset\n\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "rel/main_rel/ranking/fn_1_1576B4.c",
+    "bytes": 284,
+    "headers_sha256": "a589c0d12ea0a921f727e63ed125ea39c16e33457a7ec3899c6c793bcdfddceb",
+    "oracle_sha256": "7cc891120feb212c397b96ddb46f5213d85d0998668a1ee4bd55a3d6abc2e1ff",
+    "recipe": [
+      {
+        "label": "attributed signed success at line 66",
+        "input_sha256": "17ac43e4634f9d786815c1e0e853be3554c3e04b290468fea2556d6418bf270c",
+        "output_sha256": "42474a0e50aa253eebcedcfa2318c142e8efc0979930aa4994b52cd8aac808a1",
+        "input_symbol": "fn_1_1576B4",
+        "output_symbol": "fn_1_1576B4",
+        "edits": [
+          [
+            680,
+            681,
+            "s"
+          ]
+        ]
+      }
+    ],
+    "link": "pending"
+  },
+  "fn_1_6B48": {
+    "seed_symbol": "fn_1_6B48",
+    "generator": "fzgx fixup",
+    "transform": "address typed base at every site (CameraEntry) with peephole on",
+    "seed": "#include \"types.h\"\n\ntypedef struct {\n    u32 unk_0;\n    u8 pad_4[0x44];\n    u8 unk_48;\n} CameraState;\n\ntypedef struct {\n    u8 pad_0[0x6];\n    s16 value;\n} CameraValue;\n\ntypedef struct {\n    u8 pad_0[0x2];\n    s16 value;\n    u8 pad_4[0x1f8];\n} CameraEntry;\n\ntypedef struct {\n    CameraState *state;\n    CameraEntry *entries;\n    CameraValue *value;\n} CameraGlobals;\n\nextern CameraGlobals lbl_1_bss_F68;\n\n#pragma opt_common_subs off\n#pragma peephole off\ns16 fn_1_6B48(s32 index) {\n    CameraGlobals * globals;\n    CameraState * state;\n{\n    globals = (CameraGlobals *)&lbl_1_bss_F68;\n    state = globals->state;\n\n    if (state == 0) {\n        return -1;\n    }\n\n    if ((state->unk_0 & ((u32)1 << 31)) != 0) {\n        return -1;\n    }\n\n    switch ((s8)state->unk_48) {\n    case 9:\n    case 10:\n        return globals->value->value;\n    case 11:\n        return -1;\n    default:\n        return globals->entries[index].value;\n}\n    }\n}\n#pragma peephole reset\n#pragma opt_common_subs reset\n",
+    "seed_sha256": "a9f8e5022b345188173beabbfb3dcb56f8bce6634e5216d40e7e8ba97430a870",
+    "generated_sha256": "f87e2efe92315870aefd925b34be25eb6be44eccba29fb5637f582cfcdd6b8ee",
+    "generated_source": "#include \"types.h\"\n\ntypedef struct {\n    u32 unk_0;\n    u8 pad_4[0x44];\n    u8 unk_48;\n} CameraState;\n\ntypedef struct {\n    u8 pad_0[0x6];\n    s16 value;\n} CameraValue;\n\ntypedef struct {\n    u8 pad_0[0x2];\n    s16 value;\n    u8 pad_4[0x1f8];\n} CameraEntry;\n\ntypedef struct {\n    CameraState *state;\n    CameraEntry *entries;\n    CameraValue *value;\n} CameraGlobals;\n\n\n#pragma opt_common_subs off\n#pragma peephole on\n/* file-scope objects of the retail TU, in retail order: MWCC addresses them off one section base */\nCameraState *fzgx_obj_lbl_1_bss_F68;\nCameraEntry *fzgx_obj_game_camera_entries;\nCameraValue *fzgx_obj_live_camera;\nu8 lbl_1_bss_F74;\nu8 lbl_1_bss_F75;\nu8 lbl_1_bss_F76;\n\n#pragma section code_type \".fzgxpool\"\nstatic void fzgx_bss_layout(void) {\n    volatile u8 s;  /* fzgx-allow: S2 layout primer sink: MWCC emits .bss objects in first-access order */\n    s = *(u8 *)&fzgx_obj_lbl_1_bss_F68;\n    s = *(u8 *)&fzgx_obj_game_camera_entries;\n    s = *(u8 *)&fzgx_obj_live_camera;\n    s = *(u8 *)&lbl_1_bss_F74;\n    s = *(u8 *)&lbl_1_bss_F75;\n    s = *(u8 *)&lbl_1_bss_F76;\n}\n#pragma section code_type \".text\"\n\nstatic inline CameraEntry *fn_1_6B48_array_read(CameraEntry *array) { return array; }\ns16 fn_1_6B48(s32 index) {\n    CameraState * state;\n{\n    \n    state = fzgx_obj_lbl_1_bss_F68;\n\n    if (state == 0) {\n        return -1;\n    }\n\n    if ((state->unk_0 & ((u32)1 << 31)) != 0) {\n        return -1;\n    }\n\n    switch ((s8)state->unk_48) {\n    case 9:\n    case 10:\n        return fzgx_obj_live_camera->value;\n    case 11:\n        return -1;\n    default:\n        return fn_1_6B48_array_read(fzgx_obj_game_camera_entries)[index].value;\n}\n    }\n}\n#pragma peephole reset\n#pragma opt_common_subs reset\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "rel/main_rel/camera/fn_1_6B48.c",
+    "bytes": 120,
+    "headers_sha256": "a589c0d12ea0a921f727e63ed125ea39c16e33457a7ec3899c6c793bcdfddceb",
+    "oracle_sha256": "7cc891120feb212c397b96ddb46f5213d85d0998668a1ee4bd55a3d6abc2e1ff",
+    "recipe": [
+      {
+        "label": "define retail TU bss objects (dtk)",
+        "input_sha256": "a9f8e5022b345188173beabbfb3dcb56f8bce6634e5216d40e7e8ba97430a870",
+        "output_sha256": "1389eb29974cdaca7444199bc676ff06c169cc6de9b3261c59c9e80575b1c0c6",
+        "input_symbol": "fn_1_6B48",
+        "output_symbol": "fn_1_6B48",
+        "edits": [
+          [
+            367,
+            403,
+            ""
+          ],
+          [
+            453,
+            453,
+            "/* file-scope objects of the retail TU, in retail order: MWCC addresses them off one section base */\nCameraState *fzgx_obj_lbl_1_bss_F68;\nCameraEntry *fzgx_obj_game_camera_entries;\nCameraValue *fzgx_obj_live_camera;\nu8 lbl_1_bss_F74;\nu8 lbl_1_bss_F75;\nu8 lbl_1_bss_F76;\n\n#pragma section code_type \".fzgxpool\"\nstatic void fzgx_bss_layout(void) {\n    volatile u8 s;  /* fzgx-allow: S2 layout primer sink: MWCC emits .bss objects in first-access order */\n    s = *(u8 *)&fzgx_obj_lbl_1_bss_F68;\n    s = *(u8 *)&fzgx_obj_game_camera_entries;\n    s = *(u8 *)&fzgx_obj_live_camera;\n    s = *(u8 *)&lbl_1_bss_F74;\n    s = *(u8 *)&lbl_1_bss_F75;\n    s = *(u8 *)&lbl_1_bss_F76;\n}\n#pragma section code_type \".text\"\n\n"
+          ],
+          [
+            480,
+            509,
+            ""
+          ],
+          [
+            540,
+            609,
+            "\n    state = fzgx_obj_lbl_1_bss_F68"
+          ],
+          [
+            807,
+            821,
+            "fzgx_obj_live_camera"
+          ],
+          [
+            890,
+            899,
+            "fzgx_obj_game_camera_"
+          ]
+        ]
+      },
+      {
+        "label": "address typed base at every site (CameraEntry) with peephole on",
+        "input_sha256": "1389eb29974cdaca7444199bc676ff06c169cc6de9b3261c59c9e80575b1c0c6",
+        "output_sha256": "f87e2efe92315870aefd925b34be25eb6be44eccba29fb5637f582cfcdd6b8ee",
+        "input_symbol": "fn_1_6B48",
+        "output_symbol": "fn_1_6B48",
+        "edits": [
+          [
+            414,
+            416,
+            "n"
+          ],
+          [
+            1123,
+            1123,
+            "static inline CameraEntry *fn_1_6B48_array_read(CameraEntry *array) { return array; }\n"
+          ],
+          [
+            1504,
+            1531,
+            "n_1_6B48_array_read(fzgx_obj_game_camera_entries)"
+          ]
+        ]
+      }
+    ],
+    "link": "pending"
+  },
+  "fn_1_154BE4": {
+    "seed_symbol": "fn_1_154BE4",
+    "generator": "fzgx fixup",
+    "transform": "define retail TU bss objects (split)",
+    "seed": "#include \"types.h\"\n\nstruct fn_1_154BE4_lbl_1_bss_8ED90 {\n    u32 unk_0;\n    u32 unk_4;\n    u8 pad_8[0xc];\n    u8 state;\n};\n\nstruct fn_1_154BE4_lbl_1_data_49A18 {\n    u8 pad_0[0x94];\n    u32 unk_94;\n    u32 unk_98;\n    u32 unk_9C;\n};\n\nextern struct fn_1_154BE4_lbl_1_bss_8ED90 lbl_1_bss_8ED90;\nextern struct fn_1_154BE4_lbl_1_data_49A18 lbl_1_data_49A18;\nextern u32 lbl_801A6410;\nextern void fn_1_46B4(u32, u32, const char *, int);\nextern void fn_1_B9C0C(void);\nextern void fn_1_1596DC(s32);\nextern void fn_1_484CC(s32);\n\n#pragma opt_common_subs off\nvoid fn_1_154BE4(void) {\n    struct fn_1_154BE4_lbl_1_bss_8ED90 *p_lbl_1_bss_8ED90;\n    struct fn_1_154BE4_lbl_1_data_49A18 *p_lbl_1_data_49A18;\n    u8 *p_state;\n    p_lbl_1_bss_8ED90 = (struct fn_1_154BE4_lbl_1_bss_8ED90 *)&lbl_1_bss_8ED90;\n    p_lbl_1_data_49A18 = (struct fn_1_154BE4_lbl_1_data_49A18 *)&lbl_1_data_49A18;\n    p_state = (u8 *)p_lbl_1_bss_8ED90 + 0x14;\n    if ((s32)(*((p_state) + (0x14))) != 2 && p_lbl_1_bss_8ED90->unk_0 != 0) {\n        fn_1_46B4(lbl_801A6410, p_lbl_1_bss_8ED90->unk_0,\n            (const char *)((u8 *)p_lbl_1_data_49A18 + 0xb0), 0x10d);\n        p_lbl_1_bss_8ED90->unk_0 = 0;\n        p_lbl_1_bss_8ED90->unk_4 = 0;\n    }\n    fn_1_B9C0C();\n    fn_1_1596DC(2);\n    fn_1_484CC(2);\n    p_lbl_1_data_49A18->unk_94 = -1;\n    p_lbl_1_data_49A18->unk_98 = -1;\n    p_lbl_1_data_49A18->unk_9C = -1;\n}\n#pragma opt_common_subs reset\n\n",
+    "seed_sha256": "28d4be0f0960795af6949408d3809dc821f15625866e9701368d8ca2629ead73",
+    "generated_sha256": "2b8f7acbc727f84ceffe336c05df8cee2e43c78427326c2dda829ddcf66fbfdb",
+    "generated_source": "#include \"types.h\"\n\nstruct fn_1_154BE4_lbl_1_bss_8ED90 {\n    u32 unk_0;\n    u32 unk_4;\n    u8 pad_8[0xc];\n    u8 state;\n};\n\nstruct fn_1_154BE4_lbl_1_data_49A18 {\n    u8 pad_0[0x94];\n    u32 unk_94;\n    u32 unk_98;\n    u32 unk_9C;\n};\n\nextern struct fn_1_154BE4_lbl_1_data_49A18 lbl_1_data_49A18;\nextern u32 lbl_801A6410;\nextern void fn_1_46B4(u32, u32, const char *, int);\nextern void fn_1_B9C0C(void);\nextern void fn_1_1596DC(s32);\nextern void fn_1_484CC(s32);\n\n#pragma opt_common_subs off\n/* file-scope objects of the retail TU, in retail order: MWCC addresses them off one section base */\nu32 fzgx_obj_lbl_1_bss_8ED90;\nu32 fzgx_obj_lbl_1_bss_8ED94;\nu32 lbl_1_bss_8ED94_fill_8ED98[2];\nu8 lbl_1_bss_8EDA0;\nu8 lbl_1_bss_8ED90_gap_8EDA1;\nu16 lbl_1_bss_8ED90_gap_8EDA1_fill_8EDA2;\nu8 fzgx_obj_lbl_1_bss_8EDA4;\nu8 lbl_1_bss_8EDA4_fill_8EDA5;\nu16 lbl_1_bss_8EDA4_fill_8EDA6;\nu32 lbl_1_bss_8EDA4_fill_8EDA8[18];\nu32 fzgx_obj_lbl_1_bss_8EDF0[76];\n\n#pragma section code_type \".fzgxpool\"\nstatic void fzgx_bss_layout(void) {\n    volatile u8 s;  /* fzgx-allow: S2 layout primer sink: MWCC emits .bss objects in first-access order */\n    s = *(u8 *)&fzgx_obj_lbl_1_bss_8ED90;\n    s = *(u8 *)&fzgx_obj_lbl_1_bss_8ED94;\n    s = *(u8 *)&lbl_1_bss_8ED94_fill_8ED98;\n    s = *(u8 *)&lbl_1_bss_8EDA0;\n    s = *(u8 *)&lbl_1_bss_8ED90_gap_8EDA1;\n    s = *(u8 *)&lbl_1_bss_8ED90_gap_8EDA1_fill_8EDA2;\n    s = *(u8 *)&fzgx_obj_lbl_1_bss_8EDA4;\n    s = *(u8 *)&lbl_1_bss_8EDA4_fill_8EDA5;\n    s = *(u8 *)&lbl_1_bss_8EDA4_fill_8EDA6;\n    s = *(u8 *)&lbl_1_bss_8EDA4_fill_8EDA8;\n    s = *(u8 *)&fzgx_obj_lbl_1_bss_8EDF0;\n}\n#pragma section code_type \".text\"\n\nvoid fn_1_154BE4(void) {\n    struct fn_1_154BE4_lbl_1_data_49A18 *p_lbl_1_data_49A18;\n    u8 *p_state;\n    \n    p_lbl_1_data_49A18 = (struct fn_1_154BE4_lbl_1_data_49A18 *)&lbl_1_data_49A18;\n    p_state = (u8 *)&fzgx_obj_lbl_1_bss_8EDA4;\n    if ((s32)(*((p_state) + (0x14))) != 2 && fzgx_obj_lbl_1_bss_8ED90 != 0) {\n        fn_1_46B4(lbl_801A6410, fzgx_obj_lbl_1_bss_8ED90,\n            (const char *)((u8 *)p_lbl_1_data_49A18 + 0xb0), 0x10d);\n        fzgx_obj_lbl_1_bss_8ED90 = 0;\n        fzgx_obj_lbl_1_bss_8ED94 = 0;\n    }\n    fn_1_B9C0C();\n    fn_1_1596DC(2);\n    fn_1_484CC(2);\n    p_lbl_1_data_49A18->unk_94 = -1;\n    p_lbl_1_data_49A18->unk_98 = -1;\n    p_lbl_1_data_49A18->unk_9C = -1;\n}\n#pragma opt_common_subs reset\n\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "rel/main_rel/rep_memcard/fn_1_154BE4.c",
+    "bytes": 160,
+    "headers_sha256": "a589c0d12ea0a921f727e63ed125ea39c16e33457a7ec3899c6c793bcdfddceb",
+    "oracle_sha256": "7cc891120feb212c397b96ddb46f5213d85d0998668a1ee4bd55a3d6abc2e1ff",
+    "recipe": [
+      {
+        "label": "define retail TU bss objects (split)",
+        "input_sha256": "28d4be0f0960795af6949408d3809dc821f15625866e9701368d8ca2629ead73",
+        "output_sha256": "2b8f7acbc727f84ceffe336c05df8cee2e43c78427326c2dda829ddcf66fbfdb",
+        "input_symbol": "fn_1_154BE4",
+        "output_symbol": "fn_1_154BE4",
+        "edits": [
+          [
+            234,
+            293,
+            ""
+          ],
+          [
+            549,
+            549,
+            "/* file-scope objects of the retail TU, in retail order: MWCC addresses them off one section base */\nu32 fzgx_obj_lbl_1_bss_8ED90;\nu32 fzgx_obj_lbl_1_bss_8ED94;\nu32 lbl_1_bss_8ED94_fill_8ED98[2];\nu8 lbl_1_bss_8EDA0;\nu8 lbl_1_bss_8ED90_gap_8EDA1;\nu16 lbl_1_bss_8ED90_gap_8EDA1_fill_8EDA2;\nu8 fzgx_obj_lbl_1_bss_8EDA4;\nu8 lbl_1_bss_8EDA4_fill_8EDA5;\nu16 lbl_1_bss_8EDA4_fill_8EDA6;\nu32 lbl_1_bss_8EDA4_fill_8EDA8[18];\nu32 fzgx_obj_lbl_1_bss_8EDF0[76];\n\n#pragma section code_type \".fzgxpool\"\nstatic void fzgx_bss_layout(void) {\n    volatile u8 s;  /* fzgx-allow: S2 layout primer sink: MWCC emits .bss objects in first-access order */\n    s = *(u8 *)&fzgx_obj_lbl_1_bss_8ED90;\n    s = *(u8 *)&fzgx_obj_lbl_1_bss_8ED94;\n    s = *(u8 *)&lbl_1_bss_8ED94_fill_8ED98;\n    s = *(u8 *)&lbl_1_bss_8EDA0;\n    s = *(u8 *)&lbl_1_bss_8ED90_gap_8EDA1;\n    s = *(u8 *)&lbl_1_bss_8ED90_gap_8EDA1_fill_8EDA2;\n    s = *(u8 *)&fzgx_obj_lbl_1_bss_8EDA4;\n    s = *(u8 *)&lbl_1_bss_8EDA4_fill_8EDA5;\n    s = *(u8 *)&lbl_1_bss_8EDA4_fill_8EDA6;\n    s = *(u8 *)&lbl_1_bss_8EDA4_fill_8EDA8;\n    s = *(u8 *)&fzgx_obj_lbl_1_bss_8EDF0;\n}\n#pragma section code_type \".text\"\n\n"
+          ],
+          [
+            574,
+            633,
+            ""
+          ],
+          [
+            715,
+            790,
+            ""
+          ],
+          [
+            894,
+            1053,
+            "&fzgx_obj_lbl_1_bss_8EDA4;\n    if ((s32)(*((p_state) + (0x14))) != 2 && fzgx_obj_lbl_1_bss_8ED90 != 0) {\n        fn_1_46B4(lbl_801A6410, fzgx_obj_lbl_1_bss_8ED9"
+          ],
+          [
+            1133,
+            1194,
+            "fzgx_obj_lbl_1_bss_8ED90 = 0;\n        fzgx_obj_lbl_1_bss_8ED9"
+          ]
+        ]
+      }
+    ],
+    "link": "pool"
+  },
+  "fn_80020B3C": {
+    "seed_symbol": "fn_80020B3C",
+    "generator": "fzgx fixup",
+    "transform": "region composition: swap `*tp = 0;` / `r = a;` + regalloc: dead use of slot after its definition",
+    "seed": "#include \"types.h\"\n\nstruct fn_80020B3C_Node;\n\nstruct fn_80020B3C_Node {\n    struct fn_80020B3C_Node *next;\n    struct fn_80020B3C_Node *prev;\n    u32 unk_8;\n    u32 index;\n    u32 unk_10;\n    u32 unk_14;\n    u8 pad_18[0x8];\n    u32 unk_20;\n    u8 pad_24[0x122];\n    u16 unk_146;\n};\n\nstruct fn_80020B3C_lbl_8015D100 {\n    struct fn_80020B3C_Node *head[32];\n    struct fn_80020B3C_Node *tail[32];\n};\n\nextern struct fn_80020B3C_lbl_8015D100 lbl_8015D100;\nextern BOOL OSDisableInterrupts(void);\nextern BOOL OSRestoreInterrupts(BOOL);\nextern void fn_80022E68(struct fn_80020B3C_Node *);\n\nu32 fn_80020B3C(u32 arg0, u32 arg1, u32 arg2) {\n    struct fn_80020B3C_Node *node;\n    struct fn_80020B3C_lbl_8015D100 *p;\n    struct fn_80020B3C_Node *a;\n    struct fn_80020B3C_Node *r;\n    struct fn_80020B3C_Node **hp;\n    struct fn_80020B3C_Node **tp;\n    struct fn_80020B3C_Node *b;\n    struct fn_80020B3C_Node **slot;\n    u32 idx;\n    u32 i;\n    BOOL irq;\n\n    idx = arg0;\n    p = &lbl_8015D100;\n    irq = OSDisableInterrupts();\n    r = p->head[0];\n    if (r != 0) {\n        p->head[0] = r->next;\n    }\n    node = r;\n    if (node == 0) {\n        hp = &p->head[1];\n        tp = &p->tail[1];\n        for (i = 1; i < idx; i++) {\n            a = *hp;\n            r = 0;\n            if (a != 0) {\n                b = *tp;\n                if (a == b) {\n                    *tp = 0;\n                    r = a;\n                    *hp = 0;\n                } else if (b != 0) {\n                    r = b;\n                    *tp = b->prev;\n                    (*tp)->next = 0;\n                }\n            }\n            node = r;\n            if (r != 0) {\n                if (r->unk_146 == 1) {\n                    r->unk_20 = 1;\n                }\n                if (r->unk_10 != 0) {\n                    ((void (*)(struct fn_80020B3C_Node *))r->unk_10)(node);\n                }\n                break;\n            }\n            hp++;\n            tp++;\n        }\n    }\n    if (node != 0) {\n        slot = &p->head[idx];\n        node->next = *slot;\n        node->prev = 0;\n        if (node->next != 0) {\n            (*slot)->prev = node;\n            *slot = node;\n        } else {\n            p->tail[idx] = node;\n            *slot = node;\n        }\n        node->index = idx;\n        node->unk_10 = arg1;\n        node->unk_14 = arg2;\n        fn_80022E68(node);\n    }\n    OSRestoreInterrupts(irq);\n    return (u32)node;\n}\n",
+    "seed_sha256": "ee7fafe8b893b47797f13136aa4b17c8951bfaeaf465c47ac7ee6faed2eac1d1",
+    "generated_sha256": "8b2f2c834bd8e7cd110c9d73b6c1f49d59f438e22af93da12e29f43687158376",
+    "generated_source": "#include \"types.h\"\n\nstruct fn_80020B3C_Node;\n\nstruct fn_80020B3C_Node {\n    struct fn_80020B3C_Node *next;\n    struct fn_80020B3C_Node *prev;\n    u32 unk_8;\n    u32 index;\n    u32 unk_10;\n    u32 unk_14;\n    u8 pad_18[0x8];\n    u32 unk_20;\n    u8 pad_24[0x122];\n    u16 unk_146;\n};\n\nstruct fn_80020B3C_lbl_8015D100 {\n    struct fn_80020B3C_Node *head[32];\n    struct fn_80020B3C_Node *tail[32];\n};\n\nextern struct fn_80020B3C_lbl_8015D100 lbl_8015D100;\nextern BOOL OSDisableInterrupts(void);\nextern BOOL OSRestoreInterrupts(BOOL);\nextern void fn_80022E68(struct fn_80020B3C_Node *);\n\nstatic inline struct fn_80020B3C_Node * *fn_80020B3C_array_read(struct fn_80020B3C_Node * *array) { return array; }\n#pragma opt_common_subs off\nu32 fn_80020B3C(u32 arg0, u32 arg1, u32 arg2) {\n    struct fn_80020B3C_Node *node;\n    struct fn_80020B3C_lbl_8015D100 *p;\n    struct fn_80020B3C_Node *a;\n    struct fn_80020B3C_Node *r;\n    struct fn_80020B3C_Node **hp;\n    struct fn_80020B3C_Node **tp;\n    struct fn_80020B3C_Node *b;\n    struct fn_80020B3C_Node **slot;\n    u32 idx;\n    u32 i;\n    BOOL irq;\n\n    idx = arg0;\n    p = &lbl_8015D100;\n    irq = OSDisableInterrupts();\n    r = fn_80020B3C_array_read(p->head)[0];\n    if (r != 0) {\n        p->head[0] = r->next;\n    }\n    node = r;\n    if (node == 0) {\n        hp = &p->head[1];\n        tp = &p->tail[1];\n        for (i = 1; i < idx; i++) {\n            a = *hp;\n            r = 0;\n            if (a != 0) {\n                b = *tp;\n                if (a == b) {\n                    r = a;\n                    *tp = 0;\n                    *hp = 0;\n                } else if (b != 0) {\n                    r = b;\n                    *tp = b->prev;\n                    (*tp)->next = 0;\n                }\n            }\n            node = r;\n            if (r != 0) {\n                if (r->unk_146 == 1) {\n                    r->unk_20 = 1;\n                }\n                if (r->unk_10 != 0) {\n                    ((void (*)(struct fn_80020B3C_Node *))r->unk_10)(node);\n                }\n                break;\n            }\n            hp++;\n            tp++;\n        }\n    }\n    if (node != 0) {\n        slot = &p->head[idx];\n        (void) slot;  /* fzgx: keeps the web at its definition */\n        node->next = *slot;\n        node->prev = 0;\n        if (node->next != 0) {\n            (*slot)->prev = node;\n            *slot = node;\n        } else {\n            p->tail[idx] = node;\n            *slot = node;\n        }\n        node->index = idx;\n        node->unk_10 = arg1;\n        node->unk_14 = arg2;\n        fn_80022E68(node);\n    }\n    OSRestoreInterrupts(irq);\n    return (u32)node;\n}\n#pragma opt_common_subs reset\n\n",
+    "compiler": "GC/1.2.5n",
+    "flags": "",
+    "source": "dol/fn_80020B3C.c",
+    "bytes": 372,
+    "headers_sha256": "a589c0d12ea0a921f727e63ed125ea39c16e33457a7ec3899c6c793bcdfddceb",
+    "oracle_sha256": "7cc891120feb212c397b96ddb46f5213d85d0998668a1ee4bd55a3d6abc2e1ff",
+    "recipe": [
+      {
+        "label": "address typed base at every site (struct fn_80020B3C_Node *) with opt_common_subs off",
+        "input_sha256": "ee7fafe8b893b47797f13136aa4b17c8951bfaeaf465c47ac7ee6faed2eac1d1",
+        "output_sha256": "7bb1ac985148bf3dc16b2edb7de9581867de01d3a7908006d31c5e999b548d48",
+        "input_symbol": "fn_80020B3C",
+        "output_symbol": "fn_80020B3C",
+        "edits": [
+          [
+            583,
+            583,
+            "static inline struct fn_80020B3C_Node * *fn_80020B3C_array_read(struct fn_80020B3C_Node * *array) { return array; }\n#pragma opt_common_subs off\n"
+          ],
+          [
+            1025,
+            1032,
+            "fn_80020B3C_array_read(p->head)"
+          ],
+          [
+            2401,
+            2401,
+            "#pragma opt_common_subs reset\n\n"
+          ]
+        ]
+      },
+      {
+        "label": "region composition: swap `*tp = 0;` / `r = a;` + regalloc: dead use of slot after its definition",
+        "input_sha256": "7bb1ac985148bf3dc16b2edb7de9581867de01d3a7908006d31c5e999b548d48",
+        "output_sha256": "8b2f2c834bd8e7cd110c9d73b6c1f49d59f438e22af93da12e29f43687158376",
+        "input_symbol": "fn_80020B3C",
+        "output_symbol": "fn_80020B3C",
+        "edits": [
+          [
+            1503,
+            1503,
+            "                    r = a;\n"
+          ],
+          [
+            1532,
+            1559,
+            ""
+          ],
+          [
+            2168,
+            2168,
+            "        (void) slot;  /* fzgx: keeps the web at its definition */\n"
+          ]
+        ]
+      }
+    ],
+    "link": "pending"
+  },
+  "fn_1_3908C": {
+    "seed_symbol": "fn_1_3908C",
+    "generator": "fzgx fixup",
+    "transform": "retail contiguous switch cases (1 sites)",
+    "seed": "#include \"types.h\"\ntypedef struct Sig_ADXT_Stop_AdxSjdHandle Sig_ADXT_Stop_AdxSjdHandle;\ntypedef struct Sig_ADXT_Stop_ADXStream Sig_ADXT_Stop_ADXStream;\ntypedef struct Sig_ADXT_Stop_AXRNAHandle Sig_ADXT_Stop_AXRNAHandle;\ntypedef struct Sig_ADXT_Stop_SJInterface Sig_ADXT_Stop_SJInterface;\ntypedef struct Sig_ADXT_Stop_SJ Sig_ADXT_Stop_SJ;\ntypedef struct Sig_ADXT_Stop_ADX_AMP Sig_ADXT_Stop_ADX_AMP;\ntypedef struct Sig_ADXT_Stop_LSCObject Sig_ADXT_Stop_LSCObject;\ntypedef struct Sig_ADXT_Pause_AdxSjdHandle Sig_ADXT_Pause_AdxSjdHandle;\ntypedef struct Sig_ADXT_Pause_ADXStream Sig_ADXT_Pause_ADXStream;\ntypedef struct Sig_ADXT_Pause_AXRNAHandle Sig_ADXT_Pause_AXRNAHandle;\ntypedef struct Sig_ADXT_Pause_SJInterface Sig_ADXT_Pause_SJInterface;\ntypedef struct Sig_ADXT_Pause_SJ Sig_ADXT_Pause_SJ;\ntypedef struct Sig_ADXT_Pause_ADX_AMP Sig_ADXT_Pause_ADX_AMP;\ntypedef struct Sig_ADXT_Pause_LSCObject Sig_ADXT_Pause_LSCObject;\ntypedef struct Sig_ADXT_Stop_SJCK {\n    unsigned char *data;\n    int len;\n} Sig_ADXT_Stop_SJCK;\ntypedef void (*Sig_ADXT_Stop_SJErrorCallback)(void *object, int error);\nstruct Sig_ADXT_Stop_SJInterface {\n    void *reserved[3];\n    void (*destroy)(Sig_ADXT_Stop_SJ *sj);\n    const void *(*get_uuid)(Sig_ADXT_Stop_SJ *sj);\n    void (*reset)(Sig_ADXT_Stop_SJ *sj);\n    void (*get_chunk)(Sig_ADXT_Stop_SJ *sj, int channel, int max_size, Sig_ADXT_Stop_SJCK *chunk);\n    void (*unget_chunk)(Sig_ADXT_Stop_SJ *sj, int channel, Sig_ADXT_Stop_SJCK *chunk);\n    void (*put_chunk)(Sig_ADXT_Stop_SJ *sj, int channel, Sig_ADXT_Stop_SJCK *chunk);\n    int (*get_num_data)(Sig_ADXT_Stop_SJ *sj, int channel);\n    int (*is_get_chunk)(Sig_ADXT_Stop_SJ *sj, int channel, int size, int *available);\n    void (*entry_error_func)(Sig_ADXT_Stop_SJ *sj, Sig_ADXT_Stop_SJErrorCallback callback, void *object);\n};\nstruct Sig_ADXT_Stop_SJ {\n    const Sig_ADXT_Stop_SJInterface *interface;\n};\ntypedef struct Sig_ADXT_Stop_ADXTHandle {\n    s8 used;\n    s8 status;\n    s8 stream_type;\n    s8 maximum_channels;\n    Sig_ADXT_Stop_AdxSjdHandle *decoder;\n    Sig_ADXT_Stop_ADXStream *stream;\n    Sig_ADXT_Stop_AXRNAHandle *rna;\n    Sig_ADXT_Stop_SJ *stream_sj;\n    Sig_ADXT_Stop_SJ *input_sj;\n    Sig_ADXT_Stop_SJ *output_sj[2];\n    u8 *input_buffer;\n    s32 input_buffer_size;\n    s32 input_extra_size;\n    u8 *output_buffer;\n    s32 output_buffer_size;\n    s32 output_buffer_distance;\n    s32 server_frequency;\n    s16 stream_buffer_sectors;\n    s16 minimum_buffer_sectors;\n    s16 output_volume;\n    s16 output_pan[2];\n    s16 field_46;\n    s32 maximum_decode_samples;\n    s32 loop_count;\n    s32 link_data_length;\n    s32 field_54;\n    s32 field_58;\n    s32 field_5C;\n    s16 error_code;\n    u8 reserved_62[2];\n    s32 field_64;\n    s16 field_68;\n    s16 field_6A;\n    s8 stream_loop_enabled;\n    s8 auto_receiver;\n    u8 reserved_6E[2];\n    s8 suppress_playback;\n    s8 decoder_ready;\n    s8 paused;\n    u8 reserved_73;\n    Sig_ADXT_Stop_ADX_AMP *amplifier;\n    Sig_ADXT_Stop_SJ *amplifier_input[2];\n    Sig_ADXT_Stop_SJ *amplifier_output[2];\n    s32 time_offset;\n    s32 eos_sector;\n    s32 loop_sample_count;\n    Sig_ADXT_Stop_LSCObject *linked_stream_controller;\n    s8 link_enabled;\n    u8 reserved_99[3];\n    u32 playback_time;\n    s32 playback_start_vsync;\n    s32 linked_decoded_samples;\n    s8 pending_stream_start;\n    u8 reserved_A9[3];\n    u8 *work_end;\n    const char *pending_filename;\n    void *pending_directory;\n    s32 pending_file_offset;\n    s32 pending_file_sectors;\n} Sig_ADXT_Stop_ADXTHandle;\ntypedef struct Sig_ADXT_Pause_SJCK {\n    unsigned char *data;\n    int len;\n} Sig_ADXT_Pause_SJCK;\ntypedef void (*Sig_ADXT_Pause_SJErrorCallback)(void *object, int error);\nstruct Sig_ADXT_Pause_SJInterface {\n    void *reserved[3];\n    void (*destroy)(Sig_ADXT_Pause_SJ *sj);\n    const void *(*get_uuid)(Sig_ADXT_Pause_SJ *sj);\n    void (*reset)(Sig_ADXT_Pause_SJ *sj);\n    void (*get_chunk)(Sig_ADXT_Pause_SJ *sj, int channel, int max_size, Sig_ADXT_Pause_SJCK *chunk);\n    void (*unget_chunk)(Sig_ADXT_Pause_SJ *sj, int channel, Sig_ADXT_Pause_SJCK *chunk);\n    void (*put_chunk)(Sig_ADXT_Pause_SJ *sj, int channel, Sig_ADXT_Pause_SJCK *chunk);\n    int (*get_num_data)(Sig_ADXT_Pause_SJ *sj, int channel);\n    int (*is_get_chunk)(Sig_ADXT_Pause_SJ *sj, int channel, int size, int *available);\n    void (*entry_error_func)(Sig_ADXT_Pause_SJ *sj, Sig_ADXT_Pause_SJErrorCallback callback, void *object);\n};\nstruct Sig_ADXT_Pause_SJ {\n    const Sig_ADXT_Pause_SJInterface *interface;\n};\ntypedef struct Sig_ADXT_Pause_ADXTHandle {\n    s8 used;\n    s8 status;\n    s8 stream_type;\n    s8 maximum_channels;\n    Sig_ADXT_Pause_AdxSjdHandle *decoder;\n    Sig_ADXT_Pause_ADXStream *stream;\n    Sig_ADXT_Pause_AXRNAHandle *rna;\n    Sig_ADXT_Pause_SJ *stream_sj;\n    Sig_ADXT_Pause_SJ *input_sj;\n    Sig_ADXT_Pause_SJ *output_sj[2];\n    u8 *input_buffer;\n    s32 input_buffer_size;\n    s32 input_extra_size;\n    u8 *output_buffer;\n    s32 output_buffer_size;\n    s32 output_buffer_distance;\n    s32 server_frequency;\n    s16 stream_buffer_sectors;\n    s16 minimum_buffer_sectors;\n    s16 output_volume;\n    s16 output_pan[2];\n    s16 field_46;\n    s32 maximum_decode_samples;\n    s32 loop_count;\n    s32 link_data_length;\n    s32 field_54;\n    s32 field_58;\n    s32 field_5C;\n    s16 error_code;\n    u8 reserved_62[2];\n    s32 field_64;\n    s16 field_68;\n    s16 field_6A;\n    s8 stream_loop_enabled;\n    s8 auto_receiver;\n    u8 reserved_6E[2];\n    s8 suppress_playback;\n    s8 decoder_ready;\n    s8 paused;\n    u8 reserved_73;\n    Sig_ADXT_Pause_ADX_AMP *amplifier;\n    Sig_ADXT_Pause_SJ *amplifier_input[2];\n    Sig_ADXT_Pause_SJ *amplifier_output[2];\n    s32 time_offset;\n    s32 eos_sector;\n    s32 loop_sample_count;\n    Sig_ADXT_Pause_LSCObject *linked_stream_controller;\n    s8 link_enabled;\n    u8 reserved_99[3];\n    u32 playback_time;\n    s32 playback_start_vsync;\n    s32 linked_decoded_samples;\n    s8 pending_stream_start;\n    u8 reserved_A9[3];\n    u8 *work_end;\n    const char *pending_filename;\n    void *pending_directory;\n    s32 pending_file_offset;\n    s32 pending_file_sectors;\n} Sig_ADXT_Pause_ADXTHandle;\n\nstruct fn_1_3908C_lbl_1_bss_25B88 {\n    u32 unk_0;\n};\nstruct fn_1_3908C_lbl_1_bss_25CA4 {\n    u32 unk_0;\n};\nstruct fn_1_3908C_lbl_1_bss_3C30 {\n    u8 pad_0[0x5];\n    u8 unk_5;\n    u8 unk_6;\n    u8 pad_7[0x146D];\n    u32 unk_1474;\n};\nstruct fn_1_3908C_lbl_1_bss_6EAD0 {\n    u32 unk_0;\n};\nstruct fn_1_3908C_lbl_1_bss_381F5 {\n    u8 unk_0;\n};\n\nextern s16 lbl_1_bss_960;\nextern struct fn_1_3908C_lbl_1_bss_25B88 lbl_1_bss_25B88;\nextern struct fn_1_3908C_lbl_1_bss_25CA4 lbl_1_bss_25CA4;\nextern struct fn_1_3908C_lbl_1_bss_381F5 lbl_1_bss_381F5;\nextern struct fn_1_3908C_lbl_1_bss_3C30 lbl_1_bss_3C30;\nextern struct fn_1_3908C_lbl_1_bss_6EAD0 lbl_1_bss_6EAD0;\nextern u32 fn_1_101C0(void);\nextern u32 fn_1_A11EC(void);\nextern u32 lbl_1_bss_26C28;\nextern s8 lbl_1_bss_5104;\nextern void * fn_1_435C(void *);\nextern void ADXT_Pause(Sig_ADXT_Pause_ADXTHandle *, s32);\nextern void fn_1_4310(u32);\nextern void fn_1_48004(s32, s32);\nextern void fn_1_8616C(void);\nextern void fn_1_A1588(Sig_ADXT_Stop_ADXTHandle *, u32);\nextern void fn_1_D0790(void);\n\nvoid fn_1_3908C(void) {\n    u32 v0;\n    u32 v1;\n    s32 t7;\n    fn_1_435C((void *)lbl_1_bss_25B88.unk_0);\n    fn_1_4310(-1);\n    fn_1_435C((void *)lbl_1_bss_25CA4.unk_0);\n    fn_1_4310(-1);\n    fn_1_8616C();\n    if ((s32)lbl_1_bss_3C30.unk_6 < 37 && (s32)lbl_1_bss_3C30.unk_6 >= 31) {\n    v0 = 1;\n    } else {\n    v0 = 0;\n    }\n    fn_1_A11EC();\n    fn_1_D0790();\n    lbl_1_bss_5104 = -1;\n    t7 = fn_1_101C0();\n    lbl_1_bss_26C28 = t7;    if (t7 < 0) {\n    lbl_1_bss_26C28 = 0xf0;\n    }\n    if (lbl_1_bss_960 == 9 || (v0 & 0xFF) != 0) {\n    lbl_1_bss_26C28 = 350;\n    fn_1_A1588((Sig_ADXT_Stop_ADXTHandle *)*(u32 *)((u8 *)lbl_1_bss_6EAD0.unk_0 + 0), 7);\n    } else {\n    fn_1_A1588((Sig_ADXT_Stop_ADXTHandle *)*(u32 *)((u8 *)lbl_1_bss_6EAD0.unk_0 + 0), 6);\n    }\n    lbl_1_bss_3C30.unk_1474 = 0;\n    v1 = lbl_1_bss_6EAD0.unk_0;\n    lbl_1_bss_381F5.unk_0 = 1;\n    ADXT_Pause((Sig_ADXT_Pause_ADXTHandle *)*(u32 *)((u8 *)v1 + 0), 1);\n    if (lbl_1_bss_3C30.unk_5 == 1) {\n    fn_1_48004(187, 1);\n    }\n}\n",
+    "seed_sha256": "b2358538a01700f59a2d15715e9aa8a20572ec4ee4215b7468ad493e6fe853d7",
+    "generated_sha256": "f64e19e83a78c9467ed1eaaaabbbb9362f17e12d1089b4a6d5663237837f3ee1",
+    "generated_source": "#include \"types.h\"\ntypedef struct Sig_ADXT_Stop_AdxSjdHandle Sig_ADXT_Stop_AdxSjdHandle;\ntypedef struct Sig_ADXT_Stop_ADXStream Sig_ADXT_Stop_ADXStream;\ntypedef struct Sig_ADXT_Stop_AXRNAHandle Sig_ADXT_Stop_AXRNAHandle;\ntypedef struct Sig_ADXT_Stop_SJInterface Sig_ADXT_Stop_SJInterface;\ntypedef struct Sig_ADXT_Stop_SJ Sig_ADXT_Stop_SJ;\ntypedef struct Sig_ADXT_Stop_ADX_AMP Sig_ADXT_Stop_ADX_AMP;\ntypedef struct Sig_ADXT_Stop_LSCObject Sig_ADXT_Stop_LSCObject;\ntypedef struct Sig_ADXT_Pause_AdxSjdHandle Sig_ADXT_Pause_AdxSjdHandle;\ntypedef struct Sig_ADXT_Pause_ADXStream Sig_ADXT_Pause_ADXStream;\ntypedef struct Sig_ADXT_Pause_AXRNAHandle Sig_ADXT_Pause_AXRNAHandle;\ntypedef struct Sig_ADXT_Pause_SJInterface Sig_ADXT_Pause_SJInterface;\ntypedef struct Sig_ADXT_Pause_SJ Sig_ADXT_Pause_SJ;\ntypedef struct Sig_ADXT_Pause_ADX_AMP Sig_ADXT_Pause_ADX_AMP;\ntypedef struct Sig_ADXT_Pause_LSCObject Sig_ADXT_Pause_LSCObject;\ntypedef struct Sig_ADXT_Stop_SJCK {\n    unsigned char *data;\n    int len;\n} Sig_ADXT_Stop_SJCK;\ntypedef void (*Sig_ADXT_Stop_SJErrorCallback)(void *object, int error);\nstruct Sig_ADXT_Stop_SJInterface {\n    void *reserved[3];\n    void (*destroy)(Sig_ADXT_Stop_SJ *sj);\n    const void *(*get_uuid)(Sig_ADXT_Stop_SJ *sj);\n    void (*reset)(Sig_ADXT_Stop_SJ *sj);\n    void (*get_chunk)(Sig_ADXT_Stop_SJ *sj, int channel, int max_size, Sig_ADXT_Stop_SJCK *chunk);\n    void (*unget_chunk)(Sig_ADXT_Stop_SJ *sj, int channel, Sig_ADXT_Stop_SJCK *chunk);\n    void (*put_chunk)(Sig_ADXT_Stop_SJ *sj, int channel, Sig_ADXT_Stop_SJCK *chunk);\n    int (*get_num_data)(Sig_ADXT_Stop_SJ *sj, int channel);\n    int (*is_get_chunk)(Sig_ADXT_Stop_SJ *sj, int channel, int size, int *available);\n    void (*entry_error_func)(Sig_ADXT_Stop_SJ *sj, Sig_ADXT_Stop_SJErrorCallback callback, void *object);\n};\nstruct Sig_ADXT_Stop_SJ {\n    const Sig_ADXT_Stop_SJInterface *interface;\n};\ntypedef struct Sig_ADXT_Stop_ADXTHandle {\n    s8 used;\n    s8 status;\n    s8 stream_type;\n    s8 maximum_channels;\n    Sig_ADXT_Stop_AdxSjdHandle *decoder;\n    Sig_ADXT_Stop_ADXStream *stream;\n    Sig_ADXT_Stop_AXRNAHandle *rna;\n    Sig_ADXT_Stop_SJ *stream_sj;\n    Sig_ADXT_Stop_SJ *input_sj;\n    Sig_ADXT_Stop_SJ *output_sj[2];\n    u8 *input_buffer;\n    s32 input_buffer_size;\n    s32 input_extra_size;\n    u8 *output_buffer;\n    s32 output_buffer_size;\n    s32 output_buffer_distance;\n    s32 server_frequency;\n    s16 stream_buffer_sectors;\n    s16 minimum_buffer_sectors;\n    s16 output_volume;\n    s16 output_pan[2];\n    s16 field_46;\n    s32 maximum_decode_samples;\n    s32 loop_count;\n    s32 link_data_length;\n    s32 field_54;\n    s32 field_58;\n    s32 field_5C;\n    s16 error_code;\n    u8 reserved_62[2];\n    s32 field_64;\n    s16 field_68;\n    s16 field_6A;\n    s8 stream_loop_enabled;\n    s8 auto_receiver;\n    u8 reserved_6E[2];\n    s8 suppress_playback;\n    s8 decoder_ready;\n    s8 paused;\n    u8 reserved_73;\n    Sig_ADXT_Stop_ADX_AMP *amplifier;\n    Sig_ADXT_Stop_SJ *amplifier_input[2];\n    Sig_ADXT_Stop_SJ *amplifier_output[2];\n    s32 time_offset;\n    s32 eos_sector;\n    s32 loop_sample_count;\n    Sig_ADXT_Stop_LSCObject *linked_stream_controller;\n    s8 link_enabled;\n    u8 reserved_99[3];\n    u32 playback_time;\n    s32 playback_start_vsync;\n    s32 linked_decoded_samples;\n    s8 pending_stream_start;\n    u8 reserved_A9[3];\n    u8 *work_end;\n    const char *pending_filename;\n    void *pending_directory;\n    s32 pending_file_offset;\n    s32 pending_file_sectors;\n} Sig_ADXT_Stop_ADXTHandle;\ntypedef struct Sig_ADXT_Pause_SJCK {\n    unsigned char *data;\n    int len;\n} Sig_ADXT_Pause_SJCK;\ntypedef void (*Sig_ADXT_Pause_SJErrorCallback)(void *object, int error);\nstruct Sig_ADXT_Pause_SJInterface {\n    void *reserved[3];\n    void (*destroy)(Sig_ADXT_Pause_SJ *sj);\n    const void *(*get_uuid)(Sig_ADXT_Pause_SJ *sj);\n    void (*reset)(Sig_ADXT_Pause_SJ *sj);\n    void (*get_chunk)(Sig_ADXT_Pause_SJ *sj, int channel, int max_size, Sig_ADXT_Pause_SJCK *chunk);\n    void (*unget_chunk)(Sig_ADXT_Pause_SJ *sj, int channel, Sig_ADXT_Pause_SJCK *chunk);\n    void (*put_chunk)(Sig_ADXT_Pause_SJ *sj, int channel, Sig_ADXT_Pause_SJCK *chunk);\n    int (*get_num_data)(Sig_ADXT_Pause_SJ *sj, int channel);\n    int (*is_get_chunk)(Sig_ADXT_Pause_SJ *sj, int channel, int size, int *available);\n    void (*entry_error_func)(Sig_ADXT_Pause_SJ *sj, Sig_ADXT_Pause_SJErrorCallback callback, void *object);\n};\nstruct Sig_ADXT_Pause_SJ {\n    const Sig_ADXT_Pause_SJInterface *interface;\n};\ntypedef struct Sig_ADXT_Pause_ADXTHandle {\n    s8 used;\n    s8 status;\n    s8 stream_type;\n    s8 maximum_channels;\n    Sig_ADXT_Pause_AdxSjdHandle *decoder;\n    Sig_ADXT_Pause_ADXStream *stream;\n    Sig_ADXT_Pause_AXRNAHandle *rna;\n    Sig_ADXT_Pause_SJ *stream_sj;\n    Sig_ADXT_Pause_SJ *input_sj;\n    Sig_ADXT_Pause_SJ *output_sj[2];\n    u8 *input_buffer;\n    s32 input_buffer_size;\n    s32 input_extra_size;\n    u8 *output_buffer;\n    s32 output_buffer_size;\n    s32 output_buffer_distance;\n    s32 server_frequency;\n    s16 stream_buffer_sectors;\n    s16 minimum_buffer_sectors;\n    s16 output_volume;\n    s16 output_pan[2];\n    s16 field_46;\n    s32 maximum_decode_samples;\n    s32 loop_count;\n    s32 link_data_length;\n    s32 field_54;\n    s32 field_58;\n    s32 field_5C;\n    s16 error_code;\n    u8 reserved_62[2];\n    s32 field_64;\n    s16 field_68;\n    s16 field_6A;\n    s8 stream_loop_enabled;\n    s8 auto_receiver;\n    u8 reserved_6E[2];\n    s8 suppress_playback;\n    s8 decoder_ready;\n    s8 paused;\n    u8 reserved_73;\n    Sig_ADXT_Pause_ADX_AMP *amplifier;\n    Sig_ADXT_Pause_SJ *amplifier_input[2];\n    Sig_ADXT_Pause_SJ *amplifier_output[2];\n    s32 time_offset;\n    s32 eos_sector;\n    s32 loop_sample_count;\n    Sig_ADXT_Pause_LSCObject *linked_stream_controller;\n    s8 link_enabled;\n    u8 reserved_99[3];\n    u32 playback_time;\n    s32 playback_start_vsync;\n    s32 linked_decoded_samples;\n    s8 pending_stream_start;\n    u8 reserved_A9[3];\n    u8 *work_end;\n    const char *pending_filename;\n    void *pending_directory;\n    s32 pending_file_offset;\n    s32 pending_file_sectors;\n} Sig_ADXT_Pause_ADXTHandle;\n\nstruct fn_1_3908C_lbl_1_bss_25B88 {\n    u32 unk_0;\n};\nstruct fn_1_3908C_lbl_1_bss_25CA4 {\n    u32 unk_0;\n};\nstruct fn_1_3908C_lbl_1_bss_3C30 {\n    u8 pad_0[0x5];\n    u8 unk_5;\n    u8 unk_6;\n    u8 pad_7[0x146D];\n    u32 unk_1474;\n};\nstruct fn_1_3908C_lbl_1_bss_6EAD0 {\n    u32 unk_0;\n};\nstruct fn_1_3908C_lbl_1_bss_381F5 {\n    u8 unk_0;\n};\n\nextern s16 lbl_1_bss_960;\nextern struct fn_1_3908C_lbl_1_bss_25B88 lbl_1_bss_25B88;\nextern struct fn_1_3908C_lbl_1_bss_25CA4 lbl_1_bss_25CA4;\nextern struct fn_1_3908C_lbl_1_bss_381F5 lbl_1_bss_381F5;\nextern struct fn_1_3908C_lbl_1_bss_3C30 lbl_1_bss_3C30;\nextern struct fn_1_3908C_lbl_1_bss_6EAD0 lbl_1_bss_6EAD0;\nextern u32 fn_1_101C0(void);\nextern u32 fn_1_A11EC(void);\nextern u32 lbl_1_bss_26C28;\nextern s8 lbl_1_bss_5104;\nextern void * fn_1_435C(void *);\nextern void ADXT_Pause(Sig_ADXT_Pause_ADXTHandle *, s32);\nextern void fn_1_4310(u32);\nextern void fn_1_48004(s32, s32);\nextern void fn_1_8616C(void);\nextern void fn_1_A1588(Sig_ADXT_Stop_ADXTHandle *, u32);\nextern void fn_1_D0790(void);\n\nvoid fn_1_3908C(void) {\n    u32 v0;\n    u32 v1;\n    s32 t7;\n    fn_1_435C((void *)lbl_1_bss_25B88.unk_0);\n    fn_1_4310(-1);\n    fn_1_435C((void *)lbl_1_bss_25CA4.unk_0);\n    fn_1_4310(-1);\n    fn_1_8616C();\n    switch ((s32)lbl_1_bss_3C30.unk_6) {\ncase 31: case 32: case 33: case 34: case 35: case 36: {\n\n    v0 = 1;\n    \n} break;\ndefault: {\n\n    v0 = 0;\n    \n} break;\n}\n    fn_1_A11EC();\n    fn_1_D0790();\n    lbl_1_bss_5104 = -1;\n    t7 = fn_1_101C0();\n    lbl_1_bss_26C28 = t7;    if (t7 < 0) {\n    lbl_1_bss_26C28 = 0xf0;\n    }\n    if (lbl_1_bss_960 == 9 || (v0 & 0xFF) != 0) {\n    lbl_1_bss_26C28 = 350;\n    fn_1_A1588((Sig_ADXT_Stop_ADXTHandle *)*(u32 *)((u8 *)lbl_1_bss_6EAD0.unk_0 + 0), 7);\n    } else {\n    fn_1_A1588((Sig_ADXT_Stop_ADXTHandle *)*(u32 *)((u8 *)lbl_1_bss_6EAD0.unk_0 + 0), 6);\n    }\n    lbl_1_bss_3C30.unk_1474 = 0;\n    v1 = lbl_1_bss_6EAD0.unk_0;\n    lbl_1_bss_381F5.unk_0 = 1;\n    ADXT_Pause((Sig_ADXT_Pause_ADXTHandle *)*(u32 *)((u8 *)v1 + 0), 1);\n    if (lbl_1_bss_3C30.unk_5 == 1) {\n    fn_1_48004(187, 1);\n    }\n}\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "rel/main_rel/game/fn_1_3908C.c",
+    "bytes": 356,
+    "headers_sha256": "a589c0d12ea0a921f727e63ed125ea39c16e33457a7ec3899c6c793bcdfddceb",
+    "oracle_sha256": "7cc891120feb212c397b96ddb46f5213d85d0998668a1ee4bd55a3d6abc2e1ff",
+    "recipe": [
+      {
+        "label": "retail contiguous switch cases (1 sites)",
+        "input_sha256": "b2358538a01700f59a2d15715e9aa8a20572ec4ee4215b7468ad493e6fe853d7",
+        "output_sha256": "f64e19e83a78c9467ed1eaaaabbbb9362f17e12d1089b4a6d5663237837f3ee1",
+        "input_symbol": "fn_1_3908C",
+        "output_symbol": "fn_1_3908C",
+        "edits": [
+          [
+            7373,
+            7445,
+            "switch ((s32)lbl_1_bss_3C30.unk_6) {\ncase 31: case 32: case 33: case 34: case 35: case 36: {\n"
+          ],
+          [
+            7462,
+            7470,
+            "\n} break;\ndefault: {\n"
+          ],
+          [
+            7487,
+            7487,
+            "\n} break;\n"
+          ]
+        ]
+      }
+    ],
+    "link": "pending"
+  },
+  "fn_1_ECC": {
+    "seed_symbol": "fn_1_ECC",
+    "generator": "fzgx fixup",
+    "transform": "stmt-swap: swap `fzgx_obj_lbl_1_bss_962 = -1;` / `fzgx_obj_lbl_1_bss_960 = x;`",
+    "seed": "#include \"types.h\"\n#include \"rel/main_rel/globals.h\"\n\ntypedef void (*Fn)(void);\ntypedef struct { u8 pad[0x20]; Fn f20; Fn f24; Fn f28; } T28;\ntypedef struct { u8 pad[0x20]; Fn f20; Fn f24; Fn f28; Fn f2c; } T30;\ntypedef struct {\n    s16 a; s16 b; u16 c; u16 d; s16 e; s16 f; s32 g;\n} State;\n\nextern T28 lbl_1_data_7C0[];\nextern T30 lbl_1_data_460[];\nextern void fn_1_128C(void);\nextern void fn_1_12F194(void);\nextern void fn_1_3C98(void);\nextern void fn_1_3CC4(void);\nextern u32 lbl_801A66C0;\n\nvoid fn_1_ECC(void) {\n    State *s = (State *)&lbl_1_bss_960;\n    s16 x;\n\n    if (s->e != -1) {\n        if (s->b != -1) {\n            lbl_1_data_7C0[s->b].f28();\n            s->d = s->b;\n        }\n        if (s->a != -1) {\n            lbl_1_data_460[s->a].f2c();\n            s->c = s->a;\n        }\n        x = s->e;\n        s->b = -1;\n        s->a = x;\n        s->e = -1;\n        s->g = 0;\n        fn_1_128C();\n        lbl_1_data_460[s->a].f20();\n    } else if (s->f != -1) {\n        if (s->b != -1) {\n            lbl_1_data_7C0[s->b].f28();\n            s->d = s->b;\n        }\n        x = s->f;\n        s->b = x;\n        s->f = -1;\n        lbl_801A66C0 = 0;\n        fn_1_12F194();\n        lbl_1_data_7C0[s->b].f20();\n    }\n\n    if (s->a != -1) {\n        lbl_1_data_460[s->a].f24();\n    }\n\n    if (s->e != -1) {\n        if (s->b != -1) {\n            lbl_1_data_7C0[s->b].f28();\n            s->d = s->b;\n        }\n        if (s->a != -1) {\n            lbl_1_data_460[s->a].f2c();\n            s->c = s->a;\n        }\n        fn_1_3C98();\n        fn_1_3CC4();\n        s->a = -1;\n        s->b = -1;\n        return;\n    } else if (s->f != -1) {\n        if (s->b != -1) {\n            lbl_1_data_7C0[s->b].f28();\n            s->d = s->b;\n        }\n        x = s->f;\n        s->b = x;\n        s->f = -1;\n        lbl_801A66C0 = 0;\n        fn_1_12F194();\n        lbl_1_data_7C0[s->b].f20();\n    }\n\n    if (s->b != -1) {\n        lbl_1_data_7C0[s->b].f24();\n    }\n    if (s->g != 0) {\n        fn_1_3C98();\n        lbl_1_data_460[s->a].f28();\n    }\n\n    if (s->b != -1 && (s->f != -1 || s->e != -1)) {\n        lbl_1_data_7C0[s->b].f28();\n        x = s->e;\n        s->d = s->b;\n        s->b = -1;\n        if (x != -1 && s->a != -1) {\n            lbl_1_data_460[s->a].f2c();\n            s->c = s->a;\n            s->a = -1;\n        }\n        if (s->g == 0) {\n            fn_1_3C98();\n            fn_1_3CC4();\n            return;\n        }\n    }\n    if (s->g == 0) {\n        fn_1_3C98();\n        lbl_1_data_460[s->a].f28();\n    }\n}\n",
+    "seed_sha256": "4f6f28a36aada30080edaa61341cf01406d2d66fcbc73efe04410736c6b391a6",
+    "generated_sha256": "29bdb0a21149ccfee135f38aac1a9a6f77704ff358febd896a70e3ddba8bacee",
+    "generated_source": "#include \"types.h\"\n#include \"rel/main_rel/globals.h\"\n\ntypedef void (*Fn)(void);\ntypedef struct { u8 pad[0x20]; Fn f20; Fn f24; Fn f28; } T28;\ntypedef struct { u8 pad[0x20]; Fn f20; Fn f24; Fn f28; Fn f2c; } T30;\ntypedef struct {\n    s16 a; s16 b; u16 c; u16 d; s16 e; s16 f; s32 g;\n} State;\n\nextern T28 lbl_1_data_7C0[];\nextern T30 lbl_1_data_460[];\nextern void fn_1_128C(void);\nextern void fn_1_12F194(void);\nextern void fn_1_3C98(void);\nextern void fn_1_3CC4(void);\nextern u32 lbl_801A66C0;\n\n/* file-scope objects of the retail TU, in retail order: MWCC addresses them off one section base */\ns16 fzgx_obj_lbl_1_bss_960;\ns16 fzgx_obj_lbl_1_bss_962;\nu16 lbl_1_bss_964;\nu16 lbl_1_bss_966;\ns16 lbl_1_bss_968;\ns16 lbl_1_bss_96A;\ns32 lbl_1_bss_96C;\n\n#pragma section code_type \".fzgxpool\"\nstatic void fzgx_bss_layout(void) {\n    volatile u8 s;  /* fzgx-allow: S2 layout primer sink: MWCC emits .bss objects in first-access order */\n    s = *(u8 *)&fzgx_obj_lbl_1_bss_960;\n    s = *(u8 *)&fzgx_obj_lbl_1_bss_962;\n    s = *(u8 *)&lbl_1_bss_964;\n    s = *(u8 *)&lbl_1_bss_966;\n    s = *(u8 *)&lbl_1_bss_968;\n    s = *(u8 *)&lbl_1_bss_96A;\n    s = *(u8 *)&lbl_1_bss_96C;\n}\n#pragma section code_type \".text\"\n\nvoid fn_1_ECC(void) {\n    \n    s16 x;\n\n    if (lbl_1_bss_968 != -1) {\n        if (fzgx_obj_lbl_1_bss_962 != -1) {\n            lbl_1_data_7C0[fzgx_obj_lbl_1_bss_962].f28();\n            lbl_1_bss_966 = fzgx_obj_lbl_1_bss_962;\n        }\n        if (fzgx_obj_lbl_1_bss_960 != -1) {\n            lbl_1_data_460[fzgx_obj_lbl_1_bss_960].f2c();\n            lbl_1_bss_964 = fzgx_obj_lbl_1_bss_960;\n        }\n        x = lbl_1_bss_968;\n        fzgx_obj_lbl_1_bss_960 = x;\n        fzgx_obj_lbl_1_bss_962 = -1;\n        lbl_1_bss_968 = -1;\n        lbl_1_bss_96C = 0;\n        fn_1_128C();\n        lbl_1_data_460[fzgx_obj_lbl_1_bss_960].f20();\n    } else if (lbl_1_bss_96A != -1) {\n        if (fzgx_obj_lbl_1_bss_962 != -1) {\n            lbl_1_data_7C0[fzgx_obj_lbl_1_bss_962].f28();\n            lbl_1_bss_966 = fzgx_obj_lbl_1_bss_962;\n        }\n        x = lbl_1_bss_96A;\n        fzgx_obj_lbl_1_bss_962 = x;\n        lbl_1_bss_96A = -1;\n        lbl_801A66C0 = 0;\n        fn_1_12F194();\n        lbl_1_data_7C0[fzgx_obj_lbl_1_bss_962].f20();\n    }\n\n    if (fzgx_obj_lbl_1_bss_960 != -1) {\n        lbl_1_data_460[fzgx_obj_lbl_1_bss_960].f24();\n    }\n\n    if (lbl_1_bss_968 != -1) {\n        if (fzgx_obj_lbl_1_bss_962 != -1) {\n            lbl_1_data_7C0[fzgx_obj_lbl_1_bss_962].f28();\n            lbl_1_bss_966 = fzgx_obj_lbl_1_bss_962;\n        }\n        if (fzgx_obj_lbl_1_bss_960 != -1) {\n            lbl_1_data_460[fzgx_obj_lbl_1_bss_960].f2c();\n            lbl_1_bss_964 = fzgx_obj_lbl_1_bss_960;\n        }\n        fn_1_3C98();\n        fn_1_3CC4();\n        fzgx_obj_lbl_1_bss_960 = -1;\n        fzgx_obj_lbl_1_bss_962 = -1;\n        return;\n    } else if (lbl_1_bss_96A != -1) {\n        if (fzgx_obj_lbl_1_bss_962 != -1) {\n            lbl_1_data_7C0[fzgx_obj_lbl_1_bss_962].f28();\n            lbl_1_bss_966 = fzgx_obj_lbl_1_bss_962;\n        }\n        x = lbl_1_bss_96A;\n        fzgx_obj_lbl_1_bss_962 = x;\n        lbl_1_bss_96A = -1;\n        lbl_801A66C0 = 0;\n        fn_1_12F194();\n        lbl_1_data_7C0[fzgx_obj_lbl_1_bss_962].f20();\n    }\n\n    if (fzgx_obj_lbl_1_bss_962 != -1) {\n        lbl_1_data_7C0[fzgx_obj_lbl_1_bss_962].f24();\n    }\n    if (lbl_1_bss_96C != 0) {\n        fn_1_3C98();\n        lbl_1_data_460[fzgx_obj_lbl_1_bss_960].f28();\n    }\n\n    if (fzgx_obj_lbl_1_bss_962 != -1 && (lbl_1_bss_96A != -1 || lbl_1_bss_968 != -1)) {\n        lbl_1_data_7C0[fzgx_obj_lbl_1_bss_962].f28();\n        x = lbl_1_bss_968;\n        lbl_1_bss_966 = fzgx_obj_lbl_1_bss_962;\n        fzgx_obj_lbl_1_bss_962 = -1;\n        if (x != -1 && fzgx_obj_lbl_1_bss_960 != -1) {\n            lbl_1_data_460[fzgx_obj_lbl_1_bss_960].f2c();\n            lbl_1_bss_964 = fzgx_obj_lbl_1_bss_960;\n            fzgx_obj_lbl_1_bss_960 = -1;\n        }\n        if (lbl_1_bss_96C == 0) {\n            fn_1_3C98();\n            fn_1_3CC4();\n            return;\n        }\n    }\n    if (lbl_1_bss_96C == 0) {\n        fn_1_3C98();\n        lbl_1_data_460[fzgx_obj_lbl_1_bss_960].f28();\n    }\n}\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "rel/main_rel/_prolog/fn_1_ECC.c",
+    "bytes": 948,
+    "headers_sha256": "a589c0d12ea0a921f727e63ed125ea39c16e33457a7ec3899c6c793bcdfddceb",
+    "oracle_sha256": "7cc891120feb212c397b96ddb46f5213d85d0998668a1ee4bd55a3d6abc2e1ff",
+    "recipe": [
+      {
+        "label": "define retail TU bss objects (dtk)",
+        "input_sha256": "4f6f28a36aada30080edaa61341cf01406d2d66fcbc73efe04410736c6b391a6",
+        "output_sha256": "04fbe77ceda989fa297575203036bc55906b078143589e0e07a40898b26e0546",
+        "input_symbol": "fn_1_ECC",
+        "output_symbol": "fn_1_ECC",
+        "edits": [
+          [
+            494,
+            494,
+            "/* file-scope objects of the retail TU, in retail order: MWCC addresses them off one section base */\ns16 fzgx_obj_lbl_1_bss_960;\ns16 fzgx_obj_lbl_1_bss_962;\nu16 lbl_1_bss_964;\nu16 lbl_1_bss_966;\ns16 lbl_1_bss_968;\ns16 lbl_1_bss_96A;\ns32 lbl_1_bss_96C;\n\n#pragma section code_type \".fzgxpool\"\nstatic void fzgx_bss_layout(void) {\n    volatile u8 s;  /* fzgx-allow: S2 layout primer sink: MWCC emits .bss objects in first-access order */\n    s = *(u8 *)&fzgx_obj_lbl_1_bss_960;\n    s = *(u8 *)&fzgx_obj_lbl_1_bss_962;\n    s = *(u8 *)&lbl_1_bss_964;\n    s = *(u8 *)&lbl_1_bss_966;\n    s = *(u8 *)&lbl_1_bss_968;\n    s = *(u8 *)&lbl_1_bss_96A;\n    s = *(u8 *)&lbl_1_bss_96C;\n}\n#pragma section code_type \".text\"\n\n"
+          ],
+          [
+            520,
+            555,
+            ""
+          ],
+          [
+            576,
+            679,
+            "lbl_1_bss_968 != -1) {\n        if (fzgx_obj_lbl_1_bss_962 != -1) {\n            lbl_1_data_7C0[fzgx_obj_lbl_1_bss_962].f28();\n            lbl_1_bss_966 = fzgx_obj_lbl_1_bss_962"
+          ],
+          [
+            703,
+            780,
+            "fzgx_obj_lbl_1_bss_960 != -1) {\n            lbl_1_data_460[fzgx_obj_lbl_1_bss_960].f2c();\n            lbl_1_bss_964 = fzgx_obj_lbl_1_bss_960"
+          ],
+          [
+            804,
+            878,
+            "lbl_1_bss_968;\n        fzgx_obj_lbl_1_bss_962 = -1;\n        fzgx_obj_lbl_1_bss_960 = x;\n        lbl_1_bss_968 = -1;\n        lbl_1_bss_96C"
+          ],
+          [
+            928,
+            1059,
+            "fzgx_obj_lbl_1_bss_960].f20();\n    } else if (lbl_1_bss_96A != -1) {\n        if (fzgx_obj_lbl_1_bss_962 != -1) {\n            lbl_1_data_7C0[fzgx_obj_lbl_1_bss_962].f28();\n            lbl_1_bss_966 = fzgx_obj_lbl_1_bss_962"
+          ],
+          [
+            1083,
+            1119,
+            "lbl_1_bss_96A;\n        fzgx_obj_lbl_1_bss_962 = x;\n        lbl_1_bss_96A"
+          ],
+          [
+            1198,
+            1202,
+            "fzgx_obj_lbl_1_bss_962"
+          ],
+          [
+            1226,
+            1267,
+            "fzgx_obj_lbl_1_bss_960 != -1) {\n        lbl_1_data_460[fzgx_obj_lbl_1_bss_960"
+          ],
+          [
+            1291,
+            1394,
+            "lbl_1_bss_968 != -1) {\n        if (fzgx_obj_lbl_1_bss_962 != -1) {\n            lbl_1_data_7C0[fzgx_obj_lbl_1_bss_962].f28();\n            lbl_1_bss_966 = fzgx_obj_lbl_1_bss_962"
+          ],
+          [
+            1418,
+            1495,
+            "fzgx_obj_lbl_1_bss_960 != -1) {\n            lbl_1_data_460[fzgx_obj_lbl_1_bss_960].f2c();\n            lbl_1_bss_964 = fzgx_obj_lbl_1_bss_960"
+          ],
+          [
+            1557,
+            1580,
+            "fzgx_obj_lbl_1_bss_960 = -1;\n        fzgx_obj_lbl_1_bss_962"
+          ],
+          [
+            1618,
+            1721,
+            "lbl_1_bss_96A != -1) {\n        if (fzgx_obj_lbl_1_bss_962 != -1) {\n            lbl_1_data_7C0[fzgx_obj_lbl_1_bss_962].f28();\n            lbl_1_bss_966 = fzgx_obj_lbl_1_bss_962"
+          ],
+          [
+            1745,
+            1781,
+            "lbl_1_bss_96A;\n        fzgx_obj_lbl_1_bss_962 = x;\n        lbl_1_bss_96A"
+          ],
+          [
+            1860,
+            1864,
+            "fzgx_obj_lbl_1_bss_962"
+          ],
+          [
+            1888,
+            1929,
+            "fzgx_obj_lbl_1_bss_962 != -1) {\n        lbl_1_data_7C0[fzgx_obj_lbl_1_bss_962"
+          ],
+          [
+            1952,
+            1956,
+            "lbl_1_bss_96C"
+          ],
+          [
+            2009,
+            2013,
+            "fzgx_obj_lbl_1_bss_960"
+          ],
+          [
+            2037,
+            2293,
+            "fzgx_obj_lbl_1_bss_962 != -1 && (lbl_1_bss_96A != -1 || lbl_1_bss_968 != -1)) {\n        lbl_1_data_7C0[fzgx_obj_lbl_1_bss_962].f28();\n        x = lbl_1_bss_968;\n        lbl_1_bss_966 = fzgx_obj_lbl_1_bss_962;\n        fzgx_obj_lbl_1_bss_962 = -1;\n        if (x != -1 && fzgx_obj_lbl_1_bss_960 != -1) {\n            lbl_1_data_460[fzgx_obj_lbl_1_bss_960].f2c();\n            lbl_1_bss_964 = fzgx_obj_lbl_1_bss_960;\n            fzgx_obj_lbl_1_bss_960"
+          ],
+          [
+            2322,
+            2326,
+            "lbl_1_bss_96C"
+          ],
+          [
+            2429,
+            2433,
+            "lbl_1_bss_96C"
+          ],
+          [
+            2486,
+            2490,
+            "fzgx_obj_lbl_1_bss_960"
+          ]
+        ]
+      },
+      {
+        "label": "stmt-swap: swap `fzgx_obj_lbl_1_bss_962 = -1;` / `fzgx_obj_lbl_1_bss_960 = x;`",
+        "input_sha256": "04fbe77ceda989fa297575203036bc55906b078143589e0e07a40898b26e0546",
+        "output_sha256": "29bdb0a21149ccfee135f38aac1a9a6f77704ff358febd896a70e3ddba8bacee",
+        "input_symbol": "fn_1_ECC",
+        "output_symbol": "fn_1_ECC",
+        "edits": [
+          [
+            1625,
+            1625,
+            "        fzgx_obj_lbl_1_bss_960 = x;\n"
+          ],
+          [
+            1662,
+            1698,
+            ""
+          ]
+        ]
+      }
+    ],
     "link": "pending"
   }
 }

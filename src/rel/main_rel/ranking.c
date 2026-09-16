@@ -1049,6 +1049,82 @@ void fn_1_157598(fn_1_157598_RankingState *state) {
 #pragma opt_dead_assignments reset
 /* fzgx:end fn_1_157598 */
 
+/* fzgx:begin fn_1_1576B4 */
+extern s32 fn_8006B55C(u32, void *, void *);
+extern s32 fn_8006B628(void *, void *);
+extern s32 fn_8006B6F8(void *);
+
+typedef struct {
+    u8 field00;
+    u8 _pad01[3];
+    u32 field04;
+    u32 field08;
+    u8 field0c;
+    u8 _pad0d[1];
+    u16 field0e;
+    u16 field10;
+    u16 field12;
+    u16 field14;
+    u32 field18;
+    u32 field1c;
+    u8 field20;
+    u8 field21;
+} RankingConfig;
+
+typedef struct {
+    u32 flags;
+    u32 field04;
+    u8 _pad08[0x24];
+    void *data;
+    u8 _pad30[0x1c];
+    u8 enabled;
+} RankingState;
+
+#pragma opt_propagation off
+void fn_1_1576B4(RankingState *state) {
+    RankingConfig config;
+    u32 field04;
+    void *data;
+    s32 success;
+
+    if (state->enabled & 2) {
+        success = 0;
+        config.field00 = 4;
+        config.field04 = 0x258;
+        config.field08 = success;
+        config.field0c = 0xfa;
+        config.field0e = 0x32;
+        config.field10 = 0x96;
+        config.field12 = success;
+        config.field14 = success;
+        config.field18 = 0x14;
+        config.field1c = 0x64;
+        config.field20 = success;
+        config.field21 = success;
+
+        if (!(((0x100) & (state->flags)))) {
+            field04 = state->field04;
+            data = state->data;
+            if ((u32)data == 0xffffffffU) {
+                if (fn_8006B55C(field04, &state->data, &config) >= 0) {
+                    success = 1;
+                }
+            } else if (fn_8006B628(data, &config) >= 0) {
+                success = 1;
+            }
+
+            if (success && !(((0x100) & (state->flags))) &&
+                fn_8006B6F8(state->data) >= 0) {
+                state->flags |= 0x100;
+            }
+        } else {
+            fn_8006B6F8(state->data);
+        }
+    }
+}
+#pragma opt_propagation reset
+/* fzgx:end fn_1_1576B4 */
+
 /* fzgx:begin fn_1_1577D0 noprologue */
 #include "types.h"
 

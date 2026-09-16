@@ -3304,6 +3304,69 @@ void fn_1_557C4(void *value) {
 #pragma opt_lifetimes reset
 /* fzgx:end fn_1_557C4 */
 
+/* fzgx:begin fn_1_55924 noprologue */
+#include "types.h"
+#include "rel/main_rel/globals.h"
+#include "rel/main_rel/font.h"
+
+extern void *fn_1_54448(void *value);
+extern void *fn_1_548AC(u32 size);
+extern void fn_1_55C48(void);
+extern s16 fn_1_7BE94(void);
+extern void fn_1_5489C(void *value, void *data);
+extern void fn_1_56530(void);
+extern void lbl_8006DB74(void *value);
+extern void lbl_8006DD14(void *value, void *data);
+extern u8 *lbl_801A66CC;
+
+typedef struct {
+    u8 pad_00[0x4];
+    void *vtable;
+    void *owner;
+    u8 pad_0C[0x30];
+    s16 unk_3C;
+    u8 pad_3E[0x2];
+    Obj_1_bss_6C7A4 settings;
+    void *items[4];
+} Fn1_55924Object;
+
+void fn_1_55924(void *value, void *arg) {
+    Fn1_55924Object *object;
+    void *handle;
+    s32 ok;
+    s32 i;
+    Obj_1_bss_6C7CC *flags;
+
+    handle = fn_1_54448(arg);
+    object = (Fn1_55924Object *)fn_1_548AC(0x78);
+    if (object != 0) {
+        object->vtable = (void *)fn_1_55C48;
+        object->owner = value;
+        ok = 1;
+        lbl_8006DB74((u8 *)object + 0xC);
+        object->unk_3C = fn_1_7BE94();
+        object->settings = lbl_1_bss_6C7A4;
+        flags = &lbl_1_bss_6C7CC;
+        for (i = 0; i < 4; i++) {
+            if (__rlwnm(flags->unk_0, (i + 1) & 31, 31, 31)) {
+                object->items[i] = fn_1_548AC(0x30);
+                if (object->items[i] != 0) {
+                    lbl_8006DD14((((i * 0x30) + ((u8 *)lbl_801A66CC)) + (0xE0)), object->items[i]);
+                } else {
+                    ok = 0;
+                }
+            } else {
+                object->items[i] = 0;
+            }
+        }
+        if (ok != 0) {
+            fn_1_5489C(handle, object);
+        }
+    }
+    fn_1_56530();
+}
+/* fzgx:end fn_1_55924 */
+
 /* fzgx:begin fn_1_55A84 */
 extern const f32 lbl_1_rodata_28A8;
 extern void *fn_1_5448C(void *data);

@@ -448,6 +448,85 @@ s16 camera_get_output(void) {
 }
 /* fzgx:end camera_get_output */
 
+/* fzgx:begin fn_1_6B48 noprologue */
+#include "types.h"
+
+typedef struct {
+    u32 unk_0;
+    u8 pad_4[0x44];
+    u8 unk_48;
+} CameraState;
+
+typedef struct {
+    u8 pad_0[0x6];
+    s16 value;
+} CameraValue;
+
+typedef struct {
+    u8 pad_0[0x2];
+    s16 value;
+    u8 pad_4[0x1f8];
+} CameraEntry;
+
+typedef struct {
+    CameraState *state;
+    CameraEntry *entries;
+    CameraValue *value;
+} CameraGlobals;
+
+
+#pragma opt_common_subs off
+#pragma peephole on
+/* file-scope objects of the retail TU, in retail order: MWCC addresses them off one section base */
+CameraState *fzgx_obj_lbl_1_bss_F68;
+CameraEntry *fzgx_obj_game_camera_entries;
+CameraValue *fzgx_obj_live_camera;
+u8 lbl_1_bss_F74;
+u8 lbl_1_bss_F75;
+u8 lbl_1_bss_F76;
+
+#pragma section code_type ".fzgxpool"
+static void fzgx_bss_layout(void) {
+    volatile u8 s;  /* fzgx-allow: S2 layout primer sink: MWCC emits .bss objects in first-access order */
+    s = *(u8 *)&fzgx_obj_lbl_1_bss_F68;
+    s = *(u8 *)&fzgx_obj_game_camera_entries;
+    s = *(u8 *)&fzgx_obj_live_camera;
+    s = *(u8 *)&lbl_1_bss_F74;
+    s = *(u8 *)&lbl_1_bss_F75;
+    s = *(u8 *)&lbl_1_bss_F76;
+}
+#pragma section code_type ".text"
+
+static inline CameraEntry *fn_1_6B48_array_read(CameraEntry *array) { return array; }
+s16 fn_1_6B48(s32 index) {
+    CameraState * state;
+{
+    
+    state = fzgx_obj_lbl_1_bss_F68;
+
+    if (state == 0) {
+        return -1;
+    }
+
+    if ((state->unk_0 & ((u32)1 << 31)) != 0) {
+        return -1;
+    }
+
+    switch ((s8)state->unk_48) {
+    case 9:
+    case 10:
+        return fzgx_obj_live_camera->value;
+    case 11:
+        return -1;
+    default:
+        return fn_1_6B48_array_read(fzgx_obj_game_camera_entries)[index].value;
+}
+    }
+}
+#pragma peephole reset
+#pragma opt_common_subs reset
+/* fzgx:end fn_1_6B48 */
+
 /* fzgx:begin camera_set_result */
 void camera_set_result(s16 value) {
     // Update the camera result only while the camera state is active.

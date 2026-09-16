@@ -6428,3 +6428,30 @@ rel/main_rel/car/fn_1_84644.c:
 
 rel/main_rel/live_camera/fn_1_FB50.c:
 	.text       start:0x0000FB50 end:0x0000FCB0 align:4
+
+rel/main_rel/car/fn_1_8CED0.c:
+	.text       start:0x0008CED0 end:0x0008D0A4 align:4
+
+rel/main_rel/avline/fn_1_581AC.c:
+	.text       start:0x000581AC end:0x00058248 align:4
+
+rel/main_rel/archive/fn_1_12AC28.c:
+	.text       start:0x0012AC28 end:0x0012ADA0 align:4
+
+rel/main_rel/font/fn_1_55924.c:
+	.text       start:0x00055924 end:0x00055A84 align:4
+
+rel/main_rel/ranking/fn_1_1576B4.c:
+	.text       start:0x001576B4 end:0x001577D0 align:4
+
+rel/main_rel/camera/fn_1_6B48.c:
+	.text       start:0x00006B48 end:0x00006BC0 align:4
+
+rel/main_rel/rep_memcard/fn_1_154BE4.c:
+	.text       start:0x00154BE4 end:0x00154C84 align:4
+
+rel/main_rel/game/fn_1_3908C.c:
+	.text       start:0x0003908C end:0x000391F0 align:4
+
+rel/main_rel/_prolog/fn_1_ECC.c:
+	.text       start:0x00000ECC end:0x00001280 align:4

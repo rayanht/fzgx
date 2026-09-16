@@ -30,6 +30,38 @@ void fn_1_5819C(void) {
 }
 /* fzgx:end fn_1_5819C */
 
+/* fzgx:begin fn_1_581AC */
+extern u16 lbl_1_bss_6C844;
+extern u32 lbl_1_bss_6C840;
+
+typedef struct AvLineEntry {
+    u16 unk_00;
+    u16 unk_02;
+    u8 unk_04[0x100];
+} AvLineEntry;
+
+extern void fn_80008BA8(void*, void*, u32);
+
+#pragma opt_propagation off
+s32 fn_1_581AC(u16 value, u16 type, void* data) {
+    AvLineEntry *entry;
+    u8 *p;
+
+    if (lbl_1_bss_6C844 == 0x64) {
+        return 0;
+    }
+
+    ((AvLineEntry*)lbl_1_bss_6C840)[lbl_1_bss_6C844].unk_00 = value;
+    p = (u8*)lbl_1_bss_6C840 + lbl_1_bss_6C844 * 0x104;
+    entry = (AvLineEntry*)p;
+    entry->unk_02 = type;
+    fn_80008BA8(((AvLineEntry*)lbl_1_bss_6C840)[lbl_1_bss_6C844].unk_04, data, 0x100);
+    lbl_1_bss_6C844++;
+    return 1;
+}
+#pragma opt_propagation reset
+/* fzgx:end fn_1_581AC */
+
 /* fzgx:begin fn_1_584AC */
 // fn_1_584AC: linear congruential generator.
 u32 fn_1_584AC(void) {

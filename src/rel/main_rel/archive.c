@@ -279,6 +279,104 @@ void fn_1_12AC00(void *arg0) {
 }
 /* fzgx:end fn_1_12AC00 */
 
+/* fzgx:begin fn_1_12AC28 noprologue */
+#include "types.h"
+#include "rel/main_rel/archive.h"
+
+extern void *lbl_801A6410;
+
+extern s32 fn_8006A480(void *entry, void *arg0, void *result);
+extern void *fn_8006A998(void *result);
+extern void *fn_8006A9AC(void *result);
+extern void OSPanic(u8 *message, s32 line, u8 *file, ...);
+extern void *fn_1_4630(void *arg0, void *arg1, void *arg2, s32 arg3);
+extern void fn_80008BA8(void *arg0, void *arg1, void *arg2);
+extern void *fn_1_D38A4(void *arg0, s32 arg1);
+extern void *fn_1_D3884(void *arg0);
+
+typedef struct ArchiveEntry {
+    u8 field_0[0x4c];
+    u8 data[0x20];
+} ArchiveEntry;
+
+typedef struct ArchiveState {
+    s32 count;
+    s32 ready;
+    s32 fallback;
+    ArchiveEntry entries[1];
+} ArchiveState;
+
+static inline ArchiveEntry *fn_1_12AC28_array_read(ArchiveEntry *array) { return array; }
+#pragma opt_loop_invariants off
+typedef struct lbl_1_bss_897AC_t {
+    ArchiveEntry entries[1];
+    u8 pad_6C[0x1ac8];
+} lbl_1_bss_897AC_t;
+
+/* file-scope objects of the retail TU, in retail order: MWCC addresses them off one section base */
+s32 fzgx_obj_lbl_1_bss_897A0;
+s32 lbl_1_bss_897A4;
+s32 lbl_1_bss_897A8;
+lbl_1_bss_897AC_t fzgx_obj_lbl_1_bss_897AC;
+u32 fzgx_obj_lbl_1_bss_8B2E0[48];
+u32 fzgx_obj_lbl_1_bss_8B3A0[83];
+
+#pragma section code_type ".fzgxpool"
+static void fzgx_bss_layout(void) {
+    volatile u8 s;  /* fzgx-allow: S2 layout primer sink: MWCC emits .bss objects in first-access order */
+    s = *(u8 *)&fzgx_obj_lbl_1_bss_897A0;
+    s = *(u8 *)&lbl_1_bss_897A4;
+    s = *(u8 *)&lbl_1_bss_897A8;
+    s = *(u8 *)&fzgx_obj_lbl_1_bss_897AC;
+    s = *(u8 *)&fzgx_obj_lbl_1_bss_8B2E0;
+    s = *(u8 *)&fzgx_obj_lbl_1_bss_8B3A0;
+}
+#pragma section code_type ".text"
+
+void *fn_1_12AC28(void *arg0, void **arg1, void **arg2) {
+    void *ret;
+    void *lookup;
+    void *archive;
+    u8 info1[12];
+    u8 info2[12];
+
+    
+    if (lbl_1_bss_897A4 != 0) {
+        if (fn_8006A480(fn_1_12AC28_array_read(fzgx_obj_lbl_1_bss_897AC.entries)[fzgx_obj_lbl_1_bss_897A0].data, arg0, info1) != 0) {
+            lookup = fn_8006A998(info1);
+        } else {
+            lookup = 0;
+        }
+        archive = lookup;
+        if (lookup != 0) {
+            if (arg1 != 0 && arg2 != 0) {
+                if (fn_8006A480(fn_1_12AC28_array_read(fzgx_obj_lbl_1_bss_897AC.entries)[fzgx_obj_lbl_1_bss_897A0].data, arg0, info2) == 0) {
+                    OSPanic(lbl_1_data_40608, 0x1be, lbl_1_data_4076C);
+                }
+                *arg2 = fn_8006A9AC(info2);
+                if (*arg2 != 0) {
+                    *arg1 = fn_1_4630(lbl_801A6410, *arg2,
+                        lbl_1_data_40608, 0x1fc);
+                    fn_80008BA8(*arg1, lookup, *arg2);
+                    archive = *arg1;
+                }
+                ret = fn_1_D38A4(archive, 0);
+            } else {
+                ret = fn_1_D38A4(lookup, 0);
+            }
+        } else if (lbl_1_bss_897A8 != 0) {
+            ret = fn_1_D3884(arg0);
+        } else {
+            ret = 0;
+        }
+    } else {
+        ret = fn_1_D3884(arg0);
+    }
+    return ret;
+}
+#pragma opt_loop_invariants reset
+/* fzgx:end fn_1_12AC28 */
+
 /* fzgx:begin fn_1_12ADA0 */
 void fn_1_12ADA0(void *arg0, void *arg1) {
     fn_1_12ADC8(arg0, arg1, 0, 0);

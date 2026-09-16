@@ -14506,6 +14506,16 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_80020B3C.c",
+    "symbols": [
+      "fn_80020B3C"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.2.5n",
+    "extra_cflags": []
+  },
+  {
+    "module": "main",
     "source": "dol/fn_80020CB0.c",
     "symbols": [
       "fn_80020CB0"
@@ -21584,6 +21594,21 @@
   },
   {
     "module": "main",
+    "source": "dol/fn_80070774.c",
+    "symbols": [
+      "fn_80070774"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3",
+    "extra_cflags": [],
+    "pool": {
+      "@28": "lbl_801A7410",
+      "@31": "lbl_801A7418",
+      "@29": "lbl_801A7414"
+    }
+  },
+  {
+    "module": "main",
     "source": "dol/fn_80070A58.c",
     "symbols": [
       "fn_80070A58"
@@ -25970,6 +25995,27 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/_prolog/fn_1_ECC.c",
+    "symbols": [
+      "fn_1_ECC"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "tu": "rel/main_rel/_prolog.c",
+    "pool": {
+      "...bss.0": "lbl_1_bss_960",
+      "fzgx_obj_lbl_1_bss_960": "lbl_1_bss_960",
+      "fzgx_obj_lbl_1_bss_962": "lbl_1_bss_962",
+      "lbl_1_bss_964": "lbl_1_bss_964",
+      "lbl_1_bss_966": "lbl_1_bss_966",
+      "lbl_1_bss_968": "lbl_1_bss_968",
+      "lbl_1_bss_96A": "lbl_1_bss_96A",
+      "lbl_1_bss_96C": "lbl_1_bss_96C"
+    }
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/accessory/fn_1_108870.c",
     "symbols": [
       "fn_1_108870"
@@ -26635,6 +26681,26 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/archive/fn_1_12AC28.c",
+    "symbols": [
+      "fn_1_12AC28"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "tu": "rel/main_rel/archive.c",
+    "pool": {
+      "...bss.0": "lbl_1_bss_897A0",
+      "fzgx_obj_lbl_1_bss_897A0": "lbl_1_bss_897A0",
+      "lbl_1_bss_897A4": "lbl_1_bss_897A4",
+      "lbl_1_bss_897A8": "lbl_1_bss_897A8",
+      "fzgx_obj_lbl_1_bss_897AC": "lbl_1_bss_897AC",
+      "fzgx_obj_lbl_1_bss_8B2E0": "lbl_1_bss_8B2E0",
+      "fzgx_obj_lbl_1_bss_8B3A0": "lbl_1_bss_8B3A0"
+    }
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/archive/fn_1_12ADA0.c",
     "symbols": [
       "fn_1_12ADA0"
@@ -27150,6 +27216,17 @@
     ],
     "status": "matching",
     "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/avline.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/avline/fn_1_581AC.c",
+    "symbols": [
+      "fn_1_581AC"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
     "extra_cflags": [],
     "tu": "rel/main_rel/avline.c"
   },
@@ -30592,6 +30669,26 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/camera/fn_1_6B48.c",
+    "symbols": [
+      "fn_1_6B48"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "tu": "rel/main_rel/camera.c",
+    "pool": {
+      "...bss.0": "lbl_1_bss_F68",
+      "fzgx_obj_lbl_1_bss_F68": "lbl_1_bss_F68",
+      "fzgx_obj_game_camera_entries": "game_camera_entries",
+      "fzgx_obj_live_camera": "live_camera",
+      "lbl_1_bss_F74": "lbl_1_bss_F74",
+      "lbl_1_bss_F75": "lbl_1_bss_F75",
+      "lbl_1_bss_F76": "lbl_1_bss_F76"
+    }
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/camera/fn_1_6EC0.c",
     "symbols": [
       "fn_1_6EC0"
@@ -32702,6 +32799,22 @@
     "mw_version": null,
     "extra_cflags": [],
     "tu": "rel/main_rel/car.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/car/fn_1_8CED0.c",
+    "symbols": [
+      "fn_1_8CED0"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "tu": "rel/main_rel/car.c",
+    "pool": {
+      "...rodata.0": "lbl_1_rodata_3508",
+      "@16": "lbl_1_rodata_3518",
+      "@28": "lbl_1_rodata_3530"
+    }
   },
   {
     "module": "main_rel",
@@ -38021,6 +38134,17 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/font/fn_1_55924.c",
+    "symbols": [
+      "fn_1_55924"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "tu": "rel/main_rel/font.c"
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/font/fn_1_55A84.c",
     "symbols": [
       "fn_1_55A84"
@@ -38368,6 +38492,17 @@
     ],
     "status": "matching",
     "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/game.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/game/fn_1_3908C.c",
+    "symbols": [
+      "fn_1_3908C"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
     "extra_cflags": [],
     "tu": "rel/main_rel/game.c"
   },
@@ -43807,6 +43942,17 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/ranking/fn_1_1576B4.c",
+    "symbols": [
+      "fn_1_1576B4"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "tu": "rel/main_rel/ranking.c"
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/ranking/fn_1_1577D0.c",
     "symbols": [
       "fn_1_1577D0"
@@ -44313,6 +44459,18 @@
     "mw_version": null,
     "extra_cflags": [],
     "tu": "rel/main_rel/relocation.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/rep_memcard/fn_1_154BE4.c",
+    "symbols": [
+      "fn_1_154BE4"
+    ],
+    "status": "nonmatching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "tu": "rel/main_rel/rep_memcard.c",
+    "pool": true
   },
   {
     "module": "main_rel",
