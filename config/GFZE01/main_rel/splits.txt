@@ -6455,3 +6455,6 @@ rel/main_rel/game/fn_1_3908C.c:
 
 rel/main_rel/_prolog/fn_1_ECC.c:
 	.text       start:0x00000ECC end:0x00001280 align:4
+
+rel/main_rel/mdlload/fn_1_D4370.c:
+	.text       start:0x000D4370 end:0x000D47D8 align:4

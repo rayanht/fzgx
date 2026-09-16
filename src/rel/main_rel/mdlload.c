@@ -614,6 +614,165 @@ void fn_1_D4360(void *base) {
 }
 /* fzgx:end fn_1_D4360 */
 
+/* fzgx:begin fn_1_D4370 noprologue */
+#include "types.h"
+
+#pragma section code_type ".fzgxpool"
+__declspec(section ".fzgxpool") static void fzgx_pool_prime1(void) {
+    volatile f32 s; volatile f64 d;  /* fzgx-allow: S2 pool primer sinks */
+    s = 30.0f;
+    s = 0.6499999761581421f;
+    s = 0.75f;
+    s = 1.0f;
+    s = 0.0f;
+    s = 182.04444885253906f;
+    d = 0.5;
+    d = 2.0;
+    d = 4503599627370496.0;
+    s = 0.5f;
+    s = 0.02500000037252903f;
+    s = 0.9900000095367432f;
+    s = 1.649999976158142f;
+}
+#pragma section code_type ".text"
+struct fn_1_D4370_lbl_1_rodata_6168 {
+    u8 pad_0[0xC];
+    f32 unk_C;
+    f32 unk_10;
+    u8 pad_14[0x14];
+    f64 unk_28;
+    f32 unk_30;
+    f32 unk_34;
+    f32 unk_38;
+    f32 unk_3C;
+};
+extern struct fn_1_D4370_lbl_1_rodata_6168 lbl_1_rodata_6168;
+
+struct fn_1_D4370_lbl_801A63C0 {
+    u32 unk_0;
+};
+extern struct fn_1_D4370_lbl_801A63C0 lbl_801A63C0;
+
+extern u32 fn_1_539CC(void *, void *, f32);
+extern void fn_1_9A7A8(u32 *);
+
+struct FzgxCopy_4 { u32 words[1]; };
+
+struct D4370State {
+    f32 unk_0;
+    s32 unk_4;
+    s32 unk_8;
+    f32 arrC[5];
+    s32 arr20[5];
+    s32 unk_34;
+    s32 unk_38;
+};
+
+void fn_1_D4370(void *arg0) {
+    struct FzgxCopy_4 loc_1C;
+    struct FzgxCopy_4 loc_18;
+    struct FzgxCopy_4 loc_14;
+    u32 sp10;
+    u32 spC;
+    u32 sp8;
+    f32 temp_f4;
+    f32 temp_f4_2;
+    f32 var_f0;
+    struct { f32 value; } var_f1;
+    f32 var_f2;
+    struct D4370State *temp_r30;
+    struct fn_1_D4370_lbl_1_rodata_6168 *temp_r31;
+    struct D4370State *var_r4;
+    s32 var_r5;
+    u32 temp_r4_2;
+    u32 temp_r6;
+    u32 temp_r7;
+    u32 temp_r9;
+    u32 temp_r9_2;
+    s32 idx;
+
+    temp_r30 = (struct D4370State *)((u8 *)(arg0) + 0xC040);
+    temp_r31 = &lbl_1_rodata_6168;
+    if ((s32) (*(s32 *)((u8 *)(arg0) + 49268)) != 0) {
+        temp_r30->unk_34 = temp_r30->unk_34 - 1;
+        if (temp_r30->unk_34 <= 0) {
+            var_r4 = temp_r30;
+            var_r5 = 0;
+            temp_r9 = (lbl_801A63C0.unk_0 * 0x676A4B6B) + 0x33CB;
+            lbl_801A63C0.unk_0 = temp_r9;
+            temp_r30->unk_8 = (s32) ((s32)((temp_r9 >> 0x10U) & 0x7FFF) % 3) + 1;
+            temp_r30->unk_4 = 0;
+            while (var_r5 < temp_r30->unk_8) {
+                temp_r9_2 = (lbl_801A63C0.unk_0 * 0x676A4B6B) + 0x33CB;
+                lbl_801A63C0.unk_0 = temp_r9_2;
+                temp_r7 = (u32) ((temp_r9_2 >> 0x10U) & 0x7FFF) >> 0x1FU;
+                if (((((temp_r9_2 >> 0x10U) & 1) ^ temp_r7) - temp_r7) != 0) {
+                    var_f0 = (1.0f);
+                } else {
+                    var_f0 = (0.5f);
+                }
+                var_r4->arrC[0] = var_f0;
+                var_r5 += 1;
+                temp_r6 = (lbl_801A63C0.unk_0 * 0x676A4B6B) + 0x33CB;
+                lbl_801A63C0.unk_0 = temp_r6;
+                var_r4->arr20[0] = (s32) ((s32)((temp_r6 >> 0x10U) & 0x7FFF) % 60) + 0xA;
+                var_r4 = (struct D4370State *)((u8 *)(var_r4) + 4);
+                            }
+            temp_r30->unk_38 = temp_r30->arr20[temp_r30->unk_4];
+            (*(f32 *)((u8 *)(arg0) + 49216)) = temp_r30->arrC[temp_r30->unk_4];
+        }
+    } else {
+        temp_r30->unk_38 = temp_r30->unk_38 - 1;
+        var_f1.value = (*(f32 *)((u8 *)(arg0) + 49216)) - (0.0250000004f);
+        var_f1.value = (var_f1.value > (0.0f)) ? var_f1.value : (0.0f);
+        (*(f32 *)((u8 *)(arg0) + 49216)) = var_f1.value;
+        idx = temp_r30->unk_4;
+        if (idx == (temp_r30->unk_8 - 1)) {
+            if ((*(f32 *)((u8 *)(arg0) + 49216)) <= (0.0f)) {
+                temp_r4_2 = (lbl_801A63C0.unk_0 * 0x676A4B6B) + 0x33CB;
+                lbl_801A63C0.unk_0 = temp_r4_2;
+                temp_r30->unk_34 = (s32) ((s32)((temp_r4_2 >> 0x10U) & 0x7FFF) % 180) + 0x78;
+                temp_r30->unk_38 = 0;
+                (*(f32 *)((u8 *)(arg0) + 49216)) = (f32) (0.0f);
+            }
+        } else if (temp_r30->unk_38 <= 0) {
+            temp_r30->unk_4 = idx + 1;
+            temp_r30->unk_38 = temp_r30->arr20[temp_r30->unk_4];
+            var_f1.value = (*(f32 *)((u8 *)(arg0) + 49216)) + temp_r30->arrC[temp_r30->unk_4];
+            var_f1.value = (var_f1.value < (1.0f)) ? var_f1.value : (1.0f);
+            (*(f32 *)((u8 *)(arg0) + 49216)) = var_f1.value;
+        }
+    }
+    temp_f4 = *(f32 *)((u8 *)(arg0) + 49216);
+    (*(u8 *)((u8 *)(&loc_18) + 0)) = 0xFF;
+    (*(u8 *)((u8 *)(&loc_18) + 1)) = 0xFF;
+    (*(u8 *)((u8 *)(&loc_18) + 2)) = 0xFF;
+    (*(u8 *)((u8 *)(&loc_18) + 3)) = 0x80;
+    (*(u8 *)((u8 *)(&loc_14) + 0)) = 0xEB;
+    (*(u8 *)((u8 *)(&loc_14) + 1)) = 0xB4;
+    (*(u8 *)((u8 *)(&loc_14) + 2)) = 0xD2;
+    (*(u8 *)((u8 *)(&loc_14) + 3)) = 0x80;
+    if (temp_f4 > (0.99000001f)) {
+        loc_1C.words[0] = loc_18.words[0];
+        (*(u8 *)((u8 *)(&loc_1C) + 0)) = (u8) ((f32) (*(u8 *)((u8 *)(&loc_1C) + 0)) * temp_f4);
+        (*(u8 *)((u8 *)(&loc_1C) + 1)) = (u8) ((f32) (*(u8 *)((u8 *)(&loc_1C) + 1)) * temp_f4);
+        (*(u8 *)((u8 *)(&loc_1C) + 2)) = (u8) ((f32) (*(u8 *)((u8 *)(&loc_1C) + 2)) * temp_f4);
+        (*(u8 *)((u8 *)(&loc_1C) + 3)) = (u8) ((f32) (*(u8 *)((u8 *)(&loc_1C) + 3)) * temp_f4);
+    } else {
+        spC = loc_14.words[0];
+        sp10 = loc_18.words[0];
+        loc_1C.words[0] = fn_1_539CC((void *)(&sp10), (void *)(&spC), (f32)((0.5f) * (*(f32 *)((u8 *)(arg0) + 49216))));
+        temp_f4_2 = (*(f32 *)((u8 *)(arg0) + 49216)) / (1.64999998f);
+        (*(u8 *)((u8 *)(&loc_1C) + 0)) = (u8) ((f32) (*(u8 *)((u8 *)(&loc_1C) + 0)) * temp_f4_2);
+        (*(u8 *)((u8 *)(&loc_1C) + 1)) = (u8) ((f32) (*(u8 *)((u8 *)(&loc_1C) + 1)) * temp_f4_2);
+        (*(u8 *)((u8 *)(&loc_1C) + 2)) = (u8) ((f32) (*(u8 *)((u8 *)(&loc_1C) + 2)) * temp_f4_2);
+        (*(u8 *)((u8 *)(&loc_1C) + 3)) = (u8) ((f32) (*(u8 *)((u8 *)(&loc_1C) + 3)) * temp_f4_2);
+    }
+    sp8 = loc_1C.words[0];
+    fn_1_9A7A8((u32 *)(&sp8));
+}
+/* fzgx:end fn_1_D4370 */
+
 /* fzgx:begin fn_1_D47D8 */
 struct Entry {
     s8 flag[0x18];
