@@ -9429,5 +9429,83 @@
     ],
     "link": "verified",
     "commit": "78d19878"
+  },
+  "fn_1_84644": {
+    "seed_symbol": "fn_1_84644",
+    "generator": "fzgx fixup",
+    "transform": "paired-single kernels at every site (2)",
+    "seed": "#include \"types.h\"\n\ntypedef struct {\n    f32 x;\n    f32 y;\n    f32 z;\n} Vec3;\n\ntypedef struct {\n    u32 x;\n    u32 y;\n    u32 z;\n} RawVec3;\n\ntypedef struct {\n    u8 _pad_000[0x7c];\n    Vec3 field_07c;\n    u8 _pad_088[0xc4];\n    Vec3 field_14c;\n} Fn184644Object;\n\nextern u8 fn_1_5910(Fn184644Object *obj);\nextern void fn_1_681C(u8 index, Vec3 *out);\nextern void fn_1_6914(u8 index, Vec3 *out);\nextern void lbl_8006DBAC(Vec3 *a);\nextern void lbl_8006E1B0(RawVec3 *a, Vec3 *b);\nextern f32 lbl_8006D534(Vec3 *a, Vec3 *b);\nextern u32 lbl_1_rodata_3B20[3];\nextern f32 lbl_1_rodata_3B2C[47];\n\ns8 fn_1_84644(Fn184644Object *obj) {\n    Vec3 v0;\n    Vec3 v1;\n    Vec3 v2;\n    Vec3 delta0;\n    Vec3 delta1;\n    RawVec3 basis;\n    u8 index;\n    f32 result;\n\n    index = fn_1_5910(obj);\n    fn_1_681C(index, &v0);\n    fn_1_6914(index, &v1);\n\n    delta0.x = v1.x - v0.x;\n    delta0.y = v1.y - v0.y;\n    delta0.z = v1.z - v0.z;\n    lbl_8006DBAC(&obj->field_14c);\n\n    basis.x = lbl_1_rodata_3B20[0];\n    basis.y = lbl_1_rodata_3B20[1];\n    basis.z = lbl_1_rodata_3B20[2];\n    lbl_8006E1B0(&basis, &v2);\n\n    delta1.x = v2.x - obj->field_07c.x;\n    delta1.y = v2.y - obj->field_07c.y;\n    delta1.z = v2.z - obj->field_07c.z;\n    result = lbl_8006D534(&delta0, &delta1);\n    return (s8)(result > lbl_1_rodata_3B2C[0]);\n}\n",
+    "seed_sha256": "ba891297e1c0bf28342162e8eea1eefe20cc2ec0a8adf9a205a4d719dd1acf04",
+    "generated_sha256": "8f837eae6a7ab430f787d99e3bb9bc047908ac1c53d821a8e10f0fc4d2b521a4",
+    "generated_source": "#include \"types.h\"\n#include \"psvec.h\"\n\ntypedef struct {\n    f32 x;\n    f32 y;\n    f32 z;\n} Vec3;\n\ntypedef struct {\n    u32 x;\n    u32 y;\n    u32 z;\n} RawVec3;\n\ntypedef struct {\n    u8 _pad_000[0x7c];\n    Vec3 field_07c;\n    u8 _pad_088[0xc4];\n    Vec3 field_14c;\n} Fn184644Object;\n\nextern u8 fn_1_5910(Fn184644Object *obj);\nextern void fn_1_681C(u8 index, Vec3 *out);\nextern void fn_1_6914(u8 index, Vec3 *out);\nextern void lbl_8006DBAC(Vec3 *a);\nextern void lbl_8006E1B0(RawVec3 *a, Vec3 *b);\nextern f32 lbl_8006D534(Vec3 *a, Vec3 *b);\nextern u32 lbl_1_rodata_3B20[3];\nextern f32 lbl_1_rodata_3B2C[47];\n\ns8 fn_1_84644(Fn184644Object *obj) {\n    Vec3 v0;\n    Vec3 v1;\n    Vec3 v2;\n    Vec3 delta0;\n    Vec3 delta1;\n    RawVec3 basis;\n    u32 index;\n    f32 result;\n\n    index = (u8)(fn_1_5910(obj));\n    fn_1_681C(index, &v0);\n    fn_1_6914(index, &v1);\n\n    psvec_sub(&v1.x, &v0.x, &delta0.x);\n    lbl_8006DBAC(&obj->field_14c);\n\n    basis.x = lbl_1_rodata_3B20[0];\n    basis.y = lbl_1_rodata_3B20[1];\n    basis.z = lbl_1_rodata_3B20[2];\n    lbl_8006E1B0(&basis, &v2);\n\n    psvec_sub(&v2.x, &obj->field_07c.x, &delta1.x);\n    result = lbl_8006D534(&delta0, &delta1);\n    return (s8)(result > lbl_1_rodata_3B2C[0]);\n}\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "rel/main_rel/car/fn_1_84644.c",
+    "bytes": 232,
+    "headers_sha256": "a589c0d12ea0a921f727e63ed125ea39c16e33457a7ec3899c6c793bcdfddceb",
+    "oracle_sha256": "7cc891120feb212c397b96ddb46f5213d85d0998668a1ee4bd55a3d6abc2e1ff",
+    "recipe": [
+      {
+        "label": "lifetime promoted index u8->u32 at 715",
+        "input_sha256": "ba891297e1c0bf28342162e8eea1eefe20cc2ec0a8adf9a205a4d719dd1acf04",
+        "output_sha256": "e71a91bddd3f6bbe5ca9a66e524ff25be951008c292c1fcd44aaa7a3211c1368",
+        "input_symbol": "fn_1_84644",
+        "output_symbol": "fn_1_84644",
+        "edits": [
+          [
+            720,
+            721,
+            "32"
+          ],
+          [
+            758,
+            771,
+            "(u8)(fn_1_5910(obj)"
+          ]
+        ]
+      },
+      {
+        "label": "paired-single kernels at every site (2)",
+        "input_sha256": "e71a91bddd3f6bbe5ca9a66e524ff25be951008c292c1fcd44aaa7a3211c1368",
+        "output_sha256": "8f837eae6a7ab430f787d99e3bb9bc047908ac1c53d821a8e10f0fc4d2b521a4",
+        "input_symbol": "fn_1_84644",
+        "output_symbol": "fn_1_84644",
+        "edits": [
+          [
+            19,
+            19,
+            "#include \"psvec.h\"\n"
+          ],
+          [
+            840,
+            918,
+            "psvec_sub(&v1.x, &v0.x, &delta0.x)"
+          ],
+          [
+            1100,
+            1214,
+            "psvec_sub(&v2.x, &obj->field_07c.x, &delta1.x)"
+          ]
+        ]
+      }
+    ],
+    "link": "pending"
+  },
+  "fn_1_FB50": {
+    "seed_symbol": "fn_1_FB50",
+    "generator": "fzgx fixup",
+    "transform": "saved-body",
+    "seed": "#include \"types.h\"\n#include \"psvec.h\"\n\nextern u32 lbl_1_bss_F5C;\nextern const f64 lbl_1_rodata_580;\nextern const f64 lbl_1_rodata_588;\nextern void fn_1_8840(void);\n\ntypedef struct LiveCameraVec {\n    f32 values[3];\n} LiveCameraVec;\n\ntypedef struct LiveCamera {\n    u8 pad_00[0x1c];\n    LiveCameraVec position;\n    u8 pad_28[0x84];\n    s32 mode;\n    s32 timer;\n    LiveCameraVec saved;\n    LiveCameraVec offset;\n    LiveCameraVec velocity;\n} LiveCamera;\n\nvoid fn_1_FB50(LiveCamera *camera) {\n    f64 product;\n    f64 damping;\n    u32 i;\n\n    if (camera->mode == 0) {\n        camera->saved = camera->position;\n    } else {\n        if ((lbl_1_bss_F5C & 0x50000000) == 0) {\n            damping = lbl_1_rodata_580;\n            for (i = 0; i < 3; i++) {\n                product = damping * (f64)camera->offset.values[i];\n                camera->velocity.values[i] =\n                    (f32)((f64)camera->velocity.values[i] - product);\n            }\n            for (i = 0; i < 3; i++) {\n                camera->velocity.values[i] =\n                    (f32)((f64)camera->velocity.values[i] * lbl_1_rodata_588);\n            }\n            for (i = 0; i < 3; i++) {\n                camera->offset.values[i] =\n                    camera->offset.values[i] + camera->velocity.values[i];\n            }\n        }\n        psvec_add(&camera->saved.values[0], &camera->offset.values[0], &camera->position.values[0]);\n        if ((lbl_1_bss_F5C & 0x50000000) == 0 && camera->timer > 0) {\n            camera->timer--;\n            if (camera->timer == 0) {\n                fn_1_8840();\n            }\n        }\n    }\n}\n",
+    "seed_sha256": "47b5f4c50a2d4a34ec90b045933db08cbd845bccdeba89ba4312f14ef8d45c81",
+    "generated_sha256": "47b5f4c50a2d4a34ec90b045933db08cbd845bccdeba89ba4312f14ef8d45c81",
+    "generated_source": "#include \"types.h\"\n#include \"psvec.h\"\n\nextern u32 lbl_1_bss_F5C;\nextern const f64 lbl_1_rodata_580;\nextern const f64 lbl_1_rodata_588;\nextern void fn_1_8840(void);\n\ntypedef struct LiveCameraVec {\n    f32 values[3];\n} LiveCameraVec;\n\ntypedef struct LiveCamera {\n    u8 pad_00[0x1c];\n    LiveCameraVec position;\n    u8 pad_28[0x84];\n    s32 mode;\n    s32 timer;\n    LiveCameraVec saved;\n    LiveCameraVec offset;\n    LiveCameraVec velocity;\n} LiveCamera;\n\nvoid fn_1_FB50(LiveCamera *camera) {\n    f64 product;\n    f64 damping;\n    u32 i;\n\n    if (camera->mode == 0) {\n        camera->saved = camera->position;\n    } else {\n        if ((lbl_1_bss_F5C & 0x50000000) == 0) {\n            damping = lbl_1_rodata_580;\n            for (i = 0; i < 3; i++) {\n                product = damping * (f64)camera->offset.values[i];\n                camera->velocity.values[i] =\n                    (f32)((f64)camera->velocity.values[i] - product);\n            }\n            for (i = 0; i < 3; i++) {\n                camera->velocity.values[i] =\n                    (f32)((f64)camera->velocity.values[i] * lbl_1_rodata_588);\n            }\n            for (i = 0; i < 3; i++) {\n                camera->offset.values[i] =\n                    camera->offset.values[i] + camera->velocity.values[i];\n            }\n        }\n        psvec_add(&camera->saved.values[0], &camera->offset.values[0], &camera->position.values[0]);\n        if ((lbl_1_bss_F5C & 0x50000000) == 0 && camera->timer > 0) {\n            camera->timer--;\n            if (camera->timer == 0) {\n                fn_1_8840();\n            }\n        }\n    }\n}\n",
+    "compiler": "GC/1.3.2",
+    "flags": "",
+    "source": "rel/main_rel/live_camera/fn_1_FB50.c",
+    "bytes": 352,
+    "headers_sha256": "a589c0d12ea0a921f727e63ed125ea39c16e33457a7ec3899c6c793bcdfddceb",
+    "oracle_sha256": "7cc891120feb212c397b96ddb46f5213d85d0998668a1ee4bd55a3d6abc2e1ff",
+    "recipe": [],
+    "link": "pending"
   }
 }

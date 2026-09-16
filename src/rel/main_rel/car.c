@@ -842,6 +842,66 @@ f32 fn_1_843BC(Fn1843BCObject *obj) {
 }
 /* fzgx:end fn_1_843BC */
 
+/* fzgx:begin fn_1_84644 noprologue */
+#include "types.h"
+#include "psvec.h"
+
+typedef struct {
+    f32 x;
+    f32 y;
+    f32 z;
+} Vec3;
+
+typedef struct {
+    u32 x;
+    u32 y;
+    u32 z;
+} RawVec3;
+
+typedef struct {
+    u8 _pad_000[0x7c];
+    Vec3 field_07c;
+    u8 _pad_088[0xc4];
+    Vec3 field_14c;
+} Fn184644Object;
+
+extern u8 fn_1_5910(Fn184644Object *obj);
+extern void fn_1_681C(u8 index, Vec3 *out);
+extern void fn_1_6914(u8 index, Vec3 *out);
+extern void lbl_8006DBAC(Vec3 *a);
+extern void lbl_8006E1B0(RawVec3 *a, Vec3 *b);
+extern f32 lbl_8006D534(Vec3 *a, Vec3 *b);
+extern u32 lbl_1_rodata_3B20[3];
+extern f32 lbl_1_rodata_3B2C[47];
+
+s8 fn_1_84644(Fn184644Object *obj) {
+    Vec3 v0;
+    Vec3 v1;
+    Vec3 v2;
+    Vec3 delta0;
+    Vec3 delta1;
+    RawVec3 basis;
+    u32 index;
+    f32 result;
+
+    index = (u8)(fn_1_5910(obj));
+    fn_1_681C(index, &v0);
+    fn_1_6914(index, &v1);
+
+    psvec_sub(&v1.x, &v0.x, &delta0.x);
+    lbl_8006DBAC(&obj->field_14c);
+
+    basis.x = lbl_1_rodata_3B20[0];
+    basis.y = lbl_1_rodata_3B20[1];
+    basis.z = lbl_1_rodata_3B20[2];
+    lbl_8006E1B0(&basis, &v2);
+
+    psvec_sub(&v2.x, &obj->field_07c.x, &delta1.x);
+    result = lbl_8006D534(&delta0, &delta1);
+    return (s8)(result > lbl_1_rodata_3B2C[0]);
+}
+/* fzgx:end fn_1_84644 */
+
 /* fzgx:begin fn_1_8472C */
 typedef struct {
     u8 _pad[0x6];

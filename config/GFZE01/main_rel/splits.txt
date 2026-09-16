@@ -6422,3 +6422,9 @@ rel/main_rel/font/fn_1_55A84.c:
 
 rel/main_rel/screen_effect/fn_1_76704.c:
 	.text       start:0x00076704 end:0x00076964 align:4
+
+rel/main_rel/car/fn_1_84644.c:
+	.text       start:0x00084644 end:0x0008472C align:4
+
+rel/main_rel/live_camera/fn_1_FB50.c:
+	.text       start:0x0000FB50 end:0x0000FCB0 align:4

@@ -31187,6 +31187,17 @@
   },
   {
     "module": "main_rel",
+    "source": "rel/main_rel/car/fn_1_84644.c",
+    "symbols": [
+      "fn_1_84644"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
+    "extra_cflags": [],
+    "tu": "rel/main_rel/car.c"
+  },
+  {
+    "module": "main_rel",
     "source": "rel/main_rel/car/fn_1_8472C.c",
     "symbols": [
       "fn_1_8472C"
@@ -40126,6 +40137,17 @@
     ],
     "status": "matching",
     "mw_version": null,
+    "extra_cflags": [],
+    "tu": "rel/main_rel/live_camera.c"
+  },
+  {
+    "module": "main_rel",
+    "source": "rel/main_rel/live_camera/fn_1_FB50.c",
+    "symbols": [
+      "fn_1_FB50"
+    ],
+    "status": "matching",
+    "mw_version": "GC/1.3.2",
     "extra_cflags": [],
     "tu": "rel/main_rel/live_camera.c"
   },

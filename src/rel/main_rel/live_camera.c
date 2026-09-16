@@ -791,6 +791,65 @@ void fn_1_FA84(void) {
 }
 /* fzgx:end fn_1_FA84 */
 
+/* fzgx:begin fn_1_FB50 noprologue */
+#include "types.h"
+#include "psvec.h"
+
+extern u32 lbl_1_bss_F5C;
+extern const f64 lbl_1_rodata_580;
+extern const f64 lbl_1_rodata_588;
+extern void fn_1_8840(void);
+
+typedef struct LiveCameraVec {
+    f32 values[3];
+} LiveCameraVec;
+
+typedef struct LiveCamera {
+    u8 pad_00[0x1c];
+    LiveCameraVec position;
+    u8 pad_28[0x84];
+    s32 mode;
+    s32 timer;
+    LiveCameraVec saved;
+    LiveCameraVec offset;
+    LiveCameraVec velocity;
+} LiveCamera;
+
+void fn_1_FB50(LiveCamera *camera) {
+    f64 product;
+    f64 damping;
+    u32 i;
+
+    if (camera->mode == 0) {
+        camera->saved = camera->position;
+    } else {
+        if ((lbl_1_bss_F5C & 0x50000000) == 0) {
+            damping = lbl_1_rodata_580;
+            for (i = 0; i < 3; i++) {
+                product = damping * (f64)camera->offset.values[i];
+                camera->velocity.values[i] =
+                    (f32)((f64)camera->velocity.values[i] - product);
+            }
+            for (i = 0; i < 3; i++) {
+                camera->velocity.values[i] =
+                    (f32)((f64)camera->velocity.values[i] * lbl_1_rodata_588);
+            }
+            for (i = 0; i < 3; i++) {
+                camera->offset.values[i] =
+                    camera->offset.values[i] + camera->velocity.values[i];
+            }
+        }
+        psvec_add(&camera->saved.values[0], &camera->offset.values[0], &camera->position.values[0]);
+        if ((lbl_1_bss_F5C & 0x50000000) == 0 && camera->timer > 0) {
+            camera->timer--;
+            if (camera->timer == 0) {
+                fn_1_8840();
+            }
+        }
+    }
+}
+/* fzgx:end fn_1_FB50 */
+
 /* fzgx:begin fn_1_10138 */
 void fn_1_10138(void) {
     Obj_1_bss_17C4_At0 *obj;
