@@ -99,8 +99,10 @@ extern const f64 lbl_1_rodata_2758;
 extern const f32 lbl_1_rodata_276C;
 extern void * * fn_1_54448(s32);
 extern void lbl_8006D784(void *arg);
+extern u8 lbl_1_rodata_FD0[];
+extern void fn_1_55D6C(void);
 
-/* fzgx:begin fn_1_49410 noprologue */
+/* fzgx:begin fn_1_49410 */
 #include "types.h"
 
 struct fn_1_49410_lbl_1_rodata_FD0 {
@@ -147,44 +149,45 @@ struct fn_1_49410_lbl_1_bss_4B9CC {
     u32 unk_58;
 };
 
-extern struct fn_1_49410_lbl_1_bss_4B9CC lbl_1_bss_4B9CC;
-extern struct fn_1_49410_lbl_1_rodata_FD0 lbl_1_rodata_FD0;
+
+
+
 
 #pragma opt_propagation off
 void fn_1_49410(void) {
     f32 fzgx_live;
-    struct fn_1_49410_lbl_1_rodata_FD0 *q = &lbl_1_rodata_FD0;
+    struct fn_1_49410_lbl_1_rodata_FD0 *q = &(*(struct fn_1_49410_lbl_1_rodata_FD0 *)&lbl_1_rodata_FD0);
 
-    lbl_1_bss_4B9CC.unk_C = 42;
-    lbl_1_bss_4B9CC.unk_10 = q->unk_118;
-    lbl_1_bss_4B9CC.unk_14 = q->unk_11C;
-    lbl_1_bss_4B9CC.unk_E = 0;
+    (*(struct fn_1_49410_lbl_1_bss_4B9CC *)&lbl_1_bss_4B9CC).unk_C = 42;
+    (*(struct fn_1_49410_lbl_1_bss_4B9CC *)&lbl_1_bss_4B9CC).unk_10 = q->unk_118;
+    (*(struct fn_1_49410_lbl_1_bss_4B9CC *)&lbl_1_bss_4B9CC).unk_14 = q->unk_11C;
+    (*(struct fn_1_49410_lbl_1_bss_4B9CC *)&lbl_1_bss_4B9CC).unk_E = 0;
     fzgx_live = q->unk_120;
-    lbl_1_bss_4B9CC.unk_18 = fzgx_live;
-    lbl_1_bss_4B9CC.unk_1C = q->unk_104;
-    lbl_1_bss_4B9CC.unk_20 = q->unk_104;
-    lbl_1_bss_4B9CC.unk_24 = q->unk_104;
-    lbl_1_bss_4B9CC.unk_28 = q->unk_104;
-    lbl_1_bss_4B9CC.unk_2C = 0;
-    lbl_1_bss_4B9CC.unk_36 = 0;
-    lbl_1_bss_4B9CC.unk_30 = 0;
-    lbl_1_bss_4B9CC.unk_32 = 2;
-    lbl_1_bss_4B9CC.unk_34 = 2;
-    lbl_1_bss_4B9CC.unk_38 = q->unk_100;
-    lbl_1_bss_4B9CC.unk_37 = 0;
-    lbl_1_bss_4B9CC.unk_3C = q->unk_F0;
-    lbl_1_bss_4B9CC.unk_40 = q->unk_F0;
-    lbl_1_bss_4B9CC.unk_44 = 1;
-    lbl_1_bss_4B9CC.unk_45 = 0;
-    lbl_1_bss_4B9CC.unk_54 = 0;
-    lbl_1_bss_4B9CC.unk_50 = q->unk_F0;
-    lbl_1_bss_4B9CC.unk_46 = 0;
-    lbl_1_bss_4B9CC.unk_47 = 0;
-    lbl_1_bss_4B9CC.unk_48 = 0;
-    lbl_1_bss_4B9CC.unk_4A = 0;
-    lbl_1_bss_4B9CC.unk_4C = 640;
-    lbl_1_bss_4B9CC.unk_4E = 480;
-    lbl_1_bss_4B9CC.unk_58 = 5;
+    (*(struct fn_1_49410_lbl_1_bss_4B9CC *)&lbl_1_bss_4B9CC).unk_18 = fzgx_live;
+    (*(struct fn_1_49410_lbl_1_bss_4B9CC *)&lbl_1_bss_4B9CC).unk_1C = q->unk_104;
+    (*(struct fn_1_49410_lbl_1_bss_4B9CC *)&lbl_1_bss_4B9CC).unk_20 = q->unk_104;
+    (*(struct fn_1_49410_lbl_1_bss_4B9CC *)&lbl_1_bss_4B9CC).unk_24 = q->unk_104;
+    (*(struct fn_1_49410_lbl_1_bss_4B9CC *)&lbl_1_bss_4B9CC).unk_28 = q->unk_104;
+    (*(struct fn_1_49410_lbl_1_bss_4B9CC *)&lbl_1_bss_4B9CC).unk_2C = 0;
+    (*(struct fn_1_49410_lbl_1_bss_4B9CC *)&lbl_1_bss_4B9CC).unk_36 = 0;
+    (*(struct fn_1_49410_lbl_1_bss_4B9CC *)&lbl_1_bss_4B9CC).unk_30 = 0;
+    (*(struct fn_1_49410_lbl_1_bss_4B9CC *)&lbl_1_bss_4B9CC).unk_32 = 2;
+    (*(struct fn_1_49410_lbl_1_bss_4B9CC *)&lbl_1_bss_4B9CC).unk_34 = 2;
+    (*(struct fn_1_49410_lbl_1_bss_4B9CC *)&lbl_1_bss_4B9CC).unk_38 = q->unk_100;
+    (*(struct fn_1_49410_lbl_1_bss_4B9CC *)&lbl_1_bss_4B9CC).unk_37 = 0;
+    (*(struct fn_1_49410_lbl_1_bss_4B9CC *)&lbl_1_bss_4B9CC).unk_3C = q->unk_F0;
+    (*(struct fn_1_49410_lbl_1_bss_4B9CC *)&lbl_1_bss_4B9CC).unk_40 = q->unk_F0;
+    (*(struct fn_1_49410_lbl_1_bss_4B9CC *)&lbl_1_bss_4B9CC).unk_44 = 1;
+    (*(struct fn_1_49410_lbl_1_bss_4B9CC *)&lbl_1_bss_4B9CC).unk_45 = 0;
+    (*(struct fn_1_49410_lbl_1_bss_4B9CC *)&lbl_1_bss_4B9CC).unk_54 = 0;
+    (*(struct fn_1_49410_lbl_1_bss_4B9CC *)&lbl_1_bss_4B9CC).unk_50 = q->unk_F0;
+    (*(struct fn_1_49410_lbl_1_bss_4B9CC *)&lbl_1_bss_4B9CC).unk_46 = 0;
+    (*(struct fn_1_49410_lbl_1_bss_4B9CC *)&lbl_1_bss_4B9CC).unk_47 = 0;
+    (*(struct fn_1_49410_lbl_1_bss_4B9CC *)&lbl_1_bss_4B9CC).unk_48 = 0;
+    (*(struct fn_1_49410_lbl_1_bss_4B9CC *)&lbl_1_bss_4B9CC).unk_4A = 0;
+    (*(struct fn_1_49410_lbl_1_bss_4B9CC *)&lbl_1_bss_4B9CC).unk_4C = 640;
+    (*(struct fn_1_49410_lbl_1_bss_4B9CC *)&lbl_1_bss_4B9CC).unk_4E = 480;
+    (*(struct fn_1_49410_lbl_1_bss_4B9CC *)&lbl_1_bss_4B9CC).unk_58 = 5;
 }
 #pragma opt_propagation reset
 /* fzgx:end fn_1_49410 */
@@ -574,10 +577,10 @@ typedef struct {
     u8 pad_20[0x18];
     u32 flag;
     u8 tail[0x24];
-} FontData;
+} fn_1_4AC20_FontData;
 
-void fn_1_4AC20(FontData *value) {
-    FontData local = *value;
+void fn_1_4AC20(fn_1_4AC20_FontData *value) {
+    fn_1_4AC20_FontData local = *value;
     int x_max;
     int x_ok;
     int y_max;
@@ -897,7 +900,8 @@ void fn_1_4CF3C(const char *format, f32 x, ...) {
 /* fzgx:end fn_1_4CF3C */
 
 /* fzgx:begin fn_1_4D0A0 */
-extern u8 lbl_1_rodata_FD0[];
+
+
 
 void fn_1_4D0A0(void) {
     Obj_1_bss_4BA30 *bss = &lbl_1_bss_4BA30;
@@ -1981,6 +1985,7 @@ f32 fn_1_51BFC(f32 value) {
 /* fzgx:end fn_1_51BFC */
 
 /* fzgx:begin fn_1_51C74 noprologue */
+#include "types.h"
 #include "dolphin/types.h"
 
 typedef struct {
@@ -2008,13 +2013,13 @@ typedef struct {
     u8 pad1[4];
     f32 z;
     f32 w;
-} FontData;
+} fn_1_51C74_FontData;
 
 #pragma opt_common_subs off
 #pragma opt_propagation off
 #pragma opt_dead_assignments off
 #pragma opt_lifetimes on
-void fn_1_51C74(FontData *obj) {
+void fn_1_51C74(fn_1_51C74_FontData *obj) {
     f32 a0;
     f32 fzgx_live;
     f32 fzgx_live_;
@@ -2113,8 +2118,6 @@ void fn_1_520CC(void) {
 
 /* fzgx:begin fn_1_520F8 */
 #include "types.h"
-
-extern f32 lbl_1_rodata_2788[6];
 
 f32 fn_1_520F8(s32 value) {
     s32 base;
@@ -3236,7 +3239,8 @@ extern void fn_1_5489C(void *value, void *object);
 extern void fn_1_56530(void);
 extern void lbl_8006DB74(void *value);
 extern void lbl_8006DD14(void *value, void *object);
-extern u8 *lbl_801A66CC;
+
+
 
 typedef struct {
     u32 w0;
@@ -3368,17 +3372,14 @@ void fn_1_55924(void *value, void *arg) {
 /* fzgx:end fn_1_55924 */
 
 /* fzgx:begin fn_1_55A84 */
-extern const f32 lbl_1_rodata_28A8;
 extern void *fn_1_5448C(void *data);
 extern void *fn_1_548AC(s32 size);
-extern void fn_1_55D6C(void);
 extern u16 fn_1_7BE94(void);
 extern void fn_1_5489C(void *data, void *value);
 extern void fn_1_56530(void);
 extern void fn_1_563E4(void *state);
 extern void lbl_8006DB74(void *data);
 extern void lbl_8006DD14(void *data, void *value);
-extern u8 *lbl_801A66CC;
 
 typedef struct {
     u8 pad_00[0x1c];
