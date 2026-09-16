@@ -73,8 +73,12 @@ def memory_loads(rows, tables=None, addresses=False, flow=None):
             elif mem and base and not base[2] and re.fullmatch(r'-?(?:0x[\da-f]+|\d+)', mem[1]):
                 location = (base[0], base[1] + int(mem[1], 0))
             if location:
+                # 'symbolic': the object's own lis/lo pair (an extern declaration reproduces it);
+                # 'displacement': a numeric offset off a materialised base (a TU pool or
+                # section base, which only a native literal / primer can reproduce)
+                form = 'symbolic' if symbolic and (rel[3] == 'sda21' or (base and base[:2] == symbolic[:2] and base[2])) else 'displacement'
                 loads[i] = dict(symbol=location[0], offset=location[1], width=WIDTH[op], op=op,
-                                address=int(ins['address']))
+                                address=int(ins['address']), form=form)
         if args and re.fullmatch(r'r\d+', args[0]) and not op.startswith(('st', 'cmp', 'mt', 'b')):
             after.pop(args[0], None)
             if value:

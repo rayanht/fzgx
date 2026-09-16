@@ -554,7 +554,14 @@ def pool_scalar_reads(p, symbol, body, check):
     _, variables = declared_types(code, span[0])
     layouts = record_layouts(code,span[0],variables)
     loads = memory_loads(check._rows[0],object_jump_tables(p.target_object_for(sym),sym.name,p,sym.module))
-    referenced = {(load['symbol'],load['offset'],load['width']) for load in loads.values()}
+    # only reads retail makes through a materialised base: a literal retail addresses by its
+    # own lis/lo pair is reproduced by the extern declaration, and turning it native pools it
+    # behind a base register instead (113 of 405 bodies regressed that way, 2026-09-16)
+    displaced = [load for load in loads.values() if load.get('form') == 'displacement']
+    # a base read at one offset only is a materialised single literal (`addi r5, r3, sym@l;
+    # lfs f0, 0x0(r5)`), also reproduced by the extern; a pool base is read at several offsets
+    pools = {load['symbol'] for load in displaced if load['offset'] != 0}
+    referenced = {(load['symbol'],load['offset'],load['width']) for load in displaced if load['symbol'] in pools}
     roots = {}
     for name,ty in variables.items():
         obj = p.find_symbol(name,sym.module)
