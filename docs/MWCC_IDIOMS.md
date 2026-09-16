@@ -26,6 +26,16 @@ file from what actually unblocked functions; keep each item one or two lines.
   is evaluated first when written inline; holding it in a local moves the call and can
   swap `mullw`/`add` operands (fn_1_76704).
 
+- **Loop pointers**: a pointer initialised straight into its callee-saved register
+  (`addi r30, r3, sym@l`, no copy) and stepped by a constant is a strength-reduced
+  induction shadow of an indexed access: write `base[i].f` or `*(T *)((u8 *)base + i * K + off)`
+  with the loop counter, never `p = base; ... p = (T *)((u8 *)p + K)` (that lowers as
+  `addi r0, ...; mr r30, r0`). Likewise `off += K` against `i * K`. Shadows are numbered
+  above every declared local and coloured first (r31 downward); a constant base that
+  retail keeps above them (`manager = lbl + 0x50000` in r31 with the induction shadows in
+  r30/r29) is itself a shadow: hold it in a one-member struct (`struct { u8 *value; } mgr;`)
+  so its load is the CSE'd value (fn_10_7130, capture-verified).
+
 ## Selection panel evidence (2026-09-15)
 
 - Four-byte color structs reproduce pooled `lwz` initializers; scalar `const u32`
