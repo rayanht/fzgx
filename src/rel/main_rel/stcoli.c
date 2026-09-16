@@ -2401,6 +2401,39 @@ void fn_1_2A678(Fn_1_2A678_Source *self, Fn_1_2A678_Dest *dest) {
 }
 /* fzgx:end fn_1_2A678 */
 
+/* fzgx:begin fn_1_2A694 noprologue */
+#include "types.h"
+#include "dolphin/hw_regs.h"
+#include "psvec.h"
+#include "rel/main_rel/globals.h"
+#include "rel/main_rel/stcoli.h"
+
+extern int fn_1_15578(void *, void *, void *, void *, u32, void *, void *, void *, u32, void *);
+extern void *fn_1_14F04(void); extern int fn_1_868C0(s8); extern void fn_1_F7338(int,int,int);
+extern const f64 lbl_1_rodata_84C; extern void lbl_8006DAEC(void); extern void lbl_8006DB30(void);
+typedef struct N { u8 p[0x98]; u32 v98; u32 v9c; } N;
+typedef struct O { u32 flags; s16 id; u8 p[0x46e]; u8 v474; u8 p2[0x23]; u32 field498; N *field49c; u8 p3[0xec]; u32 field58c; } O;
+typedef struct R { u8 p[0x160]; u32 flags160; u8 p2[0x1c]; u32 v180; u32 v184; u32 v188; } R;
+typedef struct V { f32 x; f32 y; f32 z; } V; typedef struct F { f32 x; f32 y; f32 z; } F; typedef struct P { u32 x; u32 y; } P;
+#pragma opt_propagation off
+int fn_1_2A694(O *self, void *arg1, V *swap, u32 mask, V *out0, V *out1) {
+ F local; f32 work[4]; R *result; int status; int actor;
+ if ((self->flags&2)==0) mask&=0xfffff8ff;
+ { psvec_set(&local.x, *(const f32 *)(LC_BASE + 0x2C), *(const f32 *)(LC_BASE + 0x1C), *(const f32 *)(LC_BASE + 0xC)); } lbl_8006DAEC();
+ status=fn_1_15578(&local,arg1,&work[0],&work[1],mask,&self->field49c->v9c,(void *)self->field49c->v98,swap,self->field498,self); lbl_8006DB30();
+ if(((0) != (swap))){u32 t=*(u32 *)swap;*(u32 *)swap=*(((1) + ((u32 *)swap)));*(((1) + ((u32 *)swap)))=t;}
+ if(status!=0){result=(R *)fn_1_14F04(); if(result->flags160==0x100){self->flags|=0x800;status=0;}else{
+  *(P *)out0=*(P *)&result->v180;*(u32 *)((u8 *)out0+8)=result->v188; *(P *)out1=*(P *)&local;*(u32 *)((u8 *)out1+8)=*(u32 *)&local.z;
+  if((result->flags160&0x600)!=0){actor=fn_1_868C0((s8)self->id);if((self->field58c&0x10)==0){if((s8)self->v474!=-1)fn_1_F7338((s8)self->v474,2,30);
+   self->flags|=0x800;self->flags|=0x80;self->flags|=0x00800000;self->flags|=0x40000000;self->field58c|=0x10;
+   *(f32 *)((u8 *)self+0x184)=*(const f32 *)(const void *)&lbl_1_rodata_84C;*(f32 *)((u8 *)self+0x224)=*(const f32 *)(const void *)&lbl_1_rodata_84C;
+   *(f32 *)((u8 *)self+0x94)=*(const f32 *)(const void *)&lbl_1_rodata_84C;*(f32 *)((u8 *)self+0x98)=*(const f32 *)(const void *)&lbl_1_rodata_84C;*(f32 *)((u8 *)self+0x9c)=*(const f32 *)(const void *)&lbl_1_rodata_84C;*(f32 *)((u8 *)self+0xa0)=*(const f32 *)(const void *)&lbl_1_rodata_84C;*(f32 *)((u8 *)self+0xa4)=*(const f32 *)(const void *)&lbl_1_rodata_84C;*(f32 *)((u8 *)self+0xa8)=*(const f32 *)(const void *)&lbl_1_rodata_84C;*(f32 *)((u8 *)self+0x17c)=*(const f32 *)(const void *)&lbl_1_rodata_84C;
+   self->field58c&=~0x80;*(u32 *)((u8 *)actor+0x390)&=~0x200000;*(u32 *)((u8 *)actor+0x390)|=0x01000000;}} if((result->flags160&0x100)!=0)self->flags|=0x800;}}
+ if(status==0){f32 z=*(const f32 *)(const void *)&lbl_1_rodata_84C;out0->x=z;out0->y=z;out0->z=z;out1->x=z;out1->y=z;out1->z=z;} return status;
+}
+#pragma opt_propagation reset
+/* fzgx:end fn_1_2A694 */
+
 /* fzgx:begin fn_1_2B478 */
 #include "types.h"
 

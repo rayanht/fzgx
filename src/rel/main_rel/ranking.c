@@ -1413,6 +1413,64 @@ int fn_1_159588(int arg) {
 }
 /* fzgx:end fn_1_159588 */
 
+/* fzgx:begin fn_1_1596DC noprologue */
+#include "types.h"
+
+typedef struct {
+    u32 unk_0;
+    u32 unk_4;
+    s16 unk_8[16];
+    s16 unk_28;
+    s16 unk_2a;
+    u8 unk_2c;
+    u8 pad_2d[0xb];
+    s32 unk_38;
+} RankingEntry;
+
+extern RankingEntry lbl_1_data_4C810[4];
+extern u8 lbl_1_data_FCD4[];
+extern int lbl_801A66B4;
+extern int lbl_1_bss_8F588[];
+
+extern void fn_1_4811C(s16 value);
+extern s8 fn_1_46DC4(void *object);
+
+void fn_1_1596DC(int index) {
+    struct { int value; } offset;
+    RankingEntry *entry;
+    int i;
+    int count;
+
+    entry = &lbl_1_data_4C810[index];
+    i = 0;
+    while (entry->unk_2a + 1 != entry->unk_28 &&
+           (entry->unk_2a != 0xf || entry->unk_28 != 0)) {
+        fn_1_4811C(entry->unk_8[entry->unk_28]);
+        entry->unk_28 = entry->unk_28 + 1 > 0xf ? 0
+                      : (entry->unk_28 + 1 < 0 ? 0xf : entry->unk_28 + 1);
+        if (++i > 0x10) {
+            break;
+        }
+    }
+
+    if (entry->unk_38 != 0) {
+        offset.value = 0;
+        count = 0;
+        for (;;) {
+            if (*(s16 *)((u8 *)entry->unk_4 + offset.value) == -1) {
+                break;
+            }
+            if (fn_1_46DC4(*(void **)(lbl_1_data_FCD4 +
+                                      *(s16 *)((u8 *)entry->unk_4 + offset.value) * 0x28 +
+                                      lbl_801A66B4 * 4 + 4)) != 0) {
+                lbl_1_bss_8F588[*(s16 *)((u8 *)entry->unk_4 + offset.value)] = count;
+            }
+            offset.value += 2;
+        }
+    }
+}
+/* fzgx:end fn_1_1596DC */
+
 /* fzgx:begin fn_1_1598C4 noprologue */
 #include "types.h"
 

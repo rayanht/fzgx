@@ -4957,6 +4957,67 @@ void fn_10_1E398(void) {
 }
 /* fzgx:end fn_10_1E398 */
 
+/* fzgx:begin fn_10_1E57C */
+#pragma peephole off
+int fn_10_1E57C(int arg0, int arg1, int arg2) {
+    if (arg2 == 0) {
+        return 7;
+    }
+
+    switch (arg0) {
+    case 0:
+        return 1;
+    case 1:
+        return 100;
+    case 2:
+        return 3;
+    case 4:
+        return 5;
+    case 5:
+        return 2;
+    case 6:
+        return 6;
+    case 8:
+        return 16;
+    case 9:
+        if (arg1) {
+            return 109;
+        }
+        return 108;
+    case 10:
+        if (arg1) {
+            return 9;
+        }
+        return 8;
+    case 11:
+        if (arg1) {
+            return 111;
+        }
+        return 110;
+    case 12:
+        if (arg1) {
+            return 11;
+        }
+        return 10;
+    case 13:
+        return 12;
+    case 14:
+        return 13;
+    case 15:
+        return 101;
+    case 18:
+        return 15;
+    case 19:
+        return 17;
+    case 20:
+        return 18;
+    }
+
+    return 999;
+}
+#pragma peephole reset
+/* fzgx:end fn_10_1E57C */
+
 /* fzgx:begin fn_10_1E67C */
 extern struct fn_10_1E67C_lbl_10_rodata_158 lbl_10_rodata_158;
 extern u32 fn_1_49410(u32);

@@ -40,6 +40,58 @@ void fn_17_23C(void) {
 }
 /* fzgx:end fn_17_23C */
 
+/* fzgx:begin fn_17_2B4 */
+extern u32 lbl_17_bss_14;
+extern u8 lbl_17_rodata_0[];
+extern u32 lbl_17_bss_18[2];
+extern void *lbl_801A6D00;
+extern void *lbl_801A66CC;
+
+extern void fn_1_435C(u32 arg);
+extern void fn_1_407C(void);
+extern void fn_1_3CC4(void);
+extern void lbl_8006DD14(void *arg0, void *arg1);
+extern void fn_1_B870(void);
+extern void *camera_get_state_object(void);
+extern void camera_update_state(void);
+extern void lbl_8006DCA4(void);
+extern void fn_8006F4E0(void *arg0);
+extern f32 fn_1_A6FE8(void);
+extern void fn_1_549F4(void *arg0, void *arg1, f32 arg2, f32 arg3, f32 arg4, f32 arg5);
+extern void fn_1_A7024(f32 arg0, f32 arg1, f32 arg2, f32 arg3);
+
+typedef struct CameraState {
+    u8 pad[0x1c];
+    f32 value;
+} CameraState;
+
+void fn_17_2B4(void) {
+    CameraState *state;
+    f32 *constants;
+    u8 local[8];
+    f32 state_value;
+    struct { f32 value; } angle;
+
+    constants = (f32 *)lbl_17_rodata_0;
+    fn_1_435C(lbl_17_bss_14);
+    fn_1_407C();
+    fn_1_3CC4();
+    lbl_8006DD14((u8 *)lbl_801A6D00 + 0x30, lbl_801A66CC);
+    fn_1_B870();
+    state = camera_get_state_object();
+    camera_update_state();
+    lbl_8006DCA4();
+    fn_8006F4E0(&local);
+    state_value = state->value;
+    angle.value = fn_1_A6FE8();
+    fn_1_549F4((u8 *)state + 4, &local, state_value, angle.value, constants[8], constants[8]);
+    angle.value = fn_1_A6FE8();
+    fn_1_A7024(state_value, angle.value, constants[9], constants[10]);
+    fn_1_435C(lbl_17_bss_18[0]);
+    fn_1_407C();
+}
+/* fzgx:end fn_17_2B4 */
+
 /* fzgx:begin fn_17_394 */
 extern u8 lbl_17_data_63E30[32];
 extern s16 lbl_1_bss_962;

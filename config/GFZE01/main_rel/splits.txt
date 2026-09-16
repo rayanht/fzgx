@@ -6473,3 +6473,21 @@ rel/main_rel/memcard/fn_1_C023C.c:
 
 rel/main_rel/memcard/fn_1_C0374.c:
 	.text       start:0x000C0374 end:0x000C0510 align:4
+
+rel/main_rel/effect/fn_1_65AB0.c:
+	.text       start:0x00065AB0 end:0x00065B58 align:4
+
+rel/main_rel/accessory/fn_1_10B344.c:
+	.text       start:0x0010B344 end:0x0010B5A8 align:4
+
+rel/main_rel/ranking/fn_1_1596DC.c:
+	.text       start:0x001596DC end:0x00159804 align:4
+
+rel/main_rel/car/fn_1_8E3A4.c:
+	.text       start:0x0008E3A4 end:0x0008E448 align:4
+
+rel/main_rel/car/fn_1_85688.c:
+	.text       start:0x00085688 end:0x00085878 align:4
+
+rel/main_rel/stcoli/fn_1_2A694.c:
+	.text       start:0x0002A694 end:0x0002A8D0 align:4

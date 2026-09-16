@@ -298,6 +298,92 @@ void fn_1_10A43C(AccessoryObject *self) {
 }
 /* fzgx:end fn_1_10A43C */
 
+/* fzgx:begin fn_1_10B344 */
+extern f32 lbl_1_rodata_7B1C;
+extern f32 lbl_1_rodata_7B20;
+extern void fn_1_128884(void *, void *, int);
+extern void fn_1_10846C(void);
+
+typedef struct {
+    u8 active;
+    u8 _pad01[0x13];
+    f32 field14;
+    f32 field18;
+    u8 _pad1c[0x24];
+    f32 field40;
+} Entry;
+
+typedef struct {
+    u8 _pad00[0x18];
+    u32 count;
+    u8 _pad1c[8];
+    Entry *entries;
+} Doc;
+
+void fn_1_10B344(Doc *obj) {
+    u32 i;
+    u32 j;
+    Entry *a;
+    Entry *b;
+    f32 zero;
+    f32 neg;
+    Entry * a_2;
+    Entry * b_2;
+
+    if (obj == 0) {
+        return;
+    }
+    fn_1_10846C();
+    neg = lbl_1_rodata_7B1C;
+    zero = lbl_1_rodata_7B20;
+    a = obj->entries;
+    for (i = 0; i < obj->count; i++, a++) {
+        if ((a->active & 1) != 0) {
+            a->field40 = neg;
+            a->active = 0;
+        } else {
+            a->field40 = zero;
+            a->active = 1;
+        }
+    }
+    a_2 = obj->entries;
+    for (i = 0; i < obj->count; i++, a_2++) {
+        b = obj->entries + i + 1;
+        for (j = i + 1; j < obj->count; j++, b++) {
+            if ((a_2->active & 1) != 0) {
+                if ((b->active & 1) == 0) {
+                    fn_1_128884(a_2, b, 0x44);
+                }
+            }
+        }
+    }
+    a_2 = obj->entries;
+    for (i = 0; i < obj->count; i++, a_2++) {
+        b_2 = obj->entries + i + 1;
+        for (j = i + 1; j < obj->count; j++, b_2++) {
+            if (a_2->active == b_2->active) {
+                if (a_2->field18 > b_2->field18) {
+                    fn_1_128884(a_2, b_2, 0x44);
+                }
+            }
+        }
+    }
+    a_2 = obj->entries;
+    for (i = 0; i < obj->count; i++, a_2++) {
+        b_2 = obj->entries + i + 1;
+        for (j = i + 1; j < obj->count; j++, b_2++) {
+            if (a_2->active == b_2->active) {
+                if (a_2->field14 < b_2->field14 && a_2->field18 > lbl_1_rodata_7B20 && b_2->field18 > lbl_1_rodata_7B20) {
+                    fn_1_128884(a_2, b_2, 0x44);
+                } else if (a_2->field14 > b_2->field14 && a_2->field18 < lbl_1_rodata_7B20 && b_2->field18 < lbl_1_rodata_7B20) {
+                    fn_1_128884(a_2, b_2, 0x44);
+                }
+            }
+        }
+    }
+}
+/* fzgx:end fn_1_10B344 */
+
 /* fzgx:begin fn_1_10B7D8 */
 // Initializes accessory data only when an accessory object is present.
 void fn_1_10B7D8(void *accessory) {
