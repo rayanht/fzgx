@@ -2,25 +2,268 @@
 #include "rel/main_rel/globals.h"
 #include "rel/main_rel/game.h"
 
+typedef struct Sig_ADXT_Pause_AdxSjdHandle Sig_ADXT_Pause_AdxSjdHandle;
+
+typedef struct Sig_ADXT_Pause_ADXStream Sig_ADXT_Pause_ADXStream;
+
+typedef struct Sig_ADXT_Pause_AXRNAHandle Sig_ADXT_Pause_AXRNAHandle;
+
+typedef struct Sig_ADXT_Pause_SJCK {
+    unsigned char *data;
+    int len;
+} Sig_ADXT_Pause_SJCK;
+
+typedef void (*Sig_ADXT_Pause_SJErrorCallback)(void *object, int error);
+
+typedef struct Sig_ADXT_Pause_SJInterface Sig_ADXT_Pause_SJInterface;
+
+typedef struct Sig_ADXT_Pause_SJ Sig_ADXT_Pause_SJ;
+
+struct Sig_ADXT_Pause_SJ {
+    const Sig_ADXT_Pause_SJInterface *interface;
+};
+
+struct Sig_ADXT_Pause_SJInterface {
+    void *reserved[3];
+    void (*destroy)(Sig_ADXT_Pause_SJ *sj);
+    const void *(*get_uuid)(Sig_ADXT_Pause_SJ *sj);
+    void (*reset)(Sig_ADXT_Pause_SJ *sj);
+    void (*get_chunk)(Sig_ADXT_Pause_SJ *sj, int channel, int max_size, Sig_ADXT_Pause_SJCK *chunk);
+    void (*unget_chunk)(Sig_ADXT_Pause_SJ *sj, int channel, Sig_ADXT_Pause_SJCK *chunk);
+    void (*put_chunk)(Sig_ADXT_Pause_SJ *sj, int channel, Sig_ADXT_Pause_SJCK *chunk);
+    int (*get_num_data)(Sig_ADXT_Pause_SJ *sj, int channel);
+    int (*is_get_chunk)(Sig_ADXT_Pause_SJ *sj, int channel, int size, int *available);
+    void (*entry_error_func)(Sig_ADXT_Pause_SJ *sj, Sig_ADXT_Pause_SJErrorCallback callback, void *object);
+};
+
+typedef struct Sig_ADXT_Pause_ADX_AMP Sig_ADXT_Pause_ADX_AMP;
+
+typedef struct Sig_ADXT_Pause_LSCObject Sig_ADXT_Pause_LSCObject;
+
+typedef struct Sig_ADXT_Pause_ADXTHandle {
+    s8 used;
+    s8 status;
+    s8 stream_type;
+    s8 maximum_channels;
+    Sig_ADXT_Pause_AdxSjdHandle *decoder;
+    Sig_ADXT_Pause_ADXStream *stream;
+    Sig_ADXT_Pause_AXRNAHandle *rna;
+    Sig_ADXT_Pause_SJ *stream_sj;
+    Sig_ADXT_Pause_SJ *input_sj;
+    Sig_ADXT_Pause_SJ *output_sj[2];
+    u8 *input_buffer;
+    s32 input_buffer_size;
+    s32 input_extra_size;
+    u8 *output_buffer;
+    s32 output_buffer_size;
+    s32 output_buffer_distance;
+    s32 server_frequency;
+    s16 stream_buffer_sectors;
+    s16 minimum_buffer_sectors;
+    s16 output_volume;
+    s16 output_pan[2];
+    s16 field_46;
+    s32 maximum_decode_samples;
+    s32 loop_count;
+    s32 link_data_length;
+    s32 field_54;
+    s32 field_58;
+    s32 field_5C;
+    s16 error_code;
+    u8 reserved_62[2];
+    s32 field_64;
+    s16 field_68;
+    s16 field_6A;
+    s8 stream_loop_enabled;
+    s8 auto_receiver;
+    u8 reserved_6E[2];
+    s8 suppress_playback;
+    s8 decoder_ready;
+    s8 paused;
+    u8 reserved_73;
+    Sig_ADXT_Pause_ADX_AMP *amplifier;
+    Sig_ADXT_Pause_SJ *amplifier_input[2];
+    Sig_ADXT_Pause_SJ *amplifier_output[2];
+    s32 time_offset;
+    s32 eos_sector;
+    s32 loop_sample_count;
+    Sig_ADXT_Pause_LSCObject *linked_stream_controller;
+    s8 link_enabled;
+    u8 reserved_99[3];
+    u32 playback_time;
+    s32 playback_start_vsync;
+    s32 linked_decoded_samples;
+    s8 pending_stream_start;
+    u8 reserved_A9[3];
+    u8 *work_end;
+    const char *pending_filename;
+    void *pending_directory;
+    s32 pending_file_offset;
+    s32 pending_file_sectors;
+} Sig_ADXT_Pause_ADXTHandle;
+
+typedef struct Sig_ADXT_Stop_AdxSjdHandle Sig_ADXT_Stop_AdxSjdHandle;
+
+typedef struct Sig_ADXT_Stop_ADXStream Sig_ADXT_Stop_ADXStream;
+
+typedef struct Sig_ADXT_Stop_AXRNAHandle Sig_ADXT_Stop_AXRNAHandle;
+
+typedef struct Sig_ADXT_Stop_SJCK {
+    unsigned char *data;
+    int len;
+} Sig_ADXT_Stop_SJCK;
+
+typedef void (*Sig_ADXT_Stop_SJErrorCallback)(void *object, int error);
+
+typedef struct Sig_ADXT_Stop_SJInterface Sig_ADXT_Stop_SJInterface;
+
+typedef struct Sig_ADXT_Stop_SJ Sig_ADXT_Stop_SJ;
+
+struct Sig_ADXT_Stop_SJInterface {
+    void *reserved[3];
+    void (*destroy)(Sig_ADXT_Stop_SJ *sj);
+    const void *(*get_uuid)(Sig_ADXT_Stop_SJ *sj);
+    void (*reset)(Sig_ADXT_Stop_SJ *sj);
+    void (*get_chunk)(Sig_ADXT_Stop_SJ *sj, int channel, int max_size, Sig_ADXT_Stop_SJCK *chunk);
+    void (*unget_chunk)(Sig_ADXT_Stop_SJ *sj, int channel, Sig_ADXT_Stop_SJCK *chunk);
+    void (*put_chunk)(Sig_ADXT_Stop_SJ *sj, int channel, Sig_ADXT_Stop_SJCK *chunk);
+    int (*get_num_data)(Sig_ADXT_Stop_SJ *sj, int channel);
+    int (*is_get_chunk)(Sig_ADXT_Stop_SJ *sj, int channel, int size, int *available);
+    void (*entry_error_func)(Sig_ADXT_Stop_SJ *sj, Sig_ADXT_Stop_SJErrorCallback callback, void *object);
+};
+
+struct Sig_ADXT_Stop_SJ {
+    const Sig_ADXT_Stop_SJInterface *interface;
+};
+
+typedef struct Sig_ADXT_Stop_ADX_AMP Sig_ADXT_Stop_ADX_AMP;
+
+typedef struct Sig_ADXT_Stop_LSCObject Sig_ADXT_Stop_LSCObject;
+
+typedef struct Sig_ADXT_Stop_ADXTHandle {
+    s8 used;
+    s8 status;
+    s8 stream_type;
+    s8 maximum_channels;
+    Sig_ADXT_Stop_AdxSjdHandle *decoder;
+    Sig_ADXT_Stop_ADXStream *stream;
+    Sig_ADXT_Stop_AXRNAHandle *rna;
+    Sig_ADXT_Stop_SJ *stream_sj;
+    Sig_ADXT_Stop_SJ *input_sj;
+    Sig_ADXT_Stop_SJ *output_sj[2];
+    u8 *input_buffer;
+    s32 input_buffer_size;
+    s32 input_extra_size;
+    u8 *output_buffer;
+    s32 output_buffer_size;
+    s32 output_buffer_distance;
+    s32 server_frequency;
+    s16 stream_buffer_sectors;
+    s16 minimum_buffer_sectors;
+    s16 output_volume;
+    s16 output_pan[2];
+    s16 field_46;
+    s32 maximum_decode_samples;
+    s32 loop_count;
+    s32 link_data_length;
+    s32 field_54;
+    s32 field_58;
+    s32 field_5C;
+    s16 error_code;
+    u8 reserved_62[2];
+    s32 field_64;
+    s16 field_68;
+    s16 field_6A;
+    s8 stream_loop_enabled;
+    s8 auto_receiver;
+    u8 reserved_6E[2];
+    s8 suppress_playback;
+    s8 decoder_ready;
+    s8 paused;
+    u8 reserved_73;
+    Sig_ADXT_Stop_ADX_AMP *amplifier;
+    Sig_ADXT_Stop_SJ *amplifier_input[2];
+    Sig_ADXT_Stop_SJ *amplifier_output[2];
+    s32 time_offset;
+    s32 eos_sector;
+    s32 loop_sample_count;
+    Sig_ADXT_Stop_LSCObject *linked_stream_controller;
+    s8 link_enabled;
+    u8 reserved_99[3];
+    u32 playback_time;
+    s32 playback_start_vsync;
+    s32 linked_decoded_samples;
+    s8 pending_stream_start;
+    u8 reserved_A9[3];
+    u8 *work_end;
+    const char *pending_filename;
+    void *pending_directory;
+    s32 pending_file_offset;
+    s32 pending_file_sectors;
+} Sig_ADXT_Stop_ADXTHandle;
+
+typedef struct {
+    u8 unk[0xb];
+    u8 value;
+} Entry;
+
+typedef struct {
+    u8 pad_0[2];
+    s16 unk_2;
+    u8 pad_4[8];
+    u32 unk_C;
+    u8 pad_10[0x10];
+} Obj_1_bss_25E9C;
+
+typedef struct {
+    u8 pad[0x2f8];
+    u32 value_2f8;
+    u32 value_2fc;
+    u32 value_300;
+    u32 value_304;
+    u32 value_308;
+    u32 value_30c;
+    u32 value_310;
+    u32 value_314;
+    u32 value_318;
+    u32 value_31c;
+} Fn40710Config;
+extern void fn_1_15E330(s32 index, u32 value, void *arg);
+extern void fn_1_15E5E4(s32 index, void *arg);
+extern void fn_1_15E688(s32 index, u32 value, u8 state, void *arg);
+extern void fn_1_15E3E0(s32 index, u32 value);
+extern void fn_1_15E434(u32 value);
+extern void fn_1_15E540(s32 index, void *arg);
+extern void fn_1_CB404(u8 value);
+extern void fn_1_D07C4(u32 arg0, u32 arg1);
+extern u32 lbl_1_bss_25B84;
 extern u32 OSGetTick(void);
 extern void fn_1_A0978(void);
 extern void fn_1_35174(void);
 extern s32 fn_1_3EFA8(void);
 extern u16 lbl_1_bss_26B7A[3];
 extern u16 lbl_1_bss_26300;
-extern void fn_80008BEC(void *arg1, void *arg2, u32 size);
+extern void fn_80008BA8(u32 arg0, u32 arg1, u32 arg2);
+extern void fn_80008BEC(void *dest, int value, u32 size);
+extern u32 fn_1_101C0(void);
+extern u32 fn_1_A11EC(void);
+extern u32 fn_1_435C(u32 value);
+extern void ADXT_Pause(Sig_ADXT_Pause_ADXTHandle *, s32);
+extern void fn_1_4310(u32 arg0);
+extern void fn_1_48004(s32 index, s32 image);
+extern void fn_1_8616C(void);
+extern void fn_1_A1588(u32 arg0, u32 arg1);
+extern void fn_1_D0790(void);
+extern void fn_1_817C0(void);
+extern u32 lbl_1_bss_381FC;
+extern void fn_1_EB080(int mode);
+extern s64 OSGetTime(void);
 extern void fn_1_4A00(u32 arg0, u32 arg1, u32 arg2);
 extern void fn_1_5370(u32 arg0, u32 arg1);
 extern void fn_1_15E27C(void);
-extern void fn_1_D0790(void);
-extern void fn_1_4811C(s32 value);
-extern void fn_1_48004(u32 arg0, u32 arg1);
-extern void *fn_1_435C(void *value);
-extern void fn_1_4310(s32 value);
-extern void fn_1_A1588(u32 arg0, u32 arg1);
+extern void fn_1_4811C(int arg);
 extern void fn_1_A8F78(void);
 extern u8 lbl_1_bss_262F4;
-extern void fn_80008BA8(void *arg1, void *arg2, u32 size);
 extern u32 lbl_1_bss_25E74[7];
 extern u8 lbl_1_bss_3C10;
 extern void fn_1_36330(void);
@@ -31,86 +274,70 @@ extern void fn_1_37E98(void);
 extern f32 lbl_1_bss_26304[4];
 extern u8 lbl_1_bss_26B04[20];
 extern u8 lbl_1_bss_26314[2032];
-extern u32 fn_1_12EF24(u8 arg0, u8 arg1);
+extern s16 fn_1_12EF24(s16 row, s16 column);
 extern u8 lbl_1_bss_523C[32];
+extern Entry *lbl_1_bss_53F8[34];
 extern void OSPanic(const void *, u32, const char *, ...);
+extern Obj_1_bss_25E9C lbl_1_bss_25E9C[30];
+extern void fn_1_12AB38(void *arg0);
+extern void fn_1_465D0(char *value, u32 flag);
+extern void* fn_1_7F518(s16 car_type, void* car, s32 initialize);
+extern int sprintf(char *s, const char *format, ...);
 extern void fn_1_451E4(void);
 extern void fn_1_D3214(void);
 extern void fn_8001AF64(void);
-extern s32 fn_1_467F4(void);
-extern s32 fn_1_13018(void);
+extern u32 fn_1_467F4(void);
+extern u32 fn_1_13018(void);
 extern u32 fn_1_46C60(void);
 extern u32 lbl_1_bss_26C2C[2];
 extern u32 lbl_1_bss_262F8[2];
 extern u16 lbl_1_bss_26C68[35526];
-extern s32 ghost_test_record_flag0(u8 value);
-extern s32 fn_1_F9D44(u32 value);
-extern u8 fn_1_F8C50(u8 value);
+extern u32 lbl_1_bss_3C08[2];
+extern u32 fn_800075AC(u32, u32, u32);
+extern u32 ghost_test_record_flag0(s32 arg);
+extern u32 fn_1_F9D44(u32 arg);
+extern u8 fn_1_F8C50(s32 arg0);
 extern void fn_1_2DB50(void);
-extern void fn_1_3F8C(void *arg0, void (*arg1)(void), Obj_1_bss_5138 *arg2, u32 arg3);
+extern void fn_1_3F8C(void *, void *, Obj_1_bss_5138 *, int);
 extern void fn_1_2D888(void);
 extern void fn_1_2D524(void);
-extern int fn_1_F9FEC(void);
-extern int fn_1_FA180(int, int);
+extern u32 fn_1_FA070(void);
+extern int fn_1_FA180(int, u8);
+extern u32 fn_1_F9FEC(void);
+extern void fn_1_A2DC4(u32 arg0);
+extern Fn40710Config lbl_1_rodata_BD8;
 extern u8 lbl_1_bss_26B54[8];
 extern u32 fn_1_40EE4(void);
 extern u32 lbl_801A63D0;
 extern u32 lbl_1_bss_26C34[9];
 extern u8 lbl_1_bss_38218[568];
-extern void fn_1_4060(void);
+extern u32 fn_1_4060(void);
+extern void ARQPostRequest(u8 *arg0, u32 arg1, u32 arg2, u32 arg3, u32 arg4, u32 arg5, u32 arg6, u32 arg7);
 extern u32 lbl_801A63C0;
 extern void fn_1_40BE4(void);
+extern u32 GXGetTexBufferSize(u32, u32, u32, u32, u32);
 extern u32 lbl_1_bss_26B4C;
 extern u8 lbl_1_bss_25E90[8];
-extern void fn_1_48B0(void *arg0, int arg1);
+extern s32 fn_1_48B0(u32 arg0, u32 arg1);
+extern void fn_1_40F54(void *arg0);
 extern u32 lbl_801A6CE0;
 extern u32 lbl_1_bss_38454;
-extern u32 fn_80070DE0(void (*)(void));
-extern void fn_1_40F54(void *arg0);
-extern void *fn_1_D3884(u8 *arg0);
-extern void *fn_1_D358C(u8 *arg0, void *arg1);
-extern void fn_1_465D0(char *value, u32 flag);
+extern u32 fn_80070DE0(u32 arg0);
+extern void fn_1_D3884();
+extern void fn_1_D358C();
 extern void fn_800711A8(Obj_1_bss_38458_Target *target);
 extern void fn_80071718(u32 value);
-extern void sprintf(char *buffer, u32 *format, ...);
-extern u32 strlen(const char *str);
-extern int fn_80083BCC(const char *left, const char *right);
-
-extern u16 lbl_1_bss_26B7A[3];
-extern u16 lbl_1_bss_26300;
-extern void fn_1_4A00(u32 arg0, u32 arg1, u32 arg2);
-extern void fn_1_5370(u32 arg0, u32 arg1);
-extern void fn_1_15E27C(void);
-extern void fn_1_D0790(void);
-extern void fn_1_4811C(s32 value);
-extern void fn_1_48004(u32 arg0, u32 arg1);
-extern void *fn_1_435C(void *value);
-extern void fn_1_4310(s32 value);
-extern void fn_1_A1588(u32 arg0, u32 arg1);
-extern u32 lbl_801A6CE0;
-extern u32 lbl_1_bss_38454;
-extern u32 fn_80070DE0(void (*)(void));
-extern void fn_1_40F54(void *arg0);
-extern void *fn_1_D3884(u8 *arg0);
-extern void *fn_1_D358C(u8 *arg0, void *arg1);
 extern void fn_1_41134(void *unused, char *value);
-extern void fn_1_411D4(u32 index, char *message);
-extern u32 fn_800075AC(u32, u32, u32);
-extern u32 GXGetTexBufferSize(u32, u32, u32, u32, u32);
-extern u32 lbl_1_bss_25B84;
-extern void fn_1_817C0(void);
-extern u32 lbl_1_bss_381FC;
-extern void fn_1_EB080(int arg0);
-extern s64 OSGetTime(void);
-extern u32 lbl_1_bss_3C08[2];
+extern void fn_1_411D4(u32, char *);
+extern int fn_80016DF8(char *buffer);
+extern void fn_1_412A0(u32 index);
+extern size_t strlen(const char *str);
+extern int fn_80083BCC(const char *s1, const char *s2);
 extern u8 lbl_1_A9011300;
 extern u8 lbl_1_A9011100;
 extern u8 lbl_1_A9011000;
-extern void fn_1_A2DC4(u32);
 
-/* fzgx:begin fn_1_327F8 noprologue */
-#include "types.h"
-
+/* fzgx:begin fn_1_327F8 */
 struct fn_1_327F8_Arg0 {
     u32 unk_0;
     s16 unk_4;
@@ -139,16 +366,6 @@ struct fn_1_327F8_lbl_1_bss_25B88 {
     u32 unk_0;
 };
 
-extern struct fn_1_327F8_lbl_1_bss_25B88 lbl_1_bss_25B88;
-extern struct fn_1_327F8_lbl_1_bss_3C30 lbl_1_bss_3C30;
-extern u32 fn_1_15E330(s32, u32, u32);
-extern u32 fn_1_15E5E4(s32, void *);
-extern u32 fn_1_15E688(s32, u32, u8, void *);
-extern void fn_1_15E3E0(s32, u32);
-extern void fn_1_15E434(u32);
-extern void fn_1_15E540(s32, void *);
-extern void fn_1_CB404(u8);
-extern void fn_1_D07C4(u32, u32);
 
 void fn_1_327F8(struct fn_1_327F8_Arg0 *arg0, u32 arg1) {
     u8 *v0;
@@ -165,11 +382,11 @@ void fn_1_327F8(struct fn_1_327F8_Arg0 *arg0, u32 arg1) {
     v5 = *(u32 *)(v0 + 0x118);
 
     if (arg0->unk_475 != -1) {
-        if (v5 == 1 && (lbl_1_bss_3C30.unk_0 & 0x10) == 0) {
-            fn_1_15E540(v1, (void *)lbl_1_bss_25B88.unk_0);
+        if (v5 == 1 && ((*((struct fn_1_327F8_lbl_1_bss_3C30 *)&lbl_1_bss_3C30)).unk_0 & 0x10) == 0) {
+            fn_1_15E540(v1, (void *)(*((struct fn_1_327F8_lbl_1_bss_25B88 *)&lbl_1_bss_25B88)).unk_0);
         }
-        if (v5 == (lbl_1_bss_3C30.unk_4 - 1) && lbl_1_bss_3C30.unk_5 != 3) {
-            u32 a = lbl_1_bss_25B88.unk_0;
+        if (v5 == ((*((struct fn_1_327F8_lbl_1_bss_3C30 *)&lbl_1_bss_3C30)).unk_4 - 1) && (*((struct fn_1_327F8_lbl_1_bss_3C30 *)&lbl_1_bss_3C30)).unk_5 != 3) {
+            u32 a = (*((struct fn_1_327F8_lbl_1_bss_25B88 *)&lbl_1_bss_25B88)).unk_0;
             fn_1_15E5E4(arg0->unk_475, (void *)a);
         }
         fn_1_D07C4((u8)arg0->unk_475,
@@ -177,34 +394,34 @@ void fn_1_327F8(struct fn_1_327F8_Arg0 *arg0, u32 arg1) {
         fn_1_CB404((u8)arg0->unk_475);
     }
     if ((s32)arg1 != -1) {
-        *((u8 *)&lbl_1_bss_3C30 + 0x1468 + arg1) = (u8)v5;
+        *((u8 *)&(*((struct fn_1_327F8_lbl_1_bss_3C30 *)&lbl_1_bss_3C30)) + 0x1468 + arg1) = (u8)v5;
     }
     if (v5 < 8) {
-        *((u32 *)((u8 *)&lbl_1_bss_3C30 + 0x12c) + arg0->unk_4 * 0x28 + v5) = v2;
+        *((u32 *)((u8 *)&(*((struct fn_1_327F8_lbl_1_bss_3C30 *)&lbl_1_bss_3C30)) + 0x12c) + arg0->unk_4 * 0x28 + v5) = v2;
     }
     if (arg0->unk_475 != -1) {
-        fn_1_15E688(arg0->unk_475, v2, (u8)v5, (void *)lbl_1_bss_25B88.unk_0);
+        fn_1_15E688(arg0->unk_475, v2, (u8)v5, (void *)(*((struct fn_1_327F8_lbl_1_bss_25B88 *)&lbl_1_bss_25B88)).unk_0);
     }
-    if (lbl_1_bss_3C30.unk_1474 <= 0x50000 + 0x6ff4) {
+    if ((*((struct fn_1_327F8_lbl_1_bss_3C30 *)&lbl_1_bss_3C30)).unk_1474 <= 0x50000 + 0x6ff4) {
         if ((arg0->unk_0 & 0x08000000) != 0) {
             v3 = 0;
         }
         if (*(u8 *)(v0 + 0x115) == 0) {
-            if (v5 > lbl_1_bss_3C30.unk_13F4) {
-                *(u32 *)((u8 *)&lbl_1_bss_3C30 + (((v5 - 1) & 3) << 2) + 0x13b4) = v3;
-                lbl_1_bss_3C30.unk_13F4 = (u8)v5;
+            if (v5 > (*((struct fn_1_327F8_lbl_1_bss_3C30 *)&lbl_1_bss_3C30)).unk_13F4) {
+                *(u32 *)((u8 *)&(*((struct fn_1_327F8_lbl_1_bss_3C30 *)&lbl_1_bss_3C30)) + (((v5 - 1) & 3) << 2) + 0x13b4) = v3;
+                (*((struct fn_1_327F8_lbl_1_bss_3C30 *)&lbl_1_bss_3C30)).unk_13F4 = (u8)v5;
                 fn_1_15E3E0(arg0->unk_475, v3);
             }
         } else {
             if (*(u8 *)(v0 + 0x115) == 1) {
-                if (v5 > lbl_1_bss_3C30.unk_13F5) {
-                    *(u32 *)((u8 *)&lbl_1_bss_3C30 + (((v5 - 1) & 3) << 2) + 0x13d4) = v3;
-                    lbl_1_bss_3C30.unk_13F5 = (u8)v5;
-                    fn_1_15E434(lbl_1_bss_25B88.unk_0);
+                if (v5 > (*((struct fn_1_327F8_lbl_1_bss_3C30 *)&lbl_1_bss_3C30)).unk_13F5) {
+                    *(u32 *)((u8 *)&(*((struct fn_1_327F8_lbl_1_bss_3C30 *)&lbl_1_bss_3C30)) + (((v5 - 1) & 3) << 2) + 0x13d4) = v3;
+                    (*((struct fn_1_327F8_lbl_1_bss_3C30 *)&lbl_1_bss_3C30)).unk_13F5 = (u8)v5;
+                    fn_1_15E434((*((struct fn_1_327F8_lbl_1_bss_25B88 *)&lbl_1_bss_25B88)).unk_0);
                 }
             }
             if (arg0->unk_475 != -1) {
-                fn_1_15E330(arg0->unk_475, v3, lbl_1_bss_25B88.unk_0);
+                fn_1_15E330(arg0->unk_475, v3, (void *)(u32)((*((struct fn_1_327F8_lbl_1_bss_25B88 *)&lbl_1_bss_25B88)).unk_0));
             }
         }
     }
@@ -212,7 +429,7 @@ void fn_1_327F8(struct fn_1_327F8_Arg0 *arg0, u32 arg1) {
 /* fzgx:end fn_1_327F8 */
 
 /* fzgx:begin fn_1_33890 */
-extern u16 lbl_1_bss_25B98;
+
 
 typedef struct {
     u8 pad_0[0x5];
@@ -295,6 +512,7 @@ fallback:
 /* fzgx:end fn_1_33890 */
 
 /* fzgx:begin fn_1_35124 */
+
 void fn_1_35124(void) {
     OSGetTick();
     fn_1_A0978();
@@ -303,6 +521,7 @@ void fn_1_35124(void) {
 /* fzgx:end fn_1_35124 */
 
 /* fzgx:begin fn_1_3514C */
+
 void fn_1_3514C(void* arg0, int arg1) {
     if (arg1 == 1) {
         fn_1_35174();
@@ -311,12 +530,15 @@ void fn_1_3514C(void* arg0, int arg1) {
 /* fzgx:end fn_1_3514C */
 
 /* fzgx:begin fn_1_35174 */
+
 // fn_1_35174: empty in retail (single blr).
 void fn_1_35174(void) {
 }
 /* fzgx:end fn_1_35174 */
 
 /* fzgx:begin fn_1_35178 */
+
+
 // Decrement the counter while the associated state is active.
 void fn_1_35178(u32* arg0) {
     if (fn_1_3EFA8() == 0) {
@@ -345,13 +567,14 @@ void fn_1_35178(u32* arg0) {
 /* fzgx:end fn_1_35178 */
 
 /* fzgx:begin fn_1_36A94 */
+
 // Clears one indexed 0x81c0-byte entry in the shared buffer.
 void fn_1_36A94(u32 arg0, u32 arg1) {
     u8 *entry = lbl_1_bss_5480;
     u32 stride = 0x81c0;
     u32 offset = (arg0 & 0xFF) * stride;
 
-    fn_80008BA8(entry + offset, (void *)arg1, stride);
+    fn_80008BA8( (u32)(void *)(entry + offset), (u32)((void *)arg1), stride);
 }
 /* fzgx:end fn_1_36A94 */
 
@@ -362,8 +585,9 @@ u8* fn_1_36AD0(void) {
 /* fzgx:end fn_1_36AD0 */
 
 /* fzgx:begin fn_1_36ADC */
+
 void fn_1_36ADC(void) {
-    fn_80008BEC(lbl_1_bss_5480, 0, 0x20700);
+    fn_80008BEC(lbl_1_bss_5480, (int)(void *)(0), 0x20700);
 }
 /* fzgx:end fn_1_36ADC */
 
@@ -630,7 +854,7 @@ default: {
 /* fzgx:end fn_1_3908C */
 
 /* fzgx:begin fn_1_3A2C4 */
-extern u8 lbl_1_bss_38200;
+
 
 void fn_1_3A2C4(void) {
     s64 time;
@@ -653,6 +877,8 @@ void fn_1_3A2C4(void) {
 /* fzgx:end fn_1_3A2C4 */
 
 /* fzgx:begin fn_1_3DDAC */
+
+
 // Initializes global game state and configures startup resources.
 void fn_1_3DDAC(void) {
     fn_1_4A00(1, 0x1e, lbl_1_bss_5100);
@@ -667,9 +893,9 @@ void fn_1_3DDAC(void) {
     fn_1_4811C(0x94);
 
     fn_1_48004(0x8a, 1);
-    fn_1_435C((void *)lbl_1_bss_25CA4.unk_0);
+    fn_1_435C( (u32)((void *)lbl_1_bss_25CA4.unk_0));
     fn_1_4310(0x20000);
-    fn_1_435C((void *)lbl_1_bss_25B88.unk_0);
+    fn_1_435C( (u32)((void *)lbl_1_bss_25B88.unk_0));
     fn_1_4310(0x2c3);
 
     fn_1_A1588(lbl_1_bss_6EAD0.unk_0->unk_0, 0x1e);
@@ -677,11 +903,13 @@ void fn_1_3DDAC(void) {
 /* fzgx:end fn_1_3DDAC */
 
 /* fzgx:begin fn_1_3E5D0 */
+
+
 // Resets both state objects and advances the game initialization sequence.
 void fn_1_3E5D0(void) {
-    fn_1_435C((void *)lbl_1_bss_25B88.unk_0);
+    fn_1_435C( (u32)((void *)lbl_1_bss_25B88.unk_0));
     fn_1_4310(0);
-    fn_1_435C((void *)lbl_1_bss_25CA4.unk_0);
+    fn_1_435C( (u32)((void *)lbl_1_bss_25CA4.unk_0));
     fn_1_4310(0);
     fn_1_4811C(0x8a);
     fn_1_A8F78();
@@ -701,6 +929,8 @@ void fn_1_3E66C(void) {
 /* fzgx:end fn_1_3E66C */
 
 /* fzgx:begin fn_1_3E670 */
+
+
 void fn_1_3E670(void) {
     fn_1_4A00(1, 0x1e, lbl_1_bss_5100);
     lbl_1_bss_26C28 = 0;
@@ -711,18 +941,21 @@ void fn_1_3E670(void) {
 /* fzgx:end fn_1_3E670 */
 
 /* fzgx:begin fn_1_3EA70 */
+
 void fn_1_3EA70(void) {
     fn_1_A8F78();
 }
 /* fzgx:end fn_1_3EA70 */
 
 /* fzgx:begin fn_1_3EF08 */
+
 void fn_1_3EF08(u8 value) {
     lbl_1_bss_262F4 = value;
 }
 /* fzgx:end fn_1_3EF08 */
 
 /* fzgx:begin fn_1_3EF14 */
+
 static inline s16 current_mode(void) {
     return *(s16 *)&lbl_1_bss_960;
 }
@@ -733,9 +966,9 @@ void fn_1_3EF14(void *arg1) {
         (u16)(current_mode() - 13) <= 1 ||
         current_mode() == 10 ||
         current_mode() == 16) {
-        fn_80008BA8(arg1, &lbl_1_bss_3C30, 0x14b8);
+        fn_80008BA8( (u32)(void *)(arg1), (u32)(void *)(&lbl_1_bss_3C30), 0x14b8);
     } else {
-        fn_80008BEC(arg1, 0, 0x14b8);
+        fn_80008BEC(arg1, (int)(void *)(0), 0x14b8);
     }
 }
 /* fzgx:end fn_1_3EF14 */
@@ -750,6 +983,7 @@ void fn_1_3EF8C(u8 value) {
 /* fzgx:end fn_1_3EF8C */
 
 /* fzgx:begin fn_1_3EFA8 */
+
 typedef struct MainRelState {
     u8 pad_0000[0x12];
     u8 unk_12;
@@ -776,6 +1010,7 @@ s32 fn_1_3EFA8(void) {
 /* fzgx:end fn_1_3EFA8 */
 
 /* fzgx:begin fn_1_3EFF0 */
+
 void fn_1_3EFF0(u32 arg1, u8 arg2) {
     lbl_1_bss_25E74[0] = arg1;
     lbl_1_bss_3C10 = arg2;
@@ -792,6 +1027,7 @@ void fn_1_3F02C(u32 arg1) {
 /* fzgx:end fn_1_3F02C */
 
 /* fzgx:begin fn_1_3F038 */
+
 // Initializes the game state and reports whether startup has completed.
 int fn_1_3F038(void) {
     if (lbl_1_bss_26C58 != 0) {
@@ -824,6 +1060,7 @@ s16 fn_1_3F0C8(void) {
 /* fzgx:end fn_1_3F0C8 */
 
 /* fzgx:begin fn_1_3F0D8 */
+
 u8 *fn_1_3F0D8(u32 index, f32 *value, u8 *flag) {
     u8 idx = (u8)index;
     *value = lbl_1_bss_26304[idx];
@@ -878,12 +1115,6 @@ s32 fn_1_3F164(void) {
 /* fzgx:end fn_1_3F164 */
 
 /* fzgx:begin fn_1_3F1AC */
-#include "types.h"
-
-
-
-
-
 u32 fn_1_3F1AC(u32 arg0) {
     u32 v0;
     v0 = arg0;
@@ -906,6 +1137,7 @@ s32 fn_1_3F1D4(void) {
 /* fzgx:end fn_1_3F1D4 */
 
 /* fzgx:begin fn_1_3F1F8 */
+
 u8 fn_1_3F1F8(void) {
     if (lbl_1_bss_3C30.unk_A6 != 0xff) {
         return fn_1_12EF24(lbl_1_bss_3C30.unk_A6, lbl_1_bss_3C30.unk_A7);
@@ -924,18 +1156,14 @@ u8 fn_1_3F23C(u32 index) {
 /* fzgx:end fn_1_3F23C */
 
 /* fzgx:begin fn_1_3F250 */
+
 u8 fn_1_3F250(u32 index) {
     return lbl_1_bss_523C[index & 0xff];
 }
 /* fzgx:end fn_1_3F250 */
 
 /* fzgx:begin fn_1_3F264 */
-typedef struct {
-    u8 unk[0xb];
-    u8 value;
-} Entry;
 
-extern Entry *lbl_1_bss_53F8[34];
 
 // Return the stored entry byte, or the indexed fallback when no entry exists.
 u8 fn_1_3F264(u32 index) {
@@ -951,6 +1179,7 @@ u8 fn_1_3F264(u32 index) {
 /* fzgx:end fn_1_3F264 */
 
 /* fzgx:begin fn_1_3F440 */
+
 // Reports an out-of-range index and returns the corresponding limit when valid.
 s32 fn_1_3F440(u8 index) {
     u8 *limits;
@@ -968,23 +1197,8 @@ s32 fn_1_3F440(u8 index) {
 }
 /* fzgx:end fn_1_3F440 */
 
-/* fzgx:begin fn_1_3F4FC noprologue */
-#include "types.h"
-#include "rel/main_rel/game.h"
+/* fzgx:begin fn_1_3F4FC */
 
-typedef struct {
-    u8 pad_0[2];
-    s16 unk_2;
-    u8 pad_4[8];
-    u32 unk_C;
-    u8 pad_10[0x10];
-} Obj_1_bss_25E9C;
-
-extern Obj_1_bss_25E9C lbl_1_bss_25E9C[30];
-extern void fn_1_12AB38(void *arg);
-extern void fn_1_465D0(void *arg, s32 value);
-extern s32 fn_1_7F518(s16 value, void *arg, s32 mode);
-extern int sprintf(char *buffer, const char *format, ...);
 
 void fn_1_3F4FC(void) {
     u8 *dp;
@@ -996,7 +1210,7 @@ void fn_1_3F4FC(void) {
 
     dp = (u8 *)&lbl_1_data_5730;
     fn_1_12AB38(dp + 0xce4);
-    fn_1_465D0(dp + 0xcf0, 1);
+    fn_1_465D0( (char *)(void *)(dp + 0xcf0), 1);
 
     i = 0;
     while (i < lbl_1_bss_3C30.unk_9) {
@@ -1007,12 +1221,12 @@ void fn_1_3F4FC(void) {
         }
 
         if (flags & 0xf0000000) {
-            sprintf(buffer, (const char *)(dp + 0xd00), fn_1_7F518(lbl_1_bss_25E9C[i].unk_2, temp, mode));
+            sprintf(buffer, (const char *)(dp + 0xd00), (s32)fn_1_7F518(lbl_1_bss_25E9C[i].unk_2, temp, mode));
         } else {
-            sprintf(buffer, (const char *)(dp + 0xd0c), fn_1_7F518(lbl_1_bss_25E9C[i].unk_2, temp, mode));
+            sprintf(buffer, (const char *)(dp + 0xd0c), (s32)fn_1_7F518(lbl_1_bss_25E9C[i].unk_2, temp, mode));
         }
 
-        fn_1_465D0(buffer, 1);
+        fn_1_465D0( (char *)(void *)(buffer), 1);
         i++;
     }
 
@@ -1020,7 +1234,17 @@ void fn_1_3F4FC(void) {
 }
 /* fzgx:end fn_1_3F4FC */
 
-/* fzgx:begin fn_1_3F75C */
+/* fzgx:begin fn_1_3F75C noprologue */
+#include "types.h"
+#include "rel/main_rel/globals.h"
+#include "rel/main_rel/game.h"
+
+extern void fn_1_451E4(void);
+extern void fn_1_D3214(void);
+extern void fn_8001AF64(void);
+extern s32 fn_1_467F4(void);
+extern s32 fn_1_13018(void);
+
 void fn_1_3F75C(void) {
     while (fn_1_467F4() || fn_1_13018()) {
         fn_1_451E4();
@@ -1031,6 +1255,7 @@ void fn_1_3F75C(void) {
 /* fzgx:end fn_1_3F75C */
 
 /* fzgx:begin fn_1_3F7A0 */
+
 void fn_1_3F7A0(u32* self) {
     self[0] = fn_1_46C60();
 }
@@ -1100,6 +1325,7 @@ u8 fn_1_3F864(void) {
 /* fzgx:end fn_1_3F864 */
 
 /* fzgx:begin fn_1_3F894 */
+
 // Enables the associated game state and records the current mode.
 void fn_1_3F894(void) {
     lbl_1_bss_53F4 = lbl_1_bss_3C30.unk_7;
@@ -1109,6 +1335,7 @@ void fn_1_3F894(void) {
 /* fzgx:end fn_1_3F894 */
 
 /* fzgx:begin fn_1_3F8C0 */
+
 u32 fn_1_3F8C0(void) {
     return lbl_1_bss_262F8[0];
 }
@@ -1126,10 +1353,6 @@ void fn_1_3F8D0(void) {
 /* fzgx:end fn_1_3F8D0 */
 
 /* fzgx:begin fn_1_3FBF4 */
-#include "types.h"
-
-
-
 void fn_1_3FBF4(u32 arg0) {
     u32 v0;
     v0 = ((*(u32 *)&lbl_1_bss_3C30) & 0xFFFFFFFD);
@@ -1141,6 +1364,7 @@ void fn_1_3FBF4(u32 arg0) {
 /* fzgx:end fn_1_3FBF4 */
 
 /* fzgx:begin fn_1_3FC18 */
+
 u16 fn_1_3FC18(void) {
     return lbl_1_bss_26C68[0];
 }
@@ -1194,6 +1418,7 @@ u32 fn_1_3FC9C(void) {
 /* fzgx:end fn_1_3FC9C */
 
 /* fzgx:begin fn_1_3FCB0 */
+
 static inline u32 fn_1_3FCB0_operand(u32 left, u32 right) { left &= right; return left; }
 #pragma opt_propagation off
 void fn_1_3FCB0(s32 value) {
@@ -1206,10 +1431,9 @@ void fn_1_3FCB0(s32 value) {
 /* fzgx:end fn_1_3FCB0 */
 
 /* fzgx:begin fn_1_3FCF8 */
-#include "types.h"
 
 
-extern u32 fn_800075AC(u32, u32, u32);
+
 
 struct fn_1_3FCF8_lbl_1_bss_3C30 {
     u8 pad_0[0x1478];
@@ -1264,7 +1488,22 @@ u32 fn_1_3FCF8(void) {
 }
 /* fzgx:end fn_1_3FCF8 */
 
-/* fzgx:begin fn_1_3FDA8 */
+/* fzgx:begin fn_1_3FDA8 noprologue */
+#include "types.h"
+#include "rel/main_rel/globals.h"
+#include "rel/main_rel/game.h"
+
+extern void *fn_1_435C(void *value);
+extern s32 ghost_test_record_flag0(u8 value);
+extern s32 fn_1_F9D44(u32 value);
+extern u8 fn_1_F8C50(u8 value);
+extern void fn_1_2DB50(void);
+extern void fn_1_3F8C(void *arg0, void (*arg1)(void), Obj_1_bss_5138 *arg2, u32 arg3);
+extern void fn_1_2D888(void);
+extern void fn_1_2D524(void);
+
+extern void *fn_1_435C(void *value);
+
 void fn_1_3FDA8(void *arg0, void *arg1) {
     s32 condition;
     void *value;
@@ -1324,17 +1563,7 @@ done:
 }
 /* fzgx:end fn_1_3FDA8 */
 
-/* fzgx:begin fn_1_3FF90 noprologue */
-#include "rel/main_rel/game.h"
-
-extern int ghost_test_record_flag0(u8);
-extern int fn_1_F9D44(u32);
-extern u8 fn_1_F8C50(u8);
-extern u32 fn_1_435C(u32);
-extern void fn_1_2DB50(void);
-extern void fn_1_3F8C(void *, void *, Obj_1_bss_5138 *, int);
-extern void fn_1_2D888(void);
-extern void fn_1_2D524(void);
+/* fzgx:begin fn_1_3FF90 */
 
 void fn_1_3FF90(void) {
     u32 bss_25b88;
@@ -1348,7 +1577,7 @@ void fn_1_3FF90(void) {
     } else {
         if (lbl_1_bss_5138.unk_E3 == 0xff) {
             flag = 0;
-        } else if (ghost_test_record_flag0(lbl_1_bss_3C30.unk_6) != 0) {
+        } else if ((int)ghost_test_record_flag0(lbl_1_bss_3C30.unk_6) != 0) {
             flag = 0;
         } else {
             flag = 1;
@@ -1358,7 +1587,7 @@ void fn_1_3FF90(void) {
         } else {
             if (lbl_1_bss_5138.unk_E5 == 0xff) {
                 flag = 0;
-            } else if (fn_1_F9D44(lbl_1_bss_5138.unk_E5 & 0xf) != 0) {
+            } else if ((int)fn_1_F9D44(lbl_1_bss_5138.unk_E5 & 0xf) != 0) {
                 flag = 0;
             } else {
                 flag = 1;
@@ -1395,11 +1624,7 @@ void fn_1_3FF90(void) {
 }
 /* fzgx:end fn_1_3FF90 */
 
-/* fzgx:begin fn_1_4017C noprologue */
-#include "types.h"
-
-extern int fn_1_FA070(void);
-extern int fn_1_FA180(int, u8);
+/* fzgx:begin fn_1_4017C */
 
 int fn_1_4017C(void) {
     int i;
@@ -1407,7 +1632,7 @@ int fn_1_4017C(void) {
     int result2;
     int result3;
 
-    if (fn_1_FA070() != 0) {
+    if ((int)fn_1_FA070() != 0) {
         return 1;
     }
     for (i = 0; i < 3; i++) {
@@ -1423,10 +1648,11 @@ int fn_1_4017C(void) {
 /* fzgx:end fn_1_4017C */
 
 /* fzgx:begin fn_1_40224 */
+
 int fn_1_40224(void) {
     int result;
 
-    if (fn_1_F9FEC() != 0) {
+    if ((int)fn_1_F9FEC() != 0) {
         return 1;
     }
     if (fn_1_FA180(2, 0) == 0) {
@@ -1487,6 +1713,7 @@ int fn_1_40354(void) {
 /* fzgx:end fn_1_40354 */
 
 /* fzgx:begin fn_1_40710 */
+
 typedef struct {
     u8 state;
     u8 enabled;
@@ -1497,21 +1724,7 @@ typedef struct {
     u32 value_2c;
 } Fn40710Object;
 
-typedef struct {
-    u8 pad[0x2f8];
-    u32 value_2f8;
-    u32 value_2fc;
-    u32 value_300;
-    u32 value_304;
-    u32 value_308;
-    u32 value_30c;
-    u32 value_310;
-    u32 value_314;
-    u32 value_318;
-    u32 value_31c;
-} Fn40710Config;
 
-extern Fn40710Config lbl_1_rodata_BD8;
 
 void fn_1_40710(Fn40710Object *obj) {
     Fn40710Object *self = obj;
@@ -1592,6 +1805,7 @@ update_state:
 /* fzgx:end fn_1_40710 */
 
 /* fzgx:begin fn_1_40B14 */
+
 u8 *fn_1_40B14(void) {
     return lbl_1_bss_26B54;
 }
@@ -1644,8 +1858,7 @@ void fn_1_40BD4(void) {
 /* fzgx:end fn_1_40BD4 */
 
 /* fzgx:begin fn_1_40D44 */
-extern void ARQPostRequest(u8 *arg0, u32 arg1, u32 arg2, u32 arg3, u32 arg4,
-                        u32 arg5, u32 arg6, u32 arg7);
+
 
 void fn_1_40D44(void) {
     u32 result;
@@ -1673,7 +1886,15 @@ void fn_1_40D44(void) {
 }
 /* fzgx:end fn_1_40D44 */
 
-/* fzgx:begin fn_1_40E08 */
+/* fzgx:begin fn_1_40E08 noprologue */
+#include "types.h"
+#include "rel/main_rel/globals.h"
+#include "rel/main_rel/game.h"
+
+extern void fn_1_3F8C(void *arg0, void (*arg1)(void), Obj_1_bss_5138 *arg2, u32 arg3);
+extern u32 lbl_801A63C0;
+extern void fn_1_40BE4(void);
+
 // Initializes the random-selection bounds and schedules the next callback.
 void fn_1_40E08(u32 arg0) {
     u32 value;
@@ -1712,7 +1933,8 @@ u8 fn_1_40ED4(void) {
 /* fzgx:end fn_1_40ED4 */
 
 /* fzgx:begin fn_1_40EE4 */
-extern u8 lbl_1_bss_3820C;
+
+
 
 u32 fn_1_40EE4(void) {
     u32 t0;
@@ -1721,25 +1943,47 @@ u32 fn_1_40EE4(void) {
 /* fzgx:end fn_1_40EE4 */
 
 /* fzgx:begin fn_1_40F34 */
+
 u32 fn_1_40F34(void) {
     return lbl_1_bss_26B4C;
 }
 /* fzgx:end fn_1_40F34 */
 
 /* fzgx:begin fn_1_40F44 */
+
 u8 fn_1_40F44(void) {
     return lbl_1_bss_25E90[0];
 }
 /* fzgx:end fn_1_40F44 */
 
 /* fzgx:begin fn_1_40F54 */
+
+
 // Initializes the related game state with the standard allocation size.
 void fn_1_40F54(void *arg0) {
-    fn_1_48B0(arg0, 0x20);
+    fn_1_48B0( (u32)(void *)(arg0), 0x20);
 }
 /* fzgx:end fn_1_40F54 */
 
-/* fzgx:begin fn_1_40F78 */
+/* fzgx:begin fn_1_40F78 noprologue */
+#include "types.h"
+#include "rel/main_rel/globals.h"
+#include "rel/main_rel/game.h"
+
+extern u32 lbl_801A6CE0;
+extern u32 lbl_1_bss_38454;
+extern u32 fn_80070DE0(void (*)(void));
+extern void fn_1_40F54(void *arg0);
+extern void *fn_1_D3884(u8 *arg0);
+extern void *fn_1_D358C(u8 *arg0, void *arg1);
+
+extern u32 lbl_801A6CE0;
+extern u32 lbl_1_bss_38454;
+extern u32 fn_80070DE0(void (*)(void));
+extern void fn_1_40F54(void *arg0);
+extern void *fn_1_D3884(u8 *arg0);
+extern void *fn_1_D358C(u8 *arg0, void *arg1);
+
 // Initializes the shared resource handles when the subsystem is enabled.
 void fn_1_40F78(void) {
     u32 resource_handle;
@@ -1760,6 +2004,7 @@ void fn_1_40F78(void) {
 /* fzgx:end fn_1_40F78 */
 
 /* fzgx:begin fn_1_4100C */
+
 // Initializes both shared data blocks with their default state.
 void fn_1_4100C(void) {
     fn_1_465D0((char *)lbl_1_data_66E0, 1);
@@ -1767,7 +2012,17 @@ void fn_1_4100C(void) {
 }
 /* fzgx:end fn_1_4100C */
 
-/* fzgx:begin fn_1_41048 */
+/* fzgx:begin fn_1_41048 noprologue */
+#include "types.h"
+#include "rel/main_rel/globals.h"
+#include "rel/main_rel/game.h"
+
+extern void *fn_1_D3884(u8 *arg0);
+extern void *fn_1_D358C(u8 *arg0, void *arg1);
+
+extern void *fn_1_D3884(u8 *arg0);
+extern void *fn_1_D358C(u8 *arg0, void *arg1);
+
 void fn_1_41048(void) {
     void *value;
 
@@ -1780,6 +2035,7 @@ void fn_1_41048(void) {
 /* fzgx:end fn_1_41048 */
 
 /* fzgx:begin fn_1_410A0 */
+
 void fn_1_410A0(void) {
     if (lbl_1_bss_38458 != 0) {
         fn_800711A8(lbl_1_bss_38458);
@@ -1794,6 +2050,7 @@ void fn_1_410A0(void) {
 /* fzgx:end fn_1_410A0 */
 
 /* fzgx:begin fn_1_41104 */
+
 // Forwards the selected message entry to the formatter.
 void fn_1_41104(u32 message_index) {
     char *message = *(char **)(lbl_1_data_66A0 + message_index * sizeof(char *));
@@ -1801,7 +2058,16 @@ void fn_1_41104(u32 message_index) {
 }
 /* fzgx:end fn_1_41104 */
 
-/* fzgx:begin fn_1_41134 */
+/* fzgx:begin fn_1_41134 noprologue */
+#include "types.h"
+#include "rel/main_rel/globals.h"
+#include "rel/main_rel/game.h"
+
+extern void fn_1_465D0(char *value, u32 flag);
+extern void sprintf(char *buffer, u32 *format, ...);
+
+extern void fn_1_41134(void *unused, char *value);
+
 // Format the value with each registered template and publish both results.
 void fn_1_41134(void *unused, char *value) {
     char buffer[128];
@@ -1814,6 +2080,7 @@ void fn_1_41134(void *unused, char *value) {
 /* fzgx:end fn_1_41134 */
 
 /* fzgx:begin fn_1_411A4 */
+
 // Forwards the indexed message entry to the follow-up handler.
 void fn_1_411A4(u32 index) {
     fn_1_411D4(index, ((char **)lbl_1_data_66A0)[index]);
@@ -1904,9 +2171,7 @@ void fn_1_411D4(u32 index, char *value) {
 }
 /* fzgx:end fn_1_411D4 */
 
-/* fzgx:begin fn_1_412A0 noprologue */
-#include "rel/main_rel/game.h"
-
+/* fzgx:begin fn_1_412A0 */
 typedef struct BssState {
     u8 pad_10[0x10];
     u32 second[7];
@@ -1914,8 +2179,6 @@ typedef struct BssState {
     u32 first[7];
 } BssState;
 
-extern void fn_80071718(void *value);
-extern void fn_800711A8(void *value);
 
 /* file-scope objects of the retail TU, in retail order: MWCC addresses them off one section base */
 u32 fzgx_obj_lbl_1_bss_38450;
@@ -1945,11 +2208,11 @@ void fn_1_412A0(u32 index) {
     
 
     if (lbl_1_bss_38460__fzgx_offset_38[index] != 0) {
-        fn_80071718((void *)lbl_1_bss_38460__fzgx_offset_38[index]);
+        fn_80071718( (u32)((void *)lbl_1_bss_38460__fzgx_offset_38[index]));
     }
 
     if (fzgx_obj_lbl_1_bss_38460[index] != 0) {
-        fn_800711A8((void *)fzgx_obj_lbl_1_bss_38460[index]);
+        fn_800711A8( (Obj_1_bss_38458_Target *)((void *)fzgx_obj_lbl_1_bss_38460[index]));
     }
 
     lbl_1_bss_38460__fzgx_offset_38[index] = 0;
@@ -1982,6 +2245,7 @@ void fn_1_41328(RelocData *data) {
 /* fzgx:end fn_1_41328 */
 
 /* fzgx:begin fn_1_41418 */
+
 typedef struct Fn41418Data {
     u32 count;
     char *strings;
@@ -2000,7 +2264,7 @@ char *fn_1_41418(Fn41418Data *data, u32 index) {
     }
 
     while (index != 0) {
-        str = add_lengths(strlen((char *)str), str);
+        str = add_lengths((u32)strlen((char *)str), str);
         index -= 1;
         str += 1;
     }
@@ -2010,6 +2274,7 @@ char *fn_1_41418(Fn41418Data *data, u32 index) {
 /* fzgx:end fn_1_41418 */
 
 /* fzgx:begin fn_1_41488 */
+
 typedef struct Fn41488Data {
     u32 count;
     char *strings;
@@ -2028,7 +2293,7 @@ int fn_1_41488(Fn41488Data *data, const char *value) {
         if (fn_80083BCC(value, (const char *)str) == 0) {
             return index;
         }
-        str = add_lengths(strlen((const char *)str), str);
+        str = add_lengths((u32)strlen((const char *)str), str);
         index += 1;
         str += 1;
     }

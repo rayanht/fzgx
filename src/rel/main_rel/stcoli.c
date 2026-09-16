@@ -1,39 +1,130 @@
 #include "types.h"
 #include "rel/main_rel/globals.h"
 #include "rel/main_rel/stcoli.h"
+#include "dolphin/hw_regs.h"
+#include "psvec.h"
 
-extern void fn_1_9D77C(u32, u32);
-extern void fn_1_46B4(u32, u32, u8 *, s32);
-extern u32 lbl_801A6410;
-extern u8 *lbl_801A66CC;
-extern void fn_1_180F4(int, int, int, int);
-extern void fn_1_18784(int, int, int, int);
-extern void fn_1_16BA0(void *, void *, void *, void *, int);
-extern void fn_1_18214(void *, void *, int);
-extern f32 lbl_1_rodata_6D0;
-extern void fn_1_21950(void *, f32, f32);
-extern f32 lbl_1_rodata_6D4;
-extern void *memset(void *, int, unsigned int);
-extern char lbl_1_bss_9C;
-extern void fn_1_A2D84(int value);
-extern unsigned char lbl_1_rodata_840[];
+typedef struct Node {
+    u32 unk_0;
+    u8 pad_4[0x8];
+    s32 count;
+    struct Node *children;
+    u8 pad_14[0x50 - 0x14];
+} Node;
+
+typedef struct StcoliNode StcoliNode;
+
+struct StcoliNode {
+    u32 flags;
+    u8 pad[8];
+    s32 count;
+    StcoliNode *items;
+    u8 rest[0x3c];
+};
+
+typedef struct StcoliVec {
+    u32 x;
+    u32 y;
+    u32 z;
+} StcoliVec;
+
+typedef struct {
+    unsigned char pad0[0x0c];
+    int count;
+    void *entries;
+} Fn118F28Object;
+
+typedef struct Fn_1_20258Constants {
+    unsigned char pad08[8];
+    f32 value08;
+    f32 value0c;
+    unsigned char pad10[0xb0];
+    f64 valuec0;
+    f32 valuec8;
+    unsigned char padcc[4];
+    f64 valued0;
+} Fn_1_20258Constants;
+
+typedef struct {
+    u32 f00, f04, f08, f0c, f10, f14, f18, f1c, f20, f24;
+    u32 f28, f2c, f30, f34, f38, f3c, f40, f44;
+} Cfg;
+
+typedef struct {
+    u8 pad_0[0x4];
+    Cfg *cfg;
+    u8 pad_8[0xc];
+    f32 fx;
+    f32 fy;
+    f32 fz;
+    f32 rxv;
+    f32 ryv;
+    f32 rzv;
+    f32 sxv;
+    f32 syv;
+    f32 szv;
+} Entity;
+
+typedef struct {
+    u32 count;
+    u32 entries[1];
+} Stack;
+
+struct fn_1_2B478_lbl_801A6D00 {
+    u32 unk_0;
+};
+extern f32 lbl_1_rodata_6B0[6];
+extern void fn_1_17D5C(Node *node, u32 *acc);
+extern void fn_1_9E14C();
+extern void fn_1_9E170(u32 arg0, u32 arg1, u32 arg2, u32 arg3);
+extern const f32 lbl_1_rodata_6D0;
+extern f32 lbl_1_rodata_6F8;
+extern u32 mathutil_mtxA_rotate_x(u32);
+extern u32 mathutil_mtxA_rotate_y(u32);
+extern u32 mathutil_mtxA_rotate_z(u32);
+extern void fn_80008BEC(void *dest, int value, u32 size);
+extern void lbl_8006E0B4(f32, f32, f32);
+extern void lbl_8006DBE4();
 extern void lbl_8006DAEC(void);
 extern void lbl_8006DB30(void);
-extern int fn_1_8C66C(short value);
+extern void fn_1_1902C(StcoliNode *root, StcoliVec *vec, void *arg3, f32 value);
+extern void fn_1_18F28(Fn118F28Object *obj, int *args, int arg2, float value);
+extern Fn_1_20258Constants lbl_1_rodata_6C8;
+extern int fn_1_210A8(void *, f32 *, int, int, int);
+extern int fn_1_16BA0(void *, void *, void *, int *, int);
+extern f32 fn_1_16E68(void *, void *, int);
+extern unsigned char lbl_1_rodata_840[];
+extern void fn_1_22F90(void *self, int value);
+extern void lbl_8006E1F0(void *, f32, f32, f32);
+extern void fn_1_8A190(void *arg0, void *arg1);
+extern int fn_1_15578(void *, void *, void *, void *, u32, void *, void *, void *, u32, void *);
+extern void *memset(void *, int, unsigned int);
+extern int fn_1_4C10(void);
+extern u32 fn_1_4060(void);
+extern void fn_1_EB080(int);
+extern void fn_1_9D77C(u32, u32);
+extern void fn_1_46B4(u32 arg0, u32 arg1, const char *arg2, int arg3);
+extern u32 lbl_801A6410;
+extern u8 *lbl_801A66CC;
+extern int fn_1_180F4(int first, int second, int count, int ascending);
+extern void fn_1_18784();
+extern void fn_1_18214();
+extern void fn_1_21950(void *, f32, f32);
+extern f32 lbl_1_rodata_6D4;
+extern char lbl_1_bss_9C;
+extern void fn_1_A2D84(u32 arg0);
+extern u32 fn_1_8C66C(u32 index);
 extern int fn_1_163BC(void *arg0, void *arg1, int mask, int value);
 extern void lbl_8006E1D8(void *arg0, f32 arg1, f32 arg2, f32 arg3);
 extern double lbl_1_rodata_910;
-extern void fn_1_18784();
-extern void lbl_8006DBE4(void);
 extern const f32 lbl_1_rodata_84C;
 extern const f32 lbl_1_rodata_854;
-extern s16 fn_1_7B054(int);
-extern void OSReport(const char *, ...);
-extern void OSPanic(const char *, int, const char *, ...);
-extern void *fn_1_868C0(s8 value);
-extern void fn_1_F7338(s8 value, int arg2, int arg3);
+extern s16 fn_1_7B054();
+extern void OSReport(const char *format, ...);
+extern void OSPanic(const char *file, int line, const char *msg, ...);
+extern void *fn_1_868C0(s8 index);
+extern void fn_1_F7338(int arg0, void *arg1, void *arg2);
 extern const f32 lbl_1_rodata_85C;
-extern void lbl_8006E1F0(void *, f32, f32, f32);
 extern void fn_8006E978(void *, void *, void *);
 extern void mathutil_mtxA_from_quat(void *);
 extern void lbl_8006DFC4(void *);
@@ -51,9 +142,9 @@ void fn_1_14CB4(void) {
             fn_1_9D77C(lbl_1_bss_3BE0->unk_54, lbl_1_bss_3BE0->unk_48);
         }
 
-        fn_1_46B4(lbl_801A6410, lbl_1_bss_3BE4.unk_0, lbl_1_data_51C8, 0x2c9);
+        fn_1_46B4(lbl_801A6410, lbl_1_bss_3BE4.unk_0, (const char *)(u8 *)(lbl_1_data_51C8), 0x2c9);
         lbl_1_bss_3BE4.unk_0 = 0;
-        fn_1_46B4(lbl_801A6410, (u32)lbl_1_bss_3BE0, lbl_1_data_51C8, 0x2cb);
+        fn_1_46B4(lbl_801A6410, (u32)lbl_1_bss_3BE0, (const char *)(u8 *)(lbl_1_data_51C8), 0x2cb);
         lbl_1_bss_3BE0 = 0;
     }
 }
@@ -74,7 +165,7 @@ typedef struct {
     s32 unk_4;
     s8 unk_8;
     s8 unk_9;
-} StcoliEntry;
+} fn_1_14DE8_StcoliEntry;
 
 typedef struct {
     s32 count;
@@ -82,14 +173,12 @@ typedef struct {
     u8 pad_8[4];
 } StcoliRecord;
 
-extern f32 lbl_1_rodata_6B0[6];
-extern u8 lbl_1_data_54B4[148];
 
 #pragma opt_loop_invariants off
 void fn_1_14DE8(u32 index) {
     Obj_1_bss_3BE0_Target **manager;
     f32 *constants;
-    StcoliEntry *entry;
+    fn_1_14DE8_StcoliEntry *entry;
     StcoliRecord *record;
     u8 *object;
     s32 slot;
@@ -105,7 +194,7 @@ void fn_1_14DE8(u32 index) {
         return;
     }
 
-    entry = ((StcoliEntry **)lbl_1_data_54B4)[index];
+    entry = ((fn_1_14DE8_StcoliEntry **)(((u8 *)&lbl_1_data_54B4)))[index];
     if (entry == 0) {
         return;
     }
@@ -203,9 +292,9 @@ int fn_1_17B5C(int a, int b, int count, f32 threshold) {
 
     left = &((Fn17B5C_Slot *)lbl_1_bss_3BE0->unk_C)[a];
     right = &((Fn17B5C_Slot *)lbl_1_bss_3BE0->unk_C)[b];
-    if (threshold > lbl_1_rodata_6D0) {
+    if (threshold > (*((f32 *)&lbl_1_rodata_6D0))) {
         delta = right->unk_4->unk_40 - left->unk_4->unk_44;
-        if (delta < lbl_1_rodata_6D0) {
+        if (delta < (*((f32 *)&lbl_1_rodata_6D0))) {
             delta += *(f32 *)lbl_1_bss_3BE0->unk_90;
         }
         if (delta > threshold) {
@@ -237,8 +326,6 @@ int fn_1_17B5C(int a, int b, int count, f32 threshold) {
 /* fzgx:end fn_1_17B5C */
 
 /* fzgx:begin fn_1_17C6C */
-#include "types.h"
-
 typedef struct Entry {
     char pad[0x4d];
     s8 active;
@@ -309,15 +396,7 @@ int fn_1_17C6C(int current, int next, int limit) {
 /* fzgx:end fn_1_17C6C */
 
 /* fzgx:begin fn_1_17D5C */
-typedef struct Node {
-    u32 unk_0;
-    u8 pad_4[0x8];
-    s32 count;
-    struct Node *children;
-    u8 pad_14[0x50 - 0x14];
-} Node;
 
-void fn_1_17D5C(Node *node, u32 *acc);
 
 void fn_1_17D5C(Node *node, u32 *acc) {
     Node *root;
@@ -430,16 +509,15 @@ void fn_1_17D5C(Node *node, u32 *acc) {
 typedef struct {
     u8 pad_0[0x8];
     u32 unk_8;
-} StcoliEntry;
+} fn_1_17FCC_StcoliEntry;
 
-extern void fn_1_17D5C(u32, u32 *);
 
 int fn_1_17FCC(int a, int b, int c) {
     int count;
     int i;
     int end;
-    StcoliEntry *last;
-    StcoliEntry *entry;
+    fn_1_17FCC_StcoliEntry *last;
+    fn_1_17FCC_StcoliEntry *entry;
     u32 fa;
     u32 fb;
     int result;
@@ -461,17 +539,17 @@ int fn_1_17FCC(int a, int b, int c) {
     b = a + 1;
     end = c;
     end = end - 1;
-    last = (StcoliEntry *)lbl_1_bss_3BE0->unk_C + a;
+    last = (fn_1_17FCC_StcoliEntry *)lbl_1_bss_3BE0->unk_C + a;
     i = 0;
     while (i < count) {
         if (b > end) {
             b = 0;
         }
-        entry = (StcoliEntry *)lbl_1_bss_3BE0->unk_C + b;
+        entry = (fn_1_17FCC_StcoliEntry *)lbl_1_bss_3BE0->unk_C + b;
         fb = 0;
         fa = 0;
-        fn_1_17D5C(last->unk_8, &fa);
-        fn_1_17D5C(entry->unk_8, &fb);
+        fn_1_17D5C( (Node *)(u32)(last->unk_8), &fa);
+        fn_1_17D5C( (Node *)(u32)(entry->unk_8), &fb);
         if ((fa & 0x01000000) != 0 && (fb & 0x00800000) != 0) {
             break;
         }
@@ -490,10 +568,7 @@ int fn_1_17FCC(int a, int b, int c) {
 }
 /* fzgx:end fn_1_17FCC */
 
-/* fzgx:begin fn_1_180F4 noprologue */
-#include "types.h"
-#include "rel/main_rel/stcoli.h"
-
+/* fzgx:begin fn_1_180F4 */
 typedef struct {
     int unk_0;
     int unk_4;
@@ -772,9 +847,7 @@ void fn_1_18214(Entity *arg0, f32 *arg1, Stack *arg2, f32 t) {
 }
 /* fzgx:end fn_1_18214 */
 
-/* fzgx:begin fn_1_18B40 noprologue */
-#include "types.h"
-
+/* fzgx:begin fn_1_18B40 */
 typedef u32 (*fn_1_18B40_Fn)(u32, u32, u32, u32, u32, u32, u32, u32, f32);
 
 struct fn_1_18B40_Obj {
@@ -792,10 +865,6 @@ struct fn_1_18B40_Vec {
     u32 z;
 };
 
-extern u8 lbl_1_data_5548[0x190];
-extern u32 lbl_8006DBE4(void);
-extern void lbl_8006DAEC(void);
-extern void lbl_8006DB30(void);
 
 #pragma opt_loop_invariants off
 #pragma opt_common_subs off
@@ -888,7 +957,17 @@ void fn_1_18FFC(int a, int b, int c, int d, int e, int f, int g) {
 }
 /* fzgx:end fn_1_18FFC */
 
-/* fzgx:begin fn_1_1902C */
+/* fzgx:begin fn_1_1902C noprologue */
+#include "types.h"
+#include "rel/main_rel/globals.h"
+#include "rel/main_rel/stcoli.h"
+
+extern void fn_1_18784(int, int, int, int);
+extern void lbl_8006DAEC(void);
+extern void lbl_8006DB30(void);
+extern void fn_1_18784();
+extern void lbl_8006DBE4(void);
+
 typedef struct StcoliNode StcoliNode;
 typedef struct StcoliVec {
     u32 x;
@@ -991,18 +1070,7 @@ void fn_1_1902C(StcoliNode *root, StcoliVec *vec, void *arg3, f32 value) {
 /* fzgx:end fn_1_1902C */
 
 /* fzgx:begin fn_1_20258 */
-typedef struct Fn_1_20258Constants {
-    unsigned char pad08[8];
-    f32 value08;
-    f32 value0c;
-    unsigned char pad10[0xb0];
-    f64 valuec0;
-    f32 valuec8;
-    unsigned char padcc[4];
-    f64 valued0;
-} Fn_1_20258Constants;
 
-extern Fn_1_20258Constants lbl_1_rodata_6C8;
 
 typedef struct Fn_1_20258 {
     unsigned char pad00[0x30];
@@ -1067,9 +1135,7 @@ f32 fn_1_20258(Fn_1_20258 *self, f32 *out_ratio) {
 #pragma opt_strength_reduction reset
 /* fzgx:end fn_1_20258 */
 
-/* fzgx:begin fn_1_20994 noprologue */
-#include "types.h"
-
+/* fzgx:begin fn_1_20994 */
 typedef struct Fn_1_20994_Object {
     u32 unk_0;
     u32 unk_4;
@@ -1078,9 +1144,6 @@ typedef struct Fn_1_20994_Object {
     u8 unk_7D;
 } Fn_1_20994_Object;
 
-extern const f32 lbl_1_rodata_6D0;
-extern Fn_1_20994_Object *lbl_1_bss_3BE0;
-extern int fn_1_210A8(void *, f32 *, int, int, int);
 
 int fn_1_20994(void *arg, f32 *out) {
     f32 value;
@@ -1090,7 +1153,7 @@ int fn_1_20994(void *arg, f32 *out) {
 
     value = lbl_1_rodata_6D0;
     result = 0;
-    object = lbl_1_bss_3BE0;
+    object = ((Fn_1_20994_Object *)lbl_1_bss_3BE0);
     if (object != 0) {
         if (object->unk_7D != 0) {
             index = 0;
@@ -1110,11 +1173,7 @@ int fn_1_20994(void *arg, f32 *out) {
 }
 /* fzgx:end fn_1_20994 */
 
-/* fzgx:begin fn_1_21644 noprologue */
-#include "types.h"
-
-extern int fn_1_16BA0(void *, void *, void *, int *, int);
-extern f32 fn_1_16E68(void *, void *, int);
+/* fzgx:begin fn_1_21644 */
 
 void *fn_1_21644(void *arg0, f32 *arg1, void *arg2) {
     int local;
@@ -1137,7 +1196,7 @@ void fn_1_216C0(void *arg0, void *arg1, void *arg2) {
     int local;
 
     local = 0;
-    fn_1_16BA0(arg0, arg1, arg2, &local, 0);
+    fn_1_16BA0(arg0, arg1, arg2, (int *)(void *)(&local), 0);
 }
 /* fzgx:end fn_1_216C0 */
 
@@ -1163,12 +1222,12 @@ void fn_1_21BE4(Fn_1_21BE4 *self, void *arg) {
     if ((self->flags & 0x800) != 0) {
         value2 = self->field3c;
     } else {
-        value2 = lbl_1_rodata_6D0;
+        value2 = (*((f32 *)&lbl_1_rodata_6D0));
     }
     if ((self->flags & 0x400) != 0) {
         value1 = self->field40;
     } else {
-        value1 = lbl_1_rodata_6D0;
+        value1 = (*((f32 *)&lbl_1_rodata_6D0));
     }
     fn_1_21950(arg, value1, value2);
 }
@@ -1196,12 +1255,12 @@ void fn_1_21CA0(Fn_1_21CA0 *self, void *arg) {
     if ((self->flags & 0x800) != 0) {
         value2 = self->field3c;
     } else {
-        value2 = lbl_1_rodata_6D0;
+        value2 = (*((f32 *)&lbl_1_rodata_6D0));
     }
     if ((self->flags & 0x400) != 0) {
         value1 = self->field40;
     } else {
-        value1 = lbl_1_rodata_6D0;
+        value1 = (*((f32 *)&lbl_1_rodata_6D0));
     }
     fn_1_21950(arg, value1, value2);
 }
@@ -1396,10 +1455,6 @@ typedef struct Fn_1_23500_Rodata {
     f32 valuef0;
 } Fn_1_23500_Rodata;
 
-extern unsigned char lbl_1_rodata_840[];
-extern void fn_1_22F90(void *self, int value);
-extern void lbl_8006E1F0(void *self, f32 x, f32 y, f32 z);
-extern void fn_1_8A190(void *self, int value);
 
 typedef struct Fn_1_23500 {
     int flags;
@@ -1433,7 +1488,7 @@ void fn_1_23500(Fn_1_23500 *self, f32 value) {
         self->field200 = one;
         self->field481 = 0x5a;
     }
-    fn_1_8A190(self, 1);
+    fn_1_8A190(self, (void *)(int)(1));
 }
 /* fzgx:end fn_1_23500 */
 
@@ -1769,7 +1824,7 @@ void fn_1_25004(Fn_1_25004_Obj *self) {
     result = (Fn_1_25004_Result *)fn_1_868C0((s8)self->field04);
     if ((self->flags58c & 0x10) == 0) {
         if ((s8)self->field474 != -1) {
-            fn_1_F7338((s8)self->field474, 2, 0x1e);
+            fn_1_F7338((s8)self->field474, (void *)(int)(2), (void *)(int)(0x1e));
         }
         zero = (0.0f);
         self->flags00 |= 0x800;
@@ -1963,7 +2018,7 @@ void fn_1_28660(Fn_1_28660 *self) {
         result = 0;
     } else {
         result = fn_1_163BC((char *)self + 0x7c, (char *)self + 0x88,
-            mask, fn_1_8C66C(self->field04));
+            mask, (int)fn_1_8C66C(self->field04));
     }
 
     if ((result & 0x8) != 0) {
@@ -2006,8 +2061,6 @@ typedef struct {
     u8 pad_1bc[0x1bc];
 } Fn1_2A2A4Object;
 
-extern void lbl_8006DAEC(void);
-extern void lbl_8006DB30(void);
 
 void fn_1_2A2A4(Fn1_2A2A4Object *self) {
     u8 local_14[12];
@@ -2435,16 +2488,11 @@ int fn_1_2A694(O *self, void *arg1, V *swap, u32 mask, V *out0, V *out1) {
 /* fzgx:end fn_1_2A694 */
 
 /* fzgx:begin fn_1_2B478 */
-#include "types.h"
-
 struct fn_1_2B478_Arg0 {
     u8 pad_0[0x1C8];
     f32 unk_1C8;
     u8 pad_1CC[0x2D0];
     u32 unk_49C;
-};
-struct fn_1_2B478_lbl_801A6D00 {
-    u32 unk_0;
 };
 struct fn_1_2B478_lbl_801A66CC {
     u32 unk_0;
@@ -2464,10 +2512,7 @@ f32 fn_1_2B478(void *arg0) {
 }
 /* fzgx:end fn_1_2B478 */
 
-/* fzgx:begin fn_1_2C688 noprologue */
-#include "types.h"
-
-extern u32 memset(u32, u32, u32);
+/* fzgx:begin fn_1_2C688 */
 
 u32 fn_1_2C688(u32 arg0, u32 arg1, u32 arg2) {
     u32 v1;
@@ -2491,7 +2536,7 @@ u32 fn_1_2C688(u32 arg0, u32 arg1, u32 arg2) {
     v3 = v2;
     v4 = 0;
     v5 = 192;
-    t0 = memset(v3, v4, v5);
+    t0 = (u32)memset( (void *)(u32)(v3), v4, v5);
     v3 = t0;
     v3 = (v2 + 8);
     *(u32 *)((u8 *)v2 + 0) = v3;
@@ -2504,7 +2549,7 @@ u32 fn_1_2C688(u32 arg0, u32 arg1, u32 arg2) {
     if (v3 != 0) {
     v4 = 0;
     v5 = 404;
-    t1 = memset(v3, v4, v5);
+    t1 = (u32)memset( (void *)(u32)(v3), v4, v5);
     v3 = t1;
     }
     v6 = *(u32 *)((u8 *)arg0 + 1180);
@@ -2512,7 +2557,7 @@ u32 fn_1_2C688(u32 arg0, u32 arg1, u32 arg2) {
     v3 = v6;
     v4 = 0;
     v5 = 279;
-    t2 = memset(v3, v4, v5);
+    t2 = (u32)memset( (void *)(u32)(v3), v4, v5);
     v3 = t2;
     v4 = (v6 + 184);
     *(u32 *)((u8 *)v6 + 128) = 0;
