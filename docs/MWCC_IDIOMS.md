@@ -80,6 +80,11 @@ file from what actually unblocked functions; keep each item one or two lines.
   must be its own one-element table object: `table[1]` materialises the table's address where
   retail has `lwz r0, 0x13c(r29)`. Native literals + primer over the 405 unprimed
   private-literal bodies: 5 matches, 258 improved (up to +31 points), 83 regressed, 97 s.
+  The regressions were reads retail makes by the literal's own `lis`/`lo` pair or as a
+  materialised single address (`addi r5, r3, sym@l; lfs f0, 0x0(r5)`): the extern declaration
+  already reproduces both, and a native literal pools them behind a base instead. Only reads
+  through a base that retail reads at several offsets convert (`memory_loads` records the
+  form; `pool_scalar_reads` keeps multi-offset pool bases).
 
 ## Selection panel evidence (2026-09-15)
 
