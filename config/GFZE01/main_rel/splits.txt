@@ -6497,3 +6497,6 @@ rel/main_rel/screen_effect/fn_1_77B80.c:
 
 rel/main_rel/sel_static_disp/fn_1_150464.c:
 	.text       start:0x00150464 end:0x00150500 align:4
+
+rel/main_rel/game/fn_1_411D4.c:
+	.text       start:0x000411D4 end:0x000412A0 align:4

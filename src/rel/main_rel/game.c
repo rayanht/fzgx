@@ -1820,6 +1820,90 @@ void fn_1_411A4(u32 index) {
 }
 /* fzgx:end fn_1_411A4 */
 
+/* fzgx:begin fn_1_411D4 pool noprologue */
+#include "types.h"
+#include "rel/main_rel/game.h"
+
+typedef struct Fn411D4Cache {
+    u8 pad_00[0x10];
+    u32 flags[7];
+    int cached[7];
+    char *generated[7];
+} Fn411D4Cache;
+
+extern int sprintf(char *buffer, char *format, ...);
+extern int fn_80016DF8(char *buffer);
+extern void fn_1_412A0(u32 index);
+extern char *fn_1_D3884(char *buffer);
+extern int fn_1_D358C(char *buffer, char *value);
+
+/* file-scope objects of the retail TU, in retail order: MWCC addresses them off one section base */
+u32 fzgx_obj_lbl_1_bss_38450;
+u32 fzgx_obj_lbl_1_bss_38454;
+u32 fzgx_obj_lbl_1_bss_38458;
+u32 fzgx_obj_lbl_1_bss_3845C;
+u8 fzgx_obj_lbl_1_bss_38460;
+u8 lbl_1_bss_38460_fill_38461;
+u16 lbl_1_bss_38460_fill_38462;
+u32 lbl_1_bss_38460_fill_38464[6];
+u8 lbl_1_bss_38460_1C;
+u8 lbl_1_bss_38460_fill_3847D;
+u16 lbl_1_bss_38460_fill_3847E;
+u32 lbl_1_bss_38460_fill_38480[6];
+u8 lbl_1_bss_38460_38;
+u8 lbl_1_bss_38460_fill_38499;
+u16 lbl_1_bss_38460_fill_3849A;
+u32 lbl_1_bss_38460_fill_3849C[6];
+u32 fzgx_obj_lbl_1_bss_384B4;
+
+#pragma section code_type ".fzgxpool"
+static void fzgx_bss_layout(void) {
+    volatile u8 s;  /* fzgx-allow: S2 layout primer sink: MWCC emits .bss objects in first-access order */
+    s = *(u8 *)&fzgx_obj_lbl_1_bss_38450;
+    s = *(u8 *)&fzgx_obj_lbl_1_bss_38454;
+    s = *(u8 *)&fzgx_obj_lbl_1_bss_38458;
+    s = *(u8 *)&fzgx_obj_lbl_1_bss_3845C;
+    s = *(u8 *)&fzgx_obj_lbl_1_bss_38460;
+    s = *(u8 *)&lbl_1_bss_38460_fill_38461;
+    s = *(u8 *)&lbl_1_bss_38460_fill_38462;
+    s = *(u8 *)&lbl_1_bss_38460_fill_38464;
+    s = *(u8 *)&lbl_1_bss_38460_1C;
+    s = *(u8 *)&lbl_1_bss_38460_fill_3847D;
+    s = *(u8 *)&lbl_1_bss_38460_fill_3847E;
+    s = *(u8 *)&lbl_1_bss_38460_fill_38480;
+    s = *(u8 *)&lbl_1_bss_38460_38;
+    s = *(u8 *)&lbl_1_bss_38460_fill_38499;
+    s = *(u8 *)&lbl_1_bss_38460_fill_3849A;
+    s = *(u8 *)&lbl_1_bss_38460_fill_3849C;
+    s = *(u8 *)&fzgx_obj_lbl_1_bss_384B4;
+}
+#pragma section code_type ".text"
+
+void fn_1_411D4(u32 index, char *value) {
+    char second_buffer[128];
+    char buffer[128];
+    int key;
+    u32 *flags;
+    struct { u32 value; } off;
+
+    
+    sprintf(buffer, (char *)&lbl_1_data_6708, value);
+    key = fn_80016DF8(buffer);
+    off.value = index * 4;
+    flags = (u32 *)&fzgx_obj_lbl_1_bss_38460;
+
+    if (*(u32 *)((u8 *)flags + off.value) == 0 ||
+        *(int *)((u8 *)&lbl_1_bss_38460_1C + off.value) != key) {
+        fn_1_412A0(index);
+        *(int *)((u8 *)&lbl_1_bss_38460_1C + off.value) = key;
+        sprintf(second_buffer, (char *)&lbl_1_data_6700, value);
+        *(char **)((u8 *)&lbl_1_bss_38460_38 + off.value) = fn_1_D3884(second_buffer);
+        *(u32 *)((u8 *)flags + off.value) =
+            fn_1_D358C(buffer, *(char **)((u8 *)&lbl_1_bss_38460_38 + off.value));
+    }
+}
+/* fzgx:end fn_1_411D4 */
+
 /* fzgx:begin fn_1_412A0 noprologue */
 #include "rel/main_rel/game.h"
 
