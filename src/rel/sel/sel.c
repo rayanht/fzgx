@@ -1019,6 +1019,116 @@ void fn_10_472C(void) {
 }
 /* fzgx:end fn_10_472C */
 
+/* fzgx:begin fn_10_4838 */
+typedef struct Fn10_4838_Entry {
+    u8 pad_0[0x22];
+    u8 unk_22;
+} Fn10_4838_Entry;
+
+typedef struct Fn10_4838_Race {
+    u8 pad_0[0x94];
+    u32 unk_94;
+    u8 pad_98[0x6];
+    u8 unk_9E;
+    u8 pad_9F[0x5];
+    Fn10_4838_Entry *unk_A4;
+    u8 pad_A8[0x98];
+    u32 unk_140;
+} Fn10_4838_Race;
+
+typedef struct Fn10_4838_Config {
+    u8 pad_0[0x8];
+    u16 unk_8;
+    u8 pad_A[0xA];
+} Fn10_4838_Config;
+
+extern s32 lbl_10_bss_14;
+extern s16 lbl_10_bss_4938C;
+extern u32 lbl_10_bss_49388;
+extern u32 lbl_10_bss_51744;
+extern u8 lbl_10_bss_55CE0[];
+extern u16 lbl_1_bss_96A;
+extern Fn10_4838_Race lbl_1_bss_8B3A0;
+extern Fn10_4838_Config lbl_1_bss_9F8[];
+extern u32 fn_1_15BBC4(void);
+extern void fn_1_12EF80(u32 mode, void *out1, void *out2);
+extern u8 fn_1_B7C00(void);
+extern s32 fn_1_B7F58(s64 *time);
+extern s32 fn_1_4C10(void);
+extern u8 fn_10_26000(void);
+extern void fn_1_14BD44(void *, u8);
+extern void fn_1_4A00(s32, u8, u32);
+extern void fn_1_12F17C(void);
+
+void fn_10_4838(void) {
+    u32 button;
+    Fn10_4838_Race *race;
+    s32 done;
+    s64 time;
+    s16 kind;
+    u16 extra;
+
+    button = fn_1_15BBC4();
+    fn_1_12EF80(lbl_10_bss_55CE0[0], &kind, &extra);
+    if (fn_1_B7C00() != 0) {
+        return;
+    }
+    if (((u16)button == 0 && kind == 1) || ((u16)button == 1 && kind == 2) || ((u16)button == 2 && kind == 3) ||
+        ((u16)button == 3 && kind == 4) || ((u16)button == 4 && kind == 5)) {
+        if (fn_1_B7F58(&time) != 0) {
+            lbl_1_bss_8B3A0.unk_A4->unk_22 = 1;
+        }
+    }
+
+    if (lbl_10_bss_14 == -1) {
+        fn_1_4C10();
+    }
+    if ((lbl_1_bss_8B3A0.unk_140 & 0x80000000) != 0 && (lbl_1_bss_8B3A0.unk_140 & 0x40000000) == 0 &&
+        (lbl_1_bss_8B3A0.unk_94 & 8) == 0) {
+        done = 1;
+    } else if (fn_1_4C10() != 0) {
+        done = 1;
+    } else {
+        done = 0;
+    }
+    if (done != 0) {
+        return;
+    }
+
+    if (lbl_10_bss_14 != -1) {
+        s32 value = lbl_10_bss_14;
+        lbl_10_bss_14 = -1;
+        lbl_1_bss_96A = value;
+        return;
+    }
+
+    race = &lbl_1_bss_8B3A0;
+    if (race->unk_A4->unk_22 == 0) {
+        done = fn_10_26000();
+    } else {
+        fn_1_14BD44(lbl_10_bss_55CE0, race->unk_9E);
+        done = 0;
+    }
+    if (done != 0) {
+        return;
+    }
+    if ((u16)button != 0xFFFF) {
+        return;
+    }
+    if (((lbl_1_bss_9F8[lbl_1_bss_8B3A0.unk_9E].unk_8 >> 9) & 1) == 0) {
+        return;
+    }
+    if (race->unk_A4->unk_22 != 0) {
+        race->unk_A4->unk_22 = 0;
+        return;
+    }
+    lbl_10_bss_14 = 15;
+    fn_1_4A00(0, lbl_10_bss_4938C, lbl_10_bss_49388);
+    lbl_10_bss_51744 = 0;
+    fn_1_12F17C();
+}
+/* fzgx:end fn_10_4838 */
+
 /* fzgx:begin fn_10_4A84 */
 extern s32 lbl_10_bss_51740;
 extern s32 lbl_10_bss_49388;

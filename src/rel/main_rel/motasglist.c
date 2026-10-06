@@ -400,6 +400,164 @@ void fn_1_426E4(Fn1426E4Object *object, void *value) {
 }
 /* fzgx:end fn_1_426E4 */
 
+/* fzgx:begin fn_1_42AD0 noprologue */
+#include "types.h"
+
+typedef struct Fn1_42AD0_Vec {
+    f32 x;
+    f32 y;
+    f32 z;
+} Fn1_42AD0_Vec;
+
+typedef struct Fn1_42AD0_Key16 {
+    u16 cur[3];
+    u16 prev[3];
+} Fn1_42AD0_Key16;
+
+typedef struct Fn1_42AD0_Key32 {
+    s32 cur[3];
+    s32 prev[3];
+} Fn1_42AD0_Key32;
+
+typedef struct Fn1_42AD0_Bone {
+    u8 pad_0[0x88];
+    f32 mtx[3][4];
+    Fn1_42AD0_Vec pos;
+    Fn1_42AD0_Vec scale;
+    u8 pad_D0[0x4];
+    Fn1_42AD0_Key16 rot[3];
+    Fn1_42AD0_Key16 rot2[3];
+    Fn1_42AD0_Key32 trans[3];
+    u8 pad_164[0x10];
+    Fn1_42AD0_Vec prev_pos;
+    Fn1_42AD0_Vec prev_scale;
+} Fn1_42AD0_Bone;
+
+typedef struct Fn1_42AD0_Anim {
+    u16 unk_0;
+    u16 start;
+    u16 end;
+    u16 unk_6;
+    f32 speed;
+    f32 frame;
+    f32 unk_10;
+    u8 pad_14[0x4];
+} Fn1_42AD0_Anim;
+
+typedef struct Fn1_42AD0_Skel {
+    u16 count;
+    u16 flags;
+    u8 pad_4[0x4];
+    Fn1_42AD0_Bone *bones;
+    u8 pad_C[0x20];
+    f32 blend_frames;
+    Fn1_42AD0_Vec root;
+    u8 pad_3C[0x4];
+    Fn1_42AD0_Anim anim;
+    Fn1_42AD0_Anim prev_anim;
+} Fn1_42AD0_Skel;
+
+extern void fn_1_4270C(Fn1_42AD0_Skel *, void *, u32);
+extern void fn_1_433A4(Fn1_42AD0_Anim *, Fn1_42AD0_Anim *);
+extern void lbl_8006DBAC(f32 (*mtx)[4]);
+extern void fn_8006E5FC(void *);
+
+void fn_1_42AD0(Fn1_42AD0_Skel *skel, void *data, u32 arg2, u16 blend, u32 flags) {
+    f32 progress;
+    f32 length;
+    f32 start;
+    f32 new_length;
+    s32 i;
+    Fn1_42AD0_Bone *bone;
+    s32 keep;
+    u16 mode;
+
+    if (blend == 0 || (skel->flags & 0x100)) {
+        fn_1_4270C(skel, data, arg2);
+        return;
+    }
+    start = skel->anim.start;
+    length = (f32)skel->anim.end - start;
+    progress = (skel->anim.frame - start) / length;
+    fn_1_433A4(&skel->prev_anim, &skel->anim);
+    keep = flags & 2;
+    mode = flags;
+    if (keep) {
+        for (i = 0; i < skel->count; i++) {
+            bone = &skel->bones[i];
+            bone->rot[0].prev[0] = bone->rot[0].cur[0];
+            bone->rot[1].prev[0] = bone->rot[1].cur[0];
+            bone->rot[2].prev[0] = bone->rot[2].cur[0];
+            bone->trans[0].prev[0] = bone->trans[0].cur[0];
+            bone->trans[1].prev[0] = bone->trans[1].cur[0];
+            bone->trans[2].prev[0] = bone->trans[2].cur[0];
+            bone->rot2[0].prev[0] = bone->rot2[0].cur[0];
+            bone->rot2[1].prev[0] = bone->rot2[1].cur[0];
+            bone->rot2[2].prev[0] = bone->rot2[2].cur[0];
+            bone->rot[0].prev[1] = bone->rot[0].cur[1];
+            bone->rot[1].prev[1] = bone->rot[1].cur[1];
+            bone->rot[2].prev[1] = bone->rot[2].cur[1];
+            bone->trans[0].prev[1] = bone->trans[0].cur[1];
+            bone->trans[1].prev[1] = bone->trans[1].cur[1];
+            bone->trans[2].prev[1] = bone->trans[2].cur[1];
+            bone->rot2[0].prev[1] = bone->rot2[0].cur[1];
+            bone->rot2[1].prev[1] = bone->rot2[1].cur[1];
+            bone->rot2[2].prev[1] = bone->rot2[2].cur[1];
+            bone->rot[0].prev[2] = bone->rot[0].cur[2];
+            bone->rot[1].prev[2] = bone->rot[1].cur[2];
+            bone->rot[2].prev[2] = bone->rot[2].cur[2];
+            bone->trans[0].prev[2] = bone->trans[0].cur[2];
+            bone->trans[1].prev[2] = bone->trans[1].cur[2];
+            bone->trans[2].prev[2] = bone->trans[2].cur[2];
+            bone->rot2[0].prev[2] = bone->rot2[0].cur[2];
+            bone->rot2[1].prev[2] = bone->rot2[1].cur[2];
+            bone->rot2[2].prev[2] = bone->rot2[2].cur[2];
+        }
+    } else {
+        for (i = 0; i < skel->count; i++) {
+            bone = &skel->bones[i];
+            lbl_8006DBAC(bone->mtx);
+            fn_8006E5FC((u8 *)bone + 0x164);
+            bone->prev_pos = bone->pos;
+            bone->prev_scale = bone->scale;
+        }
+    }
+    fn_1_4270C(skel, data, arg2);
+    new_length = (s32)(skel->anim.end - skel->anim.start);
+    if (keep) {
+        skel->flags |= 1;
+        skel->prev_anim.speed *= length / new_length;
+    }
+    if (mode & 0x20) {
+        skel->flags |= 0x400;
+    }
+    if (mode & 0x80) {
+        skel->flags |= 0x800;
+    }
+    if (mode & 0x40) {
+        skel->flags |= 0x200;
+    }
+    if (mode & 1) {
+        f32 offset = new_length * progress;
+
+        skel->anim.frame = (f32)skel->anim.start + offset;
+    }
+    if (mode & 4) {
+        skel->flags |= 0x20;
+    }
+    if (mode & 8) {
+        skel->flags |= 0x40;
+    }
+    if (mode & 0x10) {
+        skel->flags |= 0x80;
+    }
+    skel->blend_frames = blend;
+    skel->root.x = skel->bones->mtx[0][3];
+    skel->root.y = skel->bones->mtx[1][3];
+    skel->root.z = skel->bones->mtx[2][3];
+}
+/* fzgx:end fn_1_42AD0 */
+
 /* fzgx:begin fn_1_42E74 */
 typedef struct Fn142E74Pair {
     u32 a;

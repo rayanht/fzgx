@@ -8883,6 +8883,54 @@ void fn_1_C17CC(void) {
 }
 /* fzgx:end fn_1_C17CC */
 
+/* fzgx:begin fn_1_C1ACC noprologue */
+#include "types.h"
+#include "rel/main_rel/globals.h"
+#include "rel/main_rel/memcard.h"
+
+extern void *lbl_801A6410;
+
+typedef struct Fn1_C1ACC_Entry {
+    u8 pad_0[0x2C];
+    u32 data;
+} Fn1_C1ACC_Entry;
+
+extern void fn_1_46B4(u32, u32, const char *, int);
+extern void fn_80008BEC(void *, int, u32);
+
+// The headers carry provisional types: a heap-handle table, the source-file string, and two 0x80-entry lists.
+#define fn_1_C1ACC_heap (((u32 *)&lbl_801A6410)[0])
+#define fn_1_C1ACC_file ((const char *)&lbl_1_data_3C7B8)
+#define fn_1_C1ACC_lists ((Fn1_C1ACC_Entry (*)[0x80])&lbl_1_bss_77380)
+
+void fn_1_C1ACC(void *arg0, Fn1_C1ACC_Entry *entry) {
+    s32 index;
+    s32 list;
+    s32 i;
+
+    if (entry->data != 0) {
+        fn_1_46B4(fn_1_C1ACC_heap, entry->data, fn_1_C1ACC_file, 0x32F8);
+        entry->data = 0;
+    }
+    for (i = 0; i < 0x7F; i++) {
+        if (&fn_1_C1ACC_lists[0][i] == entry) {
+            index = i;
+            list = 0;
+            break;
+        }
+        if (&fn_1_C1ACC_lists[1][i] == entry) {
+            index = i;
+            list = 1;
+            break;
+        }
+    }
+    for (i = index; i < 0x7E; i++) {
+        fn_1_C1ACC_lists[list][i] = fn_1_C1ACC_lists[list][i + 1];
+    }
+    fn_80008BEC(&fn_1_C1ACC_lists[list][0x7E], 0, sizeof(Fn1_C1ACC_Entry));
+}
+/* fzgx:end fn_1_C1ACC */
+
 /* fzgx:begin fn_1_C23CC */
 extern void fn_80008BA8(void *arg0, void *arg1, u32 arg2);
 

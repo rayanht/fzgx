@@ -396,8 +396,6 @@ int fn_1_17C6C(int current, int next, int limit) {
 /* fzgx:end fn_1_17C6C */
 
 /* fzgx:begin fn_1_17D5C */
-
-
 void fn_1_17D5C(Node *node, u32 *acc) {
     Node *root;
     s32 i1;
@@ -1070,8 +1068,6 @@ void fn_1_1902C(StcoliNode *root, StcoliVec *vec, void *arg3, f32 value) {
 /* fzgx:end fn_1_1902C */
 
 /* fzgx:begin fn_1_20258 */
-
-
 typedef struct Fn_1_20258 {
     unsigned char pad00[0x30];
     f32 field30;
@@ -1174,7 +1170,6 @@ int fn_1_20994(void *arg, f32 *out) {
 /* fzgx:end fn_1_20994 */
 
 /* fzgx:begin fn_1_21644 */
-
 void *fn_1_21644(void *arg0, f32 *arg1, void *arg2) {
     int local;
 
@@ -1265,6 +1260,73 @@ void fn_1_21CA0(Fn_1_21CA0 *self, void *arg) {
     fn_1_21950(arg, value1, value2);
 }
 /* fzgx:end fn_1_21CA0 */
+
+/* fzgx:begin fn_1_21CFC noprologue */
+#include "types.h"
+#include "dolphin/hw_regs.h"
+
+typedef struct {
+    f32 x;
+    f32 y;
+    f32 z;
+} fn_1_21CFC_Vec;
+
+extern void fn_1_18214();
+extern const f32 lbl_1_rodata_6D0; /* 0.0f */
+extern const f32 lbl_1_rodata_6E8; /* 0.5f */
+extern f32 lbl_8006D188(s16 angle);
+extern void lbl_8006E1B0(fn_1_21CFC_Vec *src, fn_1_21CFC_Vec *dst);
+extern void lbl_8006DAEC(void);
+extern void lbl_8006DCA4(void);
+extern void fn_80072558(void);
+extern void fn_8003462C(u32 type, u32 fmt, u32 count);
+extern void lbl_8006DB30(void);
+
+/* fzgx-allow: A1 GX FIFO write port; retail materialises it as lis 0xcc01/stfs -0x8000 */
+#define STCOLI_GX_WRITE_F32(v) (*(volatile f32 *)(GX_FIFO_BASE + 0x0) = (v)) /* Hardware access must remain ordered. */
+
+static inline void fn_1_21CFC_Position3f32(f32 x, f32 y, f32 z) {
+    STCOLI_GX_WRITE_F32(x);
+    STCOLI_GX_WRITE_F32(y);
+    STCOLI_GX_WRITE_F32(z);
+}
+
+void fn_1_21CFC(void *entity, fn_1_21CFC_Vec *scale, f32 t) {
+    f32 y;
+    f32 z;
+    fn_1_21CFC_Vec points[16];
+    fn_1_21CFC_Vec *point;
+    s32 i;
+    s32 angle;
+
+    fn_1_18214(entity, scale, NULL, t);
+    z = lbl_1_rodata_6D0;
+    point = points;
+    for (i = 0, angle = 0; i < 16; i++, angle += 0x1000) {
+        y = lbl_1_rodata_6E8 * lbl_8006D188(angle + 0x4000);
+        point->x = lbl_1_rodata_6E8 * lbl_8006D188(angle);
+        point->y = y;
+        point->z = z;
+        point->x *= scale->x;
+        point->y *= scale->y;
+        lbl_8006E1B0(point, point);
+        point++;
+    }
+    lbl_8006DAEC();
+    lbl_8006DCA4();
+    fn_80072558();
+    point = points;
+    fn_8003462C(0xB0, 0, 17);
+    for (i = 0; i < 16; i++) {
+        fn_1_21CFC_Position3f32(point->x, point->y, point->z);
+        point++;
+    }
+    STCOLI_GX_WRITE_F32(points[0].x);
+    STCOLI_GX_WRITE_F32(points[0].y);
+    STCOLI_GX_WRITE_F32(points[0].z);
+    lbl_8006DB30();
+}
+/* fzgx:end fn_1_21CFC */
 
 /* fzgx:begin fn_1_22E8C */
 typedef struct Fn_1_22E8CInput {
@@ -2487,6 +2549,185 @@ int fn_1_2A694(O *self, void *arg1, V *swap, u32 mask, V *out0, V *out1) {
 #pragma opt_propagation reset
 /* fzgx:end fn_1_2A694 */
 
+/* fzgx:begin fn_1_2A8D0 noprologue */
+#include "types.h"
+
+typedef struct Fn1_2A8D0_Vec {
+    f32 x;
+    f32 y;
+    f32 z;
+} Fn1_2A8D0_Vec;
+
+typedef struct Fn1_2A8D0_Node {
+    u8 pad_0[0x98];
+    u32 unk_98;
+    u32 unk_9C;
+} Fn1_2A8D0_Node;
+
+typedef struct Fn1_2A8D0_Self {
+    u32 flags;
+    s16 id;
+    u8 pad_6[0x8E];
+    f32 unk_94;
+    f32 unk_98;
+    f32 unk_9C;
+    f32 unk_A0;
+    f32 unk_A4;
+    f32 unk_A8;
+    u8 pad_AC[0xD0];
+    f32 unk_17C;
+    u8 pad_180[0x4];
+    f32 unk_184;
+    u8 pad_188[0x9C];
+    f32 unk_224;
+    u8 pad_228[0x24C];
+    u8 unk_474;
+    u8 pad_475[0x23];
+    u32 unk_498;
+    Fn1_2A8D0_Node *unk_49C;
+    u8 pad_4A0[0xEC];
+    u32 unk_58C;
+} Fn1_2A8D0_Self;
+
+typedef struct Fn1_2A8D0_Shape {
+    u8 pad_0[0xC];
+    Fn1_2A8D0_Vec unk_C;
+    Fn1_2A8D0_Vec unk_18;
+} Fn1_2A8D0_Shape;
+
+typedef struct Fn1_2A8D0_Result {
+    u8 pad_0[0x40];
+    u32 unk_40;
+    u8 pad_44[0x1C];
+    Fn1_2A8D0_Vec unk_60;
+    u8 pad_6C[0xC];
+    u32 unk_78;
+    u8 pad_7C[0xC];
+    u32 unk_88;
+    u8 pad_8C[0x1C];
+    Fn1_2A8D0_Vec unk_A8;
+    u8 pad_B4[0xC];
+    u32 unk_C0;
+    u8 pad_C4[0xC];
+    u32 unk_D0;
+    u8 pad_D4[0x1C];
+    Fn1_2A8D0_Vec unk_F0;
+    u8 pad_FC[0xC];
+    u32 unk_108;
+    u8 pad_10C[0x54];
+    u32 unk_160;
+    u8 pad_164[0x1C];
+    Fn1_2A8D0_Vec unk_180;
+} Fn1_2A8D0_Result;
+
+typedef struct Fn1_2A8D0_Actor {
+    u8 pad_0[0x390];
+    u32 unk_390;
+} Fn1_2A8D0_Actor;
+
+extern void lbl_8006E1B0(Fn1_2A8D0_Shape *, Fn1_2A8D0_Vec *);
+extern void lbl_8006DAEC(void);
+extern void lbl_8006DB30(void);
+extern s32 fn_1_15578(Fn1_2A8D0_Vec *, Fn1_2A8D0_Vec *, f32 *, Fn1_2A8D0_Vec *, u32, u32 *, u32, u32 *, u32,
+                      Fn1_2A8D0_Self *);
+extern Fn1_2A8D0_Result *fn_1_14F04(void);
+extern Fn1_2A8D0_Actor *fn_1_868C0(s8);
+extern void fn_1_F7338(s8, s32, s32);
+
+s32 fn_1_2A8D0(Fn1_2A8D0_Self *self, Fn1_2A8D0_Shape *shape, u32 *swap, u32 mask, Fn1_2A8D0_Vec *points,
+               u32 *ids, u32 *hits, u32 bit) {
+    Fn1_2A8D0_Vec normal;
+    Fn1_2A8D0_Vec pos;
+    f32 dist;
+    s32 status;
+    Fn1_2A8D0_Result *result;
+    Fn1_2A8D0_Actor *actor;
+    u32 tmp;
+
+    lbl_8006E1B0(shape, &shape->unk_18);
+    lbl_8006DAEC();
+    pos = shape->unk_18;
+    status = fn_1_15578(&pos, &shape->unk_C, &dist, &normal, mask, &self->unk_49C->unk_9C, self->unk_49C->unk_98,
+                        swap, self->unk_498, self);
+    lbl_8006DB30();
+    if (swap != NULL) {
+        tmp = swap[0];
+        swap[0] = swap[1];
+        swap[1] = tmp;
+    }
+
+    points[0].x = 0.0f;
+    points[0].y = 0.0f;
+    points[0].z = 0.0f;
+    points[1].x = 0.0f;
+    points[1].y = 0.0f;
+    points[1].z = 0.0f;
+    points[2].x = 0.0f;
+    points[2].y = 0.0f;
+    points[2].z = 0.0f;
+    points[3].x = 0.0f;
+    points[3].y = 0.0f;
+    points[3].z = 0.0f;
+    ids[3] = 0;
+    ids[2] = 0;
+    ids[1] = 0;
+    ids[0] = 0;
+    if (status != 0) {
+    result = fn_1_14F04();
+    if (result->unk_D0 != 0) {
+        points[0] = result->unk_F0;
+        ids[0] = result->unk_108;
+        hits[0] |= bit;
+    }
+    if (result->unk_88 != 0) {
+        points[1] = result->unk_A8;
+        ids[1] = result->unk_C0;
+        hits[1] |= bit;
+    }
+    if (result->unk_160 != 0) {
+        if (result->unk_160 & 0x100) {
+            self->flags |= 0x800;
+            status = 0;
+        } else if (result->unk_160 & 0x600) {
+            points[2] = result->unk_180;
+            actor = fn_1_868C0(self->id);
+            if (!(self->unk_58C & 0x10)) {
+                if ((s8)self->unk_474 != -1) {
+                    fn_1_F7338((s8)self->unk_474, 2, 30);
+                }
+                self->flags |= 0x800;
+                self->flags |= 0x80;
+                self->flags |= 0x800000;
+                self->flags |= 0x40000000;
+                self->unk_58C |= 0x10;
+                self->unk_184 = 0.0f;
+                self->unk_224 = 0.0f;
+                self->unk_94 = 0.0f;
+                self->unk_98 = 0.0f;
+                self->unk_9C = 0.0f;
+                self->unk_A0 = 0.0f;
+                self->unk_A4 = 0.0f;
+                self->unk_A8 = 0.0f;
+                self->unk_17C = 0.0f;
+                self->unk_58C &= ~0x80;
+                actor->unk_390 &= ~0x200000;
+                actor->unk_390 |= 0x1000000;
+            }
+        } else {
+            points[2] = result->unk_180;
+        }
+        hits[2] |= bit;
+    }
+    if (result->unk_40 != 0) {
+        points[3] = result->unk_60;
+        ids[3] = result->unk_78;
+        hits[3] |= bit;
+    }
+    }
+    return status;
+}
+/* fzgx:end fn_1_2A8D0 */
+
 /* fzgx:begin fn_1_2B478 */
 struct fn_1_2B478_Arg0 {
     u8 pad_0[0x1C8];
@@ -2513,7 +2754,6 @@ f32 fn_1_2B478(void *arg0) {
 /* fzgx:end fn_1_2B478 */
 
 /* fzgx:begin fn_1_2C688 */
-
 u32 fn_1_2C688(u32 arg0, u32 arg1, u32 arg2) {
     u32 v1;
     s32 v0;

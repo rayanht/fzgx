@@ -2200,6 +2200,66 @@ void fn_1_51C74(fn_1_51C74_FontData *obj) {
 #pragma opt_common_subs reset
 /* fzgx:end fn_1_51C74 */
 
+/* fzgx:begin fn_1_51E60 noprologue */
+#include "types.h"
+#include "font.h"
+
+extern u16 fn_1_A5D88(void);
+extern u16 fn_1_A5DB0(void);
+extern void fn_80038F10(f32 *viewport);
+
+static inline f32 fn_1_51E60_x(f32 x) {
+    f32 viewport[6];
+    f32 left;
+    f32 width;
+
+    fn_80038F10(viewport);
+    left = viewport[0];
+    width = viewport[2];
+    return x * width / fn_1_A5D88() + 640.0f * left / fn_1_A5D88();
+}
+
+static inline f32 fn_1_51E60_y(f32 y) {
+    f32 viewport[6];
+    f32 top;
+    f32 height;
+
+    fn_80038F10(viewport);
+    top = viewport[1];
+    height = viewport[3];
+    return y * height / fn_1_A5DB0() + 480.0f * top / fn_1_A5DB0();
+}
+
+static inline f32 fn_1_51E60_w(f32 w) {
+    f32 viewport[6];
+    f32 width;
+
+    fn_80038F10(viewport);
+    width = viewport[2];
+    return w * width / fn_1_A5D88();
+}
+
+static inline f32 fn_1_51E60_h(f32 h) {
+    f32 viewport[6];
+    f32 height;
+
+    fn_80038F10(viewport);
+    height = viewport[3];
+    return h * height / fn_1_A5DB0();
+}
+
+void fn_1_51E60(FontDrawPacket *src) {
+    FontDrawPacket packet;
+
+    packet = *src;
+    packet.x = fn_1_51E60_x(packet.x);
+    packet.y = fn_1_51E60_y(packet.y);
+    packet.scale_x = fn_1_51E60_w(packet.scale_x);
+    packet.scale_y = fn_1_51E60_h(packet.scale_y);
+    fn_1_4F734(&packet);
+}
+/* fzgx:end fn_1_51E60 */
+
 /* fzgx:begin fn_1_52070 */
 void fn_1_52070(u32 value) {
     lbl_1_bss_4E6A8 = 1;
@@ -2541,6 +2601,69 @@ void fn_1_530C8(void * arg0) {
 }
 #pragma opt_propagation reset
 /* fzgx:end fn_1_530C8 */
+
+/* fzgx:begin fn_1_535A0 noprologue */
+#include "types.h"
+#include "font.h"
+
+typedef struct Fn1_535A0_Color {
+    u8 r;
+    u8 g;
+    u8 b;
+    u8 a;
+} Fn1_535A0_Color;
+
+extern const FontDrawPacket lbl_1_rodata_26F8; /* default glyph packet */
+
+/* font.h declares the packet colour as u8[4]; it holds a GXColor */
+#define FN_1_535A0_COLOR(packet) (*(Fn1_535A0_Color *)(packet).color)
+
+void fn_1_535A0(Fn1_535A0_Color color, f32 x, f32 y, f32 z, f32 width, f32 height, f32 thickness) {
+    FontDrawPacket packet;
+
+    packet = lbl_1_rodata_26F8;
+    packet.image = 0x12;
+    packet.x = x;
+    packet.y = y;
+    packet.z = z;
+    packet.scale_x *= width / 8.0f;
+    packet.scale_y *= thickness / 8.0f;
+    FN_1_535A0_COLOR(packet) = color;
+    fn_1_4F734(&packet);
+
+    packet = lbl_1_rodata_26F8;
+    packet.image = 0x12;
+    packet.x = x;
+    packet.y = y;
+    packet.z = z;
+    packet.scale_x *= thickness / 8.0f;
+    packet.scale_y *= height / 8.0f;
+    FN_1_535A0_COLOR(packet) = color;
+    fn_1_4F734(&packet);
+
+    packet = lbl_1_rodata_26F8;
+    packet.image = 0x12;
+    packet.x = x;
+    packet.y = y + height;
+    packet.z = z;
+    packet.scale_x *= width / 8.0f;
+    packet.scale_y *= thickness / 8.0f;
+    packet.flags = 0xD;
+    FN_1_535A0_COLOR(packet) = color;
+    fn_1_4F734(&packet);
+
+    packet = lbl_1_rodata_26F8;
+    packet.image = 0x12;
+    packet.x = x + width;
+    packet.y = y;
+    packet.z = z;
+    packet.scale_x *= thickness / 8.0f;
+    packet.scale_y *= height / 8.0f;
+    packet.flags = 0x7;
+    FN_1_535A0_COLOR(packet) = color;
+    fn_1_4F734(&packet);
+}
+/* fzgx:end fn_1_535A0 */
 
 /* fzgx:begin fn_1_5415C */
 void fn_1_5415C(void *arg, s32 value) {

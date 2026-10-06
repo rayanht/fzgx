@@ -294,6 +294,109 @@ void fn_3_BEF0(void) {
 }
 /* fzgx:end fn_3_BEF0 */
 
+/* fzgx:begin fn_3_BF1C noprologue */
+#include "types.h"
+#include "sdk_addresses.h"
+
+typedef struct Fn3_BF1C_Color {
+    u8 r;
+    u8 g;
+    u8 b;
+    u8 a;
+} Fn3_BF1C_Color;
+
+typedef union {
+    u8 u8;
+    u16 u16;
+    u32 u32;
+    u64 u64;
+    s8 s8;
+    s16 s16;
+    s32 s32;
+    s64 s64;
+    f32 f32;
+    f64 f64;
+} PPCWGPipe;
+
+// Hardware or OS state can change asynchronously.
+volatile PPCWGPipe
+    GXFIFO : FZGX_ADDR_GXFIFO; // fzgx-allow: S2 SDK asynchronous state
+
+extern s32 lbl_3_bss_A1798;
+extern s32 lbl_3_data_1A14[1];
+extern u8 lbl_3_bss_7ED58[];
+extern void fn_1_4FD64(void);
+extern void fn_80074918(s32, s32, s32);
+extern void fn_80074788(s32);
+extern void fn_80074660(s32);
+extern void fn_80073678(s32);
+extern void fn_80073C6C(s32);
+extern void fn_800747D0(s32, s32, s32, s32, s32, s32, s32);
+extern void fn_80072AB0(s32, s32, s32);
+extern void fn_800734A8(s32, s32, s32, s32);
+extern void fn_80072C24(s32, s32, s32, s32, s32);
+extern void fn_80072D64(s32, s32, s32, s32, s32, s32);
+extern void fn_80072CC4(s32, s32, s32, s32, s32);
+extern void fn_80072E20(s32, s32, s32, s32, s32, s32);
+extern void fn_800728A8(s32, s32, s32, s32);
+extern void fn_80072864(s32);
+extern void fn_8007245C(s32);
+extern void fn_800371F8(s32, Fn3_BF1C_Color);
+extern void fn_8003462C(s32, s32, s32);
+extern u8 fn_1_B7C00(void);
+extern void fn_1_BC310(void *);
+
+void fn_3_BF1C(void) {
+    s32 mode;
+
+    if (lbl_3_bss_A1798 == 0) {
+        return;
+    }
+    fn_1_4FD64();
+    fn_80074918(0, 7, 0);
+    fn_80074788(1);
+    fn_80074660(0);
+    fn_80073678(1);
+    fn_80073C6C(0);
+    fn_800747D0(4, 0, 0, 0, 0, 2, 2);
+    fn_80072AB0(0, 0, 0);
+    fn_800734A8(0, 0xFF, 0xFF, 4);
+    fn_80072C24(0, 0xF, 0xF, 0xF, 2);
+    fn_80072D64(0, 0, 0, 0, 1, 0);
+    fn_80072CC4(0, 7, 7, 7, 1);
+    fn_80072E20(0, 0, 0, 0, 1, 0);
+    fn_800728A8(1, 4, 5, 0);
+    fn_80072864(2);
+    fn_8007245C(0x200);
+    {
+        Fn3_BF1C_Color color = {0x00, 0x00, 0x00, 0xA0};
+
+        fn_800371F8(1, color);
+    }
+    fn_8003462C(0x80, 7, 4);
+    GXFIFO.f32 = 0.0f;
+    GXFIFO.f32 = 0.0f;
+    GXFIFO.f32 = -1.0f;
+    GXFIFO.f32 = 640.0f;
+    GXFIFO.f32 = 0.0f;
+    GXFIFO.f32 = -1.0f;
+    GXFIFO.f32 = 640.0f;
+    GXFIFO.f32 = 480.0f;
+    GXFIFO.f32 = -1.0f;
+    GXFIFO.f32 = 0.0f;
+    GXFIFO.f32 = 480.0f;
+    GXFIFO.f32 = -1.0f;
+    if (fn_1_B7C00() != 0) {
+        return;
+    }
+    mode = lbl_3_data_1A14[0];
+    if (mode == 5 || (u32)(mode - 2) <= 1 || mode == 4) {
+        return;
+    }
+    fn_1_BC310(lbl_3_bss_7ED58);
+}
+/* fzgx:end fn_3_BF1C */
+
 /* fzgx:begin fn_3_C128 */
 extern u32 lbl_3_bss_7ED58[18];
 extern u32 lbl_3_bss_A179C;

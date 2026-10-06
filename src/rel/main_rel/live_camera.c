@@ -702,6 +702,152 @@ void fn_1_E174(f32 arg0) {
 #pragma opt_lifetimes reset
 /* fzgx:end fn_1_E174 */
 
+/* fzgx:begin fn_1_EBE4 noprologue */
+#include "types.h"
+
+typedef struct Fn1_EBE4_Vec {
+    f32 x;
+    f32 y;
+    f32 z;
+} Fn1_EBE4_Vec;
+
+typedef struct Fn1_EBE4_Camera {
+    u8 mode;
+    u8 unk_1;
+    u8 pad_2[0x4];
+    s16 unk_6;
+    s16 unk_8;
+    u8 pad_A[0x2];
+    u32 flags;
+    s16 unk_10;
+    s16 unk_12;
+    s16 unk_14;
+    u8 pad_16[0x2];
+    s32 unk_18;
+    Fn1_EBE4_Vec unk_1C;
+    Fn1_EBE4_Vec unk_28;
+    u8 pad_34[0x28];
+    s16 unk_5C;
+    u8 pad_5E[0x2];
+    f32 unk_60;
+    s16 unk_64;
+    u8 pad_66[0x4];
+    s16 unk_6A;
+} Fn1_EBE4_Camera;
+
+typedef struct Fn1_EBE4_State {
+    u8 unk_0;
+    u8 pad_1[0xB];
+    f32 unk_C;
+    u8 pad_10[0x4];
+    u8 unk_14;
+    u8 pad_15[0x64F];
+    u8 unk_664;
+    u8 pad_665[0x1];
+    s16 unk_666;
+    s32 unk_668;
+    u8 unk_66C;
+    u8 pad_66D[0x3];
+    s32 unk_670;
+    s32 unk_674;
+    u8 unk_678;
+} Fn1_EBE4_State;
+
+typedef struct Fn1_EBE4_Config {
+    u8 pad_0[0xD0];
+    s32 courses[26];
+    u8 pad_138[0x10];
+    s16 unk_148;
+    s16 unk_14A;
+    s16 unk_14C;
+} Fn1_EBE4_Config;
+
+typedef struct Fn1_EBE4_Sound {
+    void **handle;
+} Fn1_EBE4_Sound;
+
+extern Fn1_EBE4_State lbl_1_bss_1148;
+extern Fn1_EBE4_Config lbl_1_data_43B8;
+extern s16 lbl_1_bss_960;
+extern u8 lbl_1_bss_6F243;
+extern Fn1_EBE4_Sound lbl_1_bss_6EAD0;
+extern s16 fn_1_7B054(void);
+extern void fn_1_10138(Fn1_EBE4_Camera *);
+extern void fn_1_8840(void);
+extern void fn_1_A1588(void *, s32);
+extern void fn_1_A1CE8(u8);
+extern s32 fn_1_F2F34(void);
+
+void fn_1_EBE4(Fn1_EBE4_Camera *camera, s16 id, s32 replay, f32 fov) {
+    Fn1_EBE4_State *state;
+    Fn1_EBE4_Config *config;
+    s32 *course;
+    u32 i;
+
+    config = &lbl_1_data_43B8;
+    state = &lbl_1_bss_1148;
+
+    state->unk_666 = 0;
+    state->unk_668 = -1;
+    config->unk_14C = 60;
+    state->unk_C = 0.0f;
+    state->unk_14 = 0;
+    state->unk_0 = 0;
+    state->unk_66C = 0;
+    camera->flags &= ~0x80000;
+    for (i = 0, course = config->courses; i < 26; i++, course++) {
+        if (*course == fn_1_7B054()) {
+            camera->flags |= 0x80000;
+        }
+    }
+
+    if (replay) {
+        camera->mode = 6;
+        camera->unk_12 = 5;
+        camera->unk_14 = 0;
+        camera->unk_18 = 0;
+        camera->unk_10 = 0;
+        fn_1_10138(camera);
+    } else {
+        camera->mode = 5;
+        camera->unk_12 = 2;
+        camera->unk_14 = 9;
+        camera->unk_18 = 0;
+        camera->unk_10 = 0;
+    }
+    camera->unk_1 = 0;
+    camera->unk_64 = 210;
+    camera->unk_6A = 0;
+    camera->flags &= ~0x200000;
+    camera->unk_60 = fov;
+    camera->unk_5C = 0;
+    camera->unk_28 = camera->unk_1C;
+    camera->unk_8 = id;
+    camera->unk_6 = id;
+    state->unk_670 = 0;
+    state->unk_674 = 0;
+    fn_1_8840();
+
+    if (lbl_1_bss_960 == 10 && !replay) {
+        state->unk_664 = 0;
+        state->unk_678 = 2;
+        camera->mode = 0;
+        config->unk_14A = 42;
+        lbl_1_bss_6F243 = 0;
+        if (config->unk_148 != 42) {
+            config->unk_148 = 42;
+        }
+        fn_1_A1588(*lbl_1_bss_6EAD0.handle, 1);
+        fn_1_A1CE8(config->unk_148);
+    } else if (fn_1_F2F34() && !replay) {
+        camera->mode = 0;
+    }
+    if (state->unk_664) {
+        state->unk_678 = 2;
+    }
+}
+/* fzgx:end fn_1_EBE4 */
+
 /* fzgx:begin fn_1_EE04 */
 typedef struct {
     u8 pad[2];

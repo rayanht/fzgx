@@ -452,7 +452,6 @@ extern u32 fn_80008BEC(u32 arg0, int arg1, int arg2);
 extern void fn_1_7F3AC(void* object);
 
 /* fzgx:begin fn_1_1332FC */
-
 typedef struct {
     u32 v[8];
 } Word32;
@@ -500,8 +499,6 @@ void fn_1_1332FC(s32 left, s32 top, u8 page) {
 /* fzgx:end fn_1_1332FC */
 
 /* fzgx:begin fn_1_13354C */
-
-
 typedef struct {
     u32 v[16];
 } Defaults;
@@ -572,7 +569,6 @@ void fn_1_133968(void) {
 /* fzgx:end fn_1_133968 */
 
 /* fzgx:begin fn_1_133A8C */
-
 void fn_1_133A8C(void) {
     FontDrawPacket packet;
     s16 result;
@@ -600,7 +596,6 @@ void fn_1_133A8C(void) {
 /* fzgx:end fn_1_133A8C */
 
 /* fzgx:begin fn_1_133BD8 */
-
 typedef union {
     u32 raw[22];
     struct {
@@ -662,8 +657,6 @@ void fn_1_133DE0(void* arg0) {
 /* fzgx:end fn_1_133DE0 */
 
 /* fzgx:begin fn_1_134A4C */
-
-
 void fn_1_134A4C(void) {
     StaticDispParams params;
 
@@ -677,9 +670,103 @@ void fn_1_134A4C(void) {
 }
 /* fzgx:end fn_1_134A4C */
 
+/* fzgx:begin fn_1_134AD4 noprologue */
+#include "types.h"
+#include "font.h"
+
+extern const FontDrawPacket lbl_1_rodata_26F8; /* default draw packet */
+extern const f32 lbl_1_rodata_861C; /* 0.0f */
+extern const f32 lbl_1_rodata_85F4; /* 100.0f */
+extern const f32 lbl_1_rodata_8658; /* 320.0f */
+extern const f32 lbl_1_rodata_8838; /* 120.0f */
+extern const f32 lbl_1_rodata_883C; /* 436.0f */
+extern const f32 lbl_1_rodata_8840; /* 300.0f */
+extern const f32 lbl_1_rodata_8844; /* -107.0f */
+extern const f32 lbl_1_rodata_8848; /* 121.0f */
+extern const f32 lbl_1_rodata_884C; /* 747.0f */
+extern const f32 lbl_1_rodata_8850; /* 122.0f */
+extern const f32 lbl_1_rodata_885C; /* 0.98f */
+extern const f32 lbl_1_rodata_8854; /* 421.0f */
+extern const f32 lbl_1_rodata_8858; /* 302.0f */
+extern s8 fn_1_A5DC4(void);
+extern u16 fn_1_486C4(u32 image);
+extern u16 fn_1_48690(u32 image);
+
+void fn_1_134AD4(void) {
+    FontDrawPacket packet;
+
+    {
+        packet = lbl_1_rodata_26F8;
+        packet.image = 0x9A04;
+        packet.x = lbl_1_rodata_861C;
+        packet.y = lbl_1_rodata_861C;
+        packet.z = lbl_1_rodata_85F4;
+        fn_1_4F734(&packet);
+    }
+    {
+        packet = lbl_1_rodata_26F8;
+        packet.image = 0x9A05;
+        packet.x = lbl_1_rodata_8658;
+        packet.y = lbl_1_rodata_861C;
+        packet.z = lbl_1_rodata_8838;
+        fn_1_4F734(&packet);
+    }
+    {
+        packet = lbl_1_rodata_26F8;
+        packet.image = 0x9A01;
+        packet.x = lbl_1_rodata_861C;
+        packet.y = lbl_1_rodata_883C;
+        packet.z = lbl_1_rodata_8840;
+        fn_1_4F734(&packet);
+    }
+    if (fn_1_A5DC4()) {
+        {
+            packet = lbl_1_rodata_26F8;
+            packet.image = 0x9A06;
+            fn_1_51678(&packet, packet.image, 0, 0, fn_1_48690(packet.image) / 2, fn_1_486C4(packet.image));
+            packet.x = lbl_1_rodata_8844;
+            packet.y = lbl_1_rodata_861C;
+            packet.z = lbl_1_rodata_8848;
+            fn_1_4F734(&packet);
+        }
+        {
+            packet = lbl_1_rodata_26F8;
+            packet.image = 0x9A06;
+            fn_1_51678(&packet, packet.image, fn_1_48690(packet.image) / 2, 0, fn_1_48690(packet.image) / 2,
+                       fn_1_486C4(packet.image));
+            packet.x = lbl_1_rodata_884C;
+            packet.y = lbl_1_rodata_861C;
+            packet.z = lbl_1_rodata_8850;
+            packet.flags = 7;
+            fn_1_4F734(&packet);
+        }
+        {
+            packet = lbl_1_rodata_26F8;
+            packet.image = 0x9A03;
+            fn_1_51678(&packet, packet.image, 0, 0, fn_1_48690(packet.image) / 2, fn_1_486C4(packet.image));
+            packet.x = lbl_1_rodata_8844;
+            packet.y = lbl_1_rodata_8854;
+            packet.z = lbl_1_rodata_8858;
+            packet.scale_y *= lbl_1_rodata_885C;
+            fn_1_4F734(&packet);
+        }
+        {
+            packet = lbl_1_rodata_26F8;
+            packet.image = 0x9A03;
+            fn_1_51678(&packet, packet.image, fn_1_48690(packet.image) / 2, 0, fn_1_48690(packet.image) / 2,
+                       fn_1_486C4(packet.image));
+            packet.x = lbl_1_rodata_884C;
+            packet.y = lbl_1_rodata_8854;
+            packet.z = lbl_1_rodata_8858;
+            packet.scale_y *= lbl_1_rodata_885C;
+            packet.flags = 7;
+            fn_1_4F734(&packet);
+        }
+    }
+}
+/* fzgx:end fn_1_134AD4 */
+
 /* fzgx:begin fn_1_134EE4 */
-
-
 #pragma opt_strength_reduction on
 void fn_1_134EE4(s32 arg0, s32 arg1, s32 arg2, f32 farg0) {
     FontDrawPacket packet;
@@ -836,10 +923,206 @@ void fn_1_134EE4(s32 arg0, s32 arg1, s32 arg2, f32 farg0) {
 /* fzgx:end fn_1_134EE4 */
 
 /* fzgx:begin fn_1_135894 */
-
 void fn_1_135894(void* arg0, void* arg1, void* arg2, void* arg3, void* arg4, void* arg5, void* arg6, f32 arg7, f32 arg8) { fn_1_135D7C(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, lbl_1_rodata_87DC);
 }
 /* fzgx:end fn_1_135894 */
+
+/* fzgx:begin fn_1_135D7C noprologue */
+#include "types.h"
+#include "font.h"
+
+typedef struct Fn1_135D7C_Entry {
+    u32 flags;
+    u8 pad_4[0x819C];
+    u8 glyph;
+    u8 pad_81A1[0x3];
+    u8 unk_81A4;
+    u8 pad_81A5[0x7];
+    u8 unk_81AC;
+    u8 pad_81AD[0x7];
+    u8 unk_81B4;
+    u8 pad_81B5[0xB];
+} Fn1_135D7C_Entry;
+
+extern char lbl_1_data_41A30[]; /* "%s\n" */
+extern const FontDrawPacket lbl_1_rodata_26F8; /* default glyph packet */
+extern Fn1_135D7C_Entry *fn_1_12F118(void);
+extern Fn1_135D7C_Entry *fn_1_36AD0(void);
+extern void fn_1_49410(void);
+extern void fn_1_495C8(s32);
+extern void fn_1_494DC(s16);
+extern void fn_1_496FC(f32, f32);
+extern void fn_1_4954C(f32);
+extern void fn_1_4955C(f32, f32);
+extern void fn_1_4962C(void);
+extern char *fn_1_14FEAC(u8, u8, u8, char *, u32);
+extern void fn_1_4CF3C(f32, const char *, ...);
+
+#define FN_1_135D7C_DRAW_GLYPH(glyph)                                                                      {                                                                                                          packet = lbl_1_rodata_26F8;                                                                            if ((glyph) < 0) {                                                                                         index = 0;                                                                                         } else {                                                                                                   index = 40;                                                                                            if ((u32)(glyph) <= 40) {                                                                                  index = (glyph);                                                                                   }                                                                                                  }                                                                                                      packet.image = images[index];                                                                          packet.x = x;                                                                                          packet.y = y;                                                                                          packet.z = z;                                                                                          packet.scale_x *= scale_x;                                                                             packet.scale_y *= scale_y;                                                                             packet.flags = type;                                                                                   fn_1_4F734(&packet);                                                                               }
+
+void fn_1_135D7C(s16 x, s16 y, s32 type, s16 glyph, u32 arg4, s16 slot, s32 hidden, f32 scale_x, f32 scale_y,
+                 f32 z) {
+    u32 images[41] = {
+        0x4A00, 0x5400, 0x3800, 0x3E00, 0x3700, 0x5500, 0x3000, 0x3500, 0x3A00, 0x4000, 0x4400,
+        0x5000, 0x3300, 0x2E00, 0x3100, 0x4F00, 0x3900, 0x3D00, 0x4C00, 0x3F00, 0x4800, 0x5200,
+        0x4500, 0x5300, 0x3C00, 0x5600, 0x4300, 0x4200, 0x3200, 0x2F00, 0x3400, 0x3600, 0x4D00,
+        0x4600, 0x4100, 0x5100, 0x4E00, 0x4700, 0x3B00, 0x4B00, 0x4900,
+    };
+    FontDrawPacket packet;
+    char buf[32];
+    u32 index;
+    Fn1_135D7C_Entry *base;
+    Fn1_135D7C_Entry *entry;
+
+    if (glyph < 0) {
+        return;
+    }
+    if (hidden != 0) {
+        return;
+    }
+    if (glyph >= 0x29) {
+        base = fn_1_12F118();
+        if (base == fn_1_36AD0()) {
+            entry = &base[slot];
+        } else {
+            entry = &base[glyph - 0x29];
+        }
+        if (!(entry->flags & 0x40000000)) {
+            glyph = entry->glyph;
+            FN_1_135D7C_DRAW_GLYPH(glyph);
+            return;
+        }
+        fn_1_49410();
+        switch (type) {
+        case 5:
+            fn_1_495C8(0);
+            break;
+        case 6:
+            fn_1_495C8(8);
+            break;
+        case 7:
+            fn_1_495C8(16);
+            break;
+        case 9:
+            fn_1_495C8(1);
+            break;
+        case 10:
+            fn_1_495C8(9);
+            break;
+        case 11:
+            fn_1_495C8(17);
+            break;
+        case 13:
+            fn_1_495C8(2);
+            break;
+        case 14:
+            fn_1_495C8(10);
+            break;
+        case 15:
+            fn_1_495C8(18);
+            break;
+        }
+        fn_1_494DC(0x23);
+        fn_1_496FC(x, y);
+        fn_1_4954C(z);
+        fn_1_4955C(scale_x, scale_y);
+        fn_1_4962C();
+        fn_1_4CF3C(168.0f * scale_x, lbl_1_data_41A30,
+                   fn_1_14FEAC(entry->unk_81A4, entry->unk_81AC, entry->unk_81B4, buf, arg4));
+        return;
+    }
+    FN_1_135D7C_DRAW_GLYPH(glyph);
+}
+/* fzgx:end fn_1_135D7C */
+
+/* fzgx:begin fn_1_136174 noprologue */
+#include "types.h"
+
+typedef struct Fn1_136174_Color {
+    u8 r;
+    u8 g;
+    u8 b;
+    u8 a;
+} Fn1_136174_Color;
+
+typedef struct Fn1_136174_Entry {
+    u32 flags;
+    u8 pad_4[0x819C];
+    u8 glyph;
+    u8 pad_81A1[0x3];
+    u8 unk_81A4;
+    u8 pad_81A5[0x7];
+    u8 unk_81AC;
+    u8 pad_81AD[0x7];
+    u8 unk_81B4;
+    u8 pad_81B5[0xB];
+} Fn1_136174_Entry;
+
+extern char lbl_1_data_41A30[]; /* "%s\n" */
+extern char lbl_1_data_41AB8[]; /* "?????\n" */
+extern const Fn1_136174_Color lbl_1_rodata_8A08; /* {0xB7, 0xCE, 0xEA, 0xFF} */
+extern void fn_1_49410(void);
+extern void fn_1_496FC(f32, f32);
+extern void fn_1_4955C(f32, f32);
+extern void fn_1_49514(Fn1_136174_Color *);
+extern void fn_1_5233C(void);
+extern void fn_1_49738(void (*)(void));
+extern void fn_1_49748(f32);
+extern void fn_1_4954C(f32);
+extern void fn_1_495C8(s32);
+extern void fn_1_4CF3C(f32, const char *, ...);
+extern Fn1_136174_Entry *fn_1_12F118(void);
+extern Fn1_136174_Entry *fn_1_36AD0(void);
+extern char *fn_1_7F49C(s16, s16, char *);
+extern void fn_1_4962C(void);
+extern char *fn_1_14FEAC(u8, u8, u8, char *, s16);
+
+void fn_1_136174(s16 x, s16 y, s32 type, s16 glyph, s16 id, s16 slot, s32 unknown, f32 scale_x, f32 scale_y) {
+    char buf[32];
+    Fn1_136174_Entry *base;
+    Fn1_136174_Entry *entry;
+
+    if (id == 0) {
+        return;
+    }
+    if (glyph < 0) {
+        return;
+    }
+    fn_1_49410();
+    fn_1_496FC(x, y);
+    fn_1_4955C(scale_x, scale_y);
+    {
+        Fn1_136174_Color color = lbl_1_rodata_8A08;
+
+        fn_1_49514(&color);
+    }
+    fn_1_49738(fn_1_5233C);
+    fn_1_49748(1.0f);
+    fn_1_4954C(50.0f);
+    fn_1_495C8(type);
+    if (unknown) {
+        fn_1_4CF3C(122.0f, lbl_1_data_41AB8);
+        return;
+    }
+    if (glyph >= 0x29) {
+        base = fn_1_12F118();
+        if (base == fn_1_36AD0()) {
+            entry = &base[slot];
+        } else {
+            entry = &base[glyph - 0x29];
+        }
+        if (!(entry->flags & 0x40000000)) {
+            fn_1_4CF3C(122.0f, lbl_1_data_41A30, fn_1_7F49C(entry->glyph, id, buf));
+            return;
+        }
+        fn_1_496FC(x, y);
+        fn_1_4962C();
+        fn_1_4CF3C(122.0f, lbl_1_data_41A30, fn_1_14FEAC(entry->unk_81A4, entry->unk_81AC, entry->unk_81B4, buf, id));
+        return;
+    }
+    fn_1_4CF3C(122.0f, lbl_1_data_41A30, fn_1_7F49C(glyph, id, buf));
+}
+/* fzgx:end fn_1_136174 */
 
 /* fzgx:begin fn_1_136714 noprologue */
 #include "types.h"
@@ -1049,7 +1332,6 @@ void fn_1_137288(int index, void* value0, void* value1, void* value2, s16 select
 /* fzgx:end fn_1_137288 */
 
 /* fzgx:begin fn_1_1373B0 */
-
 void fn_1_1373B0(s16 arg0, u8* arg1, u8* arg2, u8* arg3, s16 arg4) {
     struct { u8* value; } base;
     u8* tmp;
@@ -1145,7 +1427,6 @@ void fn_1_13923C(u32 arg0, u32 arg1) {
 /* fzgx:end fn_1_13923C */
 
 /* fzgx:begin fn_1_1392E0 */
-
 typedef struct {
     u8 pad_0[0x54];
     f32 unk_54;
@@ -1196,7 +1477,6 @@ void fn_1_1392E0(Fn1392E0Arg0 *arg0, Fn1392E0Arg1 *arg1) {
 /* fzgx:end fn_1_1392E0 */
 
 /* fzgx:begin fn_1_139A3C */
-
 int fn_1_139A3C(int arg0) {
     s32 index = (s16)arg0;
 
@@ -1329,7 +1609,6 @@ void fn_1_139AEC(Arg0Struct *arg0) {
 /* fzgx:end fn_1_139AEC */
 
 /* fzgx:begin fn_1_139D60 */
-
 /* 0x20-byte stride view of the state table at lbl_1_bss_8B3A0. */
 typedef struct {
     u8 pad_0[0xE];
@@ -1454,6 +1733,84 @@ void fn_1_139F18(Fn139F18Obj* self) {
 }
 /* fzgx:end fn_1_139F18 */
 
+/* fzgx:begin fn_1_13A21C noprologue */
+#include "types.h"
+#include "font.h"
+
+typedef struct fn_1_13A21C_Player {
+    u8 pad_0[0xE];
+    s16 character;
+    u8 pad_10[0x10];
+} fn_1_13A21C_Player;
+
+typedef struct fn_1_13A21C_Obj {
+    s16 player;
+    u8 pad_2[0x1E];
+    u8 *icons;
+    u8 pad_24[0x14];
+    f32 unk_38;
+    f32 unk_3C;
+    f32 unk_40;
+    f32 unk_44;
+    f32 unk_48;
+    f32 unk_4C;
+} fn_1_13A21C_Obj;
+
+extern fn_1_13A21C_Player lbl_1_bss_8B3A0[4];
+extern u8 lbl_1_bss_8CA28;
+extern const FontDrawPacket lbl_1_rodata_26F8; /* default draw packet */
+extern u8 fn_1_141F94(u32 arg0);
+extern void fn_1_8CED0(void *arg0, int arg1, int arg2);
+extern void fn_1_131C08(void);
+extern void fn_1_8D3F8(void *arg0, void *arg1, void *arg2, void *arg3);
+
+void fn_1_13A21C(fn_1_13A21C_Obj *obj) {
+    FontDrawPacket packet;
+    s32 offset;
+    s32 i;
+    s16 character;
+    u8 slot;
+
+    obj->unk_38 = 0.6f;
+    obj->unk_3C = -1.3f;
+    obj->unk_40 = -16.0f;
+    obj->unk_44 = 0.2f;
+    obj->unk_4C = 0.0f;
+    for (i = 0, offset = 0; i < 4; i++) {
+        character = lbl_1_bss_8B3A0[i].character;
+        slot = fn_1_141F94((u8)i);
+        if (character == -1) {
+            continue;
+        }
+        obj->player = i;
+        if (character == 0x20) {
+            obj->unk_48 = 1.12f;
+        } else if (character == 0x27) {
+            obj->unk_48 = 0.6f;
+        } else if (character == 0x1D) {
+            obj->unk_48 = 0.12f;
+        } else {
+            obj->unk_48 = 0.0f;
+        }
+        packet = lbl_1_rodata_26F8;
+        packet.x = (slot % 2) * 0x12D + 0xE3;
+        packet.y = (slot >> 1) * 0xCA + 0xB0;
+        packet.z = 161.0f;
+        packet.flags = 10;
+        if (lbl_1_bss_8CA28) {
+            packet.scale_x *= 2.0f;
+            packet.scale_y *= 2.0f;
+        }
+        packet.scale_x *= 1.1f;
+        packet.scale_y *= 1.1f;
+        fn_1_8CED0(obj->icons + offset, 0xA0, 0x78);
+        *(f32 *)(obj->icons + offset + 0x44) = 30.0f;
+        fn_1_8D3F8(obj->icons + offset, &packet, fn_1_131C08, obj);
+        offset += 0x64;
+    }
+}
+/* fzgx:end fn_1_13A21C */
+
 /* fzgx:begin fn_1_13A848 */
 void fn_1_13A848(s16 arg0, s16 arg1, void* arg2, void* arg3, int arg4, f32 arg5, f32 arg6) {
     fn_1_49410();
@@ -1539,7 +1896,6 @@ void fn_1_13A9B8(f32 arg7, f32 arg8, s16 arg0, s16 arg1, int arg2, void* arg3,
 /* fzgx:end fn_1_13A9B8 */
 
 /* fzgx:begin fn_1_13B24C */
-
 s32 fn_1_13B24C(s32 arg0, s32 arg1, s32 arg2, s32 arg3, const char* arg4) {
     f32 temp;
 
@@ -1554,9 +1910,6 @@ s32 fn_1_13B24C(s32 arg0, s32 arg1, s32 arg2, s32 arg3, const char* arg4) {
 /* fzgx:end fn_1_13B24C */
 
 /* fzgx:begin fn_1_13B328 */
-
-
-
 void fn_1_13B328(u32 arg0, s32 arg1) {
     FontDrawPacket packet;
     PtrTab tab;
@@ -1625,8 +1978,6 @@ void fn_1_13C16C(void) {
 /* fzgx:end fn_1_13C16C */
 
 /* fzgx:begin fn_1_13C1A0 */
-
-
 struct Copy88 { u32 words[22]; };
 struct Copy200 { u32 words[10][5]; };
 
@@ -1701,8 +2052,6 @@ void fn_1_13C1A0(u8 *arg0) {
 /* fzgx:end fn_1_13C1A0 */
 
 /* fzgx:begin fn_1_13D460 */
-
-
 static inline s32 fn_1_13D460_strip_position(s32 x, s32 y) { return x + y; }
 #pragma opt_propagation off
 #pragma opt_lifetimes off
@@ -1806,8 +2155,6 @@ void fn_1_13D460(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
 /* fzgx:end fn_1_13D460 */
 
 /* fzgx:begin fn_1_13DA0C */
-
-
 // Register the three groups of static display configurations.
 void fn_1_13DA0C(void) {
     struct Struct_26F8 config;
@@ -1911,7 +2258,6 @@ void fn_1_13E054(void* arg0, void* arg1, void* arg2, int arg3) {
 /* fzgx:end fn_1_13E054 */
 
 /* fzgx:begin fn_1_13EDDC */
-
 // Build the selected display data unless the caller requested the cached path.
 void fn_1_13EDDC(u32 arg0, u32 arg1, u32 arg2, u32 arg3, s32 arg4) {
     u32 display_data[47];
@@ -1957,7 +2303,6 @@ u32 fn_1_13F72C(s16 arg0, u32 arg1, f32 farg0) {
 /* fzgx:end fn_1_13F72C */
 
 /* fzgx:begin fn_1_13F81C */
-
 // Clear the cached display-resource handles before loading a new selection.
 void fn_1_13F81C(void) {
     u32 *handles = (u32 *)(((u8 *)&lbl_1_bss_8E3E4));
@@ -1995,8 +2340,6 @@ u32 fn_1_13F8B0(u32 key) {
 /* fzgx:end fn_1_13F8B0 */
 
 /* fzgx:begin fn_1_13F8C4 */
-
-
 void fn_1_13F8C4(s32 arg_sp0) {
     s32 temp_r27;
     u8 var_r26;
@@ -2189,7 +2532,6 @@ void fn_1_14108C(s16 arg0, s32 arg1, s32 arg2) {
 /* fzgx:end fn_1_14108C */
 
 /* fzgx:begin fn_1_141338 */
-
 // Pass through the caller's arguments and append the default scale factor.
 void fn_1_141338(u32 arg0, u32 arg1, u32 arg2, u32 arg3, f32 arg4) {
     fn_1_141360(arg0, arg1, arg2, arg3, arg4, lbl_1_rodata_863C);
@@ -2197,7 +2539,6 @@ void fn_1_141338(u32 arg0, u32 arg1, u32 arg2, u32 arg3, f32 arg4) {
 /* fzgx:end fn_1_141338 */
 
 /* fzgx:begin fn_1_141614 */
-
 void fn_1_141614(s16 arg0) {
     fn_1_49410();
     fn_1_494DC(8);
@@ -2224,7 +2565,6 @@ void fn_1_141614(s16 arg0) {
 /* fzgx:end fn_1_141614 */
 
 /* fzgx:begin fn_1_141754 */
-
 typedef struct {
     u32 w[3];
 } Copy9214;
@@ -2344,7 +2684,6 @@ void fn_1_1420A4(void) {
 /* fzgx:end fn_1_1420A4 */
 
 /* fzgx:begin fn_1_1424E8 */
-
 void fn_1_1424E8(u32 unused, s32 arg1) {
     FontDrawPacket loc_8;
     s32 mode;
@@ -2554,7 +2893,6 @@ void fn_1_144EE8(void) {
 /* fzgx:end fn_1_144EE8 */
 
 /* fzgx:begin fn_1_146B5C */
-
 #pragma opt_propagation off
 void fn_1_146B5C(u32 unused, u8 *arg1) {
     s32 pos;
@@ -2586,7 +2924,6 @@ void fn_1_146B5C(u32 unused, u8 *arg1) {
 /* fzgx:end fn_1_146B5C */
 
 /* fzgx:begin fn_1_149B24 */
-
 typedef struct {
     f32 value0;
     u8 pad[8];
@@ -2661,8 +2998,6 @@ void fn_1_149C2C(void) {
 /* fzgx:end fn_1_149C2C */
 
 /* fzgx:begin fn_1_149C64 */
-
-
 // Initialize the static display state with the default viewport dimensions.
 void fn_1_149C64(void) {
     struct fn_1_149C64_lbl_1_bss_8E43C *display_state = &lbl_1_bss_8E43C;
@@ -2673,7 +3008,6 @@ void fn_1_149C64(void) {
 /* fzgx:end fn_1_149C64 */
 
 /* fzgx:begin fn_1_149CA4 */
-
 void fn_1_149CA4(u32 arg0, u32 arg1, u32 arg2, u32 arg3) {
     fn_1_520A0();
     fn_1_52070(0x140);
@@ -2785,7 +3119,6 @@ void fn_1_14A17C(void) {
 /* fzgx:end fn_1_14A17C */
 
 /* fzgx:begin fn_1_14A1AC */
-
 typedef struct {
     u8 pad_0[0x8];
     u8 unk_8;
@@ -3023,7 +3356,6 @@ u32 fn_1_14BE30(void) {
 /* fzgx:end fn_1_14BE30 */
 
 /* fzgx:begin fn_1_14BED0 */
-
 void fn_1_14BED0(void) {
     Obj_1_bss_9F8 *obj_9f8;
 
@@ -3135,7 +3467,6 @@ void fn_1_14C968(void) {
 /* fzgx:end fn_1_14C968 */
 
 /* fzgx:begin fn_1_14C9A0 */
-
 void fn_1_14C9A0(void) {
     int state = lbl_1_bss_5138[0xe2];
 
@@ -3252,7 +3583,6 @@ u32 fn_1_14D6D8(s16 index) {
 /* fzgx:end fn_1_14D6D8 */
 
 /* fzgx:begin fn_1_14D728 */
-
 typedef struct { u32 values[75]; } InitTable;
 
 static inline u32 fn_1_14D728_array_read(u32 *array, s32 index) { return array[index]; }
@@ -3307,7 +3637,6 @@ void fn_1_14D728(Source *source, Display *displays) {
 /* fzgx:end fn_1_14D728 */
 
 /* fzgx:begin fn_1_14D8DC */
-
 void fn_1_14D8DC(u8 *arg0, u8 *arg1, s16 arg2) {
     u8 *data;
     u8 *p1;
@@ -3336,7 +3665,6 @@ void fn_1_14D8DC(u8 *arg0, u8 *arg1, s16 arg2) {
 /* fzgx:end fn_1_14D8DC */
 
 /* fzgx:begin fn_1_14DB48 */
-
 typedef struct {
     u16 values[3];
     u32 extra;
@@ -3397,7 +3725,6 @@ void fn_1_14DBCC(Fn1_14DBCC_Item *arg0) {
 /* fzgx:end fn_1_14DBCC */
 
 /* fzgx:begin fn_1_14DC68 */
-
 typedef struct {
     u8 pad_0[0x340];
     void *unk_340;
@@ -3688,7 +4015,6 @@ int fn_1_14E944(const Fn1_14E944Entry *arg0, const Fn1_14E944Entry *arg1) {
 /* fzgx:end fn_1_14E944 */
 
 /* fzgx:begin fn_1_14E9E4 */
-
 typedef struct {
     Fn1_14E9E4Entry entries[75];
 } Fn1_14E9E4Blob;
@@ -3704,7 +4030,6 @@ void fn_1_14E9E4(int arg0, void *arg1) {
 /* fzgx:end fn_1_14E9E4 */
 
 /* fzgx:begin fn_1_14EA74 */
-
 typedef struct {
     u8 bytes[0x708];
 } Fn1_14EA74Blob;
@@ -3777,7 +4102,6 @@ s32 fn_1_14ED00(s32 arg0, void *arg1, s32 arg2) {
 /* fzgx:end fn_1_14ED00 */
 
 /* fzgx:begin fn_1_14EE00 */
-
 typedef struct {
     u32 word[60];
 } Table240;
@@ -4067,7 +4391,6 @@ void fn_1_14F38C(fn_1_14F38C_StaticDisp *disp, u8 *table) {
 /* fzgx:end fn_1_14F38C */
 
 /* fzgx:begin fn_1_14F46C */
-
 typedef struct {
     char *entries[75];
 } StaticDisplayStrings;
@@ -4190,7 +4513,6 @@ void fn_1_14FD7C(u32 *arg0, u32 arg1) {
 /* fzgx:end fn_1_14FD7C */
 
 /* fzgx:begin fn_1_14FDAC */
-
 void *fn_1_14FDAC(void *arg0, void *arg1, s16 arg2, void *arg3) {
     u8 local[0x40];
     void *value;
@@ -4214,7 +4536,6 @@ void *fn_1_14FDAC(void *arg0, void *arg1, s16 arg2, void *arg3) {
 /* fzgx:end fn_1_14FDAC */
 
 /* fzgx:begin fn_1_14FE48 */
-
 s32 fn_1_14FE48(void *arg0, void *arg1) {
     u8 data[64];
     void *value;
@@ -4232,8 +4553,6 @@ s32 fn_1_14FE48(void *arg0, void *arg1) {
 /* fzgx:end fn_1_14FE48 */
 
 /* fzgx:begin fn_1_150464 */
-
-
 void fn_1_150464(u32 arg0) {
     u32 v2;
     u32 v1;
@@ -4273,7 +4592,6 @@ void fn_1_150500(void) {
 /* fzgx:end fn_1_150500 */
 
 /* fzgx:begin fn_1_150518 */
-
 // Reset the active object's counters and re-run its two setup passes.
 void fn_1_150518(void) {
     Obj_1_data_2A7E0_At3C *obj = lbl_1_data_2A7E0.unk_3C;
@@ -4338,8 +4656,6 @@ void fn_1_150650(void) {
 /* fzgx:end fn_1_150650 */
 
 /* fzgx:begin fn_1_150C8C */
-
-
 // Marks each static display entry active before updating it.
 void fn_1_150C8C(fn_1_150C8C_Object *obj) {
     s32 count;
@@ -4407,7 +4723,6 @@ void fn_1_150ED0(fn_1_150ED0_Object *obj, void *arg) {
 /* fzgx:end fn_1_150ED0 */
 
 /* fzgx:begin fn_1_150F30 */
-
 // Reset the display state before rebuilding its static entries.
 void fn_1_150F30(fn_1_150F30_StaticDisp *self) {
     self->unk_2728 = 0;
@@ -4496,12 +4811,6 @@ void fn_1_150F74(void *self) {
 /* fzgx:end fn_1_150F74 */
 
 /* fzgx:begin fn_1_151668 */
-
-
-
-
-
-
 void fn_1_151668(fn_1_151668_StaticDisp *self) {
     s32 i;
     s32 j;

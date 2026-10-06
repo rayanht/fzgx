@@ -517,6 +517,134 @@ void fn_1_10C7B4(fn_1_10C7B4_AccessoryObject *self) {
 }
 /* fzgx:end fn_1_10C7B4 */
 
+/* fzgx:begin fn_1_112F40 noprologue */
+#include "types.h"
+
+typedef struct Fn112F40Entry {
+    u8 unk_0;
+    u8 pad_1[0x13];
+    f32 unk_14;
+    f32 unk_18;
+    u8 pad_1C[0x24];
+    f32 unk_40;
+} Fn112F40Entry;
+
+typedef struct Fn112F40Pair {
+    Fn112F40Entry *a;
+    Fn112F40Entry *b;
+    f32 distance;
+} Fn112F40Pair;
+
+typedef struct Fn112F40Object {
+    u8 pad_0[0x18];
+    u32 unk_18;
+    u32 unk_1C;
+    u8 pad_20[4];
+    u8 *unk_24;
+    Fn112F40Pair *unk_28;
+} Fn112F40Object;
+
+typedef struct Fn112F40Heap {
+    u32 unk_0;
+} Fn112F40Heap;
+
+extern void fn_1_10846C(void);
+extern const f32 lbl_1_rodata_7B1C;
+extern const f32 lbl_1_rodata_7B20;
+extern void fn_1_128884(void *, void *, s32);
+extern f32 fn_1_1289BC(Fn112F40Entry *, Fn112F40Entry *);
+extern void *fn_1_4630(u32, u32, const char *, int);
+extern Fn112F40Heap lbl_801A6410;
+extern u32 lbl_1_data_40530;
+
+void fn_1_112F40(Fn112F40Object *self) {
+    u32 i;
+    u32 j;
+    u32 count;
+    Fn112F40Entry *entry_i;
+    Fn112F40Entry *entry_j;
+    Fn112F40Entry *entry;
+    Fn112F40Entry *second;
+
+    if (self == NULL) {
+        return;
+    }
+
+    fn_1_10846C();
+
+    for (i = 0, entry_i = (Fn112F40Entry *)self->unk_24; i < self->unk_18; i++, entry_i++) {
+        if (entry_i->unk_0 & 1) {
+            entry_i->unk_40 = lbl_1_rodata_7B1C;
+            entry_i->unk_0 = 0;
+        } else {
+            entry_i->unk_40 = lbl_1_rodata_7B20;
+            entry_i->unk_0 = 1;
+        }
+    }
+
+    for (i = 0, entry_i = (Fn112F40Entry *)self->unk_24; i < self->unk_18; i++, entry_i++) {
+        for (j = i + 1, entry_j = (Fn112F40Entry *)(self->unk_24 + i * 0x44 + 0x44); j < self->unk_18; j++, entry_j++) {
+            if ((entry_i->unk_0 & 1) && !(entry_j->unk_0 & 1)) {
+                fn_1_128884(entry_i, entry_j, sizeof(Fn112F40Entry));
+            }
+        }
+    }
+
+    for (i = 0, entry_i = (Fn112F40Entry *)self->unk_24; i < self->unk_18; i++, entry_i++) {
+        for (j = i + 1, entry_j = (Fn112F40Entry *)(self->unk_24 + i * 0x44 + 0x44); j < self->unk_18; j++, entry_j++) {
+            if (entry_i->unk_0 == entry_j->unk_0) {
+                if (entry_i->unk_18 > entry_j->unk_18) {
+                    fn_1_128884(entry_i, entry_j, sizeof(Fn112F40Entry));
+                }
+            }
+        }
+    }
+
+    for (i = 0, entry_i = (Fn112F40Entry *)self->unk_24; i < self->unk_18; i++, entry_i++) {
+        for (j = i + 1, entry_j = (Fn112F40Entry *)(self->unk_24 + i * 0x44 + 0x44); j < self->unk_18; j++, entry_j++) {
+            if (entry_i->unk_0 == entry_j->unk_0) {
+                if (entry_i->unk_14 < entry_j->unk_14 && entry_i->unk_18 > lbl_1_rodata_7B20 && entry_j->unk_18 > lbl_1_rodata_7B20) {
+                    fn_1_128884(entry_i, entry_j, sizeof(Fn112F40Entry));
+                } else if (entry_i->unk_14 > entry_j->unk_14 && entry_i->unk_18 < lbl_1_rodata_7B20 && entry_j->unk_18 < lbl_1_rodata_7B20) {
+                    fn_1_128884(entry_i, entry_j, sizeof(Fn112F40Entry));
+                }
+            }
+        }
+    }
+
+    self->unk_1C = (((self->unk_18 >> 1) - 1) << 1) + (self->unk_18 >> 1);
+    self->unk_28 = fn_1_4630(lbl_801A6410.unk_0, self->unk_1C * sizeof(Fn112F40Pair), (const char *)&lbl_1_data_40530, 4912);
+
+    count = 0;
+    for (i = 0, entry_i = (Fn112F40Entry *)self->unk_24; i < self->unk_18 - 1; i++, entry_i++) {
+        if (entry_i->unk_0 == entry_i[1].unk_0) {
+            self->unk_28[count].a = entry_i;
+            self->unk_28[count].b = entry_i + 1;
+            self->unk_28[count].distance = fn_1_1289BC(entry_i, entry_i + 1);
+            count++;
+        }
+    }
+
+    entry_i = (Fn112F40Entry *)self->unk_24;
+    for (i = 0, entry = entry_i; i < self->unk_18; i++, entry++) {
+        if (entry->unk_0 != entry[1].unk_0) {
+            second = entry + 1;
+            break;
+        }
+    }
+
+    for (i = 0; i < self->unk_18; i++, entry_i++, second++) {
+        self->unk_28[count].a = entry_i;
+        self->unk_28[count].b = second;
+        self->unk_28[count].distance = fn_1_1289BC(entry_i, second);
+        count++;
+        if (entry_i->unk_0 != entry_i[1].unk_0) {
+            break;
+        }
+    }
+}
+/* fzgx:end fn_1_112F40 */
+
 /* fzgx:begin fn_1_1154D0 */
 typedef struct {
     u8 active;

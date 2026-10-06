@@ -6503,3 +6503,54 @@ rel/main_rel/game/fn_1_411D4.c:
 
 rel/main_rel/font/fn_1_49B70.c:
 	.text       start:0x00049B70 end:0x00049F08 align:4
+
+rel/main_rel/bg_cas/fn_1_FCFA4.c:
+	.text       start:0x000FCFA4 end:0x000FD1D4 align:4
+
+rel/main_rel/memcard/fn_1_C1ACC.c:
+	.text       start:0x000C1ACC end:0x000C1CFC align:4
+
+rel/main_rel/stcoli/fn_1_2A8D0.c:
+	.text       start:0x0002A8D0 end:0x0002ABD4 align:4
+
+rel/main_rel/screen_effect/fn_1_78EBC.c:
+	.text       start:0x00078EBC end:0x00079100 align:4
+
+rel/main_rel/live_camera/fn_1_EBE4.c:
+	.text       start:0x0000EBE4 end:0x0000EE04 align:4
+
+rel/main_rel/spline/fn_1_FA89C.c:
+	.text       start:0x000FA89C end:0x000FAB40 align:4
+
+rel/main_rel/sel_static_disp/fn_1_134AD4.c:
+	.text       start:0x00134AD4 end:0x00134EE4 align:4
+
+rel/main_rel/font/fn_1_535A0.c:
+	.text       start:0x000535A0 end:0x00053830 align:4
+
+rel/main_rel/sel_static_disp/fn_1_136174.c:
+	.text       start:0x00136174 end:0x001363F0 align:4
+
+rel/main_rel/sel_static_disp/fn_1_135D7C.c:
+	.text       start:0x00135D7C end:0x00136174 align:4
+
+rel/main_rel/motasglist/fn_1_42AD0.c:
+	.text       start:0x00042AD0 end:0x00042E74 align:4
+
+rel/main_rel/font/fn_1_51E60.c:
+	.text       start:0x00051E60 end:0x00052070 align:4
+
+rel/main_rel/archive/fn_1_12CEA8.c:
+	.text       start:0x0012CEA8 end:0x0012D254 align:4
+
+rel/main_rel/sel_static_disp/fn_1_13A21C.c:
+	.text       start:0x0013A21C end:0x0013A460 align:4
+
+rel/main_rel/enemy_ctrl/fn_1_CB424.c:
+	.text       start:0x000CB424 end:0x000CB6D8 align:4
+
+rel/main_rel/accessory/fn_1_112F40.c:
+	.text       start:0x00112F40 end:0x001132E4 align:4
+
+rel/main_rel/stcoli/fn_1_21CFC.c:
+	.text       start:0x00021CFC end:0x00021F18 align:4

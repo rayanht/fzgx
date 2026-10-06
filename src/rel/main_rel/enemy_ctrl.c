@@ -608,6 +608,94 @@ void fn_1_CB404(u8 value) {
 }
 /* fzgx:end fn_1_CB404 */
 
+/* fzgx:begin fn_1_CB424 noprologue */
+#include "types.h"
+#include "font.h"
+
+typedef struct fn_1_CB424_Color {
+    u8 r;
+    u8 g;
+    u8 b;
+    u8 a;
+} fn_1_CB424_Color;
+
+typedef struct fn_1_CB424_Entry {
+    u32 value;
+    u32 active;
+    u8 pad_8[0x4];
+} fn_1_CB424_Entry;
+
+typedef struct fn_1_CB424_Text {
+    f32 x;
+    f32 y;
+    f32 scale_x;
+    f32 scale_y;
+    f32 alpha;
+    u32 value;
+    s32 digits;
+    fn_1_CB424_Color color;
+    fn_1_CB424_Color shadow;
+} fn_1_CB424_Text;
+
+extern fn_1_CB424_Entry lbl_1_bss_7ACA0[];
+extern u32 lbl_1_data_3D544[];
+extern const FontDrawPacket lbl_1_rodata_26F8;
+extern u32 fn_1_5910(void);
+extern void fn_1_51E60(FontDrawPacket *packet);
+extern void fn_1_CB6D8(fn_1_CB424_Text *text);
+
+void fn_1_CB424(s32 x, s32 y, s32 index) {
+    fn_1_CB424_Entry *entry;
+    FontDrawPacket packet;
+    f32 t;
+    f32 a;
+    f32 c;
+
+    entry = &lbl_1_bss_7ACA0[index];
+    if ((lbl_1_data_3D544[fn_1_5910()] >> 24) & 1) {
+        packet = lbl_1_rodata_26F8;
+        packet.image = 0x9402;
+        packet.x = 560.0f;
+        packet.y = y;
+        fn_1_51E60(&packet);
+        packet = lbl_1_rodata_26F8;
+        packet.image = 0x940A;
+        packet.x = 586.0f;
+        packet.y = y;
+        fn_1_51E60(&packet);
+
+        {
+        fn_1_CB424_Text text;
+        fn_1_CB424_Color color = {0x00, 0x00, 0x00, 0x00};
+        fn_1_CB424_Color shadow = {0xFF, 0xFF, 0xFF, 0x00};
+
+        text.x = x;
+        text.y = y + 14;
+        text.scale_x = 0.7f;
+        text.scale_y = 0.8f;
+        text.alpha = 1.0f;
+        text.digits = -1;
+        text.color = color;
+        text.shadow = shadow;
+        text.value = entry->value;
+        if (entry->active != 0 && (entry->value & ~0xFFF) == 0) {
+            t = (entry->value & 0xFFF) / 1000.0f;
+            a = 2.0f * t;
+            c = 255.0f * (1.0f - t);
+            text.color.r = c;
+            text.color.g = c;
+            text.color.b = c;
+            if (a > 1.0f) {
+                a = 1.0f;
+            }
+            text.shadow.a = 255.0f * (1.0f - a);
+        }
+        fn_1_CB6D8(&text);
+        }
+    }
+}
+/* fzgx:end fn_1_CB424 */
+
 /* fzgx:begin fn_1_CC27C */
 // fn_1_CC27C: empty in retail (single blr).
 void fn_1_CC27C(void) {

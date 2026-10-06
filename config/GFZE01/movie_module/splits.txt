@@ -1748,3 +1748,21 @@ rel/movie_module/fn_12_3256C.c:
 
 rel/movie_module/fn_12_38680.c:
 	.text       start:0x00038680 end:0x00038704 align:4
+
+rel/movie_module/fn_12_38340.c:
+	.text       start:0x00038340 end:0x0003858C align:4
+
+rel/movie_module/fn_12_1F84.c:
+	.text       start:0x00001F84 end:0x000021C8 align:4
+
+rel/movie_module/fn_12_23BFC.c:
+	.text       start:0x00023BFC end:0x00023E0C align:4
+
+rel/movie_module/fn_12_23410.c:
+	.text       start:0x00023410 end:0x00023700 align:4
+
+rel/movie_module/fn_12_2BE3C.c:
+	.text       start:0x0002BE3C end:0x0002C0F8 align:4
+
+rel/movie_module/fn_12_2C640.c:
+	.text       start:0x0002C640 end:0x0002C9C4 align:4

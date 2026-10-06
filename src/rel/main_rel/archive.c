@@ -898,6 +898,108 @@ s16 fn_1_12CCB0(s16 arg0, s16 arg1) {
 }
 /* fzgx:end fn_1_12CCB0 */
 
+/* fzgx:begin fn_1_12CEA8 */
+typedef struct Fn1_12CEA8_Entry {
+    u8 pad_0[0x5];
+    u8 id;
+    u8 pad_6[0x819A];
+    u8 type;
+    u8 pad_81A1[0x1F];
+} Fn1_12CEA8_Entry;
+
+typedef struct Fn1_12CEA8_Obj {
+    u8 pad_0[0x4E0];
+} Fn1_12CEA8_Obj;
+
+extern Fn1_12CEA8_Entry *fn_1_12F118(void);
+extern Fn1_12CEA8_Entry *fn_1_36AD0(void);
+extern void fn_1_12D354(s16, void *, Fn1_12CEA8_Obj *);
+extern void fn_1_8F198(Fn1_12CEA8_Obj *, s16, void *, void *);
+extern void fn_1_8F45C(Fn1_12CEA8_Obj *, s16, void *, void *);
+
+static inline s16 fn_1_12CEA8_type(s16 id) {
+    Fn1_12CEA8_Entry *entries;
+    s16 i;
+
+    if (id < 41) {
+        return id;
+    }
+    entries = fn_1_12F118();
+    if (entries == NULL) {
+        return 6;
+    }
+    if (entries != fn_1_36AD0()) {
+        for (i = 0; i < 9; i++) {
+            if (id == entries[i].id) {
+                return entries[i].type;
+            }
+        }
+    } else if (id >= 50 && id <= 53) {
+        return entries[id - 50].type;
+    } else if (id >= 54 && id <= 57) {
+        return entries[id - 54].type;
+    } else {
+        for (i = 0; i < 4; i++) {
+            if (id == entries[i].id) {
+                return entries[i].type;
+            }
+        }
+    }
+    return 6;
+}
+
+static inline s16 fn_1_12CEA8_count(s16 id) {
+    switch (fn_1_12CEA8_type(id)) {
+    case 0x15:
+        return 1;
+    case 0x21:
+        return 2;
+    default:
+        return 0;
+    }
+}
+
+static inline s32 fn_1_12CEA8_kind(s16 id, s16 index) {
+    switch (fn_1_12CEA8_type(id)) {
+    case 0x15:
+        switch (index) {
+        case 0:
+            return 41;
+        default:
+            return -1;
+        }
+    case 0x21:
+        switch (index) {
+        case 0:
+            return 42;
+        case 1:
+            return 43;
+        default:
+            return -1;
+        }
+    default:
+        return -1;
+    }
+}
+
+void fn_1_12CEA8(s16 id, Fn1_12CEA8_Obj *objs, void *arg2, void *arg3, s32 attach) {
+    s16 i;
+    s16 kind;
+
+    for (i = 0; i < fn_1_12CEA8_count(id); i++) {
+        kind = fn_1_12CEA8_kind(id, i);
+        if (kind != -1) {
+            if (attach) {
+                fn_1_12D354(kind, arg2, &objs[i]);
+                fn_1_8F198(&objs[i], kind, arg2, arg3);
+            } else {
+                fn_1_8F45C(&objs[i], kind, arg2, arg3);
+            }
+        }
+    }
+}
+/* fzgx:end fn_1_12CEA8 */
+
 /* fzgx:begin fn_1_12D254 */
 #include "types.h"
 

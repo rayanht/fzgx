@@ -1683,6 +1683,80 @@ void fn_1_FA898(void) {
 }
 /* fzgx:end fn_1_FA898 */
 
+/* fzgx:begin fn_1_FA89C noprologue */
+#include "types.h"
+
+typedef struct Fn1_FA89C_Views {
+    u8 unk_0;
+    u8 pad_1[0x43];
+    f32 mtx[4][3][4];
+    u32 x[4];
+    u32 y[4];
+    u32 width[4];
+    u32 height[4];
+    u32 scaled_width[4];
+    u32 scaled_height[4];
+    f32 scale;
+} Fn1_FA89C_Views;
+
+typedef struct Fn1_FA89C_Ctx {
+    u8 pad_0[0x4];
+    Fn1_FA89C_Views views;
+} Fn1_FA89C_Ctx;
+
+extern s32 fn_1_58C4(void);
+extern void fn_1_5948(s32);
+extern void fn_80038FD8(u32 *, u32 *, u32 *, u32 *);
+extern void fn_1_A714C(f32 *, f32 *, f32 *, f32 *);
+extern void fn_80015CB0(f32 (*)[4], f32, f32, f32, f32, f32, f32);
+extern void fn_1_627C(s32);
+
+void fn_1_FA89C(Fn1_FA89C_Ctx *ctx) {
+    u32 x;
+    u32 width;
+    f32 a;
+    u32 y;
+    f32 b;
+    f32 right;
+    f32 c;
+    u32 height;
+    s32 i;
+    s32 count;
+    Fn1_FA89C_Views *views;
+    s16 center_x;
+    f32 d;
+    f32 left;
+    f32 top;
+    f32 bottom;
+    s16 center_y;
+
+    count = fn_1_58C4();
+    views = &ctx->views;
+    views->unk_0 = 0;
+    views->scale = 1.0f;
+    for (i = 0; i < count; i++) {
+        fn_1_5948(i);
+        fn_80038FD8(&views->x[i], &views->y[i], &views->width[i], &views->height[i]);
+        views->scaled_width[i] = views->width[i] / views->scale;
+        views->scaled_height[i] = views->height[i] / views->scale;
+        width = views->width[i];
+        height = views->height[i];
+        x = views->x[i];
+        y = views->y[i];
+        center_x = x + width / 2;
+        center_y = y + height / 2;
+        left = (f32)(s16)x / center_x - 1.0f;
+        top = (f32)(s16)y / center_y - 1.0f;
+        fn_1_A714C(&a, &b, &c, &d);
+        right = (f32)(s16)(x + width) / center_x - 1.0f;
+        bottom = (f32)(s16)(y + height) / center_y - 1.0f;
+        fn_80015CB0(views->mtx[i], a, b, 1.0f / (right - left), -1.0f / (bottom - top), -left / (right - left),
+                    -top / (bottom - top));
+        fn_1_627C(i);
+    }
+}
+/* fzgx:end fn_1_FA89C */
+
 /* fzgx:begin fn_1_FB0A8 */
 Obj_1_bss_84428 *fn_1_FB0A8(void) {
     return &lbl_1_bss_84428;

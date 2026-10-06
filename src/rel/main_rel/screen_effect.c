@@ -1787,6 +1787,153 @@ void fn_1_789AC(void) {
 }
 /* fzgx:end fn_1_789AC */
 
+/* fzgx:begin fn_1_78EBC noprologue */
+#include "types.h"
+
+typedef struct Fn1_78EBC_Point {
+    f32 x;
+    f32 y;
+} Fn1_78EBC_Point;
+
+typedef struct Fn1_78EBC_Model {
+    void *model;
+    f32 pos[3];
+    s16 rot_x;
+    s16 rot_y;
+    s16 rot_z;
+    u8 pad_16[0x2];
+    f32 scale_x;
+    f32 scale_y;
+    f32 scale_z;
+} Fn1_78EBC_Model;
+
+typedef struct Fn1_78EBC_View {
+    u8 pad_0[0xD4];
+    u32 model_count;
+    Fn1_78EBC_Model *models;
+    u32 effect_count;
+    void **effects;
+    u8 pad_E4[0x2C];
+    Fn1_78EBC_Point *points[4];
+    u8 pad_120[0x390];
+} Fn1_78EBC_View;
+
+typedef struct Fn1_78EBC_Scene {
+    u8 pad_0[0x18];
+    u32 view_count;
+    Fn1_78EBC_View *views;
+} Fn1_78EBC_Scene;
+
+typedef struct Fn1_78EBC_Camera {
+    u8 pad_0[0x2C];
+    u8 mtx[0x74];
+} Fn1_78EBC_Camera;
+
+typedef struct Fn1_78EBC_State {
+    u8 pad_0[0x8];
+    s16 mode;
+} Fn1_78EBC_State;
+
+typedef struct Fn1_78EBC_Globals {
+    u8 pad_0[0x1C];
+    f32 speed;
+} Fn1_78EBC_Globals;
+
+extern Fn1_78EBC_State lbl_1_data_1DFA4;
+extern Fn1_78EBC_Scene *lbl_1_bss_3BE0;
+extern Fn1_78EBC_Camera *lbl_1_bss_3BE4;
+extern Fn1_78EBC_Globals lbl_1_data_2A7E0;
+extern void lbl_8006DCA4(void);
+extern void lbl_8006DFE8(void *);
+extern void fn_80072558(void);
+extern void *fn_1_7A648(void *);
+extern void fn_1_5616C(s32, f32, f32);
+extern void fn_1_556F8(void *);
+extern void fn_1_56018(s32);
+extern void lbl_8006DAEC(void);
+extern void lbl_8006DBE4(void);
+extern void lbl_8006E0A4(f32 *);
+extern void mathutil_mtxA_rotate_z(s16);
+extern void mathutil_mtxA_rotate_y(s16);
+extern void mathutil_mtxA_rotate_x(s16);
+extern void lbl_8006E13C(f32 *);
+extern void fn_1_55FC4(f32);
+extern void *fn_1_79C88(void *, void *, s32, f32);
+extern void fn_1_5575C(void *);
+extern void lbl_8006DC20(void);
+
+void fn_1_78EBC(void) {
+    u32 n;
+    u32 j;
+    u32 i;
+    void **effects;
+    Fn1_78EBC_Camera *camera;
+    Fn1_78EBC_View *view;
+    void *obj;
+    Fn1_78EBC_Model *model;
+    void *effect;
+    s32 k;
+    f32 scale;
+
+    if (lbl_1_data_1DFA4.mode == -1) {
+        return;
+    }
+    if (lbl_1_bss_3BE0 == NULL) {
+        return;
+    }
+    view = lbl_1_bss_3BE0->views;
+    camera = lbl_1_bss_3BE4;
+    for (i = 0; i < lbl_1_bss_3BE0->view_count; i++, camera++, view++) {
+        if (i == 0) {
+            lbl_8006DCA4();
+        } else {
+            lbl_8006DFE8(camera->mtx);
+        }
+        fn_80072558();
+
+        effects = view->effects;
+        for (j = 0; j < view->effect_count; j++, effects++) {
+            effect = fn_1_7A648(*effects);
+            if (effect == NULL) {
+                continue;
+            }
+            if (view->points[0] != NULL || view->points[1] != NULL || view->points[2] != NULL ||
+                view->points[3] != NULL) {
+                for (k = 0; k < 4; k++) {
+                    if (view->points[k] != NULL) {
+                        fn_1_5616C(k, view->points[k]->x * (0.016666668f * lbl_1_data_2A7E0.speed),
+                                   view->points[k]->y * (0.016666668f * lbl_1_data_2A7E0.speed));
+                    }
+                }
+                fn_1_556F8(effect);
+                fn_1_56018(0);
+            } else {
+                fn_1_556F8(effect);
+            }
+        }
+
+        model = lbl_1_bss_3BE0->views[i].models;
+        lbl_8006DAEC();
+        for (n = 0; n < lbl_1_bss_3BE0->views[i].model_count; n++, model++) {
+            lbl_8006DBE4();
+            lbl_8006E0A4(model->pos);
+            mathutil_mtxA_rotate_z(model->rot_z);
+            mathutil_mtxA_rotate_y(model->rot_y);
+            mathutil_mtxA_rotate_x(model->rot_x);
+            lbl_8006E13C(&model->scale_x);
+            scale = (model->scale_x > model->scale_y) ? model->scale_x : model->scale_y;
+            scale = (model->scale_z > scale) ? model->scale_z : scale;
+            fn_1_55FC4(scale);
+            obj = fn_1_79C88(model->model, NULL, 0, scale);
+            if (obj != NULL) {
+                fn_1_5575C(obj);
+            }
+        }
+        lbl_8006DC20();
+    }
+}
+/* fzgx:end fn_1_78EBC */
+
 /* fzgx:begin fn_1_79100 */
 // Release the active screen-effect resources and reset the effect state.
 void fn_1_79100(void) {

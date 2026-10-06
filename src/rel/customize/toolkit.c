@@ -1226,6 +1226,70 @@ void fn_3_268D0(fn_3_268D0_CustomizeObject *self) {
 }
 /* fzgx:end fn_3_268D0 */
 
+/* fzgx:begin fn_3_28378 */
+#include "font.h"
+
+extern const FontDrawPacket lbl_1_rodata_26F8; /* default glyph packet */
+extern void fn_3_2406C(FontDrawPacket *packet, FontVertex *vertices);
+
+void fn_3_28378(s16 x, s16 y, s16 z, u32 image) {
+    FontDrawPacket packet;
+    void (*callback)(FontDrawPacket *, FontVertex *) = fn_3_2406C;
+
+    packet = lbl_1_rodata_26F8;
+    packet.image = image;
+    packet.x = x - 8;
+    packet.y = y - 1;
+    packet.z = z;
+    packet.flags = 0xF;
+    if (callback != NULL) {
+        packet.flags |= 0x4000000;
+        packet.vertex_callback = callback;
+    }
+    packet.alpha = 1.0f;
+    fn_1_4F734(&packet);
+
+    packet = lbl_1_rodata_26F8;
+    packet.image = image;
+    packet.x = x + 8;
+    packet.y = y - 1;
+    packet.z = z;
+    packet.flags = 0x8000D;
+    if (callback != NULL) {
+        packet.flags |= 0x4000000;
+        packet.vertex_callback = callback;
+    }
+    packet.alpha = 1.0f;
+    fn_1_4F734(&packet);
+
+    packet = lbl_1_rodata_26F8;
+    packet.image = image;
+    packet.x = x - 8;
+    packet.y = y + 1;
+    packet.z = z;
+    packet.flags = 0x100007;
+    if (callback != NULL) {
+        packet.flags |= 0x4000000;
+        packet.vertex_callback = callback;
+    }
+    packet.alpha = 1.0f;
+    fn_1_4F734(&packet);
+
+    packet = lbl_1_rodata_26F8;
+    packet.image = image;
+    packet.x = x + 8;
+    packet.y = y + 1;
+    packet.z = z;
+    packet.flags = 0x180005;
+    if (callback != NULL) {
+        packet.flags |= 0x4000000;
+        packet.vertex_callback = callback;
+    }
+    packet.alpha = 1.0f;
+    fn_1_4F734(&packet);
+}
+/* fzgx:end fn_3_28378 */
+
 /* fzgx:begin fn_3_2A2F8 */
 #include "font.h"
 

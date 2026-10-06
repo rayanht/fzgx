@@ -504,6 +504,138 @@ void fn_1_FCF74(void) {
 }
 /* fzgx:end fn_1_FCF74 */
 
+/* fzgx:begin fn_1_FCFA4 noprologue */
+#include "types.h"
+#include "rel/main_rel/globals.h"
+#include "rel/main_rel/bg_cas.h"
+
+typedef struct Fn1_FCFA4_Color {
+    u8 r;
+    u8 g;
+    u8 b;
+    u8 a;
+} Fn1_FCFA4_Color;
+
+typedef struct Fn1_FCFA4_Owner {
+    u8 pad_0[0x320];
+    s16 unk_320;
+} Fn1_FCFA4_Owner;
+
+typedef struct Fn1_FCFA4_Entry {
+    u8 pad_0[0x40F0];
+    void *unk_40F0;
+    u8 pad_40F4[0xC];
+} Fn1_FCFA4_Entry;
+
+typedef struct Fn1_FCFA4_Obj Fn1_FCFA4_Obj;
+struct Fn1_FCFA4_Obj {
+    Fn1_FCFA4_Owner *owner;
+    u8 count;
+    u8 pad_5[0x7];
+    u32 flags;
+    u8 pad_10[0x10];
+    Fn1_FCFA4_Entry entries[4];
+    s32 (*skip)(void);
+    s32 (*begin)(Fn1_FCFA4_Obj *);
+    void *unk_10428;
+    void (*draw)(Fn1_FCFA4_Obj *, Fn1_FCFA4_Entry *);
+};
+
+// bg_cas.h declares these as provisional u32: a per-owner u8 counter table and the current entry.
+#define fn_1_FCFA4_counters ((u8 *)&lbl_1_data_3EFB0)
+#define fn_1_FCFA4_current (*(Fn1_FCFA4_Entry **)&lbl_1_data_3EFA8)
+extern const Fn1_FCFA4_Color lbl_1_rodata_7608;
+extern s16 camera_get_status(void);
+extern s32 camera_get_state(void);
+extern s32 fn_1_3F854(void);
+extern s16 camera_get_output(void);
+extern void fn_800724C8(void);
+extern void fn_8007245C(u32);
+extern void fn_80074788(s32);
+extern void fn_800747D0(s32, s32, s32, s32, s32, s32, s32);
+extern void fn_800371F8(s32, Fn1_FCFA4_Color);
+extern void fn_80074918(s32, s32, s32);
+extern void fn_800720B0(s32);
+extern void fn_80072864(s32);
+
+static inline u8 fn_1_FCFA4_is_visible(Fn1_FCFA4_Obj *obj) {
+    Fn1_FCFA4_Owner *owner;
+    s16 status;
+    u8 state;
+    u8 limit;
+    u8 current;
+
+    if (obj->flags & 0x40000000) {
+        owner = obj->owner;
+        status = camera_get_status();
+        state = camera_get_state();
+        limit = fn_1_3F854();
+        if (owner == NULL) {
+            return FALSE;
+        }
+        current = fn_1_FCFA4_counters[owner->unk_320];
+        if (status == 2 && state == 6) {
+            s16 output = camera_get_output();
+
+            if (output != owner->unk_320) {
+                return FALSE;
+            }
+        } else if (status != 2) {
+            if (++fn_1_FCFA4_counters[owner->unk_320] >= limit) {
+                fn_1_FCFA4_counters[owner->unk_320] = 0;
+            }
+            if (current != owner->unk_320) {
+                return FALSE;
+            }
+        }
+    } else if (obj->flags & 0x80000000) {
+        return FALSE;
+    }
+    return TRUE;
+}
+
+static inline void fn_1_FCFA4_setup_gx(void) {
+    Fn1_FCFA4_Color color;
+
+    fn_800724C8();
+    fn_8007245C(0x2200);
+    color = lbl_1_rodata_7608;
+    fn_80074788(1);
+    fn_800747D0(4, 0, 0, 0, 0, 2, 2);
+    fn_800371F8(0, color);
+    fn_80074918(1, 7, 0);
+    fn_800720B0(0);
+    fn_80072864(2);
+}
+
+void fn_1_FCFA4(Fn1_FCFA4_Obj *obj) {
+    s16 i;
+
+    if (obj == NULL) {
+        return;
+    }
+    if (obj->skip != NULL && obj->skip() != 0) {
+        return;
+    }
+    if (lbl_1_bss_850C6.unk_0 != 0) {
+        return;
+    }
+    if (!fn_1_FCFA4_is_visible(obj)) {
+        return;
+    }
+    if (obj->begin != NULL && obj->begin(obj) == 0) {
+        return;
+    }
+    fn_1_FCFA4_setup_gx();
+    for (i = 0; i < obj->count; i++) {
+        if (obj->entries[i].unk_40F0 != NULL) {
+            fn_1_FCFA4_current = &obj->entries[i];
+            obj->draw(obj, &obj->entries[i]);
+        }
+    }
+}
+/* fzgx:end fn_1_FCFA4 */
+
 /* fzgx:begin fn_1_FD1D4 */
 extern void fn_80008BEC(void *arg0, int arg1, int arg2);
 extern void fn_1_FCA10(void);
